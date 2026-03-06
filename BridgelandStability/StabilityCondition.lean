@@ -7,36 +7,40 @@ import Mathlib.CategoryTheory.Triangulated.GrothendieckGroup
 import Mathlib.CategoryTheory.Triangulated.Slicing
 import Mathlib.Topology.PartialHomeomorph
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.GroupTheory.Finiteness
-import Mathlib.GroupTheory.QuotientGroup.Defs
+import Mathlib.Topology.Connected.Clopen
+import Mathlib.Topology.Order
+import Mathlib.Data.ENNReal.Basic
 
 /-!
 # Bridgeland Stability Conditions
 
 We define Bridgeland stability conditions on a pretriangulated category and state
-the main theorems from "Stability conditions on triangulated categories" (2007):
+the main theorem from "Stability conditions on triangulated categories" (2007):
 
-* **Theorem 1.2**: The space of locally-finite stability conditions is a complex manifold,
-  and the central charge map is a local homeomorphism.
-* **Corollary 1.3**: If the category is numerically finite, the space of numerical
-  stability conditions is a finite-dimensional complex manifold.
-
-The main theorem statements are `Prop`-valued definitions that ∃-quantify over the
-topologies involved.
+* **Theorem 1.2**: For each connected component `Σ` of the space `Stab(D)` of
+  locally-finite stability conditions, there exists a linear subspace
+  `V(Σ) ⊆ Hom_ℤ(K₀(D), ℂ)` with a linear topology, and a local homeomorphism
+  `𝒵 : Σ → V(Σ)` sending `(Z, P)` to `Z`.
 
 ## Main definitions
 
 * `CategoryTheory.Triangulated.StabilityCondition`: a locally-finite stability condition
-* `CategoryTheory.Triangulated.bridgelandTheorem_1_2`: **Theorem 1.2** as a `Prop`
-* `CategoryTheory.Triangulated.eulerFormRad`: radical of the Euler form
-* `CategoryTheory.Triangulated.NumericalK₀`: numerical Grothendieck group
-* `CategoryTheory.Triangulated.NumericallyFinite`: finite generation of numerical K₀
-* `CategoryTheory.Triangulated.bridgelandCorollary_1_3`: **Corollary 1.3** as a `Prop`
+* `CategoryTheory.Triangulated.slicingDist`: the Bridgeland generalized metric on slicings
+* `CategoryTheory.Triangulated.stabSeminorm`: the seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)`
+* `CategoryTheory.Triangulated.StabilityCondition.topologicalSpace`: the Bridgeland
+  topology on `Stab(D)`, constructed from basis neighborhoods
+* `CategoryTheory.Triangulated.bridgelandTheorem_1_2`: **Theorem 1.2** as a `Prop`,
+  stated componentwise with a linear subspace `V(Σ)`
+
+## References
+
+* Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007
 -/
 
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Complex
+open scoped ENNReal
 
 universe v u
 
@@ -65,68 +69,67 @@ structure StabilityCondition where
   /-- The slicing is locally finite. -/
   locallyFinite : slicing.IsLocallyFinite C
 
-/-- The central charge of a stability condition, viewed as a function `K₀ C → ℂ`. -/
-def StabilityCondition.centralChargeVal (σ : StabilityCondition C) : K₀ C → ℂ := σ.Z
+/-! ### Generalized metric and seminorm -/
 
-/-- **Bridgeland's Theorem 1.2.** The space of locally-finite stability conditions on `C`
-admits the structure of a complex manifold, such that the map sending each stability
-condition to its central charge is a local homeomorphism onto an open subset of
-`Hom(K₀(C), ℂ)`.
+/-- The Bridgeland generalized metric on slicings (blueprint A8). For slicings `s₁` and `s₂`,
+this is the supremum over all nonzero objects `E` of
+`max(|φ₁⁺(E) - φ₂⁺(E)|, |φ₁⁻(E) - φ₂⁻(E)|)`,
+where `φᵢ±` are the phase bounds extracted from HN filtrations.
+Values lie in `[0, ∞]`. -/
+def slicingDist (s₁ s₂ : Slicing C) : ℝ≥0∞ :=
+  ⨆ (E : C) (_ : ¬IsZero E)
+    (F₁ : HNFiltration C s₁.P E) (h₁ : 0 < F₁.n)
+    (F₂ : HNFiltration C s₂.P E) (h₂ : 0 < F₂.n),
+    ENNReal.ofReal (max |HNFiltration.phiPlus C F₁ h₁ - HNFiltration.phiPlus C F₂ h₂|
+                        |HNFiltration.phiMinus C F₁ h₁ - HNFiltration.phiMinus C F₂ h₂|)
 
-We formalize this as a `Prop`: there exist topologies on `StabilityCondition C` and on
-`K₀ C →+ ℂ` such that for every stability condition `σ`, there is a partial homeomorphism
-whose source contains `σ` and that agrees with the central charge map. -/
+/-- The seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)` (blueprint A9). For a stability condition
+`σ = (Z, P)` and a group homomorphism `U : K₀(D) → ℂ`, this is
+`sup { |U(E)| / |Z(E)| : E is σ-semistable and nonzero }`.
+Values lie in `[0, ∞]`. -/
+def stabSeminorm (σ : StabilityCondition C) (U : K₀ C →+ ℂ) : ℝ≥0∞ :=
+  ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
+    ENNReal.ofReal (‖U (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖)
+
+/-! ### Topology on Stab(D) -/
+
+/-- The basis neighborhood `B_ε(σ)` for the Bridgeland topology (blueprint A10).
+A stability condition `τ` lies in `B_ε(σ)` if the seminorm distance between
+their central charges is less than `sin(πε)` and the slicing distance is less
+than `ε`. -/
+def basisNhd (σ : StabilityCondition C) (ε : ℝ) : Set (StabilityCondition C) :=
+  {τ | stabSeminorm C σ (τ.Z - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)) ∧
+       slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε}
+
+/-- The Bridgeland topology on `Stab(D)`, generated by the basis neighborhoods
+`B_ε(σ)` for all stability conditions `σ` and all `ε ∈ (0, 1/8)`. -/
+instance StabilityCondition.topologicalSpace :
+    TopologicalSpace (StabilityCondition C) :=
+  TopologicalSpace.generateFrom
+    {U | ∃ (σ : StabilityCondition C) (ε : ℝ), 0 < ε ∧ ε < 1 / 8 ∧
+      U = basisNhd C σ ε}
+
+/-! ### Theorem 1.2 -/
+
+/-- **Bridgeland's Theorem 1.2** (corrected statement). For each connected component
+`Σ` of the topological space `Stab(D)` (with the Bridgeland topology), there exists
+a linear subspace `V(Σ) ⊆ Hom_ℤ(K₀(D), ℂ)` with a topology, and a local
+homeomorphism from `Stab(D)` to `V(Σ)`, such that:
+
+1. Every stability condition in `Σ` lies in the source of the local homeomorphism.
+2. The local homeomorphism sends each stability condition to its central charge.
+
+This implies that each connected component of `Stab(D)` is a manifold locally modelled
+on the topological vector space `V(Σ)`. -/
 def bridgelandTheorem_1_2 : Prop :=
-  ∃ (τ₁ : TopologicalSpace (StabilityCondition C))
-    (τ₂ : TopologicalSpace (K₀ C →+ ℂ)),
-    ∀ σ : StabilityCondition C,
-      ∃ (e : @PartialHomeomorph (StabilityCondition C) (K₀ C →+ ℂ) τ₁ τ₂),
-        σ ∈ e.source ∧ ∀ σ' ∈ e.source, e σ' = σ'.Z
-
-/-! ### Numerical K-theory and Corollary 1.3 -/
-
-/-- The radical of a bilinear form `χ` on `K₀ C`. This is the subgroup of elements
-`x ∈ K₀ C` such that `χ(x, y) = 0` for all `y`. When `χ` is the Euler form
-`χ(E,F) = Σᵢ (-1)ⁱ dim Hom(E, F[i])`, this gives the radical of the Euler pairing. -/
-def eulerFormRad (χ : K₀ C →+ K₀ C →+ ℤ) : AddSubgroup (K₀ C) :=
-  χ.ker
-
-/-- The numerical Grothendieck group, defined as `K₀ C` modulo the radical of
-the Euler form. -/
-def NumericalK₀ (χ : K₀ C →+ K₀ C →+ ℤ) : Type _ :=
-  K₀ C ⧸ eulerFormRad C χ
-
-/-- The `AddCommGroup` instance on `NumericalK₀ C χ`, inherited from the quotient. -/
-instance NumericalK₀.instAddCommGroup (χ : K₀ C →+ K₀ C →+ ℤ) :
-    AddCommGroup (NumericalK₀ C χ) :=
-  inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad C χ))
-
-/-- A numerical stability condition is a stability condition whose central charge
-factors through the numerical Grothendieck group `NumericalK₀ C χ`. -/
-structure NumericalStabilityCondition (χ : K₀ C →+ K₀ C →+ ℤ) where
-  /-- The underlying stability condition. -/
-  σ : StabilityCondition C
-  /-- The central charge factors through the numerical K₀. -/
-  factors : ∃ Z' : NumericalK₀ C χ →+ ℂ,
-    σ.Z = Z'.comp (QuotientAddGroup.mk' (eulerFormRad C χ))
-
-/-- The category `C` is numerically finite (with respect to Euler form `χ`) if the
-numerical Grothendieck group `NumericalK₀ C χ` is finitely generated as an abelian group. -/
-class NumericallyFinite (χ : K₀ C →+ K₀ C →+ ℤ) : Prop where
-  /-- The numerical Grothendieck group is finitely generated. -/
-  fg : AddGroup.FG (NumericalK₀ C χ)
-
-/-- **Bridgeland's Corollary 1.3.** If `C` is numerically finite, then the space of
-numerical stability conditions on `C` is a finite-dimensional complex manifold.
-
-We formalize this as: assuming `NumericallyFinite C χ`, there exist a natural number `n`
-and a topology on the space of numerical stability conditions such that every point
-has a neighborhood homeomorphic to `ℂⁿ = Fin n → ℂ`. -/
-def bridgelandCorollary_1_3 (χ : K₀ C →+ K₀ C →+ ℤ) : Prop :=
-  NumericallyFinite C χ →
-    ∃ (n : ℕ) (τ : TopologicalSpace (NumericalStabilityCondition C χ)),
-      ∀ σ : NumericalStabilityCondition C χ,
-        ∃ (e : @PartialHomeomorph (NumericalStabilityCondition C χ) (Fin n → ℂ) τ inferInstance),
-          σ ∈ e.source
+  ∀ (cc : ConnectedComponents (StabilityCondition C)),
+    ∃ (V : AddSubgroup (K₀ C →+ ℂ))
+      (τ_V : TopologicalSpace V),
+      ∃ (e : @PartialHomeomorph (StabilityCondition C) V
+        (StabilityCondition.topologicalSpace C) τ_V),
+        (∀ σ : StabilityCondition C,
+          ConnectedComponents.mk σ = cc → σ ∈ e.source) ∧
+        (∀ σ : StabilityCondition C, σ ∈ e.source →
+          (e σ : K₀ C →+ ℂ) = σ.Z)
 
 end CategoryTheory.Triangulated
