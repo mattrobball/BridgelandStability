@@ -5,10 +5,9 @@ Authors: Formalization
 -/
 import Mathlib.CategoryTheory.Triangulated.GrothendieckGroup
 import Mathlib.CategoryTheory.Triangulated.Slicing
-import Mathlib.Topology.PartialHomeomorph
+import Mathlib.Topology.IsLocalHomeomorph
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.Connected.Clopen
-import Mathlib.Topology.Order
 import Mathlib.Data.ENNReal.Basic
 
 /-!
@@ -113,23 +112,23 @@ instance StabilityCondition.topologicalSpace :
 
 /-- **Bridgeland's Theorem 1.2** (corrected statement). For each connected component
 `Σ` of the topological space `Stab(D)` (with the Bridgeland topology), there exists
-a linear subspace `V(Σ) ⊆ Hom_ℤ(K₀(D), ℂ)` with a topology, and a local
-homeomorphism from `Stab(D)` to `V(Σ)`, such that:
+a linear subspace `V(Σ) ⊆ Hom_ℤ(K₀(D), ℂ)` with a topology such that the central
+charge map `σ ↦ Z(σ)`, restricted to the component `Σ` and landing in `V(Σ)`, is a
+local homeomorphism.
 
-1. Every stability condition in `Σ` lies in the source of the local homeomorphism.
-2. The local homeomorphism sends each stability condition to its central charge.
-
-This implies that each connected component of `Stab(D)` is a manifold locally modelled
-on the topological vector space `V(Σ)`. -/
+This uses `IsLocalHomeomorph` from `Mathlib.Topology.IsLocalHomeomorph`, avoiding
+raw `PartialHomeomorph` with `@`-threaded topologies. The statement implies that each
+connected component of `Stab(D)` is a manifold locally modelled on the topological
+vector space `V(Σ)`. -/
 def bridgelandTheorem_1_2 : Prop :=
   ∀ (cc : ConnectedComponents (StabilityCondition C)),
     ∃ (V : AddSubgroup (K₀ C →+ ℂ))
-      (τ_V : TopologicalSpace V),
-      ∃ (e : @PartialHomeomorph (StabilityCondition C) V
-        (StabilityCondition.topologicalSpace C) τ_V),
-        (∀ σ : StabilityCondition C,
-          ConnectedComponents.mk σ = cc → σ ∈ e.source) ∧
-        (∀ σ : StabilityCondition C, σ ∈ e.source →
-          (e σ : K₀ C →+ ℂ) = σ.Z)
+      (τ_V : TopologicalSpace V)
+      (hZ : ∀ σ : StabilityCondition C,
+        ConnectedComponents.mk σ = cc → σ.Z ∈ V),
+      @IsLocalHomeomorph
+        {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
+        V inferInstance τ_V
+        (fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, hZ σ hσ⟩)
 
 end CategoryTheory.Triangulated

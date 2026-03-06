@@ -10,7 +10,6 @@ import Mathlib.RingTheory.Finiteness.Defs
 import Mathlib.Algebra.BigOperators.Finprod
 import Mathlib.Algebra.Ring.NegOnePow
 import Mathlib.GroupTheory.Finiteness
-import Mathlib.GroupTheory.QuotientGroup.Defs
 
 /-!
 # Numerical Stability Conditions
@@ -24,8 +23,10 @@ finite triangulated categories.
   finite type (finite-dimensional Hom spaces, finitely many nonzero shifted Hom spaces)
 * `CategoryTheory.Triangulated.eulerFormObj`: the Euler form on objects
   `χ(E,F) = Σᵢ (-1)ⁱ dim_k Hom(E, F[i])`
-* `CategoryTheory.Triangulated.eulerFormDescends`: the descent property asserting that
-  the Euler form respects distinguished triangle relations
+* `CategoryTheory.Triangulated.EulerFormDescends`: typeclass asserting that the Euler
+  form descends to K₀ (triangle-additive in both arguments)
+* `CategoryTheory.Triangulated.eulerForm`: the Euler form lifted to K₀, constructed
+  via the universal property under `[EulerFormDescends k C]`
 * `CategoryTheory.Triangulated.NumericalK₀`: the numerical Grothendieck group
   `N(D) = K₀(D) / ker(χ)`
 * `CategoryTheory.Triangulated.NumericallyFinite`: `N(D)` is finitely generated
@@ -68,17 +69,62 @@ This is defined as a finitely-supported sum using `finsum`. -/
 def eulerFormObj [Linear k C] (E F : C) : ℤ :=
   ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ (shiftFunctor C n).obj F) : ℤ)
 
-/-- The descent property for the Euler form: for every distinguished triangle
-`A → B → C → A[1]`, the Euler form satisfies `χ(B, F) = χ(A, F) + χ(C, F)` and
-`χ(F, B) = χ(F, A) + χ(F, C)` for all `F`.
-
+/-- The Euler form descends to K₀ if it is triangle-additive in both arguments.
 This is a consequence of the long exact sequence on shifted Hom spaces and
-the rank-nullity theorem. -/
-def eulerFormDescends [Linear k C] : Prop :=
-  (∀ (T : Pretriangulated.Triangle C) (_ : T ∈ distTriang C) (F : C),
-    eulerFormObj k C T.obj₂ F = eulerFormObj k C T.obj₁ F + eulerFormObj k C T.obj₃ F) ∧
-  (∀ (T : Pretriangulated.Triangle C) (_ : T ∈ distTriang C) (F : C),
-    eulerFormObj k C F T.obj₂ = eulerFormObj k C F T.obj₁ + eulerFormObj k C F T.obj₃)
+the rank-nullity theorem. We state it as a typeclass to be instantiated when
+the full proof is available. -/
+class EulerFormDescends [Linear k C] [IsFiniteType k C] : Prop where
+  /-- For fixed `F`, the function `E ↦ χ(E, F)` is triangle-additive. -/
+  covariant (F : C) : IsTriangleAdditive (fun E ↦ eulerFormObj k C E F)
+  /-- For fixed `E`, the function `F ↦ χ(E, F)` is triangle-additive. -/
+  contravariant (E : C) : IsTriangleAdditive (fun F ↦ eulerFormObj k C E F)
+
+/-! ### Euler form on K₀ -/
+
+section EulerForm
+
+variable [Linear k C] [IsFiniteType k C] [EulerFormDescends k C]
+
+/-- The inner lift: for fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism
+`K₀ C →+ ℤ` via the universal property. -/
+private def eulerFormInner (E : C) : K₀ C →+ ℤ :=
+  letI := (EulerFormDescends.contravariant (k := k) (C := C) E)
+  K₀.lift C (fun F ↦ eulerFormObj k C E F)
+
+/-- The outer function `E ↦ eulerFormInner E` is triangle-additive: for a
+distinguished triangle `T`, the lifted functions agree additively. -/
+private instance eulerFormInner_isTriangleAdditive :
+    IsTriangleAdditive (eulerFormInner k C) where
+  additive T hT := by
+    apply AddMonoidHom.ext
+    intro y
+    simp only [AddMonoidHom.add_apply]
+    refine QuotientAddGroup.induction_on y (fun x ↦ ?_)
+    induction x using FreeAbelianGroup.induction_on with
+    | C0 =>
+      have : (QuotientAddGroup.mk (0 : FreeAbelianGroup C) : K₀ C) = 0 := rfl
+      rw [this, map_zero, map_zero, map_zero, add_zero]
+    | C1 G =>
+      show eulerFormInner k C T.obj₂ (K₀.of C G) =
+        eulerFormInner k C T.obj₁ (K₀.of C G) + eulerFormInner k C T.obj₃ (K₀.of C G)
+      unfold eulerFormInner
+      simp only [K₀.lift_of]
+      exact (EulerFormDescends.covariant (k := k) (C := C) G).additive T hT
+    | Cn G ih =>
+      have : (QuotientAddGroup.mk (-FreeAbelianGroup.of G) : K₀ C) =
+        -(QuotientAddGroup.mk (FreeAbelianGroup.of G) : K₀ C) := rfl
+      rw [this, map_neg, map_neg, map_neg, ih, neg_add_rev, add_comm]
+    | Cp x y ih1 ih2 =>
+      have : (QuotientAddGroup.mk (x + y) : K₀ C) =
+        (QuotientAddGroup.mk x : K₀ C) + (QuotientAddGroup.mk y : K₀ C) := rfl
+      rw [this, map_add, map_add, map_add, ih1, ih2, add_add_add_comm]
+
+/-- The Euler form on K₀, a bilinear form `K₀ C →+ K₀ C →+ ℤ` constructed from
+`eulerFormObj` via the universal property of K₀ applied twice. -/
+def eulerForm : K₀ C →+ K₀ C →+ ℤ :=
+  K₀.lift C (eulerFormInner k C)
+
+end EulerForm
 
 /-! ### Numerical Grothendieck group -/
 
@@ -124,21 +170,27 @@ instance NumericalStabilityCondition.topologicalSpace (χ : K₀ C →+ K₀ C �
 /-! ### Corollary 1.3 -/
 
 /-- **Bridgeland's Corollary 1.3** (corrected statement). Assume `C` is numerically
-finite. Then for each connected component of `Stab_N(D)` (the space of numerical
-stability conditions), there exists a linear subspace `V ⊆ Hom_ℤ(N(D), ℂ)` with
-a topology, and a local homeomorphism from `Stab_N(D)` to `V`, such that every
-numerical stability condition in that component lies in the source.
+finite with respect to the Euler form. Then for each connected component of
+`Stab_N(D)` (the space of numerical stability conditions), the factored central
+charge map is a local homeomorphism into a subspace of `Hom_ℤ(N(D), ℂ)`.
 
-Since `N(D)` is finitely generated, `V` is finite-dimensional, making each
-connected component a finite-dimensional complex manifold (blueprint B5). -/
-def bridgelandCorollary_1_3 (χ : K₀ C →+ K₀ C →+ ℤ) : Prop :=
+Since `N(D)` is finitely generated, the target is finite-dimensional, making each
+connected component a finite-dimensional complex manifold (blueprint B5).
+
+This uses `IsLocalHomeomorph` from `Mathlib.Topology.IsLocalHomeomorph` and
+replaces the abstract `χ` parameter with the concrete `eulerForm k C` under
+`[EulerFormDescends k C]`. -/
+def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C] [EulerFormDescends k C] : Prop :=
+  let χ := eulerForm k C
   NumericallyFinite C χ →
     ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
       ∃ (V : AddSubgroup (NumericalK₀ C χ →+ ℂ))
-        (τ_V : TopologicalSpace V),
-        ∃ (e : @PartialHomeomorph (NumericalStabilityCondition C χ) V
-          (NumericalStabilityCondition.topologicalSpace C χ) τ_V),
-          ∀ σ : NumericalStabilityCondition C χ,
-            ConnectedComponents.mk σ = cc → σ ∈ e.source
+        (τ_V : TopologicalSpace V)
+        (hZ : ∀ σ : NumericalStabilityCondition C χ,
+          ConnectedComponents.mk σ = cc → σ.factors.choose ∈ V),
+        @IsLocalHomeomorph
+          {σ : NumericalStabilityCondition C χ // ConnectedComponents.mk σ = cc}
+          V inferInstance τ_V
+          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
 
 end CategoryTheory.Triangulated

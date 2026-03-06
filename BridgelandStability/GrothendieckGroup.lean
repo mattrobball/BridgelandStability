@@ -24,6 +24,9 @@ generator.
 * `CategoryTheory.Triangulated.K₀`: the Grothendieck group with its `AddCommGroup` instance
 * `CategoryTheory.Triangulated.K₀.of`: the class map `C → K₀ C`
 * `CategoryTheory.Triangulated.K₀.of_triangle`: additivity on distinguished triangles
+* `CategoryTheory.Triangulated.IsTriangleAdditive`: typeclass for functions `C → A` that
+  respect distinguished triangle relations
+* `CategoryTheory.Triangulated.K₀.lift`: the universal property of `K₀`
 -/
 
 noncomputable section
@@ -73,5 +76,28 @@ lemma K₀.of_triangle (T : Pretriangulated.Triangle C) (hT : T ∈ distTriang C
     AddSubgroup.subset_closure ⟨T, hT, rfl⟩
   convert (K₀Subgroup C).neg_mem h using 1
   abel
+
+variable {C} in
+/-- A function `f : C → A` to an additive group is triangle-additive if
+`f(B) = f(A) + f(C)` for every distinguished triangle `A → B → C → A⟦1⟧`. -/
+class IsTriangleAdditive {A : Type*} [AddCommGroup A] (f : C → A) : Prop where
+  additive : ∀ (T : Pretriangulated.Triangle C),
+    T ∈ (distTriang C) → f T.obj₂ = f T.obj₁ + f T.obj₃
+
+/-- The universal property of K₀: any triangle-additive function lifts
+to an additive group homomorphism from K₀. -/
+def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] : K₀ C →+ A :=
+  QuotientAddGroup.lift (K₀Subgroup C) (FreeAbelianGroup.lift f)
+    ((AddSubgroup.closure_le _).mpr fun x ⟨T, hT, hx⟩ ↦ by
+      simp only [SetLike.mem_coe, AddMonoidHom.mem_ker, hx, map_sub,
+        FreeAbelianGroup.lift.of]
+      have h := IsTriangleAdditive.additive (f := f) T hT
+      rw [h]; abel)
+
+/-- The lift of a triangle-additive function agrees with the original function on generators. -/
+@[simp]
+lemma K₀.lift_of {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] (X : C) :
+    K₀.lift C f (K₀.of C X) = f X :=
+  FreeAbelianGroup.lift.of f X
 
 end CategoryTheory.Triangulated
