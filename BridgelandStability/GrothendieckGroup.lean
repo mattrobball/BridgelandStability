@@ -3,9 +3,10 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Pretriangulated
+import Mathlib.CategoryTheory.Triangulated.PostnikovTower
 import Mathlib.GroupTheory.FreeAbelianGroup
 import Mathlib.GroupTheory.QuotientGroup.Defs
+import Mathlib.Algebra.BigOperators.Fin
 
 /-!
 # Grothendieck Group of a Triangulated Category
@@ -68,7 +69,7 @@ def K₀.of (X : C) : K₀ C :=
 `T.obj₁` and `T.obj₃` in `K₀ C`. -/
 lemma K₀.of_triangle (T : Pretriangulated.Triangle C) (hT : T ∈ distTriang C) :
     K₀.of C T.obj₂ = K₀.of C T.obj₁ + K₀.of C T.obj₃ := by
-  simp only [K₀.of, K₀, ← QuotientAddGroup.mk_add]
+  simp only [K₀.of, K₀]
   apply Quotient.sound
   change QuotientAddGroup.leftRel _ _ _
   rw [QuotientAddGroup.leftRel_apply]
@@ -134,5 +135,43 @@ def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] 
 lemma K₀.lift_of {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] (X : C) :
     K₀.lift C f (K₀.of C X) = f X :=
   FreeAbelianGroup.lift_apply_of f X
+
+/-! ### K₀ additivity for Postnikov towers -/
+
+/-- The K₀ class of the `(i+1)`-th chain object equals the class of the `i`-th plus
+the class of the `i`-th factor, using the `i`-th distinguished triangle. -/
+private lemma K₀.of_chain_succ {E : C} (P : PostnikovTower C E) (i : Fin P.n) :
+    K₀.of C (P.chain.obj' (i.val + 1) (by omega)) =
+    K₀.of C (P.chain.obj' i.val (by omega)) + K₀.of C (P.factor i) := by
+  have h := K₀.of_triangle C (P.triangle i) (P.triangle_dist i)
+  have h₂ := K₀.of_iso C (Classical.choice (P.triangle_obj₂ i))
+  have h₁ := K₀.of_iso C (Classical.choice (P.triangle_obj₁ i))
+  rw [h₂, h₁] at h
+  exact h
+
+/-- Auxiliary telescoping: the K₀ class of the `k`-th chain object is the partial sum
+of K₀ classes of the first `k` factors. -/
+private lemma K₀.of_chain_eq_partial_sum {E : C} (P : PostnikovTower C E)
+    (k : ℕ) (hk : k ≤ P.n) :
+    K₀.of C (P.chain.obj' k (by omega)) =
+    ∑ i : Fin k, K₀.of C (P.factor ⟨i.val, by omega⟩) := by
+  induction k with
+  | zero =>
+    simp only [Finset.univ_eq_empty, Finset.sum_empty]
+    rw [show P.chain.obj' 0 (by omega) = P.chain.left from rfl]
+    exact K₀.of_isZero C P.base_isZero
+  | succ k ih =>
+    rw [K₀.of_chain_succ C P ⟨k, by omega⟩, ih (by omega)]
+    rw [Fin.sum_univ_castSucc]; congr 1
+
+/-- **K₀ additivity for Postnikov towers**. The K₀ class of `E` equals the sum of
+the K₀ classes of the factors: `[E] = ∑ᵢ [Fᵢ]` in K₀. This is the key algebraic
+identity used in the sector bound (**Lemma 6.2**). -/
+theorem K₀.of_postnikovTower_eq_sum {E : C} (P : PostnikovTower C E) :
+    K₀.of C E = ∑ i : Fin P.n, K₀.of C (P.factor i) := by
+  rw [show K₀.of C E = K₀.of C (P.chain.obj' P.n (by omega)) from by
+    rw [show P.chain.obj' P.n (by omega) = P.chain.right from rfl]
+    exact (K₀.of_iso C (Classical.choice P.top_iso)).symm]
+  exact K₀.of_chain_eq_partial_sum C P P.n le_rfl
 
 end CategoryTheory.Triangulated
