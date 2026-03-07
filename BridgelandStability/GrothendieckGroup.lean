@@ -90,7 +90,7 @@ def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] 
   QuotientAddGroup.lift (K₀Subgroup C) (FreeAbelianGroup.lift f)
     ((AddSubgroup.closure_le _).mpr fun x ⟨T, hT, hx⟩ ↦ by
       simp only [SetLike.mem_coe, AddMonoidHom.mem_ker, hx, map_sub,
-        FreeAbelianGroup.lift.of]
+        FreeAbelianGroup.lift_apply_of]
       have h := IsTriangleAdditive.additive (f := f) T hT
       rw [h]; abel)
 
@@ -98,6 +98,6 @@ def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] 
 @[simp]
 lemma K₀.lift_of {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] (X : C) :
     K₀.lift C f (K₀.of C X) = f X :=
-  FreeAbelianGroup.lift.of f X
+  FreeAbelianGroup.lift_apply_of f X
 
 end CategoryTheory.Triangulated

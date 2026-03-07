@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import Mathlib.CategoryTheory.Triangulated.Pretriangulated
-import Mathlib.CategoryTheory.ComposableArrows
+import Mathlib.CategoryTheory.ComposableArrows.Basic
 
 /-!
 # Postnikov Towers in Triangulated Categories

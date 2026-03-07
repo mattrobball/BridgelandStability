@@ -96,28 +96,20 @@ distinguished triangle `T`, the lifted functions agree additively. -/
 private instance eulerFormInner_isTriangleAdditive :
     IsTriangleAdditive (eulerFormInner k C) where
   additive T hT := by
-    apply AddMonoidHom.ext
-    intro y
-    simp only [AddMonoidHom.add_apply]
-    refine QuotientAddGroup.induction_on y (fun x ↦ ?_)
-    induction x using FreeAbelianGroup.induction_on with
-    | C0 =>
-      have : (QuotientAddGroup.mk (0 : FreeAbelianGroup C) : K₀ C) = 0 := rfl
-      rw [this, map_zero, map_zero, map_zero, add_zero]
-    | C1 G =>
-      show eulerFormInner k C T.obj₂ (K₀.of C G) =
-        eulerFormInner k C T.obj₁ (K₀.of C G) + eulerFormInner k C T.obj₃ (K₀.of C G)
-      unfold eulerFormInner
-      simp only [K₀.lift_of]
-      exact (EulerFormDescends.covariant (k := k) (C := C) G).additive T hT
-    | Cn G ih =>
-      have : (QuotientAddGroup.mk (-FreeAbelianGroup.of G) : K₀ C) =
-        -(QuotientAddGroup.mk (FreeAbelianGroup.of G) : K₀ C) := rfl
-      rw [this, map_neg, map_neg, map_neg, ih, neg_add_rev, add_comm]
-    | Cp x y ih1 ih2 =>
-      have : (QuotientAddGroup.mk (x + y) : K₀ C) =
-        (QuotientAddGroup.mk x : K₀ C) + (QuotientAddGroup.mk y : K₀ C) := rfl
-      rw [this, map_add, map_add, map_add, ih1, ih2, add_add_add_comm]
+    -- Goal: eulerFormInner k C T.obj₂ = eulerFormInner k C T.obj₁ + eulerFormInner k C T.obj₃
+    -- Both sides are AddMonoidHoms from K₀ C = FreeAbelianGroup C ⧸ K₀Subgroup C.
+    -- By addMonoidHom_ext, suffices to check compositions with mk' are equal.
+    -- Those are AddMonoidHoms from FreeAbelianGroup C, so use lift_ext.
+    apply QuotientAddGroup.addMonoidHom_ext
+    apply FreeAbelianGroup.lift_ext
+    intro F
+    -- Now the goal involves compositions with mk' and FreeAbelianGroup.of F
+    simp only [AddMonoidHom.comp_apply, QuotientAddGroup.mk'_apply]
+    change (eulerFormInner k C T.obj₂) (K₀.of C F) =
+      (eulerFormInner k C T.obj₁) (K₀.of C F) +
+      (eulerFormInner k C T.obj₃) (K₀.of C F)
+    simp only [eulerFormInner, K₀.lift_of]
+    exact (EulerFormDescends.covariant (k := k) F).additive T hT
 
 /-- The Euler form on K₀, a bilinear form `K₀ C →+ K₀ C →+ ℤ` constructed from
 `eulerFormObj` via the universal property of K₀ applied twice. -/
