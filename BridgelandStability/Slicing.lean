@@ -1192,6 +1192,23 @@ lemma Slicing.phiPlus_gt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero 
     -- Hom(E, E) = 0 by phase gap, so id_E = 0, so E is zero — contradiction
     exact hE ((IsZero.iff_id_eq_zero E).mpr (s.hom_eq_zero_of_phase_gap C G F hgap (𝟙 E)))
 
+/-- The intrinsic phiMinus of a nonzero object is bounded above by the upper endpoint of any
+interval containing the object. -/
+lemma Slicing.phiMinus_lt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {a b : ℝ} (hI : s.intervalProp C a b E) : s.phiMinus C E hE < b :=
+  lt_of_le_of_lt (s.phiMinus_le_phiPlus C E hE) (s.phiPlus_lt_of_intervalProp C hE hI)
+
+/-- The intrinsic phiMinus of a nonzero object is bounded below by the lower endpoint of any
+interval containing the object. -/
+lemma Slicing.phiMinus_gt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {a b : ℝ} (hI : s.intervalProp C a b E) : a < s.phiMinus C E hE := by
+  rcases hI with hZ | ⟨G, hG⟩
+  · exact absurd hZ hE
+  · obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_last C s hE
+    rw [s.phiMinus_eq C E hE F hnF hneF]
+    have hGn : 0 < G.n := G.n_pos C hE
+    exact lt_of_lt_of_le (hG ⟨G.n - 1, by omega⟩).1
+      (G.phiMinus_ge_of_nonzero_last_factor C s F hGn hnF hneF)
 
 /-- **Lemma 3.4** (left inequality). In a distinguished triangle `A → E → B → A⟦1⟧`
 where the phases of A and B lie in an interval `(a, b)` with `b ≤ a + 1`,
