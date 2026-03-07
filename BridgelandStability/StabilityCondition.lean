@@ -497,6 +497,61 @@ theorem sector_bound (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
           M / Real.cos (Real.pi * η / 2) * ‖σ.Z (K₀.of C E)‖
         ring
 
+/-- Sector bound using intrinsic phase width `phiPlus - phiMinus`. -/
+theorem sector_bound' (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
+    {E : C} (hE : ¬IsZero E) {η : ℝ} (hη : 0 ≤ η) (hη1 : η < 1)
+    (hwidth : σ.slicing.phiPlus C E hE - σ.slicing.phiMinus C E hE ≤ η)
+    {M : ℝ} (hM0 : 0 ≤ M)
+    (hM : ∀ (A : C) (φ : ℝ), σ.slicing.P φ A → ¬IsZero A →
+      ‖U (K₀.of C A)‖ ≤ M * ‖σ.Z (K₀.of C A)‖) :
+    ‖U (K₀.of C E)‖ ≤
+      M / Real.cos (Real.pi * η / 2) * ‖σ.Z (K₀.of C E)‖ := by
+  obtain ⟨F, hn, hP, hM'⟩ := σ.slicing.exists_HN_intrinsic_width C hE
+  exact sector_bound C σ U F hn hη hη1 (by rw [hP, hM']; exact hwidth) hM0 hM
+
+/-- **Node 6.2d**: For a `τ`-semistable nonzero object `E` of phase `φ` with
+`d(σ, τ) < ε < 1/2`, the `σ`-HN width of `E` is less than `2ε`, so the sector
+bound applies. Combined with the seminorm bound on `W - Z`, this controls
+`‖Z([E])‖` by `‖W([E])‖` (where `W = τ.Z` and `Z = σ.Z`). -/
+theorem norm_Z_le_of_tau_semistable (σ τ : StabilityCondition C)
+    {E : C} {φ : ℝ} (hE : ¬IsZero E) (hS : τ.slicing.P φ E)
+    {ε : ℝ} (hε : 0 < ε) (hε1 : ε < 1 / 2)
+    (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε)
+    {M : ℝ} (hM0 : 0 ≤ M)
+    (hM_bound : ∀ (A : C) (ψ : ℝ), σ.slicing.P ψ A → ¬IsZero A →
+      ‖(τ.Z - σ.Z) (K₀.of C A)‖ ≤ M * ‖σ.Z (K₀.of C A)‖) :
+    (1 - M / Real.cos (Real.pi * ε)) * ‖σ.Z (K₀.of C E)‖ ≤
+      ‖τ.Z (K₀.of C E)‖ := by
+  -- The σ-HN width of E is < 2ε (since E is τ-semistable of phase φ and d < ε)
+  have hbounds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hS hd
+  have hwidth : σ.slicing.phiPlus C E hE - σ.slicing.phiMinus C E hE ≤ 2 * ε := by
+    have := hbounds.1; have := hbounds.2
+    rw [Set.mem_Ioo] at *; linarith
+  -- Apply sector bound with η = 2ε to U = τ.Z - σ.Z
+  have h2ε : 2 * ε < 1 := by linarith
+  have hcos_eq : Real.pi * (2 * ε) / 2 = Real.pi * ε := by ring
+  have hsector := sector_bound' C σ (τ.Z - σ.Z) hE (by linarith) h2ε hwidth hM0 hM_bound
+  rw [hcos_eq] at hsector
+  -- ‖(τ.Z - σ.Z)([E])‖ ≤ M / cos(πε) * ‖Z([E])‖
+  -- By reverse triangle inequality:
+  -- ‖τ.Z([E])‖ ≥ ‖Z([E])‖ - ‖(τ.Z - σ.Z)([E])‖
+  --            ≥ ‖Z([E])‖ - M/cos(πε) * ‖Z([E])‖
+  --            = (1 - M/cos(πε)) * ‖Z([E])‖
+  have hkey : ‖(τ.Z - σ.Z) (K₀.of C E)‖ ≤
+      M / Real.cos (Real.pi * ε) * ‖σ.Z (K₀.of C E)‖ := hsector
+  calc (1 - M / Real.cos (Real.pi * ε)) * ‖σ.Z (K₀.of C E)‖
+      = ‖σ.Z (K₀.of C E)‖ - M / Real.cos (Real.pi * ε) * ‖σ.Z (K₀.of C E)‖ := by ring
+    _ ≤ ‖σ.Z (K₀.of C E)‖ - ‖(τ.Z - σ.Z) (K₀.of C E)‖ := by linarith
+    _ ≤ ‖τ.Z (K₀.of C E)‖ := by
+        have : ‖σ.Z (K₀.of C E)‖ ≤ ‖τ.Z (K₀.of C E)‖ +
+          ‖(τ.Z - σ.Z) (K₀.of C E)‖ := by
+          calc ‖σ.Z (K₀.of C E)‖
+              = ‖τ.Z (K₀.of C E) - (τ.Z - σ.Z) (K₀.of C E)‖ := by
+                congr 1; simp [AddMonoidHom.sub_apply]
+            _ ≤ ‖τ.Z (K₀.of C E)‖ + ‖(τ.Z - σ.Z) (K₀.of C E)‖ :=
+                norm_sub_le _ _
+        linarith
+
 /-! ### Topology on Stab(D) -/
 
 /-- The basis neighborhood `B_ε(σ)` for the Bridgeland topology (blueprint A10).

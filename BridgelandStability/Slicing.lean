@@ -1067,6 +1067,33 @@ lemma HNFiltration.exists_nonzero_last (s : Slicing C) {E : C} (hE : ¬IsZero E)
       exact ih (G.dropLast C hn1 hlast) hdrop
     · exact ⟨G, hGn0, hlast⟩
 
+/-- For any nonzero object, there exists an HN filtration with both nonzero first and
+last factors. This follows from `exists_nonzero_first` by repeatedly dropping zero
+last factors (which preserves the nonzero first factor). -/
+lemma HNFiltration.exists_both_nonzero (s : Slicing C) {E : C} (hE : ¬IsZero E) :
+    ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n),
+      ¬IsZero (F.triangle ⟨0, hn⟩).obj₃ ∧
+      ¬IsZero (F.triangle ⟨F.n - 1, by omega⟩).obj₃ := by
+  obtain ⟨F, hnF, hfirst⟩ := HNFiltration.exists_nonzero_first C s hE
+  suffices hmain : ∀ (m : ℕ) (G : HNFiltration C s.P E),
+      G.n ≤ m → (hG : 0 < G.n) → ¬IsZero (G.triangle ⟨0, hG⟩).obj₃ →
+      ∃ (H : HNFiltration C s.P E) (hH : 0 < H.n),
+        ¬IsZero (H.triangle ⟨0, hH⟩).obj₃ ∧
+        ¬IsZero (H.triangle ⟨H.n - 1, by omega⟩).obj₃ from
+    hmain F.n F le_rfl hnF hfirst
+  intro m; induction m with
+  | zero => intro G hGn hG _; omega
+  | succ m ih =>
+    intro G hGn hG hGfirst
+    by_cases hlast : IsZero (G.triangle ⟨G.n - 1, by omega⟩).obj₃
+    · have hn1 : 1 < G.n := by
+        by_contra h; push_neg at h
+        have : (⟨0, hG⟩ : Fin G.n) = ⟨G.n - 1, by omega⟩ := Fin.ext (by omega)
+        rw [this] at hGfirst; exact hGfirst hlast
+      exact ih (G.dropLast C hn1 hlast) (by change G.n - 1 ≤ m; omega)
+        (by change 0 < G.n - 1; omega) hGfirst
+    · exact ⟨G, hG, hGfirst, hlast⟩
+
 /-! ### Intrinsic phase bounds
 
 For a nonzero object `E` with an HN filtration, the highest and lowest phases are
@@ -1139,6 +1166,17 @@ theorem Slicing.phiMinus_le_phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) :
   have hid : (𝟙 E : E ⟶ E) = 0 :=
     s.hom_eq_zero_of_phase_gap C Fm Fp hgap (𝟙 E)
   exact hE ((IsZero.iff_id_eq_zero E).mpr hid)
+
+/-- For any nonzero object, there exists an HN filtration whose extreme phases
+match the intrinsic `phiPlus` and `phiMinus`. The filtration has nonzero first and
+last factors, so `phiPlus_eq` and `phiMinus_eq` apply. -/
+lemma Slicing.exists_HN_intrinsic_width (s : Slicing C) {E : C} (hE : ¬IsZero E) :
+    ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n),
+      F.φ ⟨0, hn⟩ = s.phiPlus C E hE ∧
+      F.φ ⟨F.n - 1, by omega⟩ = s.phiMinus C E hE := by
+  obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
+  exact ⟨F, hn, (s.phiPlus_eq C E hE F hn hfirst).symm,
+    (s.phiMinus_eq C E hE F hn hlast).symm⟩
 
 /-! ### Lemma 3.4: Triangle phase-bound inequalities
 
