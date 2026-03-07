@@ -73,14 +73,12 @@ structure StabilityCondition where
 /-- The Bridgeland generalized metric on slicings (blueprint A8). For slicings `s₁` and `s₂`,
 this is the supremum over all nonzero objects `E` of
 `max(|φ₁⁺(E) - φ₂⁺(E)|, |φ₁⁻(E) - φ₂⁻(E)|)`,
-where `φᵢ±` are the phase bounds extracted from HN filtrations.
+where `φᵢ±` are the intrinsic phase bounds (well-defined by HN filtration uniqueness).
 Values lie in `[0, ∞]`. -/
 def slicingDist (s₁ s₂ : Slicing C) : ℝ≥0∞ :=
-  ⨆ (E : C) (_ : ¬IsZero E)
-    (F₁ : HNFiltration C s₁.P E) (h₁ : 0 < F₁.n)
-    (F₂ : HNFiltration C s₂.P E) (h₂ : 0 < F₂.n),
-    ENNReal.ofReal (max |HNFiltration.phiPlus C F₁ h₁ - HNFiltration.phiPlus C F₂ h₂|
-                        |HNFiltration.phiMinus C F₁ h₁ - HNFiltration.phiMinus C F₂ h₂|)
+  ⨆ (E : C) (hE : ¬IsZero E),
+    ENNReal.ofReal (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+                        |s₁.phiMinus C E hE - s₂.phiMinus C E hE|)
 
 /-- The seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)` (blueprint A9). For a stability condition
 `σ = (Z, P)` and a group homomorphism `U : K₀(D) → ℂ`, this is

@@ -32,6 +32,8 @@ following Bridgeland's "Stability conditions on triangulated categories" (2007).
 * Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007
 -/
 
+set_option linter.style.longFile 1700
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
@@ -802,6 +804,87 @@ theorem HNFiltration.phiPlus_eq_of_nonzero_factors (s : Slicing C) {E : C}
   le_antisymm (F₁.phiPlus_le_of_nonzero_factor C s F₂ hn₁ hn₂ hne₁)
     (F₂.phiPlus_le_of_nonzero_factor C s F₁ hn₂ hn₁ hne₂)
 
+/-- If all maps from `E` to the last factor of an HN filtration are zero,
+then the last factor is zero. This is the dual of `isZero_factor_zero_of_hom_eq_zero`,
+using `yoneda_exact₃` and hom-vanishing on the shifted prefix filtration. -/
+lemma HNFiltration.isZero_factor_last_of_hom_eq_zero (s : Slicing C) {E : C}
+    (G : HNFiltration C s.P E) (hn : 0 < G.n)
+    (hzero : ∀ f : E ⟶ (G.triangle ⟨G.n - 1, by omega⟩).obj₃, f = 0) :
+    IsZero (G.triangle ⟨G.n - 1, by omega⟩).obj₃ := by
+  rw [IsZero.iff_id_eq_zero]
+  let T := G.triangle ⟨G.n - 1, by omega⟩
+  -- T.obj₂ ≅ chain.obj'(G.n) ≅ E, so T.mor₂ : T.obj₂ → T.obj₃ is zero
+  let e₂ := Classical.choice (G.triangle_obj₂ ⟨G.n - 1, by omega⟩)
+  let eE := Classical.choice G.top_iso
+  have hobj₂_eq : G.chain.obj' (G.n - 1 + 1) (by omega) = G.chain.right := by
+    simp only [ComposableArrows.obj']
+    congr 1; ext; simp; omega
+  let eR : T.obj₂ ≅ E := e₂.trans (eqToIso hobj₂_eq |>.trans eE)
+  have hmor₂ : T.mor₂ = 0 := by
+    have h1 : eR.inv ≫ T.mor₂ = 0 := hzero _
+    calc T.mor₂ = (eR.hom ≫ eR.inv) ≫ T.mor₂ := by
+            rw [eR.hom_inv_id, Category.id_comp]
+      _ = eR.hom ≫ (eR.inv ≫ T.mor₂) := by rw [Category.assoc]
+      _ = 0 := by rw [h1, comp_zero]
+  -- By yoneda_exact₃: since T.mor₂ ≫ id = 0, id = T.mor₃ ≫ γ for some γ
+  have hmor₂_id : T.mor₂ ≫ 𝟙 T.obj₃ = 0 := by rw [Category.comp_id, hmor₂]
+  obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ T (G.triangle_dist ⟨G.n - 1, by omega⟩)
+    (𝟙 T.obj₃) hmor₂_id
+  -- γ : T.obj₁⟦1⟧ → T.obj₃. Show γ = 0 by hom-vanishing on shifted prefix.
+  suffices hγ0 : γ = 0 by rw [hγ, hγ0, comp_zero]
+  let e₁ := Classical.choice (G.triangle_obj₁ ⟨G.n - 1, by omega⟩)
+  by_cases hn1 : G.n = 1
+  · -- If G.n = 1, T.obj₁ ≅ chain(0) = chain.left = 0, so T.obj₁⟦1⟧ is zero
+    have he : G.chain.obj' (G.n - 1) (by omega) = G.chain.left := by
+      simp only [ComposableArrows.obj']; congr 1; ext; simp; omega
+    have hZ : IsZero T.obj₁ :=
+      G.base_isZero.of_iso (e₁.trans (eqToIso he))
+    exact ((shiftFunctor C (1 : ℤ)).map_isZero hZ).eq_of_src _ _
+  · -- G.n ≥ 2: use the shifted prefix filtration on T.obj₁⟦1⟧
+    let e₁_shift := (shiftFunctor C (1 : ℤ)).mapIso e₁
+    let pfx := G.prefix C (G.n - 1) (by omega) (by omega)
+    let pfx_shift := pfx.shiftHN C s (1 : ℤ)
+    let pfx_on_T := pfx_shift.ofIso C e₁_shift.symm
+    have hpn : pfx_on_T.n = G.n - 1 := rfl
+    have hphases : ∀ j : Fin pfx_on_T.n,
+        G.φ ⟨G.n - 1, by omega⟩ < pfx_on_T.φ j := by
+      intro ⟨j, hj⟩
+      change G.φ ⟨G.n - 1, by omega⟩ < G.φ ⟨j, by omega⟩ + (1 : ℤ)
+      have h1 : G.φ ⟨j, by omega⟩ ≥ G.φ ⟨G.n - 1, by omega⟩ :=
+        G.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+      have h2 : ((1 : ℤ) : ℝ) = 1 := by norm_num
+      linarith
+    exact s.hom_eq_zero_of_lt_phases C
+      (G.semistable ⟨G.n - 1, by omega⟩) pfx_on_T hphases γ
+
+/-- The lowest phase of an HN filtration with nonzero last factor is bounded below
+by the lowest phase of any other HN filtration. Dual of `phiPlus_le_of_nonzero_factor`. -/
+theorem HNFiltration.phiMinus_ge_of_nonzero_last_factor (s : Slicing C) {E : C}
+    (F₁ F₂ : HNFiltration C s.P E) (hn₁ : 0 < F₁.n) (hn₂ : 0 < F₂.n)
+    (hne₂ : ¬IsZero (F₂.triangle ⟨F₂.n - 1, by omega⟩).obj₃) :
+    F₁.phiMinus C hn₁ ≤ F₂.phiMinus C hn₂ := by
+  by_contra hlt
+  push_neg at hlt
+  -- F₁.φ(n₁-1) > F₂.φ(n₂-1), so all F₁ phases > F₂.φ(n₂-1)
+  have hgap : ∀ j : Fin F₁.n, F₂.φ ⟨F₂.n - 1, by omega⟩ < F₁.φ j := fun j ↦
+    lt_of_lt_of_le (by change F₂.phiMinus C hn₂ < F₁.phiMinus C hn₁; exact hlt)
+      (F₁.hφ.antitone (Fin.mk_le_mk.mpr (by omega)))
+  -- By hom_eq_zero_of_lt_phases, Hom(E, factor₂(n₂-1)) = 0
+  have hzero : ∀ f : E ⟶ (F₂.triangle ⟨F₂.n - 1, by omega⟩).obj₃, f = 0 :=
+    fun f ↦ s.hom_eq_zero_of_lt_phases C
+      (F₂.semistable ⟨F₂.n - 1, by omega⟩) F₁ hgap f
+  exact hne₂ (F₂.isZero_factor_last_of_hom_eq_zero C s hn₂ hzero)
+
+/-- For any two HN filtrations of a nonzero object where both have nonzero last factors,
+the lowest phases agree. Dual of `phiPlus_eq_of_nonzero_factors`. -/
+theorem HNFiltration.phiMinus_eq_of_nonzero_last_factors (s : Slicing C) {E : C}
+    (F₁ F₂ : HNFiltration C s.P E) (hn₁ : 0 < F₁.n) (hn₂ : 0 < F₂.n)
+    (hne₁ : ¬IsZero (F₁.triangle ⟨F₁.n - 1, by omega⟩).obj₃)
+    (hne₂ : ¬IsZero (F₂.triangle ⟨F₂.n - 1, by omega⟩).obj₃) :
+    F₁.phiMinus C hn₁ = F₂.phiMinus C hn₂ :=
+  le_antisymm (F₁.phiMinus_ge_of_nonzero_last_factor C s F₂ hn₁ hn₂ hne₂)
+    (F₂.phiMinus_ge_of_nonzero_last_factor C s F₁ hn₂ hn₁ hne₁)
+
 /-- For any HN filtration of a nonzero object, at least one factor is nonzero.
 If all factors were zero, the chain would start and end at zero, contradicting E nonzero. -/
 lemma HNFiltration.exists_nonzero_factor {P : ℝ → ObjectProperty C} {E : C}
@@ -872,7 +955,8 @@ def HNFiltration.dropFirst {P : ℝ → ObjectProperty C} {E : C}
       simp [ComposableArrows.obj', ComposableArrows.mkOfObjOfMapSucc_obj]
     base_isZero := by
       change IsZero ((ComposableArrows.mkOfObjOfMapSucc _ _).obj ⟨0, _⟩)
-      simp [ComposableArrows.mkOfObjOfMapSucc_obj]
+      simp only [ComposableArrows.map', homOfLE_leOfHom, Fin.zero_eta,
+        ComposableArrows.mkOfObjOfMapSucc_obj, Fin.coe_ofNat_eq_mod, Nat.zero_mod, zero_add]
       exact chain1_zero
     top_iso := ⟨by
       change (ComposableArrows.mkOfObjOfMapSucc _ _).obj ⟨F.n - 1, _⟩ ≅ E
@@ -944,8 +1028,8 @@ def HNFiltration.dropLast {P : ℝ → ObjectProperty C} {E : C}
     top_iso := ⟨(Classical.choice pfx.top_iso).trans
       (e₁.symm.trans ((asIso Tn.mor₁).trans
         (e₂.trans ((eqToIso (by
-          simp [ComposableArrows.obj', ComposableArrows.right]
-          congr 1; ext; simp [Fin.last]; omega)).trans
+          simp only [ComposableArrows.obj']
+          congr 1; ext; simp; omega)).trans
           (Classical.choice F.top_iso)))))⟩
     zero_isZero := fun h ↦ by omega
     φ := pfx.φ
@@ -999,10 +1083,11 @@ noncomputable def Slicing.phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) : �
   F.φ ⟨0, hn⟩
 
 /-- The intrinsic lowest phase of a nonzero object with respect to a slicing.
-This is the phase of the last factor in any HN filtration with nonzero first factor. -/
+This is the phase of the last factor in any HN filtration with nonzero last factor.
+Well-defined by `phiMinus_eq_of_nonzero_last_factors`. -/
 noncomputable def Slicing.phiMinus (s : Slicing C) (E : C) (hE : ¬IsZero E) : ℝ :=
-  let F := (HNFiltration.exists_nonzero_first C s hE).choose
-  let hn : 0 < F.n := (HNFiltration.exists_nonzero_first C s hE).choose_spec.choose
+  let F := (HNFiltration.exists_nonzero_last C s hE).choose
+  let hn : 0 < F.n := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
   F.φ ⟨F.n - 1, Nat.sub_one_lt_of_le hn le_rfl⟩
 
 /-- `Slicing.phiPlus` equals `G.φ ⟨0, hn⟩` for any HN filtration `G` with nonzero
@@ -1018,14 +1103,41 @@ theorem Slicing.phiPlus_eq (s : Slicing C) (E : C) (hE : ¬IsZero E)
   change F.φ ⟨0, hnF⟩ = G.φ ⟨0, hn⟩
   exact HNFiltration.phiPlus_eq_of_nonzero_factors C s F G hnF hn hneF hne
 
+/-- `Slicing.phiMinus` equals `G.φ ⟨G.n - 1, _⟩` for any HN filtration `G`
+with nonzero last factor. -/
+theorem Slicing.phiMinus_eq (s : Slicing C) (E : C) (hE : ¬IsZero E)
+    (G : HNFiltration C s.P E) (hn : 0 < G.n)
+    (hne : ¬IsZero (G.triangle ⟨G.n - 1, by omega⟩).obj₃) :
+    s.phiMinus C E hE = G.φ ⟨G.n - 1, by omega⟩ := by
+  unfold Slicing.phiMinus
+  let F := (HNFiltration.exists_nonzero_last C s hE).choose
+  let hnF := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
+  let hneF := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose_spec
+  change F.φ ⟨F.n - 1, _⟩ = G.φ ⟨G.n - 1, _⟩
+  exact HNFiltration.phiMinus_eq_of_nonzero_last_factors C s F G hnF hn hneF hne
+
 /-- `Slicing.phiMinus ≤ Slicing.phiPlus` for nonzero objects. -/
 theorem Slicing.phiMinus_le_phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) :
     s.phiMinus C E hE ≤ s.phiPlus C E hE := by
-  unfold Slicing.phiPlus Slicing.phiMinus
-  let F := (HNFiltration.exists_nonzero_first C s hE).choose
-  let hn := (HNFiltration.exists_nonzero_first C s hE).choose_spec.choose
-  change F.φ ⟨F.n - 1, _⟩ ≤ F.φ ⟨0, hn⟩
-  exact F.hφ.antitone (Fin.mk_le_mk.mpr (by have := hn; omega))
+  by_contra hlt
+  push_neg at hlt
+  -- phiMinus > phiPlus. The filtration from exists_nonzero_last has all phases ≥ phiMinus,
+  -- and from exists_nonzero_first all phases ≤ phiPlus. So there's a phase gap.
+  let Fp := (HNFiltration.exists_nonzero_first C s hE).choose
+  let hnp := (HNFiltration.exists_nonzero_first C s hE).choose_spec.choose
+  let Fm := (HNFiltration.exists_nonzero_last C s hE).choose
+  let hnm := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
+  -- All Fm phases ≥ phiMinus > phiPlus ≥ all Fp phases
+  have hgap : ∀ i j, Fp.φ j < Fm.φ i := fun i j ↦
+    calc Fp.φ j ≤ Fp.φ ⟨0, hnp⟩ := Fp.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))
+      _ = s.phiPlus C E hE := by unfold Slicing.phiPlus; rfl
+      _ < s.phiMinus C E hE := hlt
+      _ = Fm.φ ⟨Fm.n - 1, _⟩ := by unfold Slicing.phiMinus; rfl
+      _ ≤ Fm.φ i := Fm.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+  -- By hom_eq_zero_of_phase_gap: 𝟙 E = 0, so E is zero
+  have hid : (𝟙 E : E ⟶ E) = 0 :=
+    s.hom_eq_zero_of_phase_gap C Fm Fp hgap (𝟙 E)
+  exact hE ((IsZero.iff_id_eq_zero E).mpr hid)
 
 /-! ### Lemma 3.4: Triangle phase-bound inequalities
 
@@ -1142,6 +1254,69 @@ theorem Slicing.phiPlus_triangle_le (s : Slicing C) {A E B : C}
   -- But A⁺ is nonzero, and all maps to A are zero — contradiction
   exact hneA (FA.isZero_factor_zero_of_hom_eq_zero C s hnA hA_factor_zero)
 
+/-- **Lemma 3.4** (right inequality). In a distinguished triangle `A → E → B → A⟦1⟧`
+where the phases of A and B lie in an interval `(a, b)` with `b ≤ a + 1`,
+we have `φ⁻(E) ≤ φ⁻(B)`.
+
+The proof uses the Yoneda exact sequence: if `φ⁻(E) > φ⁻(B)`, then maps `E → B⁻`
+vanish by hom-vanishing; by exactness, maps `B → B⁻` factor through `A⟦1⟧`, but
+A's shifted phases are too high, so all maps `A⟦1⟧ → B⁻` vanish too, giving
+`B⁻ = 0`, a contradiction. -/
+theorem Slicing.phiMinus_triangle_le (s : Slicing C) {A E B : C}
+    (hB : ¬IsZero B) (hE : ¬IsZero E)
+    {a b : ℝ} (hab : b ≤ a + 1)
+    (hA_int : s.intervalProp C a b A)
+    (hB_int : s.intervalProp C a b B)
+    {f : A ⟶ E} {g : E ⟶ B} {h : B ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g h ∈ distTriang C) :
+    s.phiMinus C E hE ≤ s.phiMinus C B hB := by
+  -- Get filtrations with nonzero last factors
+  obtain ⟨FB, hnB, hneB⟩ := HNFiltration.exists_nonzero_last C s hB
+  obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hE
+  rw [s.phiMinus_eq C E hE FE hnE hneE, s.phiMinus_eq C B hB FB hnB hneB]
+  -- Suppose for contradiction that φ⁻(E) > φ⁻(B)
+  by_contra hlt
+  push_neg at hlt
+  -- All E-phases > FB.φ(n-1)
+  have hE_gap : ∀ j : Fin FE.n, FB.φ ⟨FB.n - 1, by omega⟩ < FE.φ j := fun j ↦
+    lt_of_lt_of_le hlt (FE.hφ.antitone (Fin.mk_le_mk.mpr (by omega)))
+  -- All maps B → B⁻ are zero
+  have hB_factor_zero :
+      ∀ α : B ⟶ (FB.triangle ⟨FB.n - 1, by omega⟩).obj₃, α = 0 := by
+    intro α
+    -- g ≫ α : E → B⁻ is zero by hom-vanishing
+    have hgα : g ≫ α = 0 :=
+      s.hom_eq_zero_of_lt_phases C (FB.semistable ⟨FB.n - 1, by omega⟩) FE hE_gap _
+    -- By yoneda_exact₃ on T, α = h ≫ γ for some γ : A⟦1⟧ → B⁻
+    obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ (Triangle.mk f g h) hT α hgα
+    -- Show γ = 0
+    suffices hγ0 : γ = 0 by rw [hγ, hγ0]; exact comp_zero
+    by_cases hAZ : IsZero A
+    · exact ((shiftFunctor C (1 : ℤ)).map_isZero hAZ).eq_of_src γ 0
+    · -- Get an HN filtration of A⟦1⟧ from hA_int
+      rcases hA_int with hAZ' | ⟨GA, hGA⟩
+      · exact absurd hAZ' hAZ
+      · -- Shift GA by 1 to get filtration of A⟦1⟧
+        let GAs := GA.shiftHN C s (1 : ℤ)
+        -- GAs.φ(j) = GA.φ(j) + 1 > a + 1 ≥ b > FB.φ(n-1)
+        have hAs_gap : ∀ j : Fin GAs.n,
+            FB.φ ⟨FB.n - 1, by omega⟩ < GAs.φ j := by
+          intro j
+          change FB.φ ⟨FB.n - 1, by omega⟩ < GA.φ j + ((1 : ℤ) : ℝ)
+          have h1 : GA.φ j > a := (hGA j).1
+          have h2 : FB.φ ⟨FB.n - 1, by omega⟩ < b := by
+            calc FB.φ ⟨FB.n - 1, by omega⟩
+                = s.phiMinus C B hB :=
+                  (s.phiMinus_eq C B hB FB hnB hneB).symm
+              _ ≤ s.phiPlus C B hB := s.phiMinus_le_phiPlus C B hB
+              _ < b := s.phiPlus_lt_of_intervalProp C hB hB_int
+          have h3 : ((1 : ℤ) : ℝ) = 1 := by norm_num
+          linarith
+        exact s.hom_eq_zero_of_lt_phases C
+          (FB.semistable ⟨FB.n - 1, by omega⟩) GAs hAs_gap γ
+  -- But B⁻ is nonzero and all maps B → B⁻ vanish — contradiction
+  exact hneB (FB.isZero_factor_last_of_hom_eq_zero C s hnB hB_factor_zero)
+
 /-! ### Single-factor HN filtrations -/
 
 /-- Construct a 1-factor HN filtration for a semistable object. -/
@@ -1177,6 +1352,21 @@ lemma Slicing.gtProp_of_semistable (s : Slicing C) (φ t : ℝ) (S : C)
     s.gtProp C t S :=
   Or.inr ⟨HNFiltration.single C S φ hS,
     show 0 < 1 from by omega, hgt⟩
+
+/-- For a semistable nonzero object, `phiPlus = phiMinus = φ`. -/
+theorem Slicing.phiPlus_eq_phiMinus_of_semistable (s : Slicing C) {E : C} {φ : ℝ}
+    (hS : (s.P φ) E) (hE : ¬IsZero E) :
+    s.phiPlus C E hE = φ ∧ s.phiMinus C E hE = φ := by
+  let F := HNFiltration.single C E φ hS
+  have hn : (0 : ℕ) < F.n := by change 0 < 1; omega
+  have hne : ¬IsZero (F.triangle ⟨0, hn⟩).obj₃ := by
+    change ¬IsZero (Triangle.mk (0 : (0 : C) ⟶ E) (𝟙 E) 0).obj₃
+    exact hE
+  constructor
+  · exact s.phiPlus_eq C E hE F hn hne
+  · have hneL : ¬IsZero (F.triangle ⟨F.n - 1, by omega⟩).obj₃ := by
+      change ¬IsZero (F.triangle ⟨0, hn⟩).obj₃; exact hne
+    exact s.phiMinus_eq C E hE F hn hneL
 
 /-! ### Bounded t-structures -/
 
