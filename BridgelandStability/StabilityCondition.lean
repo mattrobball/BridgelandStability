@@ -143,6 +143,51 @@ theorem norm_sum_ge_cos_mul_sum_norm {ι : Type*} {s : Finset ι} {z : ι → �
         have : -(↑(α + w / 2) * I) = ↑(-(α + w / 2)) * I := by push_cast; ring
         rw [this, Complex.norm_exp_ofReal_mul_I, mul_one]
 
+/-- **Sector norm bound (explicit exponential form)**. If complex numbers have the form
+`m i * exp(i * θ i)` with `m i > 0` and all `θ i` in an interval `(α, α + w)` with `w < π`,
+then `cos(w/2) · ∑ m i ≤ ‖∑ m i * exp(i θ i)‖`.
+
+This variant avoids `Complex.arg` and works with explicit phase angles, which is needed when
+phases can be any real number (not just in `(-π, π]`). Used in the **Lemma 6.2** sector bound. -/
+theorem norm_sum_exp_ge_cos_mul_sum {ι : Type*} {s : Finset ι}
+    {m : ι → ℝ} {θ : ι → ℝ}
+    (hm : ∀ i ∈ s, 0 ≤ m i)
+    {α w : ℝ} (hw0 : 0 ≤ w) (hwπ : w < Real.pi)
+    (hθ : ∀ i ∈ s, θ i ∈ Set.Icc α (α + w)) :
+    Real.cos (w / 2) * ∑ i ∈ s, m i ≤
+      ‖∑ i ∈ s, ↑(m i) * exp (↑(θ i) * I)‖ := by
+  -- Project onto the bisector direction β = α + w/2
+  set β := α + w / 2
+  -- Step 1: pointwise bound on real part after rotation
+  have point : ∀ i ∈ s, Real.cos (w / 2) * m i ≤
+      ((↑(m i) * exp (↑(θ i) * I)) * exp (-(↑β * I))).re := by
+    intro i hi
+    rw [mul_assoc, ← Complex.exp_add]
+    have : ↑(θ i) * I + -(↑β * I) = ↑(θ i - β) * I := by push_cast; ring
+    rw [this, Complex.re_ofReal_mul, Complex.exp_ofReal_mul_I_re]
+    have hd : |θ i - β| ≤ w / 2 := by
+      rw [abs_le]; constructor <;> [have := (hθ i hi).1; have := (hθ i hi).2] <;>
+        simp only [β] <;> linarith
+    calc Real.cos (w / 2) * m i
+        ≤ Real.cos (θ i - β) * m i := by
+          apply mul_le_mul_of_nonneg_right _ (hm i hi)
+          rw [← Real.cos_abs (θ i - β)]
+          exact Real.cos_le_cos_of_nonneg_of_le_pi (abs_nonneg _) (by linarith) hd
+      _ = m i * Real.cos (θ i - β) := mul_comm _ _
+  -- Step 2: sum, then bound re by norm
+  calc Real.cos (w / 2) * ∑ i ∈ s, m i
+      = ∑ i ∈ s, (Real.cos (w / 2) * m i) := Finset.mul_sum s _ _
+    _ ≤ ∑ i ∈ s, ((↑(m i) * exp (↑(θ i) * I)) * exp (-(↑β * I))).re :=
+        Finset.sum_le_sum point
+    _ ≤ ((∑ i ∈ s, ↑(m i) * exp (↑(θ i) * I)) * exp (-(↑β * I))).re := by
+        rw [Finset.sum_mul, Complex.re_sum]
+    _ ≤ ‖(∑ i ∈ s, ↑(m i) * exp (↑(θ i) * I)) * exp (-(↑β * I))‖ :=
+        Complex.re_le_norm _
+    _ = ‖∑ i ∈ s, ↑(m i) * exp (↑(θ i) * I)‖ := by
+        rw [norm_mul]
+        have : -(↑β * I) = ↑(-β) * I := by push_cast; ring
+        rw [this, Complex.norm_exp_ofReal_mul_I, mul_one]
+
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
@@ -361,6 +406,96 @@ def finiteSeminormSubgroup (σ : StabilityCondition C) : AddSubgroup (K₀ C →
     change stabSeminorm C σ (-U) < ⊤
     convert hU using 1
     simp [stabSeminorm, AddMonoidHom.neg_apply, norm_neg]
+
+/-! ### Sector bound (Lemma 6.2 core) -/
+
+/-- **Sector bound (Lemma 6.2 core)**. For a stability condition `σ = (Z, P)` and a group
+homomorphism `U : K₀ C →+ ℂ`, if every semistable factor satisfies
+`‖U([A])‖ ≤ M · ‖Z([A])‖`, then the bound extends to any object `E` with narrow HN width:
+`‖U([E])‖ ≤ (M / cos(πη/2)) · ‖Z([E])‖`, where `η` bounds the HN phase width.
+
+The proof decomposes `E` via its HN filtration (a PostnikovTower with phase data),
+applies K₀ additivity, the pointwise seminorm bound on factors, and the
+sector estimate `norm_sum_exp_ge_cos_mul_sum`. -/
+theorem sector_bound (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
+    {E : C} (F : HNFiltration C σ.slicing.P E) (hn : 0 < F.n)
+    {η : ℝ} (hη : 0 ≤ η) (hη1 : η < 1)
+    (hwidth : F.φ ⟨0, hn⟩ - F.φ ⟨F.n - 1, by omega⟩ ≤ η)
+    {M : ℝ} (hM0 : 0 ≤ M)
+    (hM : ∀ (A : C) (φ : ℝ), σ.slicing.P φ A → ¬IsZero A →
+      ‖U (K₀.of C A)‖ ≤ M * ‖σ.Z (K₀.of C A)‖) :
+    ‖U (K₀.of C E)‖ ≤
+      M / Real.cos (Real.pi * η / 2) * ‖σ.Z (K₀.of C E)‖ := by
+  set P := F.toPostnikovTower
+  -- K₀ decomposition
+  have hK₀ : K₀.of C E = ∑ i : Fin F.n, K₀.of C (P.factor i) :=
+    K₀.of_postnikovTower_eq_sum C P
+  -- U and Z decompose over factors
+  have hUE : U (K₀.of C E) = ∑ i : Fin F.n, U (K₀.of C (P.factor i)) := by
+    rw [hK₀, map_sum]
+  have hZE : σ.Z (K₀.of C E) = ∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i)) := by
+    rw [hK₀, map_sum]
+  -- Seminorm bound on each factor
+  have hMi : ∀ i : Fin F.n,
+      ‖U (K₀.of C (P.factor i))‖ ≤ M * ‖σ.Z (K₀.of C (P.factor i))‖ := by
+    intro i
+    by_cases hi : IsZero (P.factor i)
+    · have h0 := K₀.of_isZero C hi; simp [h0]
+    · exact hM _ _ (F.semistable i) hi
+  -- Z decomposition: Z(factor i) = ‖Z(factor i)‖ * exp(iπφᵢ)
+  have hZi : ∀ i : Fin F.n,
+      σ.Z (K₀.of C (P.factor i)) =
+      ↑(‖σ.Z (K₀.of C (P.factor i))‖) * exp (↑(Real.pi * F.φ i) * I) := by
+    intro i
+    by_cases hi : IsZero (P.factor i)
+    · have h0 := K₀.of_isZero C hi; simp [h0]
+    · obtain ⟨m, hm, hmZ⟩ := σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
+      rw [hmZ]; congr 1
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
+        Complex.norm_exp_ofReal_mul_I, mul_one]
+  -- Phase containment
+  set α := Real.pi * F.φ ⟨F.n - 1, by omega⟩
+  set w := Real.pi * η
+  have hwπ : w < Real.pi := by
+    change Real.pi * η < Real.pi; nlinarith [Real.pi_pos]
+  have hw0 : 0 ≤ w := by change 0 ≤ Real.pi * η; positivity
+  have hθ : ∀ i : Fin F.n, Real.pi * F.φ i ∈ Set.Icc α (α + w) := by
+    intro i; simp only [Set.mem_Icc, α, w]; constructor
+    · exact mul_le_mul_of_nonneg_left
+        (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))) (le_of_lt Real.pi_pos)
+    · calc Real.pi * F.φ i
+          ≤ Real.pi * F.φ ⟨0, hn⟩ := mul_le_mul_of_nonneg_left
+            (F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) (le_of_lt Real.pi_pos)
+        _ ≤ Real.pi * F.φ ⟨F.n - 1, by omega⟩ + Real.pi * η := by nlinarith
+  -- Sector estimate: cos(πη/2) * ∑ ‖Z(fi)‖ ≤ ‖Z(E)‖
+  have hcos_pos : 0 < Real.cos (w / 2) := by
+    apply Real.cos_pos_of_mem_Ioo; constructor <;> [linarith; linarith]
+  have hsector : Real.cos (w / 2) * ∑ i : Fin F.n, ‖σ.Z (K₀.of C (P.factor i))‖ ≤
+      ‖σ.Z (K₀.of C E)‖ := by
+    calc Real.cos (w / 2) * ∑ i : Fin F.n, ‖σ.Z (K₀.of C (P.factor i))‖
+        ≤ ‖∑ i : Fin F.n,
+            ↑(‖σ.Z (K₀.of C (P.factor i))‖) * exp (↑(Real.pi * F.φ i) * I)‖ :=
+          norm_sum_exp_ge_cos_mul_sum (fun i _ ↦ norm_nonneg _) hw0 hwπ (fun i _ ↦ hθ i)
+      _ = ‖∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i))‖ := by
+          congr 1; exact Finset.sum_congr rfl (fun i _ ↦ (hZi i).symm)
+      _ = ‖σ.Z (K₀.of C E)‖ := by rw [← hZE]
+  -- Combine
+  have hsum_bound : ∑ i : Fin F.n, ‖σ.Z (K₀.of C (P.factor i))‖ ≤
+      ‖σ.Z (K₀.of C E)‖ / Real.cos (w / 2) := by
+    rw [le_div_iff₀ hcos_pos, mul_comm]; exact hsector
+  calc ‖U (K₀.of C E)‖
+      = ‖∑ i : Fin F.n, U (K₀.of C (P.factor i))‖ := by rw [hUE]
+    _ ≤ ∑ i : Fin F.n, ‖U (K₀.of C (P.factor i))‖ := norm_sum_le _ _
+    _ ≤ ∑ i : Fin F.n, M * ‖σ.Z (K₀.of C (P.factor i))‖ :=
+        Finset.sum_le_sum (fun i _ ↦ hMi i)
+    _ = M * ∑ i : Fin F.n, ‖σ.Z (K₀.of C (P.factor i))‖ :=
+        (Finset.mul_sum _ _ _).symm
+    _ ≤ M * (‖σ.Z (K₀.of C E)‖ / Real.cos (w / 2)) :=
+        mul_le_mul_of_nonneg_left hsum_bound hM0
+    _ = M / Real.cos (Real.pi * η / 2) * ‖σ.Z (K₀.of C E)‖ := by
+        change M * (‖σ.Z (K₀.of C E)‖ / Real.cos (Real.pi * η / 2)) =
+          M / Real.cos (Real.pi * η / 2) * ‖σ.Z (K₀.of C E)‖
+        ring
 
 /-! ### Topology on Stab(D) -/
 
