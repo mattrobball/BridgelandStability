@@ -32,6 +32,7 @@ generator.
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits
+open scoped ZeroObject
 
 universe v u
 
@@ -76,6 +77,40 @@ lemma K₀.of_triangle (T : Pretriangulated.Triangle C) (hT : T ∈ distTriang C
     AddSubgroup.subset_closure ⟨T, hT, rfl⟩
   convert (K₀Subgroup C).neg_mem h using 1
   abel
+
+/-- The class of the explicit zero object vanishes in K₀. -/
+lemma K₀.of_zero : K₀.of C (0 : C) = 0 := by
+  have h := K₀.of_triangle C (Pretriangulated.contractibleTriangle (0 : C))
+    (Pretriangulated.contractible_distinguished (0 : C))
+  -- h : K₀.of C (contractibleTriangle 0).obj₂ = ... + K₀.of C (contractibleTriangle 0).obj₃
+  -- contractibleTriangle 0 = Triangle.mk (𝟙 0) (0 : 0 ⟶ 0) 0
+  -- obj₁ = obj₂ = 0, obj₃ = 0
+  simp only [Pretriangulated.contractibleTriangle] at h
+  -- h : K₀.of C 0 = K₀.of C 0 + K₀.of C 0
+  have : K₀.of C (0 : C) + 0 = K₀.of C (0 : C) + K₀.of C (0 : C) := by
+    rw [add_zero]; exact h
+  exact (add_left_cancel this).symm
+
+/-- Isomorphic objects have the same class in K₀. -/
+lemma K₀.of_iso {X Y : C} (e : X ≅ Y) : K₀.of C X = K₀.of C Y := by
+  have hdist := Pretriangulated.isomorphic_distinguished _
+    (Pretriangulated.contractible_distinguished X)
+    (Pretriangulated.Triangle.mk e.hom (0 : Y ⟶ (0 : C)) 0)
+    (Pretriangulated.Triangle.isoMk
+      (Pretriangulated.Triangle.mk e.hom (0 : Y ⟶ (0 : C)) 0)
+      (Pretriangulated.contractibleTriangle X)
+      (Iso.refl _) e.symm (Iso.refl _)
+      (by simp [Pretriangulated.contractibleTriangle])
+      (by simp [Pretriangulated.contractibleTriangle])
+      (by simp [Pretriangulated.contractibleTriangle]))
+  have h := K₀.of_triangle C _ hdist
+  simp only [Pretriangulated.Triangle.mk] at h
+  rw [K₀.of_zero, add_zero] at h
+  exact h.symm
+
+/-- The class of a zero object vanishes in K₀. -/
+lemma K₀.of_isZero {X : C} (hX : IsZero X) : K₀.of C X = 0 := by
+  rw [K₀.of_iso C (hX.iso (isZero_zero C)), K₀.of_zero]
 
 variable {C} in
 /-- A function `f : C → A` to an additive group is triangle-additive if
