@@ -1210,6 +1210,36 @@ lemma Slicing.phiMinus_gt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero
     exact lt_of_lt_of_le (hG ⟨G.n - 1, by omega⟩).1
       (G.phiMinus_ge_of_nonzero_last_factor C s F hGn hnF hneF)
 
+/-! ### Contrapositive hom-vanishing lemmas -/
+
+/-- If a semistable object of phase `φ` maps nonzero to `X`, then `φ ≤ φ⁺(X)`. This is the
+contrapositive of `hom_eq_zero_of_gt_phases`. -/
+lemma Slicing.phase_le_phiPlus_of_nonzero_hom (s : Slicing C) {A X : C} {φ : ℝ}
+    (hA : (s.P φ) A) (hX : ¬IsZero X) (f : A ⟶ X) (hf : f ≠ 0) :
+    φ ≤ s.phiPlus C X hX := by
+  by_contra h
+  push_neg at h
+  obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_first C s hX
+  have hlt : ∀ j : Fin F.n, F.φ j < φ := fun j ↦
+    calc F.φ j ≤ F.φ ⟨0, hnF⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))
+      _ = s.phiPlus C X hX := (s.phiPlus_eq C X hX F hnF hneF).symm
+      _ < φ := h
+  exact hf (s.hom_eq_zero_of_gt_phases C hA F hlt f)
+
+/-- If `X` maps nonzero to a semistable object of phase `ψ`, then `φ⁻(X) ≤ ψ`. This is the
+contrapositive of `hom_eq_zero_of_lt_phases`. -/
+lemma Slicing.phiMinus_le_phase_of_nonzero_hom (s : Slicing C) {X B : C} {ψ : ℝ}
+    (hB : (s.P ψ) B) (hX : ¬IsZero X) (f : X ⟶ B) (hf : f ≠ 0) :
+    s.phiMinus C X hX ≤ ψ := by
+  by_contra h
+  push_neg at h
+  obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_last C s hX
+  have hgt : ∀ j : Fin F.n, ψ < F.φ j := fun j ↦
+    calc ψ < s.phiMinus C X hX := h
+      _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C X hX F hnF hneF
+      _ ≤ F.φ j := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+  exact hf (s.hom_eq_zero_of_lt_phases C hB F hgt f)
+
 /-- **Lemma 3.4** (left inequality). In a distinguished triangle `A → E → B → A⟦1⟧`
 where the phases of A and B lie in an interval `(a, b)` with `b ≤ a + 1`,
 we have `φ⁺(A) ≤ φ⁺(E)`.

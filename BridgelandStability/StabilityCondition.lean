@@ -80,6 +80,103 @@ def slicingDist (s₁ s₂ : Slicing C) : ℝ≥0∞ :=
     ENNReal.ofReal (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
                         |s₁.phiMinus C E hE - s₂.phiMinus C E hE|)
 
+/-- The Bridgeland generalized metric is symmetric: `d(P, Q) = d(Q, P)`. -/
+theorem slicingDist_symm (s₁ s₂ : Slicing C) :
+    slicingDist C s₁ s₂ = slicingDist C s₂ s₁ := by
+  simp only [slicingDist, abs_sub_comm]
+
+/-- The Bridgeland generalized metric satisfies the triangle inequality. -/
+theorem slicingDist_triangle (s₁ s₂ s₃ : Slicing C) :
+    slicingDist C s₁ s₃ ≤ slicingDist C s₁ s₂ + slicingDist C s₂ s₃ := by
+  apply iSup_le
+  intro E
+  apply iSup_le
+  intro hE
+  calc ENNReal.ofReal (max |s₁.phiPlus C E hE - s₃.phiPlus C E hE|
+          |s₁.phiMinus C E hE - s₃.phiMinus C E hE|)
+      ≤ ENNReal.ofReal (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+            |s₁.phiMinus C E hE - s₂.phiMinus C E hE|) +
+        ENNReal.ofReal (max |s₂.phiPlus C E hE - s₃.phiPlus C E hE|
+            |s₂.phiMinus C E hE - s₃.phiMinus C E hE|) := by
+        rw [← ENNReal.ofReal_add (le_max_of_le_left (abs_nonneg _))
+          (le_max_of_le_left (abs_nonneg _))]
+        apply ENNReal.ofReal_le_ofReal
+        have abs_tri : ∀ (a b c : ℝ), |a - c| ≤ |a - b| + |b - c| := fun a b c ↦ by
+          calc |a - c| = |(a - b) + (b - c)| := by ring_nf
+            _ ≤ |a - b| + |b - c| := abs_add_le _ _
+        apply max_le
+        · calc |s₁.phiPlus C E hE - s₃.phiPlus C E hE|
+              ≤ |s₁.phiPlus C E hE - s₂.phiPlus C E hE| +
+                |s₂.phiPlus C E hE - s₃.phiPlus C E hE| := abs_tri _ _ _
+            _ ≤ max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+                  |s₁.phiMinus C E hE - s₂.phiMinus C E hE| +
+                max |s₂.phiPlus C E hE - s₃.phiPlus C E hE|
+                  |s₂.phiMinus C E hE - s₃.phiMinus C E hE| :=
+              add_le_add (le_max_left _ _) (le_max_left _ _)
+        · calc |s₁.phiMinus C E hE - s₃.phiMinus C E hE|
+              ≤ |s₁.phiMinus C E hE - s₂.phiMinus C E hE| +
+                |s₂.phiMinus C E hE - s₃.phiMinus C E hE| := abs_tri _ _ _
+            _ ≤ max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+                  |s₁.phiMinus C E hE - s₂.phiMinus C E hE| +
+                max |s₂.phiPlus C E hE - s₃.phiPlus C E hE|
+                  |s₂.phiMinus C E hE - s₃.phiMinus C E hE| :=
+              add_le_add (le_max_right _ _) (le_max_right _ _)
+    _ ≤ slicingDist C s₁ s₂ + slicingDist C s₂ s₃ := by
+        exact add_le_add (le_iSup_of_le E (le_iSup_of_le hE le_rfl))
+          (le_iSup_of_le E (le_iSup_of_le hE le_rfl))
+
+/-- If the slicing distance is less than `ε`, the intrinsic `φ⁺` values are within `ε`.
+This is one direction of **Lemma 6.1**. -/
+theorem phiPlus_sub_lt_of_slicingDist (s₁ s₂ : Slicing C) {E : C} (hE : ¬IsZero E)
+    {ε : ℝ}
+    (hd : slicingDist C s₁ s₂ < ENNReal.ofReal ε) :
+    |s₁.phiPlus C E hE - s₂.phiPlus C E hE| < ε := by
+  by_contra h
+  push_neg at h
+  have h1 : ENNReal.ofReal ε ≤ ENNReal.ofReal
+      (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+           |s₁.phiMinus C E hE - s₂.phiMinus C E hE|) :=
+    ENNReal.ofReal_le_ofReal (le_max_of_le_left h)
+  have h2 : ENNReal.ofReal
+      (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+           |s₁.phiMinus C E hE - s₂.phiMinus C E hE|)
+      ≤ slicingDist C s₁ s₂ := le_iSup_of_le E (le_iSup_of_le hE le_rfl)
+  exact absurd hd (not_lt.mpr (h1.trans h2))
+
+/-- If the slicing distance is less than `ε`, the intrinsic `φ⁻` values are within `ε`.
+This is one direction of **Lemma 6.1**. -/
+theorem phiMinus_sub_lt_of_slicingDist (s₁ s₂ : Slicing C) {E : C} (hE : ¬IsZero E)
+    {ε : ℝ}
+    (hd : slicingDist C s₁ s₂ < ENNReal.ofReal ε) :
+    |s₁.phiMinus C E hE - s₂.phiMinus C E hE| < ε := by
+  by_contra h
+  push_neg at h
+  have h1 : ENNReal.ofReal ε ≤ ENNReal.ofReal
+      (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+           |s₁.phiMinus C E hE - s₂.phiMinus C E hE|) :=
+    ENNReal.ofReal_le_ofReal (le_max_of_le_right h)
+  have h2 : ENNReal.ofReal
+      (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
+           |s₁.phiMinus C E hE - s₂.phiMinus C E hE|)
+      ≤ slicingDist C s₁ s₂ := le_iSup_of_le E (le_iSup_of_le hE le_rfl)
+  exact absurd hd (not_lt.mpr (h1.trans h2))
+
+/-- **Lemma 6.1** (one direction). If the slicing distance `d(P, Q) < ε`, then every
+`Q`-semistable object of phase `φ` has all `P`-HN phases in the interval `(φ - ε, φ + ε)`.
+In terms of intrinsic phases: `|φ⁺_P(E) - φ| < ε` and `|φ⁻_P(E) - φ| < ε`. -/
+theorem intervalProp_of_semistable_slicingDist (s₁ s₂ : Slicing C) {E : C} {φ : ℝ}
+    (hE : ¬IsZero E) (hS : (s₂.P φ) E)
+    {ε : ℝ}
+    (hd : slicingDist C s₁ s₂ < ENNReal.ofReal ε) :
+    s₁.phiPlus C E hE ∈ Set.Ioo (φ - ε) (φ + ε) ∧
+    s₁.phiMinus C E hE ∈ Set.Ioo (φ - ε) (φ + ε) := by
+  have ⟨hpP, hpM⟩ := s₂.phiPlus_eq_phiMinus_of_semistable C hS hE
+  have hP := phiPlus_sub_lt_of_slicingDist C s₁ s₂ hE hd
+  have hM := phiMinus_sub_lt_of_slicingDist C s₁ s₂ hE hd
+  rw [hpP] at hP; rw [hpM] at hM
+  rw [abs_lt] at hP hM
+  exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩
+
 /-- The seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)` (blueprint A9). For a stability condition
 `σ = (Z, P)` and a group homomorphism `U : K₀(D) → ℂ`, this is
 `sup { |U(E)| / |Z(E)| : E is σ-semistable and nonzero }`.
