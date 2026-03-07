@@ -917,6 +917,71 @@ lemma HNFiltration.exists_nonzero_first (s : Slicing C) {E : C} (hE : ¬IsZero E
       exact ih (G.dropFirst C hn1 hfirst) hdrop
     · exact ⟨G, hGn0, hfirst⟩
 
+/-- Drop the last factor from an HN filtration when it is zero. The resulting
+filtration has `n - 1` factors with phases `φ(0) > ⋯ > φ(n-2)`. -/
+def HNFiltration.dropLast {P : ℝ → ObjectProperty C} {E : C}
+    (F : HNFiltration C P E) (hn : 1 < F.n)
+    (hzero : IsZero (F.triangle ⟨F.n - 1, by omega⟩).obj₃) :
+    HNFiltration C P E :=
+  have hn0 : 0 < F.n := by omega
+  let Tn := F.triangle ⟨F.n - 1, by omega⟩
+  have hiso : IsIso Tn.mor₁ :=
+    (Triangle.isZero₃_iff_isIso₁ Tn (F.triangle_dist ⟨F.n - 1, by omega⟩)).mp hzero
+  -- chain(n-1) ≅ chain(n) ≅ E via mor₁ and top_iso
+  let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by omega⟩)
+  let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by omega⟩)
+  -- The new top_iso: prefix's chain(n-1) = F.chain.obj(n-1) ≅ chain(n) ≅ E
+  let pfx := F.prefix C (F.n - 1) (by omega) (by omega)
+  -- pfx.chain.right = pfx.chain.obj(n-1) which is F.chain.obj(n-1)
+  -- F.chain.obj(n-1) ≅ Tn.obj₁ ≅ Tn.obj₂ ≅ F.chain.obj(n) ≅ E
+  { n := F.n - 1
+    chain := pfx.chain
+    triangle := pfx.triangle
+    triangle_dist := pfx.triangle_dist
+    triangle_obj₁ := pfx.triangle_obj₁
+    triangle_obj₂ := pfx.triangle_obj₂
+    base_isZero := pfx.base_isZero
+    top_iso := ⟨(Classical.choice pfx.top_iso).trans
+      (e₁.symm.trans ((asIso Tn.mor₁).trans
+        (e₂.trans ((eqToIso (by
+          simp [ComposableArrows.obj', ComposableArrows.right]
+          congr 1; ext; simp [Fin.last]; omega)).trans
+          (Classical.choice F.top_iso)))))⟩
+    zero_isZero := fun h ↦ by omega
+    φ := pfx.φ
+    hφ := pfx.hφ
+    semistable := pfx.semistable }
+
+/-- For any nonzero object, there exists an HN filtration with nonzero last factor.
+Proved by repeatedly dropping zero last factors. -/
+lemma HNFiltration.exists_nonzero_last (s : Slicing C) {E : C} (hE : ¬IsZero E) :
+    ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n),
+      ¬IsZero (F.triangle ⟨F.n - 1, by omega⟩).obj₃ := by
+  obtain ⟨F⟩ := s.hn_exists E
+  suffices hmain : ∀ (m : ℕ) (G : HNFiltration C s.P E), G.n ≤ m →
+      ∃ (H : HNFiltration C s.P E) (hn : 0 < H.n),
+        ¬IsZero (H.triangle ⟨H.n - 1, by omega⟩).obj₃ from
+    hmain F.n F le_rfl
+  intro m
+  induction m with
+  | zero =>
+    intro G hGn
+    exact absurd (G.zero_isZero (by omega)) hE
+  | succ m ih =>
+    intro G hGn
+    have hGn0 : 0 < G.n := G.n_pos C hE
+    by_cases hlast : IsZero (G.triangle ⟨G.n - 1, by omega⟩).obj₃
+    · have hn1 : 1 < G.n := by
+        by_contra h; push_neg at h
+        have : ∀ (i : Fin G.n), IsZero (G.triangle i).obj₃ := fun i ↦ by
+          have : i = ⟨G.n - 1, by omega⟩ := Fin.ext (by omega)
+          subst this; exact hlast
+        exact absurd ((G.exists_nonzero_factor C hE).elim fun i hi ↦ absurd (this i) hi) id
+      have hdrop : (G.dropLast C hn1 hlast).n ≤ m := by
+        change G.n - 1 ≤ m; omega
+      exact ih (G.dropLast C hn1 hlast) hdrop
+    · exact ⟨G, hGn0, hlast⟩
+
 /-! ### Intrinsic phase bounds
 
 For a nonzero object `E` with an HN filtration, the highest and lowest phases are
@@ -961,6 +1026,121 @@ theorem Slicing.phiMinus_le_phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) :
   let hn := (HNFiltration.exists_nonzero_first C s hE).choose_spec.choose
   change F.φ ⟨F.n - 1, _⟩ ≤ F.φ ⟨0, hn⟩
   exact F.hφ.antitone (Fin.mk_le_mk.mpr (by have := hn; omega))
+
+/-! ### Lemma 3.4: Triangle phase-bound inequalities
+
+In a distinguished triangle `A → E → B → A⟦1⟧` where all three objects lie in an
+interval subcategory of width ≤ 1, the intrinsic highest phases satisfy
+`phiPlus(A) ≤ phiPlus(E)`. This is Lemma 3.4 of Bridgeland (2007).
+
+The proof uses the coYoneda exact sequence on the inverse rotation of the triangle:
+if `φ⁺(A) > φ⁺(E)`, then the top semistable factor `A⁺` of `A` has all maps to `E`
+vanishing; by exactness, maps `A⁺ → A` factor through `B⟦-1⟧`, but B's shifted
+phases are too low, so all maps to `B⟦-1⟧` vanish too, giving `A⁺ = 0`, a
+contradiction.
+-/
+
+/-- The intrinsic phiPlus is bounded above by the top phase of any HN filtration. -/
+lemma Slicing.phiPlus_le_phiPlus_of_hn (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    (G : HNFiltration C s.P E) (hn : 0 < G.n) :
+    s.phiPlus C E hE ≤ G.phiPlus C hn := by
+  obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_first C s hE
+  rw [s.phiPlus_eq C E hE F hnF hneF]
+  exact F.phiPlus_le_of_nonzero_factor C s G hnF hn hneF
+
+/-- The intrinsic phiPlus of a nonzero object is bounded above by the upper endpoint of any
+interval containing the object. -/
+lemma Slicing.phiPlus_lt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {a b : ℝ} (hI : s.intervalProp C a b E) : s.phiPlus C E hE < b := by
+  rcases hI with hZ | ⟨G, hG⟩
+  · exact absurd hZ hE
+  · have hGn : 0 < G.n := G.n_pos C hE
+    calc s.phiPlus C E hE
+        ≤ G.phiPlus C hGn := s.phiPlus_le_phiPlus_of_hn C hE G hGn
+      _ < b := (hG ⟨0, hGn⟩).2
+
+/-- The intrinsic phiPlus of a nonzero object is bounded below by the lower endpoint of any
+interval containing the object. -/
+lemma Slicing.phiPlus_gt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {a b : ℝ} (hI : s.intervalProp C a b E) : a < s.phiPlus C E hE := by
+  rcases hI with hZ | ⟨G, hG⟩
+  · exact absurd hZ hE
+  · have hGn : 0 < G.n := G.n_pos C hE
+    by_contra hle
+    push_neg at hle
+    -- phiPlus(E) ≤ a. Get a filtration F with nonzero first factor.
+    obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_first C s hE
+    rw [s.phiPlus_eq C E hE F hnF hneF] at hle
+    -- F.φ(0) ≤ a, so all F phases ≤ a (since phases are strictly decreasing)
+    have hF_le : ∀ j : Fin F.n, F.φ j ≤ a := fun j ↦
+      le_trans (F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))) hle
+    -- G has all phases > a, F has all phases ≤ a, so there is a phase gap
+    have hgap : ∀ (i : Fin G.n) (j : Fin F.n), F.φ j < G.φ i := fun i j ↦
+      lt_of_le_of_lt (hF_le j) (hG i).1
+    -- Hom(E, E) = 0 by phase gap, so id_E = 0, so E is zero — contradiction
+    exact hE ((IsZero.iff_id_eq_zero E).mpr (s.hom_eq_zero_of_phase_gap C G F hgap (𝟙 E)))
+
+
+/-- **Lemma 3.4** (left inequality). In a distinguished triangle `A → E → B → A⟦1⟧`
+where the phases of A and B lie in an interval `(a, b)` with `b ≤ a + 1`,
+we have `φ⁺(A) ≤ φ⁺(E)`.
+
+The width condition `b ≤ a + 1` ensures `B⟦-1⟧` has all phases below any phase of `A`,
+so the factoring argument through `B⟦-1⟧` gives a contradiction. -/
+theorem Slicing.phiPlus_triangle_le (s : Slicing C) {A E B : C}
+    (hA : ¬IsZero A) (hE : ¬IsZero E)
+    {a b : ℝ} (hab : b ≤ a + 1)
+    (hA_int : s.intervalProp C a b A)
+    (hB_int : s.intervalProp C a b B)
+    {f : A ⟶ E} {g : E ⟶ B} {h : B ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g h ∈ distTriang C) :
+    s.phiPlus C A hA ≤ s.phiPlus C E hE := by
+  -- Get filtrations with nonzero first factors
+  obtain ⟨FA, hnA, hneA⟩ := HNFiltration.exists_nonzero_first C s hA
+  obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_first C s hE
+  rw [s.phiPlus_eq C A hA FA hnA hneA, s.phiPlus_eq C E hE FE hnE hneE]
+  -- Suppose for contradiction that φ⁺(A) > φ⁺(E)
+  by_contra hlt
+  push_neg at hlt
+  -- All E-phases < FA.φ(0)
+  have hE_gap : ∀ j : Fin FE.n, FE.φ j < FA.φ ⟨0, hnA⟩ := fun j ↦
+    lt_of_le_of_lt (FE.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))) hlt
+  -- All maps A⁺ → A are zero (the key step)
+  -- For ANY map α : A⁺ → A, the composite α ≫ f : A⁺ → E is zero (since Hom(A⁺, E) = 0).
+  -- By coyoneda exactness on invRotate, α factors through B⟦-1⟧.
+  -- But Hom(A⁺, B⟦-1⟧) = 0 too, so α = 0.
+  have hA_factor_zero : ∀ α : (FA.triangle ⟨0, hnA⟩).obj₃ ⟶ A, α = 0 := by
+    intro α
+    -- α ≫ f : A⁺ → E is zero
+    have hαf : α ≫ f = 0 :=
+      s.hom_eq_zero_of_gt_phases C (FA.semistable ⟨0, hnA⟩) FE hE_gap _
+    -- By coyoneda on invRotate of the triangle, α factors through B⟦-1⟧
+    let T := Triangle.mk f g h
+    obtain ⟨β, hβ⟩ := Triangle.coyoneda_exact₂ T.invRotate
+      (inv_rot_of_distTriang _ hT) α hαf
+    -- β : A⁺ → B⟦-1⟧. Show β = 0.
+    suffices hβ0 : β = 0 by rw [hβ, hβ0, zero_comp]; rfl
+    by_cases hBZ : IsZero B
+    · exact ((shiftFunctor C (-1 : ℤ)).map_isZero hBZ).eq_of_tgt β 0
+    · -- Get an HN filtration of B⟦-1⟧ from hB_int
+      rcases hB_int with hBZ' | ⟨GB, hGB⟩
+      · exact absurd hBZ' hBZ
+      · -- Shift GB by -1 to get filtration of B⟦-1⟧
+        let GBs := GB.shiftHN C s (-1 : ℤ)
+        have hnB : 0 < GB.n := GB.n_pos C hBZ
+        -- GBs.φ(j) = GB.φ(j) - 1 < b - 1 ≤ a < FA.φ(0)
+        have hBs_gap : ∀ j : Fin GBs.n, GBs.φ j < FA.φ ⟨0, hnA⟩ := by
+          intro j
+          change GB.φ j + ((-1 : ℤ) : ℝ) < FA.φ ⟨0, hnA⟩
+          have h1 : GB.φ j < b := (hGB j).2
+          have h2 : a < FA.φ ⟨0, hnA⟩ := by
+            rw [← s.phiPlus_eq C A hA FA hnA hneA]
+            exact s.phiPlus_gt_of_intervalProp C hA hA_int
+          have h3 : ((-1 : ℤ) : ℝ) = -1 := by norm_num
+          linarith
+        exact s.hom_eq_zero_of_gt_phases C (FA.semistable ⟨0, hnA⟩) GBs hBs_gap β
+  -- But A⁺ is nonzero, and all maps to A are zero — contradiction
+  exact hneA (FA.isZero_factor_zero_of_hom_eq_zero C s hnA hA_factor_zero)
 
 /-! ### Single-factor HN filtrations -/
 
