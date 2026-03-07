@@ -154,6 +154,35 @@ def Slicing.gtProp (s : Slicing C) (t : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E) (h : 0 < F.n),
     t < F.phiMinus C h
 
+/-! ### Properties of subcategory predicates -/
+
+/-- Zero objects are in `P(≤ t)` for all `t`. -/
+lemma Slicing.leProp_zero (s : Slicing C) (t : ℝ) :
+    s.leProp C t (0 : C) :=
+  Or.inl (isZero_zero C)
+
+/-- Zero objects are in `P(> t)` for all `t`. -/
+lemma Slicing.gtProp_zero (s : Slicing C) (t : ℝ) :
+    s.gtProp C t (0 : C) :=
+  Or.inl (isZero_zero C)
+
+/-- `P(≤ t₁) ≤ P(≤ t₂)` when `t₁ ≤ t₂`. -/
+lemma Slicing.leProp_mono (s : Slicing C) {t₁ t₂ : ℝ} (h : t₁ ≤ t₂) :
+    s.leProp C t₁ ≤ s.leProp C t₂ := by
+  intro E hE
+  rcases hE with hZ | ⟨F, hF, hle⟩
+  · exact Or.inl hZ
+  · exact Or.inr ⟨F, hF, le_trans hle h⟩
+
+/-- `P(> t₂) ≤ P(> t₁)` when `t₁ ≤ t₂`. -/
+lemma Slicing.gtProp_anti (s : Slicing C) {t₁ t₂ : ℝ} (h : t₁ ≤ t₂) :
+    s.gtProp C t₂ ≤ s.gtProp C t₁ := by
+  intro E hE
+  rcases hE with hZ | ⟨F, hF, hgt⟩
+  · exact Or.inl hZ
+  · exact Or.inr ⟨F, hF, lt_of_le_of_lt h hgt⟩
+
+
 end Slicing
 
 end CategoryTheory.Triangulated
