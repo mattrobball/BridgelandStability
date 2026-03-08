@@ -1249,6 +1249,46 @@ lemma Slicing.phiMinus_gt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero
     exact lt_of_lt_of_le (hG ⟨G.n - 1, by omega⟩).1
       (G.phiMinus_ge_of_nonzero_last_factor C s F hGn hnF hneF)
 
+/-! ### Conversion between gtProp/leProp and intervalProp -/
+
+/-- The intrinsic phiMinus is an upper bound on any filtration's phiMinus.
+Dual of `phiPlus_le_phiPlus_of_hn`. -/
+lemma Slicing.phiMinus_ge_phiMinus_of_hn (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    (G : HNFiltration C s.P E) (hn : 0 < G.n) :
+    G.phiMinus C hn ≤ s.phiMinus C E hE := by
+  obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_last C s hE
+  rw [s.phiMinus_eq C E hE F hnF hneF]
+  exact G.phiMinus_ge_of_nonzero_last_factor C s F hn hnF hneF
+
+/-- If `E ∈ P(> t)` and `E` is nonzero, then `t < φ⁻(E)`. -/
+lemma Slicing.phiMinus_gt_of_gtProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hgt : s.gtProp C t E) : t < s.phiMinus C E hE := by
+  rcases hgt with hZ | ⟨G, hGn, hGt⟩
+  · exact absurd hZ hE
+  · exact lt_of_lt_of_le hGt (s.phiMinus_ge_phiMinus_of_hn C hE G hGn)
+
+/-- If `E ∈ P(≤ t)` and `E` is nonzero, then `φ⁺(E) ≤ t`. -/
+lemma Slicing.phiPlus_le_of_leProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hle : s.leProp C t E) : s.phiPlus C E hE ≤ t := by
+  rcases hle with hZ | ⟨G, hGn, hGt⟩
+  · exact absurd hZ hE
+  · exact le_trans (s.phiPlus_le_phiPlus_of_hn C hE G hGn) hGt
+
+/-- **Interval containment from intrinsic phases.** If `a < φ⁻(E)` and `φ⁺(E) < b`, then
+`E ∈ P((a, b))`. -/
+lemma Slicing.intervalProp_of_intrinsic_phases (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {a b : ℝ} (hminus : a < s.phiMinus C E hE) (hplus : s.phiPlus C E hE < b) :
+    s.intervalProp C a b E := by
+  obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
+  exact Or.inr ⟨F, fun i ↦ ⟨by
+    calc a < s.phiMinus C E hE := hminus
+      _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C E hE F hn hlast
+      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)),
+    by calc F.φ i
+        ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
+      _ = s.phiPlus C E hE := (s.phiPlus_eq C E hE F hn hfirst).symm
+      _ < b := hplus⟩⟩
+
 /-! ### Contrapositive hom-vanishing lemmas -/
 
 /-- If a semistable object of phase `φ` maps nonzero to `X`, then `φ ≤ φ⁺(X)`. This is the
@@ -2027,7 +2067,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
     · -- All phases > 0: X = A, Y = 0
       exact ⟨A, 0, s.gtProp_of_hn C F 0 hall_pos hn0, 𝟙 A, 0, 0,
         contractible_distinguished A,
-        Or.inr ⟨F, hn0, by simp [HNFiltration.phiMinus]; exact hall_pos ⟨F.n - 1, by omega⟩,
+        Or.inr ⟨F, hn0, by simp only [HNFiltration.phiMinus]; exact hall_pos ⟨F.n - 1, by omega⟩,
           fun hn0 ↦ le_refl _⟩,
         Or.inl (isZero_zero C)⟩
     · push_neg at hall_pos

@@ -113,6 +113,37 @@ lemma K₀.of_iso {X Y : C} (e : X ≅ Y) : K₀.of C X = K₀.of C Y := by
 lemma K₀.of_isZero {X : C} (hX : IsZero X) : K₀.of C X = 0 := by
   rw [K₀.of_iso C (hX.iso (isZero_zero C)), K₀.of_zero]
 
+/-- Shifting by `[1]` negates the class in K₀: `[X⟦1⟧] = -[X]`. This follows from the
+rotation of the contractible triangle, which gives `0 = [X] + [X⟦1⟧]`. -/
+@[simp]
+lemma K₀.of_shift_one (X : C) : K₀.of C (X⟦(1 : ℤ)⟧) = -K₀.of C X := by
+  -- Rotation of the contractible triangle gives a triangle with
+  -- obj₁ = X, obj₂ = 0, obj₃ = X⟦1⟧
+  have hc := Pretriangulated.contractible_distinguished X
+  have hrot := Pretriangulated.rot_of_distTriang _ hc
+  have h := K₀.of_triangle C _ hrot
+  -- After K₀: [0] = [X] + [X⟦1⟧]
+  have h₂ : K₀.of C (Pretriangulated.contractibleTriangle X).rotate.obj₂ =
+      0 := K₀.of_isZero C (isZero_zero C)
+  rw [h₂] at h
+  -- After rw [h₂]: h : 0 = K₀.of C X + K₀.of C (_.rotate.obj₃)
+  -- The obj₃ of the rotated contractible triangle is X⟦1⟧
+  have h₃ : (Pretriangulated.contractibleTriangle X).rotate.obj₃ = X⟦(1 : ℤ)⟧ := rfl
+  rw [h₃] at h
+  -- h : 0 = K₀.of C X + K₀.of C (X⟦1⟧)
+  have := h.symm
+  -- this : K₀.of C X + K₀.of C (X⟦1⟧) = 0
+  rwa [add_comm, add_eq_zero_iff_eq_neg] at this
+
+/-- Shifting by `[-1]` negates the class in K₀: `[X⟦-1⟧] = -[X]`. -/
+@[simp]
+lemma K₀.of_shift_neg_one (X : C) : K₀.of C (X⟦(-1 : ℤ)⟧) = -K₀.of C X := by
+  have h1 := K₀.of_shift_one C (X⟦(-1 : ℤ)⟧)
+  have h2 := K₀.of_iso C ((shiftFunctorCompIsoId C (-1 : ℤ) (1 : ℤ) (by omega)).app X)
+  simp only [Functor.comp_obj] at h2
+  rw [h2] at h1
+  exact (neg_eq_iff_eq_neg.mpr h1).symm
+
 variable {C} in
 /-- A function `f : C → A` to an additive group is triangle-additive if
 `f(B) = f(A) + f(C)` for every distinguished triangle `A → B → C → A⟦1⟧`. -/
