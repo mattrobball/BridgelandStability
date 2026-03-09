@@ -182,15 +182,18 @@ def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
 
 /-- A slicing is locally finite if there exists `η > 0` such that for every `t`,
-every object in the interval subcategory `P((t-η, t+η))` has well-founded
-subobject lattice (both ascending and descending chains stabilize).
+every object in the interval subcategory `P((t-η, t+η))` has a finite subobject
+lattice. This corresponds to Bridgeland's "locally finite" condition (Definition 5.7),
+which requires each quasi-abelian subcategory `P((a,b))` to be of finite length.
 
-This uses `WellFoundedLT` and `WellFoundedGT` on `Subobject E`, matching the
-pattern used by Mathlib's `IsArtinianObject` and `IsNoetherianObject`. -/
+The `Finite (Subobject E)` condition is stronger than `WellFoundedLT ∧ WellFoundedGT`
+(Artinian + Noetherian) but is the correct formulation: it ensures that stability
+functions on abelian subcategories have the Harder-Narasimhan property via
+`StabilityFunction.hasHN_of_finiteLength`. -/
 def Slicing.IsLocallyFinite (s : Slicing C) : Prop :=
   ∃ η : ℝ, 0 < η ∧ ∀ t : ℝ,
     ∀ (E : C), s.intervalProp C (t - η) (t + η) E →
-      WellFoundedLT (Subobject E) ∧ WellFoundedGT (Subobject E)
+      Finite (Subobject E)
 
 /-! ### Phase bound properties -/
 

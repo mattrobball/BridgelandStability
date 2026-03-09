@@ -72,15 +72,15 @@ lemma Slicing.intervalProp_of_isZero (s : Slicing C) {E : C} (hE : IsZero E)
 
 /-! ### Finite length in thin intervals -/
 
-/-- **Finite length in thin intervals**. For any object `E` in `P((a, b))` with
-`b - a ≤ 2η`, if all objects in `η`-intervals have well-founded subobject lattices, then
+/-- **Finite subobject lattice in thin intervals**. For any object `E` in `P((a, b))` with
+`b - a ≤ 2η`, if all objects in `η`-intervals have finite subobject lattices, then
 `E` does too. -/
 theorem Slicing.intervalFiniteLength (s : Slicing C)
     {a b : ℝ} {E : C} (hI : s.intervalProp C a b E) :
     ∀ {η : ℝ}, b - a ≤ 2 * η →
       (∀ t : ℝ, ∀ (F : C), s.intervalProp C (t - η) (t + η) F →
-        WellFoundedLT (Subobject F) ∧ WellFoundedGT (Subobject F)) →
-      WellFoundedLT (Subobject E) ∧ WellFoundedGT (Subobject E) := by
+        Finite (Subobject F)) →
+      Finite (Subobject E) := by
   intro η hwidth hlf
   -- Choose t = (a + b) / 2, then (a, b) ⊆ (t - η, t + η)
   set t := (a + b) / 2
@@ -107,7 +107,7 @@ extracted automatically. -/
 theorem Slicing.intervalFiniteLength' (s : Slicing C) (hLF : s.IsLocallyFinite C)
     {a b : ℝ} {E : C} (hI : s.intervalProp C a b E) :
     ∃ (η : ℝ), 0 < η ∧ (b - a ≤ 2 * η →
-      WellFoundedLT (Subobject E) ∧ WellFoundedGT (Subobject E)) := by
+      Finite (Subobject E)) := by
   obtain ⟨η, hη, hlf⟩ := hLF
   exact ⟨η, hη, fun hwidth ↦ s.intervalFiniteLength C hI hwidth hlf⟩
 
