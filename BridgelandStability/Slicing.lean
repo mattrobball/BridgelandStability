@@ -6,9 +6,11 @@ Authors: Formalization
 import Mathlib.CategoryTheory.Triangulated.PostnikovTower
 import Mathlib.CategoryTheory.Triangulated.Triangulated
 import Mathlib.CategoryTheory.Triangulated.TStructure.Basic
+import Mathlib.CategoryTheory.Triangulated.TStructure.Heart
 import Mathlib.CategoryTheory.ObjectProperty.ContainsZero
 import Mathlib.CategoryTheory.Subobject.Lattice
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Real.Archimedean
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
@@ -181,19 +183,30 @@ interval subcategory if it is zero or all phases in its HN filtration lie in `(a
 def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
 
-/-- A slicing is locally finite if there exists `η > 0` such that for every `t`,
-every object in the interval subcategory `P((t-η, t+η))` has a finite subobject
-lattice. This corresponds to Bridgeland's "locally finite" condition (Definition 5.7),
-which requires each quasi-abelian subcategory `P((a,b))` to be of finite length.
+/-- A slicing is locally finite if:
+1. There exists `η > 0` such that for every `t`, every object in the interval
+   subcategory `P((t-η, t+η))` has a finite subobject lattice in `C`.
+2. For every phase `φ`, every object in `P(φ)` has a finite subobject lattice
+   in the full subcategory `P(φ).FullSubcategory`.
 
-The `Finite (Subobject E)` condition is stronger than `WellFoundedLT ∧ WellFoundedGT`
-(Artinian + Noetherian) but is the correct formulation: it ensures that stability
-functions on abelian subcategories have the Harder-Narasimhan property via
-`StabilityFunction.hasHN_of_finiteLength`. -/
-def Slicing.IsLocallyFinite (s : Slicing C) : Prop :=
-  ∃ η : ℝ, 0 < η ∧ ∀ t : ℝ,
+Condition (1) corresponds to Bridgeland's "locally finite" condition (Definition 5.7),
+which requires each quasi-abelian subcategory `P((a,b))` to be of finite length.
+Condition (2) is the correct formulation for the abelian category `P(φ)`: since
+`P(φ)`-monomorphisms are weaker than `C`-monomorphisms (fewer test objects),
+the subobject lattice in `P(φ).FullSubcategory` can be larger than in `C`.
+Condition (2) ensures that stability functions on `P(φ)` have the
+Harder-Narasimhan property via `StabilityFunction.hasHN_of_finiteLength`.
+
+Note: Conditions (1) and (2) are logically independent. In concrete examples,
+both follow from the quasi-abelian category `P((a,b))` having finite length. -/
+structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
+  /-- There exists `η > 0` such that objects in thin intervals have finite subobject lattices. -/
+  intervalFinite : ∃ η : ℝ, 0 < η ∧ ∀ t : ℝ,
     ∀ (E : C), s.intervalProp C (t - η) (t + η) E →
       Finite (Subobject E)
+  /-- Every object in `P(φ)` has a finite subobject lattice in `P(φ).FullSubcategory`. -/
+  phaseFinite : ∀ (φ : ℝ) (E : (s.P φ).FullSubcategory),
+    @Finite (@Subobject _ _ E)
 
 /-! ### Phase bound properties -/
 
@@ -2230,6 +2243,35 @@ def Slicing.toTStructure (s : Slicing C) : TStructure C where
     · simp only [Int.cast_zero, neg_zero]; exact hX
     · simp only [Int.cast_one, sub_self]; exact hY
 
+/-- **Bounded t-structure from slicing.**
+The t-structure induced by a slicing is bounded: every object lies between
+`le a` and `ge b` for some integers `a, b`.
+
+The proof uses the HN filtration axiom to place every object's phases in
+a finite interval, then converts the phase bounds to `le`/`ge` bounds. -/
+theorem Slicing.toTStructure_bounded (s : Slicing C) :
+    s.toTStructure.IsBounded := by
+  intro E
+  obtain ⟨F⟩ := s.hn_exists E
+  by_cases hE : IsZero E
+  · exact ⟨0, 0, Or.inl hE, Or.inl hE⟩
+  · have hn := F.n_pos C hE
+    refine ⟨⌈-(F.phiMinus C hn)⌉ + 1, ⌊1 - F.phiPlus C hn⌋, Or.inr ⟨F, hn, ?_⟩,
+      Or.inr ⟨F, hn, ?_⟩⟩
+    · have := Int.le_ceil (-(F.phiMinus C hn))
+      push_cast
+      linarith
+    · linarith [Int.floor_le (1 - F.phiPlus C hn)]
+
+/-- **Heart identification.**
+An object `E` lies in the heart of the slicing-induced t-structure if and only
+if it satisfies both `gtProp 0` (all HN phases > 0) and `leProp 1` (all HN
+phases ≤ 1). This identifies the heart with the half-open interval `P((0, 1])`. -/
+theorem Slicing.toTStructure_heart_iff (s : Slicing C) (E : C) :
+    (s.toTStructure).heart E ↔ s.gtProp C 0 E ∧ s.leProp C 1 E := by
+  change s.toTStructure.le 0 E ∧ s.toTStructure.ge 0 E ↔ _
+  simp only [toTStructure, Int.cast_zero, neg_zero, sub_zero]
+
 /-- **HN filtration splitting with interval data**. Given an HN filtration `F`
 of `E` (wrt slicing `s`) with all phases in the open interval `(a, b)`, and a
 cutoff `t ∈ (a, b)`, produce a distinguished triangle `X → E → Y` where:
@@ -2358,4 +2400,4 @@ end Slicing
 
 end CategoryTheory.Triangulated
 
-set_option linter.style.longFile 2400
+set_option linter.style.longFile 2500

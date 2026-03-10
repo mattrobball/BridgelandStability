@@ -108,8 +108,8 @@ theorem Slicing.intervalFiniteLength' (s : Slicing C) (hLF : s.IsLocallyFinite C
     {a b : ℝ} {E : C} (hI : s.intervalProp C a b E) :
     ∃ (η : ℝ), 0 < η ∧ (b - a ≤ 2 * η →
       Finite (Subobject E)) := by
-  obtain ⟨η, hη, hlf⟩ := hLF
-  exact ⟨η, hη, fun hwidth ↦ s.intervalFiniteLength C hI hwidth hlf⟩
+  obtain ⟨w, hw, hlf⟩ := hLF.intervalFinite
+  exact ⟨w, hw, fun hwidth ↦ s.intervalFiniteLength C hI hwidth hlf⟩
 
 /-! ### Interval containment -/
 
@@ -166,6 +166,399 @@ theorem Slicing.intervalHom_eq_zero (s : Slicing C) {A B : C}
   · exact hBZ.eq_of_tgt f 0
   exact s.hom_eq_zero_of_phase_gap C FA FB
     (fun i j ↦ by linarith [(hFB j).2, (hFA i).1]) f
+
+/-! ### Heart containment — Two-heart embedding (Lemma 4.3 foundations)
+
+Objects in a thin interval `P((a, b))` with `b - a ≤ 1` lie in two different abelian hearts:
+* **Left heart** `P((a, a+1])` — the heart of the slicing shifted by `a`.
+  Controls kernels and images.
+* **Right heart** `P((b-1, b])` — the heart of the slicing shifted by `b-1`.
+  Controls cokernels and coimages.
+
+This is the foundation of Bridgeland's Lemma 4.3 and is why the interval category
+is quasi-abelian: one heart cannot handle both kernels and cokernels, but together
+the two hearts make up for each other's deficiencies.
+-/
+
+section TwoHeartEmbedding
+
+variable [IsTriangulated C]
+
+omit [IsTriangulated C] in
+/-- **Interval to gtProp.** If all HN phases lie in `(a, b)`, then phiMinus > `a`. -/
+lemma Slicing.gtProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
+    (hE : s.intervalProp C a b E) : s.gtProp C a E := by
+  rcases hE with hZ | ⟨F, hF⟩
+  · exact Or.inl hZ
+  · by_cases hn : 0 < F.n
+    · exact Or.inr ⟨F, hn, (hF ⟨F.n - 1, by omega⟩).1⟩
+    · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
+
+omit [IsTriangulated C] in
+/-- **Interval to leProp.** If all HN phases lie in `(a, b)`, then phiPlus ≤ `b`. -/
+lemma Slicing.leProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
+    (hE : s.intervalProp C a b E) : s.leProp C b E := by
+  rcases hE with hZ | ⟨F, hF⟩
+  · exact Or.inl hZ
+  · by_cases hn : 0 < F.n
+    · exact Or.inr ⟨F, hn, le_of_lt (hF ⟨0, hn⟩).2⟩
+    · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
+
+/-- **Left heart containment (Lemma 4.3a).** If `b - a ≤ 1` and `E ∈ P((a, b))`,
+then `E` lies in the heart of the t-structure induced by the slicing shifted by `a`.
+This heart is the half-open interval `P((a, a+1])`.
+
+The proof is immediate: phases in `(a, b)` satisfy `> a` (for `gtProp`) and
+`< b ≤ a + 1` (for `leProp`). -/
+theorem Slicing.intervalProp_implies_leftHeart (s : Slicing C) {a b : ℝ}
+    (hab : b - a ≤ 1) {E : C} (hE : s.intervalProp C a b E) :
+    ((s.phaseShift C a).toTStructure).heart E := by
+  rw [(s.phaseShift C a).toTStructure_heart_iff]
+  constructor
+  · -- gtProp C 0 for shifted slicing ↔ gtProp C a for original
+    rw [s.phaseShift_gtProp_zero]
+    exact s.gtProp_of_intervalProp C hE
+  · -- leProp C 1 for shifted slicing: construct shifted HN filtration
+    rcases hE with hZ | ⟨F, hF⟩
+    · exact Or.inl hZ
+    · by_cases hn : 0 < F.n
+      · right
+        refine ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - a,
+          fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hn, ?_⟩
+        · change s.P (F.φ j - a + a) _
+          rw [show F.φ j - a + a = F.φ j from by ring]
+          exact F.semistable j
+        · dsimp [HNFiltration.phiPlus]
+          linarith [(hF ⟨0, hn⟩).2]
+      · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
+
+/-- **Right heart containment (Lemma 4.3b).** If `b - a ≤ 1` and `E ∈ P((a, b))`,
+then `E` lies in the heart of the t-structure induced by the slicing shifted by `b - 1`.
+This heart is the half-open interval `P((b-1, b])`.
+
+Together with `intervalProp_implies_leftHeart`, this establishes the two-heart
+embedding: every object in a thin interval lies in both an abelian heart that
+controls kernels (left heart) and one that controls cokernels (right heart). -/
+theorem Slicing.intervalProp_implies_rightHeart (s : Slicing C) {a b : ℝ}
+    (hab : b - a ≤ 1) {E : C} (hE : s.intervalProp C a b E) :
+    ((s.phaseShift C (b - 1)).toTStructure).heart E := by
+  rw [(s.phaseShift C (b - 1)).toTStructure_heart_iff]
+  constructor
+  · -- gtProp C 0 for shifted slicing ↔ gtProp C (b-1) for original
+    rw [s.phaseShift_gtProp_zero]
+    -- Need: gtProp C (b-1) E. Since phases > a ≥ b-1, this holds.
+    rcases hE with hZ | ⟨F, hF⟩
+    · exact Or.inl hZ
+    · by_cases hn : 0 < F.n
+      · have hphase := (hF ⟨F.n - 1, by omega⟩).1
+        exact Or.inr ⟨F, hn, by simp only [HNFiltration.phiMinus]; linarith⟩
+      · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
+  · -- leProp C 1 for shifted slicing: phases - (b-1) ≤ 1, i.e., phases ≤ b
+    rcases hE with hZ | ⟨F, hF⟩
+    · exact Or.inl hZ
+    · by_cases hn : 0 < F.n
+      · right
+        refine ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - (b - 1),
+          fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hn, ?_⟩
+        · change s.P (F.φ j - (b - 1) + (b - 1)) _
+          rw [show F.φ j - (b - 1) + (b - 1) = F.φ j from by ring]
+          exact F.semistable j
+        · dsimp [HNFiltration.phiPlus]
+          linarith [(hF ⟨0, hn⟩).2]
+      · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
+
+/-! ### Phase bounds for triangles with semistable middle term
+
+For a distinguished triangle `K → F → Q → K⟦1⟧` where `F ∈ P(φ)` is σ-semistable
+and `K, Q ∈ P((a, b))` lie in a thin interval containing `φ`, Lemma 3.4 gives:
+- `φ⁺(K) ≤ φ` (the top phase of K is bounded by F's phase)
+- `φ⁻(Q) ≥ φ` (the bottom phase of Q is bounded below by F's phase)
+
+These are the foundational phase bounds for the deformation theorem's triangle test.
+Combined with interval membership, they give:
+- K has all σ-phases in `(a, φ]`
+- Q has all σ-phases in `[φ, b)`
+
+The Z-ray consequence (Im(Z(K)·rot) ≤ 0 and Im(Z(Q)·rot) ≥ 0) does NOT suffice
+to force K, Q ∈ P(φ) — the terms have opposite signs, so sum = 0 allows both nonzero.
+See the counterexample in `HeartEquivalence.lean`. The full triangle test requires
+the quasi-abelian theory or W-semistability arguments.
+-/
+
+omit [IsTriangulated C] in
+/-- **Phase upper bound from Lemma 3.4.** In a triangle `K → F → Q → K⟦1⟧` with
+`F ∈ P(φ)` σ-semistable and `K, Q` in a thin interval `P((a, b))` with `b ≤ a + 1`
+and `φ ∈ (a, b)`, if `K` is nonzero then `φ⁺(K) ≤ φ`. -/
+theorem Slicing.phiPlus_le_of_semistable_triangle (s : Slicing C) {φ : ℝ}
+    {K F Q : C} {f₁ : K ⟶ F} {f₂ : F ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C)
+    (hPφ : (s.P φ) F) (hFne : ¬IsZero F) (hKne : ¬IsZero K)
+    {a b : ℝ} (hab : b ≤ a + 1)
+    (hKI : s.intervalProp C a b K) (hQI : s.intervalProp C a b Q) :
+    s.phiPlus C K hKne ≤ φ := by
+  have hFplus : s.phiPlus C F hFne = φ :=
+    (s.phiPlus_eq_phiMinus_of_semistable C hPφ hFne).1
+  rw [← hFplus]
+  exact s.phiPlus_triangle_le C hKne hFne hab hKI hQI hT
+
+omit [IsTriangulated C] in
+/-- **Phase lower bound from Lemma 3.4.** In a triangle `K → F → Q → K⟦1⟧` with
+`F ∈ P(φ)` σ-semistable and `K, Q` in a thin interval `P((a, b))` with `b ≤ a + 1`,
+if `Q` is nonzero then `φ ≤ φ⁻(Q)`. -/
+theorem Slicing.phiMinus_ge_of_semistable_triangle (s : Slicing C) {φ : ℝ}
+    {K F Q : C} {f₁ : K ⟶ F} {f₂ : F ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C)
+    (hPφ : (s.P φ) F) (hFne : ¬IsZero F) (hQne : ¬IsZero Q)
+    {a b : ℝ} (hab : b ≤ a + 1)
+    (hKI : s.intervalProp C a b K) (hQI : s.intervalProp C a b Q) :
+    φ ≤ s.phiMinus C Q hQne := by
+  have hFminus : s.phiMinus C F hFne = φ :=
+    (s.phiPlus_eq_phiMinus_of_semistable C hPφ hFne).2
+  rw [← hFminus]
+  exact s.phiMinus_triangle_le C hQne hFne hab hKI hQI hT
+
+/-! ### One-sided phase bounds for triangles (generalizing Lemma 3.4)
+
+These lemmas generalize `phiPlus_triangle_le` and `phiMinus_triangle_le` by replacing
+the `intervalProp` condition on one vertex with a weaker `leProp` or `gtProp` condition.
+The key application is kernel/image containment: when a morphism `f : E → F` between
+interval objects has its kernel/image computed in an abelian heart, the heart membership
+gives only a `leProp`/`gtProp` bound, not full `intervalProp`. These lemmas recover
+the full interval containment from the weaker one-sided bound.
+-/
+
+omit [IsTriangulated C] in
+/-- **Phase upper bound from one-sided containment.** In a triangle `K → E → Q → K⟦1⟧`,
+if `E` has `φ⁺(E) < b` and `Q` satisfies `leProp c` (all phases ≤ c) with `c < b + 1`,
+then if `K` is nonzero, `φ⁺(K) < b`.
+
+This strengthens `phiPlus_triangle_le` by requiring only a `leProp` bound on `Q` rather
+than full `intervalProp`. The condition `c < b + 1` ensures `Q⟦-1⟧` has all phases
+`≤ c - 1 < b`, providing the hom-vanishing gap for the coyoneda factoring argument.
+
+**Key application**: kernel containment in the left heart. If `f : E → F` with both
+in `P((a, b))`, the heart's SES `ker(f) → E → im(f)` gives a triangle where `im(f)`
+is in the heart with `leProp (a + 1)`. Since `a + 1 < b + 1`, this lemma bounds
+`φ⁺(ker(f)) < b`, placing the kernel in `P((a, b))`. -/
+theorem Slicing.phiPlus_lt_of_triangle_with_leProp (s : Slicing C)
+    {K E Q : C} (hK : ¬IsZero K) {b : ℝ}
+    (hE_lt : ∀ (hE : ¬IsZero E), s.phiPlus C E hE < b)
+    {c : ℝ} (hQ_le : s.leProp C c Q) (hcb : c < b + 1)
+    {f₁ : K ⟶ E} {f₂ : E ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C) :
+    s.phiPlus C K hK < b := by
+  obtain ⟨FK, hnK, hneK⟩ := HNFiltration.exists_nonzero_first C s hK
+  rw [s.phiPlus_eq C K hK FK hnK hneK]
+  by_contra hge
+  push_neg at hge
+  -- hge : b ≤ FK.φ ⟨0, hnK⟩ (top factor has phase ≥ b)
+  -- Show all maps from FK's top factor to K are zero
+  have hK_factor_zero : ∀ α : (FK.triangle ⟨0, hnK⟩).obj₃ ⟶ K, α = 0 := by
+    intro α
+    -- Step 1: α ≫ f₁ = 0 (top factor → E is zero by hom-vanishing)
+    have hαf : α ≫ f₁ = 0 := by
+      by_cases hEZ : IsZero E
+      · exact hEZ.eq_of_tgt (α ≫ f₁) 0
+      · obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_first C s hEZ
+        have hE_gap : ∀ j : Fin FE.n, FE.φ j < FK.φ ⟨0, hnK⟩ := fun j ↦ by
+          have h1 : FE.φ j ≤ FE.φ ⟨0, hnE⟩ := by
+            apply FE.hφ.antitone; simp only [Fin.le_def]; omega
+          have h2 : FE.φ ⟨0, hnE⟩ = s.phiPlus C E hEZ :=
+            (s.phiPlus_eq C E hEZ FE hnE hneE).symm
+          linarith [hE_lt hEZ]
+        exact s.hom_eq_zero_of_gt_phases C (FK.semistable ⟨0, hnK⟩) FE hE_gap _
+    -- Step 2: By coyoneda on invRotate, α factors through Q⟦-1⟧
+    let T := Triangle.mk f₁ f₂ f₃
+    obtain ⟨β, hβ⟩ := Triangle.coyoneda_exact₂ T.invRotate
+      (inv_rot_of_distTriang _ hT) α hαf
+    -- Step 3: β = 0 (top factor → Q⟦-1⟧ is zero by hom-vanishing)
+    suffices hβ0 : β = 0 by rw [hβ, hβ0, zero_comp]; rfl
+    by_cases hQZ : IsZero Q
+    · exact ((shiftFunctor C (-1 : ℤ)).map_isZero hQZ).eq_of_tgt β 0
+    · rcases hQ_le with hQZ' | ⟨GQ, hnQ, hGQ_le⟩
+      · exact absurd hQZ' hQZ
+      · -- Shift GQ by -1 to get filtration of Q⟦-1⟧
+        let GQs := GQ.shiftHN C s (-1 : ℤ)
+        -- GQs.φ(j) = GQ.φ(j) - 1 ≤ c - 1 < b ≤ FK.φ(0)
+        have hQs_gap : ∀ j : Fin GQs.n, GQs.φ j < FK.φ ⟨0, hnK⟩ := by
+          intro j
+          change GQ.φ j + ((-1 : ℤ) : ℝ) < FK.φ ⟨0, hnK⟩
+          have h1 : GQ.φ j ≤ GQ.φ ⟨0, hnQ⟩ := by
+            apply GQ.hφ.antitone; simp only [Fin.le_def]; omega
+          have h2 : GQ.φ ⟨0, hnQ⟩ ≤ c := by
+            have := hGQ_le; change GQ.phiPlus C hnQ ≤ c at this; exact this
+          have h3 : ((-1 : ℤ) : ℝ) = -1 := by norm_num
+          linarith
+        exact s.hom_eq_zero_of_gt_phases C (FK.semistable ⟨0, hnK⟩) GQs hQs_gap β
+  -- Top factor is zero — contradiction
+  exact hneK (FK.isZero_factor_zero_of_hom_eq_zero C s hnK hK_factor_zero)
+
+omit [IsTriangulated C] in
+/-- **Phase lower bound from one-sided containment** (dual of
+`phiPlus_lt_of_triangle_with_leProp`). In a triangle `K → E → Q → K⟦1⟧`,
+if `E` has `φ⁻(E) > a` and `K` satisfies `gtProp c` (all phases > c) with `a < c + 1`,
+then if `Q` is nonzero, `a < φ⁻(Q)`.
+
+**Key application**: cokernel/quotient lower bound. In a heart SES, the quotient object
+satisfies `gtProp` from heart membership, and this lemma gives the lower phase bound
+needed for interval containment. -/
+theorem Slicing.phiMinus_gt_of_triangle_with_gtProp (s : Slicing C)
+    {K E Q : C} (hQ : ¬IsZero Q) {a : ℝ}
+    (hE_gt : ∀ (hE : ¬IsZero E), a < s.phiMinus C E hE)
+    {c : ℝ} (hK_gt : s.gtProp C c K) (hca : a < c + 1)
+    {f₁ : K ⟶ E} {f₂ : E ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C) :
+    a < s.phiMinus C Q hQ := by
+  obtain ⟨FQ, hnQ, hneQ⟩ := HNFiltration.exists_nonzero_last C s hQ
+  rw [s.phiMinus_eq C Q hQ FQ hnQ hneQ]
+  by_contra hle
+  push_neg at hle
+  -- hle : FQ.φ ⟨FQ.n - 1, _⟩ ≤ a (bottom factor has phase ≤ a)
+  -- Show all maps from Q to FQ's bottom factor are zero
+  have hQ_factor_zero :
+      ∀ β : Q ⟶ (FQ.triangle ⟨FQ.n - 1, by omega⟩).obj₃, β = 0 := by
+    intro β
+    -- Step 1: f₂ ≫ β = 0 (E → bottom_factor is zero by hom-vanishing)
+    have hfβ : f₂ ≫ β = 0 := by
+      by_cases hEZ : IsZero E
+      · exact hEZ.eq_of_src (f₂ ≫ β) 0
+      · obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hEZ
+        have hE_gap : ∀ j : Fin FE.n,
+            FQ.φ ⟨FQ.n - 1, by omega⟩ < FE.φ j := fun j ↦ by
+          have h1 : a < FE.φ ⟨FE.n - 1, by omega⟩ := by
+            have := hE_gt hEZ
+            rw [s.phiMinus_eq C E hEZ FE hnE hneE] at this; exact this
+          have h2 : FE.φ ⟨FE.n - 1, by omega⟩ ≤ FE.φ j := by
+            apply FE.hφ.antitone; simp only [Fin.le_def]; omega
+          linarith
+        exact s.hom_eq_zero_of_lt_phases C
+          (FQ.semistable ⟨FQ.n - 1, by omega⟩) FE hE_gap _
+    -- Step 2: By yoneda_exact₃, β factors through K⟦1⟧
+    obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ (Triangle.mk f₁ f₂ f₃) hT β hfβ
+    -- Step 3: γ = 0 (K⟦1⟧ → bottom_factor is zero by hom-vanishing)
+    suffices hγ0 : γ = 0 by rw [hγ, hγ0]; exact comp_zero
+    by_cases hKZ : IsZero K
+    · exact ((shiftFunctor C (1 : ℤ)).map_isZero hKZ).eq_of_src γ 0
+    · rcases hK_gt with hKZ' | ⟨GK, hnGK, hGK_gt⟩
+      · exact absurd hKZ' hKZ
+      · -- Shift GK by 1 to get filtration of K⟦1⟧
+        let GKs := GK.shiftHN C s (1 : ℤ)
+        -- GKs.φ(j) = GK.φ(j) + 1 > c + 1 > a ≥ FQ.φ(n-1)
+        have hKs_gap : ∀ j : Fin GKs.n,
+            FQ.φ ⟨FQ.n - 1, by omega⟩ < GKs.φ j := by
+          intro j
+          change FQ.φ ⟨FQ.n - 1, by omega⟩ < GK.φ j + ((1 : ℤ) : ℝ)
+          have h1 : GK.φ ⟨GK.n - 1, by omega⟩ ≤ GK.φ j := by
+            apply GK.hφ.antitone
+            change j.val ≤ GK.n - 1
+            have := j.isLt; have : GKs.n = GK.n := rfl; omega
+          have h2 : c < GK.φ ⟨GK.n - 1, by omega⟩ := hGK_gt
+          have h3 : ((1 : ℤ) : ℝ) = 1 := by norm_num
+          linarith
+        exact s.hom_eq_zero_of_lt_phases C
+          (FQ.semistable ⟨FQ.n - 1, by omega⟩) GKs hKs_gap γ
+  -- Bottom factor is zero — contradiction
+  exact hneQ (FQ.isZero_factor_last_of_hom_eq_zero C s hnQ hQ_factor_zero)
+
+/-! ### Kernel and image containment in thin intervals (Lemma 4.3 consequences)
+
+In a thin interval `P((a, b))` with `b - a ≤ 1`, the left heart `P((a, a+1])` computes
+kernels and images of morphisms between interval objects. The resulting kernels and images
+**stay in the interval** `P((a, b))`:
+
+* **Upper bound** (`phiPlus < b`): from `phiPlus_lt_of_triangle_with_leProp`, using
+  that the third vertex of the heart SES triangle has `leProp(a+1)` from heart membership.
+* **Lower bound** (`phiMinus > a`): directly from left heart membership, since all
+  phases in `P((a, a+1])` are `> a`.
+
+This does NOT extend to cokernels in the left heart: a quotient of an interval object
+in the left heart can have phases up to `a + 1 > b`. For cokernels, the right heart
+`P((b-1, b])` is needed, and the strict upper bound `phiPlus < b` requires the
+quasi-abelian theory (Bridgeland §4).
+-/
+
+omit [IsTriangulated C] in
+/-- **Kernel/image containment in thin intervals.** In a distinguished triangle
+`K → E → Q → K[1]` where `E ∈ P((a,b))` and both `K` and `Q` satisfy basic phase
+bounds (`gtProp a` and `leProp (a+1)`), then `K ∈ P((a, b))`.
+
+The upper bound `phiPlus(K) < b` comes from `phiPlus_lt_of_triangle_with_leProp`.
+The lower bound `phiMinus(K) > a` comes from `gtProp a`.
+
+**Key applications**:
+* **Kernels**: In the heart SES `0 → ker(f) → E → im(f) → 0`, both `ker(f)` and
+  `im(f)` are in the left heart, hence satisfy `gtProp a` and `leProp (a+1)`.
+* **Images**: In the heart SES `0 → im(f) → F → coker(f) → 0`, similarly. -/
+theorem Slicing.first_intervalProp_of_triangle (s : Slicing C)
+    {a b : ℝ} (hab' : a < b)
+    {K E Q : C}
+    (hE : s.intervalProp C a b E)
+    (hQ_le : s.leProp C (a + 1) Q)
+    (hK_gt : s.gtProp C a K)
+    {f₁ : K ⟶ E} {f₂ : E ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C) :
+    s.intervalProp C a b K := by
+  by_cases hK : IsZero K
+  · exact Or.inl hK
+  · -- phiPlus(K) < b: from phiPlus_lt_of_triangle_with_leProp
+    have hK_lt : s.phiPlus C K hK < b :=
+      s.phiPlus_lt_of_triangle_with_leProp C hK
+        (fun hE' ↦ s.phiPlus_lt_of_intervalProp C hE' hE)
+        hQ_le (by linarith) hT
+    -- phiMinus(K) > a: from gtProp via phiMinus_gt_of_gtProp
+    have hK_minus : a < s.phiMinus C K hK :=
+      s.phiMinus_gt_of_gtProp C hK hK_gt
+    -- Combine: K has all phases in (a, b)
+    obtain ⟨FK, hnK, hfirstK, hlastK⟩ := HNFiltration.exists_both_nonzero C s hK
+    right
+    exact ⟨FK, fun i ↦ by
+      constructor
+      · calc a < s.phiMinus C K hK := hK_minus
+          _ = FK.φ ⟨FK.n - 1, by omega⟩ := s.phiMinus_eq C K hK FK hnK hlastK
+          _ ≤ FK.φ i := FK.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+      · calc FK.φ i ≤ FK.φ ⟨0, hnK⟩ :=
+              FK.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
+          _ = s.phiPlus C K hK := (s.phiPlus_eq C K hK FK hnK hfirstK).symm
+          _ < b := hK_lt⟩
+
+omit [IsTriangulated C] in
+/-- **Extension closure for thin intervals.** In a distinguished triangle
+`A → E → B → A[1]` where `A` and `B` are in `P((a, b))` with `b - a ≤ 1`,
+then `E ∈ P((a, b))`.
+
+This follows from `phiPlus_lt_of_triangle` and `phiMinus_gt_of_triangle`. It shows
+that `P((a, b))` is extension-closed in the triangulated category when `b - a ≤ 1`.
+This is a special case of the general extension closure for interval categories. -/
+theorem Slicing.intervalProp_extension_closed (s : Slicing C)
+    {a b : ℝ}
+    {A E B : C}
+    (hA : s.intervalProp C a b A) (hB : s.intervalProp C a b B)
+    {f : A ⟶ E} {g : E ⟶ B} {h : B ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g h ∈ distTriang C) :
+    s.intervalProp C a b E := by
+  by_cases hE : IsZero E
+  · exact Or.inl hE
+  · right
+    have hPlus : s.phiPlus C E hE < b :=
+      s.phiPlus_lt_of_triangle C hE
+        (fun hA' ↦ s.phiPlus_lt_of_intervalProp C hA' hA)
+        (fun hB' ↦ s.phiPlus_lt_of_intervalProp C hB' hB) hT
+    have hMinus : a < s.phiMinus C E hE :=
+      s.phiMinus_gt_of_triangle C hE
+        (fun hA' ↦ s.phiMinus_gt_of_intervalProp C hA' hA)
+        (fun hB' ↦ s.phiMinus_gt_of_intervalProp C hB' hB) hT
+    obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
+    exact ⟨F, fun i ↦ by
+      constructor
+      · calc a < s.phiMinus C E hE := hMinus
+          _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C E hE F hn hlast
+          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+      · calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
+              F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
+          _ = s.phiPlus C E hE := (s.phiPlus_eq C E hE F hn hfirst).symm
+          _ < b := hPlus⟩
+
+end TwoHeartEmbedding
 
 /-! ### Skewed stability functions (Definition 4.4) -/
 

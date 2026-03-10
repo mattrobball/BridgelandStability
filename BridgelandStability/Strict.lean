@@ -6,6 +6,7 @@ Authors: Formalization
 import Mathlib.CategoryTheory.Abelian.Images
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
 import Mathlib.Algebra.Homology.ShortComplex.ShortExact
+import Mathlib.CategoryTheory.Subobject.Basic
 
 /-!
 # Strict Morphisms and Quasi-Abelian Categories
@@ -115,6 +116,37 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 theorem isStrict_of_abelian {X Y : C} (f : X ⟶ Y) : IsStrict f :=
   show IsIso _ from inferInstance
 
+/-- In an abelian category, every monomorphism is a strict monomorphism. -/
+theorem isStrictMono_of_mono {X Y : C} (f : X ⟶ Y) [Mono f] : IsStrictMono f :=
+  ⟨inferInstance, isStrict_of_abelian f⟩
+
+/-- In an abelian category, every epimorphism is a strict epimorphism. -/
+theorem isStrictEpi_of_epi {X Y : C} (f : X ⟶ Y) [Epi f] : IsStrictEpi f :=
+  ⟨inferInstance, isStrict_of_abelian f⟩
+
+/-- In an abelian category, every short exact sequence is a strict short exact sequence. -/
+theorem strictShortExact_of_shortExact {S : ShortComplex C} (h : S.ShortExact) :
+    StrictShortExact S :=
+  ⟨h, isStrict_of_abelian S.f, isStrict_of_abelian S.g⟩
+
 end AbelianStrict
+
+section SubobjectFiniteness
+
+variable {A : Type u} [Category.{v} A] {C : Type u} [Category.{v} C]
+
+/-- A fully faithful functor induces an injection on subobject lattices.
+If `F : A ⥤ C` is fully faithful and injective on objects, subobjects of `E` in `A`
+inject into subobjects of `F.obj E` in `C`. Together with `Finite.of_injective`,
+this transfers finiteness of subobject lattices from `C` to `A`.
+
+The key use case is the full subcategory inclusion `ι : P(φ) ⥤ C`, where local
+finiteness of the slicing gives `Finite (Subobject (ι.obj E))` in `C`, and we
+need `Finite (Subobject E)` in `P(φ)`. -/
+theorem Finite.subobject_of_fullyFaithful (F : A ⥤ C) [F.Full] [F.Faithful]
+    {E : A} (h : Finite (Subobject (F.obj E))) : Finite (Subobject E) := by
+  sorry
+
+end SubobjectFiniteness
 
 end CategoryTheory

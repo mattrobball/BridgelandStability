@@ -59,34 +59,11 @@ namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-/-! ## §3: t-structures from slicings -/
+/-! ## §3: t-structures from slicings
 
-section TStructureFromSlicing
-
-variable [IsTriangulated C]
-
-/-- **Node 3.2a / bounded t-structure from slicing.**
-The t-structure induced by a slicing is bounded: every object lies between
-`le a` and `ge b` for some integers `a, b`.
-
-The proof uses the HN filtration axiom to place every object's phases in
-a finite interval, then converts the phase bounds to `le`/`ge` bounds. -/
-theorem Slicing.toTStructure_bounded (s : Slicing C) :
-    s.toTStructure.IsBounded := by
-  sorry
-
-/-- **Node 3.5b / heart identification.**
-An object `E` lies in the heart of the slicing-induced t-structure if and only
-if it satisfies both `gtProp 0` (all HN phases > 0) and `leProp 1` (all HN
-phases ≤ 1). This identifies the heart with the half-open interval `P((0, 1])`.
-
-Note: the t-structure has `le 0 = gtProp(0)` and `ge 0 = leProp(1)`, so the
-heart `le 0 ⊓ ge 0` is exactly `gtProp 0 ⊓ leProp 1`. -/
-theorem Slicing.toTStructure_heart_iff (s : Slicing C) (E : C) :
-    (s.toTStructure).heart E ↔ s.gtProp C 0 E ∧ s.leProp C 1 E := by
-  sorry
-
-end TStructureFromSlicing
+`Slicing.toTStructure_bounded` and `Slicing.toTStructure_heart_iff` are now proved
+in `Slicing.lean` (near the `toTStructure` definition) to avoid import cycles.
+-/
 
 /-! ## §5: Stability conditions — Lemma 5.2 and Proposition 5.3 -/
 
@@ -219,36 +196,42 @@ theorem HeartStabilityData.roundtrip
 
 end Proposition53
 
-/-! ## §5: Lemma 5.2 consequences — P(φ) closure properties -/
+/-! ## §5: Lemma 5.2 consequences — P(φ) closure properties
+
+### FALSE: P(φ) is NOT closed under subobjects in the heart
+
+**Counterexample** (elliptic curve, standard stability condition `Z(E) = -deg(E) + i·rank(E)`):
+Take `F` = semistable rank 2 bundle of degree 2 on an elliptic curve `E`.
+Then `F ∈ P(3/4)` (since `arg(Z(F)) = arg(-2 + 2i) = 3π/4`).
+A nonzero section `O_E → F` gives a sub-line-bundle `O_E ↪ F` in the heart `Coh(E)`.
+But `O_E ∈ P(1/2)` (since `arg(Z(O_E)) = arg(i) = π/2`), so `O_E ∉ P(3/4)`.
+
+**Why the see-saw argument fails**: For the triangle `A → E → Q → A⟦1⟧` with `E ∈ P(φ)`:
+- `φ⁺(A) ≤ φ` (from `phiPlus_triangle_le`), so `Im(Z(A) · rot) ≤ 0`
+- `φ⁻(Q) ≥ φ` (from `phiMinus_triangle_le`), so `Im(Z(Q) · rot) ≥ 0`
+- Sum `= Im(Z(E) · rot) = 0` — but the terms have **opposite signs**, so sum `= 0`
+  does NOT force each to be zero.
+
+Compare with `P_phi_of_heart_triangle` (in `Deformation.lean`), which IS correct: it
+requires BOTH `K` and `Q` to have phases `≤ φ` (and `> φ - 1`), ensuring same-sign
+terms in the sum. -/
 
 section PhaseSubcategoryProperties
 
 variable [IsTriangulated C]
 
-/-- **P(φ) closure under subobjects in the heart.**
-If `E ∈ P(φ)` lies in the abelian heart `P((φ-1, φ])`, then every subobject
-of `E` in the heart that is nonzero also lies in `P(φ)`.
-
-This is a key ingredient for the small-gap hom-vanishing argument (Lemma 7.6):
-the image of a morphism `f : E → F` in the heart is a subobject of `F` and a
-quotient of `E`, and its W-phase is constrained by both. -/
-theorem StabilityCondition.P_phi_closed_under_subobjects_in_heart
-    (σ : StabilityCondition C) {φ : ℝ} {E : C}
-    (hE : (σ.slicing.P φ) E) (hEne : ¬IsZero E)
-    {A : Subobject E} (hA : ¬IsZero (A : C))
-    (hA_heart : (σ.slicing.toTStructure).heart (A : C)) :
-    (σ.slicing.P φ) (A : C) := by
-  sorry
-
-/-- **P(φ) closure under quotients in the heart.**
-Dual to `P_phi_closed_under_subobjects_in_heart`. -/
-theorem StabilityCondition.P_phi_closed_under_quotients_in_heart
-    (σ : StabilityCondition C) {φ : ℝ} {E Q : C}
-    (hE : (σ.slicing.P φ) E) (hEne : ¬IsZero E)
-    (f : E ⟶ Q) [Epi f] (hQ : ¬IsZero Q)
-    (hQ_heart : (σ.slicing.toTStructure).heart Q) :
-    (σ.slicing.P φ) Q := by
-  sorry
+-- NOTE: The theorems `P_phi_closed_under_subobjects_in_heart` and
+-- `P_phi_closed_under_quotients_in_heart` that were previously here are
+-- MATHEMATICALLY FALSE and have been deleted. See the section comment above
+-- for a counterexample.
+--
+-- The correct results for P(φ) closure are:
+-- 1. `P_phi_of_heart_triangle` (Deformation.lean): if BOTH K and Q have
+--    phases in (φ-1, φ], then K ∈ P(φ) and Q ∈ P(φ).
+-- 2. For Bridgeland's arguments (Lemma 7.6, 7.7), the quasi-abelian
+--    structure of P((a,b)) is needed. Strict subobjects in the quasi-abelian
+--    category DO stay in the interval, but arbitrary heart-subobjects do NOT
+--    stay in P(φ).
 
 end PhaseSubcategoryProperties
 
@@ -258,6 +241,8 @@ section DeformationInfrastructure
 
 variable [IsTriangulated C]
 
+omit [IsTriangulated C] in
+set_option backward.isDefEq.respectTransparency false in
 /-- **Heart SES to distinguished triangle.**
 Given a short exact sequence in the abelian heart (as objects and morphisms
 in the ambient category `C` that lie in the heart), there is a distinguished
@@ -276,7 +261,75 @@ theorem TStructure.heart_shortExact_triangle
       ∃ (β : W ⟶ A), β ≫ f = α) :
     ∃ (h : Q ⟶ A⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C := by
-  sorry
+  -- Work in the heart abelian subcategory (letI for transparent instance reduction)
+  letI := t.hasHeartFullSubcategory
+  let ι := t.ιHeart (H := t.heart.FullSubcategory)
+  let A' : t.heart.FullSubcategory := ⟨A, hA⟩
+  let B' : t.heart.FullSubcategory := ⟨B, hB⟩
+  let Q' : t.heart.FullSubcategory := ⟨Q, hQ⟩
+  let f' : A' ⟶ B' := ObjectProperty.homMk f
+  let g' : B' ⟶ Q' := ObjectProperty.homMk g
+  -- g' is epi in the heart (faithful inclusion preserves the epi test)
+  haveI : Epi g' := ⟨fun {Z} h₁ h₂ hh ↦ by
+    ext; exact (cancel_epi g).mp (by
+      simpa [ObjectProperty.FullSubcategory.comp_hom] using
+        congr_arg InducedCategory.Hom.hom hh)⟩
+  -- Get a distinguished triangle from the epi g' via the heart's abelian structure
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (heart_hι t) (heart_admissible t) g'
+  -- hT : Triangle.mk (ι.map i) (ι.map g') δ ∈ distTriang C
+  -- Factor ι.map i through f via hexact (i ≫ g' = 0 from the triangle)
+  have h_ig : (ι.map i) ≫ g = 0 := by
+    have := comp_distTriang_mor_zero₁₂ _ hT
+    -- this : ι.map i ≫ ι.map g' = 0; ι.map g' =_def g
+    change (ι.map i) ≫ g = 0 at this; exact this
+  obtain ⟨β_hom, hβ_hom⟩ := hexact _ h_ig
+  let β : K ⟶ A' := ObjectProperty.homMk β_hom
+  have hβf : β ≫ f' = i := ι.map_injective (by
+    rw [Functor.map_comp]; change β_hom ≫ f = ι.map i; exact hβ_hom)
+  -- i is a kernel of g' in the heart (from the distinguished triangle)
+  have hKer :=
+    Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang (heart_hι t) i g' δ hT
+  -- f' ≫ g' = 0 in the heart
+  have hfg' : f' ≫ g' = 0 := ι.map_injective (by
+    rw [Functor.map_comp, Functor.map_zero]; change f ≫ g = 0; exact hfg)
+  -- Lift f' through the kernel i to get γ : A' ⟶ K with γ ≫ i = f'
+  let γ : A' ⟶ K := hKer.lift (KernelFork.ofι f' hfg')
+  have hγi : γ ≫ i = f' := Fork.IsLimit.lift_ι hKer
+  -- β and γ are mutually inverse (both are kernel maps for g')
+  have hβγ : β ≫ γ = 𝟙 K :=
+    Fork.IsLimit.hom_ext hKer (by simp [hγi, hβf])
+  have hγβ : γ ≫ β = 𝟙 A' := by
+    haveI : Mono f' := ⟨fun {Z} h₁ h₂ hh ↦ by
+      ext; exact (cancel_mono f).mp (by
+        simpa [ObjectProperty.FullSubcategory.comp_hom] using
+          congr_arg InducedCategory.Hom.hom hh)⟩
+    rw [← cancel_mono f', Category.assoc, hβf, hγi, Category.id_comp]
+  -- Construct the isomorphism K ≅ A' in the heart
+  let eKA : K ≅ A' :=
+    { hom := β, inv := γ, hom_inv_id := hβγ, inv_hom_id := hγβ }
+  -- Transport the distinguished triangle via eKA
+  -- T = Triangle.mk (ι.map i) (ι.map g') δ ∈ distTriang C
+  -- T' = Triangle.mk f g h with h = δ ≫ (shiftFunctor C (1 : ℤ)).map (ι.map β)
+  -- iso: T' ≅ T given by (ι.mapIso eKA.symm, id, id)
+  refine ⟨δ ≫ ((shiftFunctor C (1 : ℤ)).map (ι.map eKA.hom)), ?_⟩
+  refine isomorphic_distinguished _ hT _
+    (Triangle.isoMk _ _ (ι.mapIso eKA.symm) (Iso.refl _) (Iso.refl _) ?_ ?_ ?_)
+  · -- comm₁: f ≫ 𝟙 = (ι.map γ) ≫ (ι.map i)
+    simp only [Iso.refl_hom, Category.comp_id, Functor.mapIso_hom, Iso.symm_hom,
+      Triangle.mk_mor₁]
+    -- After simp: f = ι.map eKA.inv ≫ t.ιHeart.map i
+    -- eKA.inv = γ and t.ιHeart = ι (via let), so:
+    change f = ι.map γ ≫ ι.map i
+    rw [← Functor.map_comp, hγi]; rfl
+  · -- comm₂: g ≫ 𝟙 = 𝟙 ≫ (ι.map g')
+    simp only [Iso.refl_hom, Category.comp_id, Category.id_comp]; rfl
+  · -- comm₃: (δ ≫ F.map (ι.map β)) ≫ F.map (ι.map γ) = 𝟙 ≫ δ
+    simp only [Iso.refl_hom, Category.id_comp, Triangle.mk_mor₃, Functor.mapIso_hom,
+      Iso.symm_hom]
+    rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, hβγ,
+      ι.map_id, Functor.map_id, Category.comp_id]
 
 end DeformationInfrastructure
 
