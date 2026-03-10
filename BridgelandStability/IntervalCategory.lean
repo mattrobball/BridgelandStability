@@ -2599,6 +2599,33 @@ theorem Slicing.IntervalCat.strictShortExact_iff_exists_distTriang (s : Slicing 
     exact Slicing.IntervalCat.strictShortExact_of_distTriang
       (C := C) (s := s) (a := a) (b := b) hT
 
+/-- A strict short exact sequence in `P((a,b))` yields the expected `K₀` relation
+in the ambient triangulated category. -/
+theorem Slicing.IntervalCat.K0_of_strictShortExact (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)}
+    (hS : StrictShortExact S) :
+    K₀.of C S.X₂.obj = K₀.of C S.X₁.obj + K₀.of C S.X₃.obj := by
+  obtain ⟨δ, hT⟩ := Slicing.IntervalCat.exists_distTriang_of_strictShortExact
+    (C := C) (s := s) (a := a) (b := b) hS
+  simpa using K₀.of_triangle C (Triangle.mk S.f.hom S.g.hom δ) hT
+
+/-- Append a semistable strict quotient in `P((a,b))` to an HN filtration of the
+kernel. This packages `appendFactor` with the strict short exact sequence to triangle
+bridge for interval categories. -/
+noncomputable def HNFiltration.appendStrictFactor {P : ℝ → ObjectProperty C}
+    {s : Slicing C} {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {S : ShortComplex (s.IntervalCat C a b)}
+    (G : HNFiltration C P S.X₁.obj)
+    (hS : StrictShortExact S) (ψ : ℝ) (hψ : P ψ S.X₃.obj)
+    (hψ_lt : ∀ j : Fin G.n, ψ < G.φ j) :
+    HNFiltration C P S.X₂.obj := by
+  let hδ := Slicing.IntervalCat.exists_distTriang_of_strictShortExact
+    (C := C) (s := s) (a := a) (b := b) hS
+  let δ := Classical.choose hδ
+  have hT : Triangle.mk S.f.hom S.g.hom δ ∈ distTriang C := Classical.choose_spec hδ
+  exact G.appendFactor C (Triangle.mk S.f.hom S.g.hom δ) hT
+    (Iso.refl _) (Iso.refl _) ψ hψ hψ_lt
+
 end Preabelian
 
 /-! ### Skewed stability functions (Definition 4.4) -/
@@ -2621,5 +2648,16 @@ structure SkewedStabilityFunction (s : Slicing C) (a b : ℝ) where
   `W([E])` is nonzero. -/
   nonzero : ∀ (E : C) (φ : ℝ), a < φ → φ < b →
     (s.P φ) E → ¬IsZero E → W (K₀.of C E) ≠ 0
+
+variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+
+/-- The central charge of a `SkewedStabilityFunction` is additive on strict short exact
+sequences in the thin interval category. -/
+theorem SkewedStabilityFunction.strict_additive {s : Slicing C}
+    (ssf : SkewedStabilityFunction C s a b)
+    {S : ShortComplex (s.IntervalCat C a b)} (hS : StrictShortExact S) :
+    ssf.W (K₀.of C S.X₂.obj) = ssf.W (K₀.of C S.X₁.obj) + ssf.W (K₀.of C S.X₃.obj) := by
+  rw [Slicing.IntervalCat.K0_of_strictShortExact (C := C) (s := s) (a := a) (b := b) hS,
+    map_add]
 
 end CategoryTheory.Triangulated
