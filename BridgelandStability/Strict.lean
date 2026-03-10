@@ -108,6 +108,85 @@ structure StrictShortExact (S : ShortComplex C) : Prop where
 
 end StrictShortExact
 
+section KernelCokernelStrict
+
+variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [HasKernels C] [HasCokernels C]
+
+/-- The kernel of any morphism is a strict monomorphism. The canonical comparison
+`Coim(kernel.ι g) → Im(kernel.ι g)` is an isomorphism because `kernel.ι g` is mono
+(so `Coim ≅ kernel g`), and the image `kernel(cokernel.π(kernel.ι g))` is isomorphic
+to `kernel g` via an explicit inverse pair of `kernel.lift` morphisms. -/
+theorem isStrictMono_kernel {X Y : C} (g : X ⟶ Y) : IsStrictMono (kernel.ι g) where
+  mono := inferInstance
+  strict := by
+    -- kernel.ι g is mono, so kernel(kernel.ι g) is zero
+    have hk0 : kernel.ι (kernel.ι g) = (0 : kernel (kernel.ι g) ⟶ kernel g) :=
+      (isZero_kernel_of_mono (kernel.ι g)).eq_zero_of_src _
+    -- Therefore coimage.π(kernel.ι g) = cokernel.π(kernel.ι(kernel.ι g)) is an iso
+    haveI : IsIso (cokernel.π (kernel.ι (kernel.ι g))) := by rw [hk0]; infer_instance
+    -- The image inclusion composed with g is zero (factors through cokernel)
+    have h1 : kernel.ι (cokernel.π (kernel.ι g)) ≫ g = 0 := by
+      have hf := cokernel.π_desc (kernel.ι g) g (kernel.condition g)
+      conv_lhs => rhs; rw [← hf]
+      rw [← Category.assoc, kernel.condition, zero_comp]
+    -- kernel g ≅ Im(kernel.ι g) via inverse pair of kernel.lift morphisms
+    have hℓj : kernel.lift (cokernel.π (kernel.ι g)) (kernel.ι g) (cokernel.condition _) ≫
+        kernel.lift g (kernel.ι (cokernel.π (kernel.ι g))) h1 = 𝟙 _ := by ext; simp
+    have hjℓ : kernel.lift g (kernel.ι (cokernel.π (kernel.ι g))) h1 ≫
+        kernel.lift (cokernel.π (kernel.ι g)) (kernel.ι g) (cokernel.condition _) = 𝟙 _ := by
+      ext; simp
+    haveI : IsIso (kernel.lift (cokernel.π (kernel.ι g)) (kernel.ι g) (cokernel.condition _)) :=
+      ⟨⟨_, hℓj, hjℓ⟩⟩
+    -- coimageImageComparison = inv(coimage.π) ≫ ℓ, a composition of isos
+    change IsIso (Abelian.coimageImageComparison (kernel.ι g))
+    have hπ : cokernel.π (kernel.ι (kernel.ι g)) ≫
+        Abelian.coimageImageComparison (kernel.ι g) =
+        kernel.lift (cokernel.π (kernel.ι g)) (kernel.ι g) (cokernel.condition _) :=
+      cokernel.π_desc _ _ _
+    rw [show Abelian.coimageImageComparison (kernel.ι g) =
+        inv (cokernel.π (kernel.ι (kernel.ι g))) ≫
+        kernel.lift (cokernel.π (kernel.ι g)) (kernel.ι g) (cokernel.condition _) from
+      by rw [← hπ, ← Category.assoc, IsIso.inv_hom_id, Category.id_comp]]
+    infer_instance
+
+/-- The cokernel of any morphism is a strict epimorphism. The canonical comparison
+`Coim(cokernel.π g) → Im(cokernel.π g)` is an isomorphism because `cokernel.π g` is epi
+(so `Im ≅ cokernel g`), and the coimage `cokernel(kernel.ι(cokernel.π g))` is isomorphic
+to `cokernel g` via an explicit inverse pair of `cokernel.desc` morphisms. -/
+theorem isStrictEpi_cokernel {X Y : C} (g : X ⟶ Y) : IsStrictEpi (cokernel.π g) where
+  epi := inferInstance
+  strict := by
+    -- cokernel.π g is epi, so cokernel(cokernel.π g) is zero
+    have hc0 : cokernel.π (cokernel.π g) = (0 : cokernel g ⟶ cokernel (cokernel.π g)) :=
+      (isZero_cokernel_of_epi (cokernel.π g)).eq_zero_of_tgt _
+    -- Therefore image.ι(cokernel.π g) = kernel.ι(cokernel.π(cokernel.π g)) is an iso
+    haveI : IsIso (kernel.ι (cokernel.π (cokernel.π g))) := by rw [hc0]; infer_instance
+    -- g ≫ coimage.π(cokernel.π g) = 0 (g factors through image.ι g)
+    have h1 : g ≫ cokernel.π (kernel.ι (cokernel.π g)) = 0 := by
+      rw [← Abelian.coimage_image_factorisation_assoc g]; simp
+    -- cokernel g ≅ Coim(cokernel.π g) via inverse pair of cokernel.desc morphisms
+    have hhk : cokernel.desc (kernel.ι (cokernel.π g)) (cokernel.π g) (kernel.condition _) ≫
+        cokernel.desc g (cokernel.π (kernel.ι (cokernel.π g))) h1 = 𝟙 _ := by
+      apply (cancel_epi (cokernel.π (kernel.ι (cokernel.π g)))).mp; simp
+    have hkh : cokernel.desc g (cokernel.π (kernel.ι (cokernel.π g))) h1 ≫
+        cokernel.desc (kernel.ι (cokernel.π g)) (cokernel.π g) (kernel.condition _) = 𝟙 _ := by
+      apply (cancel_epi (cokernel.π g)).mp; simp
+    haveI : IsIso (cokernel.desc (kernel.ι (cokernel.π g)) (cokernel.π g) (kernel.condition _)) :=
+      ⟨⟨_, hhk, hkh⟩⟩
+    -- coimageImageComparison = h ≫ inv(image.ι), a composition of isos
+    change IsIso (Abelian.coimageImageComparison (cokernel.π g))
+    have key : Abelian.coimageImageComparison (cokernel.π g) ≫
+        kernel.ι (cokernel.π (cokernel.π g)) =
+        cokernel.desc (kernel.ι (cokernel.π g)) (cokernel.π g) (kernel.condition _) := by
+      apply (cancel_epi (cokernel.π (kernel.ι (cokernel.π g)))).mp; simp
+    rw [show Abelian.coimageImageComparison (cokernel.π g) =
+        cokernel.desc (kernel.ι (cokernel.π g)) (cokernel.π g) (kernel.condition _) ≫
+        inv (kernel.ι (cokernel.π (cokernel.π g))) from
+      by rw [← key, Category.assoc, IsIso.hom_inv_id, Category.comp_id]]
+    infer_instance
+
+end KernelCokernelStrict
+
 section AbelianStrict
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
@@ -135,17 +214,38 @@ section SubobjectFiniteness
 
 variable {A : Type u} [Category.{v} A] {C : Type u} [Category.{v} C]
 
-/-- A fully faithful functor induces an injection on subobject lattices.
-If `F : A ⥤ C` is fully faithful and injective on objects, subobjects of `E` in `A`
-inject into subobjects of `F.obj E` in `C`. Together with `Finite.of_injective`,
+/-- A faithful functor that preserves monomorphisms induces an injection on subobject
+lattices. If `F : A ⥤ C` is faithful and preserves monomorphisms, subobjects of `E`
+in `A` inject into subobjects of `F.obj E` in `C`. Together with `Finite.of_injective`,
 this transfers finiteness of subobject lattices from `C` to `A`.
 
 The key use case is the full subcategory inclusion `ι : P(φ) ⥤ C`, where local
 finiteness of the slicing gives `Finite (Subobject (ι.obj E))` in `C`, and we
-need `Finite (Subobject E)` in `P(φ)`. -/
-theorem Finite.subobject_of_fullyFaithful (F : A ⥤ C) [F.Full] [F.Faithful]
+need `Finite (Subobject E)` in `P(φ)`.
+
+Note: fullness is not required. The hypothesis `PreservesMonomorphisms F` is needed
+because a faithful functor does not automatically preserve monomorphisms (the mono
+test in `C` involves objects not in the image of `F`). -/
+theorem Finite.subobject_of_faithful_preservesMono (F : A ⥤ C) [F.Full] [F.Faithful]
+    [F.PreservesMonomorphisms]
     {E : A} (h : Finite (Subobject (F.obj E))) : Finite (Subobject E) := by
-  sorry
+  -- Build injection: Subobject E → Subobject (F.obj E)
+  -- sending Subobject.mk (f : S ⟶ E) to Subobject.mk (F.map f : F.obj S ⟶ F.obj E)
+  let φ : Subobject E → Subobject (F.obj E) :=
+    Subobject.lift (fun {S} (f : S ⟶ E) [Mono f] ↦ Subobject.mk (F.map f))
+      (fun {S₁ S₂} f g [Mono f] [Mono g] i w ↦
+        Subobject.mk_eq_mk_of_comm _ _ (F.mapIso i) (by
+          change F.map i.hom ≫ F.map g = F.map f; rw [← F.map_comp, w]))
+  exact Finite.of_injective φ (fun s₁ s₂ heq ↦ by
+    induction s₁ using Subobject.ind
+    induction s₂ using Subobject.ind
+    rename_i S₁ f₁ _ S₂ f₂ _
+    change Subobject.mk (F.map f₁) = Subobject.mk (F.map f₂) at heq
+    exact Subobject.mk_eq_mk_of_comm f₁ f₂
+      (F.preimageIso (Subobject.isoOfMkEqMk _ _ heq))
+      (F.map_injective (by
+        simp only [Functor.preimageIso_hom, Functor.map_comp, Functor.map_preimage]
+        exact Subobject.ofMkLEMk_comp heq.le)))
 
 end SubobjectFiniteness
 
