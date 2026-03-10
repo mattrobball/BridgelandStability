@@ -170,6 +170,32 @@ theorem isStrictMono_of_isLimitKernelFork
     simpa [Category.assoc] using hcomp]
   infer_instance
 
+/-- A strict epimorphism that is also mono is an isomorphism. -/
+theorem IsStrictEpi.isIso (hf : IsStrictEpi f) [Mono f] : IsIso f := by
+  letI : Epi f := hf.epi
+  have hk : kernel.ι f = 0 := (isZero_kernel_of_mono f).eq_of_src _ _
+  let s : Y ⟶ X :=
+    hf.isColimitCokernelCofork.desc (CokernelCofork.ofπ (𝟙 X) (by simpa [hk]))
+  have hs : f ≫ s = 𝟙 X := by
+    exact hf.isColimitCokernelCofork.fac
+      (CokernelCofork.ofπ (𝟙 X) (by simpa [hk]))
+      Limits.WalkingParallelPair.one
+  letI : IsSplitMono f := IsSplitMono.mk' ⟨s, hs⟩
+  exact isIso_of_epi_of_isSplitMono f
+
+/-- A strict monomorphism that is also epi is an isomorphism. -/
+theorem IsStrictMono.isIso (hf : IsStrictMono f) [Epi f] : IsIso f := by
+  letI : Mono f := hf.mono
+  have hk : cokernel.π f = 0 := (isZero_cokernel_of_epi f).eq_of_tgt _ _
+  let s : Y ⟶ X :=
+    hf.isLimitKernelFork.lift (KernelFork.ofι (𝟙 Y) (by simpa [hk]))
+  have hs : s ≫ f = 𝟙 Y := by
+    exact hf.isLimitKernelFork.fac
+      (KernelFork.ofι (𝟙 Y) (by simpa [hk]))
+      Limits.WalkingParallelPair.zero
+  letI : IsSplitEpi f := IsSplitEpi.mk' ⟨s, hs⟩
+  exact isIso_of_mono_of_isSplitEpi f
+
 /-- A strict epimorphism is a normal epimorphism. -/
 noncomputable def IsStrictEpi.normalEpi (hf : IsStrictEpi f) : NormalEpi f where
   W := kernel f

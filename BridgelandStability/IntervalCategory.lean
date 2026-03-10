@@ -2420,6 +2420,185 @@ theorem Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart (s : Sli
       ι.map_id, Functor.map_id]
     simp
 
+/-- A strict short exact sequence in `P((a,b))` extends to a distinguished triangle in `C`. -/
+theorem Slicing.IntervalCat.exists_distTriang_of_strictShortExact (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)}
+    (hS : StrictShortExact S) :
+    ∃ (δ : S.X₃.obj ⟶ S.X₁.obj⟦(1 : ℤ)⟧), Triangle.mk S.f.hom S.g.hom δ ∈ distTriang C := by
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  letI : CategoryWithHomology t.heart.FullSubcategory :=
+    CategoryTheory.categoryWithHomology_of_abelian (C := t.heart.FullSubcategory)
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  let tR := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := tR.hasHeartFullSubcategory
+  letI : Abelian tR.heart.FullSubcategory := tR.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  have := hS.shortExact.mono_f
+  have := hS.shortExact.epi_g
+  let h := hS.shortExact.exact.condition.choose
+  let eHi : kernel S.g ≅ h.left.K :=
+    IsLimit.conePointUniqueUpToIso (kernelIsKernel S.g) h.left.hi
+  have heHi : eHi.inv ≫ kernel.ι S.g = h.left.i := by
+    simpa [KernelFork.ofι] using
+      IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel S.g) h.left.hi
+        Limits.WalkingParallelPair.zero
+  haveI : Epi h.left.f' := hS.shortExact.exact.epi_f' h.left
+  have hFRMono : Mono (FR.map h.left.f') := by
+    haveI : Mono (FR.map S.f) :=
+      Slicing.IntervalCat.mono_toRightHeart_of_strictMono
+        (C := C) (s := s) (a := a) (b := b) S.f
+        ⟨inferInstance, hS.strict_f⟩
+    have hFRComp : FR.map h.left.f' ≫ FR.map h.left.i = FR.map S.f := by
+      calc
+        FR.map h.left.f' ≫ FR.map h.left.i = FR.map (h.left.f' ≫ h.left.i) := by
+          rw [← FR.map_comp]
+        _ = FR.map S.f := by
+          simp [h.left.f'_i]
+    haveI : Mono (FR.map h.left.f' ≫ FR.map h.left.i) := by
+      rw [hFRComp]
+      infer_instance
+    exact mono_of_mono (FR.map h.left.f') (FR.map h.left.i)
+  have hf'Strict : IsStrictMono h.left.f' :=
+    Slicing.IntervalCat.strictMono_of_mono_toRightHeart
+      (C := C) (s := s) (a := a) (b := b) h.left.f'
+  haveI : IsIso h.left.f' := hf'Strict.isIso
+  let eK : S.X₁ ≅ kernel S.g := asIso h.left.f' ≪≫ eHi.symm
+  have hKerBase : IsLimit (KernelFork.ofι S.f S.zero) := by
+    refine kernel.isoKernel S.g S.f eK ?_
+    calc
+      eK.hom ≫ kernel.ι S.g = h.left.f' ≫ h.left.i := by
+          simp [eK, heHi, Category.assoc]
+      _ = S.f := h.left.f'_i
+  have hEpi : Epi (FL.map S.g) := by
+    letI : Epi (FL.map S.g) :=
+      Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
+        (C := C) (s := s) (a := a) (b := b) S.g
+        ⟨inferInstance, hS.strict_g⟩
+    infer_instance
+  have hKer :
+      IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) :=
+    isLimitForkMapOfIsLimit' FL S.zero hKerBase
+  have hExact : (S.map FL).Exact :=
+    ShortComplex.exact_of_f_is_kernel (S := S.map FL) hKer
+  have hL : (S.map FL).ShortExact :=
+    ShortComplex.ShortExact.mk' hExact (Fork.IsLimit.mono hKer) hEpi
+  exact Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart
+    (C := C) (s := s) (a := a) (b := b) hL
+
+/-- A distinguished triangle in `C` whose three vertices lie in `P((a,b))`
+defines a strict short exact sequence in `P((a,b))`. -/
+theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)}
+    {δ : S.X₃.obj ⟶ S.X₁.obj⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk S.f.hom S.g.hom δ ∈ distTriang C) :
+    StrictShortExact S := by
+  let tL := (s.phaseShift C a).toTStructure
+  letI := tL.hasHeartFullSubcategory
+  letI : Abelian tL.heart.FullSubcategory := tL.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  let ιL := tL.ιHeart (H := tL.heart.FullSubcategory)
+  have hTL :
+      Triangle.mk (ιL.map ((S.map FL).f)) (ιL.map ((S.map FL).g)) δ ∈ distTriang C := by
+    simpa [FL] using hT
+  have hKerL :
+      IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) := by
+    simpa using Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (TStructure.heart_hι tL) ((S.map FL).f) ((S.map FL).g) δ hTL
+  have hKerMap :
+      IsLimit (FL.mapCone (KernelFork.ofι S.f S.zero)) :=
+    (isLimitMapConeForkEquiv' FL S.zero).symm hKerL
+  have hKer : IsLimit (KernelFork.ofι S.f S.zero) :=
+    isLimitOfReflects FL hKerMap
+  let tR := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := tR.hasHeartFullSubcategory
+  letI : Abelian tR.heart.FullSubcategory := tR.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  let ιR := tR.ιHeart (H := tR.heart.FullSubcategory)
+  have hTR :
+      Triangle.mk (ιR.map ((S.map FR).f)) (ιR.map ((S.map FR).g)) δ ∈ distTriang C := by
+    simpa [FR] using hT
+  have hCokR :
+      IsColimit (CokernelCofork.ofπ ((S.map FR).g) (S.map FR).zero) := by
+    simpa using Triangulated.AbelianSubcategory.isColimitCokernelCoforkOfDistTriang
+      (TStructure.heart_hι tR) ((S.map FR).f) ((S.map FR).g) δ hTR
+  have hCokMap :
+      IsColimit (FR.mapCocone (CokernelCofork.ofπ S.g S.zero)) :=
+    (isColimitMapCoconeCoforkEquiv' FR S.zero).symm hCokR
+  have hCok : IsColimit (CokernelCofork.ofπ S.g S.zero) :=
+    isColimitOfReflects FR hCokMap
+  obtain ⟨hf, hg⟩ := Slicing.IntervalCat.strictMono_strictEpi_of_distTriang
+    (C := C) (s := s) (a := a) (b := b) hT
+  let eK' : kernel S.g ≅ S.X₁ :=
+    IsLimit.conePointUniqueUpToIso (kernelIsKernel S.g) hKer
+  let eK : S.X₁ ≅ kernel S.g := eK'.symm
+  have heK : eK.hom ≫ kernel.ι S.g = S.f := by
+    simpa [KernelFork.ofι] using
+      IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel S.g) hKer
+        Limits.WalkingParallelPair.zero
+  have hLift : kernel.lift S.g S.f S.zero = eK.hom := by
+    apply (cancel_mono (kernel.ι S.g)).1
+    simpa [heK] using kernel.lift_ι S.g S.f S.zero
+  have hKernelComp : kernel.ι S.g ≫ cokernel.π S.f = 0 := by
+    have hιEq : kernel.ι S.g = eK.inv ≫ S.f := by
+      apply (cancel_epi eK.hom).1
+      simp [Category.assoc, heK]
+    rw [hιEq, Category.assoc, cokernel.condition]
+    simp
+  let eQ : cokernel S.f ≅ S.X₃ :=
+    IsColimit.coconePointUniqueUpToIso (cokernelIsCokernel S.f) hCok
+  have heQ : cokernel.π S.f ≫ eQ.hom = S.g := by
+    simpa [CokernelCofork.ofπ] using
+      IsColimit.comp_coconePointUniqueUpToIso_hom (cokernelIsCokernel S.f) hCok
+        Limits.WalkingParallelPair.one
+  have hDesc : cokernel.desc S.f S.g S.zero = eQ.hom := by
+    apply (cancel_epi (cokernel.π S.f)).1
+    simpa [heQ] using cokernel.π_desc S.f S.g S.zero
+  let hLeft : S.LeftHomologyData := ShortComplex.LeftHomologyData.ofHasKernelOfHasCokernel S
+  let hRight : S.RightHomologyData := ShortComplex.RightHomologyData.ofHasCokernelOfHasKernel S
+  have hLeftZero : IsZero hLeft.H := by
+    haveI : IsIso (kernel.lift S.g S.f S.zero) := by rw [hLift]; infer_instance
+    haveI : Epi (kernel.lift S.g S.f S.zero) := by infer_instance
+    dsimp [hLeft]
+    simpa [hLift] using isZero_cokernel_of_epi (kernel.lift S.g S.f S.zero)
+  have hRightZero : IsZero hRight.H := by
+    haveI : IsIso (cokernel.desc S.f S.g S.zero) := by rw [hDesc]; infer_instance
+    haveI : Mono (cokernel.desc S.f S.g S.zero) := by infer_instance
+    dsimp [hRight]
+    simpa [hDesc] using isZero_kernel_of_mono (cokernel.desc S.f S.g S.zero)
+  have hComp : hLeft.i ≫ hRight.p = 0 := by
+    dsimp [hLeft, hRight]
+    exact hKernelComp
+  have hExact : S.Exact := by
+    let hData : S.HomologyData :=
+      { left := hLeft
+        right := hRight
+        iso := IsZero.iso hLeftZero hRightZero
+        comm := by
+          have hπZero : hLeft.π = 0 := hLeftZero.eq_of_tgt _ _
+          simpa [hπZero, Category.assoc] using hComp.symm }
+    exact ⟨⟨hData, hLeftZero⟩⟩
+  have hShortExact : S.ShortExact :=
+    ShortComplex.ShortExact.mk' hExact hf.mono hg.epi
+  refine
+    { shortExact := hShortExact
+      strict_f := hf.strict
+      strict_g := hg.strict }
+
+/-- Strict short exact sequences in `P((a,b))` are exactly the distinguished triangles
+in `C` whose three vertices lie in `P((a,b))`. -/
+theorem Slicing.IntervalCat.strictShortExact_iff_exists_distTriang (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)} :
+    StrictShortExact S ↔
+      ∃ (δ : S.X₃.obj ⟶ S.X₁.obj⟦(1 : ℤ)⟧), Triangle.mk S.f.hom S.g.hom δ ∈ distTriang C := by
+  constructor
+  · exact Slicing.IntervalCat.exists_distTriang_of_strictShortExact
+      (C := C) (s := s) (a := a) (b := b)
+  · rintro ⟨δ, hT⟩
+    exact Slicing.IntervalCat.strictShortExact_of_distTriang
+      (C := C) (s := s) (a := a) (b := b) hT
+
 end Preabelian
 
 /-! ### Skewed stability functions (Definition 4.4) -/
