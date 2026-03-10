@@ -839,6 +839,81 @@ theorem Slicing.third_intervalProp_of_triangle (s : Slicing C)
         hK_ge (by linarith) hT
     exact s.intervalProp_of_intrinsic_phases C hQ hQ_minus hQ_plus
 
+/-- If `f : X ⟶ Y` is a monomorphism in the left heart `P((a, a + 1])` and `Y` lies in the
+thin interval `P((a, b))`, then `X` also lies in `P((a, b))`. This is the concrete
+kernel-side closure condition from Bridgeland Lemma 4.2. -/
+theorem Slicing.intervalProp_of_mono_leftHeart (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {X Y : ((s.phaseShift C a).toTStructure).heart.FullSubcategory}
+    (hY : s.intervalProp C a b Y.obj) (f : X ⟶ Y) [Mono f] :
+    s.intervalProp C a b X.obj := by
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let q : Y ⟶ cokernel f := cokernel.π f
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (TStructure.heart_hι t) (TStructure.heart_admissible t) q
+  have hKGtShift :
+      (s.phaseShift C a).gtProp C 0 K.obj := by
+    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
+      K.property |>.1
+  have hKGt : s.gtProp C a K.obj := (s.phaseShift_gtProp_zero C a K.obj).mp hKGtShift
+  have hQLeShift :
+      (s.phaseShift C a).leProp C 1 (cokernel f).obj := by
+    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
+      (cokernel f).obj).mp
+      (cokernel f).property |>.2
+  have hQLe : s.leProp C (a + 1) (cokernel f).obj := by
+    simpa [add_comm] using
+      (s.phaseShift_leProp C a 1 (cokernel f).obj).mp hQLeShift
+  have hT' : Pretriangulated.Triangle.mk i.hom q.hom δ ∈ distTriang C := by
+    simpa using hT
+  have hK_mem_aux : s.intervalProp C a b K.obj :=
+    s.first_intervalProp_of_triangle C (Fact.out : a < b) hY hQLe hKGt hT'
+  have hKer : IsLimit (KernelFork.ofι f (cokernel.condition f)) :=
+    Abelian.monoIsKernelOfCokernel (CokernelCofork.ofπ q (cokernel.condition f))
+      (cokernelIsCokernel f)
+  let e : X ≅ K := IsLimit.conePointUniqueUpToIso hKer
+    (Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (TStructure.heart_hι t) i q δ hT)
+  exact (s.intervalProp C a b).prop_of_iso
+    ⟨e.inv.hom, e.hom.hom,
+      by simpa using congrArg InducedCategory.Hom.hom e.inv_hom_id,
+      by simpa using congrArg InducedCategory.Hom.hom e.hom_inv_id⟩
+    hK_mem_aux
+
+/-- If `f : X ⟶ Y` is an epimorphism in the right heart `P([b - 1, b))` and `X` lies in the
+thin interval `P((a, b))`, then `Y` also lies in `P((a, b))`. This is the concrete
+cokernel-side closure condition from Bridgeland Lemma 4.2. -/
+theorem Slicing.intervalProp_of_epi_rightHeart (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {X Y : ((s.phaseShift C (b - 1)).toTStructureGE).heart.FullSubcategory}
+    (hX : s.intervalProp C a b X.obj) (f : X ⟶ Y) [Epi f] :
+    s.intervalProp C a b Y.obj := by
+  let t := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (TStructure.heart_hι t) (TStructure.heart_admissible t) f
+  have hKGeShift :
+      (s.phaseShift C (b - 1)).geProp C 0 K.obj := by
+    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
+      K.property |>.1
+  have hKGe : s.geProp C (b - 1) K.obj :=
+    (s.phaseShift_geProp_zero C (b - 1) K.obj).mp hKGeShift
+  have hYLtShift :
+      (s.phaseShift C (b - 1)).ltProp C 1 Y.obj := by
+    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) Y.obj).mp
+      Y.property |>.2
+  have hYLt : s.ltProp C b Y.obj := by
+    simpa [show 1 + (b - 1) = b by ring] using
+      (s.phaseShift_ltProp C (b - 1) 1 Y.obj).mp hYLtShift
+  have hT' : Pretriangulated.Triangle.mk i.hom f.hom δ ∈ distTriang C := by
+    simpa using hT
+  exact s.third_intervalProp_of_triangle C (Fact.out : a < b) hX hKGe hYLt hT'
+
 end TwoHeartEmbedding
 
 section Preabelian
@@ -1471,6 +1546,132 @@ theorem Slicing.IntervalCat.mono_toLeftHeart_of_strictMono (s : Slicing C)
   haveI : Mono (eH.hom ≫ FL.map k) := inferInstance
   simpa [hmapf]
 
+/-- A strict monomorphism in `P((a, b))` becomes a monomorphism in the right heart
+`P([b - 1, b))`. -/
+theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
+    {X Y : s.IntervalCat C a b} (f : X ⟶ Y) (hf : IsStrictMono f) :
+    Mono ((Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b
+      (Fact.out : b - a ≤ 1)).map f) := by
+  have hab : b - a ≤ 1 := Fact.out
+  let t := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b hab
+  let q : Y ⟶ cokernel f := cokernel.π f
+  let qH : FR.obj Y ⟶ FR.obj (cokernel f) := FR.map q
+  let eQ := Slicing.IntervalCat.toRightHeartCokernelIso (C := C) (s := s) (a := a) (b := b) f
+  have hqHeq : qH ≫ eQ.hom = cokernel.π (FR.map f) := by
+    simpa [qH, FR, eQ] using Slicing.IntervalCat.toRightHeartCokernelIso_π_comp_hom
+      (C := C) (s := s) (a := a) (b := b) f
+  have himage_zero : Abelian.image.ι (FR.map f) ≫ qH = 0 := by
+    apply (cancel_mono eQ.hom).1
+    simpa [Category.assoc, hqHeq] using kernel.condition (cokernel.π (FR.map f))
+  have himage_kernel : IsLimit
+      (KernelFork.ofι (Abelian.image.ι (FR.map f)) himage_zero) := by
+    exact isKernelOfComp (f := qH) eQ.hom (cokernel.π (FR.map f))
+      (kernelIsKernel (cokernel.π (FR.map f))) himage_zero hqHeq
+  have hkernel_qH : IsLimit (KernelFork.ofι (kernel.ι qH) (kernel.condition qH)) := by
+    simpa using kernelIsKernel qH
+  let eKh : Abelian.image (FR.map f) ⟶ kernel qH :=
+    hkernel_qH.lift (KernelFork.ofι (Abelian.image.ι (FR.map f)) himage_zero)
+  have heKh : eKh ≫ kernel.ι qH = Abelian.image.ι (FR.map f) := by
+    simpa [eKh, KernelFork.ofι] using
+      hkernel_qH.fac (KernelFork.ofι (Abelian.image.ι (FR.map f)) himage_zero)
+        Limits.WalkingParallelPair.zero
+  let eKi : kernel qH ⟶ Abelian.image (FR.map f) :=
+    himage_kernel.lift (KernelFork.ofι (kernel.ι qH) (kernel.condition qH))
+  have heKi : eKi ≫ Abelian.image.ι (FR.map f) = kernel.ι qH := by
+    simpa [eKi, KernelFork.ofι] using
+      himage_kernel.fac (KernelFork.ofι (kernel.ι qH) (kernel.condition qH))
+        Limits.WalkingParallelPair.zero
+  let eK : Abelian.image (FR.map f) ≅ kernel qH := by
+    refine ⟨eKh, eKi, ?_, ?_⟩
+    · apply (cancel_mono (Abelian.image.ι (FR.map f))).1
+      simpa [Category.assoc, heKh, heKi]
+    · apply (cancel_mono (kernel.ι qH)).1
+      simpa [Category.assoc, heKh, heKi]
+  have heK : eK.hom ≫ kernel.ι qH = Abelian.image.ι (FR.map f) := by
+    exact heKh
+  let iH : FR.obj X ⟶ kernel qH := Abelian.factorThruImage (FR.map f) ≫ eK.hom
+  have hiH : iH ≫ kernel.ι qH = FR.map f := by
+    change (Abelian.factorThruImage (FR.map f) ≫ eK.hom) ≫ kernel.ι qH = FR.map f
+    rw [Category.assoc, heK, Abelian.image.fac]
+  haveI : Epi iH := by
+    letI : IsIso eK.hom := ⟨⟨eK.inv, eK.hom_inv_id, eK.inv_hom_id⟩⟩
+    exact CategoryTheory.epi_comp'
+      (CategoryTheory.Abelian.instEpiFactorThruImage (f := FR.map f)) inferInstance
+  have hK_mem : s.intervalProp C a b (kernel qH).obj := by
+    exact s.intervalProp_of_epi_rightHeart (C := C) (a := a) (b := b)
+      X.property iH
+  let KI : s.IntervalCat C a b := ⟨(kernel qH).obj, hK_mem⟩
+  let k : KI ⟶ Y := ObjectProperty.homMk (kernel.ι qH).hom
+  let i : X ⟶ KI := ObjectProperty.homMk iH.hom
+  have hk_zero : k ≫ q = 0 := by
+    apply ((s.intervalProp C a b).ι).map_injective
+    change (kernel.ι qH ≫ qH).hom = 0
+    exact congrArg InducedCategory.Hom.hom (kernel.condition qH)
+  have hi : i ≫ k = f := by
+    apply ((s.intervalProp C a b).ι).map_injective
+    change (iH ≫ kernel.ι qH).hom = (FR.map f).hom
+    simpa [hiH]
+  have hk_limit : IsLimit (KernelFork.ofι k hk_zero) := by
+    refine KernelFork.IsLimit.ofι _ _ (fun {W'} g hg ↦ ?_) (fun {W'} g hg ↦ ?_)
+      (fun {W'} g hg m hm ↦ ?_)
+    · let WH : t.heart.FullSubcategory := FR.obj W'
+      let ι' : WH ⟶ FR.obj Y := FR.map g
+      have hι' : ι' ≫ qH = 0 := by
+        apply ((t.heart).ι).map_injective
+        simpa [ι', qH] using congrArg InducedCategory.Hom.hom hg
+      exact ObjectProperty.homMk (kernel.lift qH ι' hι').hom
+    · let WH : t.heart.FullSubcategory := FR.obj W'
+      let ι' : WH ⟶ FR.obj Y := FR.map g
+      have hι' : ι' ≫ qH = 0 := by
+        apply ((t.heart).ι).map_injective
+        simpa [ι', qH] using congrArg InducedCategory.Hom.hom hg
+      apply ((s.intervalProp C a b).ι).map_injective
+      change (kernel.lift qH ι' hι' ≫ kernel.ι qH).hom = g.hom
+      rw [show (kernel.lift qH ι' hι' ≫ kernel.ι qH).hom = ι'.hom by
+        exact congrArg InducedCategory.Hom.hom (kernel.lift_ι qH ι' hι')]
+      rfl
+    · let WH : t.heart.FullSubcategory := FR.obj W'
+      let ι' : WH ⟶ FR.obj Y := FR.map g
+      have hι' : ι' ≫ qH = 0 := by
+        apply ((t.heart).ι).map_injective
+        simpa [ι', qH] using congrArg InducedCategory.Hom.hom hg
+      let mH : WH ⟶ kernel qH := ObjectProperty.homMk m.hom
+      have hm' : mH ≫ kernel.ι qH = kernel.lift qH ι' hι' ≫ kernel.ι qH := by
+        apply ((t.heart).ι).map_injective
+        change m.hom ≫ (kernel.ι qH).hom = (kernel.lift qH ι' hι' ≫ kernel.ι qH).hom
+        rw [show (kernel.lift qH ι' hι' ≫ kernel.ι qH).hom = ι'.hom by
+          exact congrArg InducedCategory.Hom.hom (kernel.lift_ι qH ι' hι')]
+        simpa [mH, k] using congrArg InducedCategory.Hom.hom hm
+      have hmEq : mH = kernel.lift qH ι' hι' :=
+        Fork.IsLimit.hom_ext (kernelIsKernel qH) hm'
+      apply ((s.intervalProp C a b).ι).map_injective
+      change m.hom = (kernel.lift qH ι' hι').hom
+      simpa [mH] using congrArg InducedCategory.Hom.hom hmEq
+  let e : X ≅ KI := IsLimit.conePointUniqueUpToIso (hf.isLimitKernelFork) hk_limit
+  have he : e.hom ≫ k = f := by
+    simpa [k, e, KernelFork.ofι] using
+      IsLimit.conePointUniqueUpToIso_hom_comp (hf.isLimitKernelFork) hk_limit
+        Limits.WalkingParallelPair.zero
+  let j : kernel qH ≅ FR.obj KI := by
+    refine ⟨ObjectProperty.homMk (𝟙 _), ObjectProperty.homMk (𝟙 _), ?_, ?_⟩ <;> ext <;> simp
+  have hk_map : j.inv ≫ kernel.ι qH = FR.map k := by
+    apply ((t.heart).ι).map_injective
+    change (j.inv ≫ kernel.ι qH).hom = (FR.map k).hom
+    simp [FR, k, j]
+  have hk_eq : FR.map k = j.inv ≫ kernel.ι qH := hk_map.symm
+  let eH : FR.obj X ≅ FR.obj KI := FR.mapIso e
+  have hmapf : eH.hom ≫ FR.map k = FR.map f := by
+    simpa [eH] using congrArg FR.map he
+  letI : IsIso eH.hom := ⟨⟨eH.inv, eH.hom_inv_id, eH.inv_hom_id⟩⟩
+  letI : IsIso j.inv := ⟨⟨j.hom, j.inv_hom_id, j.hom_inv_id⟩⟩
+  haveI : Mono (eH.hom ≫ (j.inv ≫ kernel.ι qH)) := inferInstance
+  have hfac : FR.map f ≫ 𝟙 _ = eH.hom ≫ (j.inv ≫ kernel.ι qH) := by
+    simpa [Category.comp_id, hk_eq, Category.assoc] using hmapf.symm
+  exact mono_of_mono_fac hfac
+
 /-- If a morphism in `P((a, b))` becomes a monomorphism in the right heart
 `P([b - 1, b))`, then it is a strict monomorphism in `P((a, b))`. -/
 theorem Slicing.IntervalCat.strictMono_of_mono_toRightHeart (s : Slicing C)
@@ -1746,6 +1947,119 @@ theorem Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι (s : Slicing C)
     rw [Category.assoc, hk_map]
     rfl
 
+/-- A strict epimorphism in `P((a, b))` becomes an epimorphism in the left heart
+`P((a, a + 1])`. -/
+theorem Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi (s : Slicing C)
+    {X Y : s.IntervalCat C a b} (g : X ⟶ Y) (hg : IsStrictEpi g) :
+    Epi ((Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b
+      (Fact.out : b - a ≤ 1)).map g) := by
+  have hab : b - a ≤ 1 := Fact.out
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b hab
+  let k : kernel g ⟶ X := kernel.ι g
+  let kH : FL.obj (kernel g) ⟶ FL.obj X := FL.map k
+  let eK := Slicing.IntervalCat.toLeftHeartKernelIso (C := C) (s := s) (a := a) (b := b) g
+  let eQ : cokernel kH ≅ cokernel (kernel.ι (FL.map g)) :=
+    cokernel.mapIso kH (kernel.ι (FL.map g)) eK (Iso.refl _)
+      (by
+        simpa [kH, FL] using
+          (Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι
+            (C := C) (s := s) (a := a) (b := b) g).symm)
+  let d : cokernel kH ⟶ FL.obj Y := eQ.hom ≫ Abelian.factorThruCoimage (FL.map g)
+  have hd : cokernel.π kH ≫ d = FL.map g := by
+    calc
+      cokernel.π kH ≫ d
+          = cokernel.π kH ≫ eQ.hom ≫ Abelian.factorThruCoimage (FL.map g) := by
+            simp [d, Category.assoc]
+      _ = cokernel.π (kernel.ι (FL.map g)) ≫ Abelian.factorThruCoimage (FL.map g) := by
+            simp [eQ, Category.assoc]
+      _ = FL.map g := Abelian.coimage.fac (FL.map g)
+  haveI : Mono d := by
+    letI : CategoryTheory.NonPreadditiveAbelian t.heart.FullSubcategory :=
+      CategoryTheory.Abelian.nonPreadditiveAbelian (C := t.heart.FullSubcategory)
+    letI : IsIso eQ.hom := ⟨⟨eQ.inv, eQ.hom_inv_id, eQ.inv_hom_id⟩⟩
+    letI : Mono eQ.hom := by infer_instance
+    change Mono (eQ.hom ≫ Abelian.factorThruCoimage (FL.map g))
+    exact CategoryTheory.mono_comp'
+      (hg := inferInstance)
+      (hf := CategoryTheory.Abelian.instMonoFactorThruCoimage (f := FL.map g))
+  have hQ_mem : s.intervalProp C a b (cokernel kH).obj :=
+    s.intervalProp_of_mono_leftHeart (C := C) (a := a) (b := b) Y.property d
+  let QI : s.IntervalCat C a b := ⟨(cokernel kH).obj, hQ_mem⟩
+  let p : X ⟶ QI := ObjectProperty.homMk (cokernel.π kH).hom
+  have hp_zero : k ≫ p = 0 := by
+    apply ((s.intervalProp C a b).ι).map_injective
+    change (kH ≫ cokernel.π kH).hom = 0
+    exact congrArg InducedCategory.Hom.hom (cokernel.condition kH)
+  have hp_colim : IsColimit (CokernelCofork.ofπ p hp_zero) := by
+    refine CokernelCofork.IsColimit.ofπ _ _ (fun {W'} g' hg' ↦ ?_) (fun {W'} g' hg' ↦ ?_)
+      (fun {W'} g' hg' m hm ↦ ?_)
+    · let WH : t.heart.FullSubcategory := FL.obj W'
+      let π' : FL.obj X ⟶ WH := FL.map g'
+      have hπ' : kH ≫ π' = 0 := by
+        apply ((t.heart).ι).map_injective
+        simpa [π', kH] using congrArg InducedCategory.Hom.hom hg'
+      exact ObjectProperty.homMk (cokernel.desc kH π' hπ').hom
+    · let WH : t.heart.FullSubcategory := FL.obj W'
+      let π' : FL.obj X ⟶ WH := FL.map g'
+      have hπ' : kH ≫ π' = 0 := by
+        apply ((t.heart).ι).map_injective
+        simpa [π', kH] using congrArg InducedCategory.Hom.hom hg'
+      apply ((s.intervalProp C a b).ι).map_injective
+      change (cokernel.π kH ≫ cokernel.desc kH π' hπ').hom = g'.hom
+      rw [show (cokernel.π kH ≫ cokernel.desc kH π' hπ').hom = π'.hom by
+        exact congrArg InducedCategory.Hom.hom (cokernel.π_desc kH π' hπ')]
+      rfl
+    · let WH : t.heart.FullSubcategory := FL.obj W'
+      let π' : FL.obj X ⟶ WH := FL.map g'
+      have hπ' : kH ≫ π' = 0 := by
+        apply ((t.heart).ι).map_injective
+        simpa [π', kH] using congrArg InducedCategory.Hom.hom hg'
+      let mH : cokernel kH ⟶ WH := ObjectProperty.homMk m.hom
+      have hm' : cokernel.π kH ≫ mH = cokernel.π kH ≫ cokernel.desc kH π' hπ' := by
+        apply ((t.heart).ι).map_injective
+        change (cokernel.π kH).hom ≫ m.hom =
+          (cokernel.π kH ≫ cokernel.desc kH π' hπ').hom
+        rw [show (cokernel.π kH ≫ cokernel.desc kH π' hπ').hom = π'.hom by
+          exact congrArg InducedCategory.Hom.hom (cokernel.π_desc kH π' hπ')]
+        simpa [mH, p] using congrArg InducedCategory.Hom.hom hm
+      have hmEq : mH = cokernel.desc kH π' hπ' :=
+        Cofork.IsColimit.hom_ext (cokernelIsCokernel kH) hm'
+      apply ((s.intervalProp C a b).ι).map_injective
+      change m.hom = (cokernel.desc kH π' hπ').hom
+      simpa [mH] using congrArg InducedCategory.Hom.hom hmEq
+  let e : QI ≅ Y := IsColimit.coconePointUniqueUpToIso hp_colim (hg.isColimitCokernelCofork)
+  have he : p ≫ e.hom = g := by
+    simpa [p, e, CokernelCofork.ofπ] using
+      IsColimit.comp_coconePointUniqueUpToIso_hom hp_colim (hg.isColimitCokernelCofork)
+        Limits.WalkingParallelPair.one
+  let j : FL.obj QI ≅ cokernel kH := by
+    refine ⟨ObjectProperty.homMk (𝟙 _), ObjectProperty.homMk (𝟙 _), ?_, ?_⟩ <;> ext <;> simp
+  have hj : FL.map p ≫ j.hom = cokernel.π kH := by
+    apply ((t.heart).ι).map_injective
+    change (FL.map p).hom ≫ (j.hom).hom = (cokernel.π kH).hom
+    have hmap : (FL.map p).hom = (cokernel.π kH).hom := by
+      change p.hom = (cokernel.π kH).hom
+      rfl
+    rw [hmap]
+    simp [j]
+  have hp_eq : FL.map p = cokernel.π kH ≫ j.inv := by
+    letI : IsIso j.hom := ⟨⟨j.inv, j.hom_inv_id, j.inv_hom_id⟩⟩
+    letI : Mono j.hom := by infer_instance
+    exact (cancel_mono j.hom).1 (by simpa [Category.assoc] using hj)
+  have hp_epi : Epi (FL.map p) := by
+    letI : IsIso j.inv := ⟨⟨j.hom, j.inv_hom_id, j.hom_inv_id⟩⟩
+    haveI : Epi (cokernel.π kH ≫ j.inv) := inferInstance
+    simpa [hp_eq]
+  let eH : FL.obj QI ≅ FL.obj Y := FL.mapIso e
+  have hmapg : FL.map p ≫ eH.hom = FL.map g := by
+    simpa [eH] using congrArg FL.map he
+  letI : IsIso eH.hom := ⟨⟨eH.inv, eH.hom_inv_id, eH.inv_hom_id⟩⟩
+  haveI : Epi (FL.map p ≫ eH.hom) := inferInstance
+  simpa [hmapg]
+
 /-- If a morphism in `P((a, b))` becomes an epimorphism in the left heart
 `P((a, a + 1])`, then it is a strict epimorphism in `P((a, b))`. -/
 theorem Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart (s : Slicing C)
@@ -1918,6 +2232,54 @@ noncomputable instance Slicing.IntervalCat.toRightHeart_preservesFiniteColimits 
   let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
   exact Functor.preservesFiniteColimits_of_preservesCokernels FR
 
+noncomputable instance Slicing.intervalCat_quasiAbelian (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
+    QuasiAbelian (s.IntervalCat C a b) where
+  pullback_strictEpi := by
+    intro X Y Z f g hg
+    let t := (s.phaseShift C a).toTStructure
+    letI := t.hasHeartFullSubcategory
+    letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+    let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+    haveI : Epi (FL.map g) :=
+      Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
+        (C := C) (s := s) (a := a) (b := b) g hg
+    have hpb :
+        IsLimit
+          (PullbackCone.mk
+            (FL.map (pullback.fst f g))
+            (FL.map (pullback.snd f g))
+            (by
+              simpa using congrArg FL.map (pullback.condition (f := f) (g := g))) :
+            PullbackCone (FL.map f) (FL.map g)) :=
+      isLimitOfHasPullbackOfPreservesLimit FL f g
+    haveI : Epi (FL.map (pullback.fst f g)) :=
+      CategoryTheory.Abelian.epi_fst_of_isLimit (f := FL.map f) (g := FL.map g) hpb
+    exact Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart
+      (C := C) (s := s) (a := a) (b := b) (pullback.fst f g)
+  pushout_strictMono := by
+    intro X Y Z f g hf
+    let t := (s.phaseShift C (b - 1)).toTStructureGE
+    letI := t.hasHeartFullSubcategory
+    letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+    let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+    haveI : Mono (FR.map f) :=
+      Slicing.IntervalCat.mono_toRightHeart_of_strictMono
+        (C := C) (s := s) (a := a) (b := b) f hf
+    have hpo :
+        IsColimit
+          (PushoutCocone.mk
+            (FR.map (pushout.inl f g))
+            (FR.map (pushout.inr f g))
+            (by
+              simpa using congrArg FR.map (pushout.condition (f := f) (g := g))) :
+            PushoutCocone (FR.map f) (FR.map g)) :=
+      isColimitOfHasPushoutOfPreservesColimit FR f g
+    haveI : Mono (FR.map (pushout.inr f g)) :=
+      CategoryTheory.Abelian.mono_inr_of_isColimit (f := FR.map f) (g := FR.map g) hpo
+    exact Slicing.IntervalCat.strictMono_of_mono_toRightHeart
+      (C := C) (s := s) (a := a) (b := b) (pushout.inr f g)
+
 /-- If a short complex in `P((a,b))` is short exact after embedding into both hearts,
 then its left map is a strict monomorphism and its right map is a strict epimorphism
 in `P((a,b))`. -/
@@ -1933,10 +2295,14 @@ theorem Slicing.IntervalCat.strictMono_strictEpi_of_shortExact_toLeftRightHearts
   let tL := (s.phaseShift C a).toTStructure
   letI := tL.hasHeartFullSubcategory
   letI : Abelian tL.heart.FullSubcategory := tL.heartFullSubcategoryAbelian
+  letI : CategoryWithHomology tL.heart.FullSubcategory :=
+    CategoryTheory.categoryWithHomology_of_abelian (C := tL.heart.FullSubcategory)
   let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
   let tR := (s.phaseShift C (b - 1)).toTStructureGE
   letI := tR.hasHeartFullSubcategory
   letI : Abelian tR.heart.FullSubcategory := tR.heartFullSubcategoryAbelian
+  letI : CategoryWithHomology tR.heart.FullSubcategory :=
+    CategoryTheory.categoryWithHomology_of_abelian (C := tR.heart.FullSubcategory)
   let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
   letI : Mono (FR.map S.f) := hR.mono_f
   letI : Epi (FL.map S.g) := hL.epi_g
@@ -1947,6 +2313,112 @@ theorem Slicing.IntervalCat.strictMono_strictEpi_of_shortExact_toLeftRightHearts
     Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart
       (C := C) (s := s) (a := a) (b := b) S.g
   exact ⟨hf, hg⟩
+
+/-- A distinguished triangle in `C` whose three vertices lie in `P((a,b))`
+forces the first map to be a strict monomorphism and the second to be a strict epimorphism
+in `P((a,b))`. -/
+theorem Slicing.IntervalCat.strictMono_strictEpi_of_distTriang (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)}
+    {δ : S.X₃.obj ⟶ S.X₁.obj⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk S.f.hom S.g.hom δ ∈ distTriang C) :
+    IsStrictMono S.f ∧ IsStrictEpi S.g := by
+  let tL := (s.phaseShift C a).toTStructure
+  letI := tL.hasHeartFullSubcategory
+  letI : Abelian tL.heart.FullSubcategory := tL.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  let ιL := tL.ιHeart (H := tL.heart.FullSubcategory)
+  have hTL :
+      Triangle.mk (ιL.map ((S.map FL).f)) (ιL.map ((S.map FL).g)) δ ∈ distTriang C := by
+    simpa [FL] using hT
+  have hKerL :
+      IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) := by
+    simpa using Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (TStructure.heart_hι tL) ((S.map FL).f) ((S.map FL).g) δ hTL
+  have hCokL :
+      IsColimit (CokernelCofork.ofπ ((S.map FL).g) (S.map FL).zero) := by
+    simpa using Triangulated.AbelianSubcategory.isColimitCokernelCoforkOfDistTriang
+      (TStructure.heart_hι tL) ((S.map FL).f) ((S.map FL).g) δ hTL
+  letI : (S.map FL).HasHomology :=
+    ShortComplex.HasHomology.mk' (ShortComplex.HomologyData.ofAbelian (S := S.map FL))
+  have hExactL : (S.map FL).Exact := by
+    exact ShortComplex.exact_of_f_is_kernel (S := S.map FL) hKerL
+  have hL : (S.map FL).ShortExact :=
+    ShortComplex.ShortExact.mk' hExactL (Fork.IsLimit.mono hKerL) (Cofork.IsColimit.epi hCokL)
+  let tR := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := tR.hasHeartFullSubcategory
+  letI : Abelian tR.heart.FullSubcategory := tR.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  let ιR := tR.ιHeart (H := tR.heart.FullSubcategory)
+  have hTR :
+      Triangle.mk (ιR.map ((S.map FR).f)) (ιR.map ((S.map FR).g)) δ ∈ distTriang C := by
+    simpa [FR] using hT
+  have hKerR :
+      IsLimit (KernelFork.ofι ((S.map FR).f) (S.map FR).zero) := by
+    simpa using Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (TStructure.heart_hι tR) ((S.map FR).f) ((S.map FR).g) δ hTR
+  have hCokR :
+      IsColimit (CokernelCofork.ofπ ((S.map FR).g) (S.map FR).zero) := by
+    simpa using Triangulated.AbelianSubcategory.isColimitCokernelCoforkOfDistTriang
+      (TStructure.heart_hι tR) ((S.map FR).f) ((S.map FR).g) δ hTR
+  letI : (S.map FR).HasHomology :=
+    ShortComplex.HasHomology.mk' (ShortComplex.HomologyData.ofAbelian (S := S.map FR))
+  have hExactR : (S.map FR).Exact := by
+    exact ShortComplex.exact_of_f_is_kernel (S := S.map FR) hKerR
+  have hR : (S.map FR).ShortExact :=
+    ShortComplex.ShortExact.mk' hExactR (Fork.IsLimit.mono hKerR) (Cofork.IsColimit.epi hCokR)
+  exact Slicing.IntervalCat.strictMono_strictEpi_of_shortExact_toLeftRightHearts
+    (C := C) (s := s) (a := a) (b := b) hL hR
+
+/-- A short exact sequence in the left heart `P((a,a+1])` with vertices in `P((a,b))`
+extends to a distinguished triangle in `C`. -/
+theorem Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)}
+    (hL :
+      (S.map (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b
+        (Fact.out : b - a ≤ 1))).ShortExact) :
+    ∃ (δ : S.X₃.obj ⟶ S.X₁.obj⟦(1 : ℤ)⟧), Triangle.mk S.f.hom S.g.hom δ ∈ distTriang C := by
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  letI : IsNormalMonoCategory t.heart.FullSubcategory := Abelian.toIsNormalMonoCategory
+  letI : IsNormalEpiCategory t.heart.FullSubcategory := Abelian.toIsNormalEpiCategory
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  let ι := t.ιHeart (H := t.heart.FullSubcategory)
+  letI : Balanced t.heart.FullSubcategory := by infer_instance
+  letI : Epi ((S.map FL).g) := hL.epi_g
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (TStructure.heart_hι t) (TStructure.heart_admissible t) ((S.map FL).g)
+  have hKer :
+      IsLimit (KernelFork.ofι i (show i ≫ (S.map FL).g = 0 by
+        exact ι.map_injective (comp_distTriang_mor_zero₁₂ _ hT))) :=
+    Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (TStructure.heart_hι t) i ((S.map FL).g) δ hT
+  have hLfIsKernel : IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) := hL.fIsKernel
+  let eKA : K ≅ FL.obj S.X₁ := IsLimit.conePointUniqueUpToIso hKer hLfIsKernel
+  refine ⟨δ ≫ ((shiftFunctor C (1 : ℤ)).map (ι.map eKA.hom)), ?_⟩
+  refine isomorphic_distinguished _ hT _
+    (Triangle.isoMk _ _ (ι.mapIso eKA.symm) (Iso.refl _) (Iso.refl _) ?_ ?_ ?_)
+  · simp only [Iso.refl_hom, Functor.mapIso_hom, Iso.symm_hom, Triangle.mk_mor₁]
+    have hcomp : ι.map eKA.inv ≫ ι.map i = S.f.hom := by
+      simpa [Functor.map_comp] using
+        congrArg (fun k => ι.map k)
+        (IsLimit.conePointUniqueUpToIso_inv_comp hKer hLfIsKernel
+          Limits.WalkingParallelPair.zero)
+    change S.f.hom ≫ 𝟙 S.X₂.obj = ι.map eKA.inv ≫ t.ιHeart.map i
+    simpa [FL] using hcomp.symm
+  · have hmap : t.ιHeart.map ((S.map FL).g) = S.g.hom := rfl
+    simp only [Iso.refl_hom, Triangle.mk_mor₂, Triangle.mk_obj₂, Triangle.mk_obj₃]
+    rw [hmap]
+    convert (rfl : S.g.hom = S.g.hom) using 1
+    · exact Category.comp_id S.g.hom
+    · exact Category.id_comp S.g.hom
+  · simp only [Iso.refl_hom, Triangle.mk_mor₃, Functor.mapIso_hom, Iso.symm_hom]
+    change (δ ≫ (shiftFunctor C (1 : ℤ)).map (ι.map eKA.hom)) ≫
+        (shiftFunctor C (1 : ℤ)).map (ι.map eKA.inv) = 𝟙 _ ≫ δ
+    rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, eKA.hom_inv_id,
+      ι.map_id, Functor.map_id]
+    simp
 
 end Preabelian
 
