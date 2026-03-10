@@ -170,6 +170,20 @@ theorem isStrictMono_of_isLimitKernelFork
     simpa [Category.assoc] using hcomp]
   infer_instance
 
+/-- An isomorphism is a strict monomorphism. -/
+theorem isStrictMono_of_isIso [IsIso f] : IsStrictMono f := by
+  apply isStrictMono_of_isLimitKernelFork
+  have hk : cokernel.π f = 0 := (isZero_cokernel_of_epi f).eq_of_tgt _ _
+  refine KernelFork.IsLimit.ofι' f (by simpa [hk]) (fun {A} k hk' ↦ ?_)
+  refine ⟨k ≫ inv f, by simp [Category.assoc]⟩
+
+/-- An isomorphism is a strict epimorphism. -/
+theorem isStrictEpi_of_isIso [IsIso f] : IsStrictEpi f := by
+  apply isStrictEpi_of_isColimitCokernelCofork
+  have hk : kernel.ι f = 0 := (isZero_kernel_of_mono f).eq_of_src _ _
+  refine CokernelCofork.IsColimit.ofπ' f (by simpa [hk]) (fun {A} k hk' ↦ ?_)
+  refine ⟨inv f ≫ k, by simp [Category.assoc]⟩
+
 /-- A strict epimorphism that is also mono is an isomorphism. -/
 theorem IsStrictEpi.isIso (hf : IsStrictEpi f) [Mono f] : IsIso f := by
   letI : Epi f := hf.epi
