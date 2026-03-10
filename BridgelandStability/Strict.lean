@@ -104,6 +104,102 @@ noncomputable def IsStrictMono.isLimitKernelFork (hf : IsStrictMono f) :
     simpa [e] using (Abelian.coimage_image_factorisation (f := f))
   exact kernel.isoKernel (cokernel.π f) f e hm
 
+/-- If `f` is the cokernel of its kernel, then `f` is a strict epimorphism. -/
+theorem isStrictEpi_of_isColimitCokernelCofork
+    (hf : IsColimit (CokernelCofork.ofπ f (kernel.condition f))) :
+    IsStrictEpi f := by
+  haveI : Epi f := Cofork.IsColimit.epi hf
+  let e : Abelian.coimage f ≅ Y :=
+    IsColimit.coconePointUniqueUpToIso (cokernelIsCokernel (kernel.ι f)) hf
+  have he : Abelian.coimage.π f ≫ e.hom = f := by
+    simpa [Abelian.coimage, e, CokernelCofork.ofπ] using
+      IsColimit.comp_coconePointUniqueUpToIso_hom
+        (cokernelIsCokernel (kernel.ι f)) hf Limits.WalkingParallelPair.one
+  have hcomp : Abelian.coimageImageComparison f ≫ Abelian.image.ι f = e.hom := by
+    apply (cancel_epi (Abelian.coimage.π f)).1
+    rw [he]
+    exact Abelian.coimage_image_factorisation (f := f)
+  refine ⟨inferInstance, ?_⟩
+  letI : IsIso (Abelian.image.ι f) := kernel.of_cokernel_of_epi (f := f)
+  letI : Mono (Abelian.image.ι f) := by infer_instance
+  change IsIso (Abelian.coimageImageComparison f)
+  rw [show Abelian.coimageImageComparison f = e.hom ≫ inv (Abelian.image.ι f) from by
+    apply (cancel_mono (Abelian.image.ι f)).1
+    simpa [Category.assoc] using hcomp]
+  infer_instance
+
+/-- If `f` is the kernel of its cokernel, then `f` is a strict monomorphism. -/
+theorem isStrictMono_of_isLimitKernelFork
+    (hf : IsLimit (KernelFork.ofι f (cokernel.condition f))) :
+    IsStrictMono f := by
+  haveI : Mono f := Fork.IsLimit.mono hf
+  have hker : IsLimit (KernelFork.ofι (Abelian.image.ι f) (kernel.condition (cokernel.π f))) := by
+    simpa [Abelian.image, KernelFork.ofι] using
+      (kernelIsKernel (cokernel.π f))
+  let u : X ⟶ Abelian.image f := hker.lift (KernelFork.ofι f (cokernel.condition f))
+  have hu : u ≫ Abelian.image.ι f = f := by
+    exact hker.fac (KernelFork.ofι f (cokernel.condition f)) Limits.WalkingParallelPair.zero
+  let v : Abelian.image f ⟶ X :=
+    hf.lift (KernelFork.ofι (Abelian.image.ι f) (kernel.condition (cokernel.π f)))
+  have hv : v ≫ f = Abelian.image.ι f := by
+    exact hf.fac
+      (KernelFork.ofι (Abelian.image.ι f) (kernel.condition (cokernel.π f)))
+      Limits.WalkingParallelPair.zero
+  let e : X ≅ Abelian.image f :=
+    ⟨u, v,
+      by
+        apply (cancel_mono f).1
+        rw [Category.assoc, hv, hu]
+        simp,
+      by
+        apply (cancel_mono (Abelian.image.ι f)).1
+        rw [Category.assoc, hu, hv]
+        simp⟩
+  have he : e.hom ≫ Abelian.image.ι f = f := hu
+  have hcomp : Abelian.coimage.π f ≫ Abelian.coimageImageComparison f = e.hom := by
+    apply (cancel_mono (Abelian.image.ι f)).1
+    rw [he]
+    simpa [Category.assoc] using (Abelian.coimage_image_factorisation (f := f))
+  refine ⟨inferInstance, ?_⟩
+  letI : IsIso (Abelian.coimage.π f) := cokernel.of_kernel_of_mono (f := f)
+  letI : Epi (Abelian.coimage.π f) := by infer_instance
+  letI : IsIso e.hom := ⟨⟨e.inv, e.hom_inv_id, e.inv_hom_id⟩⟩
+  change IsIso (Abelian.coimageImageComparison f)
+  rw [show Abelian.coimageImageComparison f = inv (Abelian.coimage.π f) ≫ e.hom from by
+    apply (cancel_epi (Abelian.coimage.π f)).1
+    simpa [Category.assoc] using hcomp]
+  infer_instance
+
+/-- A strict epimorphism is a normal epimorphism. -/
+noncomputable def IsStrictEpi.normalEpi (hf : IsStrictEpi f) : NormalEpi f where
+  W := kernel f
+  g := kernel.ι f
+  w := kernel.condition f
+  isColimit := hf.isColimitCokernelCofork
+
+/-- A normal epimorphism in a preadditive category with kernels and cokernels is strict. -/
+theorem isStrictEpi_of_normalEpi [hf : NormalEpi f] : IsStrictEpi f := by
+  let g' : hf.W ⟶ kernel f := kernel.lift f hf.g hf.w
+  have hcolim : IsColimit (CokernelCofork.ofπ f (kernel.condition f)) :=
+    isCokernelOfComp (f := kernel.ι f) g' hf.g hf.isColimit
+      (kernel.condition f) (kernel.lift_ι f hf.g hf.w)
+  exact isStrictEpi_of_isColimitCokernelCofork hcolim
+
+/-- A strict monomorphism is a normal monomorphism. -/
+noncomputable def IsStrictMono.normalMono (hf : IsStrictMono f) : NormalMono f where
+  Z := cokernel f
+  g := cokernel.π f
+  w := cokernel.condition f
+  isLimit := hf.isLimitKernelFork
+
+/-- A normal monomorphism in a preadditive category with kernels and cokernels is strict. -/
+theorem isStrictMono_of_normalMono [hf : NormalMono f] : IsStrictMono f := by
+  let g' : cokernel f ⟶ hf.Z := cokernel.desc f hf.g hf.w
+  have hlim : IsLimit (KernelFork.ofι f (cokernel.condition f)) :=
+    isKernelOfComp (f := cokernel.π f) g' hf.g hf.isLimit
+      (cokernel.condition f) (cokernel.π_desc f hf.g hf.w)
+  exact isStrictMono_of_isLimitKernelFork hlim
+
 end StrictKernelCokernel
 
 section QuasiAbelian
