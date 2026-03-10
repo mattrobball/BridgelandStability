@@ -2232,6 +2232,62 @@ noncomputable instance Slicing.IntervalCat.toRightHeart_preservesFiniteColimits 
   let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
   exact Functor.preservesFiniteColimits_of_preservesCokernels FR
 
+/-- Finite subobjects in the left heart transfer to finite subobjects in `P((a,b))`
+via the fully faithful left-heart embedding. -/
+theorem Slicing.IntervalCat.finite_subobject_of_leftHeart (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {X : s.IntervalCat C a b}
+    (hX : Finite (Subobject ((Slicing.IntervalCat.toLeftHeart
+      (C := C) (s := s) a b (Fact.out : b - a ≤ 1)).obj X))) :
+    Finite (Subobject X) := by
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  exact Finite.subobject_of_faithful_preservesMono
+    (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) hX
+
+/-- Strict epimorphisms in `P((a,b))` are closed under composition. -/
+theorem Slicing.IntervalCat.comp_strictEpi (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {X Y Z : s.IntervalCat C a b} (f : X ⟶ Y) (g : Y ⟶ Z)
+    (hf : IsStrictEpi f) (hg : IsStrictEpi g) :
+    IsStrictEpi (f ≫ g) := by
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  haveI : Epi (FL.map f) :=
+    Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
+      (C := C) (s := s) (a := a) (b := b) f hf
+  haveI : Epi (FL.map g) :=
+    Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
+      (C := C) (s := s) (a := a) (b := b) g hg
+  haveI : Epi (FL.map (f ≫ g)) := by
+    simpa using (show Epi (FL.map f ≫ FL.map g) by infer_instance)
+  exact Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart
+    (C := C) (s := s) (a := a) (b := b) (f ≫ g)
+
+/-- Strict monomorphisms in `P((a,b))` are closed under composition. -/
+theorem Slicing.IntervalCat.comp_strictMono (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {X Y Z : s.IntervalCat C a b} (f : X ⟶ Y) (g : Y ⟶ Z)
+    (hf : IsStrictMono f) (hg : IsStrictMono g) :
+    IsStrictMono (f ≫ g) := by
+  let t := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  haveI : Mono (FR.map f) :=
+    Slicing.IntervalCat.mono_toRightHeart_of_strictMono
+      (C := C) (s := s) (a := a) (b := b) f hf
+  haveI : Mono (FR.map g) :=
+    Slicing.IntervalCat.mono_toRightHeart_of_strictMono
+      (C := C) (s := s) (a := a) (b := b) g hg
+  haveI : Mono (FR.map (f ≫ g)) := by
+    simpa using (show Mono (FR.map f ≫ FR.map g) by infer_instance)
+  exact Slicing.IntervalCat.strictMono_of_mono_toRightHeart
+    (C := C) (s := s) (a := a) (b := b) (f ≫ g)
+
 noncomputable instance Slicing.intervalCat_quasiAbelian (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
     QuasiAbelian (s.IntervalCat C a b) where
