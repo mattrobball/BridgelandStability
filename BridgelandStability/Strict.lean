@@ -3,7 +3,7 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Abelian.Images
+import Mathlib.CategoryTheory.Abelian.Basic
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
 import Mathlib.Algebra.Homology.ShortComplex.ShortExact
 import Mathlib.CategoryTheory.Subobject.Basic
@@ -71,6 +71,40 @@ structure IsStrictEpi : Prop where
   strict : IsStrict f
 
 end Strict
+
+section StrictKernelCokernel
+
+variable {X Y : C} {f : X ⟶ Y}
+  [HasZeroObject C]
+  [HasKernel f] [HasCokernel f]
+  [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)]
+
+/-- A strict epimorphism is the cokernel of its kernel. -/
+noncomputable def IsStrictEpi.isColimitCokernelCofork (hf : IsStrictEpi f) :
+    IsColimit (CokernelCofork.ofπ f (kernel.condition f)) := by
+  letI : Epi f := hf.epi
+  letI : IsIso (Abelian.coimageImageComparison f) := hf.strict
+  letI : IsIso (kernel.ι (cokernel.π f)) := kernel.of_cokernel_of_epi (f := f)
+  let e : cokernel (kernel.ι f) ≅ Y :=
+    asIso (Abelian.coimageImageComparison f ≫ kernel.ι (cokernel.π f))
+  have hm : cokernel.π (kernel.ι f) ≫ e.hom = f := by
+    simpa [e] using
+      (Abelian.coimage_image_factorisation (f := f))
+  exact cokernel.cokernelIso (kernel.ι f) f e hm
+
+/-- A strict monomorphism is the kernel of its cokernel. -/
+noncomputable def IsStrictMono.isLimitKernelFork (hf : IsStrictMono f) :
+    IsLimit (KernelFork.ofι f (cokernel.condition f)) := by
+  letI : Mono f := hf.mono
+  letI : IsIso (Abelian.coimageImageComparison f) := hf.strict
+  letI : IsIso (cokernel.π (kernel.ι f)) := cokernel.of_kernel_of_mono (f := f)
+  let e : X ≅ kernel (cokernel.π f) :=
+    asIso (cokernel.π (kernel.ι f) ≫ Abelian.coimageImageComparison f)
+  have hm : e.hom ≫ kernel.ι (cokernel.π f) = f := by
+    simpa [e] using (Abelian.coimage_image_factorisation (f := f))
+  exact kernel.isoKernel (cokernel.π f) f e hm
+
+end StrictKernelCokernel
 
 section QuasiAbelian
 

@@ -6,6 +6,9 @@ Authors: Formalization
 import Mathlib.CategoryTheory.Triangulated.Slicing
 import Mathlib.CategoryTheory.Triangulated.GrothendieckGroup
 import Mathlib.CategoryTheory.Triangulated.Strict
+import Mathlib.CategoryTheory.Triangulated.TStructure.HeartAbelian
+import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
+import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
 import Mathlib.Data.Complex.Basic
 
 /-!
@@ -69,6 +72,11 @@ abbrev Slicing.IntervalCat.ι (s : Slicing C) (a b : ℝ) :
 lemma Slicing.intervalProp_of_isZero (s : Slicing C) {E : C} (hE : IsZero E)
     (a b : ℝ) : s.intervalProp C a b E :=
   Or.inl hE
+
+/-- The interval property contains the zero object. -/
+instance Slicing.intervalProp_containsZero (s : Slicing C) (a b : ℝ) :
+    (s.intervalProp C a b).ContainsZero where
+  exists_zero := ⟨0, isZero_zero C, s.intervalProp_of_isZero C (isZero_zero C) a b⟩
 
 /-! ### Finite length in thin intervals -/
 
@@ -146,6 +154,49 @@ lemma Slicing.intervalProp_mono (s : Slicing C) {E : C}
   · exact Or.inl hEZ
   · right
     exact ⟨F, fun i ↦ ⟨by linarith [(hF i).1], by linarith [(hF i).2]⟩⟩
+
+/-- The interval property is closed under isomorphisms. -/
+instance Slicing.intervalProp_closedUnderIso (s : Slicing C) (a b : ℝ) :
+    (s.intervalProp C a b).IsClosedUnderIsomorphisms where
+  of_iso e hE := by
+    rcases hE with hZ | ⟨F, hF⟩
+    · exact Or.inl (IsZero.of_iso hZ e.symm)
+    · exact Or.inr ⟨F.ofIso C e, hF⟩
+
+section FiniteProducts
+
+variable [IsTriangulated C]
+
+omit [IsTriangulated C] in
+/-- The interval property is closed under binary products. -/
+lemma Slicing.intervalProp_biprod (s : Slicing C) {a b : ℝ} {X Y : C}
+    (hX : s.intervalProp C a b X) (hY : s.intervalProp C a b Y) :
+    s.intervalProp C a b (X ⊞ Y) :=
+  s.intervalProp_of_triangle C hX hY (binaryBiproductTriangle_distinguished X Y)
+
+/-- The interval property is closed under binary products. -/
+instance Slicing.intervalProp_closedUnderBinaryProducts (s : Slicing C) (a b : ℝ) :
+    (s.intervalProp C a b).IsClosedUnderBinaryProducts :=
+  ObjectProperty.IsClosedUnderLimitsOfShape.mk' (by
+    rintro _ ⟨F, hF⟩
+    exact (s.intervalProp C a b).prop_of_iso
+      ((biprod.isoProd (F.obj ⟨WalkingPair.left⟩) (F.obj ⟨WalkingPair.right⟩)) ≪≫
+        (HasLimit.isoOfNatIso (Discrete.natIso (fun ⟨j⟩ ↦ match j with
+          | WalkingPair.left => Iso.refl _
+          | WalkingPair.right => Iso.refl _))).symm)
+      (s.intervalProp_biprod C (hF ⟨WalkingPair.left⟩) (hF ⟨WalkingPair.right⟩)))
+
+/-- The interval property is closed under finite products. -/
+instance Slicing.intervalProp_closedUnderFiniteProducts (s : Slicing C) (a b : ℝ) :
+    (s.intervalProp C a b).IsClosedUnderFiniteProducts :=
+  ObjectProperty.IsClosedUnderFiniteProducts.mk'
+
+/-- Thin interval subcategories have finite products. -/
+noncomputable instance Slicing.intervalCat_hasFiniteProducts (s : Slicing C) (a b : ℝ) :
+    HasFiniteProducts (s.IntervalCat C a b) :=
+  hasFiniteProducts_of_has_binary_and_terminal
+
+end FiniteProducts
 
 /-! ### Hom-vanishing between disjoint intervals -/
 
@@ -233,39 +284,50 @@ theorem Slicing.intervalProp_implies_leftHeart (s : Slicing C) {a b : ℝ}
       · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
 
 /-- **Right heart containment (Lemma 4.3b).** If `b - a ≤ 1` and `E ∈ P((a, b))`,
-then `E` lies in the heart of the t-structure induced by the slicing shifted by `b - 1`.
-This heart is the half-open interval `P((b-1, b])`.
+then `E` lies in the heart of the dual half-open t-structure induced by the slicing
+shifted by `b - 1`. This heart is the half-open interval `P([b-1, b))`.
 
 Together with `intervalProp_implies_leftHeart`, this establishes the two-heart
 embedding: every object in a thin interval lies in both an abelian heart that
 controls kernels (left heart) and one that controls cokernels (right heart). -/
 theorem Slicing.intervalProp_implies_rightHeart (s : Slicing C) {a b : ℝ}
     (hab : b - a ≤ 1) {E : C} (hE : s.intervalProp C a b E) :
-    ((s.phaseShift C (b - 1)).toTStructure).heart E := by
-  rw [(s.phaseShift C (b - 1)).toTStructure_heart_iff]
+    ((s.phaseShift C (b - 1)).toTStructureGE).heart E := by
+  rw [(s.phaseShift C (b - 1)).toTStructureGE_heart_iff]
   constructor
-  · -- gtProp C 0 for shifted slicing ↔ gtProp C (b-1) for original
-    rw [s.phaseShift_gtProp_zero]
-    -- Need: gtProp C (b-1) E. Since phases > a ≥ b-1, this holds.
-    rcases hE with hZ | ⟨F, hF⟩
-    · exact Or.inl hZ
-    · by_cases hn : 0 < F.n
-      · have hphase := (hF ⟨F.n - 1, by omega⟩).1
-        exact Or.inr ⟨F, hn, by simp only [HNFiltration.phiMinus]; linarith⟩
-      · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
-  · -- leProp C 1 for shifted slicing: phases - (b-1) ≤ 1, i.e., phases ≤ b
-    rcases hE with hZ | ⟨F, hF⟩
-    · exact Or.inl hZ
-    · by_cases hn : 0 < F.n
-      · right
-        refine ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - (b - 1),
-          fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hn, ?_⟩
-        · change s.P (F.φ j - (b - 1) + (b - 1)) _
-          rw [show F.φ j - (b - 1) + (b - 1) = F.φ j from by ring]
-          exact F.semistable j
-        · dsimp [HNFiltration.phiPlus]
-          linarith [(hF ⟨0, hn⟩).2]
-      · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
+  · rw [s.phaseShift_geProp_zero]
+    have hgt : s.gtProp C a E := s.gtProp_of_intervalProp C hE
+    have hge : s.geProp C a E := (s.geProp_of_gtProp (C := C) (t := a)) E hgt
+    exact (s.geProp_anti (C := C) (t₁ := b - 1) (t₂ := a) (by linarith)) E hge
+  · rw [s.phaseShift_ltProp]
+    simpa [show 1 + (b - 1) = b by ring] using s.ltProp_of_intervalProp C hE
+
+/-- The fully faithful embedding of `P((a,b))` into the left heart `P((a,a+1])`. -/
+abbrev Slicing.IntervalCat.toLeftHeart (s : Slicing C) (a b : ℝ) (hab : b - a ≤ 1) :
+    s.IntervalCat C a b ⥤ ((s.phaseShift C a).toTStructure).heart.FullSubcategory where
+  obj X := ⟨X.obj, s.intervalProp_implies_leftHeart C hab X.property⟩
+  map f := ObjectProperty.homMk f.hom
+
+/-- The fully faithful embedding of `P((a,b))` into the right heart `P([b-1,b))`. -/
+abbrev Slicing.IntervalCat.toRightHeart (s : Slicing C) (a b : ℝ) (hab : b - a ≤ 1) :
+    s.IntervalCat C a b ⥤ ((s.phaseShift C (b - 1)).toTStructureGE).heart.FullSubcategory where
+  obj X := ⟨X.obj, s.intervalProp_implies_rightHeart C hab X.property⟩
+  map f := ObjectProperty.homMk f.hom
+
+omit [IsTriangulated C] in
+/-- **Right-window bounds.** If `b - a ≤ 1` and `E ∈ P((a, b))`, then `E` satisfies
+the phase-window conditions `geProp (b - 1)` and `ltProp b`.
+
+This is the half-open interval `[b - 1, b)` needed for the future right-heart
+convention controlling cokernels. -/
+theorem Slicing.intervalProp_implies_rightWindow (s : Slicing C) {a b : ℝ}
+    (hab : b - a ≤ 1) {E : C} (hE : s.intervalProp C a b E) :
+    s.geProp C (b - 1) E ∧ s.ltProp C b E := by
+  constructor
+  · have hgt : s.gtProp C a E := s.gtProp_of_intervalProp C hE
+    have hge : s.geProp C a E := (s.geProp_of_gtProp (C := C) (t := a)) E hgt
+    exact (s.geProp_anti (C := C) (t₁ := b - 1) (t₂ := a) (by linarith)) E hge
+  · exact s.ltProp_of_intervalProp C hE
 
 /-! ### Phase bounds for triangles with semistable middle term
 
@@ -669,6 +731,214 @@ theorem Slicing.third_intervalProp_of_triangle (s : Slicing C)
     exact s.intervalProp_of_intrinsic_phases C hQ hQ_minus hQ_plus
 
 end TwoHeartEmbedding
+
+section Preabelian
+
+variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+
+/-- The left ambient abelian heart `P((a,a+1])`. -/
+abbrev Slicing.LeftHeart (s : Slicing C) (a : ℝ) :=
+  ((s.phaseShift C a).toTStructure).heart.FullSubcategory
+
+/-- The right ambient abelian heart `P([b-1,b))`. -/
+abbrev Slicing.RightHeart (s : Slicing C) (b : ℝ) :=
+  ((s.phaseShift C (b - 1)).toTStructureGE).heart.FullSubcategory
+
+noncomputable def Slicing.intervalCat_hasKernel (s : Slicing C)
+    {X Y : s.IntervalCat C a b} (f : X ⟶ Y) : HasKernel f := by
+  have hab : b - a ≤ 1 := Fact.out
+  have hab' : a < b := Fact.out
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (s := s) (C := C) a b hab
+  let XH : t.heart.FullSubcategory := FL.obj X
+  let YH : t.heart.FullSubcategory := FL.obj Y
+  let fH : XH ⟶ YH := FL.map f
+  let π : XH ⟶ cokernel (kernel.ι fH) := cokernel.π (kernel.ι fH)
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (TStructure.heart_hι t) (TStructure.heart_admissible t) π
+  have hKπ :=
+    Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (TStructure.heart_hι t) i π δ hT
+  have hKerπ : IsLimit (KernelFork.ofι (kernel.ι fH) (cokernel.condition _)) :=
+    Abelian.monoIsKernelOfCokernel _ (colimit.isColimit _)
+  let eK : K ≅ kernel fH := IsLimit.conePointUniqueUpToIso hKπ hKerπ
+  have hKGtShift :
+      (s.phaseShift C a).gtProp C 0 K.obj := by
+    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
+      K.property |>.1
+  have hKGt : s.gtProp C a K.obj := (s.phaseShift_gtProp_zero C a K.obj).mp hKGtShift
+  have hQLeShift :
+      (s.phaseShift C a).leProp C 1 (cokernel (kernel.ι fH)).obj := by
+    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
+      (cokernel (kernel.ι fH)).obj).mp
+      (cokernel (kernel.ι fH)).property |>.2
+  have hQLe : s.leProp C (a + 1) (cokernel (kernel.ι fH)).obj :=
+    by simpa [add_comm] using
+      (s.phaseShift_leProp C a 1 (cokernel (kernel.ι fH)).obj).mp hQLeShift
+  have hT' : Triangle.mk i.hom π.hom δ ∈ distTriang C := by
+    simpa using hT
+  have hK_mem_aux : s.intervalProp C a b K.obj :=
+    s.first_intervalProp_of_triangle C hab' X.property hQLe hKGt hT'
+  let eK0 : K.obj ≅ (kernel fH).obj :=
+    ⟨eK.hom.hom, eK.inv.hom,
+      by simpa using congrArg InducedCategory.Hom.hom eK.hom_inv_id,
+      by simpa using congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
+  have hKer_mem : s.intervalProp C a b (kernel fH).obj :=
+    (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
+  let KI : s.IntervalCat C a b := ⟨(kernel fH).obj, hKer_mem⟩
+  let k : KI ⟶ X := ObjectProperty.homMk (kernel.ι fH).hom
+  have hk_zero : k ≫ f = 0 := by
+    apply ((s.intervalProp C a b).ι).map_injective
+    change (kernel.ι fH ≫ fH).hom = 0
+    exact congrArg InducedCategory.Hom.hom (kernel.condition fH)
+  refine ⟨⟨KernelFork.ofι k hk_zero, ?_⟩⟩
+  refine KernelFork.IsLimit.ofι _ _ (fun {W'} g hg ↦ ?_) (fun {W'} g hg ↦ ?_)
+    (fun {W'} g hg m hm ↦ ?_)
+  · let WH : t.heart.FullSubcategory := FL.obj W'
+    let ι' : WH ⟶ XH := FL.map g
+    have hι' : ι' ≫ fH = 0 := by
+      apply ((t.heart).ι).map_injective
+      simpa [ι', fH] using congrArg InducedCategory.Hom.hom hg
+    exact ObjectProperty.homMk (kernel.lift fH ι' hι').hom
+  · let WH : t.heart.FullSubcategory := FL.obj W'
+    let ι' : WH ⟶ XH := FL.map g
+    have hι' : ι' ≫ fH = 0 := by
+      apply ((t.heart).ι).map_injective
+      simpa [ι', fH] using congrArg InducedCategory.Hom.hom hg
+    apply ((s.intervalProp C a b).ι).map_injective
+    change (kernel.lift fH ι' hι' ≫ kernel.ι fH).hom = g.hom
+    rw [show (kernel.lift fH ι' hι' ≫ kernel.ι fH).hom = ι'.hom by
+      exact congrArg InducedCategory.Hom.hom (kernel.lift_ι fH ι' hι')]
+    rfl
+  · let WH : t.heart.FullSubcategory := FL.obj W'
+    let ι' : WH ⟶ XH := FL.map g
+    have hι' : ι' ≫ fH = 0 := by
+      apply ((t.heart).ι).map_injective
+      simpa [ι', fH] using congrArg InducedCategory.Hom.hom hg
+    let mH : WH ⟶ kernel fH := ObjectProperty.homMk m.hom
+    have hm' : mH ≫ kernel.ι fH = kernel.lift fH ι' hι' ≫ kernel.ι fH := by
+      apply ((t.heart).ι).map_injective
+      change m.hom ≫ (kernel.ι fH).hom =
+        (kernel.lift fH ι' hι' ≫ kernel.ι fH).hom
+      rw [show (kernel.lift fH ι' hι' ≫ kernel.ι fH).hom = ι'.hom by
+        exact congrArg InducedCategory.Hom.hom (kernel.lift_ι fH ι' hι')]
+      simpa [mH, k] using congrArg InducedCategory.Hom.hom hm
+    have hmEq : mH = kernel.lift fH ι' hι' :=
+      Fork.IsLimit.hom_ext (kernelIsKernel fH) hm'
+    apply ((s.intervalProp C a b).ι).map_injective
+    change m.hom = (kernel.lift fH ι' hι').hom
+    simpa [mH] using congrArg InducedCategory.Hom.hom hmEq
+
+noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
+    HasKernels (s.IntervalCat C a b) :=
+  ⟨fun {X Y} f ↦ Slicing.intervalCat_hasKernel (C := C) (s := s)
+    (a := a) (b := b) (X := X) (Y := Y) f⟩
+
+noncomputable def Slicing.intervalCat_hasCokernel (s : Slicing C)
+    {X Y : s.IntervalCat C a b} (f : X ⟶ Y) : HasCokernel f := by
+  have hab : b - a ≤ 1 := Fact.out
+  have hab' : a < b := Fact.out
+  let t := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (s := s) (C := C) a b hab
+  let XH : t.heart.FullSubcategory := FR.obj X
+  let YH : t.heart.FullSubcategory := FR.obj Y
+  let fH : XH ⟶ YH := FR.map f
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (TStructure.heart_hι t) (TStructure.heart_admissible t) (cokernel.π fH)
+  have hKGeShift :
+      (s.phaseShift C (b - 1)).geProp C 0 K.obj := by
+    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
+      K.property |>.1
+  have hKGe : s.geProp C (b - 1) K.obj :=
+    (s.phaseShift_geProp_zero C (b - 1) K.obj).mp hKGeShift
+  have hQLtShift :
+      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel fH).obj := by
+    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
+      (cokernel fH).obj).mp
+      (cokernel fH).property |>.2
+  have hQLt : s.ltProp C b (cokernel fH).obj := by
+    simpa [show 1 + (b - 1) = b by ring] using
+      (s.phaseShift_ltProp C (b - 1) 1 (cokernel fH).obj).mp hQLtShift
+  have hT' : Triangle.mk i.hom (cokernel.π fH).hom δ ∈ distTriang C := by
+    simpa using hT
+  have hCoker_mem : s.intervalProp C a b (cokernel fH).obj :=
+    s.third_intervalProp_of_triangle C hab' Y.property hKGe hQLt hT'
+  let QI : s.IntervalCat C a b := ⟨(cokernel fH).obj, hCoker_mem⟩
+  let p : Y ⟶ QI := ObjectProperty.homMk (cokernel.π fH).hom
+  have hp_zero : f ≫ p = 0 := by
+    apply ((s.intervalProp C a b).ι).map_injective
+    change (fH ≫ cokernel.π fH).hom = 0
+    exact congrArg InducedCategory.Hom.hom (cokernel.condition fH)
+  refine ⟨⟨CokernelCofork.ofπ p hp_zero, ?_⟩⟩
+  refine CokernelCofork.IsColimit.ofπ _ _ (fun {W'} g hg ↦ ?_) (fun {W'} g hg ↦ ?_)
+    (fun {W'} g hg m hm ↦ ?_)
+  · let WH : t.heart.FullSubcategory := FR.obj W'
+    let π' : YH ⟶ WH := FR.map g
+    have hπ' : fH ≫ π' = 0 := by
+      apply ((t.heart).ι).map_injective
+      simpa [π', fH] using congrArg InducedCategory.Hom.hom hg
+    exact ObjectProperty.homMk (cokernel.desc fH π' hπ').hom
+  · let WH : t.heart.FullSubcategory := FR.obj W'
+    let π' : YH ⟶ WH := FR.map g
+    have hπ' : fH ≫ π' = 0 := by
+      apply ((t.heart).ι).map_injective
+      simpa [π', fH] using congrArg InducedCategory.Hom.hom hg
+    apply ((s.intervalProp C a b).ι).map_injective
+    change (cokernel.π fH ≫ cokernel.desc fH π' hπ').hom = g.hom
+    rw [show (cokernel.π fH ≫ cokernel.desc fH π' hπ').hom = π'.hom by
+      exact congrArg InducedCategory.Hom.hom (cokernel.π_desc fH π' hπ')]
+    rfl
+  · let WH : t.heart.FullSubcategory := FR.obj W'
+    let π' : YH ⟶ WH := FR.map g
+    have hπ' : fH ≫ π' = 0 := by
+      apply ((t.heart).ι).map_injective
+      simpa [π', fH] using congrArg InducedCategory.Hom.hom hg
+    let mH : cokernel fH ⟶ WH := ObjectProperty.homMk m.hom
+    have hm' : cokernel.π fH ≫ mH = cokernel.π fH ≫ cokernel.desc fH π' hπ' := by
+      apply ((t.heart).ι).map_injective
+      change (cokernel.π fH).hom ≫ m.hom =
+        (cokernel.π fH ≫ cokernel.desc fH π' hπ').hom
+      rw [show (cokernel.π fH ≫ cokernel.desc fH π' hπ').hom = π'.hom by
+        exact congrArg InducedCategory.Hom.hom (cokernel.π_desc fH π' hπ')]
+      simpa [mH, p] using congrArg InducedCategory.Hom.hom hm
+    have hmEq : mH = cokernel.desc fH π' hπ' :=
+      Cofork.IsColimit.hom_ext (cokernelIsCokernel fH) hm'
+    apply ((s.intervalProp C a b).ι).map_injective
+    change m.hom = (cokernel.desc fH π' hπ').hom
+    simpa [mH] using congrArg InducedCategory.Hom.hom hmEq
+
+noncomputable instance Slicing.intervalCat_hasCokernels (s : Slicing C) :
+    HasCokernels (s.IntervalCat C a b) :=
+  ⟨fun {X Y} f ↦ Slicing.intervalCat_hasCokernel (C := C) (s := s)
+    (a := a) (b := b) (X := X) (Y := Y) f⟩
+
+noncomputable instance Slicing.intervalCat_hasBinaryBiproducts (s : Slicing C) :
+    HasBinaryBiproducts (s.IntervalCat C a b) :=
+  HasBinaryBiproducts.of_hasBinaryProducts
+
+noncomputable instance Slicing.intervalCat_hasEqualizers (s : Slicing C) :
+    HasEqualizers (s.IntervalCat C a b) :=
+  Preadditive.hasEqualizers_of_hasKernels
+
+noncomputable instance Slicing.intervalCat_hasCoequalizers (s : Slicing C) :
+    HasCoequalizers (s.IntervalCat C a b) :=
+  Preadditive.hasCoequalizers_of_hasCokernels
+
+noncomputable instance Slicing.intervalCat_hasPullbacks (s : Slicing C) :
+    HasPullbacks (s.IntervalCat C a b) := by
+  exact Limits.hasPullbacks_of_hasBinaryProducts_of_hasEqualizers _
+
+noncomputable instance Slicing.intervalCat_hasPushouts (s : Slicing C) :
+    HasPushouts (s.IntervalCat C a b) := by
+  exact Limits.hasPushouts_of_hasBinaryCoproducts_of_hasCoequalizers _
+
+end Preabelian
 
 /-! ### Skewed stability functions (Definition 4.4) -/
 

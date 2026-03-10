@@ -34,7 +34,7 @@ following Bridgeland's "Stability conditions on triangulated categories" (2007).
 * Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007
 -/
 
-set_option linter.style.longFile 1900
+set_option linter.style.longFile 2700
 
 noncomputable section
 
@@ -538,6 +538,26 @@ lemma HNFiltration.chain_obj_leProp (s : Slicing C) {E : C}
   simp only [HNFiltration.phiPlus, HNFiltration.prefix_φ]
   exact ht ⟨0, by omega⟩
 
+/-- The chain object at the split point satisfies `ltProp t` if all phases before
+the split are < t. -/
+lemma HNFiltration.chain_obj_ltProp (s : Slicing C) {E : C}
+    (F : HNFiltration C s.P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) (t : ℝ)
+    (ht : ∀ j : Fin k, F.φ ⟨j.val, by omega⟩ < t) :
+    s.ltProp C t (F.chain.obj ⟨k, by omega⟩) := by
+  refine Or.inr ⟨F.prefix C k hk hk0, hk0, ?_⟩
+  simp only [HNFiltration.phiPlus, HNFiltration.prefix_φ]
+  exact ht ⟨0, by omega⟩
+
+/-- The chain object at the split point satisfies `geProp t` if all phases before
+the split are ≥ t. -/
+lemma HNFiltration.chain_obj_geProp (s : Slicing C) {E : C}
+    (F : HNFiltration C s.P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) (t : ℝ)
+    (ht : ∀ j : Fin k, t ≤ F.φ ⟨j.val, by omega⟩) :
+    s.geProp C t (F.chain.obj ⟨k, by omega⟩) := by
+  refine Or.inr ⟨F.prefix C k hk hk0, hk0, ?_⟩
+  simp only [HNFiltration.phiMinus, HNFiltration.prefix_φ]
+  exact ht ⟨k - 1, by omega⟩
+
 /-- An HN-filtered object satisfies `gtProp t` if all its phases are > t. -/
 lemma Slicing.gtProp_of_hn (s : Slicing C) {E : C}
     (F : HNFiltration C s.P E) (t : ℝ)
@@ -552,6 +572,24 @@ lemma Slicing.leProp_of_hn (s : Slicing C) {E : C}
     (F : HNFiltration C s.P E) (t : ℝ)
     (ht : ∀ j, F.φ j ≤ t) (hn : 0 < F.n) :
     s.leProp C t E := by
+  refine Or.inr ⟨F, hn, ?_⟩
+  simp only [HNFiltration.phiPlus]
+  exact ht ⟨0, hn⟩
+
+/-- An HN-filtered object satisfies `geProp t` if all its phases are ≥ t. -/
+lemma Slicing.geProp_of_hn (s : Slicing C) {E : C}
+    (F : HNFiltration C s.P E) (t : ℝ)
+    (ht : ∀ j, t ≤ F.φ j) (hn : 0 < F.n) :
+    s.geProp C t E := by
+  refine Or.inr ⟨F, hn, ?_⟩
+  simp only [HNFiltration.phiMinus]
+  exact ht ⟨F.n - 1, by omega⟩
+
+/-- An HN-filtered object satisfies `ltProp t` if all its phases are < t. -/
+lemma Slicing.ltProp_of_hn (s : Slicing C) {E : C}
+    (F : HNFiltration C s.P E) (t : ℝ)
+    (ht : ∀ j, F.φ j < t) (hn : 0 < F.n) :
+    s.ltProp C t E := by
   refine Or.inr ⟨F, hn, ?_⟩
   simp only [HNFiltration.phiPlus]
   exact ht ⟨0, hn⟩
@@ -728,6 +766,22 @@ instance Slicing.leProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     · exact Or.inl (IsZero.of_iso hZ e.symm)
     · exact Or.inr ⟨F.ofIso C e, hF, hle⟩
 
+/-- The property `P(< t)` is closed under isomorphisms. -/
+instance Slicing.ltProp_closedUnderIso (s : Slicing C) (t : ℝ) :
+    (s.ltProp C t).IsClosedUnderIsomorphisms where
+  of_iso e hE := by
+    rcases hE with hZ | ⟨F, hF, hlt⟩
+    · exact Or.inl (IsZero.of_iso hZ e.symm)
+    · exact Or.inr ⟨F.ofIso C e, hF, hlt⟩
+
+/-- The property `P(≥ t)` is closed under isomorphisms. -/
+instance Slicing.geProp_closedUnderIso (s : Slicing C) (t : ℝ) :
+    (s.geProp C t).IsClosedUnderIsomorphisms where
+  of_iso e hE := by
+    rcases hE with hZ | ⟨F, hF, hge⟩
+    · exact Or.inl (IsZero.of_iso hZ e.symm)
+    · exact Or.inr ⟨F.ofIso C e, hF, hge⟩
+
 /-! ### Shift lemmas for subcategory predicates -/
 
 /-- If `E` has all HN phases `> t`, then `E⟦a⟧` has all HN phases `> t + ↑a`. -/
@@ -745,6 +799,22 @@ lemma Slicing.leProp_shift (s : Slicing C) (t : ℝ) (E : C) (a : ℤ)
   · exact Or.inl ((shiftFunctor C a).map_isZero hZ)
   · exact Or.inr ⟨F.shiftHN C s a, hF, by
       rw [F.shiftHN_phiPlus]; linarith⟩
+
+/-- If `E` has all HN phases `< t`, then `E⟦a⟧` has all HN phases `< t + ↑a`. -/
+lemma Slicing.ltProp_shift (s : Slicing C) (t : ℝ) (E : C) (a : ℤ)
+    (h : s.ltProp C t E) : s.ltProp C (t + ↑a) (E⟦a⟧) := by
+  rcases h with hZ | ⟨F, hF, hlt⟩
+  · exact Or.inl ((shiftFunctor C a).map_isZero hZ)
+  · exact Or.inr ⟨F.shiftHN C s a, hF, by
+      rw [F.shiftHN_phiPlus]; linarith⟩
+
+/-- If `E` has all HN phases `≥ t`, then `E⟦a⟧` has all HN phases `≥ t + ↑a`. -/
+lemma Slicing.geProp_shift (s : Slicing C) (t : ℝ) (E : C) (a : ℤ)
+    (h : s.geProp C t E) : s.geProp C (t + ↑a) (E⟦a⟧) := by
+  rcases h with hZ | ⟨F, hF, hge⟩
+  · exact Or.inl ((shiftFunctor C a).map_isZero hZ)
+  · exact Or.inr ⟨F.shiftHN C s a, hF, by
+      rw [F.shiftHN_phiMinus]; linarith⟩
 
 /-! ### Uniqueness of extreme phases
 
@@ -1467,6 +1537,45 @@ lemma Slicing.leProp_of_triangle (s : Slicing C) {A E B : C} (t : ℝ)
     rw [hδ, hA_vanish δ]; exact zero_comp
   exact hneE (FE.isZero_factor_zero_of_hom_eq_zero C s hnE hE_vanish)
 
+/-- Extension-closure of `ltProp`: if both `A` and `B` have all HN phases
+`< t`, and `A → E → B → A⟦1⟧` is distinguished, then `E` also has all HN
+phases `< t`. -/
+lemma Slicing.ltProp_of_triangle (s : Slicing C) {A E B : C} (t : ℝ)
+    (hA : s.ltProp C t A) (hB : s.ltProp C t B)
+    {f : A ⟶ E} {g : E ⟶ B} {h : B ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g h ∈ distTriang C) :
+    s.ltProp C t E := by
+  by_cases hEZ : IsZero E
+  · exact Or.inl hEZ
+  right
+  obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_first C s hEZ
+  refine ⟨FE, hnE, ?_⟩
+  by_contra hge
+  push_neg at hge
+  have hA_vanish : ∀ α : (FE.triangle ⟨0, hnE⟩).obj₃ ⟶ A, α = 0 := by
+    intro α
+    rcases hA with hAZ | ⟨FA, hnA, hFA_lt⟩
+    · exact hAZ.eq_of_tgt α 0
+    · exact s.hom_eq_zero_of_gt_phases C (FE.semistable ⟨0, hnE⟩) FA
+        (fun i ↦ lt_of_le_of_lt
+          (FA.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) hFA_lt |>.trans_le hge) α
+  have hB_vanish : ∀ β : (FE.triangle ⟨0, hnE⟩).obj₃ ⟶ B, β = 0 := by
+    intro β
+    rcases hB with hBZ | ⟨FB, hnB, hFB_lt⟩
+    · exact hBZ.eq_of_tgt β 0
+    · exact s.hom_eq_zero_of_gt_phases C (FE.semistable ⟨0, hnE⟩) FB
+        (fun i ↦ lt_of_le_of_lt
+          (FB.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) hFB_lt |>.trans_le hge) β
+  have hE_vanish :
+      ∀ γ : (FE.triangle ⟨0, hnE⟩).obj₃ ⟶ E, γ = 0 := by
+    intro γ
+    obtain ⟨δ, hδ⟩ :=
+      Triangle.coyoneda_exact₂ (Triangle.mk f g h) hT γ
+        (hB_vanish (γ ≫ g))
+    rw [hδ, hA_vanish δ]
+    exact zero_comp
+  exact hneE (FE.isZero_factor_zero_of_hom_eq_zero C s hnE hE_vanish)
+
 /-- Extension-closure of `gtProp`: if both `A` and `B` have all HN phases
 `> t`, and `A → E → B → A⟦1⟧` is distinguished, then `E` also has all HN
 phases `> t`.
@@ -2010,6 +2119,19 @@ lemma Slicing.zero_of_gtProp_leProp (s : Slicing C) {X Y : C}
     (fun i j ↦ by linarith [(Fy.phase_mem_range C hFy j).2,
       (Fx.phase_mem_range C hFx i).1]) f
 
+/-- Any morphism from an object with all HN phases `≥ 0` to one with all HN phases
+`< 0` is zero. This is the vanishing convention needed for the right-heart
+half-open interval `[0, 1)`. -/
+lemma Slicing.zero_of_geProp_ltProp (s : Slicing C) {X Y : C}
+    (hX : s.geProp C 0 X) (hY : s.ltProp C 0 Y) (f : X ⟶ Y) : f = 0 := by
+  rcases hX with hXZ | ⟨Fx, hFx, hFx_ge⟩
+  · exact hXZ.eq_of_src f 0
+  rcases hY with hYZ | ⟨Fy, hFy, hFy_lt⟩
+  · exact hYZ.eq_of_tgt f 0
+  exact s.hom_eq_zero_of_phase_gap C Fx Fy
+    (fun i j ↦ by linarith [(Fy.phase_mem_range C hFy j).2,
+      (Fx.phase_mem_range C hFx i).1]) f
+
 /-! ### Phase-shifted slicing
 
 Given a slicing `s` and a real parameter `t`, we define a new slicing `s.phaseShift t`
@@ -2080,6 +2202,29 @@ theorem Slicing.phaseShift_gtProp_zero (s : Slicing C) (t : ℝ) (E : C) :
         exact F.semistable j
       · dsimp only [HNFiltration.phiMinus]; linarith
 
+/-- `gtProp` of a phase-shifted slicing at cutoff `u` equals `gtProp` of the
+original slicing at cutoff `u + t`. -/
+theorem Slicing.phaseShift_gtProp (s : Slicing C) (t u : ℝ) (E : C) :
+    (s.phaseShift C t).gtProp C u E ↔ s.gtProp C (u + t) E := by
+  constructor
+  · rintro (hZ | ⟨F, hF, hgt⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiMinus] at hgt
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
+      dsimp only [HNFiltration.phiMinus]
+      linarith
+  · rintro (hZ | ⟨F, hF, hgt⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiMinus] at hgt
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
+      · change s.P (F.φ j - t + t) _
+        rw [show F.φ j - t + t = F.φ j from by ring]
+        exact F.semistable j
+      · dsimp only [HNFiltration.phiMinus]
+        linarith
+
 /-- `leProp` of a phase-shifted slicing at cutoff `0` equals `leProp` of the
 original slicing at cutoff `t`. -/
 theorem Slicing.phaseShift_leProp_zero (s : Slicing C) (t : ℝ) (E : C) :
@@ -2101,6 +2246,117 @@ theorem Slicing.phaseShift_leProp_zero (s : Slicing C) (t : ℝ) (E : C) :
         exact F.semistable j
       · dsimp only [HNFiltration.phiPlus]; linarith
 
+/-- `leProp` of a phase-shifted slicing at cutoff `u` equals `leProp` of the
+original slicing at cutoff `u + t`. -/
+theorem Slicing.phaseShift_leProp (s : Slicing C) (t u : ℝ) (E : C) :
+    (s.phaseShift C t).leProp C u E ↔ s.leProp C (u + t) E := by
+  constructor
+  · rintro (hZ | ⟨F, hF, hle⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiPlus] at hle
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
+      dsimp only [HNFiltration.phiPlus]
+      linarith
+  · rintro (hZ | ⟨F, hF, hle⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiPlus] at hle
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
+      · change s.P (F.φ j - t + t) _
+        rw [show F.φ j - t + t = F.φ j from by ring]
+        exact F.semistable j
+      · dsimp only [HNFiltration.phiPlus]
+        linarith
+
+/-- `ltProp` of a phase-shifted slicing at cutoff `0` equals `ltProp` of the
+original slicing at cutoff `t`. -/
+theorem Slicing.phaseShift_ltProp_zero (s : Slicing C) (t : ℝ) (E : C) :
+    (s.phaseShift C t).ltProp C 0 E ↔ s.ltProp C t E := by
+  constructor
+  · rintro (hZ | ⟨F, hF, hlt⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiPlus] at hlt
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
+      dsimp only [HNFiltration.phiPlus]; linarith
+  · rintro (hZ | ⟨F, hF, hlt⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiPlus] at hlt
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
+      · change s.P (F.φ j - t + t) _
+        rw [show F.φ j - t + t = F.φ j from by ring]
+        exact F.semistable j
+      · dsimp only [HNFiltration.phiPlus]; linarith
+
+/-- `ltProp` of a phase-shifted slicing at cutoff `u` equals `ltProp` of the
+original slicing at cutoff `u + t`. -/
+theorem Slicing.phaseShift_ltProp (s : Slicing C) (t u : ℝ) (E : C) :
+    (s.phaseShift C t).ltProp C u E ↔ s.ltProp C (u + t) E := by
+  constructor
+  · rintro (hZ | ⟨F, hF, hlt⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiPlus] at hlt
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
+      dsimp only [HNFiltration.phiPlus]
+      linarith
+  · rintro (hZ | ⟨F, hF, hlt⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiPlus] at hlt
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
+      · change s.P (F.φ j - t + t) _
+        rw [show F.φ j - t + t = F.φ j from by ring]
+        exact F.semistable j
+      · dsimp only [HNFiltration.phiPlus]
+        linarith
+
+/-- `geProp` of a phase-shifted slicing at cutoff `0` equals `geProp` of the
+original slicing at cutoff `t`. -/
+theorem Slicing.phaseShift_geProp_zero (s : Slicing C) (t : ℝ) (E : C) :
+    (s.phaseShift C t).geProp C 0 E ↔ s.geProp C t E := by
+  constructor
+  · rintro (hZ | ⟨F, hF, hge⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiMinus] at hge
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
+      dsimp only [HNFiltration.phiMinus]; linarith
+  · rintro (hZ | ⟨F, hF, hge⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiMinus] at hge
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
+      · change s.P (F.φ j - t + t) _
+        rw [show F.φ j - t + t = F.φ j from by ring]
+        exact F.semistable j
+      · dsimp only [HNFiltration.phiMinus]; linarith
+
+/-- `geProp` of a phase-shifted slicing at cutoff `u` equals `geProp` of the
+original slicing at cutoff `u + t`. -/
+theorem Slicing.phaseShift_geProp (s : Slicing C) (t u : ℝ) (E : C) :
+    (s.phaseShift C t).geProp C u E ↔ s.geProp C (u + t) E := by
+  constructor
+  · rintro (hZ | ⟨F, hF, hge⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiMinus] at hge
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
+      dsimp only [HNFiltration.phiMinus]
+      linarith
+  · rintro (hZ | ⟨F, hF, hge⟩)
+    · exact Or.inl hZ
+    · simp only [HNFiltration.phiMinus] at hge
+      refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
+        fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
+      · change s.P (F.φ j - t + t) _
+        rw [show F.φ j - t + t = F.φ j from by ring]
+        exact F.semistable j
+      · dsimp only [HNFiltration.phiMinus]
+        linarith
+
 /-- The hom-vanishing lemma for phase-shifted slicings at general cutoff `t`:
 any morphism from `P(> t)` to `P(≤ t)` is zero. -/
 lemma Slicing.zero_of_gtProp_leProp_general (s : Slicing C) (t : ℝ) {X Y : C}
@@ -2108,6 +2364,14 @@ lemma Slicing.zero_of_gtProp_leProp_general (s : Slicing C) (t : ℝ) {X Y : C}
   have hX' := (s.phaseShift_gtProp_zero C t X).mpr hX
   have hY' := (s.phaseShift_leProp_zero C t Y).mpr hY
   exact (s.phaseShift C t).zero_of_gtProp_leProp C hX' hY' f
+
+/-- The hom-vanishing lemma for the right-heart convention at general cutoff `t`:
+any morphism from `P(≥ t)` to `P(< t)` is zero. -/
+lemma Slicing.zero_of_geProp_ltProp_general (s : Slicing C) (t : ℝ) {X Y : C}
+    (hX : s.geProp C t X) (hY : s.ltProp C t Y) (f : X ⟶ Y) : f = 0 := by
+  have hX' := (s.phaseShift_geProp_zero C t X).mpr hX
+  have hY' := (s.phaseShift_ltProp_zero C t Y).mpr hY
+  exact (s.phaseShift C t).zero_of_geProp_ltProp C hX' hY' f
 
 variable [IsTriangulated C]
 
@@ -2274,6 +2538,85 @@ theorem Slicing.tStructureAux (s : Slicing C)
             · exact le_of_lt (hφlast_lt ⟨j.val, hj⟩)
             · exact le_rfl
 
+/-- Auxiliary: given an HN filtration, produce the dual half-open t-structure
+decomposition triangle for the convention `geProp 0` / `ltProp 0`. -/
+theorem Slicing.tStructureAuxGE (s : Slicing C)
+    (A : C) (F : HNFiltration C s.P A) :
+    ∃ (X Y : C) (_ : s.geProp C 0 X) (_ : s.ltProp C 0 Y)
+      (f : X ⟶ A) (g : A ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
+      Triangle.mk f g h ∈ distTriang C := by
+  suffices hmain : ∀ (m : ℕ) (A : C) (F : HNFiltration C s.P A), F.n ≤ m →
+      ∃ (X Y : C) (_ : s.geProp C 0 X) (_ : s.ltProp C 0 Y)
+        (f : X ⟶ A) (g : A ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
+        Triangle.mk f g h ∈ distTriang C by
+    exact hmain F.n A F le_rfl
+  intro m
+  induction m with
+  | zero =>
+    intro A F hFn
+    have hn : F.n = 0 := by omega
+    exact ⟨A, 0, Or.inl (F.zero_isZero hn), Or.inl (isZero_zero C), 𝟙 A, 0, 0,
+      contractible_distinguished A⟩
+  | succ m ih =>
+    intro A F hFn
+    by_cases hn : F.n = 0
+    · exact ⟨A, 0, Or.inl (F.zero_isZero hn), Or.inl (isZero_zero C), 𝟙 A, 0, 0,
+        contractible_distinguished A⟩
+    have hn0 : 0 < F.n := Nat.pos_of_ne_zero hn
+    by_cases hall_nonneg : ∀ j : Fin F.n, 0 ≤ F.φ j
+    · exact ⟨A, 0, s.geProp_of_hn C F 0 hall_nonneg hn0, Or.inl (isZero_zero C),
+        𝟙 A, 0, 0, contractible_distinguished A⟩
+    · push_neg at hall_nonneg
+      by_cases hall_neg : ∀ j : Fin F.n, F.φ j < 0
+      · exact ⟨0, A, Or.inl (isZero_zero C), s.ltProp_of_hn C F 0 hall_neg hn0,
+          0, 𝟙 A, 0, contractible_distinguished₁ A⟩
+      · push_neg at hall_neg
+        have hn2 : 2 ≤ F.n := by
+          by_contra hlt
+          push_neg at hlt
+          obtain ⟨j, hj⟩ := hall_nonneg
+          obtain ⟨j', hj'⟩ := hall_neg
+          have heq : F.φ j = F.φ j' := congrArg F.φ (Fin.ext (by omega))
+          linarith
+        let G := F.prefix C (F.n - 1) (by omega) (by omega)
+        obtain ⟨X, Y', hX, hY', f', g', h', hT'⟩ :=
+          ih (F.chain.obj' (F.n - 1) (by omega)) G
+            (by have : G.n = F.n - 1 := rfl; omega)
+        let T := F.triangle ⟨F.n - 1, by omega⟩
+        let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by omega⟩)
+        let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by omega⟩)
+        let eA := Classical.choice F.top_iso
+        have hchainN : F.chain.obj' (F.n - 1 + 1) (by omega) =
+            F.chain.obj (Fin.last F.n) :=
+          congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+        let e₂A : T.obj₂ ≅ A :=
+          e₂.trans ((eqToIso hchainN).trans eA)
+        let u₂₃ : F.chain.obj' (F.n - 1) (by omega) ⟶ A :=
+          e₁.inv ≫ T.mor₁ ≫ e₂A.hom
+        let Tisoₘ := Triangle.isoMk (Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
+          (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧')) T e₁.symm e₂A.symm (Iso.refl _)
+          (by simp [u₂₃, e₂A])
+          (by simp [e₂A])
+          (by simp)
+        have hTu₂₃ : Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
+          (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧') ∈ distTriang C :=
+          isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by omega⟩) _ Tisoₘ
+        have hφlast : F.φ ⟨F.n - 1, by omega⟩ < 0 := by
+          obtain ⟨j, hj⟩ := hall_nonneg
+          exact lt_of_le_of_lt
+            (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))) hj
+        obtain ⟨Z, v₁₃, w₁₃, h₁₃⟩ := distinguished_cocone_triangle (f' ≫ u₂₃)
+        let oct := Triangulated.someOctahedron rfl hT' hTu₂₃ h₁₃
+        have hLast : s.ltProp C 0 T.obj₃ := by
+          exact s.ltProp_of_hn C
+            (HNFiltration.single C T.obj₃ (F.φ ⟨F.n - 1, by omega⟩)
+              (F.semistable ⟨F.n - 1, by omega⟩))
+            0 (fun _ ↦ hφlast) (by
+              change 0 < 1
+              omega)
+        have hZ : s.ltProp C 0 Z := s.ltProp_of_triangle C 0 hY' hLast oct.mem
+        exact ⟨X, Z, hX, hZ, f' ≫ u₂₃, v₁₃, w₁₃, h₁₃⟩
+
 /-- A slicing on a triangulated category determines a t-structure.
 
 The convention is:
@@ -2320,6 +2663,53 @@ def Slicing.toTStructure (s : Slicing C) : TStructure C where
     · simp only [Int.cast_zero, neg_zero]; exact hX
     · simp only [Int.cast_one, sub_self]; exact hY
 
+/-- A slicing on a triangulated category also determines the dual half-open
+t-structure whose heart is `P([0, 1))`.
+
+The convention is:
+- `le n = geProp(-n)`: objects whose HN phases are all `≥ -n`
+- `ge n = ltProp(1-n)`: objects whose HN phases are all `< 1-n`
+
+This ensures `le 0 = geProp(0)` (phases `≥ 0`) and `ge 1 = ltProp(0)` (phases `< 0`),
+with the heart being `P([0,1))`. -/
+def Slicing.toTStructureGE (s : Slicing C) : TStructure C where
+  le n := s.geProp C (-↑n)
+  ge n := s.ltProp C (1 - ↑n)
+  le_isClosedUnderIsomorphisms _ := inferInstance
+  ge_isClosedUnderIsomorphisms _ := inferInstance
+  le_shift n a n' h X hX := by
+    show s.geProp C (-↑n') (X⟦a⟧)
+    have hcast : (↑a : ℝ) + ↑n' = ↑n := by exact_mod_cast h
+    have : (-↑n' : ℝ) = -↑n + ↑a := by linarith
+    rw [this]
+    exact s.geProp_shift C _ X a hX
+  ge_shift n a n' h X hX := by
+    show s.ltProp C (1 - ↑n') (X⟦a⟧)
+    have hcast : (↑a : ℝ) + ↑n' = ↑n := by exact_mod_cast h
+    have : (1 - ↑n' : ℝ) = (1 - ↑n) + ↑a := by linarith
+    rw [this]
+    exact s.ltProp_shift C _ X a hX
+  zero' {X Y} f hX hY := by
+    have hX' : s.geProp C 0 X := by
+      simpa [show (-↑(0 : ℤ) : ℝ) = 0 from by norm_num] using hX
+    have hY' : s.ltProp C 0 Y := by
+      simpa [show (1 - ↑(1 : ℤ) : ℝ) = 0 from by norm_num] using hY
+    exact s.zero_of_geProp_ltProp C hX' hY' f
+  le_zero_le := by
+    show s.geProp C (-↑(0 : ℤ)) ≤ s.geProp C (-↑(1 : ℤ))
+    simp only [Int.cast_zero, neg_zero, Int.cast_one]
+    exact s.geProp_anti C (by norm_num : (-1 : ℝ) ≤ 0)
+  ge_one_le := by
+    show s.ltProp C (1 - ↑(1 : ℤ)) ≤ s.ltProp C (1 - ↑(0 : ℤ))
+    simp only [Int.cast_one, sub_self, Int.cast_zero, sub_zero]
+    exact s.ltProp_mono C (by norm_num : (0 : ℝ) ≤ 1)
+  exists_triangle_zero_one A := by
+    obtain ⟨F⟩ := s.hn_exists A
+    obtain ⟨X, Y, hX, hY, f, g, h, hT⟩ := Slicing.tStructureAuxGE C s A F
+    refine ⟨X, Y, ?_, ?_, f, g, h, hT⟩
+    · simp only [Int.cast_zero, neg_zero]; exact hX
+    · simp only [Int.cast_one, sub_self]; exact hY
+
 /-- **Bounded t-structure from slicing.**
 The t-structure induced by a slicing is bounded: every object lies between
 `le a` and `ge b` for some integers `a, b`.
@@ -2340,6 +2730,25 @@ theorem Slicing.toTStructure_bounded (s : Slicing C) :
       linarith
     · linarith [Int.floor_le (1 - F.phiPlus C hn)]
 
+/-- **Bounded t-structure from the dual half-open convention.**
+The t-structure induced by `toTStructureGE` is bounded. -/
+theorem Slicing.toTStructureGE_bounded (s : Slicing C) :
+    s.toTStructureGE.IsBounded := by
+  intro E
+  obtain ⟨F⟩ := s.hn_exists E
+  by_cases hE : IsZero E
+  · exact ⟨0, 0, Or.inl hE, Or.inl hE⟩
+  · have hn := F.n_pos C hE
+    refine ⟨⌈-(F.phiMinus C hn)⌉, ⌈1 - F.phiPlus C hn⌉ - 1, Or.inr ⟨F, hn, ?_⟩,
+      Or.inr ⟨F, hn, ?_⟩⟩
+    · have := Int.le_ceil (-(F.phiMinus C hn))
+      push_cast
+      linarith
+    · have hceil : ((⌈1 - F.phiPlus C hn⌉ - 1 : ℤ) : ℝ) < 1 - F.phiPlus C hn := by
+        exact (Int.lt_ceil).1 (by
+          simpa using Int.sub_one_lt (⌈1 - F.phiPlus C hn⌉ : ℤ))
+      linarith
+
 /-- **Heart identification.**
 An object `E` lies in the heart of the slicing-induced t-structure if and only
 if it satisfies both `gtProp 0` (all HN phases > 0) and `leProp 1` (all HN
@@ -2348,6 +2757,14 @@ theorem Slicing.toTStructure_heart_iff (s : Slicing C) (E : C) :
     (s.toTStructure).heart E ↔ s.gtProp C 0 E ∧ s.leProp C 1 E := by
   change s.toTStructure.le 0 E ∧ s.toTStructure.ge 0 E ↔ _
   simp only [toTStructure, Int.cast_zero, neg_zero, sub_zero]
+
+/-- **Heart identification for the dual half-open convention.**
+An object `E` lies in the heart of `toTStructureGE` if and only if it satisfies
+`geProp 0` and `ltProp 1`, i.e. its HN phases lie in `[0,1)`. -/
+theorem Slicing.toTStructureGE_heart_iff (s : Slicing C) (E : C) :
+    (s.toTStructureGE).heart E ↔ s.geProp C 0 E ∧ s.ltProp C 1 E := by
+  change s.toTStructureGE.le 0 E ∧ s.toTStructureGE.ge 0 E ↔ _
+  simp only [toTStructureGE, Int.cast_zero, neg_zero, sub_zero]
 
 /-- **HN filtration splitting with interval data**. Given an HN filtration `F`
 of `E` (wrt slicing `s`) with all phases in the open interval `(a, b)`, and a
