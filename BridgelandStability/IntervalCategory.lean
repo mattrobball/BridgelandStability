@@ -9,7 +9,10 @@ import Mathlib.CategoryTheory.Triangulated.Strict
 import Mathlib.CategoryTheory.Triangulated.TStructure.HeartAbelian
 import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
+import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
+import Mathlib.CategoryTheory.ObjectProperty.Retract
 import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
+import Mathlib.CategoryTheory.Preadditive.LeftExact
 import Mathlib.Data.Complex.Basic
 
 /-!
@@ -178,6 +181,68 @@ instance Slicing.intervalProp_closedUnderIso (s : Slicing C) (a b : ℝ) :
     rcases hE with hZ | ⟨F, hF⟩
     · exact Or.inl (IsZero.of_iso hZ e.symm)
     · exact Or.inr ⟨F.ofIso C e, hF⟩
+
+instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
+    CategoryTheory.ObjectProperty.IsStableUnderRetracts (s.intervalProp C a b) where
+  of_retract {X Y} h hY := by
+    by_cases hX : IsZero X
+    · exact Or.inl hX
+    · obtain ⟨FX, hnX, hneX⟩ := HNFiltration.exists_nonzero_first C s hX
+      have hX_lt : s.phiPlus C X hX < b := by
+        rw [s.phiPlus_eq C X hX FX hnX hneX]
+        by_contra hle
+        push_neg at hle
+        have hzeroY : ∀ α : (FX.triangle ⟨0, hnX⟩).obj₃ ⟶ Y, α = 0 := by
+          intro α
+          by_cases hY0 : IsZero Y
+          · exact hY0.eq_of_tgt α 0
+          · obtain ⟨FY, hnY, hneY⟩ := HNFiltration.exists_nonzero_first C s hY0
+            have hgap : ∀ j : Fin FY.n, FY.φ j < FX.φ ⟨0, hnX⟩ := by
+              intro j
+              have h1 : FY.φ j ≤ FY.φ ⟨0, hnY⟩ := by
+                apply FY.hφ.antitone
+                simp only [Fin.le_def]
+                omega
+              have h2 : FY.φ ⟨0, hnY⟩ = s.phiPlus C Y hY0 := by
+                exact (s.phiPlus_eq C Y hY0 FY hnY hneY).symm
+              have h3 : s.phiPlus C Y hY0 < b := s.phiPlus_lt_of_intervalProp C hY0 hY
+              linarith
+            exact s.hom_eq_zero_of_gt_phases C (FX.semistable ⟨0, hnX⟩) FY hgap α
+        have hzeroX : ∀ α : (FX.triangle ⟨0, hnX⟩).obj₃ ⟶ X, α = 0 := by
+          intro α
+          have hαi : α ≫ h.i = 0 := hzeroY (α ≫ h.i)
+          calc α = (α ≫ h.i) ≫ h.r := by simp [h.retract]
+          _ = 0 := by rw [hαi, zero_comp]
+        exact hneX (FX.isZero_factor_zero_of_hom_eq_zero C s hnX hzeroX)
+      obtain ⟨GX, hnX', hneX'⟩ := HNFiltration.exists_nonzero_last C s hX
+      have hX_gt : a < s.phiMinus C X hX := by
+        rw [s.phiMinus_eq C X hX GX hnX' hneX']
+        by_contra hge
+        push_neg at hge
+        have hzeroY : ∀ β : Y ⟶ (GX.triangle ⟨GX.n - 1, by omega⟩).obj₃, β = 0 := by
+          intro β
+          by_cases hY0 : IsZero Y
+          · exact hY0.eq_of_src β 0
+          · obtain ⟨GY, hnY, hneY⟩ := HNFiltration.exists_nonzero_last C s hY0
+            have hgap : ∀ j : Fin GY.n, GX.φ ⟨GX.n - 1, by omega⟩ < GY.φ j := by
+              intro j
+              have h1 : GY.φ ⟨GY.n - 1, by omega⟩ ≤ GY.φ j := by
+                apply GY.hφ.antitone
+                simp only [Fin.le_def]
+                omega
+              have h2 : s.phiMinus C Y hY0 = GY.φ ⟨GY.n - 1, by omega⟩ := by
+                exact s.phiMinus_eq C Y hY0 GY hnY hneY
+              have h3 : a < s.phiMinus C Y hY0 := s.phiMinus_gt_of_intervalProp C hY0 hY
+              linarith
+            exact s.hom_eq_zero_of_lt_phases C (GX.semistable ⟨GX.n - 1, by omega⟩) GY hgap β
+        have hzeroX : ∀ β : X ⟶ (GX.triangle ⟨GX.n - 1, by omega⟩).obj₃, β = 0 := by
+          intro β
+          have hrβ : h.r ≫ β = 0 := hzeroY (h.r ≫ β)
+          calc β = (𝟙 X) ≫ β := by simp
+          _ = h.i ≫ (h.r ≫ β) := by rw [← h.retract]; simp [Category.assoc]
+          _ = 0 := by rw [hrβ, comp_zero]
+        exact hneX' (GX.isZero_factor_last_of_hom_eq_zero C s hnX' hzeroX)
+      exact s.intervalProp_of_intrinsic_phases C hX hX_gt hX_lt
 
 section FiniteProducts
 
@@ -1406,6 +1471,55 @@ theorem Slicing.IntervalCat.mono_toLeftHeart_of_strictMono (s : Slicing C)
   haveI : Mono (eH.hom ≫ FL.map k) := inferInstance
   simpa [hmapf]
 
+/-- If a morphism in `P((a, b))` becomes a monomorphism in the right heart
+`P([b - 1, b))`, then it is a strict monomorphism in `P((a, b))`. -/
+theorem Slicing.IntervalCat.strictMono_of_mono_toRightHeart (s : Slicing C)
+    {X Y : s.IntervalCat C a b} (f : X ⟶ Y)
+    [Mono ((Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b
+      (Fact.out : b - a ≤ 1)).map f)] :
+    IsStrictMono f := by
+  have hab : b - a ≤ 1 := Fact.out
+  let t := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b hab
+  let eQ := Slicing.IntervalCat.toRightHeartCokernelIso (C := C) (s := s) (a := a) (b := b) f
+  let eDiag :
+      parallelPair (FR.map (cokernel.π f)) 0 ≅ parallelPair (cokernel.π (FR.map f)) 0 :=
+    parallelPair.ext (Iso.refl _) eQ
+      (by
+        simpa [FR, eQ] using Slicing.IntervalCat.toRightHeartCokernelIso_π_comp_hom
+          (C := C) (s := s) (a := a) (b := b) f)
+      (by simp)
+  have hlim' :
+      IsLimit
+        (KernelFork.ofι (FR.map f) (by
+          apply ((t.heart).ι).map_injective
+          change (f ≫ cokernel.π f).hom = 0
+          exact congrArg InducedCategory.Hom.hom (cokernel.condition f)) :
+          Fork (FR.map (cokernel.π f)) 0) := by
+    let c :
+        Fork (cokernel.π (FR.map f)) 0 :=
+      KernelFork.ofι (FR.map f) (cokernel.condition (FR.map f))
+    let s :
+        Cofork (FR.map f) 0 :=
+      CokernelCofork.ofπ (cokernel.π (FR.map f)) (cokernel.condition (FR.map f))
+    have hcanon : IsLimit c :=
+      Abelian.monoIsKernelOfCokernel s (cokernelIsCokernel (FR.map f))
+    let htrans := (IsLimit.postcomposeInvEquiv eDiag c).symm hcanon
+    exact IsLimit.ofIsoLimit htrans <|
+      Fork.ext (Iso.refl _) (by
+        have hι : c.ι = Fork.ι ((Cones.postcompose eDiag.inv).obj c) := by
+          change c.ι = c.ι ≫ eDiag.inv.app WalkingParallelPair.zero
+          simp [eDiag]
+        simpa [c] using hι)
+  have hmap :
+      IsLimit (FR.mapCone (KernelFork.ofι f (cokernel.condition f))) :=
+    (isLimitMapConeForkEquiv' FR (cokernel.condition f)).symm hlim'
+  have hlim : IsLimit (KernelFork.ofι f (cokernel.condition f)) :=
+    isLimitOfReflects FR hmap
+  exact isStrictMono_of_isLimitKernelFork hlim
+
 /-- The kernel of a morphism in `P((a,b))` is computed by the left heart
 `P((a,a+1])`. -/
 noncomputable def Slicing.IntervalCat.toLeftHeartKernelIso (s : Slicing C)
@@ -1632,6 +1746,134 @@ theorem Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι (s : Slicing C)
     rw [Category.assoc, hk_map]
     rfl
 
+/-- If a morphism in `P((a, b))` becomes an epimorphism in the left heart
+`P((a, a + 1])`, then it is a strict epimorphism in `P((a, b))`. -/
+theorem Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart (s : Slicing C)
+    {X Y : s.IntervalCat C a b} (g : X ⟶ Y)
+    [Epi ((Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b
+      (Fact.out : b - a ≤ 1)).map g)] :
+    IsStrictEpi g := by
+  have hab : b - a ≤ 1 := Fact.out
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b hab
+  let eK := Slicing.IntervalCat.toLeftHeartKernelIso (C := C) (s := s) (a := a) (b := b) g
+  let eDiag :
+      parallelPair (FL.map (kernel.ι g)) 0 ≅ parallelPair (kernel.ι (FL.map g)) 0 :=
+    parallelPair.ext eK (Iso.refl _)
+      (by
+        simpa [FL, eK] using (Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι
+          (C := C) (s := s) (a := a) (b := b) g).symm)
+      (by simp)
+  have hcolim' :
+      IsColimit
+        (CokernelCofork.ofπ (FL.map g) (by
+          apply ((t.heart).ι).map_injective
+          change (kernel.ι g ≫ g).hom = 0
+          exact congrArg InducedCategory.Hom.hom (kernel.condition g)) :
+          Cofork (FL.map (kernel.ι g)) 0) := by
+    let c :
+        Cofork (kernel.ι (FL.map g)) 0 :=
+      CokernelCofork.ofπ (FL.map g) (kernel.condition (FL.map g))
+    have hcanon : IsColimit c :=
+      Abelian.epiIsCokernelOfKernel (KernelFork.ofι (kernel.ι (FL.map g))
+        (kernel.condition (FL.map g))) (kernelIsKernel (FL.map g))
+    let htrans := (IsColimit.precomposeHomEquiv eDiag c).symm hcanon
+    exact IsColimit.ofIsoColimit htrans <|
+      Cofork.ext (Iso.refl _) (by
+        have hπ :
+            Cofork.π ((Cocones.precompose eDiag.hom).obj c) =
+              eDiag.hom.app WalkingParallelPair.one ≫ c.π := by
+          change eDiag.hom.app WalkingParallelPair.one ≫ c.π =
+            eDiag.hom.app WalkingParallelPair.one ≫ c.π
+          rfl
+        have h₁ :
+            Cofork.π ((Cocones.precompose eDiag.hom).obj c) ≫
+                (Iso.refl ((Cocones.precompose eDiag.hom).obj c).pt).hom =
+              eDiag.hom.app WalkingParallelPair.one ≫ c.π := by
+          simpa [Category.assoc] using congrArg
+            (fun k => k ≫ (Iso.refl ((Cocones.precompose eDiag.hom).obj c).pt).hom) hπ
+        have h₂ : eDiag.hom.app WalkingParallelPair.one ≫ c.π = FL.map g := by
+          simp [c, eDiag]
+        exact h₁.trans h₂)
+  have hmap :
+      IsColimit (FL.mapCocone (CokernelCofork.ofπ g (kernel.condition g))) :=
+    (isColimitMapCoconeCoforkEquiv' FL (kernel.condition g)).symm hcolim'
+  have hcolim : IsColimit (CokernelCofork.ofπ g (kernel.condition g)) :=
+    isColimitOfReflects FL hmap
+  exact isStrictEpi_of_isColimitCokernelCofork hcolim
+
+instance Slicing.IntervalCat.toLeftHeart_additive (s : Slicing C) (a b : ℝ)
+    (hab : b - a ≤ 1) :
+    Functor.Additive (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b hab) where
+  map_add := by
+    intro X Y f g
+    rfl
+
+instance Slicing.IntervalCat.toRightHeart_additive (s : Slicing C) (a b : ℝ)
+    (hab : b - a ≤ 1) :
+    Functor.Additive (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b hab) where
+  map_add := by
+    intro X Y f g
+    rfl
+
+noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesKernel (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {X Y : s.IntervalCat C a b} (f : X ⟶ Y) :
+    PreservesLimit (parallelPair f 0)
+      (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  apply preservesLimit_of_preserves_limit_cone (kernelIsKernel f)
+  change IsLimit (FL.mapCone (KernelFork.ofι (kernel.ι f) (kernel.condition f)))
+  exact (isLimitMapConeForkEquiv' FL (kernel.condition f)).symm <|
+    IsLimit.ofIsoLimit (kernelIsKernel (FL.map f)) <|
+      Fork.ext ((Slicing.IntervalCat.toLeftHeartKernelIso (C := C) (s := s)
+        (a := a) (b := b) f).symm) <| by
+          have hι :
+              (Slicing.IntervalCat.toLeftHeartKernelIso (C := C) (s := s)
+                (a := a) (b := b) f).hom ≫ kernel.ι (FL.map f) =
+                FL.map (kernel.ι f) := by
+            simpa [FL] using Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι
+              (C := C) (s := s) (a := a) (b := b) f
+          change
+            (Iso.symm (Slicing.IntervalCat.toLeftHeartKernelIso (C := C) (s := s)
+              (a := a) (b := b) f)).hom ≫ FL.map (kernel.ι f) =
+              kernel.ι (FL.map f)
+          rw [← hι]
+          simp [Category.assoc]
+
+noncomputable instance Slicing.IntervalCat.toRightHeart_preservesCokernel (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {X Y : s.IntervalCat C a b} (f : X ⟶ Y) :
+    PreservesColimit (parallelPair f 0)
+      (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
+  let t := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  apply preservesColimit_of_preserves_colimit_cocone (cokernelIsCokernel f)
+  change IsColimit (FR.mapCocone (CokernelCofork.ofπ (cokernel.π f) (cokernel.condition f)))
+  exact (isColimitMapCoconeCoforkEquiv' FR (cokernel.condition f)).symm <|
+    IsColimit.ofIsoColimit (cokernelIsCokernel (FR.map f)) <|
+      Cofork.ext ((Slicing.IntervalCat.toRightHeartCokernelIso (C := C) (s := s)
+        (a := a) (b := b) f).symm) <| by
+          have hπ :
+              FR.map (cokernel.π f) ≫
+                (Slicing.IntervalCat.toRightHeartCokernelIso (C := C) (s := s)
+                  (a := a) (b := b) f).hom =
+                cokernel.π (FR.map f) := by
+            simpa [FR] using Slicing.IntervalCat.toRightHeartCokernelIso_π_comp_hom
+              (C := C) (s := s) (a := a) (b := b) f
+          change
+            cokernel.π (FR.map f) ≫
+              (Iso.symm (Slicing.IntervalCat.toRightHeartCokernelIso (C := C) (s := s)
+                (a := a) (b := b) f)).hom =
+              FR.map (cokernel.π f)
+          rw [← hπ]
+          simp [Category.assoc]
+
 noncomputable instance Slicing.intervalCat_hasBinaryBiproducts (s : Slicing C) :
     HasBinaryBiproducts (s.IntervalCat C a b) :=
   HasBinaryBiproducts.of_hasBinaryProducts
@@ -1644,6 +1886,10 @@ noncomputable instance Slicing.intervalCat_hasCoequalizers (s : Slicing C) :
     HasCoequalizers (s.IntervalCat C a b) :=
   Preadditive.hasCoequalizers_of_hasCokernels
 
+noncomputable instance Slicing.intervalCat_hasFiniteCoproducts (s : Slicing C) :
+    HasFiniteCoproducts (s.IntervalCat C a b) :=
+  hasFiniteCoproducts_of_has_binary_and_initial
+
 noncomputable instance Slicing.intervalCat_hasPullbacks (s : Slicing C) :
     HasPullbacks (s.IntervalCat C a b) := by
   exact Limits.hasPullbacks_of_hasBinaryProducts_of_hasEqualizers _
@@ -1651,6 +1897,56 @@ noncomputable instance Slicing.intervalCat_hasPullbacks (s : Slicing C) :
 noncomputable instance Slicing.intervalCat_hasPushouts (s : Slicing C) :
     HasPushouts (s.IntervalCat C a b) := by
   exact Limits.hasPushouts_of_hasBinaryCoproducts_of_hasCoequalizers _
+
+noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesFiniteLimits (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
+    PreservesFiniteLimits
+      (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
+  let t := (s.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  exact Functor.preservesFiniteLimits_of_preservesKernels FL
+
+noncomputable instance Slicing.IntervalCat.toRightHeart_preservesFiniteColimits (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
+    PreservesFiniteColimits
+      (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
+  let t := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  exact Functor.preservesFiniteColimits_of_preservesCokernels FR
+
+/-- If a short complex in `P((a,b))` is short exact after embedding into both hearts,
+then its left map is a strict monomorphism and its right map is a strict epimorphism
+in `P((a,b))`. -/
+theorem Slicing.IntervalCat.strictMono_strictEpi_of_shortExact_toLeftRightHearts (s : Slicing C)
+    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)}
+    (hL :
+      (S.map (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b
+        (Fact.out : b - a ≤ 1))).ShortExact)
+    (hR :
+      (S.map (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b
+        (Fact.out : b - a ≤ 1))).ShortExact) :
+    IsStrictMono S.f ∧ IsStrictEpi S.g := by
+  let tL := (s.phaseShift C a).toTStructure
+  letI := tL.hasHeartFullSubcategory
+  letI : Abelian tL.heart.FullSubcategory := tL.heartFullSubcategoryAbelian
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  let tR := (s.phaseShift C (b - 1)).toTStructureGE
+  letI := tR.hasHeartFullSubcategory
+  letI : Abelian tR.heart.FullSubcategory := tR.heartFullSubcategoryAbelian
+  let FR := Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
+  letI : Mono (FR.map S.f) := hR.mono_f
+  letI : Epi (FL.map S.g) := hL.epi_g
+  have hf : IsStrictMono S.f :=
+    Slicing.IntervalCat.strictMono_of_mono_toRightHeart
+      (C := C) (s := s) (a := a) (b := b) S.f
+  have hg : IsStrictEpi S.g :=
+    Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart
+      (C := C) (s := s) (a := a) (b := b) S.g
+  exact ⟨hf, hg⟩
 
 end Preabelian
 
