@@ -239,6 +239,18 @@ def Slicing.gtProp (s : Slicing C) (t : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E) (h : 0 < F.n),
     t < F.phiMinus C h
 
+/-- The subcategory predicate `P(< t)`: an object `E` satisfies this if it is zero or
+all phases in some HN filtration of `E` are `< t`. -/
+def Slicing.ltProp (s : Slicing C) (t : ℝ) : ObjectProperty C :=
+  fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E) (h : 0 < F.n),
+    F.phiPlus C h < t
+
+/-- The subcategory predicate `P(≥ t)`: an object `E` satisfies this if it is zero or
+all phases in some HN filtration of `E` are `≥ t`. -/
+def Slicing.geProp (s : Slicing C) (t : ℝ) : ObjectProperty C :=
+  fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E) (h : 0 < F.n),
+    t ≤ F.phiMinus C h
+
 /-! ### Properties of subcategory predicates -/
 
 /-- Zero objects are in `P(≤ t)` for all `t`. -/
@@ -266,6 +278,57 @@ lemma Slicing.gtProp_anti (s : Slicing C) {t₁ t₂ : ℝ} (h : t₁ ≤ t₂) 
   rcases hE with hZ | ⟨F, hF, hgt⟩
   · exact Or.inl hZ
   · exact Or.inr ⟨F, hF, lt_of_le_of_lt h hgt⟩
+
+/-- Zero objects are in `P(< t)` for all `t`. -/
+lemma Slicing.ltProp_zero (s : Slicing C) (t : ℝ) :
+    s.ltProp C t (0 : C) :=
+  Or.inl (isZero_zero C)
+
+/-- Zero objects are in `P(≥ t)` for all `t`. -/
+lemma Slicing.geProp_zero (s : Slicing C) (t : ℝ) :
+    s.geProp C t (0 : C) :=
+  Or.inl (isZero_zero C)
+
+/-- `P(< t₁) ≤ P(< t₂)` when `t₁ ≤ t₂`. -/
+lemma Slicing.ltProp_mono (s : Slicing C) {t₁ t₂ : ℝ} (h : t₁ ≤ t₂) :
+    s.ltProp C t₁ ≤ s.ltProp C t₂ := by
+  intro E hE
+  rcases hE with hZ | ⟨F, hF, hlt⟩
+  · exact Or.inl hZ
+  · exact Or.inr ⟨F, hF, lt_of_lt_of_le hlt h⟩
+
+/-- `P(≥ t₂) ≤ P(≥ t₁)` when `t₁ ≤ t₂`. -/
+lemma Slicing.geProp_anti (s : Slicing C) {t₁ t₂ : ℝ} (h : t₁ ≤ t₂) :
+    s.geProp C t₂ ≤ s.geProp C t₁ := by
+  intro E hE
+  rcases hE with hZ | ⟨F, hF, hge⟩
+  · exact Or.inl hZ
+  · exact Or.inr ⟨F, hF, le_trans h hge⟩
+
+/-- `P(< t) ⊆ P(≤ t)` (strict upper bound implies non-strict). -/
+lemma Slicing.leProp_of_ltProp (s : Slicing C) {t : ℝ} :
+    s.ltProp C t ≤ s.leProp C t := by
+  intro E hE
+  rcases hE with hZ | ⟨F, hF, hlt⟩
+  · exact Or.inl hZ
+  · exact Or.inr ⟨F, hF, le_of_lt hlt⟩
+
+/-- `P(> t) ⊆ P(≥ t)` (strict lower bound implies non-strict). -/
+lemma Slicing.geProp_of_gtProp (s : Slicing C) {t : ℝ} :
+    s.gtProp C t ≤ s.geProp C t := by
+  intro E hE
+  rcases hE with hZ | ⟨F, hF, hgt⟩
+  · exact Or.inl hZ
+  · exact Or.inr ⟨F, hF, le_of_lt hgt⟩
+
+/-- `P((a, b)) ⊆ P(< b)` (interval containment gives strict upper bound). -/
+lemma Slicing.ltProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
+    (hI : s.intervalProp C a b E) : s.ltProp C b E := by
+  rcases hI with hZ | ⟨F, hF⟩
+  · exact Or.inl hZ
+  · by_cases hn : 0 < F.n
+    · exact Or.inr ⟨F, hn, (hF ⟨0, hn⟩).2⟩
+    · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
 
 
 /-! ### Hom-vanishing for HN-filtered objects
@@ -1289,6 +1352,20 @@ lemma Slicing.phiPlus_le_of_leProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
   rcases hle with hZ | ⟨G, hGn, hGt⟩
   · exact absurd hZ hE
   · exact le_trans (s.phiPlus_le_phiPlus_of_hn C hE G hGn) hGt
+
+/-- If `E ∈ P(< t)` and `E` is nonzero, then `φ⁺(E) < t`. -/
+lemma Slicing.phiPlus_lt_of_ltProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hlt : s.ltProp C t E) : s.phiPlus C E hE < t := by
+  rcases hlt with hZ | ⟨G, hGn, hGt⟩
+  · exact absurd hZ hE
+  · exact lt_of_le_of_lt (s.phiPlus_le_phiPlus_of_hn C hE G hGn) hGt
+
+/-- If `E ∈ P(≥ t)` and `E` is nonzero, then `t ≤ φ⁻(E)`. -/
+lemma Slicing.phiMinus_ge_of_geProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hge : s.geProp C t E) : t ≤ s.phiMinus C E hE := by
+  rcases hge with hZ | ⟨G, hGn, hGt⟩
+  · exact absurd hZ hE
+  · exact le_trans hGt (s.phiMinus_ge_phiMinus_of_hn C hE G hGn)
 
 /-- **Interval containment from intrinsic phases.** If `a < φ⁻(E)` and `φ⁺(E) < b`, then
 `E ∈ P((a, b))`. -/

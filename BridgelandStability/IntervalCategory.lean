@@ -558,6 +558,116 @@ theorem Slicing.intervalProp_extension_closed (s : Slicing C)
           _ = s.phiPlus C E hE := (s.phiPlus_eq C E hE F hn hfirst).symm
           _ < b := hPlus⟩
 
+/-! ### Cokernel/quotient containment via the right heart (Lemma 4.3 dual)
+
+In a thin interval `P((a, b))` with `b - a ≤ 1`, the **right heart** `P([b-1, b))` controls
+cokernels. Objects in the right heart satisfy `geProp(b-1)` (phases ≥ b-1) and `ltProp(b)`
+(phases < b). The key property is:
+
+Given a triangle `K → E → Q → K[1]` with `E ∈ P((a, b))`, if `K` has `geProp(b-1)` (so
+`K[1]` has phases ≥ b) and `Q` has `ltProp(b)` (phases < b), then `Q ∈ P((a, b))`.
+
+* **Upper bound** (`φ⁺(Q) < b`): immediate from the `ltProp(b)` hypothesis.
+* **Lower bound** (`φ⁻(Q) > a`): by contradiction. If Q has a bottom factor with phase ≤ a,
+  then f₂ ≫ β = 0 by hom-vanishing (E phases > a), and β factors through K[1] via
+  yoneda_exact₃. Since K[1] has phases ≥ b > a, the factoring morphism vanishes too.
+-/
+
+omit [IsTriangulated C] in
+/-- **Phase lower bound from non-strict one-sided containment.** In a triangle
+`K → E → Q → K[1]`, if `E` has `φ⁻(E) > a` and `K` satisfies `geProp c` (all phases ≥ c)
+with `a < c + 1`, then if `Q` is nonzero, `a < φ⁻(Q)`.
+
+This generalizes `phiMinus_gt_of_triangle_with_gtProp` by replacing `gtProp` (strict)
+with `geProp` (non-strict). The key application is cokernel containment via the right
+heart, where objects satisfy `geProp(b-1)` rather than `gtProp(b-1)`. -/
+theorem Slicing.phiMinus_gt_of_triangle_with_geProp (s : Slicing C)
+    {K E Q : C} (hQ : ¬IsZero Q) {a : ℝ}
+    (hE_gt : ∀ (hE : ¬IsZero E), a < s.phiMinus C E hE)
+    {c : ℝ} (hK_ge : s.geProp C c K) (hca : a < c + 1)
+    {f₁ : K ⟶ E} {f₂ : E ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C) :
+    a < s.phiMinus C Q hQ := by
+  obtain ⟨FQ, hnQ, hneQ⟩ := HNFiltration.exists_nonzero_last C s hQ
+  rw [s.phiMinus_eq C Q hQ FQ hnQ hneQ]
+  by_contra hle
+  push_neg at hle
+  -- hle : FQ.φ ⟨FQ.n - 1, _⟩ ≤ a (bottom factor has phase ≤ a)
+  have hQ_factor_zero :
+      ∀ β : Q ⟶ (FQ.triangle ⟨FQ.n - 1, by omega⟩).obj₃, β = 0 := by
+    intro β
+    -- Step 1: f₂ ≫ β = 0 (E → bottom_factor is zero by hom-vanishing)
+    have hfβ : f₂ ≫ β = 0 := by
+      by_cases hEZ : IsZero E
+      · exact hEZ.eq_of_src (f₂ ≫ β) 0
+      · obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hEZ
+        have hE_gap : ∀ j : Fin FE.n,
+            FQ.φ ⟨FQ.n - 1, by omega⟩ < FE.φ j := fun j ↦ by
+          have h1 : a < FE.φ ⟨FE.n - 1, by omega⟩ := by
+            have := hE_gt hEZ
+            rw [s.phiMinus_eq C E hEZ FE hnE hneE] at this; exact this
+          have h2 : FE.φ ⟨FE.n - 1, by omega⟩ ≤ FE.φ j :=
+            FE.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+          linarith
+        exact s.hom_eq_zero_of_lt_phases C
+          (FQ.semistable ⟨FQ.n - 1, by omega⟩) FE hE_gap _
+    -- Step 2: By yoneda_exact₃, β factors through K⟦1⟧
+    obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ (Triangle.mk f₁ f₂ f₃) hT β hfβ
+    -- Step 3: γ = 0 (K⟦1⟧ → bottom_factor is zero by hom-vanishing)
+    suffices hγ0 : γ = 0 by rw [hγ, hγ0]; exact comp_zero
+    by_cases hKZ : IsZero K
+    · exact ((shiftFunctor C (1 : ℤ)).map_isZero hKZ).eq_of_src γ 0
+    · rcases hK_ge with hKZ' | ⟨GK, hnGK, hGK_ge⟩
+      · exact absurd hKZ' hKZ
+      · -- Shift GK by 1 to get filtration of K⟦1⟧
+        let GKs := GK.shiftHN C s (1 : ℤ)
+        -- GKs.φ(j) = GK.φ(j) + 1 ≥ c + 1 > a ≥ FQ.φ(n-1)
+        have hKs_gap : ∀ j : Fin GKs.n,
+            FQ.φ ⟨FQ.n - 1, by omega⟩ < GKs.φ j := by
+          intro j
+          change FQ.φ ⟨FQ.n - 1, by omega⟩ < GK.φ j + ((1 : ℤ) : ℝ)
+          have h1 : GK.φ ⟨GK.n - 1, by omega⟩ ≤ GK.φ j := by
+            apply GK.hφ.antitone
+            change j.val ≤ GK.n - 1
+            have := j.isLt; have : GKs.n = GK.n := rfl; omega
+          have h2 : c ≤ GK.φ ⟨GK.n - 1, by omega⟩ := hGK_ge
+          have h3 : ((1 : ℤ) : ℝ) = 1 := by norm_num
+          linarith
+        exact s.hom_eq_zero_of_lt_phases C
+          (FQ.semistable ⟨FQ.n - 1, by omega⟩) GKs hKs_gap γ
+  -- Bottom factor is zero — contradiction
+  exact hneQ (FQ.isZero_factor_last_of_hom_eq_zero C s hnQ hQ_factor_zero)
+
+omit [IsTriangulated C] in
+/-- **Cokernel/quotient containment in thin intervals (Lemma 4.3 dual).** In a
+distinguished triangle `K → E → Q → K[1]` where `E ∈ P((a,b))` and `K` has
+`geProp(b-1)` (from right heart membership) and `Q` has `ltProp(b)` (from right
+heart membership), then `Q ∈ P((a, b))`.
+
+This is the key property that ensures cokernels computed in the right heart
+`P([b-1, b))` stay in the interval `P((a, b))`. Together with
+`first_intervalProp_of_triangle` (kernel containment via the left heart), this
+establishes that `P((a, b))` is quasi-abelian (Bridgeland Lemma 4.3). -/
+theorem Slicing.third_intervalProp_of_triangle (s : Slicing C)
+    {a b : ℝ} (hab' : a < b)
+    {K E Q : C}
+    (hE : s.intervalProp C a b E)
+    (hK_ge : s.geProp C (b - 1) K)
+    (hQ_lt : s.ltProp C b Q)
+    {f₁ : K ⟶ E} {f₂ : E ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C) :
+    s.intervalProp C a b Q := by
+  by_cases hQ : IsZero Q
+  · exact Or.inl hQ
+  · -- φ⁺(Q) < b: from ltProp(b) hypothesis
+    have hQ_plus : s.phiPlus C Q hQ < b := s.phiPlus_lt_of_ltProp C hQ hQ_lt
+    -- φ⁻(Q) > a: from phiMinus_gt_of_triangle_with_geProp
+    have hQ_minus : a < s.phiMinus C Q hQ :=
+      s.phiMinus_gt_of_triangle_with_geProp C hQ
+        (fun hE' ↦ s.phiMinus_gt_of_intervalProp C hE' hE)
+        hK_ge (by linarith) hT
+    exact s.intervalProp_of_intrinsic_phases C hQ hQ_minus hQ_plus
+
 end TwoHeartEmbedding
 
 /-! ### Skewed stability functions (Definition 4.4) -/
