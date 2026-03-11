@@ -174,6 +174,12 @@ lemma Slicing.intervalProp_mono (s : Slicing C) {E : C}
   · right
     exact ⟨F, fun i ↦ ⟨by linarith [(hF i).1], by linarith [(hF i).2]⟩⟩
 
+/-- The inclusion functor between nested interval subcategories. -/
+abbrev Slicing.IntervalCat.inclusion (s : Slicing C)
+    {a₁ b₁ a₂ b₂ : ℝ} (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) :
+    s.IntervalCat C a₁ b₁ ⥤ s.IntervalCat C a₂ b₂ :=
+  ObjectProperty.ιOfLE (fun X hX ↦ s.intervalProp_mono C ha hb hX)
+
 /-- The interval property is closed under isomorphisms. -/
 instance Slicing.intervalProp_closedUnderIso (s : Slicing C) (a b : ℝ) :
     (s.intervalProp C a b).IsClosedUnderIsomorphisms where
@@ -2641,6 +2647,25 @@ theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
     { shortExact := hShortExact
       strict_f := hf.strict
       strict_g := hg.strict }
+
+/-- A strict short exact sequence in a smaller interval remains strict in any larger thin
+interval containing it. This is the inclusion-case transport used in the deformation
+theorem's interval-independence step. -/
+theorem Slicing.IntervalCat.strictShortExact_inclusion (s : Slicing C)
+    {a₁ b₁ a₂ b₂ : ℝ}
+    [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)] [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
+    (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂)
+    {S : ShortComplex (s.IntervalCat C a₁ b₁)} (hS : StrictShortExact S) :
+    StrictShortExact (S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)) := by
+  obtain ⟨δ, hT⟩ :=
+    Slicing.IntervalCat.exists_distTriang_of_strictShortExact
+      (C := C) (s := s) (a := a₁) (b := b₁) hS
+  have hT' :
+      Triangle.mk ((S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)).f.hom)
+        ((S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)).g.hom) δ ∈ distTriang C := by
+    simpa [Slicing.IntervalCat.inclusion] using hT
+  exact Slicing.IntervalCat.strictShortExact_of_distTriang
+    (C := C) (s := s) (a := a₂) (b := b₂) hT'
 
 /-- Strict short exact sequences in `P((a,b))` are exactly the distinguished triangles
 in `C` whose three vertices lie in `P((a,b))`. -/
