@@ -289,6 +289,7 @@ lemma exists_distinguished_triangle_of_epi {X₂ X₃ : A} (π : X₂ ⟶ X₃) 
 
 set_option backward.isDefEq.respectTransparency false in
 include hι hA in
+omit [HasFiniteProducts A] in
 variable [IsTriangulated C] in
 lemma exists_distinguished_triangle_of_image_factorisation
     {X₁ X₂ : A} {f₁ : X₁ ⟶ X₂} {X₃ : C}
