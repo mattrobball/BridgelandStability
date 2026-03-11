@@ -288,6 +288,38 @@ lemma exists_distinguished_triangle_of_epi {X₂ X₃ : A} (π : X₂ ⟶ X₃) 
   exact Triangle.isoMk _ _ (Iso.refl _) (Iso.refl _) (asIso α)
 
 set_option backward.isDefEq.respectTransparency false in
+include hι hA in
+variable [IsTriangulated C] in
+lemma exists_distinguished_triangle_of_image_factorisation
+    {X₁ X₂ : A} {f₁ : X₁ ⟶ X₂} {X₃ : C}
+    (f₂ : ι.obj X₂ ⟶ X₃) (f₃ : X₃ ⟶ (ι.obj X₁)⟦(1 : ℤ)⟧)
+    (hT : Triangle.mk (ι.map f₁) f₂ f₃ ∈ distTriang C)
+    {K Q : A} (α : (ι.obj K)⟦(1 : ℤ)⟧ ⟶ X₃) (β : X₃ ⟶ (ι.obj Q))
+    {γ : ι.obj Q ⟶ (ι.obj K)⟦(1 : ℤ)⟧⟦(1 : ℤ)⟧}
+    (hT' : Triangle.mk α β γ ∈ distTriang C) :
+    ∃ (I : A) (i : I ⟶ X₂) (δ : ι.obj Q ⟶ (ι.obj I)⟦(1 : ℤ)⟧)
+      (m₁ : X₁ ⟶ I) (m₃ : ι.obj I ⟶ (ι.obj K)⟦(1 : ℤ)⟧),
+      Triangle.mk (ι.map i) (ι.map (πQ f₂ β)) δ ∈ distTriang C ∧
+      Triangle.mk (ι.map (ιK f₃ α)) (ι.map m₁) (-m₃) ∈ distTriang C ∧
+      m₁ ≫ i = f₁ := by
+  have hEpi : Epi (πQ f₂ β) := epi_πQ hι hT hT'
+  obtain ⟨I, i, δ, hI⟩ := exists_distinguished_triangle_of_epi hι hA (πQ f₂ β)
+  have H := someOctahedron (show f₂ ≫ β = ι.map (πQ f₂ β) by simp)
+    (rot_of_distTriang _ hT) (rot_of_distTriang _ hT')
+    (rot_of_distTriang _ hI)
+  obtain ⟨m₁, hm₁⟩ : ∃ (m₁ : X₁ ⟶ I), (shiftFunctor C (1 : ℤ)).map (ι.map m₁) = H.m₁ :=
+    ⟨(ι ⋙ shiftFunctor C (1 : ℤ)).preimage H.m₁, Functor.map_preimage (ι ⋙ _) _⟩
+  obtain ⟨m₃ : ι.obj I ⟶ (ι.obj K)⟦(1 : ℤ)⟧, hm₃⟩ :
+      ∃ m₃, (shiftFunctor C (1 : ℤ)).map m₃ = H.m₃ :=
+    ⟨(shiftFunctor C (1 : ℤ)).preimage H.m₃, Functor.map_preimage _ _⟩
+  have Hmem : Triangle.mk (ι.map (ιK f₃ α)) (ι.map m₁) (-m₃) ∈ distTriang C := by
+    rw [rotate_distinguished_triangle, ← Triangle.shift_distinguished_iff _ 1]
+    refine isomorphic_distinguished _ H.mem _ ?_
+    exact Triangle.isoMk _ _ (-(Iso.refl _)) (Iso.refl _) (Iso.refl _)
+  refine ⟨I, i, δ, m₁, m₃, hI, Hmem, ?_⟩
+  exact (ι ⋙ shiftFunctor C (1 : ℤ)).map_injective (by simpa [hm₁] using H.comm₂)
+
+set_option backward.isDefEq.respectTransparency false in
 variable (ι) in
 /-- Let `ι : A ⥤ C` be a fully faithful additive functor where `A` is
 an additive category and `C` is a triangulated category. The category `A`
