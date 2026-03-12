@@ -24,8 +24,9 @@ whose HN phases all lie in `(a, b)`.
 
 These interval subcategories play a central role in Bridgeland's deformation theorem (§7):
 when `b - a` is small enough (relative to the local finiteness parameter), objects in
-`P((a,b))` have well-founded subobject lattices, enabling HN filtration arguments within
-thin subcategories.
+`P((a,b))` have finite length in the quasi-abelian sense, i.e. well-founded chains of
+strict subobjects and strict quotients, enabling HN filtration arguments within thin
+subcategories.
 
 ## Main definitions
 
@@ -101,7 +102,10 @@ theorem Slicing.IntervalCat.isZero_of_obj_isZero (s : Slicing C) {a b : ℝ}
 
 /-- **Finite subobject lattice in thin intervals**. For any object `E` in `P((a, b))` with
 `b - a ≤ 2η`, if all objects in `η`-intervals have finite subobject lattices, then
-`E` does too. -/
+`E` does too.
+
+This is an older stronger helper; the paper-faithful local-finiteness hypothesis below
+uses strict-subobject finite length instead. -/
 theorem Slicing.intervalFiniteLength (s : Slicing C)
     {a b : ℝ} {E : C} (hI : s.intervalProp C a b E) :
     ∀ {η : ℝ}, b - a ≤ 2 * η →
@@ -128,15 +132,6 @@ theorem Slicing.intervalFiniteLength (s : Slicing C)
         by_contra h
         push_neg at h
         linarith⟩
-
-/-- Simplified version: if `s` is locally finite, the finiteness parameter can be
-extracted automatically. -/
-theorem Slicing.intervalFiniteLength' (s : Slicing C) (hLF : s.IsLocallyFinite C)
-    {a b : ℝ} {E : C} (hI : s.intervalProp C a b E) :
-    ∃ (η : ℝ), 0 < η ∧ (b - a ≤ 2 * η →
-      Finite (Subobject E)) := by
-  obtain ⟨w, hw, hlf⟩ := hLF.intervalFinite
-  exact ⟨w, hw, fun hwidth ↦ s.intervalFiniteLength C hI hwidth hlf⟩
 
 /-! ### Interval containment -/
 
@@ -2341,6 +2336,29 @@ noncomputable instance Slicing.intervalCat_quasiAbelian (s : Slicing C)
       CategoryTheory.Abelian.mono_inr_of_isColimit (f := FR.map f) (g := FR.map g) hpo
     exact Slicing.IntervalCat.strictMono_of_mono_toRightHeart
       (C := C) (s := s) (a := a) (b := b) (pushout.inr f g)
+
+/-! ### Local finiteness in thin interval categories -/
+
+omit [IsTriangulated C] in
+/-- A slicing is locally finite if there exists `η > 0` with `η < 1/2` such that every
+object in each thin interval category `P((t-η, t+η))` has finite length in the
+quasi-abelian sense, i.e. ACC/DCC on strict subobjects.
+
+The extra bound `η < 1/2` is a harmless normalization: any Bridgeland witness may be
+shrunk to such an `η`, and then the width `2η` is at most `1`, so the thin interval
+category carries the exact / quasi-abelian structure proved above. -/
+structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
+  intervalFinite : ∃ η : ℝ, ∃ hη : 0 < η, ∃ hη' : η < 1 / 2, ∀ t : ℝ,
+    let a := t - η
+    let b := t + η
+    letI : Fact (a < b) := ⟨by
+      dsimp [a, b]
+      linarith⟩
+    letI : Fact (b - a ≤ 1) := ⟨by
+      dsimp [a, b]
+      linarith⟩
+    ∀ (E : s.IntervalCat C a b),
+      IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
 
 /-- If a short complex in `P((a,b))` is short exact after embedding into both hearts,
 then its left map is a strict monomorphism and its right map is a strict epimorphism

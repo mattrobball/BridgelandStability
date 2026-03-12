@@ -532,6 +532,59 @@ lemma simple_isSemistable {E : A} (hS : Simple E) : Z.IsSemistable E := by
   · exact absurd ((subobject_isZero_iff_eq_bot B).mpr h) hB
   · rw [h]; exact le_of_eq (Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow))
 
+variable {Z}
+
+/-- In an Artinian object, repeated destabilizing subobjects terminate. Hence every nonzero
+subobject contains a semistable subobject of at least the same phase. This is the first
+chain-condition step in Bridgeland's Proposition 2.4. -/
+private theorem exists_semistable_subobject_ge_phase_of_artinian {E : A}
+    [IsArtinianObject E] {B : Subobject E} (hB : B ≠ ⊥) :
+    ∃ C : Subobject E, C ≤ B ∧ C ≠ ⊥ ∧ Z.IsSemistable (C : A) ∧
+      Z.phase (B : A) ≤ Z.phase (C : A) := by
+  induction B using WellFoundedLT.induction with
+  | ind B ih =>
+      by_cases hB' : B = ⊥
+      · exfalso
+        exact hB hB'
+      · have hB_nz : ¬IsZero (B : A) := subobject_not_isZero_of_ne_bot hB'
+        by_cases hss : Z.IsSemistable (B : A)
+        · exact ⟨B, le_rfl, hB', hss, le_rfl⟩
+        · obtain ⟨D, hD_nz, hphase⟩ :=
+            Z.exists_destabilizing_of_not_semistable (B : A) hB_nz hss
+          have hD_ne_bot : D ≠ ⊥ := subobject_ne_bot_of_not_isZero hD_nz
+          let D' : Subobject E := liftSub B D
+          have hD'_le : D' ≤ B := liftSub_le B D
+          have hD'_ne : D' ≠ ⊥ := liftSub_ne_bot B D hD_ne_bot
+          have hD'_lt : D' < B := by
+            refine lt_of_le_of_ne hD'_le ?_
+            intro hEq
+            have hphase_eq : Z.phase (D : A) = Z.phase (B : A) := by
+              calc
+                Z.phase (D : A) = Z.phase (D' : A) := (Z.phase_liftSub B D).symm
+                _ = Z.phase (B : A) := by
+                    simpa [D'] using
+                      congrArg (fun X : Subobject E => Z.phase (X : A)) hEq
+            linarith
+          rcases ih D' hD'_lt hD'_ne with ⟨C, hCB, hC_ne, hC_ss, hBC⟩
+          refine ⟨C, hCB.trans hD'_le, hC_ne, hC_ss, ?_⟩
+          have hBD : Z.phase (B : A) < Z.phase (D' : A) := by
+            rw [Z.phase_liftSub]
+            exact hphase
+          exact le_of_lt <| lt_of_lt_of_le hBD hBC
+
+/-- In a non-semistable Artinian object, there is a semistable destabilizing subobject. -/
+private theorem exists_semistable_subobject_gt_phase_of_not_semistable {E : A}
+    [IsArtinianObject E] (hE : ¬IsZero E) (hns : ¬ Z.IsSemistable E) :
+    ∃ B : Subobject E, B ≠ ⊥ ∧ Z.IsSemistable (B : A) ∧ Z.phase E < Z.phase (B : A) := by
+  obtain ⟨B, hB_nz, hB_phase⟩ := Z.exists_destabilizing_of_not_semistable E hE hns
+  have hB_ne : B ≠ ⊥ := subobject_ne_bot_of_not_isZero hB_nz
+  obtain ⟨C, hCB, hC_ne, hC_ss, hBC⟩ :=
+    Z.exists_semistable_subobject_ge_phase_of_artinian hB_ne
+  refine ⟨C, hC_ne, hC_ss, ?_⟩
+  exact lt_of_lt_of_le hB_phase hBC
+
+variable (Z)
+
 /-! ### Max phase and MDS construction -/
 
 /-- Among all nonzero subobjects of a nonzero object with finite subobject lattice,
@@ -654,6 +707,32 @@ private lemma pullback_obj_injective_of_epi {X Y : A} (p : X ⟶ Y) [Epi p] :
     _ = imageSubobject (Subobject.pullbackπ p B₂ ≫ B₂.arrow) := by
           rw [← (Subobject.isPullback p B₂).w]
     _ = B₂ := by rw [imageSubobject_epi_comp, imageSubobject_mono, Subobject.mk_arrow]
+
+/-- Quotients of Noetherian objects are Noetherian. -/
+private theorem isNoetherianObject_of_epi {X Y : A} (p : X ⟶ Y) [Epi p]
+    [IsNoetherianObject X] : IsNoetherianObject Y := by
+  rw [isNoetherianObject_iff_monotone_chain_condition]
+  intro f
+  let g : ℕ →o Subobject X :=
+    ⟨fun n ↦ (Subobject.pullback p).obj (f n),
+      fun i j hij ↦ (Subobject.pullback p).monotone (f.2 hij)⟩
+  obtain ⟨n, hn⟩ := monotone_chain_condition_of_isNoetherianObject g
+  exact ⟨n, fun m hm ↦ pullback_obj_injective_of_epi p (hn m hm)⟩
+
+/-- Quotients of Artinian objects are Artinian. -/
+private theorem isArtinianObject_of_epi {X Y : A} (p : X ⟶ Y) [Epi p]
+    [IsArtinianObject X] : IsArtinianObject Y := by
+  rw [isArtinianObject_iff_antitone_chain_condition]
+  intro f
+  let g : ℕ →o (Subobject X)ᵒᵈ :=
+    ⟨fun n ↦ OrderDual.toDual <| (Subobject.pullback p).obj (f n),
+      fun i j hij ↦ by
+        change (Subobject.pullback p).obj (f j) ≤ (Subobject.pullback p).obj (f i)
+        exact (Subobject.pullback p).monotone (f.2 hij)⟩
+  obtain ⟨n, hn⟩ := antitone_chain_condition_of_isArtinianObject g
+  exact ⟨n, fun m hm ↦ by
+    apply pullback_obj_injective_of_epi p
+    simpa using hn m hm⟩
 
 /-- The subobject `M ≤ (pullback p).obj ⊥` when `M.arrow ≫ p = 0`. This is used to show
 that pullback along the cokernel projection maps every subobject above the kernel. -/
@@ -1221,6 +1300,119 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
                 (hChain_succ j hj hj0)
                 (hn_Q'.factor_semistable ⟨j - 1, by omega⟩)))
 
+/-- The quotient of a quotient, expressed via a pulled-back kernel in the source, is
+canonically isomorphic to the quotient in the intermediate object. -/
+private noncomputable def cokernelPullbackTopIso (Z : StabilityFunction A) {E : A}
+    (M : Subobject E) {B : Subobject (cokernel M.arrow)} (hB : B ≠ ⊤) :
+    cokernel ((Subobject.pullback (cokernel.π M.arrow)).obj B).arrow ≅ cokernel B.arrow := by
+  let p := cokernel.π M.arrow
+  have hlt : B < ⊤ := lt_of_le_of_ne le_top hB
+  haveI : IsIso (((Subobject.pullback p).obj ⊤).arrow) := by
+    rw [Subobject.pullback_top]
+    infer_instance
+  calc
+    cokernel (((Subobject.pullback p).obj B).arrow)
+      ≅ cokernel
+          (Subobject.ofLE ((Subobject.pullback p).obj B) ((Subobject.pullback p).obj ⊤)
+            ((Subobject.pullback p).monotone le_top)) :=
+        cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _
+    _ ≅ cokernel (Subobject.ofLE B ⊤ le_top) :=
+        cokernelPullbackIso Z M hlt
+    _ ≅ cokernel B.arrow :=
+        (cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _).symm
+
+/-- If `A` is a semistable subobject of `E` with strictly larger phase than `E`, then the
+quotient `E/A` has phase at most the phase of `E`. -/
+private lemma phase_cokernel_le_of_destabilizing_semistable_subobject
+    (Z : StabilityFunction A) {E : A} {A' : Subobject E}
+    (hA'_ss : Z.IsSemistable (A' : A)) (hA'_phase : Z.phase E < Z.phase (A' : A))
+    (hA'_top : A' ≠ ⊤) :
+    Z.phase (cokernel A'.arrow) ≤ Z.phase E := by
+  have hA'_nz : ¬IsZero (A' : A) := hA'_ss.1
+  have hQ_nz : ¬IsZero (cokernel A'.arrow) := cokernel_nonzero_of_ne_top hA'_top
+  have hse : (ShortComplex.mk A'.arrow (cokernel.π A'.arrow)
+      (cokernel.condition A'.arrow)).ShortExact :=
+    ShortComplex.ShortExact.mk' (ShortComplex.exact_cokernel A'.arrow) inferInstance inferInstance
+  have hmin := Z.min_phase_le_of_shortExact _ hse hA'_nz hQ_nz
+  by_contra hgt
+  have hmin_gt : Z.phase E < min (Z.phase (A' : A)) (Z.phase (cokernel A'.arrow)) :=
+    lt_min hA'_phase (lt_of_not_ge hgt)
+  exact (not_lt_of_ge hmin) hmin_gt
+
+/-- A faithful Artinian/Noetherian substitute for Bridgeland's quotient-selection step:
+every nonzero object admits a nonzero semistable quotient whose phase is at most that of the
+object. The proof follows the paper's recursive quotient construction, with termination
+supplied by Noetherianity. -/
+private theorem exists_semistable_quotient_le_phase_of_artinian_noetherian
+    (Z : StabilityFunction A) {E : A} [IsArtinianObject E] [IsNoetherianObject E]
+    (hE : ¬IsZero E) :
+    ∃ (Q : A) (p : E ⟶ Q), Epi p ∧ ¬IsZero Q ∧ Z.IsSemistable Q ∧ Z.phase Q ≤ Z.phase E := by
+  suffices
+      ∀ (S : Subobject E), ¬IsZero (cokernel S.arrow) →
+        ∃ (Q : A) (p : cokernel S.arrow ⟶ Q), Epi p ∧ ¬IsZero Q ∧
+          Z.IsSemistable Q ∧ Z.phase Q ≤ Z.phase (cokernel S.arrow) by
+    let e0 : cokernel (⊥ : Subobject E).arrow ≅ E := by
+      simpa [Subobject.bot_arrow] using
+        (cokernelZeroIsoTarget (X := ((⊥ : Subobject E) : A)) (Y := E))
+    have hbot : ¬IsZero (cokernel (⊥ : Subobject E).arrow) := by
+      intro hZ
+      exact hE (hZ.of_iso e0.symm)
+    obtain ⟨Q, p, hp, hQ_nz, hQ_ss, hQ_phase⟩ := this ⊥ hbot
+    refine ⟨Q, e0.inv ≫ p, ?_, hQ_nz, hQ_ss, ?_⟩
+    · haveI : Epi p := hp
+      infer_instance
+    · simpa [Subobject.bot_arrow] using
+        hQ_phase.trans_eq (Z.phase_eq_of_iso e0)
+  intro S
+  induction S using WellFoundedGT.induction with
+  | ind S ih =>
+      intro hQS_nz
+      let QS := cokernel S.arrow
+      haveI : IsArtinianObject QS := isArtinianObject_of_epi (cokernel.π S.arrow)
+      haveI : IsNoetherianObject QS := isNoetherianObject_of_epi (cokernel.π S.arrow)
+      by_cases hQS_ss : Z.IsSemistable QS
+      · exact ⟨QS, 𝟙 _, inferInstance, hQS_nz, hQS_ss, le_rfl⟩
+      · obtain ⟨A', hA'_ne, hA'_ss, hA'_phase⟩ :=
+          Z.exists_semistable_subobject_gt_phase_of_not_semistable (E := QS) hQS_nz hQS_ss
+        have hA'_top : A' ≠ ⊤ := by
+          intro hA'_eq
+          have hphase_eq : Z.phase (A' : A) = Z.phase QS := by
+            rw [hA'_eq]
+            exact Z.phase_eq_of_iso (asIso (⊤ : Subobject QS).arrow)
+          linarith
+        let T : Subobject E := (Subobject.pullback (cokernel.π S.arrow)).obj A'
+        have hST_le : S ≤ T := le_pullback_cokernel S A'
+        have hST_lt : S < T := by
+          rcases hST_le.eq_or_lt with h | h
+          · exfalso
+            have hpb :
+                (Subobject.pullback (cokernel.π S.arrow)).obj ⊥ =
+                  (Subobject.pullback (cokernel.π S.arrow)).obj A' := by
+              calc
+                (Subobject.pullback (cokernel.π S.arrow)).obj ⊥ = S :=
+                  pullback_cokernel_bot_eq S
+                _ = T := h
+                _ = (Subobject.pullback (cokernel.π S.arrow)).obj A' := rfl
+            apply hA'_ne
+            exact ((pullback_obj_injective_of_epi (cokernel.π S.arrow)) hpb).symm
+          · exact h
+        let eT : cokernel T.arrow ≅ cokernel A'.arrow :=
+          cokernelPullbackTopIso Z S hA'_top
+        have hQT_nz : ¬IsZero (cokernel T.arrow) := by
+          intro hZ
+          exact (cokernel_nonzero_of_ne_top hA'_top) (hZ.of_iso eT.symm)
+        obtain ⟨R, r, hr_epi, hR_nz, hR_ss, hR_phase⟩ := ih T hST_lt hQT_nz
+        haveI : Epi r := hr_epi
+        have hA'_cok_phase :
+            Z.phase (cokernel A'.arrow) ≤ Z.phase QS :=
+          phase_cokernel_le_of_destabilizing_semistable_subobject Z hA'_ss hA'_phase hA'_top
+        refine ⟨R, cokernel.π A'.arrow ≫ eT.inv ≫ r, ?_, hR_nz, hR_ss, ?_⟩
+        · infer_instance
+        · calc
+            Z.phase R ≤ Z.phase (cokernel T.arrow) := hR_phase
+            _ = Z.phase (cokernel A'.arrow) := Z.phase_eq_of_iso eT
+            _ ≤ Z.phase QS := hA'_cok_phase
+
 /-- For a semistable object `E`, every nonzero epi quotient has phase `≥ phase(E)`.
 This uses the phase see-saw and the semistability condition. -/
 private lemma phase_le_of_epi (Z : StabilityFunction A)
@@ -1293,6 +1485,186 @@ private lemma hom_zero_of_semistable_phase_gt (Z : StabilityFunction A)
           intro hZ
           exact hI (hZ.of_iso (imageSubobjectIso f).symm)
   linarith
+
+/-- A semistable quotient of minimal phase, with the usual equality-factorization property.
+This is Bridgeland's maximally destabilizing quotient packaged for recursive use. -/
+private structure IsMDQ (Z : StabilityFunction A) {E B : A} (q : E ⟶ B) : Prop where
+  epi : Epi q
+  nonzero : ¬IsZero B
+  semistable : Z.IsSemistable B
+  minimal :
+    ∀ {B' : A} (q' : E ⟶ B'), Epi q' → ¬IsZero B' → Z.IsSemistable B' →
+      Z.phase B ≤ Z.phase B' ∧
+        (Z.phase B' = Z.phase B → ∃ t : B ⟶ B', q' = q ≫ t)
+
+/-- A semistable object is its own mdq. -/
+private theorem IsMDQ.id_of_semistable (Z : StabilityFunction A) {E : A}
+    (hss : Z.IsSemistable E) : IsMDQ Z (𝟙 E : E ⟶ E) where
+  epi := by infer_instance
+  nonzero := hss.1
+  semistable := hss
+  minimal := by
+    intro B' q' hq' hB'_nz hB'_ss
+    haveI : Epi q' := hq'
+    refine ⟨phase_le_of_epi Z q' hss hB'_nz, ?_⟩
+    intro hEq
+    exact ⟨q', by simpa [hEq] using (Category.id_comp q').symm⟩
+
+/-- The phase of an mdq is bounded above by the phase of the source object. -/
+private theorem IsMDQ.phase_le_of_exists_quotient
+    (Z : StabilityFunction A) {E B : A} {q : E ⟶ B} (hq : IsMDQ Z q)
+    [IsArtinianObject E] [IsNoetherianObject E] :
+    Z.phase B ≤ Z.phase E := by
+  have hE_nz : ¬IsZero E := by
+    intro hE
+    have hzero : q = 0 := zero_of_source_iso_zero _ hE.isoZero
+    haveI : Epi q := hq.epi
+    exact hq.nonzero (IsZero.of_epi_eq_zero q hzero)
+  obtain ⟨Q, p, hp, hQ_nz, hQ_ss, hQ_phase⟩ :=
+    exists_semistable_quotient_le_phase_of_artinian_noetherian Z hE_nz
+  exact (hq.minimal p hp hQ_nz hQ_ss).1.trans hQ_phase
+
+/-- Precomposing an mdq with an isomorphism of source objects preserves the mdq property. -/
+private theorem IsMDQ.precomposeIso
+    (Z : StabilityFunction A) {E E' B : A} {q : E ⟶ B}
+    (hq : IsMDQ Z q) (e : E' ≅ E) :
+    IsMDQ Z (e.hom ≫ q) where
+  epi := by
+    haveI : Epi q := hq.epi
+    letI : Epi e.hom := by infer_instance
+    infer_instance
+  nonzero := hq.nonzero
+  semistable := hq.semistable
+  minimal := by
+    intro B' q' hq' hB'_nz hB'_ss
+    haveI : Epi q' := hq'
+    let q'' : E ⟶ B' := e.inv ≫ q'
+    have hq'' : Epi q'' := by infer_instance
+    refine ⟨(hq.minimal q'' hq'' hB'_nz hB'_ss).1, ?_⟩
+    intro hEq
+    obtain ⟨t, ht⟩ := (hq.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
+    refine ⟨t, ?_⟩
+    change q' = (e.hom ≫ q) ≫ t
+    calc
+      q' = e.hom ≫ (e.inv ≫ q') := by simp [Category.assoc]
+      _ = e.hom ≫ (q ≫ t) := by
+          simpa [q''] using congrArg (fun f : E ⟶ B' => e.hom ≫ f) ht
+      _ = (e.hom ≫ q) ≫ t := by rw [Category.assoc]
+
+/-- Recursive mdq step: a semistable destabilizing subobject lets us replace `E` by the
+quotient `E/A`, recurse there, and then pull the mdq back to `E`. -/
+private theorem IsMDQ.comp_of_destabilizing_semistable_subobject
+    (Z : StabilityFunction A) {E : A} {A' : Subobject E}
+    (hA'_ss : Z.IsSemistable (A' : A)) (hA'_phase : Z.phase E < Z.phase (A' : A))
+    (hA'_top : A' ≠ ⊤) {B : A} {q : cokernel A'.arrow ⟶ B}
+    [IsArtinianObject (cokernel A'.arrow)] [IsNoetherianObject (cokernel A'.arrow)]
+    (hq : IsMDQ Z q) :
+    IsMDQ Z (cokernel.π A'.arrow ≫ q) where
+  epi := by
+    haveI : Epi q := hq.epi
+    infer_instance
+  nonzero := hq.nonzero
+  semistable := hq.semistable
+  minimal := by
+    intro B' q' hq' hB'_nz hB'_ss
+    have hB_le_cok : Z.phase B ≤ Z.phase (cokernel A'.arrow) :=
+      IsMDQ.phase_le_of_exists_quotient Z hq
+    have hB_lt_A : Z.phase B < Z.phase (A' : A) := by
+      have hA'_cok_le :
+          Z.phase (cokernel A'.arrow) ≤ Z.phase E :=
+        phase_cokernel_le_of_destabilizing_semistable_subobject Z hA'_ss hA'_phase hA'_top
+      linarith
+    by_cases hle : Z.phase B ≤ Z.phase B'
+    · refine ⟨hle, ?_⟩
+      intro hEq
+      have hB'_lt_A : Z.phase B' < Z.phase (A' : A) := by
+        rw [hEq]
+        exact hB_lt_A
+      have hzero : A'.arrow ≫ q' = 0 :=
+        hom_zero_of_semistable_phase_gt Z hA'_ss hB'_ss hB'_lt_A _
+      let q'' : cokernel A'.arrow ⟶ B' := cokernel.desc A'.arrow q' hzero
+      have hq'' : Epi q'' := by
+        exact epi_of_epi_fac (cokernel.π_desc A'.arrow q' hzero)
+      obtain ⟨t, ht⟩ := (hq.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
+      refine ⟨t, ?_⟩
+      calc
+        q' = cokernel.π A'.arrow ≫ q'' := by
+          symm
+          exact cokernel.π_desc A'.arrow q' hzero
+        _ = cokernel.π A'.arrow ≫ (q ≫ t) := by rw [ht]
+        _ = (cokernel.π A'.arrow ≫ q) ≫ t := by rw [Category.assoc]
+    · have hlt : Z.phase B' < Z.phase B := lt_of_not_ge hle
+      have hB'_lt_A : Z.phase B' < Z.phase (A' : A) :=
+        lt_of_lt_of_le hlt hB_lt_A.le
+      have hzero : A'.arrow ≫ q' = 0 :=
+        hom_zero_of_semistable_phase_gt Z hA'_ss hB'_ss hB'_lt_A _
+      let q'' : cokernel A'.arrow ⟶ B' := cokernel.desc A'.arrow q' hzero
+      have hq'' : Epi q'' := by
+        exact epi_of_epi_fac (cokernel.π_desc A'.arrow q' hzero)
+      exact False.elim <| (not_lt_of_ge (hq.minimal q'' hq'' hB'_nz hB'_ss).1) hlt
+
+/-- Existence of maximally destabilizing quotients under Artinian/Noetherian hypotheses. -/
+private theorem exists_mdq_of_artinian_noetherian
+    (Z : StabilityFunction A) {E : A} [IsArtinianObject E] [IsNoetherianObject E]
+    (hE : ¬IsZero E) :
+    ∃ (B : A) (q : E ⟶ B), IsMDQ Z q := by
+  suffices
+      ∀ (S : Subobject E), ¬IsZero (cokernel S.arrow) →
+        ∃ (B : A) (q : cokernel S.arrow ⟶ B), IsMDQ Z q by
+    let e0 : cokernel (⊥ : Subobject E).arrow ≅ E := by
+      simpa [Subobject.bot_arrow] using
+        (cokernelZeroIsoTarget (X := ((⊥ : Subobject E) : A)) (Y := E))
+    have hbot : ¬IsZero (cokernel (⊥ : Subobject E).arrow) := by
+      intro hZ
+      exact hE (hZ.of_iso e0.symm)
+    obtain ⟨B, q, hq⟩ := this ⊥ hbot
+    refine ⟨B, e0.inv ≫ q, ?_⟩
+    exact IsMDQ.precomposeIso Z hq e0.symm
+  intro S
+  induction S using WellFoundedGT.induction with
+  | ind S ih =>
+      intro hQS_nz
+      let QS := cokernel S.arrow
+      haveI : IsArtinianObject QS := isArtinianObject_of_epi (cokernel.π S.arrow)
+      haveI : IsNoetherianObject QS := isNoetherianObject_of_epi (cokernel.π S.arrow)
+      by_cases hQS_ss : Z.IsSemistable QS
+      · exact ⟨QS, 𝟙 _, IsMDQ.id_of_semistable Z hQS_ss⟩
+      · obtain ⟨A', hA'_ne, hA'_ss, hA'_phase⟩ :=
+          Z.exists_semistable_subobject_gt_phase_of_not_semistable (E := QS) hQS_nz hQS_ss
+        have hA'_top : A' ≠ ⊤ := by
+          intro hA'_eq
+          have hphase_eq : Z.phase (A' : A) = Z.phase QS := by
+            rw [hA'_eq]
+            exact Z.phase_eq_of_iso (asIso (⊤ : Subobject QS).arrow)
+          linarith
+        let T : Subobject E := (Subobject.pullback (cokernel.π S.arrow)).obj A'
+        have hST_le : S ≤ T := le_pullback_cokernel S A'
+        have hST_lt : S < T := by
+          rcases hST_le.eq_or_lt with h | h
+          · exfalso
+            have hpb :
+                (Subobject.pullback (cokernel.π S.arrow)).obj ⊥ =
+                  (Subobject.pullback (cokernel.π S.arrow)).obj A' := by
+              calc
+                (Subobject.pullback (cokernel.π S.arrow)).obj ⊥ = S :=
+                  pullback_cokernel_bot_eq S
+                _ = T := h
+                _ = (Subobject.pullback (cokernel.π S.arrow)).obj A' := rfl
+            apply hA'_ne
+            exact ((pullback_obj_injective_of_epi (cokernel.π S.arrow)) hpb).symm
+          · exact h
+        let eT : cokernel T.arrow ≅ cokernel A'.arrow :=
+          cokernelPullbackTopIso Z S hA'_top
+        have hQT_nz : ¬IsZero (cokernel T.arrow) := by
+          intro hZ
+          exact (cokernel_nonzero_of_ne_top hA'_top) (hZ.of_iso eT.symm)
+        obtain ⟨B, qT, hqT⟩ := ih T hST_lt hQT_nz
+        let qA : cokernel A'.arrow ⟶ B := eT.inv ≫ qT
+        have hqA : IsMDQ Z qA := IsMDQ.precomposeIso Z hqT eT.symm
+        letI : IsArtinianObject (cokernel A'.arrow) := isArtinianObject_of_epi (cokernel.π A'.arrow)
+        letI : IsNoetherianObject (cokernel A'.arrow) := isNoetherianObject_of_epi (cokernel.π A'.arrow)
+        exact ⟨B, cokernel.π A'.arrow ≫ qA,
+          IsMDQ.comp_of_destabilizing_semistable_subobject Z hA'_ss hA'_phase hA'_top hqA⟩
 
 /-- If `E` is semistable and has an HN filtration, the filtration has exactly one factor. -/
 private lemma hn_n_eq_one_of_semistable (Z : StabilityFunction A) {E : A}

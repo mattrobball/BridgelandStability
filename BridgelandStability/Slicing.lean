@@ -28,6 +28,7 @@ following Bridgeland's "Stability conditions on triangulated categories" (2007).
   `ObjectProperty C` for each phase slice
 * `CategoryTheory.Triangulated.Slicing.intervalProp`: the interval subcategory predicate
 * `CategoryTheory.Triangulated.Slicing.IsLocallyFinite`: the local finiteness condition
+  (defined in `IntervalCategory.lean`, once the thin interval exact structure is available)
 
 ## References
 
@@ -182,31 +183,6 @@ def HNFiltration.phiMinus {P : ℝ → ObjectProperty C} {E : C}
 interval subcategory if it is zero or all phases in its HN filtration lie in `(a,b)`. -/
 def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
-
-/-- A slicing is locally finite if:
-1. There exists `η > 0` such that for every `t`, every object in the interval
-   subcategory `P((t-η, t+η))` has a finite subobject lattice in `C`.
-2. For every phase `φ`, every object in `P(φ)` has a finite subobject lattice
-   in the full subcategory `P(φ).FullSubcategory`.
-
-Condition (1) corresponds to Bridgeland's "locally finite" condition (Definition 5.7),
-which requires each quasi-abelian subcategory `P((a,b))` to be of finite length.
-Condition (2) is the correct formulation for the abelian category `P(φ)`: since
-`P(φ)`-monomorphisms are weaker than `C`-monomorphisms (fewer test objects),
-the subobject lattice in `P(φ).FullSubcategory` can be larger than in `C`.
-Condition (2) ensures that stability functions on `P(φ)` have the
-Harder-Narasimhan property via `StabilityFunction.hasHN_of_finiteLength`.
-
-Note: Conditions (1) and (2) are logically independent. In concrete examples,
-both follow from the quasi-abelian category `P((a,b))` having finite length. -/
-structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
-  /-- There exists `η > 0` such that objects in thin intervals have finite subobject lattices. -/
-  intervalFinite : ∃ η : ℝ, 0 < η ∧ ∀ t : ℝ,
-    ∀ (E : C), s.intervalProp C (t - η) (t + η) E →
-      Finite (Subobject E)
-  /-- Every object in `P(φ)` has a finite subobject lattice in `P(φ).FullSubcategory`. -/
-  phaseFinite : ∀ (φ : ℝ) (E : (s.P φ).FullSubcategory),
-    @Finite (@Subobject _ _ E)
 
 /-! ### Phase bound properties -/
 

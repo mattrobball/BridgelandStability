@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import Mathlib.CategoryTheory.Triangulated.GrothendieckGroup
-import Mathlib.CategoryTheory.Triangulated.Slicing
+import Mathlib.CategoryTheory.Triangulated.IntervalCategory
 import Mathlib.Topology.IsLocalHomeomorph
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.Connected.Clopen
@@ -196,10 +196,11 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+  [IsTriangulated C]
 
 /-! ### Stability conditions -/
 
-/-- A Bridgeland stability condition on a pretriangulated category `C`.
+/-- A Bridgeland stability condition on a triangulated category `C`.
 This bundles a slicing with a central charge (an additive group homomorphism
 from `K₀ C` to `ℂ`), subject to a compatibility condition relating the phase
 of semistable objects to the argument of their central charge.
