@@ -1912,6 +1912,26 @@ theorem Slicing.phiMinus_triangle_le' (s : Slicing C) {A E B : C}
 
 /-! ### Single-factor HN filtrations -/
 
+/-- Construct a 0-factor HN filtration on a zero object. -/
+def HNFiltration.zero {P : ℝ → ObjectProperty C} (E : C) (hE : IsZero E) :
+    HNFiltration C P E where
+  n := 0
+  chain := ComposableArrows.mk₀ E
+  triangle := fun i ↦ nomatch i
+  triangle_dist := fun i ↦ nomatch i
+  triangle_obj₁ := fun i ↦ nomatch i
+  triangle_obj₂ := fun i ↦ nomatch i
+  base_isZero := by simpa [ComposableArrows.left] using hE
+  top_iso := ⟨by simpa [ComposableArrows.right] using Iso.refl E⟩
+  zero_isZero := fun _ ↦ hE
+  φ := fun i ↦ nomatch i
+  hφ := by
+    intro i
+    nomatch i
+  semistable := by
+    intro i
+    nomatch i
+
 /-- Construct a 1-factor HN filtration for a semistable object. -/
 def HNFiltration.single {P : ℝ → ObjectProperty C} (S : C) (φ : ℝ)
     (hS : (P φ) S) : HNFiltration C P S where

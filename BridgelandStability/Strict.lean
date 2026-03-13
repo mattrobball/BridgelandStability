@@ -219,6 +219,15 @@ noncomputable def IsStrictEpi.normalEpi (hf : IsStrictEpi f) : NormalEpi f where
   w := kernel.condition f
   isColimit := hf.isColimitCokernelCofork
 
+/-- A strict epimorphism is a regular epimorphism. -/
+noncomputable def IsStrictEpi.regularEpi (hf : IsStrictEpi f) : RegularEpi f :=
+  (hf.normalEpi).regularEpi
+
+/-- A strict epimorphism is a strong epimorphism. -/
+theorem IsStrictEpi.strongEpi (hf : IsStrictEpi f) : StrongEpi f := by
+  have := isRegularEpi_of_regularEpi hf.regularEpi
+  infer_instance
+
 /-- A normal epimorphism in a preadditive category with kernels and cokernels is strict. -/
 theorem isStrictEpi_of_normalEpi [hf : NormalEpi f] : IsStrictEpi f := by
   let g' : hf.W ⟶ kernel f := kernel.lift f hf.g hf.w
