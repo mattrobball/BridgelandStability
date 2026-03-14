@@ -1413,6 +1413,34 @@ lemma Slicing.phiMinus_ge_of_geProp (s : Slicing C) {E : C} (hE : ¬IsZero E)
   · exact absurd hZ hE
   · exact le_trans hGt (s.phiMinus_ge_phiMinus_of_hn C hE G hGn)
 
+/-- If `t < φ⁻(E)`, then `E ∈ P(> t)`. -/
+lemma Slicing.gtProp_of_phiMinus_gt (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hgt : t < s.phiMinus C E hE) : s.gtProp C t E := by
+  obtain ⟨F, hn, _, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
+  refine Or.inr ⟨F, hn, ?_⟩
+  simpa [s.phiMinus_eq C E hE F hn hlast] using hgt
+
+/-- If `φ⁺(E) ≤ t`, then `E ∈ P(≤ t)`. -/
+lemma Slicing.leProp_of_phiPlus_le (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hle : s.phiPlus C E hE ≤ t) : s.leProp C t E := by
+  obtain ⟨F, hn, hfirst, _⟩ := HNFiltration.exists_both_nonzero C s hE
+  refine Or.inr ⟨F, hn, ?_⟩
+  simpa [s.phiPlus_eq C E hE F hn hfirst] using hle
+
+/-- If `φ⁺(E) < t`, then `E ∈ P(< t)`. -/
+lemma Slicing.ltProp_of_phiPlus_lt (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hlt : s.phiPlus C E hE < t) : s.ltProp C t E := by
+  obtain ⟨F, hn, hfirst, _⟩ := HNFiltration.exists_both_nonzero C s hE
+  refine Or.inr ⟨F, hn, ?_⟩
+  simpa [s.phiPlus_eq C E hE F hn hfirst] using hlt
+
+/-- If `t ≤ φ⁻(E)`, then `E ∈ P(≥ t)`. -/
+lemma Slicing.geProp_of_phiMinus_ge (s : Slicing C) {E : C} (hE : ¬IsZero E)
+    {t : ℝ} (hge : t ≤ s.phiMinus C E hE) : s.geProp C t E := by
+  obtain ⟨F, hn, _, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
+  refine Or.inr ⟨F, hn, ?_⟩
+  simpa [s.phiMinus_eq C E hE F hn hlast] using hge
+
 /-- **Interval containment from intrinsic phases.** If `a < φ⁻(E)` and `φ⁺(E) < b`, then
 `E ∈ P((a, b))`. -/
 lemma Slicing.intervalProp_of_intrinsic_phases (s : Slicing C) {E : C} (hE : ¬IsZero E)
