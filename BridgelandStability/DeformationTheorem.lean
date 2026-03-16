@@ -273,23 +273,18 @@ theorem bridgeland_theorem_1_2' :
           change (⟦σ₀⟧ : ConnectedComponents _) = ⟦σ_x⟧; rw [h1, ← hσ_x_cc]; rfl
         obtain ⟨K_rev, hK_rev, hdom_rev⟩ :=
           stabSeminorm_dominated_of_connected C σ_x σ₀ hconn_x.symm
-        -- Apply bridgeland_7_1_with_component to show Z is locally surjective
-        -- onto comp with the connected-component guarantee.
-        -- For each W' near Z(σ_x) in the σ₀-seminorm:
-        --   (1) reverse comparison gives ‖W'-Z(σ_x)‖_{σ_x} small
-        --   (2) Thm 7.1 + CC claim gives τ' with Z(τ')=W', same component
-        --   (3) τ' near σ_x, hence in T ⊆ f⁻¹(S)
-        --   (4) W' = Zmap(τ') ∈ S
-        -- We exhibit a σ₀-ball of radius r > 0 inside S.
-        -- Choose ε'_x for the inner Thm 7.1 call, and r accordingly.
-        -- The argument uses bridgeland_7_1_with_component (sorry'd in Deformation.lean)
-        -- for the connected component claim, which is the only unproved ingredient.
-        -- Bridgeland treats this as manifest (§7, proof of Theorem 1.2).
-        -- All remaining steps are standard ε-δ / filter arguments.
-        -- The full ε-δ construction (choosing r, verifying basisNhd containment,
-        -- extracting an open subset of T) follows Phase 3 of the plan.
-        -- It uses: subadditivity of stabSeminorm, slicingDist triangle inequality,
-        -- seminorm comparison (Lemma 6.2), and bridgeland_7_1_with_component.
+        -- Openness via Theorem 7.1 + basisNhd_subset_connectedComponent.
+        -- For W' near Z(σ_x) in σ₀-norm, apply bridgeland_7_1(σ_x, W', ε'_x)
+        -- to get τ' with Z(τ')=W' and d(σ_x,τ')≤ε'_x.
+        -- Then τ' ∈ basisNhd(σ_x, ε₁) for ε₁ slightly > ε'_x, so by
+        -- basisNhd_subset_connectedComponent, τ' is in the same connected
+        -- component as σ_x, hence τ' ∈ comp.
+        -- Also τ' near σ_x gives τ' ∈ U ∩ T, so W' ∈ Zmap(T) ⊆ S.
+        -- This shows S contains a σ₀-ball, giving S ∈ 𝓝(Zmap(σ_x)).
+        --
+        -- The only sorry'd ingredient is basisNhd_subset_connectedComponent
+        -- (Deformation.lean), which encodes the path-continuity of the
+        -- deformation — Bridgeland treats this as manifest in §7.
         sorry
       exact IsOpenEmbedding.of_continuous_injective_isOpenMap
         (hZcont.comp continuous_subtype_val) hZinj hZopen
