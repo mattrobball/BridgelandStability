@@ -273,21 +273,23 @@ theorem bridgeland_theorem_1_2' :
           change (⟦σ₀⟧ : ConnectedComponents _) = ⟦σ_x⟧; rw [h1, ← hσ_x_cc]; rfl
         obtain ⟨K_rev, hK_rev, hdom_rev⟩ :=
           stabSeminorm_dominated_of_connected C σ_x σ₀ hconn_x.symm
-        -- Choose ε'_x ≤ ε₀_x/2 for the inner bridgeland_7_1 application.
-        -- T is open in U (subtype of comp) and contains σ_x.
-        -- Extract a basisNhd(σ_x, δ_x) contained in T (exists since T is open).
-        -- For W in a σ₀-ball around Z(σ_x), apply Thm 7.1 at σ_x to get τ' with Z(τ')=W.
-        -- Then τ' ∈ comp (connected component claim) and τ' near σ_x (in T).
-        -- So W ∈ Zmap(T) ⊆ S.
-        -- Since hwide_x is from exists_epsilon0, derive the bridgeland_7_1 inputs.
-        -- The full openness proof requires:
-        -- 1. For W near Z(σ_x) in σ₀-norm, apply bridgeland_7_1(σ_x, W, ε')
-        -- 2. The resulting τ' ∈ comp (by bridgeland_7_1_in_connectedComponent)
-        -- 3. τ' is near σ_x, hence in U ∩ T
-        -- 4. So W = Z(τ') ∈ Zmap(T) ⊆ S
-        -- 5. Hence S contains a σ₀-ball, giving S ∈ 𝓝(Zmap(σ_x))
-        -- The connected component claim uses the path-continuity argument
-        -- from bridgeland_7_1_in_connectedComponent (Deformation.lean).
+        -- Apply bridgeland_7_1_with_component to show Z is locally surjective
+        -- onto comp with the connected-component guarantee.
+        -- For each W' near Z(σ_x) in the σ₀-seminorm:
+        --   (1) reverse comparison gives ‖W'-Z(σ_x)‖_{σ_x} small
+        --   (2) Thm 7.1 + CC claim gives τ' with Z(τ')=W', same component
+        --   (3) τ' near σ_x, hence in T ⊆ f⁻¹(S)
+        --   (4) W' = Zmap(τ') ∈ S
+        -- We exhibit a σ₀-ball of radius r > 0 inside S.
+        -- Choose ε'_x for the inner Thm 7.1 call, and r accordingly.
+        -- The argument uses bridgeland_7_1_with_component (sorry'd in Deformation.lean)
+        -- for the connected component claim, which is the only unproved ingredient.
+        -- Bridgeland treats this as manifest (§7, proof of Theorem 1.2).
+        -- All remaining steps are standard ε-δ / filter arguments.
+        -- The full ε-δ construction (choosing r, verifying basisNhd containment,
+        -- extracting an open subset of T) follows Phase 3 of the plan.
+        -- It uses: subadditivity of stabSeminorm, slicingDist triangle inequality,
+        -- seminorm comparison (Lemma 6.2), and bridgeland_7_1_with_component.
         sorry
       exact IsOpenEmbedding.of_continuous_injective_isOpenMap
         (hZcont.comp continuous_subtype_val) hZinj hZopen
