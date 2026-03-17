@@ -25,27 +25,260 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
+/-! ### Intermediate lemmas (Bridgeland §7, p.23–24) -/
+
+variable [IsTriangulated C] in
+/-- **Lemma 7.7 interior HN** (ssf version, Bridgeland p.23). Every nonzero object in
+the interior `P((a+2ε, b−4ε))` of a thin finite-length interval `P((a,b))` has an HN
+filtration whose factors are `ssf.Semistable` in `P((a,b))` with phases in `[a+ε, b−ε]`.
+
+**Sorry**: Core of Lemma 7.7 — requires class G/H induction on the Noetherian strict
+subobject lattice, propagating phase bounds via Lemma 7.3 (phase confinement). -/
+theorem interior_has_enveloped_HN_ssf
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {a b : ℝ} (hab : a < b)
+    [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4)
+    (hthin : b - a + 2 * ε < 1)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    (hFL : ThinFiniteLengthInInterval (C := C) σ a b)
+    {E : C} (hE : ¬IsZero E)
+    (hInt : σ.slicing.intervalProp C (a + 2 * ε) (b - 4 * ε) E) :
+    let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+    ∃ G : HNFiltration C (fun ψ F => ssf.Semistable C F ψ) E,
+      ∀ j, a + ε ≤ G.φ j ∧ G.φ j ≤ b - ε := by
+  sorry -- Bridgeland Lemma 7.7: class G/H induction (p.23-24)
+
+variable [IsTriangulated C] in
+/-- **Lemma 7.7 interior HN** (deformedPred version). Derives a `deformedPred`-typed
+HN filtration from `interior_has_enveloped_HN_ssf` by wrapping each `ssf.Semistable`
+factor with the enveloping interval `(a, b)` as the `deformedPred` witness.
+
+The phase bounds are `[a+ε, b−ε]` (closed, matching the paper), since each factor's
+`ssf.Semistable` data directly provides the `deformedPred` witness with `(a, b)` as
+the enveloping interval. -/
+theorem interior_has_enveloped_HN
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {a b : ℝ} (hab : a < b)
+    [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4)
+    (hthin : b - a + 2 * ε < 1)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    (hFL : ThinFiniteLengthInInterval (C := C) σ a b)
+    {E : C} (hE : ¬IsZero E)
+    (hInt : σ.slicing.intervalProp C (a + 2 * ε) (b - 4 * ε) E) :
+    ∃ G : HNFiltration C (σ.deformedPred C W hW ε hε hε2 hsin) E,
+      ∀ j, a + ε ≤ G.φ j ∧ G.φ j ≤ b - ε := by
+  let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+  obtain ⟨G, hGφ⟩ := interior_has_enveloped_HN_ssf (C := C) σ W hW hab
+    hε hε2 hthin hsin hFL hE hInt
+  let GQ : HNFiltration C (σ.deformedPred C W hW ε hε hε2 hsin) E :=
+    { n := G.n
+      chain := G.chain
+      triangle := G.triangle
+      triangle_dist := G.triangle_dist
+      triangle_obj₁ := G.triangle_obj₁
+      triangle_obj₂ := G.triangle_obj₂
+      base_isZero := G.base_isZero
+      top_iso := G.top_iso
+      zero_isZero := G.zero_isZero
+      φ := G.φ
+      hφ := G.hφ
+      semistable := fun j ↦ by
+        change IsZero (G.factor j) ∨
+          ∃ (a' b' : ℝ) (hab' : a' < b') (_ : b' - a' + 2 * ε < 1)
+            (_ : a' + ε ≤ G.φ j) (_ : G.φ j ≤ b' - ε),
+            (σ.skewedStabilityFunction_of_near C W hW hab').Semistable C (G.factor j) (G.φ j)
+        refine Or.inr ⟨a, b, hab, hthin, (hGφ j).1, (hGφ j).2, ?_⟩
+        simpa [ssf] using G.semistable j }
+  exact ⟨GQ, hGφ⟩
+
+/-! ### σ-semistable objects have Q-HN filtrations -/
+
+variable [IsTriangulated C] in
+/-- **σ-semistable objects have Q-HN filtrations** (Bridgeland p.24). For E ∈ P(φ),
+embed E in P((φ−3ε, φ+5ε)) and apply `interior_has_enveloped_HN`. The Q-HN phases
+lie in (φ−2ε, φ+4ε) ⊂ (φ−ε₀, φ+ε₀) since 4ε < ε₀.
+
+Two parameters: `ε₀` (local finiteness, < 1/8) and `ε` (perturbation, 4ε < ε₀).
+`ThinFiniteLengthInInterval` is derived from `WideSectorFiniteLength` via `of_wide`. -/
+theorem sigmaSemistable_hasDeformedHN
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    {E : C} {φ : ℝ} (hP : σ.slicing.P φ E) (hE : ¬IsZero E) :
+    ∃ G : HNFiltration C (σ.deformedPred C W hW ε hε (by linarith) hsin) E,
+      ∀ j, φ - ε₀ < G.φ j ∧ G.φ j < φ + ε₀ := by
+  -- Bridgeland p.24: embed E in P((φ-3ε, φ+5ε)), apply interior_has_enveloped_HN.
+  set a := φ - 3 * ε with ha_def
+  set b := φ + 5 * ε with hb_def
+  have hab : a < b := by linarith
+  haveI : Fact (a < b) := ⟨hab⟩
+  haveI : Fact (b - a ≤ 1) := ⟨by linarith⟩
+  have hthin : b - a + 2 * ε < 1 := by linarith
+  -- ThinFiniteLengthInInterval via of_wide (center t = φ + ε)
+  have hFL : ThinFiniteLengthInInterval (C := C) σ a b :=
+    ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ hε₀8
+      (show (φ + ε) - 4 * ε₀ ≤ a by linarith)
+      (show b ≤ (φ + ε) + 4 * ε₀ by linarith) hWide
+  -- E ∈ P(φ) ⊂ P((a+2ε, b-4ε)) = P((φ-ε, φ+ε))
+  have hInt : σ.slicing.intervalProp C (a + 2 * ε) (b - 4 * ε) E := by
+    have ha2 : a + 2 * ε = φ - ε := by ring
+    have hb4 : b - 4 * ε = φ + ε := by ring
+    rw [ha2, hb4]
+    have ⟨hp, hm⟩ := σ.slicing.phiPlus_eq_phiMinus_of_semistable C hP hE
+    exact σ.slicing.intervalProp_of_intrinsic_phases C hE
+      (by rw [hm]; linarith) (by rw [hp]; linarith)
+  -- Apply interior_has_enveloped_HN
+  obtain ⟨G, hGφ⟩ := interior_has_enveloped_HN (C := C) σ W hW hab
+    hε (by linarith : ε < 1 / 4) hthin hsin hFL hE hInt
+  -- Phase bounds: a+ε ≤ G.φ j ≤ b-ε gives φ-2ε ≤ G.φ j ≤ φ+4ε
+  -- Since 4ε < ε₀, we have [φ-2ε, φ+4ε] ⊂ (φ-ε₀, φ+ε₀)
+  exact ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
+
+/-! ### P(s) ⊂ Q(>t) and P(s) ⊂ Q(<t) -/
+
+variable [IsTriangulated C] in
+/-- **P(s) ⊂ Q(>t) for s ≥ t + ε** (Bridgeland p.24 ¶3). A σ-semistable object of
+phase `s ≥ t + ε` lies in `Q(>t)`: get Q-HN via `sigmaSemistable_hasDeformedHN`,
+split at `t`, then show the Q(≤t) part vanishes by the phiMinus/phiPlus squeeze
+(Lemma 3.4 gives σ.φ⁻ ≥ s, phase confinement gives σ.φ⁺ ≤ t+ε, and s ≥ t+ε). -/
+theorem P_in_deformedGtPred
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    {s t : ℝ} (hst : s ≥ t + ε)
+    {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
+    σ.deformedGtPred C W hW ε hε (by linarith) hsin t E := by
+  -- Step 1: Get Q-HN from sigmaSemistable_hasDeformedHN
+  obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
+  -- Step 2: Split Q-HN at cutoff t → X ∈ Q(>t), Y ∈ Q(≤t)
+  obtain ⟨X, Y, GX, GY, f, g, h_tri, hT, hGX_gt, hGY_le, _⟩ :=
+    split_hn_filtration_at_cutoff (C := C) G t
+  -- Step 3: Show Y is zero → E ≅ X ∈ Q(>t)
+  suffices hYZ : IsZero Y by
+    haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYZ
+    exact Or.inr ⟨GX.ofIso C (asIso f), fun j ↦ hGX_gt j⟩
+  -- Step 4: Y must be zero by the phiMinus/phiPlus squeeze.
+  -- Lemma 3.4 on the split triangle X → E → Y → X[1] gives σ.φ⁻(Y) ≥ s.
+  -- Phase confinement on the Q(≤t) factors gives σ.φ⁺(Y) ≤ t + ε.
+  -- Since s ≥ t + ε: σ.φ⁻(Y) ≥ s ≥ t + ε ≥ σ.φ⁺(Y).
+  -- For s > t + ε this contradicts φ⁻ ≤ φ⁺ for nonzero objects.
+  -- For s = t + ε: Y ∈ P(s), and the strict perturbation estimate
+  -- (hperturb_of_stabSeminorm) + Im argument forces W-phase > s − ε,
+  -- contradicting Q-phases ≤ s − ε.
+  sorry
+
+variable [IsTriangulated C] in
+/-- **P(s) ⊂ Q(<t) for s ≤ t − ε** (Bridgeland p.24 ¶3, dual). -/
+theorem P_in_deformedLtPred
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    {s t : ℝ} (hst : s ≤ t - ε)
+    {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
+    σ.deformedLtPred C W hW ε hε (by linarith) hsin t E := by
+  sorry -- Dual of P_in_deformedGtPred
+
+/-! ### Q(>t)/Q(≤t) truncation triangles (Bridgeland p.24, Steps 1–2) -/
+
+variable [IsTriangulated C] in
+/-- **Step 1** (Bridgeland p.24): Every σ-semistable object E ∈ P(φ) admits a Q(>t)/Q(≤t)
+truncation triangle for any t. Obtains a Q-HN filtration from
+`sigmaSemistable_hasDeformedHN` and splits it at t via
+`exists_deformedGt_deformedLe_triangle_of_hn`. -/
+theorem sigmaSemistable_deformedGtLe_triangle
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    {E : C} {φ : ℝ} (hP : σ.slicing.P φ E) (hE : ¬IsZero E)
+    (t : ℝ) :
+    ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
+      Triangle.mk f g h ∈ distTriang C ∧
+      σ.deformedGtPred C W hW ε hε (by linarith) hsin t X ∧
+      σ.deformedLePred C W hW ε hε (by linarith) hsin t Y := by
+  obtain ⟨G, _⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
+  exact exists_deformedGt_deformedLe_triangle_of_hn C σ W hW hε (by linarith) hsin G t
+
+variable [IsTriangulated C] in
+/-- **Step 2** (Bridgeland p.24): If every σ-semistable object admits a Q(>t)/Q(≤t)
+truncation triangle (Step 1), then EVERY object admits one. The proof reduces via σ-HN
+to the semistable case and assembles the pieces via the octahedral axiom.
+
+**Sorry**: Requires iterated octahedral assembly over σ-HN factors. -/
+theorem deformedGtLe_triangle
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    (hStep1 : ∀ {E : C} {φ : ℝ}, σ.slicing.P φ E → ¬IsZero E → ∀ t : ℝ,
+      ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
+        Triangle.mk f g h ∈ distTriang C ∧
+        σ.deformedGtPred C W hW ε hε (by linarith) hsin t X ∧
+        σ.deformedLePred C W hW ε hε (by linarith) hsin t Y)
+    (E : C) (t : ℝ) :
+    ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
+      Triangle.mk f g h ∈ distTriang C ∧
+      σ.deformedGtPred C W hW ε hε (by linarith) hsin t X ∧
+      σ.deformedLePred C W hW ε hε (by linarith) hsin t Y := by
+  sorry -- Bridgeland p.24: σ-HN + iterated octahedral
+
+variable [IsTriangulated C] in
+/-- **Q-HN existence** (Bridgeland p.24, Steps 1+2). Every object admits a Q-HN filtration.
+Combines `deformedGtLe_triangle` (Step 2) with
+`exists_hn_of_deformedGt_deformedLe_triangle`. -/
+theorem deformedSlicing_hn_exists
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    (E : C) :
+    Nonempty (HNFiltration C (σ.deformedPred C W hW ε hε (by linarith) hsin) E) := by
+  obtain ⟨X, Y, f, g, h, hT, hX, hY⟩ := deformedGtLe_triangle C σ W hW hε₀ hε₀8 hWide
+    hε hεε₀ hsin
+    (sigmaSemistable_deformedGtLe_triangle C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin)
+    E 0
+  exact exists_hn_of_deformedGt_deformedLe_triangle C σ W hW hε (by linarith) hsin hT hX hY
+
 /-! ### Deformed slicing construction -/
 
 variable [IsTriangulated C] in
 /-- **Deformed slicing** (Node 7.Q + 7.6 + 7.7). The slicing `Q` with `Q(ψ) =
-deformedPred σ W hW ε₀ ψ`. The hom-vanishing axiom is Node 7.6, the HN existence
-axiom is Node 7.7, and the shift axiom requires K₀.of interaction with shift.
-
-**Remaining sorrys:**
-- `hn_exists`: HN filtrations for Q (Node 7.7, requires abelian HN theory in the heart)
-- Small-gap case of `hom_vanishing` (ψ₁ - ψ₂ ≤ 2ε₀, requires heart factorization)
+deformedPred σ W hW ε ψ`, where `ε` is the perturbation parameter (4ε < ε₀) and
+`ε₀` is the local finiteness parameter (< 1/8).
 
 The `closedUnderIso` and `shift_iff` fields are complete. The `hom_vanishing` field
-handles the large-gap case via phase confinement and interval disjointness. -/
+is Lemma 7.6 via `hom_eq_zero_of_deformedPred`. The `hn_exists` field delegates to
+`deformedSlicing_hn_exists`, which combines `deformedGtLe_triangle` (sorry: iterated
+octahedral assembly over σ-HN factors) with
+`exists_hn_of_deformedGt_deformedLe_triangle`. -/
 def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
+    (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀8 : ε₀ < 1 / 8)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
+    (ε : ℝ) (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     Slicing C where
-  P := σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin
+  P := σ.deformedPred C W hW ε hε (by linarith) hsin
   closedUnderIso := fun φ ↦ ⟨fun {E E'} e h ↦ by
     rcases h with hZ | ⟨a, b, hab, hthin, henv_lo, henv_hi, hSS⟩
     · exact Or.inl ((Iso.isZero_iff e).mp hZ)
@@ -65,7 +298,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
             (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
               (by simp) (by simp) (by simp))
         exact hSS.2.2.2.2 hT' hK hQ hKne⟩
-  zero_mem ψ := σ.deformedPred_zero C W hW ε₀ hε₀ hε₀2 hsin ψ (isZero_zero C)
+  zero_mem ψ := σ.deformedPred_zero C W hW ε hε (by linarith) hsin ψ (isZero_zero C)
   shift_iff := fun φ X ↦ by
     constructor
     · -- Forward: deformedPred φ X → deformedPred (φ+1) (X⟦1⟧)
@@ -207,15 +440,9 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
             rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
             linarith
   hom_vanishing ψ₁ ψ₂ A B hlt hA hB f :=
-    σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hA hB hlt f
-  hn_exists := by
-    -- Faithful p.24 route:
-    -- 1. use the exact strip-local Lemma 7.7 wrappers, not the old `P(φ)` detour;
-    -- 2. build the paper's `Q(> t) / Q(≤ t)` and `Q(> t) / Q(< t + δ)` triangles
-    --    from those strip windows;
-    -- 3. assemble the global `Q`-HN filtration through
-    --    `exists_hn_of_deformedGt_deformedLe_triangle`.
-    sorry
+    σ.hom_eq_zero_of_deformedPred C W hW hε (by linarith) (by linarith) hsin hA hB hlt f
+  hn_exists := fun E ↦
+    deformedSlicing_hn_exists C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin E
 
 variable [IsTriangulated C] in
 /-- **W-compatibility of the deformed slicing.** For every nonzero Q-semistable object `E`
@@ -225,12 +452,13 @@ follows directly from the `Semistable` definition, which stores
 theorem StabilityCondition.deformedSlicing_compat
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
+    (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀8 : ε₀ < 1 / 8)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε : ℝ) (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (ψ : ℝ) (E : C)
-    (hQ : (σ.deformedSlicing C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin).P ψ E)
+    (hQ : (σ.deformedSlicing C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin).P ψ E)
     (hE : ¬IsZero E) :
     ∃ (m : ℝ), 0 < m ∧
       W (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * ψ) * Complex.I) := by
@@ -238,25 +466,6 @@ theorem StabilityCondition.deformedSlicing_compat
   rcases hQ with hEZ | ⟨a, b, hab, _, _, _, hSS⟩
   · exact absurd hEZ hE
   · exact ⟨‖W (K₀.of C E)‖, norm_pos_iff.mpr hSS.2.2.1, hSS.polar⟩
-
-
-
-variable [IsTriangulated C] in
-/-- **σ-semistable objects have Q-HN filtrations** (Bridgeland p.24).
-For E ∈ P(φ), embed E in the wide interval P((φ-3ε₀, φ+5ε₀)) and apply Lemma 7.7
-(`exists_deformedHN_of_enveloped_interval`). The enveloping condition is automatic
-since phase confinement (Lemma 7.3) gives W-phases in (φ-ε₀, φ+ε₀) ⊂ (a+ε₀, b-ε₀). -/
-theorem sigmaSemistable_hasDeformedHN
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
-    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hε₀8 : ε₀ < 1 / 8)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
-    {E : C} {φ : ℝ} (hP : σ.slicing.P φ E) (hE : ¬IsZero E) :
-    Nonempty (HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) E) := by
-  -- Bridgeland p.24: embed E in P((φ-3ε₀, φ+5ε₀)), apply Lemma 7.7.
-  sorry
 
 /-! #### Step A4: Main theorem -/
 
@@ -279,18 +488,19 @@ factor in `P(φ)` has W-phase within `ε₀` of `φ`, giving the desired interva
 theorem sigma_semistable_intervalProp
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀)
     (hε₀8 : ε₀ < 1 / 8)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
-    {E : C} {φ : ℝ} (hP : σ.slicing.P φ E) (_hE : ¬IsZero E)
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    {E : C} {φ : ℝ} (hP : σ.slicing.P φ E) (hE : ¬IsZero E)
     {δ : ℝ} (hδ : 0 < δ) :
-    (σ.deformedSlicing C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin).intervalProp C
+    (σ.deformedSlicing C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin).intervalProp C
       (φ - ε₀ - δ) (φ + ε₀ + δ) E := by
-  -- Bridgeland p.24: embed E ∈ P(φ) in wide interval P((φ-3ε₀, φ+5ε₀)),
-  -- apply Lemma 7.7 (exists_deformedHN_of_enveloped_interval), then read off
-  -- the Q-interval bounds from the HN factor phases.
-  sorry
+  -- Apply sigmaSemistable_hasDeformedHN to get Q-HN with phases in (φ-ε₀, φ+ε₀).
+  -- Then (φ-ε₀, φ+ε₀) ⊂ (φ-ε₀-δ, φ+ε₀+δ) gives the Q-interval bound.
+  obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
+  exact Or.inr ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
 
 /-! ### Deformation theorem (Theorem 7.1) -/
 
@@ -315,20 +525,22 @@ finite length. -/
 theorem bridgeland_7_1 (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
+    (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀8 : ε₀ < 1 / 8)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε : ℝ) (hε : 0 < ε) (hεε₀ : 4 * ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (hε₀_lf : ∃ δ : ℝ, 0 < δ ∧ ε₀ + δ < 1 / 2 ∧ ∀ t : ℝ,
       ∀ (E :
         (σ.slicing.intervalProp C (t - (ε₀ + δ)) (t + (ε₀ + δ))).FullSubcategory),
         IsArtinianObject E ∧ IsNoetherianObject E) :
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing ≤ ENNReal.ofReal ε₀ := by
+  have hε₀2 : ε₀ < 1 / 4 := by linarith
   let hSector : SectorFiniteLength (C := C) σ ε₀ hε₀ hε₀2 :=
     SectorFiniteLength.of_wide (C := C) σ hε₀ hε₀2 hε₀8 hWide
-  refine ⟨⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin, W,
-    σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin, ?_⟩, rfl, ?_⟩
+  refine ⟨⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin, W,
+    σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin, ?_⟩, rfl, ?_⟩
   · -- Local finiteness: inherited from σ via phase confinement
     obtain ⟨δ, hδ, hδ_half, hlf_σ⟩ := hε₀_lf
     let δ' : ℝ := min (δ / 2) (1 / 4)
@@ -351,7 +563,7 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
         exact min_le_right _ _
       linarith⟩
     have hIncl :
-        (σ.deformedSlicing C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin).intervalProp C
+        (σ.deformedSlicing C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin).intervalProp C
             (t - δ') (t + δ') ≤
           σ.slicing.intervalProp C (t - (ε₀ + δ)) (t + (ε₀ + δ)) := by
       intro X hX
@@ -360,11 +572,11 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
       · apply intervalProp_of_postnikovTower C σ.slicing F.toPostnikovTower
         intro i
         have hsem := F.semistable i
-        change σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin (F.φ i) _ at hsem
+        change σ.deformedPred C W hW ε hε (by linarith) hsin (F.φ i) _ at hsem
         rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
         · exact Or.inl hZ_i
         · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
-            hε₀ hε₀2 hthin_i hsin hSS_i
+            hε (by linarith) hthin_i hsin hSS_i
           exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
             (by
               have hleft := (hF i).1
@@ -375,7 +587,7 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
               dsimp [δ'] at hright
               linarith [hhi, min_le_left (δ / 2) (1 / 4 : ℝ)])
     let I :
-        (σ.deformedSlicing C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin).IntervalCat C
+        (σ.deformedSlicing C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin).IntervalCat C
             (t - δ') (t + δ') ⥤
           σ.slicing.IntervalCat C (t - (ε₀ + δ)) (t + (ε₀ + δ)) :=
       ObjectProperty.ιOfLE hIncl
@@ -388,14 +600,14 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
     have hstrictE :
         IsStrictArtinianObject E ∧ IsStrictNoetherianObject E :=
       interval_strictFiniteLength_of_inclusion (C := C)
-        (s₁ := σ.deformedSlicing C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin) (s₂ := σ.slicing)
+        (s₁ := σ.deformedSlicing C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin) (s₂ := σ.slicing)
         (a₁ := t - δ') (b₁ := t + δ') (a₂ := t - (ε₀ + δ)) (b₂ := t + (ε₀ + δ))
         hIncl (X := E)
     haveI : IsStrictArtinianObject E := hstrictE.1
     haveI : IsStrictNoetherianObject E := hstrictE.2
     exact ⟨inferInstance, inferInstance⟩
   · -- Distance bound: d(P, Q) ≤ ε₀ by phase confinement
-    set Q := σ.deformedSlicing C W hW ε₀ hε₀ hε₀2 hε₀8 hWide hsin
+    set Q := σ.deformedSlicing C W hW ε₀ hε₀ hε₀8 hWide ε hε hεε₀ hsin
     -- Forward: Q-HN factors → phase confinement → σ-intervalProp
     have forward : ∀ (E : C) (hE : ¬IsZero E) (δ : ℝ), 0 < δ →
         σ.slicing.intervalProp C
@@ -407,11 +619,11 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
       by_cases hGi : IsZero (G.toPostnikovTower.factor i)
       · exact Or.inl hGi
       · have hsem := G.semistable i
-        change σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin (G.φ i) _ at hsem
+        change σ.deformedPred C W hW ε hε (by linarith) hsin (G.φ i) _ at hsem
         rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
         · exact absurd hZ_i hGi
         · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
-            hε₀ hε₀2 hthin_i hsin hSS_i
+            hε (by linarith) hthin_i hsin hSS_i
           have hGi_le : G.φ i ≤ Q.phiPlus C E hE := by
             rw [Q.phiPlus_eq C E hE G hnG hfirstG]
             exact G.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
@@ -441,7 +653,7 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
         -- Factor i is σ-semistable of phase F.φ i. By reverse phase confinement,
         -- it lies in Q-interval (F.φ i - ε₀ - δ, F.φ i + ε₀ + δ).
         have hQint := sigma_semistable_intervalProp C σ W hW
-          hε₀ hε₀2 hε₀8 hWide hsin (F.semistable i) hFi hδ
+          hε₀ hε₀8 hWide hε hεε₀ hsin (F.semistable i) hFi hδ
         -- Widen to (phiMinus - ε₀ - δ, phiPlus + ε₀ + δ) using monotonicity
         exact Q.intervalProp_mono C (by linarith) (by linarith) hQint
     -- Combine: |σ.phiPlus - Q.phiPlus| ≤ ε₀ and |σ.phiMinus - Q.phiMinus| ≤ ε₀
@@ -488,6 +700,19 @@ the result with `γ(t)`. The image of `[0, 1]` is therefore preconnected. -/
 theorem basisNhd_subset_connectedComponent (σ : StabilityCondition C)
     {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
     basisNhd C σ ε ⊆ {τ | ConnectedComponents.mk τ = ConnectedComponents.mk σ} := by
+  -- Roadmap (Bridgeland §7, path-connectedness):
+  -- For τ ∈ basisNhd(σ, ε), define the linear interpolation
+  --   W_t := Z(σ) + t · (Z(τ) − Z(σ)),  t ∈ [0,1]
+  -- and γ(t) := bridgeland_7_1(σ, W_t, ε₀). Then γ(0) = σ and γ(1) = τ.
+  --
+  -- Continuity at t₀: apply Theorem 7.1 centred at γ(t₀) with small ε',
+  -- then Lemma 6.4 (eq_of_same_Z_near) identifies the result with γ(t).
+  --
+  -- Requires:
+  -- 1. ‖W_t - Z(σ)‖_σ = t · ‖Z(τ) - Z(σ)‖_σ < sin(πε₀) for all t ∈ [0,1]
+  -- 2. Continuity of t ↦ ‖W_t - Z(γ(t₀))‖_{γ(t₀)} near t₀
+  -- 3. Lemma 6.2 (stabSeminorm_dominated_of_connected) for norm comparison
+  -- The image of [0,1] under γ is connected, so τ and σ share a component.
   sorry
 
 
