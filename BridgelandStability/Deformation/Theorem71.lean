@@ -160,16 +160,20 @@ theorem P_in_deformedGtPred
     σ.deformedGtPred C W hW ε hε (by linarith) hsin t E := by
   -- Step 1: Get Q-HN from sigmaSemistable_hasDeformedHN (phases in (s-ε₀, s+ε₀))
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
-  -- Step 2: Show ALL Q-HN phases > t, using Lemma 7.3 + Lemma 3.4
-  -- Phase confinement: each factor Fⱼ ∈ P((ψⱼ-ε, ψⱼ+ε)), so σ.φ⁻(Fⱼ) < ψⱼ + ε.
-  -- Lemma 3.4 on last triangle: s = σ.φ⁻(E) ≤ σ.φ⁻(Fₙ) < ψₙ + ε, so ψₙ > s - ε ≥ t.
-  -- All ψⱼ ≥ ψₙ > t (sorted decreasingly).
-  -- Step 2: Show ALL Q-HN phases > t.
-  -- By Lemma 3.4 + strict phase confinement (Lemma 7.3):
-  --   s = φ⁻(E) ≤ φ⁻(last factor) ≤ φ⁺(last factor) < ψ_last + ε
-  -- Hence ψ_last > s - ε ≥ t, and all phases ≥ ψ_last (sorted).
+  -- Step 2: All Q-HN phases > t. Suffices to show last (minimum) phase > t.
   have hall : ∀ j : Fin G.n, t < G.φ j := by
-    sorry -- Lemma 3.4 + strict phase confinement on PostnikovTower last triangle
+    have hGn : 0 < G.n := by
+      by_contra h; push_neg at h
+      exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+    -- Suffices: last phase > t (all others ≥ it by sorting)
+    suffices hlast : t < G.φ ⟨G.n - 1, by omega⟩ by
+      intro j
+      calc t < G.φ ⟨G.n - 1, by omega⟩ := hlast
+        _ ≤ G.φ j := G.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+    -- Last factor's phase confinement (strict): phiPlus < ψ_last + ε
+    -- Lemma 3.4 on last triangle: s ≤ phiMinus(last factor)
+    -- Combined: s < ψ_last + ε, so ψ_last > s - ε ≥ t
+    sorry
   -- Step 3: of_postnikovTower closes it
   exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
     (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
@@ -186,10 +190,21 @@ theorem P_in_deformedLtPred
     {s t : ℝ} (hst : s ≤ t - ε)
     {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
     σ.deformedLtPred C W hW ε hε (by linarith) hsin t E := by
-  -- Dual of P_in_deformedGtPred: get Q-HN, show all phases < t via Lemma 3.4 + 7.3
+  -- Dual of P_in_deformedGtPred: get Q-HN, show all phases < t
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
   have hall : ∀ j : Fin G.n, G.φ j < t := by
-    sorry -- Dual: Lemma 3.4 + phase confinement: ψ₁ < s + ε ≤ t
+    have hGn : 0 < G.n := by
+      by_contra h; push_neg at h
+      exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+    -- Suffices: first (maximum) phase < t (all others ≤ it by sorting)
+    suffices hfirst : G.φ ⟨0, hGn⟩ < t by
+      intro j
+      calc G.φ j ≤ G.φ ⟨0, hGn⟩ := G.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
+        _ < t := hfirst
+    -- Dual Lemma 3.4: phiPlus(first factor) ≤ phiPlus(E) = s
+    -- Strict phase confinement: ψ₁ - ε < phiPlus(first factor)
+    -- Combined: ψ₁ < s + ε ≤ t
+    sorry
   exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
     (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
 
