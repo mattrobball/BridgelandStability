@@ -1402,7 +1402,7 @@ private theorem bridgeland_6_4_one_dir [IsTriangulated C]
     (σ.slicing.phaseShift_leProp_zero C φ Y).mp hYle0
   have hXub : ∀ (hXne : ¬IsZero X), σ.slicing.phiPlus C X hXne < φ + 1 := by
     intro hXne
-    rcases hXdata with hXZ | ⟨GX', hGX', _, hbd⟩
+    rcases hXdata with hXZ | ⟨GX', hGX', _, hbd, _⟩
     · exact absurd hXZ hXne
     · -- GX' is wrt shifted slicing, phiPlus ≤ Fs.φ(0) = F.φ(0) - φ
       -- Build original-coords HN filtration of X

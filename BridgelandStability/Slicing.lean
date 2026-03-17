@@ -2414,7 +2414,8 @@ theorem Slicing.tStructureAux (s : Slicing C)
       Triangle.mk f g h ∈ distTriang C ∧
       (IsZero X ∨ ∃ (GX : HNFiltration C s.P X) (hGX : 0 < GX.n),
         0 < GX.phiMinus C hGX ∧
-        (∀ hn0 : 0 < F.n, GX.phiPlus C hGX ≤ F.φ ⟨0, hn0⟩)) := by
+        (∀ hn0 : 0 < F.n, GX.phiPlus C hGX ≤ F.φ ⟨0, hn0⟩) ∧
+        (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i)) := by
   -- Strengthened IH: also return phase bound data for both X and Y sides.
   suffices hmain : ∀ (m : ℕ) (A : C) (F : HNFiltration C s.P A), F.n ≤ m →
       ∃ (X Y : C) (_ : s.gtProp C 0 X)
@@ -2422,7 +2423,8 @@ theorem Slicing.tStructureAux (s : Slicing C)
         Triangle.mk f g h ∈ distTriang C ∧
         (IsZero X ∨ ∃ (GX : HNFiltration C s.P X) (hGX : 0 < GX.n),
           0 < GX.phiMinus C hGX ∧
-          (∀ hn0 : 0 < F.n, GX.phiPlus C hGX ≤ F.φ ⟨0, hn0⟩)) ∧
+          (∀ hn0 : 0 < F.n, GX.phiPlus C hGX ≤ F.φ ⟨0, hn0⟩) ∧
+          (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i)) ∧
         (IsZero Y ∨ ∃ (GY : HNFiltration C s.P Y) (hGY : 0 < GY.n),
           GY.phiPlus C hGY ≤ 0 ∧
           (∀ (_ : 0 < F.n) (j : Fin GY.n),
@@ -2449,7 +2451,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
       exact ⟨A, 0, s.gtProp_of_hn C F 0 hall_pos hn0, 𝟙 A, 0, 0,
         contractible_distinguished A,
         Or.inr ⟨F, hn0, by simp only [HNFiltration.phiMinus]; exact hall_pos ⟨F.n - 1, by omega⟩,
-          fun hn0 ↦ le_refl _⟩,
+          fun hn0 ↦ le_refl _, fun j ↦ ⟨j, rfl⟩⟩,
         Or.inl (isZero_zero C)⟩
     · push_neg at hall_pos
       by_cases hall_neg : ∀ j : Fin F.n, F.φ j ≤ 0
@@ -2507,8 +2509,11 @@ theorem Slicing.tStructureAux (s : Slicing C)
           refine ⟨X, T.obj₃, hX, eX.hom ≫ u₂₃, e₂A.inv ≫ T.mor₂,
             T.mor₃ ≫ (shiftFunctor C (1 : ℤ)).map e₁.hom ≫
               (shiftFunctor C (1 : ℤ)).map eX.inv, ?_,
-            hXdata.imp id (fun ⟨GX, hGX, hpos, hbd⟩ ↦
-              ⟨GX, hGX, hpos, fun _ ↦ hbd hGn0⟩),
+            hXdata.imp id (fun ⟨GX, hGX, hpos, hbd, hcontain⟩ ↦
+              ⟨GX, hGX, hpos, fun _ ↦ hbd hGn0, fun j ↦ by
+                obtain ⟨i, hi⟩ := hcontain j
+                have hi_lt := i.isLt; change i.val < F.n - 1 at hi_lt
+                exact ⟨⟨i.val, by omega⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
             Or.inr ⟨?_, ?_, ?_, ?_⟩⟩
           · -- Distinguished triangle via transport
             apply isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by omega⟩)
@@ -2548,8 +2553,11 @@ theorem Slicing.tStructureAux (s : Slicing C)
             (F.semistable ⟨F.n - 1, by omega⟩) hφlast_lt
           have hGZn : GZ.n = GY'.n + 1 := rfl
           refine ⟨X, Z, hX, f' ≫ u₂₃, v₁₃, w₁₃, h₁₃,
-            hXdata.imp id (fun ⟨GX, hGX, hpos, hbd⟩ ↦
-              ⟨GX, hGX, hpos, fun _ ↦ hbd (by change 0 < F.n - 1; omega)⟩),
+            hXdata.imp id (fun ⟨GX, hGX, hpos, hbd, hcontain⟩ ↦
+              ⟨GX, hGX, hpos, fun _ ↦ hbd (by change 0 < F.n - 1; omega), fun j ↦ by
+                obtain ⟨i, hi⟩ := hcontain j
+                have hi_lt := i.isLt; change i.val < F.n - 1 at hi_lt
+                exact ⟨⟨i.val, by omega⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
             Or.inr ⟨GZ, by omega, ?_, fun _ j ↦ ?_⟩⟩
           · -- GZ.phiPlus ≤ 0: first phase comes from GY'
             change GZ.φ ⟨0, by omega⟩ ≤ 0
@@ -2821,7 +2829,7 @@ theorem Slicing.exists_split_with_interval (s : Slicing C)
   have hYle : s.leProp C a Y := (s.phaseShift_leProp_zero C a Y).mp hY
   refine ⟨X, Y, f, g, h, hT, hXgt, hYle, fun hXne ↦ ?_⟩
   -- Extract X's phase bound from tStructureAux data
-  rcases hXdata with hXZ | ⟨GX, hGX, _, hbd⟩
+  rcases hXdata with hXZ | ⟨GX, hGX, _, hbd, _⟩
   · exact absurd hXZ hXne
   · -- GX is an HN filtration of X wrt the shifted slicing, with phiPlus ≤ Fs.φ(0)
     have hFsn : 0 < Fs.n := hn
@@ -2883,7 +2891,7 @@ theorem Slicing.exists_split_at_cutoff (s : Slicing C)
   have hYle : s.leProp C t Y := (s.phaseShift_leProp_zero C t Y).mp hY
   refine ⟨X, Y, f, g, h, hT, hXgt, hYle, fun hXne ↦ ?_⟩
   -- Extract X's phase bound from tStructureAux data
-  rcases hXdata with hXZ | ⟨GX, hGX, _, hbd⟩
+  rcases hXdata with hXZ | ⟨GX, hGX, _, hbd, _⟩
   · exact absurd hXZ hXne
   · have hFsn : 0 < Fs.n := hn
     have hGX_phiPlus_le := hbd hFsn
