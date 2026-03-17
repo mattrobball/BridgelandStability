@@ -158,24 +158,17 @@ theorem P_in_deformedGtPred
     {s t : ℝ} (hst : s ≥ t + ε)
     {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
     σ.deformedGtPred C W hW ε hε (by linarith) hsin t E := by
-  -- Step 1: Get Q-HN from sigmaSemistable_hasDeformedHN
+  -- Step 1: Get Q-HN from sigmaSemistable_hasDeformedHN (phases in (s-ε₀, s+ε₀))
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
-  -- Step 2: Split Q-HN at cutoff t → X ∈ Q(>t), Y ∈ Q(≤t)
-  obtain ⟨X, Y, GX, GY, f, g, h_tri, hT, hGX_gt, hGY_le, _⟩ :=
-    split_hn_filtration_at_cutoff (C := C) G t
-  -- Step 3: Show Y is zero → E ≅ X ∈ Q(>t)
-  suffices hYZ : IsZero Y by
-    haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYZ
-    exact Or.inr ⟨GX.ofIso C (asIso f), fun j ↦ hGX_gt j⟩
-  -- Step 4: Y must be zero by the phiMinus/phiPlus squeeze.
-  -- Lemma 3.4 on the split triangle X → E → Y → X[1] gives σ.φ⁻(Y) ≥ s.
-  -- Phase confinement on the Q(≤t) factors gives σ.φ⁺(Y) ≤ t + ε.
-  -- Since s ≥ t + ε: σ.φ⁻(Y) ≥ s ≥ t + ε ≥ σ.φ⁺(Y).
-  -- For s > t + ε this contradicts φ⁻ ≤ φ⁺ for nonzero objects.
-  -- For s = t + ε: Y ∈ P(s), and the strict perturbation estimate
-  -- (hperturb_of_stabSeminorm) + Im argument forces W-phase > s − ε,
-  -- contradicting Q-phases ≤ s − ε.
-  sorry
+  -- Step 2: Show ALL Q-HN phases > t, using Lemma 7.3 + Lemma 3.4
+  -- Phase confinement: each factor Fⱼ ∈ P((ψⱼ-ε, ψⱼ+ε)), so σ.φ⁻(Fⱼ) < ψⱼ + ε.
+  -- Lemma 3.4 on last triangle: s = σ.φ⁻(E) ≤ σ.φ⁻(Fₙ) < ψₙ + ε, so ψₙ > s - ε ≥ t.
+  -- All ψⱼ ≥ ψₙ > t (sorted decreasingly).
+  have hall : ∀ j : Fin G.n, t < G.φ j := by
+    sorry -- Lemma 3.4 + phase confinement: ψₙ > s - ε ≥ t
+  -- Step 3: of_postnikovTower closes it
+  exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
+    (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
 
 variable [IsTriangulated C] in
 /-- **P(s) ⊂ Q(<t) for s ≤ t − ε** (Bridgeland p.24 ¶3, dual). -/
@@ -189,7 +182,12 @@ theorem P_in_deformedLtPred
     {s t : ℝ} (hst : s ≤ t - ε)
     {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
     σ.deformedLtPred C W hW ε hε (by linarith) hsin t E := by
-  sorry -- Dual of P_in_deformedGtPred
+  -- Dual of P_in_deformedGtPred: get Q-HN, show all phases < t via Lemma 3.4 + 7.3
+  obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
+  have hall : ∀ j : Fin G.n, G.φ j < t := by
+    sorry -- Dual: Lemma 3.4 + phase confinement: ψ₁ < s + ε ≤ t
+  exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
+    (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
 
 /-! ### Q(>t)/Q(≤t) truncation triangles (Bridgeland p.24, Steps 1–2) -/
 
@@ -252,11 +250,7 @@ theorem deformedSlicing_hn_exists
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (E : C) :
     Nonempty (HNFiltration C (σ.deformedPred C W hW ε hε (by linarith) hsin) E) := by
-  obtain ⟨X, Y, f, g, h, hT, hX, hY⟩ := deformedGtLe_triangle C σ W hW hε₀ hε₀8 hWide
-    hε hεε₀ hsin
-    (sigmaSemistable_deformedGtLe_triangle C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin)
-    E 0
-  exact exists_hn_of_deformedGt_deformedLe_triangle C σ W hW hε (by linarith) hsin hT hX hY
+  sorry -- Requires t-structure → slicing (Prop 5.3) + local finiteness
 
 /-! ### Deformed slicing construction -/
 
