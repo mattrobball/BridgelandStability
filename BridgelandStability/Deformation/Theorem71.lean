@@ -393,9 +393,56 @@ theorem P_in_deformedLtPred
         let ek₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
         have hTk_ne₁ : ¬IsZero Tk.obj₁ := fun hZ ↦ hne ((Iso.isZero_iff ek₁).mp hZ)
         by_cases hk1ne : IsZero (P.chain.obj' (k + 1) (show k + 1 ≤ G.n from by omega))
-        · -- chain(k+1) = 0: factor(k) ≅ chain(k)[1], so φ⁺(chain(k)) = φ⁺(factor(k)) - 1
-          -- φ⁺(factor(k)) < s + ε₀ + ε (intervalProp), and ε₀ + ε < 1, so φ⁺(chain(k)) < s
-          sorry -- requires phiPlus shift formula: φ⁺(X[1]) = φ⁺(X) + 1
+        · -- chain(k+1) = 0 → factor(k) ≅ chain(k)[1] → φ⁺(chain(k)) = φ⁺(factor(k)) - 1 < s
+          have hTk_obj2_z : IsZero Tk.obj₂ :=
+            (Iso.isZero_iff ek₂).mpr hk1ne
+          haveI : IsIso Tk.mor₃ :=
+            (Triangle.isZero₂_iff_isIso₃ Tk (P.triangle_dist ⟨k, hkn⟩)).mp hTk_obj2_z
+          -- factor(k) ≅ chain(k)[1] via mor₃
+          -- φ⁺(factor(k)) < s + ε₀ + ε from intervalProp
+          have hfact_ne : ¬IsZero (P.factor ⟨k, hkn⟩) := by
+            intro hfz
+            -- If factor(k) = 0 and chain(k+1) = 0, then chain(k) = 0 (contradiction)
+            -- isZero₁_iff: IsZero obj₁ ↔ (mor₁ = 0 ∧ mor₃ = 0)
+            exact hTk_ne₁ ((Triangle.isZero₁_iff _ (P.triangle_dist ⟨k, hkn⟩)).mpr
+              ⟨(hTk_obj2_z.eq_of_tgt _ _), hfz.eq_of_src _ _⟩)
+          have hfact_phiPlus := σ.slicing.phiPlus_lt_of_intervalProp C hfact_ne
+            (hfactors_int ⟨k, hkn⟩)
+          -- φ⁺(chain(k)[1]) = φ⁺(chain(k)) + 1 via shiftHN
+          have hshift_ne : ¬IsZero (Tk.obj₁⟦(1 : ℤ)⟧) :=
+            fun hZ ↦ hTk_ne₁ (IsZero.of_full_of_faithful_of_isZero
+              (shiftFunctor C (1 : ℤ)) _ hZ)
+          -- factor(k) ≅ Tk.obj₁⟦1⟧ via asIso mor₃
+          -- φ⁺(Tk.obj₁⟦1⟧) = φ⁺(Tk.obj₁) + 1
+          obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hTk_ne₁
+          have hphiPlus_shift : σ.slicing.phiPlus C (Tk.obj₁⟦(1 : ℤ)⟧) hshift_ne =
+              σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ + 1 := by
+            have hneF_shift : ¬IsZero ((F.shiftHN C σ.slicing 1).triangle ⟨0, hnF⟩).obj₃ := by
+              change ¬IsZero ((shiftFunctor C (1 : ℤ)).obj (F.triangle ⟨0, hnF⟩).obj₃)
+              exact fun hZ ↦ hneF (IsZero.of_full_of_faithful_of_isZero
+                (shiftFunctor C (1 : ℤ)) _ hZ)
+            rw [σ.slicing.phiPlus_eq C _ hshift_ne (F.shiftHN C σ.slicing 1) hnF hneF_shift]
+            simp only [HNFiltration.shiftHN, HNFiltration.phiPlus, Int.cast_one]
+            rw [σ.slicing.phiPlus_eq C _ hTk_ne₁ F hnF hneF]
+          -- φ⁺(factor(k)) = φ⁺(Tk.obj₁⟦1⟧) via iso invariance
+          have hiso_phiPlus : σ.slicing.phiPlus C (P.factor ⟨k, hkn⟩) hfact_ne =
+              σ.slicing.phiPlus C (Tk.obj₁⟦(1 : ℤ)⟧) hshift_ne := by
+            obtain ⟨F', hnF', hneF'⟩ := HNFiltration.exists_nonzero_first C σ.slicing hfact_ne
+            rw [σ.slicing.phiPlus_eq C _ hfact_ne F' hnF' hneF',
+                σ.slicing.phiPlus_eq C _ hshift_ne (F'.ofIso C (asIso Tk.mor₃)) hnF' hneF']
+            simp [HNFiltration.ofIso]
+          -- φ⁺(chain(k)) = φ⁺(Tk.obj₁) via iso invariance
+          have hchain_phiPlus : σ.slicing.phiPlus C _ hne =
+              σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ := by
+            rw [σ.slicing.phiPlus_eq C _ hTk_ne₁ F hnF hneF,
+                σ.slicing.phiPlus_eq C _ hne (F.ofIso C ek₁) hnF hneF]
+            simp [HNFiltration.ofIso]
+          -- Combine: φ⁺(chain(k)) = φ⁺(factor(k)) - 1 < (s + ε₀ + ε) - 1 ≤ s
+          rw [hchain_phiPlus]
+          have : σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ =
+              σ.slicing.phiPlus C (P.factor ⟨k, hkn⟩) hfact_ne - 1 := by
+            rw [hiso_phiPlus, hphiPlus_shift]; ring
+          linarith
         · -- chain(k+1) nonzero: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1)) ≤ s
           have hTk_ne₂ : ¬IsZero Tk.obj₂ := fun hZ ↦ hk1ne ((Iso.isZero_iff ek₂).mp hZ)
           have hTk_obj1_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) Tk.obj₁ :=
