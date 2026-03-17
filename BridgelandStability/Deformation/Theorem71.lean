@@ -181,7 +181,7 @@ theorem P_in_deformedGtPred
   classical
   let S := (Finset.univ : Finset (Fin G.n)).filter (fun i => ¬IsZero (P.factor i))
   have hSne : S.Nonempty := by
-    obtain ⟨j, hj⟩ := G.exists_nonzero_factor hE
+    obtain ⟨j, hj⟩ := G.exists_nonzero_factor C hE
     exact ⟨j, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hj⟩⟩
   set j₀ := S.max' hSne
   have hj₀ne : ¬IsZero (P.factor j₀) :=
@@ -191,49 +191,56 @@ theorem P_in_deformedGtPred
   have hzero_suffix : ∀ i : Fin G.n, j₀.val < i.val → IsZero (P.factor i) := by
     intro i hi; by_contra hine; exact absurd (hj₀_max i hine) (by omega)
   -- chain(j₀+1) has P s via downward induction (zero factors → iso → closedUnderIso)
+  have hj₀_lt : j₀.val < G.n := j₀.isLt
   have hPchain : σ.slicing.P s (P.chain.obj' (j₀.val + 1) (by omega)) := by
-    suffices ∀ d k, k + d = G.n → j₀.val < k →
-        σ.slicing.P s (P.chain.obj' k (by omega)) from
-      this (G.n - (j₀.val + 1)) (j₀.val + 1) (by omega) (by omega)
-    intro d; induction d with
-    | zero => intro k hk _; have : k = G.n := by omega; subst this
-              exact (σ.slicing.closedUnderIso s).of_iso
-                (Classical.choice P.top_iso).symm hP
-    | succ d ih =>
-      intro k hk hjk
-      have hkn : k < G.n := by omega
-      have hfz : IsZero (P.factor ⟨k, hkn⟩) := hzero_suffix ⟨k, hkn⟩ (by omega)
-      let Tk := P.triangle ⟨k, hkn⟩
-      haveI : IsIso Tk.mor₁ :=
-        (Triangle.isZero₃_iff_isIso₁ Tk (P.triangle_dist ⟨k, hkn⟩)).mp hfz
-      let e₁ := Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)
-      let e₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
-      exact (σ.slicing.closedUnderIso s).of_iso
-        (e₁.symm.trans ((asIso Tk.mor₁).trans e₂)).symm (ih (k + 1) (by omega) (by omega))
+    have : ∀ d k (hle : k ≤ G.n), k + d = G.n → j₀.val < k →
+        σ.slicing.P s (P.chain.obj' k (by omega)) := by
+      intro d; induction d with
+      | zero =>
+        intro k hle hk _
+        have hkG : k = G.n := by omega
+        subst hkG
+        exact (σ.slicing.closedUnderIso s).of_iso
+          (Classical.choice P.top_iso).symm hP
+      | succ d ih =>
+        intro k hle hk hjk
+        have hkn : k < G.n := by omega
+        have hfz : IsZero (P.factor ⟨k, hkn⟩) := hzero_suffix ⟨k, hkn⟩ (by omega)
+        let Tk := P.triangle ⟨k, hkn⟩
+        haveI : IsIso Tk.mor₁ :=
+          (Triangle.isZero₃_iff_isIso₁ Tk (P.triangle_dist ⟨k, hkn⟩)).mp hfz
+        let e₁ := Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)
+        let e₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
+        exact (σ.slicing.closedUnderIso s).of_iso
+          (e₁.symm.trans ((asIso Tk.mor₁).trans e₂)).symm
+          (ih (k + 1) (by omega) (by omega) (by omega))
+    exact this (G.n - (j₀.val + 1)) (j₀.val + 1) (by omega) (by omega) (by omega)
   -- chain(j₀+1) is nonzero (zero would propagate to chain(n) ≅ E, contradicting hE)
   have hchain_ne : ¬IsZero (P.chain.obj' (j₀.val + 1) (by omega)) := by
-    intro hZ; apply hE; apply IsZero.of_iso _ (Classical.choice P.top_iso)
-    suffices ∀ m k, k = j₀.val + 1 + m → k ≤ G.n →
-        IsZero (P.chain.obj' k (by omega)) from
-      this (G.n - (j₀.val + 1)) G.n (by omega) le_rfl
-    intro m; induction m with
-    | zero => intro k hk _; have : k = j₀.val + 1 := by omega; subst this; exact hZ
-    | succ m ihm =>
-      intro k hk hkn
-      have hk1 : k - 1 < G.n := by omega
-      have hZprev := ihm (k - 1) (by omega) (by omega)
-      let Tk1 := P.triangle ⟨k - 1, hk1⟩
-      have hobj1_z : IsZero Tk1.obj₁ :=
-        IsZero.of_iso hZprev (Classical.choice (P.triangle_obj₁ ⟨k - 1, hk1⟩)).symm
-      have hfz : IsZero Tk1.obj₃ := hzero_suffix ⟨k - 1, hk1⟩ (by omega)
-      have hobj2_z : IsZero Tk1.obj₂ :=
-        (Triangle.isZero₂_iff _ (P.triangle_dist ⟨k - 1, hk1⟩)).mpr
-          ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩
-      exact IsZero.of_iso hobj2_z (Classical.choice (P.triangle_obj₂ ⟨k - 1, hk1⟩))
+    intro hZ; apply hE
+    have : ∀ m k (hle : k ≤ G.n), k = j₀.val + 1 + m →
+        IsZero (P.chain.obj' k (by omega)) := by
+      intro m; induction m with
+      | zero => intro k hle hk; exact hk ▸ hZ
+      | succ m ihm =>
+        intro k hle hk
+        have hk1 : k - 1 < G.n := by omega
+        have hZprev := ihm (k - 1) (by omega) (by omega)
+        let Tk1 := P.triangle ⟨k - 1, hk1⟩
+        have hobj1_z : IsZero Tk1.obj₁ :=
+          (Iso.isZero_iff (Classical.choice (P.triangle_obj₁ ⟨k - 1, hk1⟩))).mpr hZprev
+        have hfz : IsZero Tk1.obj₃ := hzero_suffix ⟨k - 1, hk1⟩ (by omega)
+        have hobj2_z : IsZero Tk1.obj₂ :=
+          (Triangle.isZero₂_iff _ (P.triangle_dist ⟨k - 1, hk1⟩)).mpr
+            ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩
+        exact (Iso.isZero_iff (Classical.choice (P.triangle_obj₂ ⟨k - 1, hk1⟩))).mp hobj2_z
+    exact (Iso.isZero_iff (Classical.choice P.top_iso)).mp
+      (this (G.n - (j₀.val + 1)) G.n le_rfl (by omega))
   -- Apply Lemma 3.4 to the triangle at j₀
   let ej₁ := Classical.choice (P.triangle_obj₁ j₀)
   let ej₂ := Classical.choice (P.triangle_obj₂ j₀)
-  have hTj₂_ne : ¬IsZero (P.triangle j₀).obj₂ := fun hZ ↦ hchain_ne (IsZero.of_iso hZ ej₂)
+  have hTj₂_ne : ¬IsZero (P.triangle j₀).obj₂ :=
+    fun hZ ↦ hchain_ne ((Iso.isZero_iff ej₂).mp hZ)
   have hTj₁_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) (P.triangle j₀).obj₁ := by
     rcases intervalProp_chain_of_postnikovTower σ.slicing P hfactors_int j₀.val
       (by omega) with hZ | ⟨F, hF⟩
@@ -296,7 +303,7 @@ theorem P_in_deformedLtPred
   classical
   let S := (Finset.univ : Finset (Fin G.n)).filter (fun i => ¬IsZero (P.factor i))
   have hSne : S.Nonempty := by
-    obtain ⟨j, hj⟩ := G.exists_nonzero_factor hE
+    obtain ⟨j, hj⟩ := G.exists_nonzero_factor C hE
     exact ⟨j, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hj⟩⟩
   set j₁ := S.min' hSne
   have hj₁ne : ¬IsZero (P.factor j₁) :=
@@ -318,32 +325,37 @@ theorem P_in_deformedLtPred
     -- so φ⁺(chain(j₁+1)) ≤ φ⁺(chain(n)) = φ⁺(E) = s.
     have hzero_prefix : ∀ i : Fin G.n, i.val < j₁.val → IsZero (P.factor i) := by
       intro i hi; by_contra hine; exact absurd (hj₁_min i hine) (by omega)
+    have hj₁_lt : j₁.val < G.n := j₁.isLt
     have hchain_j₁_zero : IsZero (P.chain.obj' j₁.val (by omega)) := by
-      induction j₁.val with
-      | zero => exact P.base_isZero
-      | succ k ih =>
-        have hkn : k < G.n := by omega
-        have hfz : IsZero (P.factor ⟨k, hkn⟩) := hzero_prefix ⟨k, hkn⟩ (by omega)
-        let Tk := P.triangle ⟨k, hkn⟩
-        have hobj1_z : IsZero Tk.obj₁ :=
-          IsZero.of_iso (ih (by intro i hi; exact hzero_prefix i (by omega)))
-            (Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)).symm
-        exact IsZero.of_iso
-          ((Triangle.isZero₂_iff _ (P.triangle_dist ⟨k, hkn⟩)).mpr
-            ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩)
-          (Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩))
+      have : ∀ m (hle : m ≤ G.n), m ≤ j₁.val →
+          (∀ i : Fin G.n, i.val < m → IsZero (P.factor i)) →
+          IsZero (P.chain.obj' m (by omega)) := by
+        intro m; induction m with
+        | zero => intro _ _ _; exact P.base_isZero
+        | succ k ih =>
+          intro hle hkj₁ hpref
+          have hkn : k < G.n := by omega
+          have hfz : IsZero (P.factor ⟨k, hkn⟩) := hpref ⟨k, hkn⟩ (by omega)
+          let Tk := P.triangle ⟨k, hkn⟩
+          have hobj1_z : IsZero Tk.obj₁ :=
+            (Iso.isZero_iff (Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩))).mpr
+              (ih (by omega) (by omega) (fun i hi ↦ hpref i (by omega)))
+          exact (Iso.isZero_iff (Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩))).mp
+            ((Triangle.isZero₂_iff _ (P.triangle_dist ⟨k, hkn⟩)).mpr
+              ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩)
+      exact this j₁.val (by omega) le_rfl hzero_prefix
     -- chain(j₁+1) ≅ factor(j₁) via isZero₁_iff_isIso₂ on the triangle at j₁
     let Tj₁ := P.triangle j₁
     have hTj₁_obj1_z : IsZero Tj₁.obj₁ :=
-      IsZero.of_iso hchain_j₁_zero (Classical.choice (P.triangle_obj₁ j₁)).symm
+      (Iso.isZero_iff (Classical.choice (P.triangle_obj₁ j₁))).mpr hchain_j₁_zero
     haveI : IsIso Tj₁.mor₂ :=
       (Triangle.isZero₁_iff_isIso₂ Tj₁ (P.triangle_dist j₁)).mp hTj₁_obj1_z
     -- chain(j₁+1) is nonzero (since factor(j₁) is nonzero and chain(j₁+1) ≅ factor(j₁))
     let ej₁₂ := Classical.choice (P.triangle_obj₂ j₁)
     have hchain_j₁1_ne : ¬IsZero (P.chain.obj' (j₁.val + 1) (by omega)) :=
-      fun hZ ↦ hj₁ne (IsZero.of_iso
-        ((Iso.isZero_iff (asIso Tj₁.mor₂)).mp (IsZero.of_iso hZ ej₁₂.symm))
-        (Iso.refl _))
+      fun hZ ↦ hj₁ne
+        ((Iso.isZero_iff (asIso Tj₁.mor₂)).mp
+          ((Iso.isZero_iff ej₁₂).mp hZ))
     -- φ⁺(chain(j₁+1)) ≤ s by downward induction from chain(n)
     -- At each step: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1))
     have hphiPlus_le : σ.slicing.phiPlus C (P.chain.obj' (j₁.val + 1) (by omega))

@@ -7,6 +7,8 @@ import Mathlib.CategoryTheory.Triangulated.StabilityCondition
 import Mathlib.CategoryTheory.Triangulated.StabilityFunction
 import Mathlib.CategoryTheory.Triangulated.IntervalCategory
 import Mathlib.CategoryTheory.Triangulated.TStructure.HeartAbelian
+import Mathlib.CategoryTheory.Triangulated.Deformation.PPhiAbelian
+import Mathlib.CategoryTheory.Triangulated.Deformation.PhaseArithmetic
 
 /-!
 # Heart Equivalence and Blueprint Scaffolding
@@ -71,52 +73,200 @@ section Lemma52
 
 variable [IsTriangulated C]
 
-/-- **Lemma 5.2 / P(φ) is abelian.**
-For each phase `φ`, the full subcategory `P(φ)` of `σ`-semistable objects of
-phase `φ` (plus the zero object) is an abelian category.
+/-- If the underlying object of a full-subcategory object is zero, then the
+full-subcategory object itself is zero. -/
+private theorem ObjectProperty.FullSubcategory.isZero_of_obj_isZero
+    {P : ObjectProperty C} [HasZeroObject P.FullSubcategory]
+    {X : P.FullSubcategory} (hX : IsZero X.obj) : IsZero X := by
+  let Z : P.FullSubcategory := 0
+  have hZ : IsZero Z.obj := (P.ι.map_isZero (show IsZero Z from isZero_zero _))
+  let e : X.obj ≅ Z.obj := hX.iso hZ
+  exact (show IsZero Z from isZero_zero _).of_iso (P.isoMk e)
 
-The proof embeds `P(φ)` fully faithfully into the abelian heart `P((φ-1, φ])`,
-then shows that for any morphism `f` in `P(φ)`, its kernel and cokernel in the
-heart still lie in `P(φ)`. This uses Lemma 3.4 (triangle phase bounds) applied
-to the short exact sequences `0 → ker f → A → im f → 0` and
-`0 → im f → B → coker f → 0`. Since all terms have phases confined to `{φ}`,
-the phase bounds force the kernel and cokernel into `P(φ)`.
-
-The abelian structure on `P(φ)` is then inherited from the heart via the
-closure under kernels and cokernels. -/
-def StabilityCondition.P_phi_abelian
-    (σ : StabilityCondition C) (φ : ℝ) :
-    Abelian (σ.slicing.P φ).FullSubcategory := by
-  sorry
+set_option backward.isDefEq.respectTransparency false in
+/-- A short exact sequence in the abelian slice `P(φ)` extends to a distinguished
+triangle in the ambient triangulated category. -/
+private theorem StabilityCondition.P_phi_shortExact_triangle
+    (σ : StabilityCondition C) (φ : ℝ)
+    {A B Q : (σ.slicing.P φ).FullSubcategory}
+    (f : A ⟶ B) (g : B ⟶ Q) (hfg : f ≫ g = 0)
+    [Mono f] [Epi g]
+    (hexact : ∀ {W : (σ.slicing.P φ).FullSubcategory} (α : W ⟶ B), α ≫ g = 0 →
+      ∃ (β : W ⟶ A), β ≫ f = α) :
+    ∃ (h : Q.obj ⟶ A.obj⟦(1 : ℤ)⟧),
+      Triangle.mk f.hom g.hom h ∈ distTriang C := by
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+  let ι := (σ.slicing.P φ).ι
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (σ.P_phi_hom_vanishing C φ) (σ.P_phi_admissible C φ) g
+  have h_ig : (ι.map i) ≫ g.hom = 0 := by
+    have := comp_distTriang_mor_zero₁₂ _ hT
+    change (ι.map i) ≫ g.hom = 0 at this
+    exact this
+  have h_ig' : ObjectProperty.homMk (ι.map i) ≫ g = 0 := by
+    ext
+    exact h_ig
+  obtain ⟨β_hom, hβ_hom⟩ := hexact (W := K) (ObjectProperty.homMk (ι.map i)) h_ig'
+  let β : K ⟶ A := β_hom
+  have hβf : β ≫ f = i := by
+    ext
+    exact congrArg InducedCategory.Hom.hom hβ_hom
+  have hKer :=
+    Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (σ.P_phi_hom_vanishing C φ) i g δ hT
+  have hfg' : f ≫ g = 0 := hfg
+  let γ : A ⟶ K := hKer.lift (KernelFork.ofι f hfg')
+  have hγi : γ ≫ i = f := Fork.IsLimit.lift_ι hKer
+  have hβγ : β ≫ γ = 𝟙 K :=
+    Fork.IsLimit.hom_ext hKer (by simp [hγi, hβf])
+  have hγβ : γ ≫ β = 𝟙 A := by
+    rw [← cancel_mono f, Category.assoc, hβf, hγi, Category.id_comp]
+  let eKA : K ≅ A :=
+    { hom := β, inv := γ, hom_inv_id := hβγ, inv_hom_id := hγβ }
+  refine ⟨δ ≫ ((shiftFunctor C (1 : ℤ)).map (ι.map eKA.hom)), ?_⟩
+  refine isomorphic_distinguished _ hT _
+    (Triangle.isoMk _ _ (ι.mapIso eKA.symm) (Iso.refl _) (Iso.refl _) ?_ ?_ ?_)
+  · simp only [Iso.refl_hom, Category.comp_id, Functor.mapIso_hom, Iso.symm_hom,
+      Triangle.mk_mor₁]
+    change f.hom = ι.map γ ≫ ι.map i
+    rw [← Functor.map_comp, hγi]
+    rfl
+  · simp only [Iso.refl_hom, Category.comp_id, Category.id_comp]
+    rfl
+  · simp only [Iso.refl_hom, Category.id_comp, Triangle.mk_mor₃, Functor.mapIso_hom,
+      Iso.symm_hom]
+    rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, hβγ, ι.map_id,
+      Functor.map_id, Category.comp_id]
 
 /-- **Stability function restricted to P(φ).**
 The central charge `Z` of a stability condition, restricted to `σ`-semistable
-objects of phase `φ`, defines a stability function on the abelian category
-`P(φ)`.
+objects of phase `φ`, for `0 < φ ≤ 1`, defines a stability function on the
+abelian category `P(φ)`.
 
 The `Zobj` field sends `E : P(φ)` to `σ.Z (K₀.of C (ι E))`, where `ι` is
 the inclusion `P(φ) ↪ C`. Additivity follows from `K₀.of_shortExact_P_phi`;
 the upper half plane condition follows from the compatibility axiom of `σ`. -/
 def StabilityCondition.stabilityFunctionOnPhase
-    (σ : StabilityCondition C) (φ : ℝ) :
+    (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
     @StabilityFunction (σ.slicing.P φ).FullSubcategory _
       (σ.P_phi_abelian C φ) := by
   letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
   exact {
     Zobj := fun E => σ.Z (K₀.of C ((σ.slicing.P φ).ι.obj E))
-    map_zero' := fun X hX => by sorry
-    additive := fun S hS => by sorry
-    upper := fun E hE => by sorry }
+    map_zero' := fun X hX => by
+      simpa using congrArg σ.Z (K₀.of_isZero C (((σ.slicing.P φ).ι.map_isZero hX)))
+    additive := fun S hS => by
+      letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+      letI : IsNormalMonoCategory (σ.slicing.P φ).FullSubcategory := Abelian.toIsNormalMonoCategory
+      letI : IsNormalEpiCategory (σ.slicing.P φ).FullSubcategory := Abelian.toIsNormalEpiCategory
+      letI : Balanced (σ.slicing.P φ).FullSubcategory := by infer_instance
+      haveI := hS.mono_f
+      haveI := hS.epi_g
+      obtain ⟨δ, hT⟩ :=
+        StabilityCondition.P_phi_shortExact_triangle (C := C) σ φ S.f S.g S.zero
+          (fun {W} α hα ↦ by
+            have hker : IsLimit (KernelFork.ofι S.f S.zero) := hS.fIsKernel
+            exact ⟨hker.lift (KernelFork.ofι α hα), hker.fac _ WalkingParallelPair.zero⟩)
+      simpa using congrArg σ.Z (K₀.of_triangle C (Triangle.mk S.f.hom S.g.hom δ) hT)
+    upper := fun E hE => by
+      have hEobj : ¬IsZero E.obj := fun hZ ↦
+        hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
+          (C := C) (P := σ.slicing.P φ) (X := E) hZ)
+      obtain ⟨m, hm, hmZ⟩ := σ.compat φ E.obj E.property hEobj
+      have harg_eq :
+          Complex.arg ((m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I)) = Real.pi * φ := by
+        rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]
+        constructor
+        · nlinarith [Real.pi_pos, hφ.1]
+        · nlinarith [Real.pi_pos, hφ.2]
+      have harg : 0 < Complex.arg ((m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I)) := by
+        rw [harg_eq]
+        nlinarith [Real.pi_pos, hφ.1]
+      have hmem :
+          ((m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I)) ∈ upperHalfPlaneUnion :=
+        mem_upperHalfPlaneUnion_of_arg_pos harg
+      simpa [hmZ] using hmem }
+
+private theorem StabilityCondition.phase_eq_of_mem_P_phi
+    (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1)
+    (E : (σ.slicing.P φ).FullSubcategory) (hE : ¬IsZero E) :
+    @StabilityFunction.phase _ _ (σ.P_phi_abelian C φ)
+      (σ.stabilityFunctionOnPhase C hφ) E = φ := by
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+  have hEobj : ¬IsZero E.obj := fun hZ ↦
+    hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
+      (C := C) (P := σ.slicing.P φ) (X := E) hZ)
+  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E.obj E.property hEobj
+  have harg : Complex.arg ((m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I)) = Real.pi * φ := by
+    rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]
+    constructor
+    · nlinarith [Real.pi_pos, hφ.1]
+    · nlinarith [Real.pi_pos, hφ.2]
+  change (1 / Real.pi) * Complex.arg (σ.Z (K₀.of C E.obj)) = φ
+  rw [hmZ, harg]
+  field_simp [Real.pi_ne_zero]
 
 /-- **HasHN for the restricted stability function on P(φ).**
-The stability function on `P(φ)` has the Harder-Narasimhan property, since
-`P(φ)` has finite length (from local finiteness of `σ`) and
-`hasHN_of_finiteLength` applies. -/
+For `0 < φ ≤ 1`, every nonzero object of `P(φ)` is already semistable of phase
+`φ`, so the HN filtration has a single factor. -/
 theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
-    (σ : StabilityCondition C) (φ : ℝ) :
+    (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
     @StabilityFunction.HasHNProperty (σ.slicing.P φ).FullSubcategory _
-      (σ.P_phi_abelian C φ) (σ.stabilityFunctionOnPhase C φ) := by
-  sorry
+      (σ.P_phi_abelian C φ) (σ.stabilityFunctionOnPhase C hφ) := by
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+  intro E hE
+  let Z := σ.stabilityFunctionOnPhase C hφ
+  have hss : Z.IsSemistable E := by
+    refine ⟨hE, ?_⟩
+    intro B hB
+    rw [σ.phase_eq_of_mem_P_phi C hφ B hB, σ.phase_eq_of_mem_P_phi C hφ E hE]
+  refine ⟨{
+    n := 1
+    hn := Nat.one_pos
+    chain := fun i => if i = 0 then ⊥ else ⊤
+    chain_strictMono := by
+      intro ⟨i, hi⟩ ⟨j, hj⟩ h
+      simp only [Fin.lt_def] at h
+      have hi0 : i = 0 := by omega
+      have hj1 : j = 1 := by omega
+      subst hi0
+      subst hj1
+      simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, ↓reduceIte,
+        Fin.mk_one, one_ne_zero, gt_iff_lt]
+      exact lt_of_le_of_ne bot_le
+        (Ne.symm (StabilityFunction.subobject_top_ne_bot_of_not_isZero hE))
+    chain_bot := by simp
+    chain_top := by simp
+    φ := fun _ => φ
+    φ_anti := by
+      intro i j hij
+      exact False.elim (by omega)
+    factor_phase := by
+      intro ⟨j, hj⟩
+      have hj0 : j = 0 := by omega
+      subst hj0
+      change Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ bot_le)) = φ
+      have htop :
+          Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ bot_le)) =
+            Z.phase ((⊤ : Subobject E) : (σ.slicing.P φ).FullSubcategory) :=
+        Z.phase_eq_of_iso
+          (StabilityFunction.Subobject.cokernelBotIso (⊤ : Subobject E) bot_le)
+      calc
+        Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ bot_le))
+            = Z.phase ((⊤ : Subobject E) : (σ.slicing.P φ).FullSubcategory) := htop
+        _ = Z.phase E := Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow)
+        _ = φ := σ.phase_eq_of_mem_P_phi C hφ E hE
+    factor_semistable := by
+      intro ⟨j, hj⟩
+      have hj0 : j = 0 := by omega
+      subst hj0
+      change Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ bot_le))
+      refine Z.isSemistable_of_iso
+        ((asIso (⊤ : Subobject E).arrow).symm ≪≫
+          (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le).symm) ?_
+      exact hss
+  }⟩
 
 end Lemma52
 
@@ -143,6 +293,152 @@ structure HeartStabilityData where
   /-- The stability function has the HN property. -/
   hasHN : @StabilityFunction.HasHNProperty t.heart.FullSubcategory _ hAbelian Z
 
+set_option backward.isDefEq.respectTransparency false in
+/-- A short exact sequence in the heart full subcategory extends to a distinguished
+triangle in the ambient triangulated category. -/
+private theorem TStructure.heartFullSubcategory_shortExact_triangle
+    (t : TStructure C)
+    {A B Q : t.heart.FullSubcategory}
+    (f : A ⟶ B) (g : B ⟶ Q) (hfg : f ≫ g = 0)
+    [Mono f] [Epi g]
+    (hexact : ∀ {W : t.heart.FullSubcategory} (α : W ⟶ B), α ≫ g = 0 →
+      ∃ (β : W ⟶ A), β ≫ f = α) :
+    ∃ (h : Q.obj ⟶ A.obj⟦(1 : ℤ)⟧),
+      Triangle.mk f.hom g.hom h ∈ distTriang C := by
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  let ι := t.heart.ι
+  obtain ⟨K, i, δ, hT⟩ :=
+    Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
+      (heart_hι t) (heart_admissible t) g
+  have h_ig : (ι.map i) ≫ g.hom = 0 := by
+    have := comp_distTriang_mor_zero₁₂ _ hT
+    change (ι.map i) ≫ g.hom = 0 at this
+    exact this
+  have h_ig' : ObjectProperty.homMk (ι.map i) ≫ g = 0 := by
+    ext
+    exact h_ig
+  obtain ⟨β_hom, hβ_hom⟩ := hexact (W := K) (ObjectProperty.homMk (ι.map i)) h_ig'
+  let β : K ⟶ A := β_hom
+  have hβf : β ≫ f = i := by
+    ext
+    exact congrArg InducedCategory.Hom.hom hβ_hom
+  have hKer :=
+    Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
+      (heart_hι t) i g δ hT
+  let γ : A ⟶ K := hKer.lift (KernelFork.ofι f hfg)
+  have hγi : γ ≫ i = f := Fork.IsLimit.lift_ι hKer
+  have hβγ : β ≫ γ = 𝟙 K :=
+    Fork.IsLimit.hom_ext hKer (by simp [hγi, hβf])
+  have hγβ : γ ≫ β = 𝟙 A := by
+    rw [← cancel_mono f, Category.assoc, hβf, hγi, Category.id_comp]
+  let eKA : K ≅ A :=
+    { hom := β, inv := γ, hom_inv_id := hβγ, inv_hom_id := hγβ }
+  refine ⟨δ ≫ ((shiftFunctor C (1 : ℤ)).map (ι.map eKA.hom)), ?_⟩
+  refine isomorphic_distinguished _ hT _
+    (Triangle.isoMk _ _ (ι.mapIso eKA.symm) (Iso.refl _) (Iso.refl _) ?_ ?_ ?_)
+  · simp only [Iso.refl_hom, Category.comp_id, Functor.mapIso_hom, Iso.symm_hom,
+      Triangle.mk_mor₁]
+    change f.hom = ι.map γ ≫ ι.map i
+    rw [← Functor.map_comp, hγi]
+    rfl
+  · simp only [Iso.refl_hom, Category.comp_id, Category.id_comp]
+    rfl
+  · simp only [Iso.refl_hom, Category.id_comp, Triangle.mk_mor₃, Functor.mapIso_hom,
+      Iso.symm_hom]
+    rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, hβγ]
+    change δ ≫ (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = δ
+    have hmap :
+        (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = 𝟙 ((shiftFunctor C (1 : ℤ)).obj (ι.obj K)) := by
+      simpa using (Functor.map_id (shiftFunctor C (1 : ℤ)) (ι.obj K))
+    rw [hmap]
+    exact Category.comp_id δ
+
+private def StabilityCondition.stabilityFunctionOnHeart
+    (σ : StabilityCondition C) :
+    @StabilityFunction (σ.slicing.toTStructure.heart.FullSubcategory) _
+      ((σ.slicing.toTStructure).heartFullSubcategoryAbelian) := by
+  let t := σ.slicing.toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  exact {
+    Zobj := fun E => σ.Z (K₀.of C E.obj)
+    map_zero' := fun X hX => by
+      simpa using congrArg σ.Z (K₀.of_isZero C (((t.heart).ι.map_isZero hX)))
+    additive := fun S hS => by
+      letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+      letI : IsNormalMonoCategory t.heart.FullSubcategory := Abelian.toIsNormalMonoCategory
+      letI : IsNormalEpiCategory t.heart.FullSubcategory := Abelian.toIsNormalEpiCategory
+      letI : Balanced t.heart.FullSubcategory := by infer_instance
+      haveI := hS.mono_f
+      haveI := hS.epi_g
+      obtain ⟨δ, hT⟩ :=
+        TStructure.heartFullSubcategory_shortExact_triangle (C := C) t S.f S.g S.zero
+          (fun {W} α hα ↦ by
+            have hker : IsLimit (KernelFork.ofι S.f S.zero) := hS.fIsKernel
+            exact ⟨hker.lift (KernelFork.ofι α hα), hker.fac _ WalkingParallelPair.zero⟩)
+      simpa using congrArg σ.Z (K₀.of_triangle C (Triangle.mk S.f.hom S.g.hom δ) hT)
+    upper := fun E hE => by
+      classical
+      let ι := (t.heart).ι
+      have hEobj : ¬IsZero E.obj := fun hZ ↦
+        hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
+          (C := C) (P := t.heart) (X := E) hZ)
+      have hEheart := (σ.slicing.toTStructure_heart_iff C E.obj).mp E.property
+      obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hEobj
+      let P := F.toPostnikovTower
+      let s : Finset (Fin F.n) := Finset.univ.filter (fun i => ¬IsZero (P.factor i))
+      have hs : s.Nonempty := by
+        obtain ⟨i, hi⟩ := F.exists_nonzero_factor C hEobj
+        exact ⟨i, by simpa [s, P] using hi⟩
+      have hphiMinus : 0 < σ.slicing.phiMinus C E.obj hEobj :=
+        gt_phases_of_gtProp C σ.slicing hEobj hEheart.1
+      have hphiPlus : σ.slicing.phiPlus C E.obj hEobj ≤ 1 :=
+        σ.slicing.phiPlus_le_of_leProp C hEobj hEheart.2
+      have hphase_mem : ∀ i ∈ s, F.φ i ∈ Set.Ioc (0 : ℝ) 1 := by
+        intro i hi
+        constructor
+        · calc
+            0 < σ.slicing.phiMinus C E.obj hEobj := hphiMinus
+            _ = F.φ ⟨F.n - 1, by omega⟩ := by
+              rw [σ.slicing.phiMinus_eq C E.obj hEobj F hn hlast]
+            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+        · calc
+            F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
+            _ = σ.slicing.phiPlus C E.obj hEobj := by
+              rw [σ.slicing.phiPlus_eq C E.obj hEobj F hn hfirst]
+            _ ≤ 1 := hphiPlus
+      have hterm : ∀ i ∈ s, σ.Z (K₀.of C (P.factor i)) ∈ upperHalfPlaneUnion := by
+        intro i hi
+        letI : Abelian (σ.slicing.P (F.φ i)).FullSubcategory := σ.P_phi_abelian C (F.φ i)
+        let Xi : (σ.slicing.P (F.φ i)).FullSubcategory := ⟨P.factor i, F.semistable i⟩
+        have hXi : ¬IsZero Xi := by
+          intro hZ
+          exact (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
+            ((σ.slicing.P (F.φ i)).ι.map_isZero hZ)
+        exact (σ.stabilityFunctionOnPhase C (hphase_mem i hi)).upper Xi hXi
+      let f : Fin F.n → ℂ := fun i => σ.Z (K₀.of C (P.factor i))
+      have hsum_all : σ.Z (K₀.of C E.obj) = Finset.sum Finset.univ f := by
+        rw [K₀.of_postnikovTower_eq_sum C P, map_sum]
+      let z : Finset (Fin F.n) := Finset.univ.filter (fun i => IsZero (P.factor i))
+      have hzero_filter :
+          Finset.sum z f = 0 := by
+        refine Finset.sum_eq_zero ?_
+        intro i hi
+        simp only [z, Finset.mem_filter, Finset.mem_univ, true_and] at hi
+        rw [K₀.of_isZero C hi, map_zero]
+      have hsum_filter :
+          Finset.sum Finset.univ f = Finset.sum s f := by
+        calc
+          Finset.sum Finset.univ f = Finset.sum s f + Finset.sum z f := by
+            simpa [s, z, f] using
+              (Finset.sum_filter_add_sum_filter_not (s := Finset.univ)
+                (p := fun i : Fin F.n => ¬IsZero (P.factor i)) (f := f)).symm
+          _ = Finset.sum s f + 0 := by rw [hzero_filter]
+          _ = Finset.sum s f := by simp
+      rw [hsum_all, hsum_filter]
+      exact sum_mem_upperHalfPlane hs hterm }
+
 /-- **Proposition 5.3a / forward direction.**
 Every stability condition `σ` determines heart stability data:
 1. The t-structure is `σ.slicing.toTStructure`.
@@ -158,7 +454,7 @@ def StabilityCondition.toHeartStabilityData
     (σ : StabilityCondition C) : HeartStabilityData C where
   t := σ.slicing.toTStructure
   bounded := σ.slicing.toTStructure_bounded C
-  Z := by sorry
+  Z := σ.stabilityFunctionOnHeart C
   hasHN := by sorry
 
 /-- **Proposition 5.3b / reverse direction.**
