@@ -312,9 +312,49 @@ theorem P_in_deformedLtPred
     -- All factors before j₁ are zero → chain(j₁) ≅ 0 → chain(j₁+1) ≅ factor(j₁)
     -- then phiPlus monotone along chain to chain(n) ≅ E.
     -- Combined with phase confinement: G.φ j₁ - ε < σ.φ⁻ ≤ σ.φ⁺ ≤ s, so G.φ j₁ < s + ε ≤ t
+    -- Show σ.φ⁺(factor j₁) ≤ s via phiPlus monotonicity along the PostnikovTower chain.
+    -- chain(j₁) ≅ 0 (prefix zero), so chain(j₁+1) ≅ factor(j₁).
+    -- phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1)) at each step,
+    -- so φ⁺(chain(j₁+1)) ≤ φ⁺(chain(n)) = φ⁺(E) = s.
+    have hzero_prefix : ∀ i : Fin G.n, i.val < j₁.val → IsZero (P.factor i) := by
+      intro i hi; by_contra hine; exact absurd (hj₁_min i hine) (by omega)
+    have hchain_j₁_zero : IsZero (P.chain.obj' j₁.val (by omega)) := by
+      induction j₁.val with
+      | zero => exact P.base_isZero
+      | succ k ih =>
+        have hkn : k < G.n := by omega
+        have hfz : IsZero (P.factor ⟨k, hkn⟩) := hzero_prefix ⟨k, hkn⟩ (by omega)
+        let Tk := P.triangle ⟨k, hkn⟩
+        have hobj1_z : IsZero Tk.obj₁ :=
+          IsZero.of_iso (ih (by intro i hi; exact hzero_prefix i (by omega)))
+            (Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)).symm
+        exact IsZero.of_iso
+          ((Triangle.isZero₂_iff _ (P.triangle_dist ⟨k, hkn⟩)).mpr
+            ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩)
+          (Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩))
+    -- chain(j₁+1) ≅ factor(j₁) via isZero₁_iff_isIso₂ on the triangle at j₁
+    let Tj₁ := P.triangle j₁
+    have hTj₁_obj1_z : IsZero Tj₁.obj₁ :=
+      IsZero.of_iso hchain_j₁_zero (Classical.choice (P.triangle_obj₁ j₁)).symm
+    haveI : IsIso Tj₁.mor₂ :=
+      (Triangle.isZero₁_iff_isIso₂ Tj₁ (P.triangle_dist j₁)).mp hTj₁_obj1_z
+    -- chain(j₁+1) is nonzero (since factor(j₁) is nonzero and chain(j₁+1) ≅ factor(j₁))
+    let ej₁₂ := Classical.choice (P.triangle_obj₂ j₁)
+    have hchain_j₁1_ne : ¬IsZero (P.chain.obj' (j₁.val + 1) (by omega)) :=
+      fun hZ ↦ hj₁ne (IsZero.of_iso
+        ((Iso.isZero_iff (asIso Tj₁.mor₂)).mp (IsZero.of_iso hZ ej₁₂.symm))
+        (Iso.refl _))
+    -- φ⁺(chain(j₁+1)) ≤ s by downward induction from chain(n)
+    -- At each step: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1))
+    have hphiPlus_le : σ.slicing.phiPlus C (P.chain.obj' (j₁.val + 1) (by omega))
+        hchain_j₁1_ne ≤ s := by
+      sorry -- phiPlus monotonicity along PostnikovTower chain (phiPlus_triangle_le iterated)
+    -- Transport: φ⁺(factor j₁) = φ⁺(chain(j₁+1)) since chain(j₁+1) ≅ factor(j₁)
+    -- Combined: G.φ j₁ - ε < σ.φ⁻ ≤ σ.φ⁺ ≤ s, so G.φ j₁ < s + ε
     have hj₁_lt : G.φ j₁ < s + ε := by
-      sorry -- Dual of Lemma 3.4: σ.φ⁺(factor j₁) ≤ σ.φ⁺(E) = s
-            -- Requires phiPlus monotonicity along PostnikovTower chain
+      have hfact_phiPlus : σ.slicing.phiPlus C Tj₁.obj₃ hj₁ne ≤ s := by
+        sorry -- transport φ⁺ through mor₂ iso from chain(j₁+1) to factor(j₁)
+      linarith [hconf₁.1, σ.slicing.phiMinus_le_phiPlus C Tj₁.obj₃ hj₁ne]
     exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower P
       (fun j ↦ by
         by_cases hfz : IsZero (P.factor j)
