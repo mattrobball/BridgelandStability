@@ -312,19 +312,19 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have hE_heart : t.heart E := by
         simpa [t, ss, a] using
           mem_phaseShiftHeart_of_midpoint_left (C := C) (s := σ.slicing) hSS₁.2.1
-            hE_lo hE_hi hgap hsmallGap hε₀2
+            (le_of_lt hE_lo) (le_of_lt hE_hi) hgap hsmallGap hε₀2
       have hF_heart : t.heart F := by
         simpa [t, ss, a] using
           mem_phaseShiftHeart_of_midpoint_right (C := C) (s := σ.slicing) hSS₂.2.1
-            hF_lo hF_hi hgap hsmallGap hε₀2
+            (le_of_lt hF_lo) (le_of_lt hF_hi) hgap hsmallGap hε₀2
       have hE_window :
           σ.slicing.gtProp C a E ∧ σ.slicing.leProp C (ψ₁ + ε₀) E := by
         exact gtProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
-          (a := a) hE_heart hSS₁.2.1 hE_hi
+          (a := a) hE_heart hSS₁.2.1 (le_of_lt hE_hi)
       have hF_window :
           σ.slicing.geProp C (ψ₂ - ε₀) F ∧ σ.slicing.leProp C (a + 1) F := by
         exact geProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
-          (a := a) hF_heart hSS₂.2.1 hF_lo
+          (a := a) hF_heart hSS₂.2.1 (le_of_lt hF_lo)
       have habE_left_src : a₁ < ψ₁ + ε₀ := by
         linarith [henv₁_lo]
       have hE_upper : σ.slicing.intervalProp C a₁ (ψ₁ + ε₀) E := by
@@ -356,7 +356,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have hF_right : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1) F := by
         exact σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.2.1
           (σ.slicing.phiMinus_gt_of_intervalProp C hSS₂.2.1 hF_lower)
-          (lt_of_le_of_lt hF_hi (by
+          (lt_trans hF_hi (by
             dsimp [a]
             linarith [hgap, hε₀2]))
       have henvF_right_hi : ψ₂ ≤ (a + 1) - ε₀ := by
@@ -436,14 +436,14 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         exact hfH hfH_zero
       have hI_phiPlus_left : σ.slicing.phiPlus C I_H.obj hIne < ψ₁ + ε₀ := by
         exact σ.slicing.phiPlus_lt_of_triangle_with_leProp C hIne
-          (fun hF' ↦ lt_of_le_of_lt hF_hi (by linarith [hgap])) hQ_le (by linarith) hT_I'
+          (fun hF' ↦ lt_trans hF_hi (by linarith [hgap])) hQ_le (by linarith) hT_I'
       have hI_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) I_H.obj := by
         exact σ.slicing.intervalProp_of_intrinsic_phases C hIne
           (σ.slicing.phiMinus_gt_of_gtProp C hIne hI_gt)
           hI_phiPlus_left
       have hI_phiMinus_right : ψ₂ - ε₀ < σ.slicing.phiMinus C I_H.obj hIne := by
         exact σ.slicing.phiMinus_gt_of_triangle_with_gtProp C hIne
-          (fun hE' ↦ lt_of_lt_of_le (by linarith [hgap]) hE_lo) hK_gt (by linarith) hT_pH'
+          (fun hE' ↦ lt_trans (by linarith [hgap]) hE_lo) hK_gt (by linarith) hT_pH'
       have hI_right : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1) I_H.obj := by
         exact σ.slicing.intervalProp_of_intrinsic_phases C hIne
           hI_phiMinus_right

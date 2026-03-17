@@ -158,69 +158,109 @@ theorem P_in_deformedGtPred
     {s t : ℝ} (hst : s ≥ t + ε)
     {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
     σ.deformedGtPred C W hW ε hε (by linarith) hsin t E := by
-  -- Step 1: Get Q-HN from sigmaSemistable_hasDeformedHN (phases in (s-ε₀, s+ε₀))
+  -- Step 1: Q-HN filtration with phases in (s-ε₀, s+ε₀)
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
-  -- Step 2: All Q-HN phases > t. Suffices to show last (minimum) phase > t.
-  have hall : ∀ j : Fin G.n, t < G.φ j := by
-    have hGn : 0 < G.n := by
-      by_contra h; push_neg at h
-      exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
-    -- Suffices: last phase > t (all others ≥ it by sorting)
-    suffices hlast : t < G.φ ⟨G.n - 1, by omega⟩ by
-      intro j
-      calc t < G.φ ⟨G.n - 1, by omega⟩ := hlast
-        _ ≤ G.φ j := G.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
-    -- Apply Lemma 3.4 to the last PostnikovTower triangle
-    set k : Fin G.n := ⟨G.n - 1, by omega⟩
-    set T := G.toPostnikovTower.triangle k
-    have hTdist := G.toPostnikovTower.triangle_dist k
-    -- Last factor nonzero (if zero, E would have fewer factors, contradicting G.n)
-    by_cases hfz : IsZero T.obj₃
-    · -- If last factor is zero, chain(n) ≅ chain(n-1) and we can use hGφ
-      -- Actually this case can't happen for the LAST factor of a nonzero E
-      -- with a proper HN filtration, but let's handle it via hGφ
-      linarith [(hGφ k).1]
-    -- Strict phase confinement on last factor
-    rcases G.semistable k with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
-    · exact absurd hZ hfz
-    · have hconf := phase_confinement_from_stabSeminorm C σ W hW hab' hε
-        (by linarith) hthin' hsin hSS'
-      -- hconf.2 : σ.phiPlus(factor) < ψ_last + ε
-      -- Need: s ≤ σ.phiMinus(factor) (from Lemma 3.4)
-      -- Then s < ψ_last + ε, so ψ_last > s - ε ≥ t
-      -- For now, use the intervalProp route: E ∈ P((ψ_last-ε, ψ_last+ε)) would give
-      -- s < ψ_last + ε. But intervalProp gives wider bounds.
-      -- Use hGφ: ψ_last > s - ε₀, combined with Lemma 3.4 to tighten.
-      -- Lemma 3.4 on T: phiMinus(T.obj₂) ≤ phiMinus(T.obj₃)
-      have e₂ := Classical.choice (G.toPostnikovTower.triangle_obj₂ k)
-      -- T.obj₂ ≅ E (up to the chain iso)
-      have hTobj2_ne : ¬IsZero T.obj₂ := fun h ↦ hE (IsZero.of_iso h e₂)
-      -- All factors in common interval
-      have hTobj3_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) T.obj₃ :=
-        σ.slicing.intervalProp_of_intrinsic_phases C hfz
-          (by linarith [(hGφ k).1, hconf.1]) (by linarith [(hGφ k).2, hconf.2])
-      -- T.obj₁ in common interval (by walking the tower prefix)
-      have hTobj1_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) T.obj₁ := by
-        have e₁ := Classical.choice (G.toPostnikovTower.triangle_obj₁ k)
-        have hint := intervalProp_of_postnikovTower σ.slicing
-          G.toPostnikovTower (fun j ↦ by
-            by_cases hj : IsZero (G.toPostnikovTower.factor j)
-            · exact Or.inl hj
-            · rcases G.semistable j with hZ | ⟨a'', b'', hab'', hthin'', _, _, hSS''⟩
-              · exact absurd hZ hj
-              · have hc := phase_confinement_from_stabSeminorm C σ W hW hab'' hε
-                  (by linarith) hthin'' hsin hSS''
-                exact σ.slicing.intervalProp_of_intrinsic_phases C hj
-                  (by linarith [(hGφ j).1, hc.1]) (by linarith [(hGφ j).2, hc.2]))
-        sorry -- transport from chain(n-1) to T.obj₁ via iso
-      -- Apply Lemma 3.4
-      have h34 := σ.slicing.phiMinus_triangle_le C hfz hTobj2_ne
-        (by linarith : s + ε₀ + ε ≤ s - ε₀ - ε + 1) hTobj1_int hTobj3_int hTdist
-      -- Transport: phiMinus(T.obj₂) = phiMinus(E) = s
-      sorry
-  -- Step 3: of_postnikovTower closes it
-  exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
-    (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
+  have hGn : 0 < G.n := by
+    by_contra h; push_neg at h
+    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+  set P := G.toPostnikovTower
+  -- Step 2: All factors have σ-intervalProp
+  have hfactors_int : ∀ j, σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε)
+      (P.factor j) := fun j ↦ by
+    by_cases hj : IsZero (P.factor j)
+    · exact Or.inl hj
+    · rcases G.semistable j with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
+      · exact absurd hZ hj
+      · have hc := phase_confinement_from_stabSeminorm C σ W hW hab' hε
+          (by linarith) hthin' hsin hSS'
+        exact σ.slicing.intervalProp_of_intrinsic_phases C hj
+          (by linarith [(hGφ j).1, hc.1]) (by linarith [(hGφ j).2, hc.2])
+  -- Step 3: Find last nonzero factor j₀, prove G.φ j₀ > s - ε ≥ t via Lemma 3.4.
+  -- All factors after j₀ are zero, so chain(j₀+1) ≅ E, giving σ.φ⁻(chain(j₀+1)) = s.
+  -- Lemma 3.4: s = σ.φ⁻(chain(j₀+1)) ≤ σ.φ⁻(factor j₀) ≤ σ.φ⁺(factor j₀) < G.φ j₀ + ε.
+  classical
+  let S := (Finset.univ : Finset (Fin G.n)).filter (fun i => ¬IsZero (P.factor i))
+  have hSne : S.Nonempty := by
+    obtain ⟨j, hj⟩ := G.exists_nonzero_factor hE
+    exact ⟨j, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hj⟩⟩
+  set j₀ := S.max' hSne
+  have hj₀ne : ¬IsZero (P.factor j₀) :=
+    (Finset.mem_filter.mp (Finset.max'_mem S hSne)).2
+  have hj₀_max : ∀ i : Fin G.n, ¬IsZero (P.factor i) → i ≤ j₀ :=
+    fun i hi ↦ Finset.le_max' S i (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hi⟩)
+  have hzero_suffix : ∀ i : Fin G.n, j₀.val < i.val → IsZero (P.factor i) := by
+    intro i hi; by_contra hine; exact absurd (hj₀_max i hine) (by omega)
+  -- chain(j₀+1) has P s via downward induction (zero factors → iso → closedUnderIso)
+  have hPchain : σ.slicing.P s (P.chain.obj' (j₀.val + 1) (by omega)) := by
+    suffices ∀ d k, k + d = G.n → j₀.val < k →
+        σ.slicing.P s (P.chain.obj' k (by omega)) from
+      this (G.n - (j₀.val + 1)) (j₀.val + 1) (by omega) (by omega)
+    intro d; induction d with
+    | zero => intro k hk _; have : k = G.n := by omega; subst this
+              exact (σ.slicing.closedUnderIso s).of_iso
+                (Classical.choice P.top_iso).symm hP
+    | succ d ih =>
+      intro k hk hjk
+      have hkn : k < G.n := by omega
+      have hfz : IsZero (P.factor ⟨k, hkn⟩) := hzero_suffix ⟨k, hkn⟩ (by omega)
+      let Tk := P.triangle ⟨k, hkn⟩
+      haveI : IsIso Tk.mor₁ :=
+        (Triangle.isZero₃_iff_isIso₁ Tk (P.triangle_dist ⟨k, hkn⟩)).mp hfz
+      let e₁ := Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)
+      let e₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
+      exact (σ.slicing.closedUnderIso s).of_iso
+        (e₁.symm.trans ((asIso Tk.mor₁).trans e₂)).symm (ih (k + 1) (by omega) (by omega))
+  -- chain(j₀+1) is nonzero (zero would propagate to chain(n) ≅ E, contradicting hE)
+  have hchain_ne : ¬IsZero (P.chain.obj' (j₀.val + 1) (by omega)) := by
+    intro hZ; apply hE; apply IsZero.of_iso _ (Classical.choice P.top_iso)
+    suffices ∀ m k, k = j₀.val + 1 + m → k ≤ G.n →
+        IsZero (P.chain.obj' k (by omega)) from
+      this (G.n - (j₀.val + 1)) G.n (by omega) le_rfl
+    intro m; induction m with
+    | zero => intro k hk _; have : k = j₀.val + 1 := by omega; subst this; exact hZ
+    | succ m ihm =>
+      intro k hk hkn
+      have hk1 : k - 1 < G.n := by omega
+      have hZprev := ihm (k - 1) (by omega) (by omega)
+      let Tk1 := P.triangle ⟨k - 1, hk1⟩
+      have hobj1_z : IsZero Tk1.obj₁ :=
+        IsZero.of_iso hZprev (Classical.choice (P.triangle_obj₁ ⟨k - 1, hk1⟩)).symm
+      have hfz : IsZero Tk1.obj₃ := hzero_suffix ⟨k - 1, hk1⟩ (by omega)
+      have hobj2_z : IsZero Tk1.obj₂ :=
+        (Triangle.isZero₂_iff _ (P.triangle_dist ⟨k - 1, hk1⟩)).mpr
+          ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩
+      exact IsZero.of_iso hobj2_z (Classical.choice (P.triangle_obj₂ ⟨k - 1, hk1⟩))
+  -- Apply Lemma 3.4 to the triangle at j₀
+  let ej₁ := Classical.choice (P.triangle_obj₁ j₀)
+  let ej₂ := Classical.choice (P.triangle_obj₂ j₀)
+  have hTj₂_ne : ¬IsZero (P.triangle j₀).obj₂ := fun hZ ↦ hchain_ne (IsZero.of_iso hZ ej₂)
+  have hTj₁_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) (P.triangle j₀).obj₁ := by
+    rcases intervalProp_chain_of_postnikovTower σ.slicing P hfactors_int j₀.val
+      (by omega) with hZ | ⟨F, hF⟩
+    · exact Or.inl ((Iso.isZero_iff ej₁.symm).mp hZ)
+    · exact Or.inr ⟨F.ofIso C ej₁.symm, hF⟩
+  have h34 := σ.slicing.phiMinus_triangle_le C hj₀ne hTj₂_ne
+    (by linarith : s + ε₀ + ε ≤ s - ε₀ - ε + 1) hTj₁_int (hfactors_int j₀)
+    (P.triangle_dist j₀)
+  -- σ.φ⁻(T.obj₂) = s via P s transport
+  have hTj₂_phiMinus : σ.slicing.phiMinus C (P.triangle j₀).obj₂ hTj₂_ne = s :=
+    (σ.slicing.phiPlus_eq_phiMinus_of_semistable C
+      ((σ.slicing.closedUnderIso s).of_iso ej₂.symm hPchain) hTj₂_ne).2
+  -- Phase confinement on factor j₀
+  rcases G.semistable j₀ with hZ₀ | ⟨a₀, b₀, hab₀, hthin₀, _, _, hSS₀⟩
+  · exact absurd hZ₀ hj₀ne
+  · have hconf₀ := phase_confinement_from_stabSeminorm C σ W hW hab₀ hε
+      (by linarith) hthin₀ hsin hSS₀
+    -- s ≤ φ⁻(factor j₀) ≤ φ⁺(factor j₀) < G.φ j₀ + ε
+    have hj₀_gt : s - ε < G.φ j₀ := by
+      linarith [h34, hTj₂_phiMinus,
+        σ.slicing.phiMinus_le_phiPlus C (P.triangle j₀).obj₃ hj₀ne, hconf₀.2]
+    -- Step 4: of_postnikovTower — zero factors get any ψ > t, nonzero get G.φ j > t
+    exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower P
+      (fun j ↦ by
+        by_cases hfz : IsZero (P.factor j)
+        · exact ⟨t + 1, by linarith, Or.inl hfz⟩
+        · exact ⟨G.φ j, by linarith [G.hφ.antitone (hj₀_max j hfz)], G.semistable j⟩)
 
 variable [IsTriangulated C] in
 /-- **P(s) ⊂ Q(<t) for s ≤ t − ε** (Bridgeland p.24 ¶3, dual). -/
@@ -236,21 +276,50 @@ theorem P_in_deformedLtPred
     σ.deformedLtPred C W hW ε hε (by linarith) hsin t E := by
   -- Dual of P_in_deformedGtPred: get Q-HN, show all phases < t
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀8 hWide hε hεε₀ hsin hP hE
-  have hall : ∀ j : Fin G.n, G.φ j < t := by
-    have hGn : 0 < G.n := by
-      by_contra h; push_neg at h
-      exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
-    -- Suffices: first (maximum) phase < t (all others ≤ it by sorting)
-    suffices hfirst : G.φ ⟨0, hGn⟩ < t by
-      intro j
-      calc G.φ j ≤ G.φ ⟨0, hGn⟩ := G.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
-        _ < t := hfirst
-    -- Dual Lemma 3.4: phiPlus(first factor) ≤ phiPlus(E) = s
-    -- Strict phase confinement: ψ₁ - ε < phiPlus(first factor)
-    -- Combined: ψ₁ < s + ε ≤ t
-    sorry
-  exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
-    (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
+  have hGn : 0 < G.n := by
+    by_contra h; push_neg at h
+    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+  set P := G.toPostnikovTower
+  -- All factors have σ-intervalProp
+  have hfactors_int : ∀ j, σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε)
+      (P.factor j) := fun j ↦ by
+    by_cases hj : IsZero (P.factor j)
+    · exact Or.inl hj
+    · rcases G.semistable j with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
+      · exact absurd hZ hj
+      · have hc := phase_confinement_from_stabSeminorm C σ W hW hab' hε
+          (by linarith) hthin' hsin hSS'
+        exact σ.slicing.intervalProp_of_intrinsic_phases C hj
+          (by linarith [(hGφ j).1, hc.1]) (by linarith [(hGφ j).2, hc.2])
+  -- Find first nonzero factor j₁ (min index). Dual of P_in_deformedGtPred:
+  -- σ.φ⁺(factor j₁) ≤ σ.φ⁺(E) = s, phase confinement gives G.φ j₁ < s + ε ≤ t.
+  classical
+  let S := (Finset.univ : Finset (Fin G.n)).filter (fun i => ¬IsZero (P.factor i))
+  have hSne : S.Nonempty := by
+    obtain ⟨j, hj⟩ := G.exists_nonzero_factor hE
+    exact ⟨j, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hj⟩⟩
+  set j₁ := S.min' hSne
+  have hj₁ne : ¬IsZero (P.factor j₁) :=
+    (Finset.mem_filter.mp (Finset.min'_mem S hSne)).2
+  have hj₁_min : ∀ i : Fin G.n, ¬IsZero (P.factor i) → j₁ ≤ i :=
+    fun i hi ↦ Finset.min'_le S i (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hi⟩)
+  -- Phase confinement on factor j₁
+  rcases G.semistable j₁ with hZ₁ | ⟨a₁, b₁, hab₁, hthin₁, _, _, hSS₁⟩
+  · exact absurd hZ₁ hj₁ne
+  · have hconf₁ := phase_confinement_from_stabSeminorm C σ W hW hab₁ hε
+      (by linarith) hthin₁ hsin hSS₁
+    -- Dual Lemma 3.4: σ.φ⁺(factor j₁) ≤ σ.φ⁺(E) = s
+    -- All factors before j₁ are zero → chain(j₁) ≅ 0 → chain(j₁+1) ≅ factor(j₁)
+    -- then phiPlus monotone along chain to chain(n) ≅ E.
+    -- Combined with phase confinement: G.φ j₁ - ε < σ.φ⁻ ≤ σ.φ⁺ ≤ s, so G.φ j₁ < s + ε ≤ t
+    have hj₁_lt : G.φ j₁ < s + ε := by
+      sorry -- Dual of Lemma 3.4: σ.φ⁺(factor j₁) ≤ σ.φ⁺(E) = s
+            -- Requires phiPlus monotonicity along PostnikovTower chain
+    exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower P
+      (fun j ↦ by
+        by_cases hfz : IsZero (P.factor j)
+        · exact ⟨t - 1, by linarith, Or.inl hfz⟩
+        · exact ⟨G.φ j, by linarith [G.hφ.antitone (hj₁_min j hfz)], G.semistable j⟩)
 
 /-! ### Q(>t)/Q(≤t) truncation triangles (Bridgeland p.24, Steps 1–2) -/
 

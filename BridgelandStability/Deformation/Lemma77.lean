@@ -386,6 +386,35 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
 
 /-! ### Extension-closure of `intervalProp` over Postnikov towers -/
 
+/-- All intermediate chain objects of a PostnikovTower satisfy `intervalProp` when
+all factors do. This is the induction underlying `intervalProp_of_postnikovTower`,
+extracted so that it can be applied to intermediate chain objects (e.g., for
+Lemma 3.4 arguments on PostnikovTower triangles). -/
+lemma intervalProp_chain_of_postnikovTower (s : Slicing C) {E : C} {a b : ℝ}
+    (P : PostnikovTower C E)
+    (hfactors : ∀ i, s.intervalProp C a b (P.factor i))
+    (k : ℕ) (hk : k ≤ P.n) :
+    s.intervalProp C a b (P.chain.obj' k (by omega)) := by
+  induction k with
+  | zero =>
+    rw [show P.chain.obj' 0 (by omega) = P.chain.left from rfl]
+    exact Or.inl P.base_isZero
+  | succ k ih =>
+    set T := P.triangle ⟨k, by omega⟩
+    have hT := P.triangle_dist ⟨k, by omega⟩
+    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by omega⟩)
+    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by omega⟩)
+    have h₁ : s.intervalProp C a b T.obj₁ := by
+      rcases ih (by omega) with hZ | ⟨F, hF⟩
+      · exact Or.inl ((Iso.isZero_iff e₁.symm).mp hZ)
+      · exact Or.inr ⟨F.ofIso C e₁.symm, hF⟩
+    have h₃ : s.intervalProp C a b T.obj₃ := hfactors ⟨k, by omega⟩
+    have h₂ : s.intervalProp C a b T.obj₂ :=
+      s.intervalProp_of_triangle C h₁ h₃ hT
+    rcases h₂ with hZ | ⟨F, hF⟩
+    · exact Or.inl ((Iso.isZero_iff e₂).mp hZ)
+    · exact Or.inr ⟨F.ofIso C e₂, hF⟩
+
 /-- Extension-closure of `intervalProp` over Postnikov towers: if all factors of a
 Postnikov tower have HN phases in `(a, b)`, then the total object does too.
 
