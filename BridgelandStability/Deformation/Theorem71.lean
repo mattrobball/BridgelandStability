@@ -164,8 +164,12 @@ theorem P_in_deformedGtPred
   -- Phase confinement: each factor Fⱼ ∈ P((ψⱼ-ε, ψⱼ+ε)), so σ.φ⁻(Fⱼ) < ψⱼ + ε.
   -- Lemma 3.4 on last triangle: s = σ.φ⁻(E) ≤ σ.φ⁻(Fₙ) < ψₙ + ε, so ψₙ > s - ε ≥ t.
   -- All ψⱼ ≥ ψₙ > t (sorted decreasingly).
+  -- Step 2: Show ALL Q-HN phases > t.
+  -- By Lemma 3.4 + strict phase confinement (Lemma 7.3):
+  --   s = φ⁻(E) ≤ φ⁻(last factor) ≤ φ⁺(last factor) < ψ_last + ε
+  -- Hence ψ_last > s - ε ≥ t, and all phases ≥ ψ_last (sorted).
   have hall : ∀ j : Fin G.n, t < G.φ j := by
-    sorry -- Lemma 3.4 + phase confinement: ψₙ > s - ε ≥ t
+    sorry -- Lemma 3.4 + strict phase confinement on PostnikovTower last triangle
   -- Step 3: of_postnikovTower closes it
   exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
     (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
