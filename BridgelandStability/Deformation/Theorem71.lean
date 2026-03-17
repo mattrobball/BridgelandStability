@@ -368,14 +368,75 @@ theorem P_in_deformedLtPred
       fun hZ ↦ hTj₁_obj2_ne ((Iso.isZero_iff ej₁₂).mpr hZ)
     -- φ⁺(chain(j₁+1)) ≤ s by downward induction from chain(n)
     -- At each step: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1))
+    -- φ⁺(chain(j₁+1)) ≤ φ⁺(chain(n)) = s by downward induction.
+    -- At each step: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1)).
     have hphiPlus_le : σ.slicing.phiPlus C (P.chain.obj' (j₁.val + 1) (by omega))
         hchain_j₁1_ne ≤ s := by
-      sorry -- phiPlus monotonicity along PostnikovTower chain (phiPlus_triangle_le iterated)
+      -- Prove: for all k with j₁+1 ≤ k ≤ n, if chain(k) nonzero then φ⁺(chain(k)) ≤ s
+      suffices hmain : ∀ d k (hle : k ≤ G.n), k + d = G.n → 0 < k →
+          (hne : ¬IsZero (P.chain.obj' k (by omega))) →
+          σ.slicing.phiPlus C (P.chain.obj' k (by omega)) hne ≤ s from
+        hmain (G.n - (j₁.val + 1)) (j₁.val + 1) (by omega) (by omega) (by omega) hchain_j₁1_ne
+      intro d; induction d with
+      | zero =>
+        intro k hle hk hkpos hne
+        have hkG : k = G.n := by omega
+        subst hkG
+        exact le_of_eq (σ.slicing.phiPlus_eq_phiMinus_of_semistable C
+          ((σ.slicing.closedUnderIso s).of_iso (Classical.choice P.top_iso).symm hP) hne).1
+      | succ d ih =>
+        intro k hle hk hkpos hne
+        have hkn : k < G.n := by omega
+        -- Triangle at k: chain(k) → chain(k+1) → factor(k) → chain(k)[1]
+        let Tk := P.triangle ⟨k, hkn⟩
+        let ek₁ := Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)
+        let ek₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
+        have hTk_ne₁ : ¬IsZero Tk.obj₁ := fun hZ ↦ hne ((Iso.isZero_iff ek₁).mp hZ)
+        by_cases hk1ne : IsZero (P.chain.obj' (k + 1) (show k + 1 ≤ G.n from by omega))
+        · -- chain(k+1) = 0: factor(k) ≅ chain(k)[1], so φ⁺(chain(k)) = φ⁺(factor(k)) - 1
+          -- φ⁺(factor(k)) < s + ε₀ + ε (intervalProp), and ε₀ + ε < 1, so φ⁺(chain(k)) < s
+          sorry -- requires phiPlus shift formula: φ⁺(X[1]) = φ⁺(X) + 1
+        · -- chain(k+1) nonzero: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1)) ≤ s
+          have hTk_ne₂ : ¬IsZero Tk.obj₂ := fun hZ ↦ hk1ne ((Iso.isZero_iff ek₂).mp hZ)
+          have hTk_obj1_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) Tk.obj₁ :=
+            (σ.slicing.intervalProp_closedUnderIso C _ _).of_iso ek₁.symm
+              (intervalProp_chain_of_postnikovTower σ.slicing (C := C) (P := P)
+                hfactors_int k (show k ≤ G.n from by omega))
+          have hle_step := σ.slicing.phiPlus_triangle_le C hTk_ne₁ hTk_ne₂
+            (by linarith : s + ε₀ + ε ≤ s - ε₀ - ε + 1) hTk_obj1_int
+            (hfactors_int ⟨k, hkn⟩) (P.triangle_dist ⟨k, hkn⟩)
+          -- hle_step : φ⁺(Tk.obj₁) ≤ φ⁺(Tk.obj₂)
+          -- Transport: φ⁺(chain(k)) = φ⁺(Tk.obj₁), φ⁺(chain(k+1)) = φ⁺(Tk.obj₂)
+          have hk1_le := ih (k + 1) (by omega) (by omega) (by omega) hk1ne
+          -- φ⁺ is iso-invariant (closedUnderIso → phiPlus preserved)
+          have h_eq₁ : σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ =
+              σ.slicing.phiPlus C _ hne := by
+            obtain ⟨F, hn, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hTk_ne₁
+            rw [σ.slicing.phiPlus_eq C _ hTk_ne₁ F hn hneF,
+                σ.slicing.phiPlus_eq C _ hne (F.ofIso C ek₁) hn hneF]
+            simp [HNFiltration.ofIso]
+          have h_eq₂ : σ.slicing.phiPlus C Tk.obj₂ hTk_ne₂ =
+              σ.slicing.phiPlus C _ hk1ne := by
+            obtain ⟨F, hn, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hTk_ne₂
+            rw [σ.slicing.phiPlus_eq C _ hTk_ne₂ F hn hneF,
+                σ.slicing.phiPlus_eq C _ hk1ne (F.ofIso C ek₂) hn hneF]
+            simp [HNFiltration.ofIso]
+          linarith
     -- Transport: φ⁺(factor j₁) = φ⁺(chain(j₁+1)) since chain(j₁+1) ≅ factor(j₁)
     -- Combined: G.φ j₁ - ε < σ.φ⁻ ≤ σ.φ⁺ ≤ s, so G.φ j₁ < s + ε
     have hj₁_lt : G.φ j₁ < s + ε := by
       have hfact_phiPlus : σ.slicing.phiPlus C Tj₁.obj₃ hj₁ne ≤ s := by
-        sorry -- transport φ⁺ through mor₂ iso from chain(j₁+1) to factor(j₁)
+        -- Tj₁.obj₃ ≅ Tj₁.obj₂ ≅ chain(j₁+1) via (asIso mor₂)⁻¹ and ej₁₂
+        -- phiPlus is iso-invariant: transport HN filtration via ofIso
+        obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hchain_j₁1_ne
+        -- chain(j₁+1) ≅ Tj₁.obj₂ ≅ Tj₁.obj₃ = factor(j₁)
+        -- ej₁₂.symm : chain(j₁+1) ≅ Tj₁.obj₂, asIso mor₂ : Tj₁.obj₂ ≅ Tj₁.obj₃
+        rw [σ.slicing.phiPlus_eq C _ hj₁ne
+          ((F.ofIso C (ej₁₂.symm.trans (asIso Tj₁.mor₂)))) (by change 0 < F.n; exact hnF)
+          (by change ¬IsZero _; exact hneF)]
+        rw [σ.slicing.phiPlus_eq C _ hchain_j₁1_ne F hnF hneF] at hphiPlus_le
+        simp only [HNFiltration.ofIso, HNFiltration.phiPlus] at hphiPlus_le ⊢
+        exact hphiPlus_le
       have h1 : G.φ j₁ - ε < σ.slicing.phiMinus C Tj₁.obj₃ hj₁ne := hconf₁.1
       have h2 := σ.slicing.phiMinus_le_phiPlus C Tj₁.obj₃ hj₁ne
       linarith
