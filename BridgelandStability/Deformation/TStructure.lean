@@ -37,6 +37,40 @@ inductive ObjectProperty.ExtensionClosure {C : Type u} [Category.{v} C] [HasZero
       P.ExtensionClosure Y →
       P.ExtensionClosure E
 
+/-- Extension closure is monotone: if `P ≤ Q` then `P.ExtensionClosure ≤ Q.ExtensionClosure`. -/
+theorem ObjectProperty.ExtensionClosure.mono {C : Type u} [Category.{v} C] [HasZeroObject C]
+    [HasShift C ℤ] [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {P Q : ObjectProperty C} (h : P ≤ Q) :
+    P.ExtensionClosure ≤ Q.ExtensionClosure := by
+  intro E hE
+  induction hE with
+  | zero hZ => exact .zero hZ
+  | mem hP => exact .mem (h _ hP)
+  | ext hT _ _ ihX ihY => exact .ext hT ihX ihY
+
+/-- If generators are orthogonal (`Hom(P, Q) = 0`), their extension closures are orthogonal.
+Proof by nested induction on the `ExtensionClosure` structure, using the exact Hom sequences
+from distinguished triangles. -/
+theorem ObjectProperty.ExtensionClosure.hom_eq_zero {C : Type u} [Category.{v} C]
+    [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
+    [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {P Q : ObjectProperty C}
+    (h : ∀ (E F : C), P E → Q F → ∀ (f : E ⟶ F), f = 0)
+    {E F : C} (hE : P.ExtensionClosure E) (hF : Q.ExtensionClosure F)
+    (f : E ⟶ F) : f = 0 := by
+  induction hE generalizing F with
+  | zero hZ => exact hZ.eq_of_src f 0
+  | mem hP =>
+    induction hF with
+    | zero hZ => exact hZ.eq_of_tgt f 0
+    | mem hQ => exact h _ _ hP hQ f
+    | ext hT _ _ ihA ihB =>
+      obtain ⟨g, rfl⟩ := Triangle.coyoneda_exact₂ _ hT f (ihB _)
+      simp [ihA g]
+  | ext hT _ _ ihX ihY =>
+    obtain ⟨g, rfl⟩ := Triangle.yoneda_exact₂ _ hT f (ihX hF _)
+    simp [ihY hF g]
+
 namespace Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
@@ -333,8 +367,8 @@ theorem StabilityCondition.deformedLePred_mono
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {t₁ t₂ : ℝ} (ht : t₁ ≤ t₂) :
     σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t₁ ≤
-      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t₂ := by
-  sorry
+      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t₂ :=
+  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, le_trans hψ ht, hP⟩)
 
 variable [IsTriangulated C] in
 /-- Monotonicity of the provisional `Q(< t)` predicate. -/
@@ -345,8 +379,8 @@ theorem StabilityCondition.deformedLtPred_mono
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {t₁ t₂ : ℝ} (ht : t₁ ≤ t₂) :
     σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t₁ ≤
-      σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t₂ := by
-  sorry
+      σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t₂ :=
+  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, lt_of_lt_of_le hψ ht, hP⟩)
 
 variable [IsTriangulated C] in
 /-- Any `Q(< t)`-object is in `Q(≤ t)`. -/
@@ -357,8 +391,20 @@ theorem StabilityCondition.deformedLePred_of_deformedLtPred
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {t : ℝ} :
     σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t ≤
-      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t := by
-  sorry
+      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t :=
+  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, le_of_lt hψ, hP⟩)
+
+variable [IsTriangulated C] in
+/-- Anti-monotonicity of `Q(> t)`: if `t₁ ≤ t₂` then `Q(> t₂) ⊆ Q(> t₁)`. -/
+theorem StabilityCondition.deformedGtPred_anti
+    (σ : StabilityCondition C)
+    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    {t₁ t₂ : ℝ} (ht : t₁ ≤ t₂) :
+    σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t₂ ≤
+      σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t₁ :=
+  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, lt_of_le_of_lt ht hψ, hP⟩)
 
 variable [IsTriangulated C] in
 /-- A length-one HN filtration presents the ambient object as isomorphic to its unique factor.
@@ -674,8 +720,11 @@ theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLe
     {E F : C} {t : ℝ}
     (hE : σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t E)
     (hF : σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t F)
-    (f : E ⟶ F) : f = 0 := by
-  sorry
+    (f : E ⟶ F) : f = 0 :=
+  ObjectProperty.ExtensionClosure.hom_eq_zero
+    (fun E F ⟨ψ₁, hψ₁, hE'⟩ ⟨ψ₂, hψ₂, hF'⟩ f ↦
+      σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by linarith) f)
+    hE hF f
 
 variable [IsTriangulated C] in
 /-- Orthogonality of `Q(> t)` and `Q(< t)`. This is the strict version of Node 7.8b used
@@ -689,8 +738,11 @@ theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLt
     {E F : C} {t : ℝ}
     (hE : σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t E)
     (hF : σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t F)
-    (f : E ⟶ F) : f = 0 := by
-  sorry
+    (f : E ⟶ F) : f = 0 :=
+  ObjectProperty.ExtensionClosure.hom_eq_zero
+    (fun E F ⟨ψ₁, hψ₁, hE'⟩ ⟨ψ₂, hψ₂, hF'⟩ f ↦
+      σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by linarith) f)
+    hE hF f
 variable [IsTriangulated C] in
 /-- A `Q`-HN filtration split at cutoff `t` gives the paper's truncation triangle whose two
 pieces lie in `Q(> t)` and `Q(≤ t)`. -/
