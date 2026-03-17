@@ -198,7 +198,11 @@ theorem phiPlus_lt_of_wSemistable
     -- Hence K is σ-semistable of phase φ. Perturbation: wPhaseOf(W(K)) > φ - ε₀ ≥ ψ.
     -- K ∈ P(φ) since all its HN phases = φ
     have hK_sem : σ.slicing.P φ K := by
-      sorry -- K phases all = φ (from hgap + phases > t₀ > m) → semistable
+      -- K is assembled from F₀'s factors at phase φ via the split.
+      -- K ∈ P(φ) follows from: phiPlus(K) ≤ φ (triangle bound) and
+      -- phiMinus(K) ≥ φ (Jordan-Hölder: K's σ-HN factors are among E's, and
+      -- E's factors above the gap are all at phase φ).
+      sorry
     have ⟨hlo, _⟩ := hperturb K φ hK_sem hKne (by linarith) hφ_lt_b
     -- Y ∈ P((a, b))
     have hYI : σ.slicing.intervalProp C a b Y := by
