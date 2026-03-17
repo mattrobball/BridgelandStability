@@ -73,9 +73,20 @@ theorem phiPlus_lt_of_wSemistable
   -- Proof by contradiction
   by_contra hgt; push_neg at hgt
   rcases eq_or_lt_of_le hgt with heq | hgt
-  · -- Boundary case: phiPlus(E) = ψ + ε₀. The top σ-factor A ∈ P(ψ + ε₀) has
-    -- W-phase > (ψ + ε₀) - ε₀ = ψ (strict perturbation), contradicting W-semistability.
-    sorry
+  · -- Boundary case: phiPlus(E) = ψ + ε₀.
+    have hψε_lt_b : ψ + ε₀ < b := heq ▸ σ.slicing.phiPlus_lt_of_intervalProp C hE hI
+    have hψε_gt_a : a < ψ + ε₀ := lt_of_lt_of_le
+      (σ.slicing.phiMinus_gt_of_intervalProp C hE hI)
+      (heq ▸ σ.slicing.phiMinus_le_phiPlus C E hE)
+    -- If E is σ-semistable at phase ψ+ε₀, direct perturbation gives contradiction.
+    -- If not, split at a gap below ψ+ε₀ to isolate the top factor.
+    by_cases hsem : σ.slicing.P (ψ + ε₀) E
+    · -- E ∈ P(ψ+ε₀): perturbation gives wPhaseOf(W(E)) > (ψ+ε₀)-ε₀ = ψ
+      have ⟨hlo, _⟩ := hperturb E (ψ + ε₀) hsem hE hψε_gt_a hψε_lt_b
+      linarith
+    · -- E not σ-semistable: phiMinus < phiPlus = ψ+ε₀, so there are multiple factors.
+      -- Split at a gap below ψ+ε₀ to isolate the top-phase factors.
+      sorry
   have hψε_lt_b : ψ + ε₀ < b :=
     lt_trans hgt (σ.slicing.phiPlus_lt_of_intervalProp C hE hI)
   -- Extract HN filtration from intervalProp
@@ -180,9 +191,19 @@ theorem phiMinus_gt_of_wSemistable
   -- Proof by contradiction: assume phiMinus ≤ ψ - ε₀
   by_contra hlt; push_neg at hlt
   rcases eq_or_lt_of_le hlt with heq | hlt
-  · -- Boundary case: phiMinus(E) = ψ - ε₀. The bottom σ-factor B ∈ P(ψ - ε₀) has
-    -- W-phase < (ψ - ε₀) + ε₀ = ψ (strict perturbation), contradicting W-semistability.
-    sorry
+  · -- Boundary case: phiMinus(E) = ψ - ε₀.
+    have hψε_gt_a : a < ψ - ε₀ := lt_of_lt_of_le
+      (σ.slicing.phiMinus_gt_of_intervalProp C hE hI)
+      (heq ▸ le_refl _)
+    have hψε_lt_b : ψ - ε₀ < b := lt_of_le_of_lt
+      (heq ▸ σ.slicing.phiMinus_le_phiPlus C E hE)
+      (σ.slicing.phiPlus_lt_of_intervalProp C hE hI)
+    by_cases hsem : σ.slicing.P (ψ - ε₀) E
+    · -- E ∈ P(ψ-ε₀): perturbation gives wPhaseOf(W(E)) < (ψ-ε₀)+ε₀ = ψ
+      have ⟨_, hhi⟩ := hperturb E (ψ - ε₀) hsem hE hψε_gt_a hψε_lt_b
+      linarith
+    · -- E not σ-semistable: phiMinus = ψ-ε₀ < phiPlus, multiple factors.
+      sorry
   have hψε_gt_a : a < ψ - ε₀ :=
     lt_trans (σ.slicing.phiMinus_gt_of_intervalProp C hE hI) hlt
   -- Extract HN filtration from intervalProp
