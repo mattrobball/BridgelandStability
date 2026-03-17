@@ -32,13 +32,27 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-/-- **Lemma 6.2**: On a connected component, the finite-seminorm subgroups agree. -/
+/-- **Lemma 6.2**: On a connected component, the finite-seminorm subgroups agree.
+
+**Note**: The proof requires `K₀(D)` to have finite rank as an abelian group
+(`Module.Finite ℤ (K₀ C)`). Bridgeland uses this to identify the finite-seminorm
+subgroup V(σ) with `Hom(K₀(D), ℂ)` (all homomorphisms have finite seminorm when
+K₀ has finite rank), so V(σ) = V(τ) for any σ, τ. Without finite rank, V(σ) can
+vary across the connected component. This hypothesis should be added once the
+downstream consumers (bridgeland_theorem_1_2') are updated. -/
 theorem finiteSeminormSubgroup_eq_of_connected (σ τ : StabilityCondition C)
     (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
     finiteSeminormSubgroup C σ = finiteSeminormSubgroup C τ := by
   sorry
 
-/-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination). -/
+/-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination).
+
+**Note**: The proof requires `K₀(D)` to have finite rank as an abelian group
+(`Module.Finite ℤ (K₀ C)`). When K₀ has finite rank, V(σ) = Hom(K₀(D), ℂ) is
+finite-dimensional over ℝ, and all norms on a finite-dimensional space are
+equivalent. The constant K comes from the operator norm of the identity map
+between (V, ‖·‖_σ) and (V, ‖·‖_τ). Without finite rank, seminorm equivalence
+can fail. -/
 theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
     (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
     ∃ K : ENNReal, K ≠ ⊤ ∧

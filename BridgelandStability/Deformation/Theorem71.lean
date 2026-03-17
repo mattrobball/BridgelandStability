@@ -170,10 +170,54 @@ theorem P_in_deformedGtPred
       intro j
       calc t < G.φ ⟨G.n - 1, by omega⟩ := hlast
         _ ≤ G.φ j := G.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
-    -- Last factor's phase confinement (strict): phiPlus < ψ_last + ε
-    -- Lemma 3.4 on last triangle: s ≤ phiMinus(last factor)
-    -- Combined: s < ψ_last + ε, so ψ_last > s - ε ≥ t
-    sorry
+    -- Apply Lemma 3.4 to the last PostnikovTower triangle
+    set k : Fin G.n := ⟨G.n - 1, by omega⟩
+    set T := G.toPostnikovTower.triangle k
+    have hTdist := G.toPostnikovTower.triangle_dist k
+    -- Last factor nonzero (if zero, E would have fewer factors, contradicting G.n)
+    by_cases hfz : IsZero T.obj₃
+    · -- If last factor is zero, chain(n) ≅ chain(n-1) and we can use hGφ
+      -- Actually this case can't happen for the LAST factor of a nonzero E
+      -- with a proper HN filtration, but let's handle it via hGφ
+      linarith [(hGφ k).1]
+    -- Strict phase confinement on last factor
+    rcases G.semistable k with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
+    · exact absurd hZ hfz
+    · have hconf := phase_confinement_from_stabSeminorm C σ W hW hab' hε
+        (by linarith) hthin' hsin hSS'
+      -- hconf.2 : σ.phiPlus(factor) < ψ_last + ε
+      -- Need: s ≤ σ.phiMinus(factor) (from Lemma 3.4)
+      -- Then s < ψ_last + ε, so ψ_last > s - ε ≥ t
+      -- For now, use the intervalProp route: E ∈ P((ψ_last-ε, ψ_last+ε)) would give
+      -- s < ψ_last + ε. But intervalProp gives wider bounds.
+      -- Use hGφ: ψ_last > s - ε₀, combined with Lemma 3.4 to tighten.
+      -- Lemma 3.4 on T: phiMinus(T.obj₂) ≤ phiMinus(T.obj₃)
+      have e₂ := Classical.choice (G.toPostnikovTower.triangle_obj₂ k)
+      -- T.obj₂ ≅ E (up to the chain iso)
+      have hTobj2_ne : ¬IsZero T.obj₂ := fun h ↦ hE (IsZero.of_iso h e₂)
+      -- All factors in common interval
+      have hTobj3_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) T.obj₃ :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hfz
+          (by linarith [(hGφ k).1, hconf.1]) (by linarith [(hGφ k).2, hconf.2])
+      -- T.obj₁ in common interval (by walking the tower prefix)
+      have hTobj1_int : σ.slicing.intervalProp C (s - ε₀ - ε) (s + ε₀ + ε) T.obj₁ := by
+        have e₁ := Classical.choice (G.toPostnikovTower.triangle_obj₁ k)
+        have hint := intervalProp_of_postnikovTower σ.slicing
+          G.toPostnikovTower (fun j ↦ by
+            by_cases hj : IsZero (G.toPostnikovTower.factor j)
+            · exact Or.inl hj
+            · rcases G.semistable j with hZ | ⟨a'', b'', hab'', hthin'', _, _, hSS''⟩
+              · exact absurd hZ hj
+              · have hc := phase_confinement_from_stabSeminorm C σ W hW hab'' hε
+                  (by linarith) hthin'' hsin hSS''
+                exact σ.slicing.intervalProp_of_intrinsic_phases C hj
+                  (by linarith [(hGφ j).1, hc.1]) (by linarith [(hGφ j).2, hc.2]))
+        sorry -- transport from chain(n-1) to T.obj₁ via iso
+      -- Apply Lemma 3.4
+      have h34 := σ.slicing.phiMinus_triangle_le C hfz hTobj2_ne
+        (by linarith : s + ε₀ + ε ≤ s - ε₀ - ε + 1) hTobj1_int hTobj3_int hTdist
+      -- Transport: phiMinus(T.obj₂) = phiMinus(E) = s
+      sorry
   -- Step 3: of_postnikovTower closes it
   exact _root_.CategoryTheory.ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower
     (fun j ↦ ⟨G.φ j, hall j, G.semistable j⟩)
