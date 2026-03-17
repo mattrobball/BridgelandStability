@@ -315,8 +315,9 @@ theorem phiMinus_gt_of_wSemistable
     · -- E ∈ P(ψ-ε₀): perturbation gives wPhaseOf(W(E)) < (ψ-ε₀)+ε₀ = ψ
       have ⟨_, hhi⟩ := hperturb E (ψ - ε₀) hsem hE hψε_gt_a hψε_lt_b
       linarith
-    · -- E not σ-semistable: phiMinus = ψ-ε₀ < phiPlus, multiple factors.
-      sorry
+    · -- Dual of upper bound: gap-split isolates bottom factors at ψ-ε₀.
+      -- Y ∈ P(ψ-ε₀) via tStructureAux phase containment → perturbation → Im → contradiction.
+      sorry -- Requires same pattern as upper bound but on Y side; deferred to next commit
   have hψε_gt_a : a < ψ - ε₀ :=
     lt_trans (σ.slicing.phiMinus_gt_of_intervalProp C hE hI) hlt
   -- Extract HN filtration from intervalProp
