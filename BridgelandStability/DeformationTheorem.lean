@@ -3,7 +3,7 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Deformation
+import Mathlib.CategoryTheory.Triangulated.Deformation.Theorem71
 import Mathlib.Topology.Maps.Basic
 import Mathlib.Topology.Connected.Clopen
 
@@ -31,6 +31,20 @@ namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+
+/-- **Lemma 6.2**: On a connected component, the finite-seminorm subgroups agree. -/
+theorem finiteSeminormSubgroup_eq_of_connected (σ τ : StabilityCondition C)
+    (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
+    finiteSeminormSubgroup C σ = finiteSeminormSubgroup C τ := by
+  sorry
+
+/-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination). -/
+theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
+    (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
+    ∃ K : ENNReal, K ≠ ⊤ ∧
+      ∀ (f : K₀ C →+ ℂ), stabSeminorm C σ f ≠ ⊤ →
+        stabSeminorm C σ f ≤ K * stabSeminorm C τ f := by
+  sorry
 
 /-- Z(σ) has finite σ-seminorm: ‖Z(σ)‖_σ ≤ 1, hence Z(σ) ∈ V(σ). -/
 theorem Z_mem_finiteSeminormSubgroup (σ : StabilityCondition C) :
