@@ -71,6 +71,44 @@ theorem ObjectProperty.ExtensionClosure.hom_eq_zero {C : Type u} [Category.{v} C
     obtain ⟨g, rfl⟩ := Triangle.yoneda_exact₂ _ hT f (ihX hF _)
     simp [ihY hF g]
 
+/-- Extension closure is closed under isomorphisms. -/
+theorem ObjectProperty.ExtensionClosure.of_iso {C : Type u} [Category.{v} C] [HasZeroObject C]
+    [HasShift C ℤ] [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {P : ObjectProperty C} {X Y : C} (e : X ≅ Y)
+    (h : P.ExtensionClosure X) : P.ExtensionClosure Y := by
+  obtain ⟨Z, g, k, hT⟩ := distinguished_cocone_triangle e.hom
+  have hZ : IsZero Z := (Triangle.isZero₃_iff_isIso₁ _ hT).mpr
+    (show IsIso (Triangle.mk e.hom g k).mor₁ from e.isIso_hom)
+  exact .ext hT h (.zero hZ)
+
+/-- Walking a Postnikov tower: if every factor satisfies `Q`, the total object is in
+`Q.ExtensionClosure`. This is the bridge from HN-filtration data to extension-closure
+membership. -/
+theorem ObjectProperty.ExtensionClosure.of_postnikovTower {C : Type u} [Category.{v} C]
+    [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
+    [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Q : ObjectProperty C} {E : C} (P : Triangulated.PostnikovTower C E)
+    (hfactors : ∀ i, Q (P.factor i)) : Q.ExtensionClosure E := by
+  suffices h : ∀ k (hk : k ≤ P.n),
+      Q.ExtensionClosure (P.chain.obj' k (by omega)) by
+    exact .of_iso (Classical.choice P.top_iso) (h P.n le_rfl)
+  intro k
+  induction k with
+  | zero =>
+    intro _
+    rw [show P.chain.obj' 0 (by omega) = P.chain.left from rfl]
+    exact .zero P.base_isZero
+  | succ k ih =>
+    intro hk
+    have hchain_k := ih (by omega)
+    set T := P.triangle ⟨k, by omega⟩
+    have hT := P.triangle_dist ⟨k, by omega⟩
+    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by omega⟩)
+    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by omega⟩)
+    have h₁ : Q.ExtensionClosure T.obj₁ := .of_iso e₁.symm hchain_k
+    have h₃ : Q.ExtensionClosure T.obj₃ := .mem (hfactors ⟨k, by omega⟩)
+    exact .of_iso e₂ (.ext hT h₁ h₃)
+
 namespace Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
@@ -758,7 +796,13 @@ theorem exists_deformedGt_deformedLe_triangle_of_hn
       Triangle.mk f g h ∈ distTriang C ∧
       σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t X ∧
       σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t Y := by
-  sorry
+  obtain ⟨X, Y, GX, GY, f, g, h, hT, hGX, hGY, _⟩ :=
+    split_hn_filtration_at_cutoff (C := C) G t
+  exact ⟨X, Y, f, g, h, hT,
+    ObjectProperty.ExtensionClosure.of_postnikovTower GX.toPostnikovTower
+      (fun j ↦ ⟨GX.φ j, hGX j, GX.semistable j⟩),
+    ObjectProperty.ExtensionClosure.of_postnikovTower GY.toPostnikovTower
+      (fun j ↦ ⟨GY.φ j, hGY j, GY.semistable j⟩)⟩
 
 variable [IsTriangulated C] in
 /-- A `Q`-HN filtration split at cutoff `t` also gives the strip-style truncation triangle
@@ -775,7 +819,10 @@ theorem exists_deformedGt_deformedLt_triangle_of_hn
       Triangle.mk f g h ∈ distTriang C ∧
       σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t X ∧
       σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin (t + δ) Y := by
-  sorry
+  obtain ⟨X, Y, f, g, h, hT, hX, hY⟩ :=
+    exists_deformedGt_deformedLe_triangle_of_hn C σ W hW hε₀ hε₀2 hsin G t
+  exact ⟨X, Y, f, g, h, hT, hX,
+    ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, by linarith, hP⟩) _ hY⟩
 
 variable [IsTriangulated C] in
 /-- Faithful Node 7.8c wrapper: once an object in a thin interval admits a `Q`-HN filtration
@@ -801,7 +848,17 @@ theorem exists_deformedGt_deformedLe_triangle_of_enveloped_interval
       Triangle.mk f g h ∈ distTriang C ∧
       σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t X ∧
       σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t Y := by
-  sorry
+  let EI : σ.slicing.IntervalCat C a b := ⟨E, hE⟩
+  have hEIne : ¬IsZero EI := by
+    intro hZ
+    exact hEne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
+  obtain ⟨G, _hGφ⟩ :=
+    exists_deformedHN_of_enveloped_interval
+      (C := C) (σ := σ) (W := W) (hW := hW) hab
+      hFiniteLength hε₀ hε₀2 hε₀8 hthin hsin hW_interval hWindow
+      (X := EI) hEIne
+  exact exists_deformedGt_deformedLe_triangle_of_hn
+    (C := C) (σ := σ) (W := W) (hW := hW) hε₀ hε₀2 hsin G t
 
 
 end CategoryTheory.Triangulated
