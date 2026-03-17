@@ -178,45 +178,82 @@ theorem phiPlus_lt_of_wSemistable
       · exact lt_of_le_of_lt
           (hF₀_top ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val)))
           hφ_lt_b
-    -- Split E at cutoff t₀
-    obtain ⟨K, Y, fK, gY, δ, hT, hKgt, hYle, hKphiPlus⟩ :=
-      σ.slicing.exists_split_at_cutoff C F₀ hF₀_phases hn₀ (t := t₀)
-    -- K is nonzero (top factor at φ > t₀)
+    -- Split E at cutoff t₀ using tStructureAux directly (keeping phase containment)
+    let Fs := F₀.phaseShift (C := C) t₀
+    obtain ⟨K, Y, hKgt₀, hYle₀, fK, gY, δ, hT, hKdata⟩ :=
+      Slicing.tStructureAux C (σ.slicing.phaseShift C t₀) E Fs
+    have hKgt : σ.slicing.gtProp C t₀ K :=
+      (σ.slicing.phaseShift_gtProp_zero C t₀ K).mp hKgt₀
+    have hYle : σ.slicing.leProp C t₀ Y :=
+      (σ.slicing.phaseShift_leProp_zero C t₀ Y).mp hYle₀
     have hKne : ¬IsZero K := by
       intro hKZ
       linarith [σ.slicing.phiPlus_le_of_leProp C hE
         (σ.slicing.leProp_of_triangle C t₀ (Or.inl hKZ) hYle hT)]
-    -- K ∈ P((a, b))
-    have hm_gt_a : a < m := by
-      have hmem := Finset.max'_mem Slower hSlower_ne
-      obtain ⟨j_m, _, hj_m_eq⟩ := Finset.mem_image.mp (Finset.mem_filter.mp hmem).1
-      linarith [(hF₀_phases j_m).1]
-    have hKI : σ.slicing.intervalProp C a b K :=
-      σ.slicing.intervalProp_of_intrinsic_phases C hKne
-        (by linarith [σ.slicing.phiMinus_gt_of_gtProp C hKne hKgt]) (hKphiPlus hKne)
-    -- K has all σ-phases > t₀ > m, so by hgap all K phases = φ.
-    -- Hence K is σ-semistable of phase φ. Perturbation: wPhaseOf(W(K)) > φ - ε₀ ≥ ψ.
-    -- K ∈ P(φ) since all its HN phases = φ
-    have hK_sem : σ.slicing.P φ K := by
-      -- K is assembled from F₀'s factors at phase φ via the split.
-      -- K ∈ P(φ) follows from: phiPlus(K) ≤ φ (triangle bound) and
-      -- phiMinus(K) ≥ φ (Jordan-Hölder: K's σ-HN factors are among E's, and
-      -- E's factors above the gap are all at phase φ).
-      sorry
-    have ⟨hlo, _⟩ := hperturb K φ hK_sem hKne (by linarith) hφ_lt_b
-    -- Y ∈ P((a, b))
-    have hYI : σ.slicing.intervalProp C a b Y := by
-      by_cases hYZ : IsZero Y
-      · exact Or.inl hYZ
-      · exact σ.slicing.intervalProp_of_intrinsic_phases C hYZ
-          (lt_of_lt_of_le (σ.slicing.phiMinus_gt_of_intervalProp C hE hI)
-            (σ.slicing.phiMinus_triangle_le' C hYZ hE (by linarith) hKI
-              (lt_of_le_of_lt (σ.slicing.phiPlus_le_of_leProp C hYZ hYle)
-                (by linarith)) hT))
-          (lt_of_le_of_lt (σ.slicing.phiPlus_le_of_leProp C hYZ hYle)
-            (by linarith))
-    -- W-semistability: wPhaseOf(W(K)) ≤ ψ. But wPhaseOf > φ-ε₀ ≥ ψ. Contradiction.
-    linarith [hsemistable hT hKI hYI hKne]
+    rcases hKdata with hKZ | ⟨GX, hGXn, _, _, hGX_contain⟩
+    · exact absurd hKZ hKne
+    · -- GX phases (shifted back) are among F₀'s phases > t₀, which are all = φ by hgap.
+      let GXorig : HNFiltration C σ.slicing.P K :=
+        { n := GX.n, chain := GX.chain, triangle := GX.triangle
+          triangle_dist := GX.triangle_dist, triangle_obj₁ := GX.triangle_obj₁
+          triangle_obj₂ := GX.triangle_obj₂, base_isZero := GX.base_isZero
+          top_iso := GX.top_iso, zero_isZero := GX.zero_isZero
+          φ := fun j ↦ GX.φ j + t₀
+          hφ := by intro i j hij; linarith [GX.hφ hij]
+          semistable := fun j ↦ GX.semistable j }
+      have hGXorig_phases_eq : ∀ j : Fin GXorig.n, GXorig.φ j = φ := by
+        intro j
+        obtain ⟨i_s, hi_eq⟩ := hGX_contain j
+        have hGXj_eq : GXorig.φ j = F₀.φ ⟨i_s.val, i_s.isLt⟩ := by
+          show GX.φ j + t₀ = F₀.φ ⟨i_s.val, i_s.isLt⟩
+          have : Fs.φ i_s = F₀.φ ⟨i_s.val, i_s.isLt⟩ - t₀ := rfl
+          linarith [hi_eq]
+        rw [hGXj_eq]
+        rcases hgap ⟨i_s.val, i_s.isLt⟩ with hle_m | heq_phase
+        · -- F₀.φ i ≤ m, but GXorig.φ j > t₀ > m, contradiction
+          have hj_gt_t₀ : GXorig.φ j > t₀ := by
+            show GX.φ j + t₀ > t₀
+            have hanti : GX.φ ⟨GX.n - 1, by omega⟩ ≤ GX.φ j :=
+              GX.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt))
+            simp only [HNFiltration.phiMinus] at *; linarith
+          linarith
+        · exact heq_phase
+      -- K ∈ P(φ): phiPlus ≤ φ and phiMinus ≥ φ from GXorig having all phases = φ
+      have hK_sem : σ.slicing.P φ K := by
+        have hphiPlus_le : σ.slicing.phiPlus C K hKne ≤ φ := by
+          have := σ.slicing.phiPlus_le_phiPlus_of_hn C hKne GXorig hGXn
+          simp only [HNFiltration.phiPlus, hGXorig_phases_eq] at this; exact this
+        have hphiMinus_ge : φ ≤ σ.slicing.phiMinus C K hKne := by
+          have := σ.slicing.phiMinus_ge_phiMinus_of_hn C hKne GXorig hGXn
+          simp only [HNFiltration.phiMinus, hGXorig_phases_eq] at this; exact this
+        have heq := le_antisymm (le_trans hphiPlus_le hphiMinus_ge)
+          (σ.slicing.phiMinus_le_phiPlus C K hKne)
+        have hpe : σ.slicing.phiPlus C K hKne = φ :=
+          le_antisymm hphiPlus_le (le_trans hphiMinus_ge (heq ▸ le_refl _))
+        have hsem := σ.slicing.semistable_of_phiPlus_eq_phiMinus C hKne heq
+        rwa [hpe] at hsem
+      have hm_gt_a : a < m := by
+        obtain ⟨j_m, _, hj_m_eq⟩ := Finset.mem_image.mp
+          (Finset.mem_filter.mp (Finset.max'_mem Slower hSlower_ne)).1
+        linarith [(hF₀_phases j_m).1]
+      have hKI : σ.slicing.intervalProp C a b K :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hKne
+          (by linarith [σ.slicing.phiMinus_gt_of_gtProp C hKne hKgt])
+          (by linarith [(σ.slicing.phiPlus_eq_phiMinus_of_semistable C hK_sem hKne).1])
+      have ⟨hlo, _⟩ := hperturb K φ hK_sem hKne (by linarith) hφ_lt_b
+      -- Y ∈ P((a, b))
+      have hYI : σ.slicing.intervalProp C a b Y := by
+        by_cases hYZ : IsZero Y
+        · exact Or.inl hYZ
+        · exact σ.slicing.intervalProp_of_intrinsic_phases C hYZ
+            (lt_of_lt_of_le (σ.slicing.phiMinus_gt_of_intervalProp C hE hI)
+              (σ.slicing.phiMinus_triangle_le' C hYZ hE (by linarith) hKI
+                (lt_of_le_of_lt (σ.slicing.phiPlus_le_of_leProp C hYZ hYle)
+                  (by linarith)) hT))
+            (lt_of_le_of_lt (σ.slicing.phiPlus_le_of_leProp C hYZ hYle)
+              (by linarith))
+      -- W-semistability: wPhaseOf(W(K)) ≤ ψ. But wPhaseOf > φ-ε₀ ≥ ψ. Contradiction.
+      linarith [hsemistable hT hKI hYI hKne]
 
 variable [IsTriangulated C] in
 /-- **Bridgeland's Lemma 7.3 (lower bound).** If `E` is W-semistable of W-phase `ψ` in

@@ -2428,7 +2428,8 @@ theorem Slicing.tStructureAux (s : Slicing C)
         (IsZero Y ∨ ∃ (GY : HNFiltration C s.P Y) (hGY : 0 < GY.n),
           GY.phiPlus C hGY ≤ 0 ∧
           (∀ (_ : 0 < F.n) (j : Fin GY.n),
-            F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j)) by
+            F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) ∧
+          (∀ j : Fin GY.n, ∃ i : Fin F.n, GY.φ j = F.φ i)) by
     obtain ⟨X, Y, hX, f, g, h, hT, hXdata, hY⟩ := hmain F.n A F le_rfl
     exact ⟨X, Y, hX,
       hY.elim Or.inl (fun ⟨GY, hGY, hle, _⟩ ↦ Or.inr ⟨GY, hGY, hle⟩),
@@ -2460,7 +2461,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
           contractible_distinguished₁ A,
           Or.inl (isZero_zero C),
           Or.inr ⟨F, hn0, hall_neg ⟨0, hn0⟩, fun _ j ↦
-            F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))⟩⟩
+            F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)), fun j ↦ ⟨j, rfl⟩⟩⟩
       · -- Mixed case: some phases > 0 and some ≤ 0
         push_neg at hall_neg
         -- F.n ≥ 2: can't be mixed with only one factor
@@ -2500,7 +2501,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
         have hφlast : F.φ ⟨F.n - 1, by omega⟩ ≤ 0 :=
           le_trans (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))) hj₀
         -- Case split on whether the prefix decomposition gave Y' = 0
-        rcases hY' with hY'Z | ⟨GY', hGY', hGY'_le, hGY'_bound⟩
+        rcases hY' with hY'Z | ⟨GY', hGY', hGY'_le, hGY'_bound, hGY'_contain⟩
         · -- Y' is zero (prefix was all-positive): f' is iso
           have hf'Iso : IsIso f' :=
             (Triangle.isZero₃_iff_isIso₁ _ hT').mp hY'Z
@@ -2514,7 +2515,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
                 obtain ⟨i, hi⟩ := hcontain j
                 have hi_lt := i.isLt; change i.val < F.n - 1 at hi_lt
                 exact ⟨⟨i.val, by omega⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
-            Or.inr ⟨?_, ?_, ?_, ?_⟩⟩
+            Or.inr ⟨?_, ?_, ?_, ?_, ?_⟩⟩
           · -- Distinguished triangle via transport
             apply isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by omega⟩)
             exact Triangle.isoMk _ T (eX.trans e₁.symm) e₂A.symm (Iso.refl _)
@@ -2530,6 +2531,8 @@ theorem Slicing.tStructureAux (s : Slicing C)
             exact hφlast
           · -- Phase bound: F.φ(n-1) ≤ single.φ j = F.φ(n-1)
             intro _ _; exact le_rfl
+          · -- Phase containment: single.φ j = F.φ(n-1)
+            intro j; exact ⟨⟨F.n - 1, by omega⟩, by simp [HNFiltration.single]⟩
         · -- Y' has filtration with phase bound: use octahedral + appendFactor
           -- Extract the phase bound from the IH
           have hGn : 0 < G.n := by change 0 < F.n - 1; omega
@@ -2558,7 +2561,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
                 obtain ⟨i, hi⟩ := hcontain j
                 have hi_lt := i.isLt; change i.val < F.n - 1 at hi_lt
                 exact ⟨⟨i.val, by omega⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
-            Or.inr ⟨GZ, by omega, ?_, fun _ j ↦ ?_⟩⟩
+            Or.inr ⟨GZ, by omega, ?_, fun _ j ↦ ?_, fun j ↦ ?_⟩⟩
           · -- GZ.phiPlus ≤ 0: first phase comes from GY'
             change GZ.φ ⟨0, by omega⟩ ≤ 0
             simp only [GZ, HNFiltration.appendFactor, dif_pos hGY']
@@ -2569,6 +2572,17 @@ theorem Slicing.tStructureAux (s : Slicing C)
             split_ifs with hj
             · exact le_of_lt (hφlast_lt ⟨j.val, hj⟩)
             · exact le_rfl
+          · -- Phase containment: GZ.φ j comes from GY' or appended factor
+            change ∃ i : Fin F.n, GZ.φ j = F.φ i
+            simp only [GZ, HNFiltration.appendFactor]
+            split_ifs with hj
+            · -- j < GY'.n: GZ.φ j = GY'.φ ⟨j, hj⟩
+              obtain ⟨i_G, hi_G⟩ := hGY'_contain ⟨j.val, hj⟩
+              have hi_lt := i_G.isLt; change i_G.val < F.n - 1 at hi_lt
+              exact ⟨⟨i_G.val, by omega⟩,
+                by simp [G, HNFiltration.prefix] at hi_G; exact hi_G⟩
+            · -- j = GY'.n: GZ.φ j = F.φ(n-1)
+              exact ⟨⟨F.n - 1, by omega⟩, rfl⟩
 
 /-- Auxiliary: given an HN filtration, produce the dual half-open t-structure
 decomposition triangle for the convention `geProp 0` / `ltProp 0`. -/
