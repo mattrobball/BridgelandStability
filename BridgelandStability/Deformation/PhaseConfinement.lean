@@ -34,7 +34,7 @@ factor has W-phase within `ε₀` of its σ-phase, then `σ.phiPlus(E) ≤ ψ + 
 The proof splits `E` at the cutoff `ψ + ε₀` via the t-structure. The resulting subobject
 `K` (with σ-phases above `ψ + ε₀`) has W-phase `> ψ` by the Im/sin argument, contradicting
 W-semistability. -/
-theorem phiPlus_le_of_wSemistable
+theorem phiPlus_lt_of_wSemistable
     (σ : StabilityCondition C) {E : C} {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
     {ψ : ℝ} (hSS : ssf.Semistable C E ψ)
@@ -43,7 +43,7 @@ theorem phiPlus_le_of_wSemistable
         a < φ → φ < b →
         φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀) :
-    σ.slicing.phiPlus C E hSS.2.1 ≤ ψ + ε₀ := by
+    σ.slicing.phiPlus C E hSS.2.1 < ψ + ε₀ := by
   obtain ⟨hI, hE, _, hψ, hsemistable⟩ := hSS
   -- W nonvanishing and reformulated perturbation bounds
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
@@ -72,6 +72,10 @@ theorem phiPlus_le_of_wSemistable
       (le_of_lt (by linarith [ssf.hα_mem.2])) hI hW_ne hperturb_lt
   -- Proof by contradiction
   by_contra hgt; push_neg at hgt
+  rcases eq_or_lt_of_le hgt with heq | hgt
+  · -- Boundary case: phiPlus(E) = ψ + ε₀. The top σ-factor A ∈ P(ψ + ε₀) has
+    -- W-phase > (ψ + ε₀) - ε₀ = ψ (strict perturbation), contradicting W-semistability.
+    sorry
   have hψε_lt_b : ψ + ε₀ < b :=
     lt_trans hgt (σ.slicing.phiPlus_lt_of_intervalProp C hE hI)
   -- Extract HN filtration from intervalProp
@@ -137,7 +141,7 @@ The proof splits `E` at the cutoff `ψ - ε₀`. The resulting quotient `Y` (wit
 factor. Combined with `Im(W(E) · exp(-iπψ)) = 0` (from `wPhaseOf(W(E)) = ψ`), this
 shows `Im(W(K) · exp(-iπψ)) > 0`, giving `wPhaseOf(W(K)) > ψ` and contradicting
 W-semistability. -/
-theorem phiMinus_ge_of_wSemistable
+theorem phiMinus_gt_of_wSemistable
     (σ : StabilityCondition C) {E : C} {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
     {ψ : ℝ} (hSS : ssf.Semistable C E ψ)
@@ -146,7 +150,7 @@ theorem phiMinus_ge_of_wSemistable
         a < φ → φ < b →
         φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀) :
-    ψ - ε₀ ≤ σ.slicing.phiMinus C E hSS.2.1 := by
+    ψ - ε₀ < σ.slicing.phiMinus C E hSS.2.1 := by
   obtain ⟨hI, hE, _, hψ, hsemistable⟩ := hSS
   -- W nonvanishing and reformulated perturbation bounds
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
@@ -173,8 +177,12 @@ theorem phiMinus_ge_of_wSemistable
   have hψ_hi : ψ < b + ε₀ := by
     rw [← hψ]; exact wPhaseOf_lt_of_intervalProp C σ hE ssf.W
       (le_of_lt (by linarith [ssf.hα_mem.2])) hI hW_ne hperturb_lt
-  -- Proof by contradiction
+  -- Proof by contradiction: assume phiMinus ≤ ψ - ε₀
   by_contra hlt; push_neg at hlt
+  rcases eq_or_lt_of_le hlt with heq | hlt
+  · -- Boundary case: phiMinus(E) = ψ - ε₀. The bottom σ-factor B ∈ P(ψ - ε₀) has
+    -- W-phase < (ψ - ε₀) + ε₀ = ψ (strict perturbation), contradicting W-semistability.
+    sorry
   have hψε_gt_a : a < ψ - ε₀ :=
     lt_trans (σ.slicing.phiMinus_gt_of_intervalProp C hE hI) hlt
   -- Extract HN filtration from intervalProp
@@ -310,10 +318,10 @@ theorem phase_confinement_of_wSemistable
         a < φ → φ < b →
         φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀) :
-    ψ - ε₀ ≤ σ.slicing.phiMinus C E hSS.2.1 ∧
-    σ.slicing.phiPlus C E hSS.2.1 ≤ ψ + ε₀ :=
-  ⟨phiMinus_ge_of_wSemistable C σ hSS hε₀ hthin hperturb,
-   phiPlus_le_of_wSemistable C σ hSS hε₀ hthin hperturb⟩
+    ψ - ε₀ < σ.slicing.phiMinus C E hSS.2.1 ∧
+    σ.slicing.phiPlus C E hSS.2.1 < ψ + ε₀ :=
+  ⟨phiMinus_gt_of_wSemistable C σ hSS hε₀ hthin hperturb,
+   phiPlus_lt_of_wSemistable C σ hSS hε₀ hthin hperturb⟩
 
 variable [IsTriangulated C] in
 /-- **Weak hom-vanishing for W-semistable objects.** If `E` is W-semistable of W-phase `ψ₁`
@@ -578,8 +586,8 @@ theorem phase_confinement_from_stabSeminorm
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {ψ : ℝ}
     (hSS : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ) :
-    ψ - ε₀ ≤ σ.slicing.phiMinus C E hSS.2.1 ∧
-    σ.slicing.phiPlus C E hSS.2.1 ≤ ψ + ε₀ := by
+    ψ - ε₀ < σ.slicing.phiMinus C E hSS.2.1 ∧
+    σ.slicing.phiPlus C E hSS.2.1 < ψ + ε₀ := by
   have hthin1 : b - a < 1 := by linarith
   exact phase_confinement_of_wSemistable C σ hSS hε₀ hthin
     (hperturb_of_stabSeminorm C σ W hW hthin1 hε₀ hε₀2 hsin)
