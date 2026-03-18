@@ -429,9 +429,10 @@ theorem P_in_deformedLtPred
               σ.slicing.phiPlus C (Tk.obj₁⟦(1 : ℤ)⟧) hshift_ne := by
             haveI : IsIso Tk.mor₃ :=
               (Triangle.isZero₂_iff_isIso₃ Tk (P.triangle_dist ⟨k, hkn⟩)).mp hTk_obj2_z
+            let eTk₃ : Tk.obj₃ ≅ Tk.obj₁⟦(1 : ℤ)⟧ := asIso Tk.mor₃
             obtain ⟨F', hnF', hneF'⟩ := HNFiltration.exists_nonzero_first C σ.slicing hfact_ne
             rw [σ.slicing.phiPlus_eq C _ hfact_ne F' hnF' hneF',
-                σ.slicing.phiPlus_eq C _ hshift_ne (F'.ofIso C (asIso Tk.mor₃)) hnF' hneF']
+                σ.slicing.phiPlus_eq C _ hshift_ne (F'.ofIso C eTk₃) hnF' hneF']
             simp [HNFiltration.ofIso]
           -- φ⁺(chain(k)) = φ⁺(Tk.obj₁) via iso invariance
           have hchain_phiPlus : σ.slicing.phiPlus C _ hne =
@@ -482,8 +483,10 @@ theorem P_in_deformedLtPred
         -- ej₁₂.symm : chain(j₁+1) ≅ Tj₁.obj₂, asIso mor₂ : Tj₁.obj₂ ≅ Tj₁.obj₃
         haveI : IsIso Tj₁.mor₂ :=
           (Triangle.isZero₁_iff_isIso₂ Tj₁ (P.triangle_dist j₁)).mp hTj₁_obj1_z
+        let ej₁23 : Tj₁.obj₂ ≅ Tj₁.obj₃ := asIso Tj₁.mor₂
+        change σ.slicing.phiPlus C (P.factor j₁) hj₁ne ≤ s
         rw [σ.slicing.phiPlus_eq C _ hj₁ne
-          ((F.ofIso C (ej₁₂.symm.trans (asIso Tj₁.mor₂)))) (by change 0 < F.n; exact hnF)
+          ((F.ofIso C (ej₁₂.symm.trans ej₁23))) (by change 0 < F.n; exact hnF)
           (by change ¬IsZero _; exact hneF)]
         rw [σ.slicing.phiPlus_eq C _ hchain_j₁1_ne F hnF hneF] at hphiPlus_le
         simp only [HNFiltration.ofIso, HNFiltration.phiPlus] at hphiPlus_le ⊢

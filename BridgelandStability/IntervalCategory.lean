@@ -2098,17 +2098,17 @@ theorem Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart (s : Slicing C)
     exact IsColimit.ofIsoColimit htrans <|
       Cofork.ext (Iso.refl _) (by
         have hπ :
-            Cofork.π ((Cocones.precompose eDiag.hom).obj c) =
+            Cofork.π ((Cocone.precompose eDiag.hom).obj c) =
               eDiag.hom.app WalkingParallelPair.one ≫ c.π := by
           change eDiag.hom.app WalkingParallelPair.one ≫ c.π =
             eDiag.hom.app WalkingParallelPair.one ≫ c.π
           rfl
         have h₁ :
-            Cofork.π ((Cocones.precompose eDiag.hom).obj c) ≫
-                (Iso.refl ((Cocones.precompose eDiag.hom).obj c).pt).hom =
+            Cofork.π ((Cocone.precompose eDiag.hom).obj c) ≫
+                (Iso.refl ((Cocone.precompose eDiag.hom).obj c).pt).hom =
               eDiag.hom.app WalkingParallelPair.one ≫ c.π := by
           simpa [Category.assoc] using congrArg
-            (fun k => k ≫ (Iso.refl ((Cocones.precompose eDiag.hom).obj c).pt).hom) hπ
+            (fun k => k ≫ (Iso.refl ((Cocone.precompose eDiag.hom).obj c).pt).hom) hπ
         have h₂ : eDiag.hom.app WalkingParallelPair.one ≫ c.π = FL.map g := by
           simp [c, eDiag]
         exact h₁.trans h₂)
