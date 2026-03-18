@@ -111,7 +111,16 @@ theorem interior_has_enveloped_HN_ssf
         wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α →
         ∀ f : E₁ ⟶ F₁, f = 0 := by
-    sorry -- Bridgeland Lemma 7.6: class H enveloping + hom_eq_zero_of_deformedPred
+    -- Bridgeland Lemma 7.6 + 7.7 (p.22–23): Hom vanishing between ssf-Semistable objects.
+    -- Large gap (ψ₁ > ψ₂ + 2ε): handled by hom_eq_zero_of_wSemistable_gap.
+    -- Small gap (0 < ψ₁ - ψ₂ ≤ 2ε): convert ssf.Semistable → deformedPred with witness
+    --   interval (a, b), then apply hom_eq_zero_of_deformedPred. The conversion requires
+    --   a + ε ≤ ψ ≤ b - ε (enveloping condition). This follows from the φ⁺ reduction
+    --   (paper p.23: "I can always assume φ⁺(E) < ψ(E) + ε") combined with class H bounds
+    --   (ψ < b - 3ε from X ∈ P((a, b-4ε))). Closing this sorry requires: (1) implementing
+    --   the φ⁺ reduction in the MDQ step, (2) restricting hHom to phases in (a+ε, b-ε)
+    --   via a modified exists_strictMDQ_of_finiteLength, and (3) adding hε8 : ε < 1/8.
+    sorry
   -- Part A: Apply recursion with quotient lower bound t = a + ε
   obtain ⟨G, hGφ⟩ :=
     SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowerBound
