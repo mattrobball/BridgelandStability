@@ -2415,7 +2415,10 @@ theorem Slicing.tStructureAux (s : Slicing C)
       (IsZero X ∨ ∃ (GX : HNFiltration C s.P X) (hGX : 0 < GX.n),
         0 < GX.phiMinus C hGX ∧
         (∀ hn0 : 0 < F.n, GX.phiPlus C hGX ≤ F.φ ⟨0, hn0⟩) ∧
-        (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i)) := by
+        (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i)) ∧
+      (IsZero Y ∨ ∃ (GY : HNFiltration C s.P Y) (hGY : 0 < GY.n),
+        GY.phiPlus C hGY ≤ 0 ∧
+        (∀ j : Fin GY.n, ∃ i : Fin F.n, GY.φ j = F.φ i)) := by
   -- Strengthened IH: also return phase bound data for both X and Y sides.
   suffices hmain : ∀ (m : ℕ) (A : C) (F : HNFiltration C s.P A), F.n ≤ m →
       ∃ (X Y : C) (_ : s.gtProp C 0 X)
@@ -2432,8 +2435,10 @@ theorem Slicing.tStructureAux (s : Slicing C)
           (∀ j : Fin GY.n, ∃ i : Fin F.n, GY.φ j = F.φ i)) by
     obtain ⟨X, Y, hX, f, g, h, hT, hXdata, hY⟩ := hmain F.n A F le_rfl
     exact ⟨X, Y, hX,
-      hY.elim Or.inl (fun ⟨GY, hGY, hle, _⟩ ↦ Or.inr ⟨GY, hGY, hle⟩),
-      f, g, h, hT, hXdata⟩
+      hY.elim Or.inl (fun ⟨GY, hGY, hle, _, _⟩ ↦ Or.inr ⟨GY, hGY, hle⟩),
+      f, g, h, hT, hXdata,
+      hY.elim Or.inl (fun ⟨GY, hGY, hle, _, hcontain⟩ ↦
+        Or.inr ⟨GY, hGY, hle, hcontain⟩)⟩
   intro m
   induction m with
   | zero =>
