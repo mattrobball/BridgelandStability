@@ -33,6 +33,33 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C] [Module.Finite ℤ (K₀ C)]
 
+/-- **Local connectedness of `Stab(D)`**: every basis neighbourhood is contained in
+the topological connected component of its centre.
+
+This is the path-connectedness content of Bridgeland's Theorem 1.2 proof (§7).
+For `τ ∈ basisNhd(σ, ε)`, the linear interpolation `W_t = Z(σ) + t·(Z(τ) − Z(σ))`
+and `γ(t) = bridgeland_7_1(σ, W_t, ε₀)` define a path from `σ` to `τ`.
+Path-continuity at `t₀` follows from applying Theorem 7.1 centred at `γ(t₀)` with
+a small `ε′`, then **Lemma 6.4** (uniqueness for same `Z` and `d < 1`) identifies
+the result with `γ(t)`. The image of `[0, 1]` is therefore preconnected. -/
+theorem basisNhd_subset_connectedComponent (σ : StabilityCondition C)
+    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
+    basisNhd C σ ε ⊆ {τ | ConnectedComponents.mk τ = ConnectedComponents.mk σ} := by
+  -- Roadmap (Bridgeland §7, path-connectedness):
+  -- For τ ∈ basisNhd(σ, ε), define the linear interpolation
+  --   W_t := Z(σ) + t · (Z(τ) − Z(σ)),  t ∈ [0,1]
+  -- and γ(t) := bridgeland_7_1(σ, W_t, ε₀). Then γ(0) = σ and γ(1) = τ.
+  --
+  -- Continuity at t₀: apply Theorem 7.1 centred at γ(t₀) with small ε',
+  -- then Lemma 6.4 (eq_of_same_Z_near) identifies the result with γ(t).
+  --
+  -- Requires:
+  -- 1. ‖W_t - Z(σ)‖_σ = t · ‖Z(τ) - Z(σ)‖_σ < sin(πε₀) for all t ∈ [0,1]
+  -- 2. Continuity of t ↦ ‖W_t - Z(γ(t₀))‖_{γ(t₀)} near t₀
+  -- 3. Lemma 6.2 (stabSeminorm_dominated_of_connected) for norm comparison
+  -- The image of [0,1] under γ is connected, so τ and σ share a component.
+  sorry
+
 /-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination).
 
 **Note**: The proof requires `K₀(D)` to have finite rank as an abelian group
