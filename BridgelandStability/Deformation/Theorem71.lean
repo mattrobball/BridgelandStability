@@ -148,7 +148,106 @@ theorem interior_has_enveloped_HN_ssf
   --   E ∈ P((a+2ε, b-4ε)): phiPlus(E) < b - 4ε
   --   combining: ψ(F₁) - ε < phiMinus(F₁) ≤ phiPlus(E) < b - 4ε → ψ(F₁) < b - 3ε
   have hψ₁_bound : G.φ ⟨0, hGn⟩ < b - 3 * ε := by
-    sorry -- nonzero map F₁ → E from PostnikovTower + intervalHom_eq_zero contrapositive
+    -- Strategy: phiPlus chain monotonicity. Show phiPlus(chain(1)) ≤ phiPlus(E) < b-4ε,
+    -- then chain(1) ≅ F₁ gives phiPlus(F₁) < b-4ε, combined with phase confinement
+    -- ψ₁ - ε < phiMinus(F₁) ≤ phiPlus(F₁) yields ψ₁ < b - 3ε.
+    have hfactors_ab : ∀ i, σ.slicing.intervalProp C a b (P.factor i) :=
+      fun i ↦ (G.semistable i).1
+    have hPn : P.n = G.n := rfl
+    have hchain_int : ∀ k (hk : k ≤ P.n),
+        σ.slicing.intervalProp C a b (P.chain.obj' k (by omega)) :=
+      fun k hk ↦ intervalProp_chain_of_postnikovTower σ.slicing (C := C) P hfactors_ab k hk
+    have hab1 : b ≤ a + 1 := by linarith [Fact.out (p := b - a ≤ 1)]
+    -- chain(1) is nonzero: chain(0) = 0, first triangle ⟹ chain(1) ≅ F₁ ≠ 0
+    have hchain1_ne : ¬IsZero (P.chain.obj' 1 (by omega)) := by
+      intro hZ
+      let T0 := P.triangle ⟨0, hGn⟩
+      have hobj₂_z : IsZero T0.obj₂ :=
+        (Iso.isZero_iff (Classical.choice (P.triangle_obj₂ ⟨0, hGn⟩))).mpr hZ
+      haveI : IsIso T0.mor₂ :=
+        (Triangle.isZero₁_iff_isIso₂ T0 (P.triangle_dist ⟨0, hGn⟩)).mp
+          ((Iso.isZero_iff (Classical.choice (P.triangle_obj₁ ⟨0, hGn⟩))).mpr P.base_isZero)
+      exact hF₁_ne ((Iso.isZero_iff (asIso T0.mor₂)).mp hobj₂_z)
+    -- Backward induction: phiPlus(chain(k)) ≤ phiPlus(E) for 1 ≤ k ≤ P.n
+    suffices hmain : ∀ d k (hle : k ≤ P.n), k + d = P.n → 0 < k →
+        (hne : ¬IsZero (P.chain.obj' k (by omega))) →
+        σ.slicing.phiPlus C (P.chain.obj' k (by omega)) hne ≤
+          σ.slicing.phiPlus C E hE by
+      have h1_le := hmain (P.n - 1) 1 (by omega) (by omega) (by omega) hchain1_ne
+      -- Transport: phiPlus(F₁) = phiPlus(chain(1))
+      obtain ⟨Fch, hnch, hnech⟩ := HNFiltration.exists_nonzero_first C σ.slicing hchain1_ne
+      have hIsIso0 : IsIso (P.triangle ⟨0, hGn⟩).mor₂ :=
+        (Triangle.isZero₁_iff_isIso₂ _ (P.triangle_dist ⟨0, hGn⟩)).mp
+          ((Iso.isZero_iff (Classical.choice (P.triangle_obj₁ ⟨0, hGn⟩))).mpr P.base_isZero)
+      have h_F₁_eq : σ.slicing.phiPlus C (P.factor ⟨0, hGn⟩) hF₁_ne = Fch.φ ⟨0, hnch⟩ :=
+        σ.slicing.phiPlus_eq C _ hF₁_ne
+          (Fch.ofIso C ((Classical.choice (P.triangle_obj₂ ⟨0, hGn⟩)).symm.trans
+            (@asIso _ _ _ _ (P.triangle ⟨0, hGn⟩).mor₂ hIsIso0))) hnch hnech
+      have h_ch1_eq := σ.slicing.phiPlus_eq C _ hchain1_ne Fch hnch hnech
+      linarith [hψ₁_conf.1, σ.slicing.phiMinus_le_phiPlus C (P.factor ⟨0, hGn⟩) hF₁_ne]
+    intro d; induction d with
+    | zero =>
+      intro k hle hk _ hne
+      have hkG : k = P.n := by omega
+      subst hkG
+      exact le_of_eq (by
+        obtain ⟨F, hn, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hne
+        rw [σ.slicing.phiPlus_eq C _ hne F hn hneF,
+            σ.slicing.phiPlus_eq C _ hE (F.ofIso C (Classical.choice P.top_iso)) hn hneF]
+        simp [HNFiltration.ofIso])
+    | succ d ih =>
+      intro k hle hk hkpos hne
+      have hkn : k < P.n := by omega
+      let Tk := P.triangle ⟨k, hkn⟩
+      let ek₁ := Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)
+      let ek₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
+      have hTk_ne₁ : ¬IsZero Tk.obj₁ := fun hZ ↦ hne ((Iso.isZero_iff ek₁).mp hZ)
+      -- chain(k+1) must be nonzero (if zero: factor(k) ≅ chain(k)[1] has σ-phases
+      -- in (a+1, b+1), disjoint from (a, b), contradicting factor(k) ∈ P((a,b)))
+      by_cases hk1z : IsZero (P.chain.obj' (k + 1) (by omega))
+      · exfalso
+        have hTk_obj2_z : IsZero Tk.obj₂ := (Iso.isZero_iff ek₂).mpr hk1z
+        haveI : IsIso Tk.mor₃ :=
+          (Triangle.isZero₂_iff_isIso₃ Tk (P.triangle_dist ⟨k, hkn⟩)).mp hTk_obj2_z
+        have hfact_ne : ¬IsZero (P.factor ⟨k, hkn⟩) := by
+          intro hfz; exact hTk_ne₁
+            ((Triangle.isZero₁_iff _ (P.triangle_dist ⟨k, hkn⟩)).mpr
+              ⟨hTk_obj2_z.eq_of_tgt _ _, hfz.eq_of_src _ _⟩)
+        have hfact_shift : σ.slicing.intervalProp C (a + 1) (b + 1) (P.factor ⟨k, hkn⟩) := by
+          rcases hchain_int k (by omega) with hZ | ⟨F, hF⟩
+          · exact absurd hZ hne
+          · exact Or.inr
+              ⟨((F.ofIso C ek₁.symm).shiftHN C σ.slicing 1).ofIso C (asIso Tk.mor₃).symm,
+                fun i ↦ by
+                  simp only [HNFiltration.ofIso, HNFiltration.shiftHN, Int.cast_one]
+                  constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+        have hid := σ.slicing.intervalHom_eq_zero C hfact_shift (hfactors_ab ⟨k, hkn⟩) hab1
+          (𝟙 (P.factor ⟨k, hkn⟩))
+        apply hfact_ne
+        rw [IsZero.iff_id_eq_zero]
+        exact hid
+      · -- chain(k+1) nonzero: phiPlus_triangle_le + iso transport + IH
+        have hk1ne : ¬IsZero (P.chain.obj' (k + 1) (by omega)) := hk1z
+        have hTk_ne₂ : ¬IsZero Tk.obj₂ := fun hZ ↦ hk1ne ((Iso.isZero_iff ek₂).mp hZ)
+        have hTk_obj1_int : σ.slicing.intervalProp C a b Tk.obj₁ :=
+          (σ.slicing.intervalProp_closedUnderIso C _ _).of_iso ek₁.symm
+            (hchain_int k (by omega))
+        have hle_step := σ.slicing.phiPlus_triangle_le C hTk_ne₁ hTk_ne₂
+          hab1 hTk_obj1_int (hfactors_ab ⟨k, hkn⟩) (P.triangle_dist ⟨k, hkn⟩)
+        have hk1_le := ih (k + 1) (by omega) (by omega) (by omega) hk1ne
+        have h_eq₁ : σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ =
+            σ.slicing.phiPlus C _ hne := by
+          obtain ⟨F, hn, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hTk_ne₁
+          rw [σ.slicing.phiPlus_eq C _ hTk_ne₁ F hn hneF,
+              σ.slicing.phiPlus_eq C _ hne (F.ofIso C ek₁) hn hneF]
+          simp [HNFiltration.ofIso]
+        have h_eq₂ : σ.slicing.phiPlus C Tk.obj₂ hTk_ne₂ =
+            σ.slicing.phiPlus C _ hk1ne := by
+          obtain ⟨F, hn, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hTk_ne₂
+          rw [σ.slicing.phiPlus_eq C _ hTk_ne₂ F hn hneF,
+              σ.slicing.phiPlus_eq C _ hk1ne (F.ofIso C ek₂) hn hneF]
+          simp [HNFiltration.ofIso]
+        linarith
   -- Combine: all phases ≤ G.φ ⟨0, hGn⟩ < b - 3ε ≤ b - ε
   refine ⟨G, fun j ↦ ⟨le_of_lt (hGφ j).1, ?_⟩⟩
   calc G.φ j ≤ G.φ ⟨0, hGn⟩ := by
