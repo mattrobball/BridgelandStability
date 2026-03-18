@@ -471,6 +471,7 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
       L < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < U)
     (hWidth : U - L < 1)
+    {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (hE : ssf.Semistable C E.obj
@@ -479,6 +480,7 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
+        wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α < U_hom →
         ∀ f : E ⟶ F, f = 0)
     {X : σ.slicing.IntervalCat C a b} {A : Subobject X}
     (hA_ss :
@@ -489,6 +491,8 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
       wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α <
         wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α)
     (hA_top : A ≠ ⊤)
+    (hA_phase_upper :
+      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
     {B : σ.slicing.IntervalCat C a b} {q : cokernel A.arrow ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q) :
     IsStrictMDQ (C := C) σ ssf (cokernel.π A.arrow ≫ q) where
@@ -541,7 +545,7 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
             wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α := by
         rw [hEq]
         exact hB_lt_A
-      have hzero : A.arrow ≫ q' = 0 := hHom hA_ss hB'_ss hB'_lt_A (A.arrow ≫ q')
+      have hzero : A.arrow ≫ q' = 0 := hHom hA_ss hB'_ss hB'_lt_A hA_phase_upper (A.arrow ≫ q')
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
       have hq'' : IsStrictEpi q'' := by
         apply interval_strictEpi_of_strictEpi_comp
@@ -564,7 +568,7 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
           wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α <
             wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
         lt_trans hlt hB_lt_A
-      have hzero : A.arrow ≫ q' = 0 := hHom hA_ss hB'_ss hB'_lt_A (A.arrow ≫ q')
+      have hzero : A.arrow ≫ q' = 0 := hHom hA_ss hB'_ss hB'_lt_A hA_phase_upper (A.arrow ≫ q')
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
       have hq'' : IsStrictEpi q'' := by
         apply interval_strictEpi_of_strictEpi_comp
@@ -592,6 +596,7 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
       L < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < U)
     (hWidth : U - L < 1)
+    {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (hE : ssf.Semistable C E.obj
@@ -600,7 +605,16 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
+        wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α < U_hom →
         ∀ f : E ⟶ F, f = 0)
+    (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
+      {A : Subobject Y}
+      (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
+        (wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+      (_ : IsStrictMono A.arrow)
+      (_ : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α <
+        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
+      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X) :
     ∃ (B : σ.slicing.IntervalCat C a b) (q : X ⟶ B), IsStrictMDQ (C := C) σ ssf q := by
   letI : IsStrictNoetherianObject X := (hFiniteLength X).2
@@ -663,7 +677,8 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
         exact ⟨B, cokernel.π A.arrow ≫ qA,
           IsStrictMDQ.comp_of_destabilizing_semistable_subobject
             (C := C) (σ := σ) (a := a) (b := b)
-            hFiniteLength hW_interval hWindow hWidth hHom hA_ss hA_strict hA_phase_gt hA_ne_top hqA⟩
+            hFiniteLength hW_interval hWindow hWidth hHom hA_ss hA_strict hA_phase_gt hA_ne_top
+            (hDestabBound hQS_ne hA_ss hA_strict hA_phase_gt) hqA⟩
 
 variable [IsTriangulated C] in
 noncomputable def interval_kernelSubobject_isLimitKernelFork

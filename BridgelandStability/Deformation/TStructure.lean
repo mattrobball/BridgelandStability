@@ -320,10 +320,14 @@ theorem exists_deformedHN_of_enveloped_interval
       (L := a + ε₀) (U := b - ε₀)
       (fun {F} hF hFne ↦ hWindow hF hFne)
       (by linarith [hthin])
-      (fun {E F} hE hF hlt f ↦
+      (fun {E F} hE hF hlt _hguard f ↦
         hom_eq_zero_of_enveloped_interval_semistable
           (C := C) (σ := σ) (W := W) (hW := hW) hab
-          hε₀ hε₀2 hε₀8 hthin hsin hWindow hE hF hlt f) X hX
+          hε₀ hε₀2 hε₀8 hthin hsin hWindow hE hF hlt f)
+      (fun {Y} _hY {A} hA_ss _hA_strict _hA_dest ↦ by
+        simpa [ssf, StabilityCondition.skewedStabilityFunction_of_near] using
+          (hWindow hA_ss.1 hA_ss.2.1).2)
+      X hX
   let GQ : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) X.obj :=
     { n := G.n
       chain := G.chain

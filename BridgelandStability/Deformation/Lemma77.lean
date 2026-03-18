@@ -42,6 +42,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       L < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < U)
     (hWidth : U - L < 1)
+    {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (hE : ssf.Semistable C E.obj
@@ -50,7 +51,16 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
+        wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α < U_hom →
         ∀ f : E ⟶ F, f = 0)
+    (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
+      {A : Subobject Y}
+      (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
+        (wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+      (_ : IsStrictMono A.arrow)
+      (_ : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α <
+        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
+      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
     (t : ℝ)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X) :
     (∀ A : Subobject X, A ≠ ⊤ → IsStrictMono A.arrow →
@@ -119,7 +129,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       letI : IsStrictNoetherianObject Y := (hFiniteLength Y).2
       obtain ⟨B, q, hq⟩ := ssf.exists_strictMDQ_of_finiteLength
         (C := C) (σ := σ) (a := a) (b := b) hFiniteLength hW_interval hWindow hWidth hHom
-        (X := Y) hS
+        hDestabBound (X := Y) hS
       let K : Subobject Y := kernelSubobject q
       have hK_ne_bot : K ≠ ⊥ :=
         IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
@@ -305,6 +315,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
       L < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < U)
     (hWidth : U - L < 1)
+    {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (hE : ssf.Semistable C E.obj
@@ -313,7 +324,16 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
+        wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α < U_hom →
         ∀ f : E ⟶ F, f = 0)
+    (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
+      {A : Subobject Y}
+      (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
+        (wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+      (_ : IsStrictMono A.arrow)
+      (_ : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α <
+        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
+      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X) :
     let Psem : ℝ → ObjectProperty C := fun ψ E => ssf.Semistable C E ψ
     ∃ G : HNFiltration C Psem X.obj,
@@ -332,7 +352,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
   exact
     SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       (C := C) (σ := σ) (a := a) (b := b) (ssf := ssf)
-      hFiniteLength hW_interval hWindow hWidth hHom L X hX hL
+      hFiniteLength hW_interval hWindow hWidth hHom hDestabBound L X hX hL
 
 /- Quotient-form wrapper for the faithful 7.7 recursion. This is the interface closest
 to Bridgeland's classes `G` and `H`: the lower phase bound is stated directly for
@@ -351,6 +371,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
       L < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < U)
     (hWidth : U - L < 1)
+    {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (hE : ssf.Semistable C E.obj
@@ -359,7 +380,16 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
+        wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α < U_hom →
         ∀ f : E ⟶ F, f = 0)
+    (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
+      {A : Subobject Y}
+      (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
+        (wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+      (_ : IsStrictMono A.arrow)
+      (_ : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α <
+        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
+      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
     (t : ℝ)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X)
     (hquot :
@@ -382,7 +412,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
   exact
     SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       (C := C) (σ := σ) (a := a) (b := b) (ssf := ssf)
-      hFiniteLength hW_interval hWindow hWidth hHom t X hX hquot'
+      hFiniteLength hW_interval hWindow hWidth hHom hDestabBound t X hX hquot'
 
 /-! ### Extension-closure of `intervalProp` over Postnikov towers -/
 

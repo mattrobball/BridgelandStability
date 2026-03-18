@@ -39,7 +39,7 @@ theorem interior_has_enveloped_HN_ssf
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     [Fact (a < b)] [Fact (b - a ≤ 1)]
-    {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4)
+    {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hthin : b - a + 2 * ε < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (hFL : ThinFiniteLengthInInterval (C := C) σ a b)
@@ -102,6 +102,7 @@ theorem interior_has_enveloped_HN_ssf
   -- by A, meaning its phase lies in [a+ε, b-ε]. With the enveloping condition satisfied,
   -- hom_eq_zero_of_deformedPred (Lemma 7.6) applies for any phase gap.
   -- The large-gap case (> 2ε) also follows from hom_eq_zero_of_wSemistable_gap.
+  -- Hom vanishing with restricted upper bound (U_hom = b - ε)
   have hHom :
       ∀ {E₁ F₁ : σ.slicing.IntervalCat C a b}
         (hE₁ : ssf.Semistable C E₁.obj
@@ -110,22 +111,38 @@ theorem interior_has_enveloped_HN_ssf
           (wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α →
+        wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α < b - ε →
         ∀ f : E₁ ⟶ F₁, f = 0 := by
-    -- Bridgeland Lemma 7.6 + 7.7 (p.22–23): Hom vanishing between ssf-Semistable objects.
-    -- Large gap (ψ₁ > ψ₂ + 2ε): handled by hom_eq_zero_of_wSemistable_gap.
-    -- Small gap (0 < ψ₁ - ψ₂ ≤ 2ε): convert ssf.Semistable → deformedPred with witness
-    --   interval (a, b), then apply hom_eq_zero_of_deformedPred. The conversion requires
-    --   a + ε ≤ ψ ≤ b - ε (enveloping condition). This follows from the φ⁺ reduction
-    --   (paper p.23: "I can always assume φ⁺(E) < ψ(E) + ε") combined with class H bounds
-    --   (ψ < b - 3ε from X ∈ P((a, b-4ε))). Closing this sorry requires: (1) implementing
-    --   the φ⁺ reduction in the MDQ step, (2) restricting hHom to phases in (a+ε, b-ε)
-    --   via a modified exists_strictMDQ_of_finiteLength, and (3) adding hε8 : ε < 1/8.
+    intro E₁ F₁ hE₁ hF₁ hgap hguard f
+    -- Large gap (ψ₁ > ψ₂ + 2ε): disjoint σ-phase intervals via phase confinement.
+    by_cases hlarge :
+        wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α >
+          wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α + 2 * ε
+    · have h0 := hom_eq_zero_of_wSemistable_gap (C := C) σ hE₁ hF₁ hε hthin hpert hlarge f.hom
+      ext; exact h0
+    · -- Small gap (0 < ψ₁ - ψ₂ ≤ 2ε): requires deformedPred conversion (Lemma 7.6).
+      -- Guard gives ψ_E₁ < b - ε. For the enveloping condition (a + ε ≤ ψ ≤ b - ε)
+      -- needed to convert ssf.Semistable → deformedPred, the lower bound a + ε ≤ ψ
+      -- requires the φ⁺ reduction from Bridgeland p.23.
+      sorry
+  -- Destabilizing subobject phase bound (U_hom = b - ε)
+  have hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
+      {A : Subobject Y}
+      (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
+        (wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+      (_ : IsStrictMono A.arrow)
+      (_ : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α <
+        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
+      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < b - ε := by
+    -- Bridgeland p.23: φ⁺ reduction. For the initial recursion step (Y a quotient of X
+    -- with X ∈ P((a+2ε, b-4ε))), phase confinement gives ψ_A < b - 3ε < b - ε.
+    -- For general Y (quotients of quotients), this requires the full φ⁺ reduction.
     sorry
   -- Part A: Apply recursion with quotient lower bound t = a + ε
   obtain ⟨G, hGφ⟩ :=
     SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowerBound
       (C := C) (σ := σ) (a := a) (b := b) (ssf := ssf) hFL hW_ne
-      (L := a - ε) (U := b + ε) hWindow hWidth hHom
+      (L := a - ε) (U := b + ε) hWindow hWidth hHom hDestabBound
       (a + ε) XI hXI_ne
       (fun {B} q hq hBne ↦ by
         simpa [ssf, StabilityCondition.skewedStabilityFunction_of_near] using
@@ -278,7 +295,7 @@ theorem interior_has_enveloped_HN
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     [Fact (a < b)] [Fact (b - a ≤ 1)]
-    {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4)
+    {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hthin : b - a + 2 * ε < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (hFL : ThinFiniteLengthInInterval (C := C) σ a b)
@@ -288,7 +305,7 @@ theorem interior_has_enveloped_HN
       ∀ j, a + ε ≤ G.φ j ∧ G.φ j ≤ b - ε := by
   let ssf := σ.skewedStabilityFunction_of_near C W hW hab
   obtain ⟨G, hGφ⟩ := interior_has_enveloped_HN_ssf (C := C) σ W hW hab
-    hε hε2 hthin hsin hFL hE hInt
+    hε hε2 hε8 hthin hsin hFL hE hInt
   let GQ : HNFiltration C (σ.deformedPred C W hW ε hε hε2 hsin) E :=
     { n := G.n
       chain := G.chain
@@ -351,7 +368,7 @@ theorem sigmaSemistable_hasDeformedHN
       (by rw [hm]; linarith) (by rw [hp]; linarith)
   -- Apply interior_has_enveloped_HN
   obtain ⟨G, hGφ⟩ := interior_has_enveloped_HN (C := C) σ W hW hab
-    hε (by linarith : ε < 1 / 4) hthin hsin hFL hE hInt
+    hε (by linarith : ε < 1 / 4) (by linarith : ε < 1 / 8) hthin hsin hFL hE hInt
   -- Phase bounds: a+ε ≤ G.φ j ≤ b-ε gives φ-2ε ≤ G.φ j ≤ φ+4ε
   -- Since 4ε < ε₀, we have [φ-2ε, φ+4ε] ⊂ (φ-ε₀, φ+ε₀)
   exact ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
