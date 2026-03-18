@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import Mathlib.CategoryTheory.Triangulated.Deformation.Theorem71
+import Mathlib.RingTheory.Finiteness.Defs
 import Mathlib.Topology.Maps.Basic
 import Mathlib.Topology.Connected.Clopen
 
@@ -30,20 +31,7 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
-
-/-- **Lemma 6.2**: On a connected component, the finite-seminorm subgroups agree.
-
-**Note**: The proof requires `K₀(D)` to have finite rank as an abelian group
-(`Module.Finite ℤ (K₀ C)`). Bridgeland uses this to identify the finite-seminorm
-subgroup V(σ) with `Hom(K₀(D), ℂ)` (all homomorphisms have finite seminorm when
-K₀ has finite rank), so V(σ) = V(τ) for any σ, τ. Without finite rank, V(σ) can
-vary across the connected component. This hypothesis should be added once the
-downstream consumers (bridgeland_theorem_1_2') are updated. -/
-theorem finiteSeminormSubgroup_eq_of_connected (σ τ : StabilityCondition C)
-    (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
-    finiteSeminormSubgroup C σ = finiteSeminormSubgroup C τ := by
-  sorry
+  [IsTriangulated C] [Module.Finite ℤ (K₀ C)]
 
 /-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination).
 
@@ -56,10 +44,33 @@ can fail. -/
 theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
     (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
     ∃ K : ENNReal, K ≠ ⊤ ∧
-      ∀ (f : K₀ C →+ ℂ), stabSeminorm C σ f ≠ ⊤ →
-        stabSeminorm C σ f ≤ K * stabSeminorm C τ f := by
+      ∀ (f : K₀ C →+ ℂ), stabSeminorm C σ f ≤ K * stabSeminorm C τ f := by
   sorry
 
+/-- **Lemma 6.2**: On a connected component, the finite-seminorm subgroups agree.
+
+**Note**: The proof requires `K₀(D)` to have finite rank as an abelian group
+(`Module.Finite ℤ (K₀ C)`). Bridgeland uses this to identify the finite-seminorm
+subgroup V(σ) with `Hom(K₀(D), ℂ)` (all homomorphisms have finite seminorm when
+K₀ has finite rank), so V(σ) = V(τ) for any σ, τ. Without finite rank, V(σ) can
+vary across the connected component. This hypothesis should be added once the
+downstream consumers (bridgeland_theorem_1_2') are updated. -/
+theorem finiteSeminormSubgroup_eq_of_connected (σ τ : StabilityCondition C)
+    (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
+    finiteSeminormSubgroup C σ = finiteSeminormSubgroup C τ := by
+  ext f
+  show stabSeminorm C σ f < ⊤ ↔ stabSeminorm C τ f < ⊤
+  obtain ⟨K₁, hK₁, hdom₁⟩ := stabSeminorm_dominated_of_connected C σ τ h
+  obtain ⟨K₂, hK₂, hdom₂⟩ := stabSeminorm_dominated_of_connected C τ σ h.symm
+  constructor
+  · intro hf
+    exact lt_of_le_of_lt (hdom₂ f)
+      (ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hK₂) hf)
+  · intro hf
+    exact lt_of_le_of_lt (hdom₁ f)
+      (ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hK₁) hf)
+
+omit [Module.Finite ℤ (K₀ C)] in
 /-- Z(σ) has finite σ-seminorm: ‖Z(σ)‖_σ ≤ 1, hence Z(σ) ∈ V(σ). -/
 theorem Z_mem_finiteSeminormSubgroup (σ : StabilityCondition C) :
     σ.Z ∈ finiteSeminormSubgroup C σ := by
@@ -76,6 +87,7 @@ theorem Z_mem_finiteSeminormSubgroup (σ : StabilityCondition C) :
         · rw [div_le_one (lt_of_le_of_ne (norm_nonneg _) (Ne.symm h))]
     _ < ⊤ := ENNReal.one_lt_top
 
+omit [Module.Finite ℤ (K₀ C)] in
 /-- Two stability conditions with same Z and d < 1 are equal (Lemma 6.4). -/
 theorem StabilityCondition.eq_of_same_Z_near (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z)
@@ -207,15 +219,6 @@ theorem bridgeland_theorem_1_2' :
         have hconn'' : ConnectedComponents.mk σ₀ = ConnectedComponents.mk τ'' := by
           have h1 : (⟦σ₀⟧ : ConnectedComponents _) = cc := ‹_›
           change (⟦σ₀⟧ : ConnectedComponents _) = ⟦τ''⟧; rw [h1, ← hτ''cc]; rfl
-        -- Finiteness: τ''.Z, τ'.Z ∈ V(σ₀), so difference is finite
-        have hτ''_V : τ''.Z ∈ finiteSeminormSubgroup C σ₀ :=
-          finiteSeminormSubgroup_eq_of_connected C σ₀ τ'' hconn'' ▸
-            Z_mem_finiteSeminormSubgroup C τ''
-        have hτ'_V : τ'.Z ∈ finiteSeminormSubgroup C σ₀ :=
-          finiteSeminormSubgroup_eq_of_connected C σ₀ τ' hconn_τ' ▸
-            Z_mem_finiteSeminormSubgroup C τ'
-        have hdiff_fin : stabSeminorm C σ₀ (τ''.Z - τ'.Z) ≠ ⊤ :=
-          ne_top_of_lt ((finiteSeminormSubgroup C σ₀).sub_mem hτ''_V hτ'_V)
         -- Subadditivity: ‖A+B‖ ≤ ‖A‖ + ‖B‖ for stabSeminorm
         have hsub : stabSeminorm C σ₀ ((τ''.Z - τ'.Z) + (τ'.Z - ↑W)) ≤
             stabSeminorm C σ₀ (τ''.Z - τ'.Z) + stabSeminorm C σ₀ (τ'.Z - ↑W) := by
@@ -249,7 +252,7 @@ theorem bridgeland_theorem_1_2' :
             _ ≤ K * ENNReal.ofReal (Real.sin (Real.pi * δ)) +
                 stabSeminorm C σ₀ (τ'.Z - ↑W) := by
                 gcongr
-                exact (hdom _ hdiff_fin).trans (by gcongr)
+                exact (hdom _).trans (by gcongr)
         -- Convert to ℝ and close
         have hlt : K * ENNReal.ofReal (Real.sin (Real.pi * δ)) +
             stabSeminorm C σ₀ (τ'.Z - ↑W) < ENNReal.ofReal r := by

@@ -48,7 +48,114 @@ theorem interior_has_enveloped_HN_ssf
     let ssf := σ.skewedStabilityFunction_of_near C W hW hab
     ∃ G : HNFiltration C (fun ψ F => ssf.Semistable C F ψ) E,
       ∀ j, a + ε ≤ G.φ j ∧ G.φ j ≤ b - ε := by
-  sorry -- Bridgeland Lemma 7.7: class G/H induction (p.23-24)
+  let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+  -- E ∈ P((a, b)) via interval monotonicity
+  have hE_ab : σ.slicing.intervalProp C a b E :=
+    σ.slicing.intervalProp_mono C (by linarith) (by linarith) hInt
+  -- Lift E to IntervalCat(a,b)
+  let XI : σ.slicing.IntervalCat C a b := ⟨E, hE_ab⟩
+  have hXI_ne : ¬IsZero XI := by
+    intro hZ; exact hE (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
+  -- Global perturbation bounds
+  have hthin' : b - a < 1 := by linarith
+  have hpert := hperturb_of_stabSeminorm C σ W hW hthin' hε hε2 hsin
+  have hsmall : stabSeminorm C σ (W - σ.Z) <
+      ENNReal.ofReal (Real.cos (Real.pi * (b - a) / 2)) :=
+    stabSeminorm_lt_cos_of_hsin_hthin (C := C) (σ := σ) (W := W) hab hε hε2 hthin hsin
+  -- W ≠ 0 for nonzero interval objects
+  have hW_ne : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
+      ssf.W (K₀.of C F) ≠ 0 := by
+    intro F hF hFne
+    exact σ.W_ne_zero_of_intervalProp C W hthin' hsmall hFne hF
+  -- Perturbation bounds for global window (stated in terms of W and (a+b)/2 directly)
+  have hW_ne_sem : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
+      a < φ → φ < b → W (K₀.of C F) ≠ 0 := by
+    intro F φ hP hFne _ _
+    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
+  have hpert_lo : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
+      a < φ → φ < b →
+      a - ε < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
+      wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < a - ε + 1 := by
+    intro F φ hP hFne haφ hφb
+    obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
+    exact ⟨by linarith, by linarith⟩
+  have hpert_hi : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
+      a < φ → φ < b →
+      b + ε - 1 < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
+      wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε := by
+    intro F φ hP hFne haφ hφb
+    obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
+    exact ⟨by linarith, by linarith⟩
+  -- Global window: L = a - ε, U = b + ε
+  have hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
+      a - ε < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
+        wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε := by
+    intro F hF hFne
+    exact ⟨wPhaseOf_gt_of_intervalProp C σ hFne W
+        (by linarith [hab]) hF hW_ne_sem hpert_lo,
+      wPhaseOf_lt_of_intervalProp C σ hFne W
+        (by linarith [hab]) hF hW_ne_sem hpert_hi⟩
+  have hWidth : (b + ε) - (a - ε) < 1 := by linarith
+  -- Hom vanishing between ssf-semistable objects (Bridgeland p.23-24, via Lemma 7.6)
+  -- Bridgeland's class H argument: objects E ∈ A with ψ(E) < b-3ε have the property
+  -- that (after the φ⁺ reduction) every W-semistable strict subquotient is "enveloped"
+  -- by A, meaning its phase lies in [a+ε, b-ε]. With the enveloping condition satisfied,
+  -- hom_eq_zero_of_deformedPred (Lemma 7.6) applies for any phase gap.
+  -- The large-gap case (> 2ε) also follows from hom_eq_zero_of_wSemistable_gap.
+  have hHom :
+      ∀ {E₁ F₁ : σ.slicing.IntervalCat C a b}
+        (hE₁ : ssf.Semistable C E₁.obj
+          (wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α))
+        (hF₁ : ssf.Semistable C F₁.obj
+          (wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α)),
+        wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α <
+          wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α →
+        ∀ f : E₁ ⟶ F₁, f = 0 := by
+    sorry -- Bridgeland Lemma 7.6: class H enveloping + hom_eq_zero_of_deformedPred
+  -- Part A: Apply recursion with quotient lower bound t = a + ε
+  obtain ⟨G, hGφ⟩ :=
+    SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowerBound
+      (C := C) (σ := σ) (a := a) (b := b) (ssf := ssf) hFL hW_ne
+      (L := a - ε) (U := b + ε) hWindow hWidth hHom
+      (a + ε) XI hXI_ne
+      (fun {B} q hq hBne ↦ by
+        simpa [ssf, StabilityCondition.skewedStabilityFunction_of_near] using
+          wPhaseOf_gt_of_strictQuotient_of_inner_strip
+            (C := C) (σ := σ) (W := W) (hW := hW) hε hε2 hthin hsin
+            (X := XI) hInt q hq hBne)
+  -- Phase lower bound is immediate: a + ε < G.φ j
+  -- Part B: Tight upper bound on phases (Bridgeland p.23 argument)
+  -- The first HN factor F₁ has phase ψ₁ < b - 3ε
+  have hGn : 0 < G.n := by
+    by_contra h; push_neg at h
+    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+  set P := G.toPostnikovTower with hP_def
+  -- F₁ = factor 0 is ssf-semistable with phase G.φ ⟨0, hGn⟩
+  have hF₁_ss : ssf.Semistable C (P.factor ⟨0, hGn⟩) (G.φ ⟨0, hGn⟩) :=
+    G.semistable ⟨0, hGn⟩
+  have hF₁_ne : ¬IsZero (P.factor ⟨0, hGn⟩) := hF₁_ss.2.1
+  -- Phase confinement: phiMinus(F₁) > G.φ ⟨0, hGn⟩ - ε
+  have hψ₁_conf := phase_confinement_from_stabSeminorm C σ W hW hab hε hε2 hthin hsin hF₁_ss
+  -- phiPlus(E) < b - 4ε (from E ∈ P((a+2ε, b-4ε)))
+  have hE_phiPlus : σ.slicing.phiPlus C E hE < b - 4 * ε :=
+    σ.slicing.phiPlus_lt_of_intervalProp C hE hInt
+  -- Tight upper bound: ψ(F₁) < b - 3ε (Bridgeland p.23, ¶2)
+  -- "there is a nonzero map F₁ → E" (from chain(1) ≅ F₁ ↪ chain(n) ≅ E in the
+  -- abelian category A = IntervalCat(a,b), the PostnikovTower inclusion is mono)
+  -- "together with Lemma 7.3 ensures that ψ(F₁) < b - 3ε":
+  --   phase confinement: phiMinus(F₁) > ψ(F₁) - ε
+  --   σ-Hom vanishing contrapositive: phiMinus(F₁) ≤ phiPlus(E) (since Hom(F₁,E) ≠ 0)
+  --   E ∈ P((a+2ε, b-4ε)): phiPlus(E) < b - 4ε
+  --   combining: ψ(F₁) - ε < phiMinus(F₁) ≤ phiPlus(E) < b - 4ε → ψ(F₁) < b - 3ε
+  have hψ₁_bound : G.φ ⟨0, hGn⟩ < b - 3 * ε := by
+    sorry -- nonzero map F₁ → E from PostnikovTower + intervalHom_eq_zero contrapositive
+  -- Combine: all phases ≤ G.φ ⟨0, hGn⟩ < b - 3ε ≤ b - ε
+  refine ⟨G, fun j ↦ ⟨le_of_lt (hGφ j).1, ?_⟩⟩
+  calc G.φ j ≤ G.φ ⟨0, hGn⟩ := by
+        rcases Nat.eq_or_lt_of_le (Nat.zero_le j.val) with hj | hj
+        · exact le_of_eq (congrArg G.φ (Fin.ext hj.symm))
+        · exact le_of_lt (G.hφ (Fin.mk_lt_mk.mpr hj))
+    _ ≤ b - ε := by linarith
 
 variable [IsTriangulated C] in
 /-- **Lemma 7.7 interior HN** (deformedPred version). Derives a `deformedPred`-typed

@@ -317,7 +317,183 @@ theorem phiMinus_gt_of_wSemistable
       linarith
     · -- Dual of upper bound: gap-split isolates bottom factors at ψ-ε₀.
       -- Y ∈ P(ψ-ε₀) via tStructureAux phase containment → perturbation → Im → contradiction.
-      sorry -- Requires same pattern as upper bound but on Y side; deferred to next commit
+      -- Part 1: gap-split isolates bottom factors at ψ-ε₀
+      obtain ⟨F₀, hn₀, hne₀, hneL₀⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
+      have hF₀_bot : F₀.φ ⟨F₀.n - 1, by omega⟩ = ψ - ε₀ := by
+        linarith [σ.slicing.phiMinus_eq C E hE F₀ hn₀ hneL₀]
+      -- Not all HN phases = ψ-ε₀ (otherwise E σ-semistable → contradiction)
+      have hexists_upper : ∃ j : Fin F₀.n, ψ - ε₀ < F₀.φ j := by
+        by_contra hall; push_neg at hall
+        have hall_eq : ∀ j : Fin F₀.n, F₀.φ j = ψ - ε₀ := fun j ↦
+          le_antisymm (hall j)
+            (hF₀_bot ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt)))
+        have hphiPlus_le : σ.slicing.phiPlus C E hE ≤ ψ - ε₀ := by
+          have := σ.slicing.phiPlus_le_phiPlus_of_hn C hE F₀ hn₀
+          simp only [HNFiltration.phiPlus, hall_eq] at this; exact this
+        have heq_pm : σ.slicing.phiPlus C E hE = σ.slicing.phiMinus C E hE := by
+          linarith [σ.slicing.phiMinus_le_phiPlus C E hE]
+        have hpe : σ.slicing.phiPlus C E hE = ψ - ε₀ :=
+          le_antisymm hphiPlus_le (by linarith [σ.slicing.phiMinus_le_phiPlus C E hE])
+        have hsem' := σ.slicing.semistable_of_phiPlus_eq_phiMinus C hE heq_pm
+        rw [hpe] at hsem'; exact hsem hsem'
+      -- Find gap: min phase above ψ-ε₀
+      classical
+      let Supper := ((Finset.univ : Finset (Fin F₀.n)).image F₀.φ).filter (ψ - ε₀ < ·)
+      have hSupper_ne : Supper.Nonempty := by
+        obtain ⟨j_up, hj_up⟩ := hexists_upper
+        exact ⟨F₀.φ j_up, Finset.mem_filter.mpr
+          ⟨Finset.mem_image.mpr ⟨j_up, Finset.mem_univ _, rfl⟩, hj_up⟩⟩
+      set m_lo := Supper.min' hSupper_ne
+      have hm_gt : ψ - ε₀ < m_lo :=
+        (Finset.mem_filter.mp (Supper.min'_mem hSupper_ne)).2
+      -- Gap: every HN phase is = ψ-ε₀ or ≥ m_lo
+      have hgap : ∀ j : Fin F₀.n, F₀.φ j = ψ - ε₀ ∨ m_lo ≤ F₀.φ j := by
+        intro j
+        by_cases hj : ψ - ε₀ < F₀.φ j
+        · right; exact Supper.min'_le (F₀.φ j)
+            (Finset.mem_filter.mpr ⟨Finset.mem_image.mpr ⟨j, Finset.mem_univ _, rfl⟩, hj⟩)
+        · left; push_neg at hj; exact le_antisymm hj
+            (hF₀_bot ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt)))
+      set t_lo := ((ψ - ε₀) + m_lo) / 2
+      have ht_lo_gt : ψ - ε₀ < t_lo := by simp only [t_lo]; linarith
+      have ht_lo_lt : t_lo < m_lo := by simp only [t_lo]; linarith
+      -- F₀ phases are in (a, b)
+      have hF₀_phases : ∀ i : Fin F₀.n, a < F₀.φ i ∧ F₀.φ i < b := by
+        intro i
+        constructor
+        · have hanti : F₀.φ ⟨F₀.n - 1, by omega⟩ ≤ F₀.φ i :=
+            F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt i.isLt))
+          have hphiMin_eq := σ.slicing.phiMinus_eq C E hE F₀ hn₀ hneL₀
+          linarith [σ.slicing.phiMinus_gt_of_intervalProp C hE hI]
+        · exact lt_of_le_of_lt
+            (F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val)))
+            (by linarith [σ.slicing.phiPlus_eq C E hE F₀ hn₀ hne₀,
+              σ.slicing.phiPlus_lt_of_intervalProp C hE hI])
+      -- Split E at cutoff t_lo via tStructureAux
+      let Fs := F₀.phaseShift (C := C) t_lo
+      obtain ⟨K, Y, hKgt₀, hYle₀, fK, gY, δ, hT, hXdata, hYdata⟩ :=
+        Slicing.tStructureAux C (σ.slicing.phaseShift C t_lo) E Fs
+      have hKgt : σ.slicing.gtProp C t_lo K :=
+        (σ.slicing.phaseShift_gtProp_zero C t_lo K).mp hKgt₀
+      have hYle : σ.slicing.leProp C t_lo Y :=
+        (σ.slicing.phaseShift_leProp_zero C t_lo Y).mp hYle₀
+      -- K nonzero: F₀.φ(0) ≥ m_lo > t_lo, so phiPlus(E) > t_lo
+      have hKne : ¬IsZero K := by
+        intro hKZ
+        have hE_le := σ.slicing.phiPlus_le_of_leProp C hE
+          (σ.slicing.leProp_of_triangle C t_lo (Or.inl hKZ) hYle hT)
+        obtain ⟨j_up, hj_up⟩ := hexists_upper
+        have h0_gt : ψ - ε₀ < F₀.φ ⟨0, hn₀⟩ :=
+          lt_of_lt_of_le hj_up (F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _)))
+        have h0_ge_m : m_lo ≤ F₀.φ ⟨0, hn₀⟩ := Supper.min'_le (F₀.φ ⟨0, hn₀⟩)
+          (Finset.mem_filter.mpr ⟨Finset.mem_image.mpr
+            ⟨⟨0, hn₀⟩, Finset.mem_univ _, rfl⟩, h0_gt⟩)
+        linarith [σ.slicing.phiPlus_eq C E hE F₀ hn₀ hne₀]
+      -- Y nonzero: phiMinus(E) = ψ-ε₀ < t_lo, contradicts gtProp
+      have hYne : ¬IsZero Y := by
+        intro hYZ
+        linarith [σ.slicing.phiMinus_gt_of_gtProp C hE
+          (σ.slicing.gtProp_of_triangle C t_lo hKgt (Or.inl hYZ) hT)]
+      -- Extract X data (for K's phiPlus bound)
+      obtain hKZ | ⟨GX, hGXn', hGX_pos, hGX_upper, hGX_contain'⟩ := hXdata
+      · exact absurd hKZ hKne
+      -- Extract Y data (for Y ∈ P(ψ-ε₀))
+      obtain hYZ | ⟨GY, hGYn, hGY_le, hGY_contain⟩ := hYdata
+      · exact absurd hYZ hYne
+      -- GYorig: shift GY phases back to σ.slicing
+      let GYorig : HNFiltration C σ.slicing.P Y :=
+        { n := GY.n, chain := GY.chain, triangle := GY.triangle
+          triangle_dist := GY.triangle_dist, triangle_obj₁ := GY.triangle_obj₁
+          triangle_obj₂ := GY.triangle_obj₂, base_isZero := GY.base_isZero
+          top_iso := GY.top_iso, zero_isZero := GY.zero_isZero
+          φ := fun j ↦ GY.φ j + t_lo
+          hφ := by intro i j hij; linarith [GY.hφ hij]
+          semistable := fun j ↦ GY.semistable j }
+      -- All GYorig phases = ψ-ε₀ (gap + containment)
+      have hGYorig_phases_eq : ∀ j : Fin GYorig.n, GYorig.φ j = ψ - ε₀ := by
+        intro j
+        obtain ⟨i_s, hi_eq⟩ := hGY_contain j
+        have hGYj_eq : GYorig.φ j = F₀.φ ⟨i_s.val, i_s.isLt⟩ := by
+          show GY.φ j + t_lo = F₀.φ ⟨i_s.val, i_s.isLt⟩
+          have : Fs.φ i_s = F₀.φ ⟨i_s.val, i_s.isLt⟩ - t_lo := rfl
+          linarith [hi_eq]
+        rw [hGYj_eq]
+        rcases hgap ⟨i_s.val, i_s.isLt⟩ with heq_phase | hge_m
+        · exact heq_phase
+        · exfalso
+          have hGY_unfold : GYorig.φ j = GY.φ j + t_lo := rfl
+          have hle_top : GY.φ j ≤ GY.φ ⟨0, hGYn⟩ :=
+            GY.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))
+          simp only [HNFiltration.phiPlus] at hGY_le
+          linarith
+      -- Y ∈ P(ψ-ε₀): all HN phases equal → semistable
+      have hY_sem : σ.slicing.P (ψ - ε₀) Y := by
+        have hphiPlus_le : σ.slicing.phiPlus C Y hYne ≤ ψ - ε₀ := by
+          have := σ.slicing.phiPlus_le_phiPlus_of_hn C hYne GYorig hGYn
+          simp only [HNFiltration.phiPlus, hGYorig_phases_eq] at this; exact this
+        have hphiMinus_ge : ψ - ε₀ ≤ σ.slicing.phiMinus C Y hYne := by
+          have := σ.slicing.phiMinus_ge_phiMinus_of_hn C hYne GYorig hGYn
+          simp only [HNFiltration.phiMinus, hGYorig_phases_eq] at this; exact this
+        have heq_pm := le_antisymm (le_trans hphiPlus_le hphiMinus_ge)
+          (σ.slicing.phiMinus_le_phiPlus C Y hYne)
+        have hpe : σ.slicing.phiPlus C Y hYne = ψ - ε₀ :=
+          le_antisymm hphiPlus_le (le_trans hphiMinus_ge (heq_pm ▸ le_refl _))
+        have hsem_Y := σ.slicing.semistable_of_phiPlus_eq_phiMinus C hYne heq_pm
+        rwa [hpe] at hsem_Y
+      -- GXorig: shift GX phases back for K's phiPlus bound
+      let GXorig : HNFiltration C σ.slicing.P K :=
+        { n := GX.n, chain := GX.chain, triangle := GX.triangle
+          triangle_dist := GX.triangle_dist, triangle_obj₁ := GX.triangle_obj₁
+          triangle_obj₂ := GX.triangle_obj₂, base_isZero := GX.base_isZero
+          top_iso := GX.top_iso, zero_isZero := GX.zero_isZero
+          φ := fun j ↦ GX.φ j + t_lo
+          hφ := by intro i j hij; linarith [GX.hφ hij]
+          semistable := fun j ↦ GX.semistable j }
+      have hKphiPlus_lt_b : σ.slicing.phiPlus C K hKne < b := by
+        have hle := σ.slicing.phiPlus_le_phiPlus_of_hn C hKne GXorig hGXn'
+        have h_upper := hGX_upper hn₀
+        simp only [HNFiltration.phiPlus] at hle h_upper
+        have : (GXorig.φ ⟨0, hGXn'⟩ : ℝ) = GX.φ ⟨0, hGXn'⟩ + t_lo := rfl
+        have : (Fs.φ ⟨0, hn₀⟩ : ℝ) = F₀.φ ⟨0, hn₀⟩ - t_lo := rfl
+        linarith [(hF₀_phases ⟨0, hn₀⟩).2]
+      -- K ∈ P((a, b))
+      have hKI : σ.slicing.intervalProp C a b K :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hKne
+          (by linarith [σ.slicing.phiMinus_gt_of_gtProp C hKne hKgt])
+          hKphiPlus_lt_b
+      -- Y ∈ P((a, b))
+      have hYI : σ.slicing.intervalProp C a b Y :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hYne
+          (by linarith [(σ.slicing.phiPlus_eq_phiMinus_of_semistable C hY_sem hYne).2])
+          (by linarith [(σ.slicing.phiPlus_eq_phiMinus_of_semistable C hY_sem hYne).1])
+      -- Part 2: Im argument → contradiction
+      set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
+      -- Im(W(Y)·rot) < 0: Y ∈ P(ψ-ε₀) with wPhaseOf(W(Y)) < ψ
+      have ⟨hlo_Y, hhi_Y⟩ := hperturb Y (ψ - ε₀) hY_sem hYne hψε_gt_a hψε_lt_b
+      have him_Y_neg : (ssf.W (K₀.of C Y) * rot).im < 0 :=
+        im_neg_of_phase_below
+          (norm_pos_iff.mpr (ssf.nonzero Y (ψ - ε₀) hψε_gt_a hψε_lt_b hY_sem hYne))
+          (wPhaseOf_compat _ _)
+          (by linarith) (by linarith)
+      -- Im(W(E)·rot) = 0 (wPhaseOf(W(E)) = ψ)
+      have him_E_zero : (ssf.W (K₀.of C E) * rot).im = 0 :=
+        im_eq_zero_of_wPhaseOf_eq hψ
+      -- K₀ additivity: W(K) + W(Y) = W(E)
+      have hK₀ : ssf.W (K₀.of C K) + ssf.W (K₀.of C Y) = ssf.W (K₀.of C E) := by
+        rw [← map_add]; congr 1
+        exact (K₀.of_triangle C (Triangle.mk fK gY δ) hT).symm
+      -- Im(W(K)·rot) > 0 → wPhaseOf(W(K)) > ψ → contradicts W-semistability
+      have him_K_pos := im_pos_of_sum_zero_and_neg hK₀ him_E_zero him_Y_neg
+      have hK_lo : a - ε₀ < wPhaseOf (ssf.W (K₀.of C K)) ssf.α :=
+        wPhaseOf_gt_of_intervalProp C σ hKne ssf.W
+          (le_of_lt (by linarith [ssf.hα_mem.1])) hKI hW_ne hperturb_gt
+      have hK_hi : wPhaseOf (ssf.W (K₀.of C K)) ssf.α < b + ε₀ :=
+        wPhaseOf_lt_of_intervalProp C σ hKne ssf.W
+          (le_of_lt (by linarith [ssf.hα_mem.2])) hKI hW_ne hperturb_lt
+      linarith [wPhaseOf_gt_of_im_pos him_K_pos
+        (show wPhaseOf (ssf.W (K₀.of C K)) ssf.α ∈ Set.Ioo (ψ - 1) (ψ + 1) from
+          ⟨by linarith, by linarith⟩),
+        hsemistable hT hKI hYI hKne]
   have hψε_gt_a : a < ψ - ε₀ :=
     lt_trans (σ.slicing.phiMinus_gt_of_intervalProp C hE hI) hlt
   -- Extract HN filtration from intervalProp
