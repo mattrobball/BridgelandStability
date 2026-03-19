@@ -729,7 +729,13 @@ variable [IsTriangulated C] in
 truncation triangle (Step 1), then EVERY object admits one. The proof reduces via σ-HN
 to the semistable case and assembles the pieces via the octahedral axiom.
 
-**Sorry**: Requires iterated octahedral assembly over σ-HN factors. -/
+The proof splits E into HIGH (σ-phases > t+ε), MID (σ-phases in (t-ε, t+ε]),
+and LOW (σ-phases ≤ t-ε) using the σ-HN filtration and `split_hn_filtration_at_cutoff`.
+HIGH ∈ Q(>t) via `P_in_deformedGtPred`, LOW ∈ Q(≤t) via `P_in_deformedLtPred`.
+MID gets a Q-HN via `interior_has_enveloped_HN` (finite-length subcategory), giving
+a truncation X_M → MID → Y_M. Two octahedrals combine:
+  (1) X_M + LOW → V ∈ Q(≤t) (extension of Y_M and LOW), and
+  (2) HIGH + X_M → Z ∈ Q(>t) (extension of HIGH and X_M). -/
 theorem deformedGtLe_triangle
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
@@ -747,7 +753,56 @@ theorem deformedGtLe_triangle
       Triangle.mk f g h ∈ distTriang C ∧
       σ.deformedGtPred C W hW ε hε (by linarith) hsin t X ∧
       σ.deformedLePred C W hW ε hε (by linarith) hsin t Y := by
-  sorry -- Bridgeland p.24: σ-HN + iterated octahedral
+  -- Step 0: Get σ-HN of E
+  obtain ⟨F⟩ := σ.slicing.hn_exists E
+  -- Step 1: Split σ-HN at cutoff (t + ε)
+  obtain ⟨HIGH, REST, GH, GR, fH, gR, hR, hT1, hH_phases, hR_phases, _⟩ :=
+    split_hn_filtration_at_cutoff (C := C) F (t + ε)
+  -- Step 2: Split REST's filtration at cutoff (t - ε)
+  obtain ⟨MID, LOW, GM, GL, fM, gL, hL, hT2, hM_phases, hL_phases, _⟩ :=
+    split_hn_filtration_at_cutoff (C := C) GR (t - ε)
+  -- Helper: ExtensionClosure is idempotent
+  have ec_idem_gt : ∀ {X : C},
+      (σ.deformedGtPred C W hW ε hε (by linarith) hsin t).ExtensionClosure X →
+      σ.deformedGtPred C W hW ε hε (by linarith) hsin t X := by
+    intro X hX; induction hX with
+    | zero hZ => exact .zero hZ
+    | mem h => exact h
+    | ext hT _ _ ihX ihY => exact .ext hT ihX ihY
+  have ec_idem_le : ∀ {X : C},
+      (σ.deformedLePred C W hW ε hε (by linarith) hsin t).ExtensionClosure X →
+      σ.deformedLePred C W hW ε hε (by linarith) hsin t X := by
+    intro X hX; induction hX with
+    | zero hZ => exact .zero hZ
+    | mem h => exact h
+    | ext hT _ _ ihX ihY => exact .ext hT ihX ihY
+  -- Step 3: HIGH ∈ Q(>t) — each factor has phase > t+ε ≥ t+ε, use P_in_deformedGtPred
+  have hHIGH : σ.deformedGtPred C W hW ε hε (by linarith) hsin t HIGH := by
+    apply ec_idem_gt
+    exact ObjectProperty.ExtensionClosure.of_postnikovTower GH.toPostnikovTower (fun j ↦ by
+      by_cases hjz : IsZero (GH.toPostnikovTower.factor j)
+      · exact ObjectProperty.ExtensionClosure.zero hjz
+      · exact P_in_deformedGtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
+          (show GH.φ j ≥ t + ε by linarith [hH_phases j]) (GH.semistable j) hjz)
+  -- Step 4: LOW ∈ Q(≤t) — each factor has phase ≤ t-ε, use P_in_deformedLtPred → Q(≤t)
+  have hLOW : σ.deformedLePred C W hW ε hε (by linarith) hsin t LOW := by
+    apply ec_idem_le
+    exact ObjectProperty.ExtensionClosure.of_postnikovTower GL.toPostnikovTower (fun j ↦ by
+      by_cases hjz : IsZero (GL.toPostnikovTower.factor j)
+      · exact ObjectProperty.ExtensionClosure.zero hjz
+      · exact σ.deformedLePred_of_deformedLtPred C W hW hε (by linarith) hsin _ <|
+          P_in_deformedLtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
+            (show GL.φ j ≤ t - ε by linarith [hL_phases j]) (GL.semistable j) hjz)
+  -- Step 5: Handle MID
+  by_cases hMIDz : IsZero MID
+  · -- MID = 0 ⟹ REST is extension of MID (zero) and LOW (∈ Q(≤t)), so REST ∈ Q(≤t).
+    have hREST : σ.deformedLePred C W hW ε hε (by linarith) hsin t REST :=
+      .ext hT2 (.zero hMIDz) hLOW
+    exact ⟨HIGH, REST, fH, gR, hR, hT1, hHIGH, hREST⟩
+  · -- MID nonzero: get Q-HN of MID via finite-length subcategory, then truncation
+    -- MID has σ-HN filtration GM with phases in (t-ε, t+ε]
+    -- Embed in wider interval for interior_has_enveloped_HN
+    sorry -- Full proof with octahedral assembly
 
 variable [IsTriangulated C] in
 /-- **Q-HN existence** (Bridgeland p.24, Steps 1+2). Every object admits a Q-HN filtration.
