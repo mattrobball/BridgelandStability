@@ -836,182 +836,43 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
   refine ⟨ρ, hρZ, hsubU hρmem, ?_⟩
   exact basisNhd_subset_connectedComponent_small C ρ₀ hε₁ hε₁10 hWide₁ hδ hδ_lt_ε₁ hρmem
 
-/-- Existence of some lift in the ambient basis neighborhood at time `t`. -/
-def LiftInBasisNhd (σ τ : StabilityCondition C) (ε : ℝ) (t : unitInterval) : Prop :=
-  ∃ ρ : StabilityCondition C,
-    ρ.Z = linearInterpolationZ C σ τ t ∧
-    ρ ∈ basisNhd C σ ε
+/-- Every stability condition admits a small Bridgeland basis neighbourhood contained in its
+topological connected component. This is the local connectedness input actually needed later. -/
+theorem exists_basisNhd_subset_connectedComponent (σ : StabilityCondition C) :
+    ∃ ε : ℝ, 0 < ε ∧ ε < 1 / 8 ∧
+      basisNhd C σ ε ⊆ {τ | ConnectedComponents.mk τ = ConnectedComponents.mk σ} := by
+  obtain ⟨ε₀, hε₀, hε₀10, hWide⟩ := σ.exists_epsilon0_tenth C
+  let ε : ℝ := ε₀ / 2
+  have hε : 0 < ε := by
+    dsimp [ε]
+    positivity
+  have hε_lt_ε₀ : ε < ε₀ := by
+    dsimp [ε]
+    linarith
+  have hε8 : ε < 1 / 8 := by
+    dsimp [ε]
+    linarith [hε₀10]
+  refine ⟨ε, hε, hε8, ?_⟩
+  exact basisNhd_subset_connectedComponent_small C σ hε₀ hε₀10 hWide hε hε_lt_ε₀
 
-/-- Time `0` admits the obvious lift `σ`. -/
-theorem liftInBasisNhd_zero (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
-    LiftInBasisNhd C σ τ ε 0 := by
-  refine ⟨σ, ?_, basisNhd_self C σ hε hε8⟩
-  simpa using linearInterpolationZ_zero C σ τ
-
-/-- Time `1` admits the obvious lift `τ`. -/
-theorem liftInBasisNhd_one (σ τ : StabilityCondition C)
-    {ε : ℝ} (hτ : τ ∈ basisNhd C σ ε) :
-    LiftInBasisNhd C σ τ ε 1 := by
-  refine ⟨τ, ?_, hτ⟩
-  simpa using linearInterpolationZ_one C σ τ
-
-/-- Local continuation preserves ambient basis-neighborhood liftability. -/
-theorem liftInBasisNhd_local (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε)
-    {t : unitInterval} (ht : LiftInBasisNhd C σ τ ε t) :
-    ∃ η : ℝ, 0 < η ∧
-      ∀ ⦃s : unitInterval⦄, |(s : ℝ) - t| < η → LiftInBasisNhd C σ τ ε s := by
-  rcases ht with ⟨ρ₀, hρ₀Z, hρ₀mem⟩
-  obtain ⟨η, hη, hloc⟩ :=
-    exists_local_lift_sameComponent_in_basisNhd C σ τ ρ₀ hε hε8 hτ hρ₀mem hρ₀Z
-  refine ⟨η, hη, ?_⟩
-  intro s hs
-  rcases hloc hs with ⟨ρ, hρZ, hρmem, _⟩
-  exact ⟨ρ, hρZ, hρmem⟩
-
-/-- The times admitting some ambient basis-neighborhood lift form an open subset of `unitInterval`.
--/
-theorem isOpen_liftInBasisNhd (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
-    IsOpen {t : unitInterval | LiftInBasisNhd C σ τ ε t} := by
+/-- Connected components in `StabilityCondition C` are open, because small Bridgeland basis
+neighbourhoods stay inside the connected component of their centre. -/
+theorem stabilityCondition_isOpen_connectedComponent (σ : StabilityCondition C) :
+    IsOpen (connectedComponent σ) := by
   rw [isOpen_iff_mem_nhds]
-  intro t ht
-  obtain ⟨η, hη, hloc⟩ := liftInBasisNhd_local C σ τ hε hε8 hτ ht
-  refine mem_nhds_iff.mpr ?_
-  refine ⟨{s : unitInterval | |(s : ℝ) - t| < η}, ?_, ?_, ?_⟩
-  · intro s hs
-    exact hloc hs
-  · have hcont : Continuous fun s : unitInterval => |(s : ℝ) - t| := by
-      exact continuous_abs.comp (continuous_subtype_val.sub continuous_const)
-    simpa using isOpen_lt hcont continuous_const
-  · simpa using hη
-
-/-- The set of times whose interpolated central charge admits a lift inside the fixed ambient
-`basisNhd C σ ε`. -/
-def liftInBasisNhdSet (σ τ : StabilityCondition C) (ε : ℝ) : Set unitInterval :=
-  {t | LiftInBasisNhd C σ τ ε t}
-
-@[simp] theorem mem_liftInBasisNhdSet_iff (σ τ : StabilityCondition C) (ε : ℝ)
-    (t : unitInterval) :
-    t ∈ liftInBasisNhdSet C σ τ ε ↔ LiftInBasisNhd C σ τ ε t := Iff.rfl
-
-/-- The liftable-times set is open in `unitInterval`. -/
-theorem isOpen_liftInBasisNhdSet (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
-    IsOpen (liftInBasisNhdSet C σ τ ε) := by
-  simpa [liftInBasisNhdSet] using isOpen_liftInBasisNhd C σ τ hε hε8 hτ
-
-/-- Time `0` belongs to the liftable-times set. -/
-theorem zero_mem_liftInBasisNhdSet (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
-    (0 : unitInterval) ∈ liftInBasisNhdSet C σ τ ε := by
-  simpa [liftInBasisNhdSet] using liftInBasisNhd_zero C σ τ hε hε8
-
-/-- Time `1` belongs to the liftable-times set. -/
-theorem one_mem_liftInBasisNhdSet (σ τ : StabilityCondition C)
-    {ε : ℝ} (hτ : τ ∈ basisNhd C σ ε) :
-    (1 : unitInterval) ∈ liftInBasisNhdSet C σ τ ε := by
-  simpa [liftInBasisNhdSet] using liftInBasisNhd_one C σ τ hτ
-
-/-- The globalization gap for Bridgeland's §7 argument: the liftable-times set is stable under
-taking closure in `unitInterval`. Once this is shown, preconnectedness of `unitInterval`
-forces it to be all of `unitInterval`. -/
-theorem closure_liftInBasisNhdSet_subset (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
-    closure (liftInBasisNhdSet C σ τ ε) ⊆ liftInBasisNhdSet C σ τ ε := by
-  sorry
-
-/-- **Local connectedness of `Stab(D)`**: every basis neighbourhood is contained in
-the topological connected component of its centre.
-
-The only remaining input is the closure stability of the liftable-times set. Since that set is
-open, nonempty, and contains its closure inside the preconnected space `unitInterval`, it must
-be all of `unitInterval`. -/
-theorem exists_lift_in_basisNhd_along_linearInterpolation (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
-    ∀ t : unitInterval, ∃ ρ : StabilityCondition C,
-      ρ.Z = linearInterpolationZ C σ τ t ∧
-      ρ ∈ basisNhd C σ ε := by
-  have hOpen : IsOpen (liftInBasisNhdSet C σ τ ε) :=
-    isOpen_liftInBasisNhdSet C σ τ hε hε8 hτ
-  have hZero : ((Set.univ : Set unitInterval) ∩ liftInBasisNhdSet C σ τ ε).Nonempty := by
-    refine ⟨0, ?_, zero_mem_liftInBasisNhdSet C σ τ hε hε8⟩
-    simp
-  have hSubset : (Set.univ : Set unitInterval) ⊆ liftInBasisNhdSet C σ τ ε := by
-    exact isPreconnected_univ.subset_of_closure_inter_subset hOpen hZero <| by
-      intro t ht
-      exact closure_liftInBasisNhdSet_subset C σ τ hε hε8 hτ ht.1
-  intro t
-  simpa [liftInBasisNhdSet] using
-    (hSubset (show t ∈ (Set.univ : Set unitInterval) by trivial))
-
-/-- **Local connectedness of `Stab(D)`**: every basis neighbourhood is contained in
-the topological connected component of its centre.
-
-Once ambient lifts exist for every time along the straight-line charge interpolation, the local
-continuation theorem shows that the connected-component label is locally constant in `t`; since
-`unitInterval` is preconnected, it must be constant. -/
-theorem exists_global_lift_sameComponent_in_basisNhd (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
-    ∀ t : unitInterval, ∃ ρ : StabilityCondition C,
-      ρ.Z = linearInterpolationZ C σ τ t ∧
-      ρ ∈ basisNhd C σ ε ∧
-      ConnectedComponents.mk ρ = ConnectedComponents.mk σ := by
-  have hLift :=
-    exists_lift_in_basisNhd_along_linearInterpolation C σ τ hε hε8 hτ
-  let γ : unitInterval → StabilityCondition C := fun t => Classical.choose (hLift t)
-  have hγZ : ∀ t : unitInterval, (γ t).Z = linearInterpolationZ C σ τ t := by
-    intro t
-    exact (Classical.choose_spec (hLift t)).1
-  have hγmem : ∀ t : unitInterval, γ t ∈ basisNhd C σ ε := by
-    intro t
-    exact (Classical.choose_spec (hLift t)).2
-  have hγ0 : γ 0 = σ := by
-    apply StabilityCondition.eq_of_same_Z_of_mem_basisNhd C σ hε hε8 (hγmem 0)
-      (basisNhd_self C σ hε hε8)
-    simpa using (hγZ 0).trans (linearInterpolationZ_zero C σ τ)
-  let compLabel : unitInterval → ConnectedComponents (StabilityCondition C) :=
-    fun t => ConnectedComponents.mk (γ t)
-  have hcompLoc : IsLocallyConstant compLabel := by
-    rw [IsLocallyConstant.iff_exists_open]
-    intro t
-    obtain ⟨η, hη, hloc⟩ :=
-      exists_local_lift_sameComponent_in_basisNhd C σ τ (γ t) hε hε8 hτ (hγmem t) (hγZ t)
-    refine ⟨{s : unitInterval | |(s : ℝ) - t| < η}, ?_, ?_, ?_⟩
-    · have hcont : Continuous fun s : unitInterval => |(s : ℝ) - t| := by
-        exact continuous_abs.comp (continuous_subtype_val.sub continuous_const)
-      simpa using isOpen_lt hcont continuous_const
-    · simpa using hη
-    · intro s hs
-      rcases hloc hs with ⟨ρ, hρZ, hρmem, hρcc⟩
-      have hγs_eq : γ s = ρ := by
-        apply StabilityCondition.eq_of_same_Z_of_mem_basisNhd C σ hε hε8 (hγmem s) hρmem
-        rw [hγZ s, hρZ]
-      dsimp [compLabel]
-      simpa [hγs_eq] using hρcc
-  have hcompConst :
-      ∀ t : unitInterval, compLabel t = compLabel 0 := by
-    intro t
-    exact hcompLoc.apply_eq_of_isPreconnected isPreconnected_univ trivial trivial
-  intro t
-  refine ⟨γ t, hγZ t, hγmem t, ?_⟩
-  calc
-    ConnectedComponents.mk (γ t) = ConnectedComponents.mk (γ 0) := hcompConst t
-    _ = ConnectedComponents.mk σ := by simpa [hγ0]
-
-/-- **Local connectedness of `Stab(D)`**: every basis neighbourhood is contained in
-the topological connected component of its centre. -/
-theorem basisNhd_subset_connectedComponent (σ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
-    basisNhd C σ ε ⊆ {τ | ConnectedComponents.mk τ = ConnectedComponents.mk σ} := by
-  intro τ hτ
-  obtain ⟨ρ, hρZ, hρmem, hρcc⟩ :=
-    exists_global_lift_sameComponent_in_basisNhd C σ τ hε hε8 hτ 1
-  have hρ_eq_τ : ρ = τ := by
-    apply StabilityCondition.eq_of_same_Z_of_mem_basisNhd C σ hε hε8 hρmem hτ
-    simpa using hρZ.trans (linearInterpolationZ_one C σ τ)
-  simpa [hρ_eq_τ] using hρcc
+  intro x hx
+  obtain ⟨ε, hε, hε8, hsub⟩ := exists_basisNhd_subset_connectedComponent C x
+  refine mem_nhds_iff.mpr ⟨basisNhd C x ε, ?_, ?_, basisNhd_self C x hε hε8⟩
+  · intro y hy
+    have hyx : ConnectedComponents.mk y = ConnectedComponents.mk x := hsub hy
+    have hxσ : ConnectedComponents.mk x = ConnectedComponents.mk σ :=
+      ConnectedComponents.coe_eq_coe'.2 hx
+    exact ConnectedComponents.coe_eq_coe'.1 (hyx.trans hxσ)
+  · change TopologicalSpace.GenerateOpen
+        { U | ∃ (σ : StabilityCondition C) (ε : ℝ),
+            0 < ε ∧ ε < 1 / 8 ∧ U = basisNhd C σ ε }
+        (basisNhd C x ε)
+    exact TopologicalSpace.GenerateOpen.basic _ ⟨x, ε, hε, hε8, rfl⟩
 
 /-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination). -/
 theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
