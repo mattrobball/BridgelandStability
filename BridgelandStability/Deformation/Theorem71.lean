@@ -98,66 +98,25 @@ theorem interior_has_enveloped_HN_ssf
       wPhaseOf_lt_of_intervalProp C σ hFne W
         (by linarith [hab]) hF hW_ne_sem hpert_hi⟩
   have hWidth : (b + ε) - (a - ε) < 1 := by linarith
-  -- Hom vanishing between ssf-semistable objects (Bridgeland p.23-24, via Lemma 7.6)
-  -- Bridgeland's class H argument: objects E ∈ A with ψ(E) < b-3ε have the property
-  -- that (after the φ⁺ reduction) every W-semistable strict subquotient is "enveloped"
-  -- by A, meaning its phase lies in [a+ε, b-ε]. With the enveloping condition satisfied,
-  -- hom_eq_zero_of_deformedPred (Lemma 7.6) applies for any phase gap.
-  -- The large-gap case (> 2ε) also follows from hom_eq_zero_of_wSemistable_gap.
-  -- Hom vanishing with restricted upper bound (U_hom = b - ε)
-  have hHom :
-      ∀ {E₁ F₁ : σ.slicing.IntervalCat C a b}
-        (hE₁ : ssf.Semistable C E₁.obj
-          (wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α))
-        (hF₁ : ssf.Semistable C F₁.obj
-          (wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α)),
-        wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α <
-          wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α →
-        wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α < b - ε →
-        ∀ f : E₁ ⟶ F₁, f = 0 := by
-    intro E₁ F₁ hE₁ hF₁ hgap hguard f
-    -- Large gap (ψ₁ > ψ₂ + 2ε): disjoint σ-phase intervals via phase confinement.
-    by_cases hlarge :
-        wPhaseOf (ssf.W (K₀.of C E₁.obj)) ssf.α >
-          wPhaseOf (ssf.W (K₀.of C F₁.obj)) ssf.α + 2 * ε
-    · have h0 := hom_eq_zero_of_wSemistable_gap (C := C) σ hE₁ hF₁ hε hthin hpert hlarge f.hom
-      ext; exact h0
-    · -- Small gap (0 < ψ₁ - ψ₂ ≤ 2ε): requires deformedPred conversion (Lemma 7.6).
-      -- Guard gives ψ_E₁ < b - ε. For the enveloping condition (a + ε ≤ ψ ≤ b - ε)
-      -- needed to convert ssf.Semistable → deformedPred, the lower bound a + ε ≤ ψ
-      -- follows from the quotient lower bound maintained through the recursion
-      -- (class G property), which ensures ψ > a + ε for all objects that arise.
-      -- See `hHom_enveloped` in PhiPlusReduction.lean for the enveloped version.
-      -- Resolution: replace this recursion with `hn_exists_with_phiPlus_reduction`
-      -- which uses `hHom_enveloped` internally, only applied to enveloped objects.
-      sorry
-  -- Destabilizing subobject phase bound (U_hom = b - ε)
-  have hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
-      {A : Subobject Y}
-      (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
-        (wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
-      (_ : IsStrictMono A.arrow)
-      (_ : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α <
-        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
-      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < b - ε := by
-    -- Bridgeland p.23: φ⁺ reduction. When φ⁺(Y) < ψ(Y) + ε and ψ(Y) < b - 3ε,
-    -- `phiPlus_bound_of_destabilizing_subobject` gives ψ(A) < b - ε (sorry-free).
-    -- The condition φ⁺(Y) < ψ(Y) + ε follows from the φ⁺ split branch of the
-    -- recursion, and ψ(Y) < b - 3ε is the class H upper bound.
-    -- Resolution: replace this recursion with `hn_exists_with_phiPlus_reduction`
-    -- which proves hDestabBound internally at each step.
-    sorry
-  -- Part A: Apply recursion with quotient lower bound t = a + ε
+  -- Part A: Apply φ⁺ reduction recursion (replaces hHom + hDestabBound sorry path)
+  have hε8 : ε < 1 / 8 := by linarith
+  have h_wide : 6 * ε ≤ b - a := by
+    have h1 := σ.slicing.phiMinus_gt_of_intervalProp C hE hInt
+    have h2 := σ.slicing.phiPlus_lt_of_intervalProp C hE hInt
+    have h3 := σ.slicing.phiMinus_le_phiPlus C E hE
+    linarith
   obtain ⟨G, hGφ⟩ :=
-    SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowerBound
-      (C := C) (σ := σ) (a := a) (b := b) (ssf := ssf) hFL hW_ne
-      (L := a - ε) (U := b + ε) hWindow hWidth hHom hDestabBound
-      (a + ε) XI hXI_ne
+    hn_exists_with_phiPlus_reduction
+      (C := C) σ W hW hab hε hε2 hε8 hthin hsin hFL hW_ne
+      (L := a - ε) (U := b + ε) hWindow hWidth
+      (a + ε) (le_refl _) XI hXI_ne
       (fun {B} q hq hBne ↦ by
         simpa [ssf, StabilityCondition.skewedStabilityFunction_of_near] using
           wPhaseOf_gt_of_strictQuotient_of_inner_strip
             (C := C) (σ := σ) (W := W) (hW := hW) hε hε2 hthin hsin
             (X := XI) hInt q hq hBne)
+      (by linarith) h_wide
+      (fun hXne => σ.slicing.phiPlus_lt_of_intervalProp C hXne hInt)
   -- Phase lower bound is immediate: a + ε < G.φ j
   -- Part B: Tight upper bound on phases (Bridgeland p.23 argument)
   -- The first HN factor F₁ has phase ψ₁ < b - 3ε
@@ -1018,19 +977,18 @@ theorem StabilityCondition.deformedSlicing_compat
 
 variable [IsTriangulated C] in
 /-- **Reverse phase confinement**. If `E` is σ-semistable of phase `φ` and
-`‖W - Z‖_σ < sin(πε₀)`, then `E` lies in the Q-interval `(φ - ε₀ - δ, φ + ε₀ + δ)`
+`‖W - Z‖_σ < sin(πε)`, then `E` lies in the Q-interval `(φ - 2ε - δ, φ + 4ε + δ)`
 for any `δ > 0`.
 
 This replaces the incorrect statement `sigma_semistable_is_deformedPred` which claimed
 σ-semistable implies Q-semistable. That is **false**: a σ-semistable object `E` can
 decompose into W-semistable factors with different W-phases (e.g., `E = S₁ ⊕ S₂` with
 `S₁, S₂` σ-stable of the same phase but different W-phases), so `E` need not be
-Q-semistable. The correct statement is that `E` lies in a Q-interval of half-width
-`ε₀ + δ` centered at `φ`.
+Q-semistable. The correct statement is that `E` lies in the larger Q-interval
+`(φ - 2ε - δ, φ + 4ε + δ)`.
 
 The proof applies `sigmaSemistable_hasDeformedHN` to obtain a Q-HN filtration for `E`
-whose factors have phases in `(φ - 2ε, φ + 4ε)`, then enlarges this to an interval
-with slack `δ`.
+whose factors have phases in `(φ - 2ε, φ + 4ε)`, then enlarges this by `δ`.
 -/
 theorem sigma_semistable_intervalProp
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -1049,28 +1007,55 @@ theorem sigma_semistable_intervalProp
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
   exact Or.inr ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
 
+theorem deformed_intervalProp_subset_sigma_intervalProp
+    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    {ε₀ : ℝ} (hε₀ : 0 < ε₀)
+    (hε₀10 : ε₀ < 1 / 10)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    {ε : ℝ} (hε : 0 < ε) (hεε₀ : ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
+    (t : ℝ) :
+    (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).intervalProp C
+        (t - ε₀) (t + ε₀) ≤
+      σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) := by
+  intro X hX
+  rcases hX with hZ | ⟨F, hF⟩
+  · exact Or.inl hZ
+  · apply intervalProp_of_postnikovTower C σ.slicing F.toPostnikovTower
+    intro i
+    have hsem := F.semistable i
+    change σ.deformedPred C W hW ε hε (by linarith) hsin (F.φ i) _ at hsem
+    rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
+    · exact Or.inl hZ_i
+    · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
+        hε (by linarith) hthin_i hsin hSS_i
+      exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
+        (by
+          have hleft := (hF i).1
+          linarith)
+        (by
+          have hright := (hF i).2
+          linarith)
+
 /-! ### Deformation theorem (Theorem 7.1) -/
 
 variable [IsTriangulated C] in
 /-- A quantitative helper for **Bridgeland's Theorem 7.1**. Given a
 stability condition `σ = (Z, P)` on a triangulated category `D` and a group
-homomorphism `W : K₀(D) → ℂ` with `‖W - Z‖_σ < sin(πε)` for some `0 < ε` with
-`4ε < ε₀`
-(where `ε₀` comes from
-the local finiteness of `σ`), there exists a locally-finite stability condition
-`τ = (W, Q)` with `d(P, Q) ≤ ε`.
+homomorphism `W : K₀(D) → ℂ` with `‖W - Z‖_σ < sin(πε)` for some `0 < ε < ε₀`
+(where `ε₀` comes from the local finiteness of `σ`), there exists a locally-finite
+stability condition `τ = (W, Q)` with `d(P, Q) ≤ ε`.
 
 The proof constructs the deformed slicing `Q` via `deformedSlicing`, then verifies:
 1. **Hom-vanishing** (Lemma 7.6): `hom_eq_zero_of_deformedPred`
 2. **HN filtrations** (Lemma 7.7 + Nodes 7.8–7.9): well-founded recursion in thin
    quasi-abelian categories, assembled via t-structures `Q(> t)`
 3. **Compatibility**: `deformedSlicing_compat`
-4. **Local finiteness**: inherited from `σ` via phase confinement (Node 7.3)
+4. **Local finiteness**: inherited from `σ` via the interval inclusion
+   `Q((t-ε₀,t+ε₀)) ⊆ P((t-2ε₀,t+2ε₀))`
 5. **Distance bound**: `d(P, Q) ≤ ε` by phase confinement (Node 7.3)
-
-The hypothesis `hε₀_lf` ensures `ε₀` is small enough relative to `σ`'s local finiteness
-parameter, following Bridgeland's condition that intervals of half-width `ε₀ + δ` have
-finite length. -/
+-/
 theorem bridgeland_7_1_le (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
@@ -1078,11 +1063,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
     (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
-    (hε₀_lf : ∃ δ : ℝ, 0 < δ ∧ ε₀ + δ < 1 / 2 ∧ ∀ t : ℝ,
-      ∀ (E :
-        (σ.slicing.intervalProp C (t - (ε₀ + δ)) (t + (ε₀ + δ))).FullSubcategory),
-        IsArtinianObject E ∧ IsNoetherianObject E) :
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing ≤ ENNReal.ofReal ε := by
   have hε₀8 : ε₀ < 1 / 8 := by linarith
@@ -1091,68 +1072,31 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
     SectorFiniteLength.of_wide (C := C) σ hε₀ hε₀2 hε₀8 hWide
   refine ⟨⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, W,
     σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, ?_⟩, rfl, ?_⟩
-  · -- Local finiteness: inherited from σ via phase confinement
-    obtain ⟨δ, hδ, hδ_half, hlf_σ⟩ := hε₀_lf
-    let δ' : ℝ := min (δ / 2) (1 / 4)
+  · -- Local finiteness: inherited from σ via Q((t-ε₀,t+ε₀)) ⊆ P((t-2ε₀,t+2ε₀))
     constructor
-    refine ⟨δ', by
-      dsimp [δ']
-      positivity, by
-      dsimp [δ']
-      exact lt_of_le_of_lt (min_le_right _ _) (by norm_num), fun t E ↦ ?_⟩
-    letI : Fact (t - δ' < t + δ') := ⟨by
-      dsimp [δ']
-      have : 0 < δ' := by
-        dsimp [δ']
-        positivity
-      linarith⟩
-    letI : Fact ((t + δ') - (t - δ') ≤ 1) := ⟨by
-      dsimp [δ']
-      have hδ' : δ' ≤ 1 / 4 := by
-        dsimp [δ']
-        exact min_le_right _ _
-      linarith⟩
+    refine ⟨ε₀, hε₀, by linarith, fun t E ↦ ?_⟩
+    letI : Fact (t - ε₀ < t + ε₀) := ⟨by linarith [hε₀]⟩
+    letI : Fact ((t + ε₀) - (t - ε₀) ≤ 1) := ⟨by linarith [hε₀10]⟩
+    letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by linarith [hε₀]⟩
+    letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by linarith [hε₀10]⟩
     have hIncl :
         (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).intervalProp C
-            (t - δ') (t + δ') ≤
-          σ.slicing.intervalProp C (t - (ε₀ + δ)) (t + (ε₀ + δ)) := by
-      intro X hX
-      rcases hX with hZ | ⟨F, hF⟩
-      · exact Or.inl hZ
-      · apply intervalProp_of_postnikovTower C σ.slicing F.toPostnikovTower
-        intro i
-        have hsem := F.semistable i
-        change σ.deformedPred C W hW ε hε (by linarith) hsin (F.φ i) _ at hsem
-        rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
-        · exact Or.inl hZ_i
-        · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
-            hε (by linarith) hthin_i hsin hSS_i
-          exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
-            (by
-              have hleft := (hF i).1
-              dsimp [δ'] at hleft
-              linarith [hlo, min_le_left (δ / 2) (1 / 4 : ℝ)])
-            (by
-              have hright := (hF i).2
-              dsimp [δ'] at hright
-              linarith [hhi, min_le_left (δ / 2) (1 / 4 : ℝ)])
-    let I :
-        (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).IntervalCat C
-            (t - δ') (t + δ') ⥤
-          σ.slicing.IntervalCat C (t - (ε₀ + δ)) (t + (ε₀ + δ)) :=
-      ObjectProperty.ιOfLE hIncl
-    letI : Fact (t - (ε₀ + δ) < t + (ε₀ + δ)) := ⟨by linarith [hε₀, hδ]⟩
-    letI : Fact ((t + (ε₀ + δ)) - (t - (ε₀ + δ)) ≤ 1) := ⟨by linarith [hδ_half]⟩
-    have hI : IsArtinianObject (I.obj E) ∧ IsNoetherianObject (I.obj E) :=
-      hlf_σ t (I.obj E)
-    haveI : IsArtinianObject (I.obj E) := hI.1
-    haveI : IsNoetherianObject (I.obj E) := hI.2
+            (t - ε₀) (t + ε₀) ≤
+          σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) :=
+      deformed_intervalProp_subset_sigma_intervalProp C σ W hW hε₀ hε₀10 hWide hε hεε₀
+        hsin t
+    have hbig :
+        IsStrictArtinianObject ((ObjectProperty.ιOfLE hIncl).obj E) ∧
+          IsStrictNoetherianObject ((ObjectProperty.ιOfLE hIncl).obj E) := by
+      simpa [hSector] using hSector t ((ObjectProperty.ιOfLE hIncl).obj E)
+    haveI : IsStrictArtinianObject ((ObjectProperty.ιOfLE hIncl).obj E) := hbig.1
+    haveI : IsStrictNoetherianObject ((ObjectProperty.ιOfLE hIncl).obj E) := hbig.2
     have hstrictE :
         IsStrictArtinianObject E ∧ IsStrictNoetherianObject E :=
-      interval_strictFiniteLength_of_inclusion (C := C)
+      interval_strictFiniteLength_of_inclusion_strict (C := C)
         (s₁ := σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin)
         (s₂ := σ.slicing)
-        (a₁ := t - δ') (b₁ := t + δ') (a₂ := t - (ε₀ + δ)) (b₂ := t + (ε₀ + δ))
+        (a₁ := t - ε₀) (b₁ := t + ε₀) (a₂ := t - 2 * ε₀) (b₂ := t + 2 * ε₀)
         hIncl (X := E)
     haveI : IsStrictArtinianObject E := hstrictE.1
     haveI : IsStrictNoetherianObject E := hstrictE.2
@@ -1294,11 +1238,7 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
     (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
-    (hε₀_lf : ∃ δ : ℝ, 0 < δ ∧ ε₀ + δ < 1 / 2 ∧ ∀ t : ℝ,
-      ∀ (E :
-        (σ.slicing.intervalProp C (t - (ε₀ + δ)) (t + (ε₀ + δ))).FullSubcategory),
-        IsArtinianObject E ∧ IsNoetherianObject E) :
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε := by
   set x := (stabSeminorm C σ (W - σ.Z)).toReal
@@ -1356,7 +1296,7 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
       simpa [x, hsin'_eq] using hy_between.1
     exact (ENNReal.toReal_lt_toReal hx_ne_top ENNReal.ofReal_ne_top).1 hx_lt'
   obtain ⟨τ, hτZ, hτdist⟩ :=
-    bridgeland_7_1_le C σ W hW ε₀ hε₀ hε₀10 hWide ε' hε'_pos hε'ε₀ hsin' hε₀_lf
+    bridgeland_7_1_le C σ W hW ε₀ hε₀ hε₀10 hWide ε' hε'_pos hε'ε₀ hsin'
   refine ⟨τ, hτZ, lt_of_le_of_lt hτdist ?_⟩
   exact (ENNReal.ofReal_lt_ofReal_iff hε).2 hε'_lt
 
