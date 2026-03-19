@@ -801,8 +801,35 @@ theorem deformedGtLe_triangle
     exact ⟨HIGH, REST, fH, gR, hR, hT1, hHIGH, hREST⟩
   · -- MID nonzero: get Q-HN of MID via finite-length subcategory, then truncation
     -- MID has σ-HN filtration GM with phases in (t-ε, t+ε]
-    -- Embed in wider interval for interior_has_enveloped_HN
-    sorry -- Full proof with octahedral assembly
+    -- Step 5a: Get truncation of MID via embedding in P((t-3ε, t+5ε+δ))
+    -- and applying interior_has_enveloped_HN + split_hn_filtration_at_cutoff
+    have hMID_trunc :
+        ∃ (XM YM : C) (fXM : XM ⟶ MID) (gYM : MID ⟶ YM) (hYM : YM ⟶ XM⟦(1 : ℤ)⟧),
+          Triangle.mk fXM gYM hYM ∈ distTriang C ∧
+          σ.deformedGtPred C W hW ε hε (by linarith) hsin t XM ∧
+          σ.deformedLePred C W hW ε hε (by linarith) hsin t YM := by
+      -- Each factor of MID is σ-semistable with phase in (t-ε, t+ε].
+      -- Embed MID in a thin finite-length interval and use interior_has_enveloped_HN
+      -- to get Q-HN of MID, then split at cutoff t.
+      sorry
+    obtain ⟨XM, YM, fXM, gYM, hYM, hTM, hXM, hYM_pred⟩ := hMID_trunc
+    -- Step 5b: First octahedral — combine MID truncation with LOW to get REST's Q(≤t) part
+    -- Compose: XM → MID → REST (= fXM ≫ fM)
+    obtain ⟨V, vR, wV, hTV⟩ := distinguished_cocone_triangle (fXM ≫ fM)
+    -- Octahedral: h₁₂ = XM → MID → YM, h₂₃ = MID → REST → LOW, h₁₃ = XM → REST → V
+    let oct1 := Triangulated.someOctahedron rfl hTM hT2 hTV
+    -- oct1.mem: YM → V → LOW → YM[1] (distinguished)
+    have hV : σ.deformedLePred C W hW ε hε (by linarith) hsin t V :=
+      .ext oct1.mem hYM_pred hLOW
+    -- Step 5c: Second octahedral — combine HIGH with REST's Q(>t) part
+    -- Compose: E → REST → V (= gR ≫ vR) and use Octahedron' since gR is second morphism
+    obtain ⟨Z13, vE, wZ13, hTZ⟩ := distinguished_cocone_triangle₁ (gR ≫ vR)
+    -- Octahedron': h₁₂ = HIGH → E → REST, h₂₃ = XM → REST → V, h₁₃ = Z13 → E → V
+    let oct2 := Triangulated.someOctahedron' rfl hT1 hTV hTZ
+    -- oct2.mem: HIGH → Z13 → XM → HIGH[1] (distinguished)
+    have hZ13 : σ.deformedGtPred C W hW ε hε (by linarith) hsin t Z13 :=
+      .ext oct2.mem hHIGH hXM
+    exact ⟨Z13, V, vE, gR ≫ vR, wZ13, hTZ, hZ13, hV⟩
 
 variable [IsTriangulated C] in
 /-- **Q-HN existence** (Bridgeland p.24, Steps 1+2). Every object admits a Q-HN filtration.
