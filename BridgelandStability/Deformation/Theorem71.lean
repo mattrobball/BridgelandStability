@@ -809,9 +809,42 @@ theorem deformedGtLe_triangle
           σ.deformedGtPred C W hW ε hε (by linarith) hsin t XM ∧
           σ.deformedLePred C W hW ε hε (by linarith) hsin t YM := by
       -- Each factor of MID is σ-semistable with phase in (t-ε, t+ε].
-      -- Embed MID in a thin finite-length interval and use interior_has_enveloped_HN
-      -- to get Q-HN of MID, then split at cutoff t.
-      sorry
+      -- Embed MID in P((t-ε₀, t+ε₀)) ⊂ P((t-2ε-ε₀, t+4ε+ε₀)) and use
+      -- interior_has_enveloped_HN to get Q-HN of MID, then split at cutoff t.
+      set a := t - 2 * ε - ε₀ with ha_def
+      set b := t + 4 * ε + ε₀ with hb_def
+      have hab : a < b := by linarith
+      haveI : Fact (a < b) := ⟨hab⟩
+      haveI : Fact (b - a ≤ 1) := ⟨by simp [a, b]; linarith⟩
+      have hthin_ab : b - a + 2 * ε < 1 := by simp [a, b]; linarith
+      -- ThinFiniteLengthInInterval from WideSectorFiniteLength (center t+ε₀)
+      have hFL_ab : ThinFiniteLengthInInterval (C := C) σ a b :=
+        ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ (by linarith)
+          (show (t + ε₀) - 4 * ε₀ ≤ a by simp [a]; linarith)
+          (show b ≤ (t + ε₀) + 4 * ε₀ by simp [b]; linarith) hWide
+      -- MID ∈ intervalProp(a+2ε, b-4ε) = intervalProp(t-ε₀, t+ε₀)
+      have hMID_int : σ.slicing.intervalProp C (a + 2 * ε) (b - 4 * ε) MID := by
+        -- GM's phases satisfy t-ε < φ_j (from hM_phases) and φ_j ≤ t+ε (inherited from GR).
+        -- Since ε < ε₀: t-ε > t-ε₀ = a+2ε and t+ε < t+ε₀ = b-4ε. QED.
+        right; refine ⟨GM, fun j ↦ ?_⟩
+        constructor
+        · -- a + 2ε = t - ε₀ < t - ε < GM.φ j
+          have := hM_phases j; simp [a]; linarith
+        · -- GM.φ j ≤ t + ε < t + ε₀ = b - 4ε
+          -- GM's phases come from GR's phases (which satisfy ≤ t+ε)
+          -- The split preserves this bound.
+          have : GM.φ j ≤ t + ε := by
+            -- GM is the high part of splitting GR at t-ε. Its phases are a subset of
+            -- GR's phases. Since all of GR's phases are ≤ t+ε, so are GM's.
+            sorry
+          simp [b]; linarith
+      -- Apply interior_has_enveloped_HN to get Q-HN of MID
+      have hMIDne : ¬IsZero MID := hMIDz
+      obtain ⟨G_mid, hG_mid_phases⟩ := interior_has_enveloped_HN C σ W hW hab
+        hε (by linarith : ε < 1 / 10) hthin_ab hsin hFL_ab hMIDne hMID_int
+      -- Split Q-HN at cutoff t → truncation triangle
+      exact exists_deformedGt_deformedLe_triangle_of_hn C σ W hW hε (by linarith) hsin
+        G_mid t
     obtain ⟨XM, YM, fXM, gYM, hYM, hTM, hXM, hYM_pred⟩ := hMID_trunc
     -- Step 5b: First octahedral — combine MID truncation with LOW to get REST's Q(≤t) part
     -- Compose: XM → MID → REST (= fXM ≫ fM)
