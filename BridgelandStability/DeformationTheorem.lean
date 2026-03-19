@@ -836,103 +836,6 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
   refine ⟨ρ, hρZ, hsubU hρmem, ?_⟩
   exact basisNhd_subset_connectedComponent_small C ρ₀ hε₁ hε₁10 hWide₁ hδ hδ_lt_ε₁ hρmem
 
-/-- Reachability of a time `t` along the straight-line charge interpolation by a lift that stays
-inside the ambient basis neighborhood of `σ` and in the connected component of `σ`. -/
-def ReachInBasisNhd (σ τ : StabilityCondition C) (ε : ℝ) (t : unitInterval) : Prop :=
-  ∃ ρ : StabilityCondition C,
-    ρ.Z = linearInterpolationZ C σ τ t ∧
-    ρ ∈ basisNhd C σ ε ∧
-    ConnectedComponents.mk ρ = ConnectedComponents.mk σ
-
-/-- Time `0` is reachable by the constant lift `σ`. -/
-theorem reachInBasisNhd_zero (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
-    ReachInBasisNhd C σ τ ε 0 := by
-  refine ⟨σ, ?_, basisNhd_self C σ hε hε8, rfl⟩
-  simp [ReachInBasisNhd, linearInterpolationZ_zero]
-
-/-- Local continuation preserves reachability in the ambient basis neighborhood. -/
-theorem reachInBasisNhd_local (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε)
-    {t : unitInterval} (ht : ReachInBasisNhd C σ τ ε t) :
-    ∃ η : ℝ, 0 < η ∧
-      ∀ ⦃s : unitInterval⦄, |(s : ℝ) - t| < η → ReachInBasisNhd C σ τ ε s := by
-  rcases ht with ⟨ρ₀, hρ₀Z, hρ₀mem, hρ₀cc⟩
-  obtain ⟨η, hη, hcont⟩ :=
-    exists_local_lift_sameComponent_in_basisNhd C σ τ ρ₀ hε hε8 hτ hρ₀mem hρ₀Z
-  refine ⟨η, hη, ?_⟩
-  intro s hs
-  rcases hcont hs with ⟨ρ, hρZ, hρmem, hρcc⟩
-  refine ⟨ρ, hρZ, hρmem, ?_⟩
-  rw [hρcc, hρ₀cc]
-
-/-- The reachable-times set for the straight-line charge interpolation is open in `unitInterval`. -/
-theorem isOpen_reachInBasisNhd (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
-    IsOpen {t : unitInterval | ReachInBasisNhd C σ τ ε t} := by
-  rw [isOpen_iff_mem_nhds]
-  intro t ht
-  obtain ⟨η, hη, hloc⟩ := reachInBasisNhd_local C σ τ hε hε8 hτ ht
-  refine mem_nhds_iff.mpr ?_
-  refine ⟨{s : unitInterval | |(s : ℝ) - t| < η}, ?_, ?_, ?_⟩
-  · intro s hs
-    exact hloc hs
-  · have hcont : Continuous fun s : unitInterval => |(s : ℝ) - t| := by
-      exact continuous_abs.comp (continuous_subtype_val.sub continuous_const)
-    simpa using isOpen_lt hcont continuous_const
-  · simpa using hη
-
-/-- The statement that every time up to `a` is reachable. -/
-def ReachPrefix (σ τ : StabilityCondition C) (ε a : ℝ) : Prop :=
-  0 ≤ a ∧ a ≤ 1 ∧ ∀ t : unitInterval, (t : ℝ) ≤ a → ReachInBasisNhd C σ τ ε t
-
-/-- The zero prefix is reachable. -/
-theorem reachPrefix_zero (σ τ : StabilityCondition C)
-    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
-    ReachPrefix C σ τ ε 0 := by
-  refine ⟨le_rfl, by norm_num, ?_⟩
-  intro t ht
-  have ht0 : (t : ℝ) = 0 := by
-    linarith [t.2.1, ht]
-  have ht_eq : t = 0 := Subtype.ext ht0
-  simpa [ht_eq] using reachInBasisNhd_zero C σ τ hε hε8
-
-/-- A reachable proper prefix extends slightly to the right. -/
-theorem reachPrefix_step (σ τ : StabilityCondition C)
-    {ε a : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε)
-    (ha : ReachPrefix C σ τ ε a) (ha1 : a < 1) :
-    ∃ b : ℝ, a < b ∧ ReachPrefix C σ τ ε b := by
-  rcases ha with ⟨ha0, ha1le, hprefix⟩
-  let t : unitInterval := ⟨a, ⟨ha0, ha1le⟩⟩
-  have ht : ReachInBasisNhd C σ τ ε t := hprefix t le_rfl
-  obtain ⟨η, hη, hloc⟩ := reachInBasisNhd_local C σ τ hε hε8 hτ ht
-  let b : ℝ := min 1 (a + η / 2)
-  have hab : a < b := by
-    dsimp [b]
-    refine lt_min_iff.2 ?_
-    constructor
-    · exact ha1
-    · linarith
-  refine ⟨b, hab, ?_⟩
-  refine ⟨le_trans ha0 hab.le, by
-    dsimp [b]
-    exact min_le_left _ _, ?_⟩
-  intro s hs
-  by_cases hsa : (s : ℝ) ≤ a
-  · exact hprefix s hsa
-  · have hs_close : |(s : ℝ) - t| < η := by
-      change |(s : ℝ) - a| < η
-      rw [abs_of_nonneg]
-      · have hs_le : (s : ℝ) ≤ a + η / 2 := by
-          calc
-            (s : ℝ) ≤ b := hs
-            _ ≤ a + η / 2 := by
-              dsimp [b]
-              exact min_le_right _ _
-        linarith
-      · linarith
-    exact hloc hs_close
-
 /-- Existence of some lift in the ambient basis neighborhood at time `t`. -/
 def LiftInBasisNhd (σ τ : StabilityCondition C) (ε : ℝ) (t : unitInterval) : Prop :=
   ∃ ρ : StabilityCondition C,
@@ -984,21 +887,64 @@ theorem isOpen_liftInBasisNhd (σ τ : StabilityCondition C)
     simpa using isOpen_lt hcont continuous_const
   · simpa using hη
 
+/-- The set of times whose interpolated central charge admits a lift inside the fixed ambient
+`basisNhd C σ ε`. -/
+def liftInBasisNhdSet (σ τ : StabilityCondition C) (ε : ℝ) : Set unitInterval :=
+  {t | LiftInBasisNhd C σ τ ε t}
+
+@[simp] theorem mem_liftInBasisNhdSet_iff (σ τ : StabilityCondition C) (ε : ℝ)
+    (t : unitInterval) :
+    t ∈ liftInBasisNhdSet C σ τ ε ↔ LiftInBasisNhd C σ τ ε t := Iff.rfl
+
+/-- The liftable-times set is open in `unitInterval`. -/
+theorem isOpen_liftInBasisNhdSet (σ τ : StabilityCondition C)
+    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
+    IsOpen (liftInBasisNhdSet C σ τ ε) := by
+  simpa [liftInBasisNhdSet] using isOpen_liftInBasisNhd C σ τ hε hε8 hτ
+
+/-- Time `0` belongs to the liftable-times set. -/
+theorem zero_mem_liftInBasisNhdSet (σ τ : StabilityCondition C)
+    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
+    (0 : unitInterval) ∈ liftInBasisNhdSet C σ τ ε := by
+  simpa [liftInBasisNhdSet] using liftInBasisNhd_zero C σ τ hε hε8
+
+/-- Time `1` belongs to the liftable-times set. -/
+theorem one_mem_liftInBasisNhdSet (σ τ : StabilityCondition C)
+    {ε : ℝ} (hτ : τ ∈ basisNhd C σ ε) :
+    (1 : unitInterval) ∈ liftInBasisNhdSet C σ τ ε := by
+  simpa [liftInBasisNhdSet] using liftInBasisNhd_one C σ τ hτ
+
+/-- The globalization gap for Bridgeland's §7 argument: the liftable-times set is stable under
+taking closure in `unitInterval`. Once this is shown, preconnectedness of `unitInterval`
+forces it to be all of `unitInterval`. -/
+theorem closure_liftInBasisNhdSet_subset (σ τ : StabilityCondition C)
+    {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
+    closure (liftInBasisNhdSet C σ τ ε) ⊆ liftInBasisNhdSet C σ τ ε := by
+  sorry
+
 /-- **Local connectedness of `Stab(D)`**: every basis neighbourhood is contained in
 the topological connected component of its centre.
 
-This is the actual remaining globalization input in Bridgeland's §7 argument: for each time
-along the straight-line charge interpolation, there is some lift in the fixed ambient
-`basisNhd C σ ε`. Component constancy is then a separate local-uniqueness argument. -/
+The only remaining input is the closure stability of the liftable-times set. Since that set is
+open, nonempty, and contains its closure inside the preconnected space `unitInterval`, it must
+be all of `unitInterval`. -/
 theorem exists_lift_in_basisNhd_along_linearInterpolation (σ τ : StabilityCondition C)
     {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
     ∀ t : unitInterval, ∃ ρ : StabilityCondition C,
       ρ.Z = linearInterpolationZ C σ τ t ∧
       ρ ∈ basisNhd C σ ε := by
-  -- The remaining gap is now isolated as a pure existence statement:
-  -- the open set `{t | LiftInBasisNhd C σ τ ε t}` contains `0` and `1`, and one must show it is
-  -- all of `unitInterval`.
-  sorry
+  have hOpen : IsOpen (liftInBasisNhdSet C σ τ ε) :=
+    isOpen_liftInBasisNhdSet C σ τ hε hε8 hτ
+  have hZero : ((Set.univ : Set unitInterval) ∩ liftInBasisNhdSet C σ τ ε).Nonempty := by
+    refine ⟨0, ?_, zero_mem_liftInBasisNhdSet C σ τ hε hε8⟩
+    simp
+  have hSubset : (Set.univ : Set unitInterval) ⊆ liftInBasisNhdSet C σ τ ε := by
+    exact isPreconnected_univ.subset_of_closure_inter_subset hOpen hZero <| by
+      intro t ht
+      exact closure_liftInBasisNhdSet_subset C σ τ hε hε8 hτ ht.1
+  intro t
+  simpa [liftInBasisNhdSet] using
+    (hSubset (show t ∈ (Set.univ : Set unitInterval) by trivial))
 
 /-- **Local connectedness of `Stab(D)`**: every basis neighbourhood is contained in
 the topological connected component of its centre.
@@ -1210,32 +1156,67 @@ theorem Z_mem_finiteSeminormSubgroup (σ : StabilityCondition C) :
         · rw [div_le_one (lt_of_le_of_ne (norm_nonneg _) (Ne.symm h))]
     _ < ⊤ := ENNReal.one_lt_top
 
+/-- A chosen representative of a connected component of `StabilityCondition C`. -/
+def componentRep (cc : ConnectedComponents (StabilityCondition C)) : StabilityCondition C :=
+  Classical.choose cc.exists_rep
+
+@[simp] theorem mk_componentRep (cc : ConnectedComponents (StabilityCondition C)) :
+    ConnectedComponents.mk (componentRep C cc) = cc :=
+  Classical.choose_spec cc.exists_rep
+
+/-- The component of stability conditions with connected-component label `cc`. -/
+abbrev componentStabilityCondition (cc : ConnectedComponents (StabilityCondition C)) :=
+  {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
+
+/-- Bridgeland's `V(Σ)`, implemented using a chosen representative of the component. -/
+def componentSeminormSubgroup (cc : ConnectedComponents (StabilityCondition C)) :
+    AddSubgroup (K₀ C →+ ℂ) :=
+  finiteSeminormSubgroup C (componentRep C cc)
+
+/-- The seminorm balls in `V(Σ)` coming from the representative `σ₀ ∈ Σ`. -/
+def componentSeminormBall (cc : ConnectedComponents (StabilityCondition C))
+    (W : componentSeminormSubgroup C cc) (r : ℝ) :
+    Set (componentSeminormSubgroup C cc) :=
+  {F | stabSeminorm C (componentRep C cc) (↑F - ↑W) < ENNReal.ofReal r}
+
+/-- The basis of seminorm balls defining the topology on `V(Σ)`. -/
+def componentSeminormBasis (cc : ConnectedComponents (StabilityCondition C)) :
+    Set (Set (componentSeminormSubgroup C cc)) :=
+  {S | ∃ (W : componentSeminormSubgroup C cc) (r : ℝ), 0 < r ∧
+    S = componentSeminormBall C cc W r}
+
+/-- The linear topology on `V(Σ)` generated by seminorm balls for one representative. -/
+abbrev componentSeminormTopology (cc : ConnectedComponents (StabilityCondition C)) :
+    TopologicalSpace (componentSeminormSubgroup C cc) :=
+  TopologicalSpace.generateFrom (componentSeminormBasis C cc)
+
+/-- For `σ ∈ Σ`, its central charge lies in `V(Σ)`. -/
+theorem componentZ_mem (cc : ConnectedComponents (StabilityCondition C))
+    (σ : StabilityCondition C) (hσ : ConnectedComponents.mk σ = cc) :
+    σ.Z ∈ componentSeminormSubgroup C cc := by
+  change σ.Z ∈ finiteSeminormSubgroup C (componentRep C cc)
+  rw [finiteSeminormSubgroup_eq_of_connected C (componentRep C cc) σ (by
+    rw [mk_componentRep C cc, hσ])]
+  exact Z_mem_finiteSeminormSubgroup C σ
+
+/-- The central charge map restricted to a connected component and landing in `V(Σ)`. -/
+def componentZMap (cc : ConnectedComponents (StabilityCondition C)) :
+    componentStabilityCondition C cc → componentSeminormSubgroup C cc :=
+  fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, componentZ_mem C cc σ hσ⟩
+
 /-! ### Theorem 1.2 -/
 
 theorem bridgeland_theorem_1_2' :
     bridgelandTheorem_1_2 C := by
   intro cc
-  obtain ⟨σ₀⟩ := cc.exists_rep
-  let V := finiteSeminormSubgroup C σ₀
-  let comp := {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
-  let Zmap : comp → V :=
-    fun ⟨σ', hσ'⟩ ↦ ⟨σ'.Z, by
-      show σ'.Z ∈ finiteSeminormSubgroup C σ₀
-      rw [finiteSeminormSubgroup_eq_of_connected C σ₀ σ' (by
-        have h1 : (⟦σ₀⟧ : ConnectedComponents _) = cc := ‹_›
-        change (⟦σ₀⟧ : ConnectedComponents _) = ⟦σ'⟧; rw [h1, ← hσ']; rfl)]
-      exact Z_mem_finiteSeminormSubgroup C σ'⟩
-  -- Seminorm topology on V from ‖·‖_{σ₀}
-  letI τ_V : TopologicalSpace V := TopologicalSpace.generateFrom
-    {S : Set V | ∃ (W : V) (r : ℝ), 0 < r ∧
-      S = {F : V | stabSeminorm C σ₀ (↑F - ↑W) < ENNReal.ofReal r}}
-  refine ⟨V, τ_V, ?_, ?_⟩
+  let σ₀ := componentRep C cc
+  let V := componentSeminormSubgroup C cc
+  let comp := componentStabilityCondition C cc
+  let Zmap : comp → V := componentZMap C cc
+  letI : TopologicalSpace V := componentSeminormTopology C cc
+  refine ⟨V, componentSeminormTopology C cc, ?_, ?_⟩
   · intro σ hσ
-    show σ.Z ∈ finiteSeminormSubgroup C σ₀
-    rw [finiteSeminormSubgroup_eq_of_connected C σ₀ σ (by
-      have h1 : (⟦σ₀⟧ : ConnectedComponents _) = cc := ‹_›
-      change (⟦σ₀⟧ : ConnectedComponents _) = ⟦σ⟧; rw [h1, ← hσ]; rfl)]
-    exact Z_mem_finiteSeminormSubgroup C σ
+    exact componentZ_mem C cc σ hσ
   · rw [isLocalHomeomorph_iff_isOpenEmbedding_restrict]
     intro ⟨σ, hσ⟩
     obtain ⟨ε₀, hε₀, hε₀8, hWide⟩ := σ.exists_epsilon0 C
@@ -1258,14 +1239,15 @@ theorem bridgeland_theorem_1_2' :
           rw [slicingDist_self]; exact ENNReal.ofReal_pos.mpr hε_pos
     · -- Continuity (Prop 6.3 + Lemma 6.2)
       have hZcont : Continuous Zmap := by
-        rw [continuous_generateFrom_iff]
+        change @Continuous comp ↥V instTopologicalSpaceSubtype
+          (componentSeminormTopology C cc) Zmap
+        rw [componentSeminormTopology, continuous_generateFrom_iff]
         rintro S ⟨W, r, hr, rfl⟩
         rw [isOpen_iff_mem_nhds]
         intro ⟨τ', hτ'cc⟩ hτ'_mem
         -- On comp, comparison is available: all points are on cc.
         have hconn_τ' : ConnectedComponents.mk σ₀ = ConnectedComponents.mk τ' := by
-          have h1 : (⟦σ₀⟧ : ConnectedComponents _) = cc := ‹_›
-          change (⟦σ₀⟧ : ConnectedComponents _) = ⟦τ'⟧; rw [h1, ← hτ'cc]; rfl
+          rw [show σ₀ = componentRep C cc by rfl, mk_componentRep C cc, hτ'cc]
         obtain ⟨K, hK, hdom⟩ := stabSeminorm_dominated_of_connected C σ₀ τ' hconn_τ'
         -- Preimage of σ₀-ball is open: subadditivity + comparison + basisNhd.
         -- ‖Z(τ'')-W‖_{σ₀} ≤ ‖Z(τ'')-Z(τ')‖_{σ₀} + ‖Z(τ')-W‖_{σ₀}
@@ -1329,8 +1311,7 @@ theorem bridgeland_theorem_1_2' :
         show stabSeminorm C σ₀ (τ''.Z - ↑W) < ENNReal.ofReal r
         -- Connectivity for τ''
         have hconn'' : ConnectedComponents.mk σ₀ = ConnectedComponents.mk τ'' := by
-          have h1 : (⟦σ₀⟧ : ConnectedComponents _) = cc := ‹_›
-          change (⟦σ₀⟧ : ConnectedComponents _) = ⟦τ''⟧; rw [h1, ← hτ''cc]; rfl
+          rw [show σ₀ = componentRep C cc by rfl, mk_componentRep C cc, hτ''cc]
         -- Subadditivity: ‖A+B‖ ≤ ‖A‖ + ‖B‖ for stabSeminorm
         have hsub : stabSeminorm C σ₀ ((τ''.Z - τ'.Z) + (τ'.Z - ↑W)) ≤
             stabSeminorm C σ₀ (τ''.Z - τ'.Z) + stabSeminorm C σ₀ (τ'.Z - ↑W) := by
@@ -1410,8 +1391,7 @@ theorem bridgeland_theorem_1_2' :
         obtain ⟨T, hT_sub, hT_open, hx_T⟩ := mem_nhds_iff.mp hS
         -- Comparison: ‖U‖_{σ_x} ≤ K_rev * ‖U‖_{σ₀}
         have hconn_x : ConnectedComponents.mk σ₀ = ConnectedComponents.mk σ_x := by
-          have h1 : (⟦σ₀⟧ : ConnectedComponents _) = cc := ‹_›
-          change (⟦σ₀⟧ : ConnectedComponents _) = ⟦σ_x⟧; rw [h1, ← hσ_x_cc]; rfl
+          rw [show σ₀ = componentRep C cc by rfl, mk_componentRep C cc, hσ_x_cc]
         obtain ⟨K_rev, hK_rev, hdom_rev⟩ :=
           stabSeminorm_dominated_of_connected C σ_x σ₀ hconn_x.symm
         rcases isOpen_induced_iff.mp hT_open with ⟨Tcomp, hTcomp_open, hT_eq⟩
@@ -1484,15 +1464,18 @@ theorem bridgeland_theorem_1_2' :
         refine Filter.mem_of_superset
           (IsOpen.mem_nhds
             (by
-              change TopologicalSpace.GenerateOpen
-                  {S : Set V | ∃ (W : V) (r : ℝ), 0 < r ∧
-                    S = {F : V | stabSeminorm C σ₀ (↑F - ↑W) < ENNReal.ofReal r}}
-                  B
+              change TopologicalSpace.GenerateOpen (componentSeminormBasis C cc) B
               exact TopologicalSpace.GenerateOpen.basic _ ⟨Zmap ⟨σ_x, hσ_x_cc⟩, r0, hr0, by
                 ext F
-                change stabSeminorm C σ₀ (↑F - σ_x.Z) < ENNReal.ofReal r0 ↔
+                change componentSeminormBall C cc (Zmap ⟨σ_x, hσ_x_cc⟩) r0 F ↔
                   stabSeminorm C σ₀ (↑F - σ_x.Z) < ENNReal.ofReal r0
-                simp⟩)
+                change
+                  stabSeminorm C (componentRep C cc)
+                      (↑F - ↑(componentZMap C cc ⟨σ_x, hσ_x_cc⟩)) <
+                    ENNReal.ofReal r0 ↔
+                    stabSeminorm C (componentRep C cc) (↑F - σ_x.Z) <
+                      ENNReal.ofReal r0
+                rfl⟩)
             (by
               change stabSeminorm C σ₀ (σ_x.Z - σ_x.Z) < ENNReal.ofReal r0
               rw [sub_self, stabSeminorm_zero]
