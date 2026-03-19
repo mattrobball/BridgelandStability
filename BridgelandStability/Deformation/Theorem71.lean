@@ -756,11 +756,16 @@ theorem deformedGtLe_triangle
   -- Step 0: Get σ-HN of E
   obtain ⟨F⟩ := σ.slicing.hn_exists E
   -- Step 1: Split σ-HN at cutoff (t + ε)
-  obtain ⟨HIGH, REST, GH, GR, fH, gR, hR, hT1, hH_phases, hR_phases, _⟩ :=
+  obtain ⟨HIGH, REST, GH, GR, fH, gR, hR, hT1, hprops1⟩ :=
     split_hn_filtration_at_cutoff (C := C) F (t + ε)
+  have hH_phases := And.left hprops1
+  have hR_phases := And.left (And.right hprops1)
   -- Step 2: Split REST's filtration at cutoff (t - ε)
-  obtain ⟨MID, LOW, GM, GL, fM, gL, hL, hT2, hM_phases, hL_phases, _⟩ :=
+  obtain ⟨MID, LOW, GM, GL, fM, gL, hL, hT2, hprops2⟩ :=
     split_hn_filtration_at_cutoff (C := C) GR (t - ε)
+  have hM_phases := And.left hprops2
+  have hL_phases := And.left (And.right hprops2)
+  have hGM_contain := And.right (And.right (And.right hprops2))
   -- Helper: ExtensionClosure is idempotent
   have ec_idem_gt : ∀ {X : C},
       (σ.deformedGtPred C W hW ε hε (by linarith) hsin t).ExtensionClosure X →
@@ -834,9 +839,8 @@ theorem deformedGtLe_triangle
           -- GM's phases come from GR's phases (which satisfy ≤ t+ε)
           -- The split preserves this bound.
           have : GM.φ j ≤ t + ε := by
-            -- GM is the high part of splitting GR at t-ε. Its phases are a subset of
-            -- GR's phases. Since all of GR's phases are ≤ t+ε, so are GM's.
-            sorry
+            obtain ⟨i, hi⟩ := hGM_contain j
+            rw [hi]; exact hR_phases i
           simp [b]; linarith
       -- Apply interior_has_enveloped_HN to get Q-HN of MID
       have hMIDne : ¬IsZero MID := hMIDz

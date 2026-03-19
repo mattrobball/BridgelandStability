@@ -625,7 +625,8 @@ theorem split_hn_filtration_at_cutoff
       (∀ j : Fin GX.n, t < GX.φ j) ∧
       (∀ j : Fin GY.n, GY.φ j ≤ t) ∧
       (∀ (_ : 0 < F.n) (j : Fin GY.n),
-        F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) := by
+        F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) ∧
+      (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i) := by
   suffices hmain :
       ∀ (m : ℕ) (A : C) (F : HNFiltration C P A), F.n ≤ m →
         ∃ (X Y : C) (GX : HNFiltration C P X) (GY : HNFiltration C P Y)
@@ -634,7 +635,8 @@ theorem split_hn_filtration_at_cutoff
           (∀ j : Fin GX.n, t < GX.φ j) ∧
           (∀ j : Fin GY.n, GY.φ j ≤ t) ∧
           (∀ (_ : 0 < F.n) (j : Fin GY.n),
-            F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) by
+            F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) ∧
+          (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i) by
     exact hmain F.n A F le_rfl
   intro m
   induction m with
@@ -642,61 +644,51 @@ theorem split_hn_filtration_at_cutoff
       intro A F hFn
       have hn : F.n = 0 := by omega
       refine ⟨A, 0, F, HNFiltration.zero C (P := P) 0 (isZero_zero C),
-        𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_⟩
-      · intro j
-        exact False.elim (by simpa [hn] using j.is_lt)
-      · intro j
-        exact Fin.elim0 j
-      · intro hn0 j
-        exact False.elim (by omega)
+        𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_, ?_⟩
+      · intro j; exact False.elim (by simpa [hn] using j.is_lt)
+      · intro j; exact Fin.elim0 j
+      · intro hn0 j; exact False.elim (by omega)
+      · intro j; exact False.elim (by simpa [hn] using j.isLt)
   | succ m ih =>
       intro A F hFn
       by_cases hn : F.n = 0
       · refine ⟨A, 0, F, HNFiltration.zero C (P := P) 0 (isZero_zero C),
-          𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_⟩
-        · intro j
-          exact False.elim (by simpa [hn] using j.is_lt)
-        · intro j
-          exact Fin.elim0 j
-        · intro hn0 j
-          exact False.elim (by omega)
+          𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_, ?_⟩
+        · intro j; exact False.elim (by simpa [hn] using j.is_lt)
+        · intro j; exact Fin.elim0 j
+        · intro hn0 j; exact False.elim (by omega)
+        · intro j; exact False.elim (by simpa [hn] using j.isLt)
       · have hn0 : 0 < F.n := Nat.pos_of_ne_zero hn
         by_cases hlast_gt : t < F.φ ⟨F.n - 1, by omega⟩
         · refine ⟨A, 0, F, HNFiltration.zero C (P := P) 0 (isZero_zero C),
-            𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_⟩
-          · intro j
-            exact lt_of_lt_of_le hlast_gt
+            𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_, ?_⟩
+          · intro j; exact lt_of_lt_of_le hlast_gt
               (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)))
-          · intro j
-            exact Fin.elim0 j
-          · intro _ j
-            exact Fin.elim0 j
+          · intro j; exact Fin.elim0 j
+          · intro _ j; exact Fin.elim0 j
+          · intro j; exact ⟨j, rfl⟩
         · have hlast_le : F.φ ⟨F.n - 1, by omega⟩ ≤ t := by
             linarith
           by_cases hFone : F.n = 1
           · refine ⟨0, A, HNFiltration.zero C (P := P) 0 (isZero_zero C), F,
-              0, 𝟙 A, 0, contractible_distinguished₁ A, ?_, ?_, ?_⟩
+              0, 𝟙 A, 0, contractible_distinguished₁ A, ?_, ?_, ?_, ?_⟩
+            · intro j; exact Fin.elim0 j
             · intro j
-              exact Fin.elim0 j
-            · intro j
-              have hj : j = ⟨0, by omega⟩ := by
-                apply Fin.ext
-                omega
-              subst j
-              simpa [HNFiltration.phiPlus, hFone] using hlast_le
+              have hj : j = ⟨0, by omega⟩ := by apply Fin.ext; omega
+              subst j; simpa [HNFiltration.phiPlus, hFone] using hlast_le
             · intro _ j
-              have hj : j = ⟨0, by omega⟩ := by
-                apply Fin.ext
-                omega
-              subst j
-              simpa [hFone]
+              have hj : j = ⟨0, by omega⟩ := by apply Fin.ext; omega
+              subst j; simpa [hFone]
+            · intro j; exact Fin.elim0 j
           · have hn2 : 2 ≤ F.n := by omega
             let G := F.prefix C (F.n - 1) (by omega) (by omega)
-            obtain ⟨X, Y', GX, GY', f', g', h', hT', hGX_gt, hGY'_le, hGY'_bound⟩ :=
+            obtain ⟨X, Y', GX, GY', f', g', h', hT', hprops⟩ :=
               ih (F.chain.obj' (F.n - 1) (by omega)) G
-                (by
-                  change F.n - 1 ≤ m
-                  omega)
+                (by change F.n - 1 ≤ m; omega)
+            have hGX_gt := And.left hprops
+            have hGY'_le := And.left (And.right hprops)
+            have hGY'_bound := And.left (And.right (And.right hprops))
+            have hGX_contain := And.right (And.right (And.right hprops))
             let T := F.triangle ⟨F.n - 1, by omega⟩
             let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by omega⟩)
             let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by omega⟩)
@@ -738,7 +730,7 @@ theorem split_hn_filtration_at_cutoff
             let GZ := GY'.appendFactor C oct.triangle oct.mem (Iso.refl _)
               (Iso.refl _) (F.φ ⟨F.n - 1, by omega⟩)
               (F.semistable ⟨F.n - 1, by omega⟩) hφlast_lt
-            refine ⟨X, Z, GX, GZ, f' ≫ u₂₃, v₁₃, w₁₃, h₁₃, hGX_gt, ?_, ?_⟩
+            refine ⟨X, Z, GX, GZ, f' ≫ u₂₃, v₁₃, w₁₃, h₁₃, hGX_gt, ?_, ?_, ?_⟩
             · intro j
               change GZ.φ j ≤ t
               simp only [GZ, HNFiltration.appendFactor]
@@ -751,6 +743,12 @@ theorem split_hn_filtration_at_cutoff
               split_ifs with hj
               · exact le_of_lt (hφlast_lt ⟨j.val, hj⟩)
               · exact le_rfl
+            · -- Phase containment: GX.φ j is a phase of G, hence of F
+              intro j
+              obtain ⟨i_G, hi_G⟩ := hGX_contain j
+              have hi_lt := i_G.isLt; change i_G.val < F.n - 1 at hi_lt
+              exact ⟨⟨i_G.val, by omega⟩,
+                by simp [G, HNFiltration.prefix] at hi_G; exact hi_G⟩
 
 
 variable [IsTriangulated C] in
@@ -803,8 +801,9 @@ theorem exists_deformedGt_deformedLe_triangle_of_hn
       Triangle.mk f g h ∈ distTriang C ∧
       σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t X ∧
       σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t Y := by
-  obtain ⟨X, Y, GX, GY, f, g, h, hT, hGX, hGY, _⟩ :=
+  obtain ⟨X, Y, GX, GY, f, g, h, hT, hprops⟩ :=
     split_hn_filtration_at_cutoff (C := C) G t
+  have hGX := And.left hprops; have hGY := And.left (And.right hprops)
   exact ⟨X, Y, f, g, h, hT,
     ObjectProperty.ExtensionClosure.of_postnikovTower GX.toPostnikovTower
       (fun j ↦ ⟨GX.φ j, hGX j, GX.semistable j⟩),
