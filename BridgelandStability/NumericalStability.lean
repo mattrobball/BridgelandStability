@@ -50,6 +50,7 @@ namespace CategoryTheory.Triangulated
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+  [IsTriangulated C]
 
 /-! ### Finite type -/
 
