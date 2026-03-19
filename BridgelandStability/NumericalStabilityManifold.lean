@@ -9,6 +9,7 @@ import Mathlib.Geometry.Manifold.Complex
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import Mathlib.Topology.Connected.TotallyDisconnected
 import Mathlib.Topology.IsLocalHomeomorph
+import Mathlib.Topology.LocalAtTarget
 
 /-!
 # Numerical Stability Manifolds
@@ -248,12 +249,67 @@ noncomputable def bridgelandCorollary_1_3_topologicalLinearModel [Linear k C] [I
     (bridgelandCorollary_1_3_localLinearModel (C := C) (k := k) hnum cc).toTopologicalLinearModel
 
 /-- A generic manifold-construction theorem for complex local homeomorphisms into a normed model
+space. The genuinely nontrivial step is to build a charted space whose transition maps are
+restrictions of the identity. -/
+theorem exists_chartedSpace_and_hasGroupoid_idRestr_of_isLocalHomeomorph_to_complex_model
+    {E M : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [TopologicalSpace M]
+    (f : M → E) (hf : IsLocalHomeomorph f) :
+    ∃ _ : ChartedSpace E M, HasGroupoid M (@idRestrGroupoid E _) := by
+  classical
+  let chartAt : M → OpenPartialHomeomorph M E := fun x => Classical.choose (hf x)
+  have mem_chart_source : ∀ x : M, x ∈ (chartAt x).source := fun x =>
+    (Classical.choose_spec (hf x)).1
+  have chartAt_eq : ∀ x : M, f = chartAt x := fun x =>
+    (Classical.choose_spec (hf x)).2
+  let charted : ChartedSpace E M := {
+    atlas := Set.range chartAt
+    chartAt := chartAt
+    mem_chart_source := mem_chart_source
+    chart_mem_atlas x := ⟨x, rfl⟩ }
+  letI : ChartedSpace E M := charted
+  refine ⟨charted, ?_⟩
+  constructor
+  intro e e' he he'
+  rcases he with ⟨x, rfl⟩
+  rcases he' with ⟨y, rfl⟩
+  let g : OpenPartialHomeomorph E E := (chartAt x).symm ≫ₕ chartAt y
+  have hchart_eq : (chartAt y : M → E) = chartAt x := by
+    exact (chartAt_eq y).symm.trans (chartAt_eq x)
+  have hg :
+      g ≈ OpenPartialHomeomorph.ofSet g.source g.open_source := by
+    constructor
+    · rfl
+    · intro z hz
+      change chartAt y ((chartAt x).symm z) = z
+      rw [hchart_eq]
+      exact (chartAt x).right_inv hz.1
+  exact (@idRestrGroupoid E _).mem_of_eqOnSource (idRestrGroupoid_mem g.open_source) hg
+
+/-- Once a charted space has transition maps in the restriction groupoid, it is automatically a
+complex manifold. This is the fully generic part of the manifold assembly. -/
+theorem isManifold_of_hasGroupoid_idRestr
+    {E M : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [TopologicalSpace M]
+    [ChartedSpace E M] [HasGroupoid M (@idRestrGroupoid E _)] :
+    IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞) M := by
+  have hle : @idRestrGroupoid E _ ≤ contDiffGroupoid (⊤ : WithTop ℕ∞) (𝓘(ℂ, E)) :=
+    (closedUnderRestriction_iff_id_le _).mp inferInstance
+  letI : HasGroupoid M (contDiffGroupoid (⊤ : WithTop ℕ∞) (𝓘(ℂ, E))) :=
+    hasGroupoid_of_le (M := M) (G₁ := @idRestrGroupoid E _)
+      (G₂ := contDiffGroupoid _ (𝓘(ℂ, E)))
+      inferInstance hle
+  exact IsManifold.mk' (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞) M
+
+/-- A generic manifold-construction theorem for complex local homeomorphisms into a normed model
 space. This is the abstract topological-to-manifold bridge needed to keep Corollary 1.3 small. -/
 theorem exists_chartedSpace_and_complexManifold_of_isLocalHomeomorph_to_complex_model
     {E M : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [TopologicalSpace M]
     (f : M → E) (hf : IsLocalHomeomorph f) :
     ∃ _ : ChartedSpace E M, IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞) M := by
-  sorry
+  rcases
+      exists_chartedSpace_and_hasGroupoid_idRestr_of_isLocalHomeomorph_to_complex_model
+        (E := E) (M := M) f hf with
+    ⟨_instChartedSpace, _instHasGroupoid⟩
+  exact ⟨_instChartedSpace, isManifold_of_hasGroupoid_idRestr (E := E) (M := M)⟩
 
 /-- A mechanical-assembly version of Bridgeland's Corollary 1.3: once the topological linear local
 model and the generic manifold bridge are available, the complex-manifold conclusion should follow
