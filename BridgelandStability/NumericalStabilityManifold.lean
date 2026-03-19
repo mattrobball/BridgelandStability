@@ -137,7 +137,38 @@ theorem IsLocalHomeomorph.codRestrict_preimage
     (hf : IsLocalHomeomorph f) (s : Set Y) :
     @IsLocalHomeomorph {x : X // f x ∈ s} s inferInstance inferInstance
       (fun x => ⟨f x.1, x.2⟩) := by
-  sorry
+  rw [isLocalHomeomorph_iff_isOpenEmbedding_restrict]
+  intro x
+  obtain ⟨e, hxe, hfe⟩ := hf x.1
+  let U : Set {x : X // f x ∈ s} := Subtype.val ⁻¹' e.source
+  refine ⟨U, ?_, ?_⟩
+  · refine IsOpen.mem_nhds ?_ ?_
+    · exact e.open_source.preimage continuous_subtype_val
+    · exact hxe
+  · let comm : U ≃ₜ {y : e.source // e y.1 ∈ s} := {
+      toFun := fun y => ⟨⟨y.1.1, y.2⟩, by simpa [hfe] using y.1.2⟩
+      invFun := fun y => ⟨⟨y.1.1, by simpa [hfe] using y.2⟩, y.1.2⟩
+      left_inv y := by
+        cases y
+        rfl
+      right_inv y := by
+        cases y
+        rfl
+      continuous_toFun := by
+        fun_prop
+      continuous_invFun := by
+        fun_prop
+      }
+    let emb : Topology.IsOpenEmbedding (s.restrictPreimage (e.source.restrict e)) :=
+      Set.restrictPreimage_isOpenEmbedding s e.isOpenEmbedding_restrict
+    have hcomp :
+        s.restrictPreimage (e.source.restrict e) ∘ comm =
+          U.restrict (fun x : {x : X // f x ∈ s} => (⟨f x.1, x.2⟩ : s)) := by
+      funext y
+      apply Subtype.ext
+      have hy : (comm y).1.1 = y.1.1 := rfl
+      simpa [hfe] using congrArg e hy
+    simpa [hcomp] using emb.comp comm.isOpenEmbedding
 
 /-- A topological complex-linear local model for a connected component of numerical stability
 conditions. This packages the local-homeomorphism part of Corollary 1.3, before using numerical
@@ -187,10 +218,52 @@ def chargeMap (M : NumericalComponentTopologicalLinearLocalModel C χ cc) :
 /-- Numerical finiteness should imply that the numerical charge space is finite-dimensional over
 `ℂ`. This is the algebraic input needed to upgrade a local linear model to the full
 Corollary 1.3 package. -/
-theorem numericalChargeSpace_finiteDimensional (χ : K₀ C →+ K₀ C →+ ℤ)
+  theorem numericalChargeSpace_finiteDimensional (χ : K₀ C →+ K₀ C →+ ℤ)
     [NumericallyFinite C χ] :
     FiniteDimensional ℂ (NumericalChargeSpace C χ) := by
-  sorry
+  let A := NumericalK₀ C χ
+  have hfg : AddGroup.FG A := NumericallyFinite.fg (C := C) (χ := χ)
+  have htopfg : (⊤ : AddSubgroup A).FG := (AddGroup.fg_def).mp hfg
+  rcases (AddSubgroup.fg_iff_exists_fin_addMonoidHom (H := (⊤ : AddSubgroup A))).mp htopfg with
+    ⟨n, g, hg_range⟩
+  have hg : Function.Surjective g := by
+    intro x
+    have hx : x ∈ AddMonoidHom.range g := by
+      simpa [hg_range]
+    rcases hx with ⟨y, rfl⟩
+    exact ⟨y, rfl⟩
+  let precomp : NumericalChargeSpace C χ →ₗ[ℂ] ((Fin n → ℤ) →+ ℂ) := {
+    toFun := fun Z => Z.comp g
+    map_add' := by
+      intro Z₁ Z₂
+      ext x
+      rfl
+    map_smul' := by
+      intro a Z
+      ext x
+      rfl }
+  have hprecomp : Function.Injective precomp := by
+    intro Z₁ Z₂ hZ
+    ext x
+    obtain ⟨y, rfl⟩ := hg x
+    exact DFunLike.congr_fun hZ y
+  let eval : ((Fin n → ℤ) →+ ℂ) →ₗ[ℂ] (Fin n → ℂ) := {
+    toFun := fun Z i => Z (Pi.single i 1)
+    map_add' := by
+      intro Z₁ Z₂
+      ext i
+      rfl
+    map_smul' := by
+      intro a Z
+      ext i
+      rfl }
+  have heval : Function.Injective eval := by
+    intro Z₁ Z₂ hZ
+    apply AddMonoidHom.toIntLinearMap_injective
+    apply (Pi.basisFun ℤ (Fin n)).ext
+    intro i
+    simpa [eval, Pi.basisFun_apply] using congr_fun hZ i
+  exact FiniteDimensional.of_injective (eval ∘ₗ precomp) (heval.comp hprecomp)
 
 /-- Upgrade a local linear model to a full topological linear model once the ambient numerical
 charge space is known to be finite-dimensional. -/
