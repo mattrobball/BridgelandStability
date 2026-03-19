@@ -610,6 +610,137 @@ theorem append_hn_filtration_of_triangle
             exact hjLast.symm ▸ hlast_gt_t
 
 variable [IsTriangulated C] in
+/-- Upper-bound companion for `append_hn_filtration_of_triangle`: if all input phases
+are `≤ U`, so are all output phases. Follows from `appendFactor`'s phase structure
+(`φ j = if j < G.n then G.φ j else ψ`). -/
+theorem append_hn_filtration_of_triangle_le
+    {P : ℝ → ObjectProperty C} {X E Y : C}
+    (hPiso : ∀ φ : ℝ, (P φ).IsClosedUnderIsomorphisms)
+    (GX : HNFiltration C P X) (GY : HNFiltration C P Y)
+    (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧)
+    (hT : Triangle.mk f g h ∈ distTriang C)
+    (t U : ℝ)
+    (hX_gt : ∀ j : Fin GX.n, t < GX.φ j)
+    (hY_gt : ∀ i : Fin GY.n, t < GY.φ i)
+    (hsep : ∀ i : Fin GY.n, ∀ j : Fin GX.n, GY.φ i < GX.φ j)
+    (hX_le : ∀ j : Fin GX.n, GX.φ j ≤ U)
+    (hY_le : ∀ i : Fin GY.n, GY.φ i ≤ U) :
+    ∃ G : HNFiltration C P E, (∀ j : Fin G.n, t < G.φ j) ∧ (∀ j : Fin G.n, G.φ j ≤ U) := by
+  suffices hmain :
+      ∀ (m : ℕ) {Y : C} (GY : HNFiltration C P Y), GY.n ≤ m →
+        ∀ {E : C} (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
+          Triangle.mk f g h ∈ distTriang C →
+          ∀ (t : ℝ),
+          (∀ j : Fin GX.n, t < GX.φ j) →
+          (∀ i : Fin GY.n, t < GY.φ i) →
+          (∀ i : Fin GY.n, ∀ j : Fin GX.n, GY.φ i < GX.φ j) →
+          (∀ j : Fin GX.n, GX.φ j ≤ U) →
+          (∀ i : Fin GY.n, GY.φ i ≤ U) →
+          ∃ G : HNFiltration C P E,
+            (∀ j : Fin G.n, t < G.φ j) ∧ (∀ j : Fin G.n, G.φ j ≤ U) by
+    exact hmain GY.n GY le_rfl f g h hT t hX_gt hY_gt hsep hX_le hY_le
+  intro m
+  induction m with
+  | zero =>
+      intro Y GY hn E f g h hT t hX_gt hY_gt hsep hX_le hY_le
+      have hYn : GY.n = 0 := by omega
+      have hYz : IsZero Y := GY.zero_isZero hYn
+      haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
+      refine ⟨GX.ofIso C (asIso f), fun j ↦ ?_, fun j ↦ ?_⟩
+      · simpa using hX_gt j
+      · simpa using hX_le j
+  | succ m ih =>
+      intro Y GY hn E f g h hT t hX_gt hY_gt hsep hX_le hY_le
+      by_cases hYn : GY.n = 0
+      · have hYz : IsZero Y := GY.zero_isZero hYn
+        haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
+        refine ⟨GX.ofIso C (asIso f), fun j ↦ ?_, fun j ↦ ?_⟩
+        · simpa using hX_gt j
+        · simpa using hX_le j
+      · have hYpos : 0 < GY.n := Nat.pos_of_ne_zero hYn
+        by_cases hYone : GY.n = 1
+        · let j0 : Fin GY.n := ⟨0, by omega⟩
+          have hsep0 : ∀ j : Fin GX.n, GY.φ j0 < GX.φ j := fun j ↦ hsep j0 j
+          have hYss : P (GY.φ j0) Y :=
+            semistable_of_hn_length_one (C := C) hPiso GY hYone
+          refine ⟨GX.appendFactor C (Triangle.mk f g h) hT (Iso.refl _) (Iso.refl _)
+            (GY.φ j0) hYss hsep0, fun j ↦ ?_, fun j ↦ ?_⟩
+          · by_cases hj : j.val < GX.n
+            · have : GY.φ j0 <
+                  (GX.appendFactor C _ hT (Iso.refl _) (Iso.refl _) (GY.φ j0) hYss hsep0).φ j := by
+                simpa [HNFiltration.appendFactor, hj] using hsep0 ⟨j.val, hj⟩
+              exact lt_trans (hY_gt j0) this
+            · have : (GX.appendFactor C _ hT (Iso.refl _) (Iso.refl _)
+                  (GY.φ j0) hYss hsep0).φ j = GY.φ j0 := by
+                simp [HNFiltration.appendFactor, hj]
+              exact this.symm ▸ hY_gt j0
+          · by_cases hj : j.val < GX.n
+            · simp only [HNFiltration.appendFactor, hj, dite_true]
+              exact hX_le ⟨j.val, hj⟩
+            · simp only [HNFiltration.appendFactor, hj, dite_false]
+              exact hY_le j0
+        · have hYtwo : 2 ≤ GY.n := by omega
+          let jLast : Fin GY.n := ⟨GY.n - 1, by omega⟩
+          let GY' := GY.prefix C (GY.n - 1) (by omega) (by omega)
+          let Tlast := GY.triangle jLast
+          let e₁ := Classical.choice (GY.triangle_obj₁ jLast)
+          let e₂ := Classical.choice (GY.triangle_obj₂ jLast)
+          let eY := by
+            have hchainN : GY.chain.obj' (GY.n - 1 + 1) (by omega) =
+                GY.chain.obj (Fin.last GY.n) :=
+              congrArg GY.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+            exact e₂.trans ((eqToIso hchainN).trans (Classical.choice GY.top_iso))
+          let f23 : GY.chain.obj ⟨GY.n - 1, by omega⟩ ⟶ Y :=
+            e₁.inv ≫ Tlast.mor₁ ≫ eY.hom
+          let g23 : Y ⟶ Tlast.obj₃ := eY.inv ≫ Tlast.mor₂
+          let h23 : Tlast.obj₃ ⟶ GY.chain.obj ⟨GY.n - 1, by omega⟩⟦(1 : ℤ)⟧ :=
+            Tlast.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧'
+          have hT23 : Triangle.mk f23 g23 h23 ∈ distTriang C := by
+            refine isomorphic_distinguished _ (GY.triangle_dist jLast) _ ?_
+            exact Triangle.isoMk _ _ e₁.symm eY.symm (Iso.refl _)
+              (by simp [Tlast, f23, eY]) (by simp [Tlast, g23, eY]) (by simp [Tlast, h23])
+          obtain ⟨Z, f13, h13, hT13⟩ := distinguished_cocone_triangle₁ (g ≫ g23)
+          let oct := Triangulated.someOctahedron'
+            (show g ≫ g23 = g ≫ g23 by rfl) hT hT23 hT13
+          have hsep' : ∀ i : Fin GY'.n, ∀ j : Fin GX.n, GY'.φ i < GX.φ j := by
+            intro i j
+            have hi : i.val < GY.n - 1 := i.is_lt
+            exact hsep ⟨i.val, by omega⟩ j
+          have hX_gt_last : ∀ j : Fin GX.n, GY.φ jLast < GX.φ j := fun j ↦ hsep jLast j
+          have hY'_gt_last : ∀ i : Fin GY'.n, GY.φ jLast < GY'.φ i := by
+            intro i
+            have hi : i.val < GY.n - 1 := i.is_lt
+            change GY.φ jLast < GY.φ ⟨i.val, by omega⟩
+            exact GY.hφ (Fin.mk_lt_mk.mpr (by omega))
+          obtain ⟨GZ, hGZ_lo, hGZ_le⟩ := ih GY' (by
+            change GY.n - 1 ≤ m; omega)
+            oct.triangle.mor₁ oct.triangle.mor₂ oct.triangle.mor₃ oct.mem
+            (GY.φ jLast) hX_gt_last hY'_gt_last hsep'
+            (fun j ↦ hX_le j)
+            (fun i ↦ by
+              have hi : i.val < GY.n - 1 := i.is_lt
+              exact hY_le ⟨i.val, by omega⟩)
+          have hlast_gt_t : t < GY.φ jLast := hY_gt jLast
+          refine ⟨GZ.appendFactor C (Triangle.mk f13 (g ≫ g23) h13) hT13
+            (Iso.refl _) (Iso.refl _) (GY.φ jLast) (GY.semistable jLast) hGZ_lo,
+            fun j ↦ ?_, fun j ↦ ?_⟩
+          · by_cases hj : j.val < GZ.n
+            · have : GY.φ jLast <
+                  (GZ.appendFactor C _ hT13 (Iso.refl _) (Iso.refl _) (GY.φ jLast)
+                    (GY.semistable jLast) hGZ_lo).φ j := by
+                simpa [HNFiltration.appendFactor, hj] using hGZ_lo ⟨j.val, hj⟩
+              exact lt_trans hlast_gt_t this
+            · have : (GZ.appendFactor C _ hT13 (Iso.refl _) (Iso.refl _) (GY.φ jLast)
+                  (GY.semistable jLast) hGZ_lo).φ j = GY.φ jLast := by
+                simp [HNFiltration.appendFactor, hj]
+              exact this.symm ▸ hlast_gt_t
+          · by_cases hj : j.val < GZ.n
+            · simp only [HNFiltration.appendFactor, hj, dite_true]
+              exact hGZ_le ⟨j.val, hj⟩
+            · simp only [HNFiltration.appendFactor, hj, dite_false]
+              exact hY_le jLast
+
+variable [IsTriangulated C] in
 /-- Split an HN filtration at an arbitrary cutoff `t`. The `X`-part carries a filtration whose
 phases are all `> t`, and the `Y`-part carries a filtration whose phases are all `≤ t`.
 
