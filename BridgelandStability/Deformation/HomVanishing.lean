@@ -5,6 +5,7 @@ Authors: Formalization
 -/
 import BridgelandStability.Deformation.StrictShortExactSequence
 import BridgelandStability.Deformation.BoundaryTriangle
+import BridgelandStability.TStructure.AbelianSubcategoryImageFactorisation
 
 /-!
 # Deformation of Stability Conditions — HomVanishing
