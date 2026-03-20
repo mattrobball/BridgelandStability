@@ -48,13 +48,39 @@ private lemma finrank_mid_of_exact {K M N : Type v} [AddCommGroup K] [Module k K
 -- For a distinguished triangle A → B → C → A[1], the long exact Hom sequence
 -- and the rank-nullity theorem give a telescoping identity:
 --   Σ_n (-1)^n dim Hom(E, B[n]) = Σ_n (-1)^n dim Hom(E, A[n]) + Σ_n (-1)^n dim Hom(E, C[n])
+-- Key cancellation: Σ (-1)^n r(n-1) = -Σ (-1)^n r(n), so the sum of both is zero.
+-- This is the heart of the Euler characteristic telescoping.
+-- Key cancellation: Σ (-1)^n r(n-1) + Σ (-1)^n r(n) = 0 for finitely supported r.
+-- Proof: shift index in the first sum, use (-1)^(n+1) = -(-1)^n.
+private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
+    (hr : (Function.support r).Finite) :
+    ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * r (n - 1) +
+    ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * r n = 0 := by
+  -- Shift the first sum: n ↦ n-1 becomes m ↦ m+1
+  have h_shift : ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * r (n - 1) =
+      ∑ᶠ m : ℤ, ((m + 1).negOnePow : ℤ) * r m := by
+    show ∑ᶠ n : ℤ, (((n : ℤ).negOnePow : ℤ) * r (n - 1)) =
+        ∑ᶠ m : ℤ, (((m + 1 : ℤ).negOnePow : ℤ) * r m)
+    have : (fun n : ℤ ↦ ((n : ℤ).negOnePow : ℤ) * r (n - 1)) =
+        fun n : ℤ ↦ (((Equiv.subRight (1 : ℤ) n + 1 : ℤ).negOnePow : ℤ) *
+          r (Equiv.subRight (1 : ℤ) n)) := by
+      ext n; simp [Equiv.subRight, sub_add_cancel]
+    rw [this]
+    exact @finsum_comp_equiv ℤ ℤ ℤ _ (Equiv.subRight 1)
+      (f := fun m ↦ ((m + 1 : ℤ).negOnePow : ℤ) * r m)
+  rw [h_shift]
+  -- (-1)^(m+1) = -(-1)^m
+  simp_rw [Int.negOnePow_succ, Units.val_neg, neg_mul]
+  -- Now: Σ -(-1)^m r(m) + Σ (-1)^n r(n) = 0
+  rw [finsum_neg_distrib]
+  linarith
+
 private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
-    -- The long exact Hom sequence from coyoneda gives, at each degree n:
-    --   Hom(E, A[n]) → Hom(E, B[n]) → Hom(E, C[n])  exact (im f = ker g)
-    -- Combined with the connecting maps Hom(E, C[n]) → Hom(E, A[n+1]),
-    -- the alternating sum telescopes to zero.
+    -- Goal: χ(E, T.obj₂) = χ(E, T.obj₁) + χ(E, T.obj₃)
+    -- The preadditiveCoyoneda.obj (op E) is homological, giving exactness at each degree.
+    -- By rank-nullity + telescoping, the alternating sum is additive.
     sorry
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
