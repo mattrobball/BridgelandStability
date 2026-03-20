@@ -420,12 +420,9 @@ theorem Slicing.toTStructureGE_bounded (s : Slicing C) :
   · have hn := F.n_pos C hE
     refine ⟨⌈-(F.phiMinus C hn)⌉, ⌈1 - F.phiPlus C hn⌉ - 1, Or.inr ⟨F, hn, ?_⟩,
       Or.inr ⟨F, hn, ?_⟩⟩
-    · have := Int.le_ceil (-(F.phiMinus C hn))
-      push_cast
-      linarith
+    · linarith [Int.le_ceil (-(F.phiMinus C hn))]
     · have hceil : ((⌈1 - F.phiPlus C hn⌉ - 1 : ℤ) : ℝ) < 1 - F.phiPlus C hn := by
-        exact (Int.lt_ceil).1 (by
-          simpa using Int.sub_one_lt (⌈1 - F.phiPlus C hn⌉ : ℤ))
+        exact (Int.lt_ceil).1 (by omega)
       linarith
 
 /-- **Heart identification.**
