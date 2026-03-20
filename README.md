@@ -116,13 +116,15 @@ parts of modern geometry and mathematical physics.
   tying the theory to cluster structures, exact WKB, and mirror-symmetry
   phenomena.
 
-This is still an active subject, not just a finished 2007 story. Recent papers
-include new existence results for normal surfaces (Langer, 2023/2024), current
-survey notes on stability spaces in representation theory (Barbieri, 2024),
-new work connecting Bridgeland-Smith type correspondences to
-Donaldson-Thomas invariants (Kidwai-Williams, 2024), new wall-crossing results
-for higher-rank DT/PT theory (Jardim-Lo-Maciocia-Martinez, 2025), and even new
-results about the metric geometry of stability spaces themselves (Fan, 2024/2025).
+Some benchmark applications and extensions already sit in journals that are
+obviously first-rank. Bayer and Macri used Bridgeland wall-crossing to relate
+moduli of sheaves on K3 surfaces to the minimal model program in JAMS and
+Inventiones. Bridgeland and Smith identified spaces of stability conditions
+with spaces of quadratic differentials in Publications mathematiques de l'IHES.
+Bayer, Macri, and Stellari established threefold existence results in
+Inventiones, Chunyi Li proved existence on the quintic threefold in
+Inventiones, and Bayer-Lahoz-Macri-Nuer-Perry-Stellari developed the theory in
+families in Publications mathematiques de l'IHES.
 
 This repository is aimed at the foundation under those applications: if the
 basic manifold and deformation story is formalized well, a lot of later
@@ -196,23 +198,26 @@ special pleading as possible.
 7. Tom Bridgeland and Ivan Smith,
    [Quadratic differentials as stability conditions](https://arxiv.org/abs/1302.7030).
 
-### More Recent Directions
+### Top-Journal Applications And Extensions
 
-8. Anna Barbieri,
-   [Spaces of Bridgeland stability conditions in representation theory](https://arxiv.org/abs/2409.15131),
-   survey article, 2024.
-9. Adrian Langer,
-   [Bridgeland stability conditions on normal surfaces](https://arxiv.org/abs/2310.04761),
-   Ann. Mat. Pura Appl. 203 (2024), 2653-2664.
-10. Omar Kidwai and Nicholas J. Williams,
-    [Donaldson-Thomas invariants for the Bridgeland-Smith correspondence](https://arxiv.org/abs/2401.10093),
-    2024.
-11. Howard Nuer,
-    [Stability conditions on some families of Calabi-Yau threefolds via orbifolding](https://arxiv.org/abs/2501.06207),
-    2025.
-12. Marcos Jardim, Jason Lo, Antony Maciocia, Cristian Martinez,
-    [Higher rank DT/PT wall-crossing in Bridgeland stability](https://arxiv.org/abs/2503.20008),
-    2025.
-13. Yu-Wei Fan,
-    [A space of stability conditions that is not a length space](https://arxiv.org/abs/2412.04777),
-    2024/2025.
+8. Arend Bayer and Emanuele Macri,
+   [Projectivity and birational geometry of Bridgeland moduli spaces](https://www.ams.org/jams/2014-27-03/S0894-0347-2014-00790-6/),
+   Journal of the American Mathematical Society 27 (2014), 707-752.
+9. Arend Bayer and Emanuele Macri,
+   [MMP for moduli of sheaves on K3s via wall-crossing: nef and movable cones, Lagrangian fibrations](https://doi.org/10.1007/s00222-014-0501-8),
+   Inventiones mathematicae 198 (2014), 505-590.
+10. Tom Bridgeland and Ivan Smith,
+    [Quadratic differentials as stability conditions](https://link.springer.com/article/10.1007/s10240-014-0066-5),
+    Publications mathematiques de l'IHES 121 (2015), 155-278.
+11. Arend Bayer, Emanuele Macri, and Paolo Stellari,
+    [The space of stability conditions on abelian threefolds, and on some Calabi-Yau threefolds](https://link.springer.com/article/10.1007/s00222-016-0665-5),
+    Inventiones mathematicae 206 (2016), 869-933.
+12. Arend Bayer and Tom Bridgeland,
+    [Derived automorphism groups of K3 surfaces of Picard rank 1](https://doi.org/10.1215/00127094-3674332),
+    Duke Mathematical Journal 166 (2017), 75-124.
+13. Chunyi Li,
+    [On stability conditions for the quintic threefold](https://link.springer.com/article/10.1007/s00222-019-00888-z),
+    Inventiones mathematicae 218 (2019), 301-340.
+14. Arend Bayer, Marti Lahoz, Emanuele Macri, Howard Nuer, Alexander Perry, Paolo Stellari,
+    [Stability conditions in families](https://link.springer.com/article/10.1007/s10240-021-00124-6),
+    Publications mathematiques de l'IHES 133 (2021), 157-325.

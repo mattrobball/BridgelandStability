@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import BridgelandStability.StabilityCondition.Basic
-import BridgelandStability.StabilityFunction
-import BridgelandStability.IntervalCategory
+import BridgelandStability.StabilityFunction.Basic
+import BridgelandStability.IntervalCategory.Basic
 import BridgelandStability.TStructure.HeartAbelian
 
 /-!

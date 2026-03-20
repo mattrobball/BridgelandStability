@@ -3,7 +3,7 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Slicing
+import BridgelandStability.Slicing.Basic
 import BridgelandStability.GrothendieckGroup
 import BridgelandStability.Strict
 import BridgelandStability.TStructure.HeartAbelian

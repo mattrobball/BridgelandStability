@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import BridgelandStability.GrothendieckGroup
-import BridgelandStability.IntervalCategory
+import BridgelandStability.IntervalCategory.Basic
 import Mathlib.Topology.IsLocalHomeomorph
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.Connected.Clopen
