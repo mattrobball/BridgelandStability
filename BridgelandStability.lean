@@ -13,6 +13,8 @@ import BridgelandStability.Deformation.MaximalDestabilizingQuotient
 import BridgelandStability.Deformation.MaximalDestabilizingQuotientKernel
 import BridgelandStability.Deformation.PhaseArithmetic
 import BridgelandStability.Deformation.PhaseConfinement
+import BridgelandStability.Deformation.PhiPlusHN
+import BridgelandStability.Deformation.PhiPlusMDQ
 import BridgelandStability.Deformation.PhiPlusReduction
 import BridgelandStability.Deformation.Pullback
 import BridgelandStability.Deformation.Setup

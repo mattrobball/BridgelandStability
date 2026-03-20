@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 import BridgelandStability.Deformation.TStructure
 import BridgelandStability.Deformation.IntervalAbelian
-import BridgelandStability.Deformation.PhiPlusReduction
+import BridgelandStability.Deformation.PhiPlusHN
 
 /-!
 # Deformation of Stability Conditions — Theorem71
