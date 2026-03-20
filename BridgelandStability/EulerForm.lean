@@ -211,7 +211,11 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
         have hRK : LinearMap.range g_n = LinearMap.ker (δ_lin n) := by
           ext x; simp only [LinearMap.mem_range, LinearMap.mem_ker, Linear.rightComp_apply]
           constructor
-          · rintro ⟨y, rfl⟩; sorry
+          · rintro ⟨y, rfl⟩
+            show (y ≫ T.mor₂⟦n⟧') ≫ (T.mor₃⟦n⟧' ≫ _) = 0
+            have h23 : T.mor₂⟦n⟧' ≫ T.mor₃⟦n⟧' = 0 := by
+              rw [← Functor.map_comp, comp_distTriang_mor_zero₂₃ T hT, Functor.map_zero]
+            simp [reassoc_of% h23]
           · intro hx
             -- x ≫ δ_mor = 0, factor x through T.mor₂⟦n⟧'
             -- Use coyoneda_exact₃ on shifted triangle
