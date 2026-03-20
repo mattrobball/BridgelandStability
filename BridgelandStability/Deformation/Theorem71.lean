@@ -3,9 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Deformation.TStructure
-import Mathlib.CategoryTheory.Triangulated.Deformation.PPhiAbelian
-import Mathlib.CategoryTheory.Triangulated.Deformation.PhiPlusReduction
+import BridgelandStability.Deformation.TStructure
+import BridgelandStability.Deformation.PPhiAbelian
+import BridgelandStability.Deformation.PhiPlusReduction
 
 /-!
 # Deformation of Stability Conditions — Theorem71

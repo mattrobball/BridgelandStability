@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 
-import Mathlib.CategoryTheory.Triangulated.DeformationTheorem
-import Mathlib.CategoryTheory.Triangulated.EulerForm
-import Mathlib.CategoryTheory.Triangulated.NumericalStability
+import BridgelandStability.DeformationTheorem
+import BridgelandStability.EulerForm
+import BridgelandStability.NumericalStability
 import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.Geometry.Manifold.Complex
 import Mathlib.Topology.Algebra.Module.FiniteDimension

@@ -3,20 +3,20 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.StabilityCondition
-import Mathlib.CategoryTheory.Triangulated.StabilityFunction
-import Mathlib.CategoryTheory.Triangulated.IntervalCategory
+import BridgelandStability.StabilityCondition
+import BridgelandStability.StabilityFunction
+import BridgelandStability.IntervalCategory
 import Mathlib.CategoryTheory.Triangulated.HomologicalFunctor
 import Mathlib.CategoryTheory.Triangulated.Yoneda
-import Mathlib.CategoryTheory.Triangulated.TStructure.HeartAbelian
+import BridgelandStability.TStructure.HeartAbelian
 import Mathlib.CategoryTheory.Triangulated.TStructure.SpectralObject
 import Mathlib.CategoryTheory.Triangulated.TStructure.TruncLEGT
 import Mathlib.Algebra.Homology.SpectralObject.Basic
 import Mathlib.CategoryTheory.Shift.ShiftSequence
 import Mathlib.CategoryTheory.Abelian.FunctorCategory
 import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
-import Mathlib.CategoryTheory.Triangulated.Deformation.PPhiAbelian
-import Mathlib.CategoryTheory.Triangulated.Deformation.PhaseArithmetic
+import BridgelandStability.Deformation.PPhiAbelian
+import BridgelandStability.Deformation.PhaseArithmetic
 
 open scoped BigOperators
 

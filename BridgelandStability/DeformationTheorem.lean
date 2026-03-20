@@ -3,7 +3,7 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Deformation.Theorem71
+import BridgelandStability.Deformation.Theorem71
 import Mathlib.Topology.Bases
 import Mathlib.Topology.Maps.Basic
 import Mathlib.Topology.Connected.Clopen

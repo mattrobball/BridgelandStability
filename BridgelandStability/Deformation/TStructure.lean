@@ -3,8 +3,8 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Deformation.Lemma77
-import Mathlib.CategoryTheory.Triangulated.Deformation.HomVanishing
+import BridgelandStability.Deformation.Lemma77
+import BridgelandStability.Deformation.HomVanishing
 
 /-!
 # Deformation of Stability Conditions — TStructure

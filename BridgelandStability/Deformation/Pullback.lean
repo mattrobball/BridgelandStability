@@ -3,8 +3,8 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Deformation.BoundaryTriangles
-import Mathlib.CategoryTheory.Triangulated.Deformation.IntervalSelection
+import BridgelandStability.Deformation.BoundaryTriangles
+import BridgelandStability.Deformation.IntervalSelection
 
 /-!
 # Deformation of Stability Conditions — Pullback

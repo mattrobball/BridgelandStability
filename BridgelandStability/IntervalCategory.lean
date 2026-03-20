@@ -3,10 +3,10 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Slicing
-import Mathlib.CategoryTheory.Triangulated.GrothendieckGroup
-import Mathlib.CategoryTheory.Triangulated.Strict
-import Mathlib.CategoryTheory.Triangulated.TStructure.HeartAbelian
+import BridgelandStability.Slicing
+import BridgelandStability.GrothendieckGroup
+import BridgelandStability.Strict
+import BridgelandStability.TStructure.HeartAbelian
 import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
 import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Pullbacks

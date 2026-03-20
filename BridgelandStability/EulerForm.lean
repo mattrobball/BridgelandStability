@@ -3,7 +3,7 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.NumericalStability
+import BridgelandStability.NumericalStability
 import Mathlib.CategoryTheory.Triangulated.Yoneda
 import Mathlib.CategoryTheory.Linear.Yoneda
 import Mathlib.CategoryTheory.Shift.Linear
