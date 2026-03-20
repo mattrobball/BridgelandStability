@@ -1,5 +1,7 @@
 import BridgelandStability.Deformation.BoundaryTriangle
+import BridgelandStability.Deformation.DeformedGtLe
 import BridgelandStability.Deformation.DeformedSlicing
+import BridgelandStability.Deformation.DeformedSlicingHN
 import BridgelandStability.Deformation.ExtensionClosure
 import BridgelandStability.Deformation.FiniteLengthHN
 import BridgelandStability.Deformation.HNExistence
