@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import BridgelandStability.StabilityCondition.Basic
-import BridgelandStability.StabilityFunction.HarderNarasimhan
+import BridgelandStability.StabilityFunction.Uniqueness
 import BridgelandStability.IntervalCategory.QuasiAbelian
 import BridgelandStability.TStructure.HeartAbelian
 

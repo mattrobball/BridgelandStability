@@ -155,12 +155,12 @@ cleanup, consolidation, and renaming that Mathlib would require.
 
 This is an experiment in AI-assisted formalization.
 
-Rule 1: AI use in a human-led workflow. The current toolchain is
+**Rule 1:** Humans write no Lean code beyond Mathlib. The current toolchain is
 `claude-code` with Opus 4.6 and `codex` with GPT-5.4 plus FRO Lean skills. The
 goal is not to replace human mathematical judgment, but to study how far a
 human-led effort can push AI-assisted formalization on top of Mathlib.
 
-Rule 2: getting Lean to accept a proof script is not success. The end state has
+**Rule 2:** Getting Lean to accept a proof script is not success. The end state has
 to be Mathlib quality: correct abstractions, reusable lemmas, sane names,
 controlled imports, documentation, and proofs that could plausibly survive code
 review and upstreaming. If we do not reach that bar, the project has failed.

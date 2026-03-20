@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import BridgelandStability.StabilityCondition.Topology
-import BridgelandStability.StabilityFunction.HarderNarasimhan
+import BridgelandStability.StabilityFunction.Uniqueness
 import BridgelandStability.IntervalCategory.QuasiAbelian
 import Mathlib.CategoryTheory.Triangulated.HomologicalFunctor
 import Mathlib.CategoryTheory.Triangulated.Yoneda
