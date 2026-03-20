@@ -369,7 +369,7 @@ theorem HeartStabilityData.toH0primeHom_fromH0primeHom_of_isGE
   symm
   exact h.toH0primeHom_eq (C := C) E
     (h.fromH0primeHom_of_isGE (C := C) E β) β
-    (by simpa using h.fromH0primeHom_of_isGE_hom (C := C) E β)
+    (h.fromH0primeHom_of_isGE_hom (C := C) E β).symm
 
 theorem HeartStabilityData.fromH0primeHom_of_isGE_toH0primeHom
     (h : HeartStabilityData C)
@@ -478,15 +478,6 @@ noncomputable def HeartStabilityData.toH0primeIsoViaTruncGE
   map_add' := by
     intro f g
     simp
-
--- `docBlame` currently misses the attached docstrings on these public
--- `noncomputable def`s, even though `findDocString?` and hover both see them.
-attribute [nolint docBlame]
-  HeartStabilityData.toH0primeHom
-  HeartStabilityData.fromH0primeHom_of_isGE
-  HeartStabilityData.toH0primeIsoOfIsGE
-  HeartStabilityData.H0primeObjIsoTruncGE
-  HeartStabilityData.toH0primeIsoViaTruncGE
 
 theorem HeartStabilityData.toH0primeIsoViaTruncGE_naturality
     (h : HeartStabilityData C)
