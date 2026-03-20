@@ -20,8 +20,6 @@ set_option backward.privateInPublic true
 set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
 
-set_option linter.style.longFile 1700
-
 /-!
 # Bridgeland Stability Conditions
 
