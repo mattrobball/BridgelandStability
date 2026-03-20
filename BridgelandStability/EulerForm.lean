@@ -168,7 +168,7 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
           simp only [← Functor.map_comp, this, Functor.map_zero]
         · intro x hx
           -- Exactness: if x ≫ T.mor₂⟦n⟧' = 0, then x factors through T.mor₁⟦n⟧'
-          sorry -- Needs careful treatment of shifted triangle exactness
+          sorry
       -- Rank-nullity at B[n]: dim B[n] = dim(range f_n) + dim(range g_n)
       haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
       have h_mid := finrank_mid_of_exact k f_n g_n hexact_B
