@@ -53,7 +53,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     Slicing C where
-  P := σ.deformedPred C W hW ε hε (by linarith) hsin
+  P := σ.deformedPred C W hW ε
   closedUnderIso := fun φ ↦ ⟨fun {E E'} e h ↦ by
     rcases h with hZ | ⟨a, b, hab, hthin, henv_lo, henv_hi, hSS⟩
     · exact Or.inl ((Iso.isZero_iff e).mp hZ)
@@ -73,7 +73,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
             (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
               (by simp) (by simp) (by simp))
         exact hSS.2.2.2.2 hT' hK hQ hKne⟩
-  zero_mem ψ := σ.deformedPred_zero C W hW ε hε (by linarith) hsin ψ (isZero_zero C)
+  zero_mem ψ := σ.deformedPred_zero C W hW ε ψ (isZero_zero C)
   shift_iff := fun φ X ↦ by
     constructor
     · -- Forward: deformedPred φ X → deformedPred (φ+1) (X⟦1⟧)
@@ -219,7 +219,6 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
   hn_exists := fun E ↦
     deformedSlicing_hn_exists C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin E
 
-variable [IsTriangulated C] in
 /-- **W-compatibility of the deformed slicing.** For every nonzero Q-semistable object `E`
 of Q-phase `ψ`, the central charge `W([E])` lies on the ray `ℝ₊ · exp(iπψ)`. This
 follows directly from the `Semistable` definition, which stores
@@ -244,7 +243,6 @@ theorem StabilityCondition.deformedSlicing_compat
 
 /-! #### Step A4: Main theorem -/
 
-variable [IsTriangulated C] in
 /-- **Reverse phase confinement**. If `E` is σ-semistable of phase `φ` and
 `‖W - Z‖_σ < sin(πε)`, then `E` lies in the Q-interval `(φ - 2ε - δ, φ + 4ε + δ)`
 for any `δ > 0`.
@@ -294,7 +292,7 @@ theorem deformed_intervalProp_subset_sigma_intervalProp
   · apply intervalProp_of_postnikovTower C σ.slicing F.toPostnikovTower
     intro i
     have hsem := F.semistable i
-    change σ.deformedPred C W hW ε hε (by linarith) hsin (F.φ i) _ at hsem
+    change σ.deformedPred C W hW ε (F.φ i) _ at hsem
     rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
     · exact Or.inl hZ_i
     · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i

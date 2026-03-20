@@ -35,7 +35,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 /-! ### Deformation theorem (Theorem 7.1) -/
 
-variable [IsTriangulated C] in
 /-- A quantitative helper for **Bridgeland's Theorem 7.1**. Given a
 stability condition `σ = (Z, P)` on a triangulated category `D` and a group
 homomorphism `W : K₀(D) → ℂ` with `‖W - Z‖_σ < sin(πε)` for some `0 < ε < ε₀`
@@ -59,8 +58,12 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
+    let _Q : Slicing C :=
+      @StabilityCondition.deformedSlicing C _ _ _ _ _ _ ‹IsTriangulated C›
+        σ W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing ≤ ENNReal.ofReal ε := by
+  dsimp
   have hε₀8 : ε₀ < 1 / 8 := by linarith
   have hε₀2 : ε₀ < 1 / 4 := by linarith
   let hSector : SectorFiniteLength (C := C) σ ε₀ hε₀ hε₀2 :=
@@ -100,7 +103,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
     set Q := σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
     have deformedGtPred_subset_gtProp :
         ∀ {t : ℝ} {E : C},
-          σ.deformedGtPred C W hW ε hε (by linarith) hsin t E →
+          σ.deformedGtPred C W hW ε t E →
             Q.gtProp C t E := by
       intro t E hE
       induction hE with
@@ -116,7 +119,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
           exact Q.gtProp_of_triangle C t ihX ihY hT
     have deformedLtPred_subset_ltProp :
         ∀ {t : ℝ} {E : C},
-          σ.deformedLtPred C W hW ε hε (by linarith) hsin t E →
+          σ.deformedLtPred C W hW ε t E →
             Q.ltProp C t E := by
       intro t E hE
       induction hE with
@@ -142,7 +145,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
       by_cases hGi : IsZero (G.toPostnikovTower.factor i)
       · exact Or.inl hGi
       · have hsem := G.semistable i
-        change σ.deformedPred C W hW ε hε (by linarith) hsin (G.φ i) _ at hsem
+        change σ.deformedPred C W hW ε (G.φ i) _ at hsem
         rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
         · exact absurd hZ_i hGi
         · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
@@ -219,7 +222,6 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
             Q.phiMinus C E hE - ε))
         linarith
 
-variable [IsTriangulated C] in
 /-- **Bridgeland's Theorem 7.1** (deformation of stability conditions). Under the
 usual small-deformation hypothesis on `W`, there exists a locally-finite stability
 condition `τ = (W, Q)` with `d(P, Q) < ε`.
@@ -234,8 +236,12 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
+    let _Q : Slicing C :=
+      @StabilityCondition.deformedSlicing C _ _ _ _ _ _ ‹IsTriangulated C›
+        σ W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε := by
+  dsimp
   set x := (stabSeminorm C σ (W - σ.Z)).toReal
   have hx_lt : x < Real.sin (Real.pi * ε) := by
     dsimp [x]
