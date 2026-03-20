@@ -1,6 +1,7 @@
 # BridgelandStability
 
-This repository is an experimental AI-assisted formalization of parts of Tom
+This repository is an experimental AI-assisted formalization of the main
+results of Tom
 Bridgeland's paper
 [Stability conditions on triangulated categories](https://annals.math.princeton.edu/2007/166-2/p01)
 in Lean 4 and mathlib.
@@ -44,9 +45,8 @@ depend on a central charge and vary continuously in moduli. Bridgeland's paper
 takes that heuristic and turns it into a precise piece of homological algebra.
 
 The paper is therefore motivated by physics, but mathematically it is mostly
-about the internal geometry of triangulated categories: slicings, hearts,
-interval subcategories, deformation estimates, and the topology of the space of
-stability conditions itself.
+about the main structural results around slicings, hearts, deformation
+estimates, and the topology of the space of stability conditions itself.
 
 ## The main theorem and Corollary 1.3
 
@@ -165,9 +165,12 @@ cleanup, consolidation, and renaming that mathlib would require.
 
 ## Project charter
 
-This is an experiment in AI-assisted auto-formalization.
+This is an experiment in AI-assisted formalization.
 
-Rule 1: no human proof code outside mathlib.
+Rule 1: AI use in a human-led workflow. The current toolchain is
+`claude-code` with Opus 4.6 and `codex` with GPT-5.4 plus FRO Lean skills. The
+goal is not to replace human mathematical judgment, but to study how far a
+human-led effort can push AI-assisted formalization on top of mathlib.
 
 Rule 2: getting Lean to accept a proof script is not success. The end state has
 to be mathlib quality: correct abstractions, reusable lemmas, sane names,
