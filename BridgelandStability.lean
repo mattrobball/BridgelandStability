@@ -33,6 +33,8 @@ import BridgelandStability.StabilityCondition.Basic
 import BridgelandStability.StabilityCondition.ConnectedComponent
 import BridgelandStability.StabilityCondition.Deformation
 import BridgelandStability.StabilityCondition.LocalHomeomorphism
+import BridgelandStability.StabilityCondition.Seminorm
+import BridgelandStability.StabilityCondition.Topology
 import BridgelandStability.StabilityFunction.Basic
 import BridgelandStability.StabilityFunction.HarderNarasimhan
 import BridgelandStability.Strict

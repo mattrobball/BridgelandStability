@@ -3,7 +3,7 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityCondition.Basic
+import BridgelandStability.StabilityCondition.Seminorm
 import BridgelandStability.StabilityFunction.HarderNarasimhan
 import BridgelandStability.IntervalCategory.QuasiAbelian
 import BridgelandStability.TStructure.HeartAbelian

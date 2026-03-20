@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import BridgelandStability.Deformation.Theorem
+import BridgelandStability.StabilityCondition.Topology
 import Mathlib.Topology.Bases
 import Mathlib.Topology.Maps.Basic
 import Mathlib.Topology.Connected.Clopen
