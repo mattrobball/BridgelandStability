@@ -6,6 +6,8 @@ Authors: Formalization
 import Mathlib.CategoryTheory.Triangulated.NumericalStability
 import Mathlib.CategoryTheory.Triangulated.Yoneda
 import Mathlib.CategoryTheory.Linear.Yoneda
+import Mathlib.CategoryTheory.Shift.Linear
+import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
@@ -21,6 +23,7 @@ and the rank-nullity theorem for finite-dimensional vector spaces.
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
+open scoped CategoryTheory.Pretriangulated.Opposite
 
 universe w v u
 
@@ -79,14 +82,53 @@ private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
 -- pointwise, with all supports finite, then the alternating sums satisfy
 -- Σ (-1)^n b(n) = Σ (-1)^n a(n) + Σ (-1)^n c(n).
 private lemma eulerSum_of_rank_identity
-    {a b c : ℤ → C} {r : ℤ → ℤ}
+    (E : C) {a b c : ℤ → C} {r : ℤ → ℤ}
     (hrank : ∀ n : ℤ, (Module.finrank k (E ⟶ b n) : ℤ) =
       Module.finrank k (E ⟶ a n) + Module.finrank k (E ⟶ c n) - r (n - 1) - r n)
-    (hfin_b : ∀ n, Module.Finite k (E ⟶ b n))
+    (hfin_a : Set.Finite {n : ℤ | Nontrivial (E ⟶ a n)})
+    (hfin_b : Set.Finite {n : ℤ | Nontrivial (E ⟶ b n)})
+    (hfin_c : Set.Finite {n : ℤ | Nontrivial (E ⟶ c n)})
     (hr : (Function.support r).Finite) :
     (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * Module.finrank k (E ⟶ b n)) =
     (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * Module.finrank k (E ⟶ a n)) +
     (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * Module.finrank k (E ⟶ c n)) := by
+  let fa : ℤ → ℤ := fun n ↦ (n.negOnePow : ℤ) * Module.finrank k (E ⟶ a n)
+  let fb : ℤ → ℤ := fun n ↦ (n.negOnePow : ℤ) * Module.finrank k (E ⟶ b n)
+  let fc : ℤ → ℤ := fun n ↦ (n.negOnePow : ℤ) * Module.finrank k (E ⟶ c n)
+  let fr : ℤ → ℤ := fun n ↦ (n.negOnePow : ℤ) * (-r (n - 1) - r n)
+  have hfa : (Function.support fa).Finite := by
+    refine Set.Finite.subset hfin_a ?_
+    intro n hn
+    have hfinrank_ne : (Module.finrank k (E ⟶ a n) : ℤ) ≠ 0 := by
+      intro h0
+      apply hn
+      simp [fa, h0]
+    letI : Nontrivial (E ⟶ a n) :=
+      Module.nontrivial_of_finrank_pos (R := k) (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
+    show Nontrivial (E ⟶ a n)
+    infer_instance
+  have hfb : (Function.support fb).Finite := by
+    refine Set.Finite.subset hfin_b ?_
+    intro n hn
+    have hfinrank_ne : (Module.finrank k (E ⟶ b n) : ℤ) ≠ 0 := by
+      intro h0
+      apply hn
+      simp [fb, h0]
+    letI : Nontrivial (E ⟶ b n) :=
+      Module.nontrivial_of_finrank_pos (R := k) (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
+    show Nontrivial (E ⟶ b n)
+    infer_instance
+  have hfc : (Function.support fc).Finite := by
+    refine Set.Finite.subset hfin_c ?_
+    intro n hn
+    have hfinrank_ne : (Module.finrank k (E ⟶ c n) : ℤ) ≠ 0 := by
+      intro h0
+      apply hn
+      simp [fc, h0]
+    letI : Nontrivial (E ⟶ c n) :=
+      Module.nontrivial_of_finrank_pos (R := k) (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
+    show Nontrivial (E ⟶ c n)
+    infer_instance
   -- Rewrite b(n) using hrank: b(n) = a(n) + c(n) - r(n-1) - r(n)
   have key : ∀ n, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ b n) : ℤ) =
       (n.negOnePow : ℤ) * Module.finrank k (E ⟶ a n) +
@@ -95,12 +137,35 @@ private lemma eulerSum_of_rank_identity
   simp_rw [key]
   -- Goal: Σ (x + y + z) = Σ x + Σ y where z cancels
   -- Suffices: Σ z = 0
-  suffices hz : ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) = 0 by
-    -- Σ (x + y + z) = Σ x + Σ y + Σ z = Σ x + Σ y + 0
-    -- Need finsum_add_distrib with finite support
-    -- All remaining sorries are finite support bookkeeping
-    sorry
+  suffices hz : ∑ᶠ n : ℤ, fr n = 0 by
+    have hfac : (Function.support (fun n : ℤ ↦ fa n + fc n)).Finite := by
+      exact Set.Finite.subset (hfa.union hfc) (Function.support_add _ _)
+    have hr_shift : (Function.support fun n : ℤ ↦ r (n - 1)).Finite := by
+      refine Set.Finite.subset (hr.image fun m : ℤ ↦ m + 1) ?_
+      intro n hn
+      refine ⟨n - 1, hn, by simp⟩
+    have hfr : (Function.support fr).Finite := by
+      refine Set.Finite.subset (hr_shift.union hr) ?_
+      intro n hn
+      by_cases h1 : r (n - 1) = 0
+      · by_cases h2 : r n = 0
+        · exfalso
+          apply hn
+          simp [fr, h1, h2]
+        · exact Or.inr h2
+      · exact Or.inl h1
+    let lhs : ℤ := finsum (fun n : ℤ ↦ (fa n + fc n) + fr n)
+    let rhs : ℤ := finsum fa + finsum fc
+    have hsum := by
+      show lhs = rhs
+      dsimp [lhs, rhs]
+      rw [finsum_add_distrib hfac]
+      · rw [finsum_add_distrib hfa hfc, hz]
+        simp
+      · exact hfr
+    simpa [fa, fc, fr, lhs, rhs]
   -- Expand: (-1)^n * (-r(n-1) - r(n)) = -((-1)^n * r(n-1)) - ((-1)^n * r(n))
+  change ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) = 0
   simp_rw [show ∀ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) =
       -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) - ((n : ℤ).negOnePow : ℤ) * r n from
     fun n ↦ by ring]
@@ -109,8 +174,10 @@ private lemma eulerSum_of_rank_identity
       ((n : ℤ).negOnePow : ℤ) * r n) =
     fun n : ℤ ↦ (-(((n : ℤ).negOnePow : ℤ) * r (n - 1)) +
       (-(((n : ℤ).negOnePow : ℤ) * r n))) from by ext; ring]
-  have hr_shift : (Function.support (fun n : ℤ ↦ r (n - 1))).Finite :=
-    hr.preimage (fun _ _ h ↦ by omega)
+  have hr_shift : (Function.support (fun n : ℤ ↦ r (n - 1))).Finite := by
+    refine Set.Finite.subset (hr.image fun m : ℤ ↦ m + 1) ?_
+    intro n hn
+    refine ⟨n - 1, hn, by simp⟩
   have hfs1 : (Function.support (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r (n - 1)))).Finite := by
     apply hr_shift.subset; intro n hn
     simp only [Function.mem_support, neg_ne_zero, mul_ne_zero_iff] at hn
@@ -119,6 +186,93 @@ private lemma eulerSum_of_rank_identity
     apply hr.subset; intro n hn
     simp only [Function.mem_support, neg_ne_zero, mul_ne_zero_iff] at hn
     exact hn.2
+  rw [finsum_add_distrib hfs1 hfs2]
+  simp only [finsum_neg_distrib]
+  linarith [finsum_alternating_shift_cancel hr]
+
+-- A version of `eulerSum_of_rank_identity` for arbitrary finitely-supported integer-valued
+-- sequences. This is used for the covariant Euler form, where the varying object appears in the
+-- first argument of `Hom`.
+private lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
+    (hrank : ∀ n : ℤ, b n = a n + c n - r (n - 1) - r n)
+    (hfa : (Function.support a).Finite)
+    (hfc : (Function.support c).Finite)
+    (hr : (Function.support r).Finite) :
+    (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * b n) =
+    (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * a n) +
+    (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * c n) := by
+  let fa : ℤ → ℤ := fun n ↦ (n.negOnePow : ℤ) * a n
+  let fc : ℤ → ℤ := fun n ↦ (n.negOnePow : ℤ) * c n
+  let fr : ℤ → ℤ := fun n ↦ (n.negOnePow : ℤ) * (-r (n - 1) - r n)
+  have hfa' : (Function.support fa).Finite := by
+    refine Set.Finite.subset hfa ?_
+    intro n hn
+    simp [Function.mem_support, fa] at hn ⊢
+    intro ha
+    exact hn (by simp [ha])
+  have hfc' : (Function.support fc).Finite := by
+    refine Set.Finite.subset hfc ?_
+    intro n hn
+    simp [Function.mem_support, fc] at hn ⊢
+    intro hc
+    exact hn (by simp [hc])
+  have key : ∀ n, (n.negOnePow : ℤ) * b n =
+      (n.negOnePow : ℤ) * a n +
+      (n.negOnePow : ℤ) * c n +
+      (n.negOnePow : ℤ) * (-r (n - 1) - r n) := fun n ↦ by
+    rw [hrank]
+    ring
+  simp_rw [key]
+  suffices hz : ∑ᶠ n : ℤ, fr n = 0 by
+    have hfac : (Function.support (fun n : ℤ ↦ fa n + fc n)).Finite := by
+      exact Set.Finite.subset (hfa'.union hfc') (Function.support_add _ _)
+    have hr_shift : (Function.support fun n : ℤ ↦ r (n - 1)).Finite := by
+      refine Set.Finite.subset (hr.image fun m : ℤ ↦ m + 1) ?_
+      intro n hn
+      refine ⟨n - 1, hn, by simp⟩
+    have hfr : (Function.support fr).Finite := by
+      refine Set.Finite.subset (hr_shift.union hr) ?_
+      intro n hn
+      by_cases h1 : r (n - 1) = 0
+      · by_cases h2 : r n = 0
+        · exfalso
+          apply hn
+          simp [fr, h1, h2]
+        · exact Or.inr h2
+      · exact Or.inl h1
+    let lhs : ℤ := finsum (fun n : ℤ ↦ (fa n + fc n) + fr n)
+    let rhs : ℤ := finsum fa + finsum fc
+    have hsum : lhs = rhs := by
+      dsimp [lhs, rhs]
+      rw [finsum_add_distrib hfac]
+      · rw [finsum_add_distrib hfa' hfc', hz]
+        simp
+      · exact hfr
+    simpa [fa, fc, fr, lhs, rhs]
+  change ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) = 0
+  simp_rw [show ∀ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) =
+      -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) - ((n : ℤ).negOnePow : ℤ) * r n from
+    fun n ↦ by ring]
+  have hr_shift : (Function.support (fun n : ℤ ↦ r (n - 1))).Finite := by
+    refine Set.Finite.subset (hr.image fun m : ℤ ↦ m + 1) ?_
+    intro n hn
+    refine ⟨n - 1, hn, by simp⟩
+  have hfs1 : (Function.support (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r (n - 1)))).Finite := by
+    apply hr_shift.subset
+    intro n hn
+    simp only [Function.mem_support, neg_ne_zero, mul_ne_zero_iff] at hn
+    exact hn.2
+  have hfs2 : (Function.support (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r n))).Finite := by
+    apply hr.subset
+    intro n hn
+    simp only [Function.mem_support, neg_ne_zero, mul_ne_zero_iff] at hn
+    exact hn.2
+  rw [show (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) -
+      ((n : ℤ).negOnePow : ℤ) * r n) =
+    fun n : ℤ ↦ (-(((n : ℤ).negOnePow : ℤ) * r (n - 1)) +
+      (-(((n : ℤ).negOnePow : ℤ) * r n))) from by
+    ext
+    ring]
   rw [finsum_add_distrib hfs1 hfs2]
   simp only [finsum_neg_distrib]
   linarith [finsum_alternating_shift_cancel hr]
@@ -135,107 +289,79 @@ private lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
   · rintro ⟨y, rfl⟩; rw [Category.assoc, hfg, comp_zero]
   · intro hx; exact hexact x hx
 
+private lemma linearMap_range_eq_ker_of_addMonoidHom {V W X : Type v}
+    [AddCommGroup V] [Module k V]
+    [AddCommGroup W] [Module k W]
+    [AddCommGroup X] [Module k X]
+    (f : V →ₗ[k] W) (g : W →ₗ[k] X)
+    (h : f.toAddMonoidHom.range = g.toAddMonoidHom.ker) :
+    LinearMap.range f = LinearMap.ker g := by
+  ext x
+  change x ∈ f.toAddMonoidHom.range ↔ x ∈ g.toAddMonoidHom.ker
+  rw [h]
+
+private noncomputable instance linearCoyonedaObjIsHomological (E : C) :
+    (((linearCoyoneda k C).obj (Opposite.op E)) : C ⥤ ModuleCat k).IsHomological where
+  exact T hT := by
+    rw [ShortComplex.exact_iff_exact_map_forget₂]
+    simpa using ((preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT)
+
 private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
     simp only [eulerFormObj]
-    -- For each n: exact sequence Hom(E,A[n]) →f Hom(E,B[n]) →g Hom(E,C[n])
-    -- with connecting map δ_n : Hom(E,C[n]) → Hom(E,A[n+1])
-    -- Rank-nullity + exactness:
-    --   dim B[n] = dim(range f) + dim(range g)
-    --           = (dim A[n] - dim(range δ_{n-1})) + (dim C[n] - dim(range δ_n))
-    -- Set r(n) = dim(range δ_n). Then dim B[n] - dim A[n] - dim C[n] = -r(n-1) - r(n).
-    -- The alternating sum of -r(n-1) - r(n) vanishes by shift cancellation.
-    -- Define the connecting map as a k-linear map (postcomposition with δ)
-    -- δ_lin n = postcompose with (Tn.mor₃ ≫ iso) where Tn is the shifted triangle
-    -- and iso : T.obj₁⟦n⟧⟦1⟧ ≅ T.obj₁⟦n+1⟧ is the shift composition iso
+    let F : C ⥤ ModuleCat k := (linearCoyoneda k C).obj (Opposite.op E)
+    letI : F.ShiftSequence ℤ := Functor.ShiftSequence.tautological F ℤ
+    letI : F.IsHomological := linearCoyonedaObjIsHomological (k := k) (C := C) E
     let δ_lin : (n : ℤ) → ((E ⟶ T.obj₃⟦n⟧) →ₗ[k] (E ⟶ T.obj₁⟦(n + 1)⟧)) := fun n ↦
-      Linear.rightComp k E (((Triangle.shiftFunctor C n).obj T).mor₃ ≫
-        (shiftFunctorAdd' C n 1 (n + 1) (by omega)).inv.app T.obj₁)
+      Linear.rightComp k E (T.mor₃⟦n⟧' ≫
+        (shiftFunctorAdd' C 1 n (n + 1) (by omega)).inv.app T.obj₁)
     let r : ℤ → ℤ := fun n ↦ Module.finrank k (LinearMap.range (δ_lin n))
-    -- Pointwise rank identity from exactness + rank-nullity:
-    -- dim B[n] = dim A[n] + dim C[n] - r(n-1) - r(n)
+    have hδ_eq : ∀ n : ℤ, ((F.homologySequenceδ T n (n + 1) rfl).hom) = δ_lin n := by
+      intro n
+      ext x
+      simpa [F, δ_lin] using
+        (CategoryTheory.Pretriangulated.preadditiveCoyoneda_homologySequenceδ_apply
+          (C := C) (T := T) (n₀ := n) (n₁ := n + 1) (h := rfl) (A := Opposite.op E) x)
+    have h_ker_f_aux : ∀ m : ℤ,
+        Module.finrank k (LinearMap.ker (((F.shift (m + 1)).map T.mor₁).hom)) = r m := by
+      intro m
+      let f_succ : (E ⟶ T.obj₁⟦m + 1⟧) →ₗ[k] (E ⟶ T.obj₂⟦m + 1⟧) :=
+        ((F.shift (m + 1)).map T.mor₁).hom
+      have h_exact₁ : LinearMap.range (δ_lin m) = LinearMap.ker f_succ := by
+        simpa [f_succ, hδ_eq m] using
+          (ShortComplex.Exact.moduleCat_range_eq_ker
+            (F.homologySequence_exact₁ T hT m (m + 1) rfl))
+      simpa [r] using
+        congrArg (fun V : Submodule k (E ⟶ T.obj₁⟦m + 1⟧) => Module.finrank k V) h_exact₁.symm
     have hrank : ∀ n : ℤ,
         (Module.finrank k (E ⟶ T.obj₂⟦n⟧) : ℤ) =
         Module.finrank k (E ⟶ T.obj₁⟦n⟧) + Module.finrank k (E ⟶ T.obj₃⟦n⟧) -
           r (n - 1) - r n := by
       intro n
-      -- k-linear maps: postcomposition with T.mor₁⟦n⟧' and T.mor₂⟦n⟧'
-      let f_n := Linear.rightComp k E (T.mor₁⟦n⟧')
-      let g_n := Linear.rightComp k E (T.mor₂⟦n⟧')
-      -- Exactness at B[n]: range f_n = ker g_n (from coyoneda being homological)
+      let f_n : (E ⟶ T.obj₁⟦n⟧) →ₗ[k] (E ⟶ T.obj₂⟦n⟧) := ((F.shift n).map T.mor₁).hom
+      let g_n : (E ⟶ T.obj₂⟦n⟧) →ₗ[k] (E ⟶ T.obj₃⟦n⟧) := ((F.shift n).map T.mor₂).hom
       have hexact_B : LinearMap.range f_n = LinearMap.ker g_n := by
-        apply linearRange_eq_linearKer_of_ab_exact k C E
-        · -- T.mor₁⟦n⟧' ≫ T.mor₂⟦n⟧' = 0
-          have := comp_distTriang_mor_zero₁₂ T hT
-          simp only [← Functor.map_comp, this, Functor.map_zero]
-        · intro x hx
-          -- Use coyoneda_exact₂ on the shifted triangle (sign-twisted morphisms).
-          set Tn := (Triangle.shiftFunctor C n).obj T
-          have hx' : x ≫ Tn.mor₂ = 0 := by
-            show x ≫ (n.negOnePow • T.mor₂⟦n⟧') = 0
-            simp [Preadditive.comp_zsmul, hx]
-          obtain ⟨y, hy⟩ := Triangle.coyoneda_exact₂ Tn
-            (Triangle.shift_distinguished T hT n) x hx'
-          -- hy : x = y ≫ Tn.mor₁ = y ≫ ((-1)^n • T.mor₁⟦n⟧')
-          refine ⟨(n.negOnePow : ℤˣ).val • y, ?_⟩
-          -- x = y ≫ Tn.mor₁ = y ≫ ((-1)^n • T.mor₁⟦n⟧') = (-1)^n • (y ≫ T.mor₁⟦n⟧')
-          -- Want: ((-1)^n • y) ≫ T.mor₁⟦n⟧' = (-1)^n • (y ≫ T.mor₁⟦n⟧') = x
-          have h1 : y ≫ Tn.mor₁ = (n.negOnePow : ℤˣ) • (y ≫ T.mor₁⟦n⟧') := by
-            simp [Tn, Triangle.shiftFunctor, Preadditive.comp_zsmul]
-          show ((n.negOnePow : ℤˣ).val • y) ≫ T.mor₁⟦n⟧' = x
-          rw [Preadditive.zsmul_comp]
-          -- Goal: ↑n.negOnePow • (y ≫ T.mor₁⟦n⟧') = x
-          -- From hy: x = y ≫ Tn.mor₁, h1: y ≫ Tn.mor₁ = n.negOnePow • (y ≫ T.mor₁⟦n⟧')
-          -- So x = n.negOnePow • (y ≫ T.mor₁⟦n⟧')
-          -- And ↑n.negOnePow • (y ≫ T.mor₁⟦n⟧') = n.negOnePow • (y ≫ T.mor₁⟦n⟧') = x
-          -- The ↑ vs non-↑ is just coercion
-          convert (hy.trans h1).symm
-      -- Rank-nullity at B[n]: dim B[n] = dim(range f_n) + dim(range g_n)
+        simpa [f_n, g_n, F] using
+          (ShortComplex.Exact.moduleCat_range_eq_ker
+            (F.homologySequence_exact₂ T hT n))
       haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
       have h_mid := finrank_mid_of_exact k f_n g_n hexact_B
-      -- We need: dim(ker f_n) = r(n-1) and dim(range g_n) = dim C[n] - r(n).
-      -- These follow from exactness at the other two positions + rank-nullity.
-      -- For now, sorry and note the remaining work.
       haveI : Module.Finite k (E ⟶ T.obj₁⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₁⟦n⟧)
       haveI : Module.Finite k (E ⟶ T.obj₃⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₃⟦n⟧)
-      -- dim(ker f_n) = r(n-1): from long exact sequence exactness at A[n],
-      -- ker(f_n) = im(δ_{n-1}), so dim(ker f_n) = dim(im δ_{n-1}) = r(n-1).
-      -- Note: δ_{n-1} maps to T.obj₁⟦(n-1)+1⟧ ≅ T.obj₁⟦n⟧, so r(n-1) = dim(range δ_{n-1})
-      -- equals dim(ker f_n) up to the transport iso. finrank is iso-invariant.
       have h_ker_f : Module.finrank k (LinearMap.ker f_n) = r (n - 1) := by
-        sorry -- connecting map exactness at A[n]
-      -- dim(ker δ_n) = dim(range g_n): from exactness at C[n]
-      -- The exact sequence at C[n]: Hom(E, B[n]) →g Hom(E, C[n]) →δ Hom(E, A[n+1])
-      -- Exactness: ker δ_n = range g_n
+        change Module.finrank k (LinearMap.ker (((F.shift n).map T.mor₁).hom)) = r (n - 1)
+        have hn : n = (n - 1) + 1 := by omega
+        rw [hn]
+        simpa using h_ker_f_aux (n - 1)
       have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
           Module.finrank k (LinearMap.range g_n) := by
-        -- Direct proof: show range(g_n) = ker(δ_lin n) as submodules
-        have hRK : LinearMap.range g_n = LinearMap.ker (δ_lin n) := by
-          ext x; simp only [LinearMap.mem_range, LinearMap.mem_ker, Linear.rightComp_apply]
-          constructor
-          · rintro ⟨y, rfl⟩
-            show (δ_lin n) (g_n y) = 0
-            simp only [δ_lin, g_n, Linear.rightComp_apply, Category.assoc]
-            set Tn := (Triangle.shiftFunctor C n).obj T
-            have h23 : Tn.mor₂ ≫ Tn.mor₃ = 0 :=
-              comp_distTriang_mor_zero₂₃ Tn (Triangle.shift_distinguished T hT n)
-            -- Goal: y ≫ Tn.mor₂ ≫ Tn.mor₃ ≫ iso = 0
-            -- Tn.mor₂ = sign • T.mor₂⟦n⟧' and Tn.mor₃ = sign • T.mor₃⟦n⟧' ≫ comm
-            -- Need to handle the sign twist to use h23
-            sorry
-          · intro hx
-            -- x ≫ δ_mor = 0, factor x through T.mor₂⟦n⟧'
-            -- Use coyoneda_exact₃ on shifted triangle
-            set Tn := (Triangle.shiftFunctor C n).obj T
-            sorry -- coyoneda_exact₃ on shifted triangle with sign + iso handling
-                  -- Same pattern as hexact_B but mor₃ uses shiftFunctorComm
-                  -- while δ_lin uses shiftFunctorAdd' — need to reconcile
-        rw [hRK]
-      -- Combine: dim B[n] = dim(range f_n) + dim(range g_n) [h_mid]
-      -- dim A[n] = dim(range f_n) + dim(ker f_n) = dim(range f_n) + r(n-1) [h_f + h_ker_f]
-      -- dim C[n] = dim(ker δ_n) + dim(range δ_n) = dim(range g_n) + r(n) [h_δ + h_ker_δ]
-      -- So dim B[n] = (dim A[n] - r(n-1)) + (dim C[n] - r(n))
+        have h_exact₃ : LinearMap.range g_n = LinearMap.ker (δ_lin n) := by
+          simpa [g_n, hδ_eq n] using
+            (ShortComplex.Exact.moduleCat_range_eq_ker
+              (F.homologySequence_exact₃ T hT n (n + 1) rfl))
+        simpa using
+          congrArg (fun V : Submodule k (E ⟶ T.obj₃⟦n⟧) => Module.finrank k V) h_exact₃.symm
       have h_f : (Module.finrank k (LinearMap.range f_n) : ℤ) =
           Module.finrank k (E ⟶ T.obj₁⟦n⟧) - r (n - 1) := by
         have := f_n.finrank_range_add_finrank_ker
@@ -247,24 +373,178 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
         simp only [r] at h2 ⊢
         omega
       linarith
-    -- Now sum with alternating signs
-    have key : ∀ n : ℤ,
-        (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₂⟦n⟧) =
-        (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₁⟦n⟧) +
-        (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₃⟦n⟧) +
-        (n.negOnePow : ℤ) * (-r (n - 1) - r n) := by
-      intro n; rw [hrank n]; ring
-    -- Apply the abstract Euler sum lemma
-    sorry
+    have hr : (Function.support r).Finite := by
+      refine Set.Finite.subset
+        ((IsFiniteType.finite_support (k := k) E T.obj₁).image fun m : ℤ ↦ m - 1) ?_
+      intro n hn
+      have hnonzero : (r n : ℤ) ≠ 0 := hn
+      have hnontrivial : Nontrivial (E ⟶ T.obj₁⟦n + 1⟧) := by
+        by_contra htriv
+        haveI : Subsingleton (E ⟶ T.obj₁⟦n + 1⟧) := not_nontrivial_iff_subsingleton.mp htriv
+        have hδ : δ_lin n = 0 := by
+          ext x
+          exact Subsingleton.elim _ _
+        apply hnonzero
+        simp [r, hδ]
+      exact ⟨n + 1, hnontrivial, by simp⟩
+    exact eulerSum_of_rank_identity (k := k) (C := C) E
+      (a := fun n ↦ T.obj₁⟦n⟧)
+      (b := fun n ↦ T.obj₂⟦n⟧)
+      (c := fun n ↦ T.obj₃⟦n⟧)
+      (r := r)
+      hrank
+      (by simpa using IsFiniteType.finite_support (k := k) E T.obj₁)
+      (by simpa using IsFiniteType.finite_support (k := k) E T.obj₂)
+      (by simpa using IsFiniteType.finite_support (k := k) E T.obj₃)
+      hr
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
 -- Same argument applied to the preadditiveYoneda functor.
-private theorem eulerFormObj_covariant_triangleAdditive (F : C) :
+private theorem eulerFormObj_covariant_triangleAdditive (F : C)
+    [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
     IsTriangleAdditive (fun E ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
-    sorry
+    simp only [eulerFormObj]
+    let Top : Triangle Cᵒᵖ := (triangleOpEquivalence C).functor.obj (Opposite.op T)
+    have hTop : Top ∈ distTriang Cᵒᵖ := op_distinguished T hT
+    let G : Cᵒᵖ ⥤ AddCommGrpCat := preadditiveYoneda.obj F
+    let δ_lin : (n : ℤ) → ((T.obj₁ ⟶ F⟦n⟧) →ₗ[k] (T.obj₃ ⟶ F⟦(n + 1)⟧)) := fun n ↦
+      { toFun := fun x =>
+          T.mor₃ ≫ x⟦(1 : ℤ)⟧' ≫ (shiftFunctorAdd' C n 1 (n + 1) (by omega)).inv.app F
+        map_add' := by
+          intro x y
+          simp [Category.assoc, Functor.map_add]
+        map_smul' := by
+          intro r x
+          simp [Category.assoc, Functor.map_smul] }
+    let r : ℤ → ℤ := fun n ↦ Module.finrank k (LinearMap.range (δ_lin n))
+    have hδ_eq : ∀ n : ℤ,
+        G.homologySequenceδ Top n (n + 1) rfl =
+          AddCommGrpCat.ofHom (δ_lin n).toAddMonoidHom := by
+      intro n
+      ext x
+      simpa [Top, δ_lin, G] using
+        (CategoryTheory.Pretriangulated.preadditiveYoneda_homologySequenceδ_apply
+          (C := C) (T := T) (n₀ := n) (n₁ := n + 1) (h := rfl) (B := F) x)
+    have hmap₁ : ∀ n : ℤ,
+        (G.shift n).map Top.mor₁ =
+          AddCommGrpCat.ofHom (Linear.leftComp k (F⟦n⟧) T.mor₂).toAddMonoidHom := by
+      intro n
+      ext x
+      rfl
+    have hmap₂ : ∀ n : ℤ,
+        (G.shift n).map Top.mor₂ =
+          AddCommGrpCat.ofHom (Linear.leftComp k (F⟦n⟧) T.mor₁).toAddMonoidHom := by
+      intro n
+      ext x
+      rfl
+    have h_ker_f_aux : ∀ m : ℤ,
+        Module.finrank k (LinearMap.ker (Linear.leftComp k (F⟦m + 1⟧) T.mor₂)) = r m := by
+      intro m
+      let f_succ : (T.obj₃ ⟶ F⟦m + 1⟧) →ₗ[k] (T.obj₂ ⟶ F⟦m + 1⟧) :=
+        Linear.leftComp k (F⟦m + 1⟧) T.mor₂
+      have h_exact₁_ab0 :=
+        (ShortComplex.Exact.ab_range_eq_ker
+          (G.homologySequence_exact₁ Top hTop m (m + 1) rfl))
+      have h_exact₁_ab : ((δ_lin m).toAddMonoidHom).range = (f_succ.toAddMonoidHom).ker := by
+        change (AddCommGrpCat.Hom.hom (G.homologySequenceδ Top m (m + 1) rfl)).range =
+          (AddCommGrpCat.Hom.hom ((G.shift (m + 1)).map Top.mor₁)).ker at h_exact₁_ab0
+        simpa [hδ_eq m, hmap₁ (m + 1), f_succ] using h_exact₁_ab0
+      have h_exact₁ : LinearMap.range (δ_lin m) = LinearMap.ker f_succ :=
+        linearMap_range_eq_ker_of_addMonoidHom (k := k) (δ_lin m) f_succ h_exact₁_ab
+      simpa [r] using
+        congrArg (fun V : Submodule k (T.obj₃ ⟶ F⟦m + 1⟧) => Module.finrank k V) h_exact₁.symm
+    have hrank : ∀ n : ℤ,
+        (Module.finrank k (T.obj₂ ⟶ F⟦n⟧) : ℤ) =
+        Module.finrank k (T.obj₃ ⟶ F⟦n⟧) + Module.finrank k (T.obj₁ ⟶ F⟦n⟧) -
+          r (n - 1) - r n := by
+      intro n
+      let f_n : (T.obj₃ ⟶ F⟦n⟧) →ₗ[k] (T.obj₂ ⟶ F⟦n⟧) := Linear.leftComp k (F⟦n⟧) T.mor₂
+      let g_n : (T.obj₂ ⟶ F⟦n⟧) →ₗ[k] (T.obj₁ ⟶ F⟦n⟧) := Linear.leftComp k (F⟦n⟧) T.mor₁
+      have hexact_B_ab0 :=
+        (ShortComplex.Exact.ab_range_eq_ker
+          (G.homologySequence_exact₂ Top hTop n))
+      have hexact_B_ab : (f_n.toAddMonoidHom).range = (g_n.toAddMonoidHom).ker := by
+        change (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₁)).range =
+          (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₂)).ker at hexact_B_ab0
+        simpa [hmap₁ n, hmap₂ n, f_n, g_n] using hexact_B_ab0
+      have hexact_B : LinearMap.range f_n = LinearMap.ker g_n :=
+        linearMap_range_eq_ker_of_addMonoidHom (k := k) f_n g_n hexact_B_ab
+      haveI : Module.Finite k (T.obj₂ ⟶ F⟦n⟧) := IsFiniteType.finite_dim (k := k) T.obj₂ (F⟦n⟧)
+      have h_mid := finrank_mid_of_exact k f_n g_n hexact_B
+      haveI : Module.Finite k (T.obj₃ ⟶ F⟦n⟧) := IsFiniteType.finite_dim (k := k) T.obj₃ (F⟦n⟧)
+      haveI : Module.Finite k (T.obj₁ ⟶ F⟦n⟧) := IsFiniteType.finite_dim (k := k) T.obj₁ (F⟦n⟧)
+      have h_ker_f : Module.finrank k (LinearMap.ker f_n) = r (n - 1) := by
+        have h_ker_f' :
+            Module.finrank k
+              (LinearMap.ker (Linear.leftComp k (F⟦n - 1 + 1⟧) T.mor₂)) = r (n - 1) := by
+          simpa using h_ker_f_aux (n - 1)
+        have hshift : F⟦n - 1 + 1⟧ = F⟦n⟧ := by
+          simpa using congrArg (fun m : ℤ => (shiftFunctor C m).obj F) (show n - 1 + 1 = n by
+            omega)
+        rw [hshift] at h_ker_f'
+        simpa [f_n] using h_ker_f'
+      have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
+          Module.finrank k (LinearMap.range g_n) := by
+        have h_exact₃_ab0 :=
+          (ShortComplex.Exact.ab_range_eq_ker
+            (G.homologySequence_exact₃ Top hTop n (n + 1) rfl))
+        have h_exact₃_ab : (g_n.toAddMonoidHom).range = ((δ_lin n).toAddMonoidHom).ker := by
+          change (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₂)).range =
+            (AddCommGrpCat.Hom.hom (G.homologySequenceδ Top n (n + 1) rfl)).ker at h_exact₃_ab0
+          simpa [hδ_eq n, hmap₂ n, g_n] using h_exact₃_ab0
+        have h_exact₃ : LinearMap.range g_n = LinearMap.ker (δ_lin n) :=
+          linearMap_range_eq_ker_of_addMonoidHom (k := k) g_n (δ_lin n) h_exact₃_ab
+        simpa using
+          congrArg (fun V : Submodule k (T.obj₁ ⟶ F⟦n⟧) => Module.finrank k V) h_exact₃.symm
+      have h_f : (Module.finrank k (LinearMap.range f_n) : ℤ) =
+          Module.finrank k (T.obj₃ ⟶ F⟦n⟧) - r (n - 1) := by
+        have := f_n.finrank_range_add_finrank_ker
+        omega
+      have h_g : (Module.finrank k (LinearMap.range g_n) : ℤ) =
+          Module.finrank k (T.obj₁ ⟶ F⟦n⟧) - r n := by
+        have h1 := (δ_lin n).finrank_range_add_finrank_ker
+        have h2 := h_ker_δ
+        simp only [r] at h2 ⊢
+        omega
+      linarith
+    have hr : (Function.support r).Finite := by
+      refine Set.Finite.subset
+        ((IsFiniteType.finite_support (k := k) T.obj₃ F).image fun m : ℤ ↦ m - 1) ?_
+      intro n hn
+      have hnonzero : (r n : ℤ) ≠ 0 := hn
+      have hnontrivial : Nontrivial (T.obj₃ ⟶ F⟦n + 1⟧) := by
+        by_contra htriv
+        haveI : Subsingleton (T.obj₃ ⟶ F⟦n + 1⟧) := not_nontrivial_iff_subsingleton.mp htriv
+        have hδ : δ_lin n = 0 := by
+          ext x
+          exact Subsingleton.elim _ _
+        apply hnonzero
+        simp [r, hδ]
+      exact ⟨n + 1, hnontrivial, by simp⟩
+    let a : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₃ ⟶ F⟦n⟧)
+    let b : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₂ ⟶ F⟦n⟧)
+    let c : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₁ ⟶ F⟦n⟧)
+    have hfa : (Function.support a).Finite := by
+      refine Set.Finite.subset (IsFiniteType.finite_support (k := k) T.obj₃ F) ?_
+      intro n hn
+      have hfinrank_ne : (Module.finrank k (T.obj₃ ⟶ F⟦n⟧) : ℤ) ≠ 0 := hn
+      letI : Nontrivial (T.obj₃ ⟶ F⟦n⟧) :=
+        Module.nontrivial_of_finrank_pos (R := k) (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
+      show Nontrivial (T.obj₃ ⟶ F⟦n⟧)
+      infer_instance
+    have hfc : (Function.support c).Finite := by
+      refine Set.Finite.subset (IsFiniteType.finite_support (k := k) T.obj₁ F) ?_
+      intro n hn
+      have hfinrank_ne : (Module.finrank k (T.obj₁ ⟶ F⟦n⟧) : ℤ) ≠ 0 := hn
+      letI : Nontrivial (T.obj₁ ⟶ F⟦n⟧) :=
+        Module.nontrivial_of_finrank_pos (R := k) (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
+      show Nontrivial (T.obj₁ ⟶ F⟦n⟧)
+      infer_instance
+    simpa [a, b, c, add_comm] using
+      eulerSum_of_rank_identity_int (hrank := hrank) hfa hfc hr
 
-instance : EulerFormDescends k C where
+instance [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] : EulerFormDescends k C where
   covariant := fun F ↦ eulerFormObj_covariant_triangleAdditive k C F
   contravariant := fun E ↦ eulerFormObj_contravariant_triangleAdditive k C E
 

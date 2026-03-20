@@ -5,6 +5,7 @@ Authors: Formalization
 -/
 
 import Mathlib.CategoryTheory.Triangulated.DeformationTheorem
+import Mathlib.CategoryTheory.Triangulated.EulerForm
 import Mathlib.CategoryTheory.Triangulated.NumericalStability
 import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.Geometry.Manifold.Complex
@@ -524,7 +525,8 @@ theorem exists_chartedSpace_and_complexManifold_of_isLocalHomeomorph_to_complex_
 model and the generic manifold bridge are available, the complex-manifold conclusion should follow
 without a large bespoke proof. -/
 theorem bridgelandCorollary_1_3_complexManifold [Linear k C] [IsFiniteType k C]
-    [EulerFormDescends k C] (hnum : NumericallyFinite C (eulerForm k C))
+    [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)]
+    (hnum : NumericallyFinite C (eulerForm k C))
     (cc : ConnectedComponents (NumericalStabilityCondition C (eulerForm k C))) :
     ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
       (_ : FiniteDimensional ℂ E)
