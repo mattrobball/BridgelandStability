@@ -30,9 +30,10 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
 
 /-! ### Thin-interval Phase 3 selection infrastructure -/
+
+section
 
 lemma intervalSubobject_isZero_iff_eq_bot
     {s : Slicing C} {a b : ℝ} {X : s.IntervalCat C a b} (B : Subobject X) :
@@ -61,8 +62,14 @@ lemma intervalSubobject_top_ne_bot_of_not_isZero
       (C := C) (s := s) (a := a) (b := b) (X := X) _).mpr h
   exact hZ.of_iso (asIso (⊤ : Subobject X).arrow).symm
 
+end
+
+section
+
+variable [IsTriangulated C]
+
 lemma intervalSubobject_arrow_strictMono_of_strictMono
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X Y : s.IntervalCat C a b} (f : Y ⟶ X) (hf : IsStrictMono f) :
     letI : Mono f := hf.mono
@@ -74,12 +81,12 @@ lemma intervalSubobject_arrow_strictMono_of_strictMono
     Slicing.IntervalCat.comp_strictMono
       (C := C) (s := s) (a := a) (b := b) e.hom f he hf
   have harr : e.hom ≫ f = (Subobject.mk f).arrow := by
-    simpa [e] using (Subobject.underlyingIso_hom_comp_eq_mk f)
+    exact Subobject.underlyingIso_hom_comp_eq_mk f
   rw [← harr]
   exact hcomp
 
 theorem interval_strictShortExact_cokernel_of_strictMono
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X Y : s.IntervalCat C a b} (f : Y ⟶ X) (hf : IsStrictMono f) :
     StrictShortExact (ShortComplex.mk f (cokernel.π f) (cokernel.condition f)) := by
@@ -111,7 +118,7 @@ theorem interval_strictShortExact_cokernel_of_strictMono
     (C := C) (s := s) (a := a) (b := b) hT
 
 theorem intervalInclusion_map_strictMono
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -134,7 +141,7 @@ theorem intervalInclusion_map_strictMono
       (C := C) (s := s₂) (a := a₂) (b := b₂) hT').1
 
 theorem interval_strictArtinianObject_of_inclusion
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -148,7 +155,7 @@ theorem interval_strictArtinianObject_of_inclusion
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h f hf)
 
 theorem interval_strictNoetherianObject_of_inclusion
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -162,7 +169,7 @@ theorem interval_strictNoetherianObject_of_inclusion
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h f hf)
 
 theorem interval_strictFiniteLength_of_inclusion
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -177,7 +184,7 @@ theorem interval_strictFiniteLength_of_inclusion
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h⟩
 
 theorem interval_thinFiniteLength_of_inclusion
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -196,7 +203,7 @@ theorem interval_thinFiniteLength_of_inclusion
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h (X := X))
 
 theorem interval_strictArtinianObject_of_inclusion_strict
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -246,10 +253,8 @@ theorem interval_strictArtinianObject_of_inclusion_strict
     have hmk : Subobject.mk B₁.1.arrow ≤ Subobject.mk B₂.1.arrow := by
       simpa [Subobject.mk_arrow] using (show B₁.1 ≤ B₂.1 from hB)
     exact Subobject.mk_le_mk_of_comm (I.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk)) (by
-      change I.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk) ≫ I.map B₂.1.arrow =
-        I.map B₁.1.arrow
       rw [← I.map_comp]
-      simpa using congrArg I.map (Subobject.ofMkLEMk_comp hmk))
+      exact congrArg I.map (Subobject.ofMkLEMk_comp hmk))
   exact
     (show isStrictArtinianObject.Is X from
       ObjectProperty.is_of_prop _
@@ -266,7 +271,7 @@ theorem interval_strictArtinianObject_of_inclusion_strict
             simpa using congrArg OrderDual.ofDual (hn m hm))⟩))
 
 theorem interval_strictNoetherianObject_of_inclusion_strict
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -316,10 +321,8 @@ theorem interval_strictNoetherianObject_of_inclusion_strict
     have hmk : Subobject.mk B₁.1.arrow ≤ Subobject.mk B₂.1.arrow := by
       simpa [Subobject.mk_arrow] using (show B₁.1 ≤ B₂.1 from hB)
     exact Subobject.mk_le_mk_of_comm (I.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk)) (by
-      change I.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk) ≫ I.map B₂.1.arrow =
-        I.map B₁.1.arrow
       rw [← I.map_comp]
-      simpa using congrArg I.map (Subobject.ofMkLEMk_comp hmk))
+      exact congrArg I.map (Subobject.ofMkLEMk_comp hmk))
   exact
     (show isStrictNoetherianObject.Is X from
       ObjectProperty.is_of_prop _
@@ -333,7 +336,7 @@ theorem interval_strictNoetherianObject_of_inclusion_strict
           exact ⟨n, fun m hm ↦ hF_inj (hn m hm)⟩))
 
 theorem interval_strictFiniteLength_of_inclusion_strict
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -348,7 +351,7 @@ theorem interval_strictFiniteLength_of_inclusion_strict
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h⟩
 
 theorem interval_thinFiniteLength_of_inclusion_strict
-    {s₁ s₂ : Slicing C} [IsTriangulated C]
+    {s₁ s₂ : Slicing C}
     {a₁ b₁ a₂ b₂ : ℝ}
     [Fact (a₁ < b₁)] [Fact (b₁ - a₁ ≤ 1)]
     [Fact (a₂ < b₂)] [Fact (b₂ - a₂ ≤ 1)]
@@ -389,7 +392,7 @@ theorem SectorFiniteLength.of_wide
     (a₂ := t - 4 * ε₀) (b₂ := t + 4 * ε₀) hIncl (hWide t) E
 
 theorem interval_K0_of_strictMono
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X Y : s.IntervalCat C a b} (f : Y ⟶ X) (hf : IsStrictMono f) :
     K₀.of C X.obj = K₀.of C Y.obj + K₀.of C (cokernel f).obj := by
@@ -397,6 +400,10 @@ theorem interval_K0_of_strictMono
     Slicing.IntervalCat.K0_of_strictShortExact (C := C) (s := s) (a := a) (b := b)
       (interval_strictShortExact_cokernel_of_strictMono
         (C := C) (s := s) (a := a) (b := b) f hf)
+
+section
+
+omit [IsTriangulated C]
 
 lemma interval_card_subobject_lt_of_ne_top
     {s : Slicing C} {a b : ℝ} {X : s.IntervalCat C a b} {M : Subobject X}
@@ -415,11 +422,13 @@ lemma interval_card_subobject_lt_of_ne_top
     have hle : φ B ≤ M := by
       calc
         φ B ≤ φ ⊤ := (Subobject.map M.arrow).monotone le_top
-        _ = M := by simpa [φ] using (Subobject.map_top M.arrow)
+        _ = M := by simp [φ]
     have htop_le : (⊤ : Subobject X) ≤ M := by
       simpa only [hB] using hle
     exact hM (top_le_iff.mp htop_le))
 
+/-- Lift a subobject of an interval subobject `M` back to a subobject of the ambient
+interval object `X` by composing the two defining arrows. -/
 def intervalLiftSub
     {s : Slicing C} {a b : ℝ} {X : s.IntervalCat C a b}
     (M : Subobject X) (A : Subobject (M : s.IntervalCat C a b)) : Subobject X :=
@@ -438,7 +447,7 @@ lemma intervalLiftSub_bot
     (M : Subobject X) :
     intervalLiftSub (C := C) (X := X) M (⊥ : Subobject (M : s.IntervalCat C a b)) = ⊥ := by
   apply (Subobject.mk_eq_bot_iff_zero).mpr
-  simp [intervalLiftSub, Subobject.bot_arrow]
+  simp [Subobject.bot_arrow]
 
 lemma intervalLiftSub_ne_bot
     {s : Slicing C} {a b : ℝ} {X : s.IntervalCat C a b}
@@ -457,7 +466,8 @@ lemma intervalLiftSub_mono
     (M : Subobject X) {A B : Subobject (M : s.IntervalCat C a b)} (h : A ≤ B) :
     intervalLiftSub (C := C) (X := X) M A ≤ intervalLiftSub (C := C) (X := X) M B := by
   refine Subobject.mk_le_mk_of_comm (Subobject.ofLE A B h) ?_
-  simp [intervalLiftSub, Category.assoc, Subobject.ofLE_arrow]
+  dsimp [intervalLiftSub]
+  simp
 
 lemma intervalLiftSub_lt
     {s : Slicing C} {a b : ℝ} {X : s.IntervalCat C a b}
@@ -470,11 +480,13 @@ lemma intervalLiftSub_lt
   rw [show (Subobject.map M.arrow).obj A = intervalLiftSub (C := C) (X := X) M A by
     simpa [intervalLiftSub] using (Subobject.map_mk A.arrow M.arrow)]
   rw [show (Subobject.map M.arrow).obj (⊤ : Subobject (M : s.IntervalCat C a b)) = M by
-    simpa using (Subobject.map_top M.arrow)]
+    simp]
   exact hEq
 
+end
+
 lemma intervalSubobject_bot_arrow_strictMono
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} :
     IsStrictMono ((⊥ : Subobject X).arrow) := by
@@ -489,7 +501,7 @@ lemma intervalSubobject_bot_arrow_strictMono
   exact (isZero_zero (s.IntervalCat C a b)).of_iso Subobject.botCoeIsoZero
 
 lemma intervalLiftSub_arrow_strictMono_of_strictMono
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} {M : Subobject X}
     (hM : IsStrictMono M.arrow) {A : Subobject (M : s.IntervalCat C a b)}
@@ -501,6 +513,10 @@ lemma intervalLiftSub_arrow_strictMono_of_strictMono
   simpa [intervalLiftSub] using
     (intervalSubobject_arrow_strictMono_of_strictMono
       (C := C) (s := s) (a := a) (b := b) (A.arrow ≫ M.arrow) hcomp)
+
+section
+
+omit [IsTriangulated C]
 
 lemma intervalLiftSub_wPhase_eq
     {s : Slicing C} {a b : ℝ}
@@ -523,7 +539,8 @@ lemma intervalLiftSub_wPhase_eq
   simpa [eI, eC] using
     congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC)
 
-variable [IsTriangulated C] in
+end
+
 /-- A non-semistable thin-interval object contains a proper strict subobject of strictly larger
 `W`-phase. This is the paper-faithful first step in Bridgeland's descent argument: the witness
 is extracted directly from the failure of the semistability triangle test, not by finite
@@ -625,8 +642,10 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
   refine ⟨B, hB_ne_bot, hB_ne_top, hB_strict, ?_⟩
   rwa [hB_phase_eq]
 
+/-- The quotient induced by a lifted subobject morphism is canonically identified with the
+quotient of the original subobject morphism inside the smaller interval object. -/
 def intervalLiftSubCokernelIso
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)] {X : s.IntervalCat C a b}
     (M : Subobject X) {A B : Subobject (M : s.IntervalCat C a b)} (h : A ≤ B) :
     cokernel (Subobject.ofLE
@@ -645,8 +664,9 @@ def intervalLiftSubCokernelIso
       ((intervalLiftSub (C := C) (X := X) M B : Subobject X) : s.IntervalCat C a b) ≅
         (B : s.IntervalCat C a b) := Subobject.underlyingIso (B.arrow ≫ M.arrow)
   have hwBase : fBase ≫ (B.arrow ≫ M.arrow) = A.arrow ≫ M.arrow := by
-    simpa [fBase, Category.assoc] using
-      congrArg (fun k => k ≫ M.arrow) (Subobject.ofLE_arrow h)
+    change Subobject.ofLE A B h ≫ (B.arrow ≫ M.arrow) = A.arrow ≫ M.arrow
+    rw [← Category.assoc]
+    exact congrArg (fun k => k ≫ M.arrow) (Subobject.ofLE_arrow h)
   have hArrow :
       fLift = eA.hom ≫ fBase ≫ eB.inv := by
     simpa [intervalLiftSub, eA, eB, Category.assoc] using
@@ -667,7 +687,6 @@ def intervalLiftSubCokernelIso
     simp
   exact cokernel.mapIso (f := fLift) (f' := fBase) eA eB hw
 
-variable [IsTriangulated C] in
 /-- Among the proper strict kernels of a non-semistable interval object, there is one whose
 strict quotient has minimal `W`-phase, and among those minimal-phase kernels we may choose one
 that is maximal for inclusion. This is the quotient-recursion selection step for Phase 3. -/
@@ -758,7 +777,8 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
       simpa [phaseObj, KI] using hEqPhase
     have : wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α <
         wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := by
-      simpa [hEqPhase'] using hgt
+      have hgt' := hgt
+      simp [hEqPhase'] at hgt'
     exact lt_irrefl _ this
   let T : Set (Subobject X) := {B | B ≠ ⊤ ∧ IsStrictMono B.arrow}
   have hT_ne : T.Nonempty := ⟨B, hB_ne_top, hB_strict⟩
@@ -781,7 +801,6 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
     exact lt_of_le_of_ne hle (fun hEq ↦
       absurd (hM_max ⟨hBT, hEq.symm.trans hM_phase⟩ hMB.le) (not_le_of_gt hMB))
 
-variable [IsTriangulated C] in
 /-- Among the proper strict kernels of a non-semistable interval object, there is one whose
 strict quotient has minimal `W`-phase, and among the kernels achieving that minimal quotient
 phase we may choose one that is minimal for inclusion. This is the mdq-oriented selection
@@ -826,7 +845,6 @@ theorem SkewedStabilityFunction.exists_minPhase_minimal_strictKernel
     exact lt_of_le_of_ne hle (fun hEq ↦
       absurd (hM_min ⟨hBT, hEq.symm.trans hM_phase⟩ hBM.le) (not_le_of_gt hBM))
 
-variable [IsTriangulated C] in
 /-- Among the nonzero strict subobjects of a thin-interval object, there is one with maximal
 W-phase, and among those maximal-phase candidates we may choose one that is maximal for
 inclusion. This is the strict-subobject selection step needed for the thin-interval HN
@@ -875,7 +893,6 @@ theorem SkewedStabilityFunction.exists_maxPhase_maximal_strictSubobject_of_finit
     exact lt_of_le_of_ne hle (fun hEq ↦
       absurd (hM_max ⟨hBT, hEq.trans hM_phase⟩ hMB.le) (not_le_of_gt hMB))
 
-variable [IsTriangulated C] in
 /-- Among the nonzero strict subobjects of a thin-interval object, there is one with maximal
 W-phase, and among those maximal-phase candidates we may choose one that is maximal for
 inclusion. This is the strict-subobject selection step needed for the thin-interval HN
@@ -896,7 +913,6 @@ theorem SkewedStabilityFunction.exists_maxPhase_maximal_strictSubobject
   exact ssf.exists_maxPhase_maximal_strictSubobject_of_finite
     (C := C) (σ := σ) (a := a) (b := b) (X := X) hX (Set.toFinite _)
 
-variable [IsTriangulated C] in
 /-- A nonzero strict subobject that is maximal for W-phase among all nonzero strict subobjects
 is W-semistable. -/
 theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
@@ -951,7 +967,8 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
       exact (Subobject.mk_eq_bot_iff_zero).mp (show Subobject.mk (iKM ≫ M.arrow) = ⊥ by simpa [B] using hB)
     have hId : 𝟙 KI = 0 := by
       apply (cancel_mono (iKM ≫ M.arrow)).1
-      simpa [hzero]
+      rw [hzero]
+      simp
     exact hKI_ne ((IsZero.iff_id_eq_zero KI).mpr hId)
   have hB_strict : IsStrictMono B.arrow := by
     let e := Subobject.underlyingIso (iKM ≫ M.arrow)
@@ -960,8 +977,7 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
       Slicing.IntervalCat.comp_strictMono
         (C := C) (s := σ.slicing) (a := a) (b := b) e.hom (iKM ≫ M.arrow) he_strict hComp_strict
     have hArrow : e.hom ≫ (iKM ≫ M.arrow) = B.arrow := by
-      simpa [e, B, Category.assoc] using
-        (Subobject.underlyingIso_hom_comp_eq_mk (iKM ≫ M.arrow))
+      exact Subobject.underlyingIso_hom_comp_eq_mk (iKM ≫ M.arrow)
     rw [← hArrow]
     exact htmp
   have hPhaseB : phaseObj KI ≤ phaseObj (M : σ.slicing.IntervalCat C a b) := by
@@ -979,5 +995,6 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
   simpa [phaseObj, KI]
     using hPhaseB
 
+end
 
 end CategoryTheory.Triangulated
