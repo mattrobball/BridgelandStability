@@ -31,7 +31,6 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
 
 /-! ### Thin-interval pullback infrastructure -/
 
@@ -46,7 +45,7 @@ theorem interval_pullbackπ_strictEpi_of_strictEpi
   have hpb : IsStrictEpi (pullback.fst B.arrow p) :=
     QuasiAbelian.pullback_strictEpi B.arrow p hp
   have he : e.hom ≫ pullback.fst B.arrow p = Subobject.pullbackπ p B := by
-    simpa [e] using (Subobject.isPullback p B).isoPullback_hom_fst
+    exact (Subobject.isPullback p B).isoPullback_hom_fst
   have hcomp : IsStrictEpi (e.hom ≫ pullback.fst B.arrow p) :=
     Slicing.IntervalCat.comp_strictEpi
       (C := C) (s := s) (a := a) (b := b) e.hom (pullback.fst B.arrow p)
@@ -86,10 +85,12 @@ theorem interval_pullback_arrow_strictMono_of_strictMono
             _ = 0 := by simp)
         (fun {W} g hg ↦ by
           let u : W ⟶ (B : s.IntervalCat C a b) :=
-            hKerB.lift (KernelFork.ofι (g ≫ p) (by simpa [Category.assoc] using hg))
+            hKerB.lift (KernelFork.ofι (g ≫ p) (by
+              rw [Category.assoc]
+              exact hg))
           have hu : u ≫ B.arrow = g ≫ p := by
             exact hKerB.fac _ Limits.WalkingParallelPair.zero
-          exact ⟨sq.lift u g hu, by simpa [pb] using sq.lift_snd u g hu⟩) }
+          exact ⟨sq.lift u g hu, by exact sq.lift_snd u g hu⟩) }
   exact isStrictMono_of_normalMono
 
 lemma interval_le_pullback_cokernel
@@ -101,8 +102,14 @@ lemma interval_le_pullback_cokernel
   let q := cokernel.π M.arrow
   let pbB := (Subobject.pullback q).obj B
   let sq := Subobject.isPullback q B
-  refine Subobject.le_of_comm (sq.lift 0 M.arrow (by simpa [q] using cokernel.condition M.arrow)) ?_
-  simpa [pbB] using sq.lift_snd 0 M.arrow (by simpa [q] using cokernel.condition M.arrow)
+  refine Subobject.le_of_comm (sq.lift 0 M.arrow (by
+    dsimp [q]
+    rw [zero_comp]
+    exact (cokernel.condition M.arrow).symm)) ?_
+  exact sq.lift_snd 0 M.arrow (by
+    dsimp [q]
+    rw [zero_comp]
+    exact (cokernel.condition M.arrow).symm)
 
 lemma interval_ofLE_pullbackπ_eq_zero
     {s : Slicing C} [IsTriangulated C] {a b : ℝ}
@@ -120,10 +127,12 @@ lemma interval_ofLE_pullbackπ_eq_zero
     (Subobject.ofLE M pbB hle ≫ Subobject.pullbackπ q B) ≫ B.arrow
         = Subobject.ofLE M pbB hle ≫ (pbB.arrow ≫ q) := by
             rw [Category.assoc, sq.w]
-    _ = (Subobject.ofLE M pbB hle ≫ pbB.arrow) ≫ q := by simp [Category.assoc]
+    _ = (Subobject.ofLE M pbB hle ≫ pbB.arrow) ≫ q := by simp
     _ = M.arrow ≫ q := by rw [Subobject.ofLE_arrow]
     _ = 0 ≫ B.arrow := by
-          rw [show M.arrow ≫ q = 0 by simpa [q] using cokernel.condition M.arrow]
+          rw [show M.arrow ≫ q = 0 by
+            dsimp [q]
+            exact cokernel.condition M.arrow]
           simp
 
 theorem interval_strictShortExact_of_kernel_strictEpi
@@ -185,13 +194,12 @@ theorem interval_strictShortExact_pullback_left
               let hiB : B.Factors (i ≫ q) := by
                 simpa [hiq] using (Subobject.factors_zero : B.Factors (0 : K ⟶ Q))
               change
-                (((Subobject.pullback q).obj B).factorThru i (Limits.pullback_factors q B i hiB) ≫
+                ((((Subobject.pullback q).obj B).factorThru i (Limits.pullback_factors q B i hiB)) ≫
                     ((Subobject.pullback q).obj B).arrow) ≫ q =
                   i ≫ q
-              simpa [Category.assoc] using
-                congrArg (fun t ↦ t ≫ q)
-                  (Subobject.factorThru_arrow ((Subobject.pullback q).obj B) i
-                    (Limits.pullback_factors q B i hiB))
+              exact congrArg (fun t ↦ t ≫ q)
+                (Subobject.factorThru_arrow ((Subobject.pullback q).obj B) i
+                  (Limits.pullback_factors q B i hiB))
           _ = 0 := hiq
           _ = 0 ≫ B.arrow := by simp)) := by
   let pb := (Subobject.pullback q).obj B
@@ -211,7 +219,7 @@ theorem interval_strictShortExact_pullback_left
       _ = m ≫ (pb.arrow ≫ q) := by rw [(Subobject.isPullback q B).w]
       _ = (m ≫ pb.arrow) ≫ q := by simp [Category.assoc]
       _ = i ≫ q := by
-          simpa [Category.assoc] using congrArg (fun t ↦ t ≫ q) hm
+          exact congrArg (fun t ↦ t ≫ q) hm
       _ = 0 := hiq
       _ = 0 ≫ B.arrow := by simp
   haveI : Mono i := Fork.IsLimit.mono hKer
@@ -254,22 +262,22 @@ theorem interval_strictShortExact_pullback_right
     StrictShortExact
       (ShortComplex.mk pb.arrow p (by
         calc
-          pb.arrow ≫ p = pb.arrow ≫ q ≫ g := by simp [p, Category.assoc]
+          pb.arrow ≫ p = pb.arrow ≫ q ≫ g := by simp [p]
           _ = (pb.arrow ≫ q) ≫ g := by simp [Category.assoc]
           _ = (Subobject.pullbackπ q B ≫ B.arrow) ≫ g := by
               rw [(Subobject.isPullback q B).w]
-          _ = Subobject.pullbackπ q B ≫ B.arrow ≫ g := by simp [Category.assoc]
-          _ = 0 := by simp [hBg, Category.assoc])) := by
+          _ = Subobject.pullbackπ q B ≫ B.arrow ≫ g := by simp
+          _ = 0 := by simp [hBg])) := by
   let pb := (Subobject.pullback q).obj B
   let p : E ⟶ Y := q ≫ g
   let hcomp : pb.arrow ≫ p = 0 := by
     calc
-      pb.arrow ≫ p = pb.arrow ≫ q ≫ g := by simp [p, Category.assoc]
+      pb.arrow ≫ p = pb.arrow ≫ q ≫ g := by simp [p]
       _ = (pb.arrow ≫ q) ≫ g := by simp [Category.assoc]
       _ = (Subobject.pullbackπ q B ≫ B.arrow) ≫ g := by
           rw [(Subobject.isPullback q B).w]
-      _ = Subobject.pullbackπ q B ≫ B.arrow ≫ g := by simp [Category.assoc]
-      _ = 0 := by simp [hBg, Category.assoc]
+      _ = Subobject.pullbackπ q B ≫ B.arrow ≫ g := by simp
+      _ = 0 := by simp [hBg]
   have hKer : IsLimit (KernelFork.ofι pb.arrow hcomp) := by
     refine KernelFork.IsLimit.ofι' pb.arrow hcomp (fun {W} k hk ↦ ?_)
     let u : W ⟶ (B : s.IntervalCat C a b) :=
@@ -278,7 +286,7 @@ theorem interval_strictShortExact_pullback_right
     have hu : u ≫ B.arrow = k ≫ q := by
       exact hBKer.fac _ Limits.WalkingParallelPair.zero
     refine ⟨(Subobject.isPullback q B).lift u k hu, ?_⟩
-    simpa [pb] using (Subobject.isPullback q B).lift_snd u k hu
+    exact (Subobject.isPullback q B).lift_snd u k hu
   have hp : IsStrictEpi p :=
     Slicing.IntervalCat.comp_strictEpi
       (C := C) (s := s) (a := a) (b := b) q g hq hg
@@ -349,6 +357,7 @@ theorem interval_strictShortExact_ofLE_pullbackπ_cokernel
   exact Slicing.IntervalCat.strictShortExact_of_distTriang
     (C := C) (s := s) (a := a) (b := b) hT
 
+/-- The first map in a strict short exact sequence in a thin interval category is a kernel. -/
 noncomputable def interval_fIsKernel_of_strictShortExact
     {s : Slicing C} [IsTriangulated C] {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -394,6 +403,7 @@ noncomputable def interval_fIsKernel_of_strictShortExact
         simp [eK, heHi, Category.assoc]
     _ = S.f := h.left.f'_i
 
+/-- Pulling back a strict subobject along a cokernel map preserves the cokernel object up to iso. -/
 noncomputable def interval_cokernel_pullbackTopIso
     {s : Slicing C} [IsTriangulated C] {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -432,16 +442,16 @@ noncomputable def interval_cokernel_pullbackTopIso
         Limits.WalkingParallelPair.zero
   let eC : cokernel pb.arrow ≅ cokernel (kernel.ι p) :=
     cokernel.mapIso pb.arrow (kernel.ι p) eK (Iso.refl _)
-      (by simpa [heK])
+      (by simp [heK])
   let eQ : cokernel (kernel.ι p) ≅ cokernel B.arrow :=
     IsColimit.coconePointUniqueUpToIso (cokernelIsCokernel (kernel.ι p))
       hp.isColimitCokernelCofork
   exact eC ≪≫ eQ
 
 theorem semistable_of_upper_inclusion
+    [IsTriangulated C]
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a b₁ b₂ ψ ε₀ : ℝ} (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
     {E : C}
     (hSS : (σ.skewedStabilityFunction_of_near C W hW hab₁).Semistable C E ψ)
@@ -463,7 +473,7 @@ theorem semistable_of_upper_inclusion
       stabSeminorm C σ (W - σ.Z) <
         ENNReal.ofReal (Real.cos (Real.pi * (b₂ - a) / 2)) :=
     stabSeminorm_lt_cos_of_hsin_hthin
-      (C := C) (σ := σ) (W := W) hab₂ hε₀ hε₀2 hthin₂ hsin
+      (C := C) (σ := σ) (W := W) hab₂ hε₀ hthin₂ hsin
   let hpert₂ := hperturb_of_stabSeminorm C σ W hW hthin₂' hε₀ hε₀2 hsin
   have hW_ne₂ :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
@@ -523,7 +533,7 @@ theorem semistable_of_upper_inclusion
         (C := C) (s := σ.slicing) (a := a) (b := b₂) hS₀
   obtain ⟨X, Y, fX, gY, δY, hTQ, hX_ge, hY₁⟩ :=
     exists_upper_boundary_triangle (C := C) (s := σ.slicing)
-      hab₁ hab₂ hb hQI
+      hab₁ hQI
   have hX₂ : σ.slicing.intervalProp C a b₂ X :=
     intervalProp_of_upper_boundary_triangle (C := C) (s := σ.slicing)
       hab₁ hab₂ hb₁_le hQI hX_ge hY₁ hTQ
@@ -582,7 +592,10 @@ theorem semistable_of_upper_inclusion
         _ = mPB ≫ (PB.arrow ≫ qE) := by rw [(Subobject.isPullback qE BX).w]
         _ = (mPB ≫ PB.arrow) ≫ qE := by simp [Category.assoc]
         _ = iK ≫ qE := by
-            simpa [mPB, hPBfac] using Subobject.factorThru_arrow PB iK hPBfac
+            have hmPB : mPB ≫ PB.arrow = iK := by
+              exact Subobject.factorThru_arrow PB iK hPBfac
+            change (mPB ≫ PB.arrow) ≫ qE = iK ≫ qE
+            rw [hmPB]
         _ = 0 := hcomp₀
         _ = 0 ≫ BX.arrow := by simp
     let SL : ShortComplex (σ.slicing.IntervalCat C a b₂) :=
@@ -596,7 +609,7 @@ theorem semistable_of_upper_inclusion
       calc
         BX.arrow ≫ qY = ((Subobject.underlyingIso xQ).hom ≫ xQ) ≫ qY := by
           rw [Subobject.underlyingIso_hom_comp_eq_mk xQ]
-        _ = (Subobject.underlyingIso xQ).hom ≫ (xQ ≫ qY) := by simp [Category.assoc]
+        _ = (Subobject.underlyingIso xQ).hom ≫ (xQ ≫ qY) := by simp
         _ = 0 := by simp [hcomp₁]
     have hBXKer : IsLimit (KernelFork.ofι BX.arrow hBXcomp) := by
       have hS₁Ker : IsLimit (KernelFork.ofι xQ hcomp₁) := by
@@ -613,13 +626,13 @@ theorem semistable_of_upper_inclusion
     let pE : EI₂ ⟶ YI₂ := qE ≫ qY
     let hcompR : PB.arrow ≫ pE = 0 := by
       calc
-        PB.arrow ≫ pE = PB.arrow ≫ qE ≫ qY := by simp [pE, Category.assoc]
+        PB.arrow ≫ pE = PB.arrow ≫ qE ≫ qY := by simp [pE]
         _ = (PB.arrow ≫ qE) ≫ qY := by simp [Category.assoc]
         _ = (Subobject.pullbackπ qE BX ≫ BX.arrow) ≫ qY := by
             rw [(Subobject.isPullback qE BX).w]
         _ = Subobject.pullbackπ qE BX ≫ BX.arrow ≫ qY := by
-            simp [Category.assoc]
-        _ = Subobject.pullbackπ qE BX ≫ (BX.arrow ≫ qY) := by simp [Category.assoc]
+            simp
+        _ = Subobject.pullbackπ qE BX ≫ (BX.arrow ≫ qY) := by simp
         _ = 0 := by simp [hBXcomp]
     let SR : ShortComplex (σ.slicing.IntervalCat C a b₂) :=
       ShortComplex.mk PB.arrow pE hcompR
@@ -637,7 +650,8 @@ theorem semistable_of_upper_inclusion
         simpa using hm_zero_hom
       have hId : 𝟙 KI₂ = 0 := by
         apply (cancel_mono mPB).1
-        simpa [hm_zero]
+        rw [hm_zero]
+        simp
       have hKZ : IsZero KI₂ := (IsZero.iff_id_eq_zero KI₂).mpr hId
       exact hKne (((σ.slicing.intervalProp C a b₂).ι).map_isZero hKZ)
     obtain ⟨δR, hTR⟩ := Slicing.IntervalCat.exists_distTriang_of_strictShortExact
