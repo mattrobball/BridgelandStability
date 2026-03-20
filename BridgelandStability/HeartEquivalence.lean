@@ -1341,6 +1341,20 @@ private noncomputable def HeartStabilityData.H0FunctorShiftObjIsoHeartCoh
         (TStructure.truncGELEObjShiftIso (C := C) h.t n X).symm)
   exact ((Functor.isoShift (h.H0Functor (C := C)) n).app X).symm ≪≫ e₂
 
+private theorem TStructure.isIso_truncLT_pred_map_of_isGE
+    (t : TStructure C) [IsTriangulated C]
+    {a : ℤ} {A Z X₃ : C} [t.IsGE A a]
+    {m₁ : A ⟶ Z} {m₃ : Z ⟶ X₃} {δ : X₃ ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk m₁ m₃ δ ∈ distTriang C) :
+    IsIso ((t.truncLT (a - 1)).map m₃) := by
+  let T : Triangle C := Triangle.mk m₁ m₃ δ
+  have hrot : T.rotate ∈ distTriang C := by
+    simpa [T] using rot_of_distTriang _ hT
+  have hGE : t.IsGE (T.rotate.obj₃) (a - 1) := by
+    change t.IsGE (A⟦(1 : ℤ)⟧) (a - 1)
+    simpa [T] using t.isGE_shift A a 1 (a - 1) (by omega)
+  simpa [T] using t.isIso₁_truncLT_map_of_isGE T.rotate hrot (a - 1) hGE
+
 private theorem TStructure.exists_truncLT_octahedral_split
     (t : TStructure C) [IsTriangulated C]
     {X₁ X₂ X₃ : C} {f : X₁ ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ X₁⟦(1 : ℤ)⟧}
@@ -1511,6 +1525,248 @@ private theorem HeartStabilityData.toH0primeHom_eq_zero_iff
     apply h.hom_ext_toH0prime (C := C) E
     simpa [hf] using h.toH0primeHom_hom (C := C) E f
 
+private theorem HeartStabilityData.isZero_H0prime_of_isGE_one
+    (h : HeartStabilityData C) [IsTriangulated C]
+    {X : C} [h.t.IsGE X 1] :
+    IsZero (h.H0prime (C := C) X) := by
+  refine ObjectProperty.FullSubcategory.isZero_of_obj_isZero (C := C) ?_
+  change IsZero ((h.t.truncLE 0).obj ((h.t.truncGE 0).obj X))
+  exact h.t.isZero_truncLE_obj_of_isGE 0 1 rfl ((h.t.truncGE 0).obj X)
+
+private theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_truncLT_map
+    (h : HeartStabilityData C) [IsTriangulated C]
+    {A Z X₃ : C} [h.t.IsGE A 0]
+    {m₁ : A ⟶ Z} {m₃ : Z ⟶ X₃} {δ : X₃ ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk m₁ m₃ δ ∈ distTriang C)
+    (hm₃LT : IsIso ((h.t.truncLT 0).map m₃))
+    (E : h.t.heart.FullSubcategory) :
+    ((shortComplexOfDistTriangle (Triangle.mk m₁ m₃ δ) hT).map
+      (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+  rw [ShortComplex.ab_exact_iff]
+  intro β hβ
+  letI := hm₃LT
+  have hkernel :
+      β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+          (h.t.truncGE 0).map m₃ = 0 :=
+    (h.comp_H0primeFunctor_map_eq_zero_iff (C := C) E β m₃).mp hβ
+  have hkernel' :
+      β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+          (h.t.truncGE 0).map m₃ ≫ (h.t.truncGEδLT 0).app X₃ = 0 := by
+    simpa [Category.assoc] using
+      congrArg (fun k => k ≫ (h.t.truncGEδLT 0).app X₃) hkernel
+  have hobsComp :
+      β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+          (h.t.truncGEδLT 0).app Z ≫ ((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧' = 0 := by
+    calc
+      β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+          (h.t.truncGEδLT 0).app Z ≫ ((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧' =
+        β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+          (h.t.truncGE 0).map m₃ ≫ (h.t.truncGEδLT 0).app X₃ := by
+            simpa [Category.assoc] using
+              congrArg
+                (fun k =>
+                  β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫ k)
+                ((h.t.truncGEδLT 0).naturality m₃).symm
+      _ = 0 := hkernel'
+  have hobs :
+      β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+          (h.t.truncGEδLT 0).app Z = 0 := by
+    have hobsComp' :
+        β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+            (h.t.truncGEδLT 0).app Z ≫ ((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧' =
+          0 ≫ ((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧' := by
+      simpa using hobsComp
+    have hobsComp'' :
+        (β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
+            (h.t.truncGEδLT 0).app Z) ≫ ((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧' =
+          0 ≫ ((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧' := by
+      simpa [Category.assoc] using hobsComp'
+    exact (cancel_mono (((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧')).1 hobsComp''
+  obtain ⟨f, hfβ⟩ := h.exists_toH0primeHom_eq_of_obstruction_zero (C := C) E β hobs
+  change E.obj ⟶ Z at f
+  have hfm₃π :
+      f ≫ m₃ ≫ (h.t.truncGEπ 0).app X₃ = 0 := by
+    have hβ' : h.toH0primeHom (C := C) E f ≫ (h.H0primeFunctor (C := C)).map m₃ = 0 := by
+      simpa [hfβ] using hβ
+    have hzeroTo : h.toH0primeHom (C := C) E (f ≫ m₃) = 0 := by
+      calc
+        h.toH0primeHom (C := C) E (f ≫ m₃) =
+            h.toH0primeHom (C := C) E f ≫ (h.H0primeFunctor (C := C)).map m₃ := by
+              symm
+              exact h.toH0primeHom_comp_H0primeFunctor_map (C := C) E f m₃
+        _ = 0 := hβ'
+    simpa [Category.assoc] using (h.toH0primeHom_eq_zero_iff (C := C) E (f ≫ m₃)).mp hzeroTo
+  obtain ⟨u, hu⟩ := Triangle.coyoneda_exact₂ _ (h.t.triangleLTGE_distinguished 0 X₃) (f ≫ m₃)
+    (by simpa using hfm₃π)
+  change E.obj ⟶ (h.t.truncLT 0).obj X₃ at u
+  let u' : E.obj ⟶ (h.t.truncLT 0).obj Z := u ≫ inv ((h.t.truncLT 0).map m₃)
+  have hu' :
+      u' ≫ (h.t.truncLTι 0).app Z ≫ m₃ = f ≫ m₃ := by
+    have hu₁ :
+        u' ≫ (h.t.truncLTι 0).app Z ≫ m₃ =
+          u' ≫ (h.t.truncLT 0).map m₃ ≫ (h.t.truncLTι 0).app X₃ := by
+      simpa [Category.assoc] using
+        congrArg (fun k => u' ≫ k) ((h.t.truncLTι 0).naturality m₃).symm
+    have hu₂ :
+        u' ≫ (h.t.truncLT 0).map m₃ ≫ (h.t.truncLTι 0).app X₃ =
+          u ≫ (h.t.truncLTι 0).app X₃ := by
+      simp [u', Category.assoc]
+    have hu₃ : u ≫ (h.t.truncLTι 0).app X₃ = f ≫ m₃ := by
+      simpa using hu.symm
+    exact hu₁.trans (hu₂.trans hu₃)
+  let n : E.obj ⟶ Z := u' ≫ (h.t.truncLTι 0).app Z
+  have hn : n ≫ m₃ = f ≫ m₃ := by
+    simpa [n] using hu'
+  let f' : E.obj ⟶ Z := f + (-n)
+  have hf'm₃ : f' ≫ m₃ = 0 := by
+    simp [f', hn, Category.assoc]
+  have hu'zero :
+      h.toH0primeHom (C := C) E n = 0 := by
+    have hz :
+        (h.t.truncLTι 0).app Z ≫ (h.t.truncGEπ 0).app Z = 0 :=
+      comp_distTriang_mor_zero₁₂ _ (h.t.triangleLTGE_distinguished 0 Z)
+    apply (h.toH0primeHom_eq_zero_iff (C := C) E n).2
+    simpa [n, Category.assoc] using congrArg (fun k => u' ≫ k) hz
+  have hnegzero :
+      h.toH0primeHom (C := C) E (-n) = 0 := by
+    apply (h.toH0primeHom_eq_zero_iff (C := C) E (-n)).2
+    simpa using congrArg Neg.neg
+      ((h.toH0primeHom_eq_zero_iff (C := C) E n).mp hu'zero)
+  obtain ⟨a, ha⟩ := Triangle.coyoneda_exact₂ _ hT f' hf'm₃
+  have hf'Eq :
+      h.toH0primeHom (C := C) E f' = h.toH0primeHom (C := C) E f := by
+    simp [f', hnegzero]
+  have hfβ' : h.toH0primeHom (C := C) E f = β := by
+    simpa using hfβ.symm
+  have hcomp₁ :
+      h.toH0primeHom (C := C) E a ≫ (h.H0primeFunctor (C := C)).map m₁ =
+        h.toH0primeHom (C := C) E (a ≫ m₁) := by
+    exact h.toH0primeHom_comp_H0primeFunctor_map (C := C) E a m₁
+  have hcomp₂ :
+      h.toH0primeHom (C := C) E (a ≫ m₁) = h.toH0primeHom (C := C) E f' := by
+    simpa using congrArg (h.toH0primeHom (C := C) E) ha.symm
+  refine ⟨h.toH0primeHom (C := C) E a, ?_⟩
+  exact hcomp₁.trans (hcomp₂.trans (hf'Eq.trans hfβ'))
+
+private theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_one
+    (h : HeartStabilityData C) [IsTriangulated C]
+    {A Z X₃ : C} [h.t.IsGE A 1]
+    {m₁ : A ⟶ Z} {m₃ : Z ⟶ X₃} {δ : X₃ ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk m₁ m₃ δ ∈ distTriang C)
+    (E : h.t.heart.FullSubcategory) :
+    ((shortComplexOfDistTriangle (Triangle.mk m₁ m₃ δ) hT).map
+      (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+  letI : h.t.IsGE A 0 := h.t.isGE_of_ge A 0 1 (by omega)
+  have hm₃LT : IsIso ((h.t.truncLT 0).map m₃) := by
+    let T : Triangle C := Triangle.mk m₁ m₃ δ
+    have hrot : T.rotate ∈ distTriang C := by
+      simpa [T] using rot_of_distTriang _ hT
+    have hGE : h.t.IsGE (T.rotate.obj₃) 0 := by
+      change h.t.IsGE (A⟦(1 : ℤ)⟧) 0
+      simpa [T] using h.t.isGE_shift A 1 1 0 (by omega)
+    simpa [T] using h.t.isIso₁_truncLT_map_of_isGE T.rotate hrot 0 hGE
+  exact h.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_truncLT_map
+    (C := C) hT hm₃LT E
+
+private theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_split_one
+    (h : HeartStabilityData C) [IsTriangulated C]
+    {A X₂ X₃ Z : C} [h.t.IsGE A 0]
+    {f : A ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A⟦(1 : ℤ)⟧}
+    {v : X₂ ⟶ Z} {w : Z ⟶ ((h.t.truncLT 1).obj A)⟦(1 : ℤ)⟧}
+    {m₁ : (h.t.truncGE 1).obj A ⟶ Z} {m₃ : Z ⟶ X₃}
+    (E : h.t.heart.FullSubcategory)
+    (hT : Triangle.mk f g δ ∈ distTriang C)
+    (h13 : Triangle.mk ((h.t.truncLTι 1).app A ≫ f) v w ∈ distTriang C)
+    (h23 :
+      Triangle.mk m₁ m₃
+        (δ ≫ ((shiftFunctor C (1 : ℤ)).map ((h.t.truncGEπ 1).app A))) ∈ distTriang C)
+    (hm₁ : ((h.t.truncGEπ 1).app A) ≫ m₁ = f ≫ v)
+    (hm₃ : v ≫ m₃ = g)
+    (hex13 :
+      ((shortComplexOfDistTriangle
+        (Triangle.mk ((h.t.truncLTι 1).app A ≫ f) v w) h13).map
+        (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact)
+    :
+    ((shortComplexOfDistTriangle (Triangle.mk f g δ) hT).map
+      (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+  rw [ShortComplex.ab_exact_iff]
+  intro β hβ
+  have hex23 :=
+    h.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_one (C := C) h23 E
+  rw [ShortComplex.ab_exact_iff] at hex23 hex13
+  have hβ' : β ≫ (h.H0primeFunctor (C := C)).map (v ≫ m₃) = 0 := by
+    simpa [hm₃] using hβ
+  have hβvm₃ :
+      (β ≫ (h.H0primeFunctor (C := C)).map v) ≫
+          (h.H0primeFunctor (C := C)).map m₃ = 0 := by
+    simpa [Functor.map_comp, Category.assoc] using hβ'
+  obtain ⟨a, ha⟩ := hex23 (β ≫ (h.H0primeFunctor (C := C)).map v) hβvm₃
+  have ha_zero : a = 0 := by
+    exact IsZero.eq_of_tgt (h.isZero_H0prime_of_isGE_one (C := C)
+      (X := (h.t.truncGE 1).obj A)) a 0
+  have ha_m₁_zero : a ≫ (h.H0primeFunctor (C := C)).map m₁ = 0 := by
+    cases ha_zero
+    exact zero_comp
+  have hβv_zero : β ≫ (h.H0primeFunctor (C := C)).map v = 0 := by
+    calc
+      β ≫ (h.H0primeFunctor (C := C)).map v =
+          a ≫ (h.H0primeFunctor (C := C)).map m₁ := by
+            simpa using ha.symm
+      _ = 0 := ha_m₁_zero
+  obtain ⟨a', ha'⟩ := hex13 β hβv_zero
+  refine ⟨a' ≫ (h.H0primeFunctor (C := C)).map ((h.t.truncLTι 1).app A), ?_⟩
+  calc
+    (a' ≫ (h.H0primeFunctor (C := C)).map ((h.t.truncLTι 1).app A)) ≫
+        (h.H0primeFunctor (C := C)).map f =
+      a' ≫ (h.H0primeFunctor (C := C)).map (((h.t.truncLTι 1).app A) ≫ f) := by
+        simp [Functor.map_comp, Category.assoc]
+    _ = a' ≫
+        (h.H0primeFunctor (C := C)).map (((h.t.truncLTι 1).app A) ≫ f) := by rfl
+    _ = β := by simpa [Functor.map_comp] using ha'
+
+private theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_zero_of_heart_case
+    (h : HeartStabilityData C) [IsTriangulated C]
+    {A X₂ X₃ : C} [h.t.IsGE A 0]
+    {f : A ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g δ ∈ distTriang C)
+    (E : h.t.heart.FullSubcategory)
+    (hHeart :
+      ∀ (A0 : h.t.heart.FullSubcategory) {Y₂ Y₃ : C}
+        {f0 : A0.obj ⟶ Y₂} {g0 : Y₂ ⟶ Y₃} {δ0 : Y₃ ⟶ A0.obj⟦(1 : ℤ)⟧}
+        (hT0 : Triangle.mk f0 g0 δ0 ∈ distTriang C),
+        ((shortComplexOfDistTriangle (Triangle.mk f0 g0 δ0) hT0).map
+          (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact) :
+    ((shortComplexOfDistTriangle (Triangle.mk f g δ) hT).map
+      (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+  let A0 : h.t.heart.FullSubcategory :=
+    ⟨(h.t.truncLT 1).obj A, (h.t.mem_heart_iff _).mpr
+      ⟨h.t.isLE_truncLT_obj A 1 0 (by omega), inferInstance⟩⟩
+  obtain ⟨Z, v, w, m₁, m₃, h13, h23, hm₁, hmw, hm₃⟩ :=
+    h.t.exists_truncLT_octahedral_split (C := C) hT 1
+  have hex13 :
+      ((shortComplexOfDistTriangle
+        (Triangle.mk ((h.t.truncLTι 1).app A ≫ f) v w) h13).map
+        (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+    simpa [A0] using hHeart A0 h13
+  exact h.H0primeFunctor_preadditiveCoyoneda_exact_of_split_one
+    (C := C) (A := A) (X₂ := X₂) (X₃ := X₃) (Z := Z) (f := f) (g := g) (δ := δ)
+    (v := v) (w := w) (m₁ := m₁) (m₃ := m₃) E hT h13 h23 hm₁ hm₃ hex13
+
+private theorem TStructure.isIso_truncLT_negOne_map_of_heart_source
+    (t : TStructure C) [IsTriangulated C]
+    (A : t.heart.FullSubcategory) {X₂ X₃ : C}
+    {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g δ ∈ distTriang C) :
+    IsIso ((t.truncLT (-1)).map g) := by
+  let T : Triangle C := Triangle.mk f g δ
+  have hrot : T.rotate ∈ distTriang C := by
+    simpa [T] using rot_of_distTriang _ hT
+  have hGE : t.IsGE (T.rotate.obj₃) (-1) := by
+    change t.IsGE (A.obj⟦(1 : ℤ)⟧) (-1)
+    letI : t.IsGE A.obj 0 := (t.mem_heart_iff A.obj).mp A.property |>.2
+    simpa [T] using t.isGE_shift A.obj 0 1 (-1)
+  simpa [T] using t.isIso₁_truncLT_map_of_isGE T.rotate hrot (-1) hGE
+
 private theorem HeartStabilityData.isZero_H0Functor_shift_obj_of_lt_bound
     (h : HeartStabilityData C) [IsTriangulated C]
     {X : C} {m n : ℤ} (hmn : m < n) (hGE : h.t.IsGE X n) :
@@ -1608,6 +1864,15 @@ private theorem ShortComplex.exact_of_eval
     infer_instance
   exact (epi_comp_iff_of_isIso (E.map φ) (kernelComparison S.g E)).mp hCompEpi
 
+private theorem ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel
+    {D : Type*} [Category D] [Preadditive D] {S : ShortComplex D}
+    (hS : IsLimit (KernelFork.ofι S.f S.zero)) (E : D) :
+    (S.map (preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+  rw [ShortComplex.ab_exact_iff]
+  intro β hβ
+  refine ⟨hS.lift (KernelFork.ofι β ?_), hS.fac _ WalkingParallelPair.zero⟩
+  simpa using hβ
+
 private theorem HeartStabilityData.H0primeFunctor_comp_preadditiveYoneda_eval
     (h : HeartStabilityData C) (E : h.t.heart.FullSubcategory) :
     (h.H0primeFunctor (C := C) ⋙
@@ -1680,6 +1945,31 @@ private theorem HeartStabilityData.H0Functor_isHomological_of_eval
   letI : Functor.IsHomological (h.H0primeFunctor (C := C)) :=
     h.H0primeFunctor_isHomological_of_preadditiveYoneda (C := C)
   exact h.H0Functor_isHomological_of_H0primeFunctor (C := C)
+
+private theorem HeartStabilityData.H0Functor_isHomological_of_eval_of_heart_case
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (hHeart :
+      ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+        {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+        (hT : Triangle.mk f g δ ∈ distTriang C) (E : h.t.heart.FullSubcategory),
+        ((shortComplexOfDistTriangle (Triangle.mk f g δ) hT).map
+          (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact) :
+    Functor.IsHomological (h.H0Functor (C := C)) := by
+  apply h.H0Functor_isHomological_of_eval (C := C)
+  intro T hT E
+  obtain ⟨Z, v, w, m₁, m₃, h13, h23, hm₁, hmw, hm₃, hiff⟩ :=
+    h.H0primeFunctor_preadditiveCoyoneda_exact_iff_octahedral_split (C := C) T hT E
+  have h23Exact :
+      ((shortComplexOfDistTriangle
+        (Triangle.mk m₁ m₃
+          (T.mor₃ ≫ ((shiftFunctor C (1 : ℤ)).map ((h.t.truncGEπ 0).app T.obj₁)))) h23).map
+        (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+    exact h.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_zero_of_heart_case
+      (C := C) (A := (h.t.truncGE 0).obj T.obj₁) (X₂ := Z) (X₃ := T.obj₃)
+      (f := m₁) (g := m₃)
+      (δ := T.mor₃ ≫ ((shiftFunctor C (1 : ℤ)).map ((h.t.truncGEπ 0).app T.obj₁)))
+      h23 E (fun A {X₂} {X₃} {f} {g} {δ} hT ↦ hHeart A hT E)
+  exact hiff.mpr h23Exact
 
 private noncomputable def Triangulated.SpectralObject.mapHomologicalFunctor
     {ι : Type*} [Category ι] {A : Type*} [Category A] [Abelian A]
@@ -2032,6 +2322,467 @@ private noncomputable def HeartStabilityData.H0FunctorObjIsoOfHeart
       HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
       ((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj E.obj) ≪≫ e0)
   exact ObjectProperty.isoMk _ e0'
+
+private noncomputable def HeartStabilityData.H0primeObjIsoOfHeart
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (E : h.t.heart.FullSubcategory) :
+    h.H0prime (C := C) E.obj ≅ E :=
+  (h.H0ObjIsoH0prime (C := C) E.obj).symm ≪≫ h.H0FunctorObjIsoOfHeart (C := C) E
+
+@[reassoc]
+private theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (E : h.t.heart.FullSubcategory) :
+    ((h.H0primeObjIsoOfHeart (C := C) E).inv).hom ≫
+        (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+      (h.t.truncGEπ 0).app E.obj := by
+  have hLE0 : h.t.IsLE E.obj 0 := (h.t.mem_heart_iff E.obj).mp E.property |>.1
+  haveI hIsoGEMapLE :
+      IsIso ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj)) := by
+    exact Functor.map_isIso (h.t.truncGE 0) ((h.t.truncLEι 0).app E.obj)
+  let eLE : (h.t.truncLE 0).obj E.obj ≅ E.obj :=
+    @asIso _ _ _ _ ((h.t.truncLEι 0).app E.obj)
+      ((h.t.isLE_iff_isIso_truncLEι_app 0 E.obj).mp hLE0)
+  let eGELE : (h.t.truncGELE 0 0).obj E.obj ≅ (h.t.truncGE 0).obj E.obj := by
+    simpa [TStructure.truncGELE] using
+      (asIso ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj)))
+  have hpent :
+      (h.t.truncGEπ 0).app ((h.t.truncLE 0).obj E.obj) ≫
+          (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+            (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+        (h.t.truncLEι 0).app E.obj ≫ (h.t.truncGEπ 0).app E.obj := by
+    simpa [HeartStabilityData.H0prime, TStructure.truncLE, TStructure.truncGELE,
+      TStructure.truncLEGE, TStructure.truncGELEIsoLEGE] using
+      h.t.truncGELTToLTGE_app_pentagon 0 1 E.obj
+  have hnat :
+      eLE.inv ≫ (h.t.truncGEπ 0).app ((h.t.truncLE 0).obj E.obj) =
+        (h.t.truncGEπ 0).app E.obj ≫
+          eGELE.inv := by
+    apply (Iso.eq_comp_inv eGELE).2
+    simpa [eLE, eGELE, Category.assoc] using
+      (h.t.truncGEπ_naturality 0 ((h.t.truncLEι 0).app E.obj))
+  have hmain :
+      (h.t.truncGEπ 0).app E.obj ≫
+          eGELE.inv ≫
+            (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+              (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+        (h.t.truncGEπ 0).app E.obj := by
+    have h' :
+        eLE.inv ≫ (h.t.truncGEπ 0).app ((h.t.truncLE 0).obj E.obj) ≫
+            (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+              (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+          eLE.inv ≫ (h.t.truncLEι 0).app E.obj ≫ (h.t.truncGEπ 0).app E.obj := by
+      simpa [Category.assoc] using congrArg (fun k => eLE.inv ≫ k) hpent
+    have h'' :
+        (h.t.truncGEπ 0).app E.obj ≫ eGELE.inv ≫
+            (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+              (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+          eLE.inv ≫ (h.t.truncLEι 0).app E.obj ≫ (h.t.truncGEπ 0).app E.obj := by
+      have hstep :
+          (h.t.truncGEπ 0).app E.obj ≫ eGELE.inv ≫
+              (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+                (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+            eLE.inv ≫ (h.t.truncGEπ 0).app ((h.t.truncLE 0).obj E.obj) ≫
+              (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+                (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) := by
+        simpa [Category.assoc] using
+          congrArg
+            (fun k =>
+              k ≫ (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+                (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj))
+            hnat.symm
+      exact hstep.trans (by simpa [Category.assoc] using h')
+    simpa [Category.assoc, eLE] using h''
+  have hmain' :
+      (h.t.truncGEπ 0).app E.obj ≫ eGELE.inv ≫
+          (shiftFunctorZero C ℤ).inv.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj E.obj)) ≫
+            (shiftFunctorZero C ℤ).hom.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj E.obj)) ≫
+              (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+                (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+        (h.t.truncGEπ 0).app E.obj := by
+    calc
+      (h.t.truncGEπ 0).app E.obj ≫ eGELE.inv ≫
+            (shiftFunctorZero C ℤ).inv.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj E.obj)) ≫
+              (shiftFunctorZero C ℤ).hom.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj E.obj)) ≫
+                (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+                  (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
+          (h.t.truncGEπ 0).app E.obj ≫ eGELE.inv ≫
+            (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+              (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) := by
+                simpa [Category.assoc] using
+                  congrArg
+                    (fun k =>
+                      (h.t.truncGEπ 0).app E.obj ≫ eGELE.inv ≫ k ≫
+                        (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
+                          (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj))
+                    ((shiftFunctorZero C ℤ).inv_hom_id_app
+                      ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj E.obj)))
+      _ = (h.t.truncGEπ 0).app E.obj := hmain
+  simpa [HeartStabilityData.H0primeObjIsoOfHeart, HeartStabilityData.H0FunctorObjIsoOfHeart,
+    HeartStabilityData.H0ObjIsoH0prime, HeartStabilityData.H0Functor,
+    HeartStabilityData.heartCohFunctor, HeartStabilityData.heartCoh,
+    HeartStabilityData.heartShiftOfPure, HeartStabilityData.H0prime, TStructure.truncGELE,
+    TStructure.truncLEGE, eGELE, Category.assoc] using hmain'
+
+@[reassoc]
+  private theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_comp_H0primeFunctor_map
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X : C} (f : A.obj ⟶ X) :
+    (h.H0primeObjIsoOfHeart (C := C) A).inv ≫ (h.H0primeFunctor (C := C)).map f =
+      h.toH0primeHom (C := C) A f := by
+  apply h.hom_ext_toH0prime (C := C) A
+  change
+    (((h.H0primeObjIsoOfHeart (C := C) A).inv).hom ≫
+        ((h.H0primeFunctor (C := C)).map f).hom) ≫
+          (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) =
+      (h.toH0primeHom (C := C) A f).hom ≫
+        (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X)
+  rw [Category.assoc, h.toH0primeHom_hom (C := C) A f]
+  have hstep₁ :
+      ((h.H0primeObjIsoOfHeart (C := C) A).inv).hom ≫
+            ((h.H0primeFunctor (C := C)).map f).hom ≫
+              (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) =
+          ((h.H0primeObjIsoOfHeart (C := C) A).inv).hom ≫
+            (h.t.truncLEι 0).app ((h.t.truncGE 0).obj A.obj) ≫
+              (h.t.truncGE 0).map f := by
+    simpa [Category.assoc, HeartStabilityData.H0prime, TStructure.truncLEGE] using
+      congrArg
+        (fun k => ((h.H0primeObjIsoOfHeart (C := C) A).inv).hom ≫ k)
+        (NatTrans.naturality (h.t.truncLEι 0) ((h.t.truncGE 0).map f))
+  have hstep₂ :
+      ((h.H0primeObjIsoOfHeart (C := C) A).inv).hom ≫
+            (h.t.truncLEι 0).app ((h.t.truncGE 0).obj A.obj) ≫
+              (h.t.truncGE 0).map f =
+          (h.t.truncGEπ 0).app A.obj ≫ (h.t.truncGE 0).map f := by
+    simpa [Category.assoc] using
+      congrArg (fun k => k ≫ (h.t.truncGE 0).map f)
+        (h.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι (C := C) A)
+  exact hstep₁.trans (hstep₂.trans (by simpa using h.t.truncGEπ_naturality 0 f))
+
+private noncomputable def HeartStabilityData.heartSourceH0primeShortComplex
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
+    ShortComplex h.t.heart.FullSubcategory :=
+  ShortComplex.mk
+    ((h.H0primeObjIsoOfHeart (C := C) A).inv ≫ (h.H0primeFunctor (C := C)).map f)
+    ((h.H0primeFunctor (C := C)).map g)
+    (by
+      simpa [Functor.map_comp, Category.assoc] using
+        congrArg ((h.H0primeFunctor (C := C)).map) hfg)
+
+@[simp]
+private theorem HeartStabilityData.heartSourceH0primeShortComplex_f_eq_toH0primeHom
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
+    (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f =
+      h.toH0primeHom (C := C) A f := by
+  exact h.H0primeObjIsoOfHeart_inv_comp_H0primeFunctor_map (C := C) A f
+
+private noncomputable def HeartStabilityData.heartSourceH0primeShortComplexIso
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g δ ∈ distTriang C) :
+    h.heartSourceH0primeShortComplex (C := C) A f g (comp_distTriang_mor_zero₁₂ _ hT) ≅
+      (shortComplexOfDistTriangle (Triangle.mk f g δ) hT).map
+        (h.H0primeFunctor (C := C)) := by
+  refine ShortComplex.isoMk
+    (h.H0primeObjIsoOfHeart (C := C) A).symm
+    (Iso.refl _)
+    (Iso.refl _)
+    ?_
+    ?_
+  · change
+      (h.H0primeObjIsoOfHeart (C := C) A).inv ≫ (h.H0primeFunctor (C := C)).map f =
+        ((h.H0primeObjIsoOfHeart (C := C) A).inv ≫
+          (h.H0primeFunctor (C := C)).map f) ≫ 𝟙 _ 
+    simp
+  · simp [HeartStabilityData.heartSourceH0primeShortComplex, shortComplexOfDistTriangle]
+
+private theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_iff
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g δ ∈ distTriang C)
+    (E : h.t.heart.FullSubcategory) :
+    ((shortComplexOfDistTriangle (Triangle.mk f g δ) hT).map
+      (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact ↔
+      ((h.heartSourceH0primeShortComplex (C := C) A f g
+        (comp_distTriang_mor_zero₁₂ _ hT)).map
+        (preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
+  simpa [ShortComplex.map_comp] using
+    (ShortComplex.exact_iff_of_iso
+      ((preadditiveCoyoneda.obj (Opposite.op E)).mapShortComplex.mapIso
+        (h.heartSourceH0primeShortComplexIso (C := C) A hT))).symm
+
+private theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_of_f_is_kernel
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} (hfg : f ≫ g = 0)
+    (hKer :
+      IsLimit (KernelFork.ofι
+        (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f
+        (h.heartSourceH0primeShortComplex (C := C) A f g hfg).zero))
+    (E : h.t.heart.FullSubcategory) :
+    ((h.heartSourceH0primeShortComplex (C := C) A f g hfg).map
+      (preadditiveCoyoneda.obj (Opposite.op E))).Exact :=
+  ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel hKer E
+
+private noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_cokernelDesc
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
+    cokernel (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f ⟶
+      h.H0prime (C := C) X₃ :=
+  cokernel.desc
+    (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f
+    (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g
+    (h.heartSourceH0primeShortComplex (C := C) A f g hfg).zero
+
+@[reassoc (attr := simp)]
+private theorem HeartStabilityData.heartSourceH0primeShortComplex_cokernelπ_comp_cokernelDesc
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
+    cokernel.π (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f ≫
+      h.heartSourceH0primeShortComplex_cokernelDesc (C := C) A f g hfg =
+        (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g := by
+  exact cokernel.π_desc
+    (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f
+    (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g
+    (h.heartSourceH0primeShortComplex (C := C) A f g hfg).zero
+
+private noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_f_is_kernel_of_distTriang
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} (hfg : f ≫ g = 0)
+    {δ : (h.H0prime (C := C) X₃).obj ⟶ A.obj⟦(1 : ℤ)⟧}
+    (hT :
+      Triangle.mk
+          (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f.hom
+          (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g.hom
+          δ ∈ distTriang C) :
+    IsLimit (KernelFork.ofι
+      (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f
+      (h.heartSourceH0primeShortComplex (C := C) A f g hfg).zero) := by
+  letI := h.t.hasHeartFullSubcategory
+  letI : Abelian h.t.heart.FullSubcategory := h.t.heartFullSubcategoryAbelian
+  letI : IsNormalMonoCategory h.t.heart.FullSubcategory := Abelian.toIsNormalMonoCategory
+  letI : IsNormalEpiCategory h.t.heart.FullSubcategory := Abelian.toIsNormalEpiCategory
+  letI : Balanced h.t.heart.FullSubcategory := by infer_instance
+  have hSE :
+      (h.heartSourceH0primeShortComplex (C := C) A f g hfg).ShortExact := by
+    refine TStructure.heartFullSubcategory_shortExact_of_distTriang
+      (C := C) h.t (A := A)
+      (B := h.H0prime (C := C) X₂) (Q := h.H0prime (C := C) X₃)
+      (f := (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f)
+      (g := (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g)
+      (δ := δ) hT
+  exact hSE.fIsKernel
+
+private theorem HeartStabilityData.H0Functor_isHomological_of_eval_of_heartSourceH0primeShortComplex
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (hHeart :
+      ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+        {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+        (hT : Triangle.mk f g δ ∈ distTriang C) (E : h.t.heart.FullSubcategory),
+        ((h.heartSourceH0primeShortComplex (C := C) A f g
+          (comp_distTriang_mor_zero₁₂ _ hT)).map
+          (preadditiveCoyoneda.obj (Opposite.op E))).Exact) :
+    Functor.IsHomological (h.H0Functor (C := C)) := by
+  apply h.H0Functor_isHomological_of_eval_of_heart_case (C := C)
+  intro A X₂ X₃ f g δ hT E
+  exact (h.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_iff
+    (C := C) A hT E).mpr (hHeart A hT E)
+
+private theorem HeartStabilityData.H0Functor_isHomological_of_heartSourceH0primeShortComplex_f_is_kernel
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (hKer :
+      ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+        {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+        (hT : Triangle.mk f g δ ∈ distTriang C),
+        IsLimit (KernelFork.ofι
+          (h.heartSourceH0primeShortComplex (C := C) A f g
+            (comp_distTriang_mor_zero₁₂ _ hT)).f
+          (h.heartSourceH0primeShortComplex (C := C) A f g
+            (comp_distTriang_mor_zero₁₂ _ hT)).zero)) :
+    Functor.IsHomological (h.H0Functor (C := C)) := by
+  apply h.H0Functor_isHomological_of_eval_of_heartSourceH0primeShortComplex (C := C)
+  intro A X₂ X₃ f g δ hT E
+  exact h.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_of_f_is_kernel
+    (C := C) A (comp_distTriang_mor_zero₁₂ _ hT) (hKer A hT) E
+
+private theorem HeartStabilityData.H0Functor_isHomological_of_heartSourceH0primeShortComplex_distTriang
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (hTri :
+      ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+        {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+        (hT : Triangle.mk f g δ ∈ distTriang C),
+        Σ' δ' : (h.H0prime (C := C) X₃).obj ⟶ A.obj⟦(1 : ℤ)⟧,
+          Triangle.mk
+            (h.heartSourceH0primeShortComplex (C := C) A f g
+              (comp_distTriang_mor_zero₁₂ _ hT)).f.hom
+            (h.heartSourceH0primeShortComplex (C := C) A f g
+              (comp_distTriang_mor_zero₁₂ _ hT)).g.hom
+            δ' ∈ distTriang C) :
+    Functor.IsHomological (h.H0Functor (C := C)) := by
+  apply h.H0Functor_isHomological_of_heartSourceH0primeShortComplex_f_is_kernel (C := C)
+  intro A X₂ X₃ f g δ hT
+  let hδ' := hTri A hT
+  exact h.heartSourceH0primeShortComplex_f_is_kernel_of_distTriang
+    (C := C) A (comp_distTriang_mor_zero₁₂ _ hT) hδ'.2
+
+private noncomputable def HeartStabilityData.heartSourceNegOneToAShiftHom
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₃ : C}
+    (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) :
+    (h.t.truncGELT (-1) 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := by
+  let s : (h.t.truncLT 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := (h.t.truncLTι 0).app X₃ ≫ δ
+  have hs :
+      (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s = 0 := by
+    have hs' :
+        (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s =
+          (h.t.truncLTι (-1)).app X₃ ≫ δ := by
+      simpa [s, Category.assoc] using
+        congrArg (fun k => k ≫ δ)
+          ((h.t.truncLTι_comp_natTransTruncLTOfLE_app (-1) 0 (by omega) X₃))
+    rw [hs']
+    letI : h.t.IsGE A.obj 0 := (h.t.mem_heart_iff A.obj).mp A.property |>.2
+    letI : h.t.IsLE ((h.t.truncLT (-1)).obj X₃) (-2) := h.t.isLE_truncLT_obj ..
+    letI : h.t.IsGE (A.obj⟦(1 : ℤ)⟧) (-1) := h.t.isGE_shift _ 0 1 (-1)
+    exact h.t.zero _ (-2) (-1) (by omega)
+  exact Triangle.yoneda_exact₂ _
+    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by omega) X₃) s hs |>.choose
+
+@[reassoc]
+private theorem HeartStabilityData.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₃ : C}
+    (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) :
+    (h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X₃) ≫
+        h.heartSourceNegOneToAShiftHom (C := C) A δ =
+      (h.t.truncLTι 0).app X₃ ≫ δ := by
+  let s : (h.t.truncLT 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := (h.t.truncLTι 0).app X₃ ≫ δ
+  have hs :
+      (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s = 0 := by
+    have hs' :
+        (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s =
+          (h.t.truncLTι (-1)).app X₃ ≫ δ := by
+      simpa [s, Category.assoc] using
+        congrArg (fun k => k ≫ δ)
+          ((h.t.truncLTι_comp_natTransTruncLTOfLE_app (-1) 0 (by omega) X₃))
+    rw [hs']
+    letI : h.t.IsGE A.obj 0 := (h.t.mem_heart_iff A.obj).mp A.property |>.2
+    letI : h.t.IsLE ((h.t.truncLT (-1)).obj X₃) (-2) := h.t.isLE_truncLT_obj ..
+    letI : h.t.IsGE (A.obj⟦(1 : ℤ)⟧) (-1) := h.t.isGE_shift _ 0 1 (-1)
+    exact h.t.zero _ (-2) (-1) (by omega)
+  exact (Triangle.yoneda_exact₂ _
+    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by omega) X₃) s hs).choose_spec.symm
+
+private noncomputable def HeartStabilityData.heartSourceNegOneToAHom
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₃ : C}
+    (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) :
+    h.heartCoh (C := C) (-1) X₃ ⟶ A := by
+  let e :
+      ((h.t.truncGELE (-1) (-1)).obj X₃)⟦(-1 : ℤ)⟧ ≅
+        ((h.t.truncGELT (-1) 0).obj X₃)⟦(-1 : ℤ)⟧ :=
+    (shiftFunctor C (-1)).mapIso
+      ((h.t.truncGELEIsoTruncGELT (-1) (-1) 0 rfl).app X₃)
+  refine ObjectProperty.homMk (e.hom ≫
+    (shiftFunctor C (-1)).map (h.heartSourceNegOneToAShiftHom (C := C) A δ) ≫
+      (shiftShiftNeg (X := A.obj) (i := (1 : ℤ))).hom)
+
+private theorem HeartStabilityData.exists_heartSourceNegOneToAShiftHom_comp_shift_map_factor
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g δ ∈ distTriang C) :
+    ∃ φ : ((h.t.truncLT (-1)).obj X₃)⟦(1 : ℤ)⟧ ⟶ X₂⟦(1 : ℤ)⟧,
+      h.heartSourceNegOneToAShiftHom (C := C) A δ ≫ (shiftFunctor C (1 : ℤ)).map f =
+        (h.t.truncGELTδLT (-1) 0).app X₃ ≫ φ := by
+  have hzero :
+      (h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X₃) ≫
+          h.heartSourceNegOneToAShiftHom (C := C) A δ ≫
+            (shiftFunctor C (1 : ℤ)).map f = 0 := by
+    calc
+      (h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X₃) ≫
+          h.heartSourceNegOneToAShiftHom (C := C) A δ ≫
+            (shiftFunctor C (1 : ℤ)).map f =
+        (h.t.truncLTι 0).app X₃ ≫ δ ≫ (shiftFunctor C (1 : ℤ)).map f := by
+          simpa [Category.assoc] using
+            congrArg (fun k => k ≫ (shiftFunctor C (1 : ℤ)).map f)
+              (h.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom (C := C) A δ)
+      _ = (h.t.truncLTι 0).app X₃ ≫ 0 := by
+          simpa [Category.assoc] using
+            congrArg (fun k => (h.t.truncLTι 0).app X₃ ≫ k) (comp_distTriang_mor_zero₃₁ _ hT)
+      _ = 0 := comp_zero
+  obtain ⟨φ, hφ⟩ := Triangle.yoneda_exact₃ _
+    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by omega) X₃)
+    (h.heartSourceNegOneToAShiftHom (C := C) A δ ≫ (shiftFunctor C (1 : ℤ)).map f)
+    hzero
+  exact ⟨φ, by simpa [TStructure.triangleLTLTGELT] using hφ⟩
+
+private theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_comp_truncGEπ_zero
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (E A : h.t.heart.FullSubcategory) {X₃ : C}
+    (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) (m : E.obj ⟶ X₃)
+    (hm : m ≫ (h.t.truncGEπ 0).app X₃ = 0) :
+    ∃ u : E.obj ⟶ (h.t.truncGELT (-1) 0).obj X₃,
+      u ≫ h.heartSourceNegOneToAShiftHom (C := C) A δ = m ≫ δ := by
+  obtain ⟨u₀, hu₀⟩ := Triangle.coyoneda_exact₂ _
+    (h.t.triangleLTGE_distinguished 0 X₃) m hm
+  change E.obj ⟶ (h.t.truncLT 0).obj X₃ at u₀
+  refine ⟨u₀ ≫ (h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X₃), ?_⟩
+  calc
+    (u₀ ≫ (h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X₃)) ≫
+          h.heartSourceNegOneToAShiftHom (C := C) A δ =
+        u₀ ≫ (h.t.truncLTι 0).app X₃ ≫ δ := by
+          simpa [Category.assoc] using
+            congrArg (fun k => u₀ ≫ k)
+              (h.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom (C := C) A δ)
+    _ = m ≫ δ := by
+          simpa [Category.assoc] using congrArg (fun k => k ≫ δ) hu₀.symm
+
+private theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_toH0prime_comp_kernel
+    (h : HeartStabilityData C) [IsTriangulated C]
+    (E A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
+    (f : E.obj ⟶ X₂) (g : X₂ ⟶ X₃)
+    {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
+    (hfg :
+      h.toH0primeHom (C := C) E f ≫ (h.H0primeFunctor (C := C)).map g = 0) :
+    ∃ u : E.obj ⟶ (h.t.truncGELT (-1) 0).obj X₃,
+      u ≫ h.heartSourceNegOneToAShiftHom (C := C) A δ =
+        f ≫ g ≫ δ := by
+  have hzeroTo : h.toH0primeHom (C := C) E (f ≫ g) = 0 := by
+    calc
+      h.toH0primeHom (C := C) E (f ≫ g) =
+          h.toH0primeHom (C := C) E f ≫ (h.H0primeFunctor (C := C)).map g := by
+            symm
+            exact h.toH0primeHom_comp_H0primeFunctor_map (C := C) E f g
+      _ = 0 := hfg
+  have hfgπ : f ≫ g ≫ (h.t.truncGEπ 0).app X₃ = 0 := by
+    simpa [Category.assoc] using
+      (h.toH0primeHom_eq_zero_iff (C := C) E (f ≫ g)).mp hzeroTo
+  simpa [Category.assoc] using
+    h.exists_comp_heartSourceNegOneToAShiftHom_eq_of_comp_truncGEπ_zero
+      (C := C) E A δ
+      (f ≫ g) (by simpa [Category.assoc] using hfgπ)
+
+private theorem TStructure.comp_shift_truncGEπ_zero_of_truncLT_negOne
+    (t : TStructure C) [IsTriangulated C] {X₂ X₃ : C}
+    (φ : ((t.truncLT (-1)).obj X₃)⟦(1 : ℤ)⟧ ⟶ X₂⟦(1 : ℤ)⟧) :
+    φ ≫ (shiftFunctor C (1 : ℤ)).map ((t.truncGEπ 0).app X₂) = 0 := by
+  letI : t.IsLE ((t.truncLT (-1)).obj X₃) (-1) := t.isLE_truncLT_obj ..
+  letI : t.IsLE (((t.truncLT (-1)).obj X₃)⟦(1 : ℤ)⟧) (-2) := by
+    simpa using t.isLE_shift ((t.truncLT (-1)).obj X₃) (-1) 1 (-2) (by norm_num)
+  letI : t.IsGE ((t.truncGE 0).obj X₂) 0 := t.isGE_truncGE_obj ..
+  letI : t.IsGE (((t.truncGE 0).obj X₂)⟦(1 : ℤ)⟧) (-1 : ℤ) := by
+    simpa using t.isGE_shift ((t.truncGE 0).obj X₂) 0 1 (-1) (by norm_num)
+  exact t.zero (φ ≫ (shiftFunctor C (1 : ℤ)).map ((t.truncGEπ 0).app X₂)) (-2) (-1) (by
+    norm_num)
 
 private noncomputable def HeartStabilityData.heartCohObjIsoOfHeartShift
     (h : HeartStabilityData C) [IsTriangulated C]
