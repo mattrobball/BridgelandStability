@@ -43,7 +43,7 @@ paper as a mathematical response to Michael Douglas's work on D-branes and
 `Pi`-stability in string theory. In that story, BPS branes on a Calabi-Yau are
 expected to be organized by a derived category, while physical stability should
 depend on a central charge and vary continuously in moduli. Bridgeland's paper
-takes that heuristic and turns it into a precise piece of homological algebra.
+takes that insight and turns it into a precise piece of homological algebra.
 
 The paper is therefore motivated by physics, but mathematically it is mostly
 about the main structural results around slicings, hearts, deformation
