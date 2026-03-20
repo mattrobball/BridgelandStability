@@ -147,8 +147,11 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     -- Set r(n) = dim(range δ_n). Then dim B[n] - dim A[n] - dim C[n] = -r(n-1) - r(n).
     -- The alternating sum of -r(n-1) - r(n) vanishes by shift cancellation.
     -- Define the connecting map as a k-linear map (postcomposition with δ)
+    -- δ_lin n = postcompose with (Tn.mor₃ ≫ iso) where Tn is the shifted triangle
+    -- and iso : T.obj₁⟦n⟧⟦1⟧ ≅ T.obj₁⟦n+1⟧ is the shift composition iso
     let δ_lin : (n : ℤ) → ((E ⟶ T.obj₃⟦n⟧) →ₗ[k] (E ⟶ T.obj₁⟦(n + 1)⟧)) := fun n ↦
-      Linear.rightComp k E (T.mor₃⟦n⟧' ≫ (shiftFunctorAdd' C 1 n (n + 1) (by omega)).inv.app _)
+      Linear.rightComp k E (((Triangle.shiftFunctor C n).obj T).mor₃ ≫
+        (shiftFunctorAdd' C n 1 (n + 1) (by omega)).inv.app T.obj₁)
     let r : ℤ → ℤ := fun n ↦ Module.finrank k (LinearMap.range (δ_lin n))
     -- Pointwise rank identity from exactness + rank-nullity:
     -- dim B[n] = dim A[n] + dim C[n] - r(n-1) - r(n)
@@ -212,10 +215,15 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
           ext x; simp only [LinearMap.mem_range, LinearMap.mem_ker, Linear.rightComp_apply]
           constructor
           · rintro ⟨y, rfl⟩
-            show (y ≫ T.mor₂⟦n⟧') ≫ (T.mor₃⟦n⟧' ≫ _) = 0
-            have h23 : T.mor₂⟦n⟧' ≫ T.mor₃⟦n⟧' = 0 := by
-              rw [← Functor.map_comp, comp_distTriang_mor_zero₂₃ T hT, Functor.map_zero]
-            simp [reassoc_of% h23]
+            show (δ_lin n) (g_n y) = 0
+            simp only [δ_lin, g_n, Linear.rightComp_apply, Category.assoc]
+            set Tn := (Triangle.shiftFunctor C n).obj T
+            have h23 : Tn.mor₂ ≫ Tn.mor₃ = 0 :=
+              comp_distTriang_mor_zero₂₃ Tn (Triangle.shift_distinguished T hT n)
+            -- Goal: y ≫ Tn.mor₂ ≫ Tn.mor₃ ≫ iso = 0
+            -- Tn.mor₂ = sign • T.mor₂⟦n⟧' and Tn.mor₃ = sign • T.mor₃⟦n⟧' ≫ comm
+            -- Need to handle the sign twist to use h23
+            sorry
           · intro hx
             -- x ≫ δ_mor = 0, factor x through T.mor₂⟦n⟧'
             -- Use coyoneda_exact₃ on shifted triangle
