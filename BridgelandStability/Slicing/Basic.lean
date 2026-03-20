@@ -43,8 +43,6 @@ set_option backward.privateInPublic true
 set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
 
-set_option linter.style.longFile 2700
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
