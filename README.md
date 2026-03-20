@@ -10,7 +10,7 @@ The mathematical target is the deformation-theoretic core of the paper:
 the topology on `Stab(D)`, the local-homeomorphism theorem for the central
 charge, and the consequent complex manifold structure on the space of
 numerically finite stability conditions. The engineering target is stricter:
-this should eventually become mathlib-quality code, not just code that happens
+this should eventually become Mathlib-quality code, not just code that happens
 to compile once.
 
 ## What Bridgeland stability conditions are
@@ -149,7 +149,7 @@ The most important files are:
 
 The code should be read as an active formalization project, not as a polished
 final library. Some files already expose reusable APIs; others still need the
-cleanup, consolidation, and renaming that mathlib would require.
+cleanup, consolidation, and renaming that Mathlib would require.
 
 ## Project charter
 
@@ -158,16 +158,16 @@ This is an experiment in AI-assisted formalization.
 Rule 1: AI use in a human-led workflow. The current toolchain is
 `claude-code` with Opus 4.6 and `codex` with GPT-5.4 plus FRO Lean skills. The
 goal is not to replace human mathematical judgment, but to study how far a
-human-led effort can push AI-assisted formalization on top of mathlib.
+human-led effort can push AI-assisted formalization on top of Mathlib.
 
 Rule 2: getting Lean to accept a proof script is not success. The end state has
-to be mathlib quality: correct abstractions, reusable lemmas, sane names,
+to be Mathlib quality: correct abstractions, reusable lemmas, sane names,
 controlled imports, documentation, and proofs that could plausibly survive code
 review and upstreaming. If we do not reach that bar, the project has failed.
 
 That standard is intentional. A one-off formalization would be easy to
 overvalue. The real question is whether AI can help produce library-quality
-mathematics in a modern proof assistant on top of mathlib, with as little
+mathematics in a modern proof assistant on top of Mathlib, with as little
 special pleading as possible.
 
 ## Selected References
