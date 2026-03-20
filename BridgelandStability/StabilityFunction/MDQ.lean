@@ -31,6 +31,8 @@ The IsMDQ structure, MDQ existence from artinian+noetherian, and
 HN filtration existence via MDQ recursion.
 -/
 
+/-- A quotient `q : E ⟶ B` is maximally destabilizing if it is an epimorphism onto a
+nonzero semistable object of minimal phase among semistable quotients of `E`. -/
 structure IsMDQ (Z : StabilityFunction A) {E B : A} (q : E ⟶ B) : Prop where
   epi : Epi q
   nonzero : ¬IsZero B
@@ -50,8 +52,8 @@ private theorem IsMDQ.id_of_semistable (Z : StabilityFunction A) {E : A}
     intro B' q' hq' hB'_nz hB'_ss
     haveI : Epi q' := hq'
     refine ⟨phase_le_of_epi Z q' hss hB'_nz, ?_⟩
-    intro hEq
-    exact ⟨q', by simpa [hEq] using (Category.id_comp q').symm⟩
+    intro _hEq
+    exact ⟨q', by simp⟩
 
 /-- The phase of an mdq is bounded above by the phase of the source object. -/
 private theorem IsMDQ.phase_le_of_exists_quotient
@@ -145,7 +147,7 @@ private theorem IsMDQ.precomposeIso
     refine ⟨t, ?_⟩
     change q' = (e.hom ≫ q) ≫ t
     calc
-      q' = e.hom ≫ (e.inv ≫ q') := by simp [Category.assoc]
+      q' = e.hom ≫ (e.inv ≫ q') := by simp
       _ = e.hom ≫ (q ≫ t) := by
           simpa [q''] using congrArg (fun f : E ⟶ B' => e.hom ≫ f) ht
       _ = (e.hom ≫ q) ≫ t := by rw [Category.assoc]
@@ -174,7 +176,7 @@ private theorem IsMDQ.of_epi_factor
     apply (cancel_epi p).1
     calc
       p ≫ q' = q ≫ t := ht
-      _ = (p ≫ piQ) ≫ t := by simpa [hfac]
+      _ = (p ≫ piQ) ≫ t := by rw [← hfac]
       _ = p ≫ (piQ ≫ t) := by rw [Category.assoc]
 
 /-- Recursive mdq step: a semistable destabilizing subobject lets us replace `E` by the
@@ -350,9 +352,14 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
   let Q : A := cokernel T.arrow
   let p : E ⟶ Q := cokernel.π T.arrow
   have hKq : K.arrow ≫ q = 0 := by
-    simpa [K] using (kernelSubobject_arrow_comp (f := q))
+    change (kernelSubobject q).arrow ≫ q = 0
+    exact kernelSubobject_arrow_comp (f := q)
   have hT_mk : T = Subobject.mk (K'.arrow ≫ K.arrow) := by
-    simpa [T] using (Subobject.map_mk K'.arrow K.arrow)
+    calc
+      (Subobject.map K.arrow).obj K' = (Subobject.map K.arrow).obj (Subobject.mk K'.arrow) := by
+        rw [Subobject.mk_arrow]
+      _ = Subobject.mk (K'.arrow ≫ K.arrow) := by
+        exact Subobject.map_mk K'.arrow K.arrow
   have hT_le_K : T ≤ K := by
     change (Subobject.map K.arrow).obj K' ≤ K
     simpa [K, Subobject.map_top] using (Subobject.map K.arrow).monotone (show K' ≤ ⊤ by exact le_top)
@@ -360,7 +367,7 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
     rw [hT_mk]
     let e := Subobject.underlyingIso (K'.arrow ≫ K.arrow)
     have he : e.inv ≫ (Subobject.mk (K'.arrow ≫ K.arrow)).arrow = K'.arrow ≫ K.arrow := by
-      simpa [e] using (Subobject.underlyingIso_arrow (K'.arrow ≫ K.arrow))
+      exact Subobject.underlyingIso_arrow (K'.arrow ≫ K.arrow)
     have hpre : e.inv ≫ ((Subobject.mk (K'.arrow ≫ K.arrow)).arrow ≫ q) = 0 := by
       calc
         e.inv ≫ (Subobject.mk (K'.arrow ≫ K.arrow)).arrow ≫ q
@@ -370,7 +377,7 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
     calc
       (Subobject.mk (K'.arrow ≫ K.arrow)).arrow ≫ q
           = e.hom ≫ (e.inv ≫ ((Subobject.mk (K'.arrow ≫ K.arrow)).arrow ≫ q)) := by
-              simp [Category.assoc]
+              simp
       _ = 0 := by rw [hpre]; simp
   let πQ : Q ⟶ B := cokernel.desc T.arrow q hTq
   have hp_fac : p ≫ πQ = q := by
@@ -443,18 +450,23 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
       _ = Z.phase B := max_eq_right hle
   exact (not_le_of_gt hQ_gt) hQ_le
 
+section
+
+omit [Abelian A] in
 private theorem Subobject.map_eq_mk {E : A} (K : Subobject E) (S : Subobject (K : A)) :
     (Subobject.map K.arrow).obj S = Subobject.mk (S.arrow ≫ K.arrow) := by
   calc
     (Subobject.map K.arrow).obj S = (Subobject.map K.arrow).obj (Subobject.mk S.arrow) := by
       rw [Subobject.mk_arrow]
     _ = Subobject.mk (S.arrow ≫ K.arrow) := by
-      simpa using (Subobject.map_mk S.arrow K.arrow)
+      exact Subobject.map_mk S.arrow K.arrow
 
+omit [Abelian A] in
 private noncomputable def Subobject.mapSubIso {E : A} (K : Subobject E) (S : Subobject (K : A)) :
     ((Subobject.map K.arrow).obj S : A) ≅ (S : A) :=
   Subobject.isoOfEqMk _ (S.arrow ≫ K.arrow) (Subobject.map_eq_mk K S)
 
+omit [Abelian A] in
 private theorem Subobject.ofLE_map_comp_mapSubIso_hom {E : A} (K : Subobject E)
     {S T : Subobject (K : A)} (h : S ≤ T) :
     Subobject.ofLE ((Subobject.map K.arrow).obj S) ((Subobject.map K.arrow).obj T)
@@ -462,7 +474,9 @@ private theorem Subobject.ofLE_map_comp_mapSubIso_hom {E : A} (K : Subobject E)
       (Subobject.mapSubIso K S).hom ≫ Subobject.ofLE S T h := by
   apply Subobject.eq_of_comp_arrow_eq
   apply (cancel_mono K.arrow).1
-  simp [Subobject.mapSubIso, Subobject.map_eq_mk, Category.assoc]
+  simp [Subobject.mapSubIso, Category.assoc]
+
+end
 
 private noncomputable def Subobject.cokernelMapIso {E : A} (K : Subobject E)
     {S T : Subobject (K : A)} (h : S ≤ T) :
@@ -506,21 +520,26 @@ private noncomputable def Subobject.cokernelOfLEMapKernelIsoTarget
     cokernel.mapIso _ _ eT (Iso.refl _)
       (by
         apply Subobject.eq_of_comp_arrow_eq
-        simp [eT, hT, T, Category.assoc, Subobject.mapSubIso, Subobject.map_eq_mk])
+        simp [eT, T, Category.assoc, Subobject.mapSubIso])
   exact eQ ≪≫ cokernelKernelSubobjectIsoTarget q
 
+section
+
+omit [Abelian A] in
 private theorem Subobject.map_eq_mk_mono {X Y : A} (f : X ⟶ Y) [Mono f] (S : Subobject X) :
     (Subobject.map f).obj S = Subobject.mk (S.arrow ≫ f) := by
   calc
     (Subobject.map f).obj S = (Subobject.map f).obj (Subobject.mk S.arrow) := by
       rw [Subobject.mk_arrow]
     _ = Subobject.mk (S.arrow ≫ f) := by
-      simpa using (Subobject.map_mk S.arrow f)
+      exact Subobject.map_mk S.arrow f
 
+omit [Abelian A] in
 private noncomputable def Subobject.mapMonoIso {X Y : A} (f : X ⟶ Y) [Mono f] (S : Subobject X) :
     ((Subobject.map f).obj S : A) ≅ (S : A) :=
   Subobject.isoOfEqMk _ (S.arrow ≫ f) (Subobject.map_eq_mk_mono f S)
 
+omit [Abelian A] in
 private theorem Subobject.ofLE_map_comp_mapMonoIso_hom {X Y : A} (f : X ⟶ Y) [Mono f]
     {S T : Subobject X} (h : S ≤ T) :
     Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
@@ -528,7 +547,9 @@ private theorem Subobject.ofLE_map_comp_mapMonoIso_hom {X Y : A} (f : X ⟶ Y) [
       (Subobject.mapMonoIso f S).hom ≫ Subobject.ofLE S T h := by
   apply Subobject.eq_of_comp_arrow_eq
   apply (cancel_mono f).1
-  simp [Subobject.mapMonoIso, Subobject.map_eq_mk_mono, Category.assoc]
+  simp [Subobject.mapMonoIso, Category.assoc]
+
+end
 
 private noncomputable def Subobject.cokernelMapMonoIso {X Y : A} (f : X ⟶ Y) [Mono f]
     {S T : Subobject X} (h : S ≤ T) :
@@ -568,7 +589,8 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
       calc
         K.arrow ≫ (Iso.refl Y).hom = K.arrow := by simp
         _ = (Subobject.underlyingIso i).hom ≫ i := by
-            simpa [K] using (Subobject.underlyingIso_hom_comp_eq_mk i).symm
+            change (Subobject.mk i).arrow = (Subobject.underlyingIso i).hom ≫ i
+            exact (Subobject.underlyingIso_hom_comp_eq_mk i).symm
     exact eKi ≪≫ eB
   have hK_ne_top : K ≠ ⊤ := by
     intro hK
@@ -583,7 +605,7 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
   have hNewBot : newChain ⟨0, by omega⟩ = ⊥ := by
     change (Subobject.map i).obj (F.chain ⟨0, by omega⟩) = ⊥
     rw [F.chain_bot]
-    simpa using (Subobject.map_bot i)
+    exact Subobject.map_bot i
   have hNewK : newChain ⟨F.n, by omega⟩ = K := by
     simp [newChain, K, Subobject.map_top, F.chain_top]
   have hNewTop : newChain ⟨F.n + 1, by omega⟩ = ⊤ := by
@@ -631,11 +653,11 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
           have hj_le : (j : ℕ) ≤ F.n := by omega
-          simpa [newChain, j', hj_le]
+          simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
           have hj1_le : (j : ℕ) + 1 ≤ F.n := by omega
-          simpa [newChain, j', hj1_le]
+          simp [newChain, j', hj1_le]
         have hphase :
             Z.phase (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
               ((Subobject.map i).obj (F.chain j'.succ))
@@ -669,11 +691,11 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
           have hj_le : (j : ℕ) ≤ F.n := by omega
-          simpa [newChain, j', hj_le]
+          simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
           have hj1_le : (j : ℕ) + 1 ≤ F.n := by omega
-          simpa [newChain, j', hj1_le]
+          simp [newChain, j', hj1_le]
         have hsemistable :
             Z.IsSemistable
               (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
@@ -748,6 +770,7 @@ theorem exists_hn_of_semistable (Z : StabilityFunction A) {E : A}
     Nonempty (AbelianHNFiltration Z E) := by
   exact ⟨(exists_hn_with_last_phase_of_semistable Z hss).choose⟩
 
+/-- Transport an HN filtration across an isomorphism of the ambient object. -/
 noncomputable def AbelianHNFiltration.ofIso {Z : StabilityFunction A} {E E' : A}
     (F : AbelianHNFiltration Z E) (e : E ≅ E') :
     AbelianHNFiltration Z E' where
