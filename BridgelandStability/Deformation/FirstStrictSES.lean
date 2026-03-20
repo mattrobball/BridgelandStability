@@ -31,10 +31,9 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
 
 theorem SkewedStabilityFunction.semistable_of_iso
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     {ssf : SkewedStabilityFunction C s a b}
     {E E' : C} (e : E ≅ E') {ψ : ℝ} (h : ssf.Semistable C E ψ) :
     ssf.Semistable C E' ψ := by
@@ -51,7 +50,10 @@ theorem SkewedStabilityFunction.semistable_of_iso
           (by simp) (by simp) (by simp))
     exact h.2.2.2.2 hT' hK hQ hKne
 
-variable [IsTriangulated C] in
+section
+
+variable [IsTriangulated C]
+
 /-- A maximal-phase strict subobject of a non-semistable interval object cannot be `⊤`. -/
 theorem SkewedStabilityFunction.maxPhase_strictSubobject_ne_top_of_not_semistable
     (σ : StabilityCondition C) {a b : ℝ}
@@ -88,11 +90,9 @@ theorem SkewedStabilityFunction.maxPhase_strictSubobject_ne_top_of_not_semistabl
     (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
       (asIso (⊤ : Subobject X).arrow)
   have hTop_ss := semistable_of_iso
-    (C := C) (s := σ.slicing) (a := a) (b := b)
-    eC hM_ss
+    (C := C) (s := σ.slicing) (a := a) (b := b) eC hM_ss
   simpa [hphase] using hTop_ss
 
-variable [IsTriangulated C] in
 /-- In a non-semistable interval object, a maximal-phase strict subobject has strictly
 larger phase than the ambient object. -/
 theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semistable
@@ -103,7 +103,6 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
     (hX : ¬IsZero X)
     (hns : ¬ ssf.Semistable C X.obj
       (wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α))
-    (hM_ne : M ≠ ⊥) (hM_strict : IsStrictMono M.arrow)
     (hM_max : ∀ B : Subobject X, B ≠ ⊥ → IsStrictMono B.arrow →
       wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ≤
         wPhaseOf (ssf.W (K₀.of C (M : σ.slicing.IntervalCat C a b).obj)) ssf.α)
@@ -147,7 +146,8 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
         (show Subobject.mk iKX = ⊥ by simpa [B] using hB)
     have hId : 𝟙 KI = 0 := by
       apply (cancel_mono iKX).1
-      simpa [hzero]
+      rw [hzero]
+      simp
     exact hKI_ne ((IsZero.iff_id_eq_zero KI).mpr hId)
   have hB_strict : IsStrictMono B.arrow := by
     simpa [B] using
@@ -166,7 +166,6 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
     exact hIsoK.trans_le hPhaseSub
   simpa [phaseObj, KI] using hPhaseB.trans hle
 
-variable [IsTriangulated C] in
 /-- Strict-Artinian descent for the first strict short exact sequence: starting from a
 non-semistable thin-interval object, repeatedly pass to a proper strict subobject of larger
 phase until the descent terminates at a semistable strict subobject. This is the faithful
@@ -265,7 +264,6 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
     · exact interval_strictShortExact_cokernel_of_strictMono
         (C := C) (s := σ.slicing) (a := a) (b := b) D.1.arrow D.2
 
-variable [IsTriangulated C] in
 /-- Finiteness of subobjects in the left-heart image of an interval object implies finiteness of
 its strict-subobject set in the thin interval category. This is the paper-faithful local
 finite-length input for the first strict short exact sequence. -/
@@ -296,7 +294,6 @@ theorem Slicing.IntervalCat.finite_strictSubobjects_of_finite_leftHeartSubobject
         simp only [Functor.preimageIso_hom, Functor.map_comp, Functor.map_preimage]
         exact Subobject.ofMkLEMk_comp hEq.le)))
 
-variable [IsTriangulated C] in
 /-- Bridgeland's first strict short exact sequence in a thin category: if an interval object is
 not `W`-semistable, there is a proper strict subobject of maximal `W`-phase, and its inclusion
 gives a strict short exact sequence `0 → A → E → B → 0`.
@@ -338,12 +335,14 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable
       wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α <
         wPhaseOf (ssf.W (K₀.of C (M : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
     ssf.phase_gt_of_maxPhase_strictSubobject_of_not_semistable
-      (C := C) (σ := σ) (a := a) (b := b) (X := X) hX hns hM_ne hM_strict hM_max hW_interval
+      (C := C) (σ := σ) (a := a) (b := b) (X := X) hX hns hM_max hW_interval
   have hS : StrictShortExact
       (ShortComplex.mk M.arrow (cokernel.π M.arrow) (cokernel.condition M.arrow)) :=
     interval_strictShortExact_cokernel_of_strictMono
       (C := C) (s := σ.slicing) (a := a) (b := b) M.arrow hM_strict
   exact ⟨M, hM_ne, hM_ne_top, hM_strict, hM_ss, hphase_gt, hS⟩
+
+end
 
 
 end CategoryTheory.Triangulated
