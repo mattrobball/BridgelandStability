@@ -191,24 +191,36 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       -- Rank-nullity at B[n]: dim B[n] = dim(range f_n) + dim(range g_n)
       haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
       have h_mid := finrank_mid_of_exact k f_n g_n hexact_B
-      -- The connecting map δ_{n-1} targets T.obj₁⟦(n-1)+1⟧ = T.obj₁⟦n⟧ (up to iso).
-      -- Exactness at A[n] and C[n] give dim constraints.
-      -- Rather than formalizing the connecting map exactness (same sign-handling
-      -- as hexact_B × 2), we compute directly from rank-nullity.
-      -- dim(range f_n) + dim(ker f_n) = dim A[n]
-      -- dim(range g_n) + dim(ker g_n) = dim B[n] ... wait, g_n maps FROM B[n]
-      -- Actually: dim B[n] = dim(range f_n) + dim(range g_n) [from h_mid]
-      -- dim A[n] = dim(range f_n) + dim(ker f_n) [rank-nullity on f_n]
-      -- dim C[n] = dim(range g_n) + dim(ker g_n) [rank-nullity on g_n FROM C[n]]
-      -- No: g_n : B[n] → C[n], so rank-nullity gives dim B[n] = dim(ker g_n) + dim(range g_n)
-      -- And ker g_n = range f_n [hexact_B]
-      -- We need ker f_n = range δ_{n-1} to get dim(ker f_n) = r(n-1).
-      -- And ker δ_n = range g_n to get dim(ker δ_n) ... hmm not directly useful.
-      -- Actually just need: dim(ker f_n) = r(n-1) and dim(range g_n) = dim C[n] - r(n).
-      -- For dim(range g_n): rank-nullity on δ_n gives dim C[n] = dim(ker δ_n) + r(n).
-      -- And exactness at C[n]: ker δ_n = range g_n. So dim(range g_n) = dim C[n] - r(n).
-      -- Same sorry structure — needs connecting map exactness.
-      sorry
+      -- We need: dim(ker f_n) = r(n-1) and dim(range g_n) = dim C[n] - r(n).
+      -- These follow from exactness at the other two positions + rank-nullity.
+      -- For now, sorry and note the remaining work.
+      haveI : Module.Finite k (E ⟶ T.obj₁⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₁⟦n⟧)
+      haveI : Module.Finite k (E ⟶ T.obj₃⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₃⟦n⟧)
+      -- dim(ker f_n) = r(n-1): from long exact sequence exactness at A[n],
+      -- ker(f_n) = im(δ_{n-1}), so dim(ker f_n) = dim(im δ_{n-1}) = r(n-1).
+      -- Note: δ_{n-1} maps to T.obj₁⟦(n-1)+1⟧ ≅ T.obj₁⟦n⟧, so r(n-1) = dim(range δ_{n-1})
+      -- equals dim(ker f_n) up to the transport iso. finrank is iso-invariant.
+      have h_ker_f : Module.finrank k (LinearMap.ker f_n) = r (n - 1) := by
+        sorry -- connecting map exactness at A[n]
+      -- dim(ker δ_n) = dim(range g_n): from exactness at C[n]
+      have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
+          Module.finrank k (LinearMap.range g_n) := by
+        sorry -- connecting map exactness at C[n]
+      -- Combine: dim B[n] = dim(range f_n) + dim(range g_n) [h_mid]
+      -- dim A[n] = dim(range f_n) + dim(ker f_n) = dim(range f_n) + r(n-1) [h_f + h_ker_f]
+      -- dim C[n] = dim(ker δ_n) + dim(range δ_n) = dim(range g_n) + r(n) [h_δ + h_ker_δ]
+      -- So dim B[n] = (dim A[n] - r(n-1)) + (dim C[n] - r(n))
+      have h_f : (Module.finrank k (LinearMap.range f_n) : ℤ) =
+          Module.finrank k (E ⟶ T.obj₁⟦n⟧) - r (n - 1) := by
+        have := f_n.finrank_range_add_finrank_ker
+        omega
+      have h_g : (Module.finrank k (LinearMap.range g_n) : ℤ) =
+          Module.finrank k (E ⟶ T.obj₃⟦n⟧) - r n := by
+        have h1 := (δ_lin n).finrank_range_add_finrank_ker
+        have h2 := h_ker_δ
+        simp only [r] at h2 ⊢
+        omega
+      linarith
     -- Now sum with alternating signs
     have key : ∀ n : ℤ,
         (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₂⟦n⟧) =
