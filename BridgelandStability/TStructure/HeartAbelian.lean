@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import Mathlib.CategoryTheory.Triangulated.TStructure.Heart
-import BridgelandStability.TStructure.AbelianSubcategory
+import Mathlib.CategoryTheory.Triangulated.TStructure.AbelianSubcategory
 import Mathlib.CategoryTheory.Triangulated.TStructure.TruncLTGE
 import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
 
