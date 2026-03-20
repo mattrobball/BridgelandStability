@@ -54,7 +54,9 @@ theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
       (C := C) (s := s) (a := a) (b := b) f
   have himage_zero : Abelian.image.ι (FR.map f) ≫ qH = 0 := by
     apply (cancel_mono eQ.hom).1
-    simpa [Category.assoc, hqHeq] using kernel.condition (cokernel.π (FR.map f))
+    rw [Category.assoc, hqHeq, zero_comp]
+    change kernel.ι (cokernel.π (FR.map f)) ≫ cokernel.π (FR.map f) = 0
+    exact kernel.condition (cokernel.π (FR.map f))
   have himage_kernel : IsLimit
       (KernelFork.ofι (Abelian.image.ι (FR.map f)) himage_zero) := by
     exact isKernelOfComp (f := qH) eQ.hom (cokernel.π (FR.map f))
@@ -76,9 +78,11 @@ theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
   let eK : Abelian.image (FR.map f) ≅ kernel qH := by
     refine ⟨eKh, eKi, ?_, ?_⟩
     · apply (cancel_mono (Abelian.image.ι (FR.map f))).1
-      simpa [Category.assoc, heKh, heKi]
+      rw [Category.assoc, heKi, heKh]
+      simp
     · apply (cancel_mono (kernel.ι qH)).1
-      simpa [Category.assoc, heKh, heKi]
+      rw [Category.assoc, heKh, heKi]
+      simp
   have heK : eK.hom ≫ kernel.ι qH = Abelian.image.ι (FR.map f) := by
     exact heKh
   let iH : FR.obj X ⟶ kernel qH := Abelian.factorThruImage (FR.map f) ≫ eK.hom
@@ -102,7 +106,7 @@ theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
   have hi : i ≫ k = f := by
     apply ((s.intervalProp C a b).ι).map_injective
     change (iH ≫ kernel.ι qH).hom = (FR.map f).hom
-    simpa [hiH]
+    rw [hiH]
   have hk_limit : IsLimit (KernelFork.ofι k hk_zero) := by
     refine KernelFork.IsLimit.ofι _ _ (fun {W'} g hg ↦ ?_) (fun {W'} g hg ↦ ?_)
       (fun {W'} g hg m hm ↦ ?_)
@@ -199,7 +203,7 @@ theorem Slicing.IntervalCat.strictMono_of_mono_toRightHeart (s : Slicing C)
     let htrans := (IsLimit.postcomposeInvEquiv eDiag c).symm hcanon
     exact IsLimit.ofIsoLimit htrans <|
       Fork.ext (Iso.refl _) (by
-        have hι : c.ι = Fork.ι ((Cones.postcompose eDiag.inv).obj c) := by
+        have hι : c.ι = Fork.ι ((Cone.postcompose eDiag.inv).obj c) := by
           change c.ι = c.ι ≫ eDiag.inv.app WalkingParallelPair.zero
           simp [eDiag]
         simpa [c] using hι)
@@ -265,8 +269,8 @@ noncomputable def Slicing.IntervalCat.toLeftHeartKernelIso (s : Slicing C)
     s.first_intervalProp_of_triangle C hab' X.property hQLe hKGt hT'
   let eK0 : K.obj ≅ (kernel fH).obj :=
     ⟨eK.hom.hom, eK.inv.hom,
-      by simpa using congrArg InducedCategory.Hom.hom eK.hom_inv_id,
-      by simpa using congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
+      by exact congrArg InducedCategory.Hom.hom eK.hom_inv_id,
+      by exact congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
   have hKer_mem : s.intervalProp C a b (kernel fH).obj :=
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel fH).obj, hKer_mem⟩
@@ -371,8 +375,8 @@ theorem Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι (s : Slicing C)
     s.first_intervalProp_of_triangle C hab' X.property hQLe hKGt hT'
   let eK0 : K.obj ≅ (kernel fH).obj :=
     ⟨eK.hom.hom, eK.inv.hom,
-      by simpa using congrArg InducedCategory.Hom.hom eK.hom_inv_id,
-      by simpa using congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
+      by exact congrArg InducedCategory.Hom.hom eK.hom_inv_id,
+      by exact congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
   have hKer_mem : s.intervalProp C a b (kernel fH).obj :=
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel fH).obj, hKer_mem⟩
@@ -458,13 +462,13 @@ theorem Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi (s : Slicing C)
             (C := C) (s := s) (a := a) (b := b) g).symm)
   let d : cokernel kH ⟶ FL.obj Y := eQ.hom ≫ Abelian.factorThruCoimage (FL.map g)
   have hd : cokernel.π kH ≫ d = FL.map g := by
-    calc
-      cokernel.π kH ≫ d
-          = cokernel.π kH ≫ eQ.hom ≫ Abelian.factorThruCoimage (FL.map g) := by
-            simp [d, Category.assoc]
-      _ = cokernel.π (kernel.ι (FL.map g)) ≫ Abelian.factorThruCoimage (FL.map g) := by
-            simp [eQ, Category.assoc]
-      _ = FL.map g := Abelian.coimage.fac (FL.map g)
+      calc
+        cokernel.π kH ≫ d
+            = cokernel.π kH ≫ eQ.hom ≫ Abelian.factorThruCoimage (FL.map g) := by
+            simp [d]
+        _ = cokernel.π (kernel.ι (FL.map g)) ≫ Abelian.factorThruCoimage (FL.map g) := by
+            simp [eQ]
+        _ = FL.map g := Abelian.coimage.fac (FL.map g)
   haveI : Mono d := by
     letI : CategoryTheory.NonPreadditiveAbelian t.heart.FullSubcategory :=
       CategoryTheory.Abelian.nonPreadditiveAbelian (C := t.heart.FullSubcategory)
