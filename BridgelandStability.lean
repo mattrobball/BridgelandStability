@@ -28,6 +28,9 @@ import BridgelandStability.NumericalStability
 import BridgelandStability.NumericalStabilityManifold
 import BridgelandStability.PostnikovTower
 import BridgelandStability.Slicing.Basic
+import BridgelandStability.Slicing.ExtensionClosure
+import BridgelandStability.Slicing.HNOperations
+import BridgelandStability.Slicing.Phase
 import BridgelandStability.Slicing.TStructure
 import BridgelandStability.StabilityCondition.Basic
 import BridgelandStability.StabilityCondition.ConnectedComponent
