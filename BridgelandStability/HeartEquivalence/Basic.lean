@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 import BridgelandStability.StabilityCondition.Topology
 import BridgelandStability.StabilityFunction.Uniqueness
-import BridgelandStability.IntervalCategory.QuasiAbelian
+import BridgelandStability.IntervalCategory.FiniteLength
 import Mathlib.CategoryTheory.Triangulated.HomologicalFunctor
 import Mathlib.CategoryTheory.Triangulated.Yoneda
 import BridgelandStability.TStructure.HeartAbelian

@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 import BridgelandStability.StabilityCondition.Basic
 import BridgelandStability.StabilityFunction.Uniqueness
-import BridgelandStability.IntervalCategory.QuasiAbelian
+import BridgelandStability.IntervalCategory.FiniteLength
 import BridgelandStability.TStructure.HeartAbelian
 
 /-!
