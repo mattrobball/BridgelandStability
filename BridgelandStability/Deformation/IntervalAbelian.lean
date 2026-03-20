@@ -453,7 +453,6 @@ theorem StabilityCondition.P_phi_hom_vanishing
     ((σ.slicing.shift_int C φ Y.obj n).mp Y.property) f
 
 set_option backward.isDefEq.respectTransparency false in
-variable [IsTriangulated C] in
 /-- **P(φ) membership for truncation of a P(φ)-cone** (**Bridgeland's Lemma 5.2**).
 Given a distinguished triangle `A → B → X₃ → A⟦1⟧` with `A, B ∈ P(φ)`, the
 t-structure truncation pieces of `X₃` (from the shifted slicing) lie in `P(φ)`.
@@ -469,10 +468,11 @@ theorem P_phi_of_truncation_of_P_phi_cone
     {A B X₃ : C} (hA : σ.slicing.P φ A) (hB : σ.slicing.P φ B)
     {f₁ : A ⟶ B} {f₂ : B ⟶ X₃} {f₃ : X₃ ⟶ A⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C) :
-    σ.slicing.P φ
-      (((σ.slicing.phaseShift C (φ - 1)).toTStructure.truncGE 0).obj X₃) ∧
-    σ.slicing.P φ
-      ((((σ.slicing.phaseShift C (φ - 1)).toTStructure.truncLT 0).obj X₃)⟦(-1 : ℤ)⟧) := by
+    let t : TStructure C :=
+      @Slicing.toTStructure C _ _ _ _ _ _ ‹IsTriangulated C› (σ.slicing.phaseShift C (φ - 1))
+    σ.slicing.P φ ((t.truncGE 0).obj X₃) ∧
+      σ.slicing.P φ (((t.truncLT 0).obj X₃)⟦(-1 : ℤ)⟧) := by
+  dsimp
   set s := σ.slicing
   set ss := s.phaseShift C (φ - 1)
   set t := ss.toTStructure
@@ -733,7 +733,6 @@ theorem P_phi_of_truncation_of_P_phi_cone
     convert h using 1; push_cast; ring
   exact ⟨hQ_Pφ, hK_Pφ⟩
 
-variable [IsTriangulated C] in
 /-- **Admissibility of morphisms in P(φ)** (**Bridgeland's Lemma 5.2**). For any morphism
 `f₁ : X₁ → X₂` in `P(φ)` and distinguished triangle `ι(X₁) → ι(X₂) → X₃ → ι(X₁)⟦1⟧`,
 there exist `K, Q ∈ P(φ)` and a distinguished triangle `(ι K)⟦1⟧ → X₃ → ι Q`.
@@ -743,7 +742,10 @@ to decompose X₃, then promotes the truncation pieces from heart `P((φ-1, φ])
 to `P(φ)` via `P_phi_of_truncation_of_P_phi_cone` (the epi approach). -/
 theorem StabilityCondition.P_phi_admissible
     (σ : StabilityCondition C) (φ : ℝ) :
+    let _t : TStructure C :=
+      @Slicing.toTStructure C _ _ _ _ _ _ ‹IsTriangulated C› (σ.slicing.phaseShift C (φ - 1))
     AbelianSubcategory.admissibleMorphism (σ.slicing.P φ).ι = ⊤ := by
+  dsimp
   set s := σ.slicing
   set ss := s.phaseShift C (φ - 1)
   set t := ss.toTStructure
@@ -834,6 +836,7 @@ theorem StabilityCondition.P_phi_admissible
 variable [IsTriangulated C] in
 /-- **P(φ) is abelian** (**Bridgeland's Lemma 5.2**). Each slicing slice `P(φ)` of a
 stability condition is an abelian category. -/
+@[reducible]
 noncomputable def StabilityCondition.P_phi_abelian
     (σ : StabilityCondition C) (φ : ℝ) :
     Abelian (σ.slicing.P φ).FullSubcategory :=
