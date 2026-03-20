@@ -64,7 +64,7 @@ private lemma finrank_mid_of_exact {K M N : Type v} [AddCommGroup K] [Module k K
 -- Key cancellation: Σ (-1)^n r(n-1) + Σ (-1)^n r(n) = 0 for finitely supported r.
 -- Proof: shift index in the first sum, use (-1)^(n+1) = -(-1)^n.
 private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
-    (hr : (Function.support r).Finite) :
+    (_hr : (Function.support r).Finite) :
     ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * r (n - 1) +
     ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * r n = 0 := by
   -- Shift the first sum: n ↦ n-1 becomes m ↦ m+1
@@ -89,6 +89,8 @@ private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
 -- Abstract Euler sum lemma: if dim b(n) = dim a(n) + dim c(n) - r(n-1) - r(n)
 -- pointwise, with all supports finite, then the alternating sums satisfy
 -- Σ (-1)^n b(n) = Σ (-1)^n a(n) + Σ (-1)^n c(n).
+omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
+  [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
 private lemma eulerSum_of_rank_identity
     (E : C) {a b c : ℤ → C} {r : ℤ → ℤ}
     (hrank : ∀ n : ℤ, (Module.finrank k (E ⟶ b n) : ℤ) =
@@ -287,6 +289,8 @@ private lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
 
 -- For a middle-exact sequence in AddCommGrpCat that is also k-linear,
 -- the range/ker equality lifts from abelian groups to k-modules.
+omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
+  [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
 private lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
     (f : A ⟶ B) (g : B ⟶ C') (hfg : f ≫ g = 0)
     (hexact : ∀ (x : E ⟶ B), x ≫ g = 0 → ∃ y : E ⟶ A, y ≫ f = x) :
@@ -314,6 +318,7 @@ private noncomputable instance linearCoyonedaObjIsHomological (E : C) :
     rw [ShortComplex.exact_iff_exact_map_forget₂]
     simpa using ((preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT)
 
+omit [IsTriangulated C] in
 private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
@@ -393,7 +398,7 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
           ext x
           exact Subsingleton.elim _ _
         apply hnonzero
-        simp [r, hδ]
+        simp [r]
       exact ⟨n + 1, hnontrivial, by simp⟩
     exact eulerSum_of_rank_identity (k := k) (C := C) E
       (a := fun n ↦ T.obj₁⟦n⟧)
@@ -408,6 +413,7 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
 -- Same argument applied to the preadditiveYoneda functor.
+omit [IsTriangulated C] in
 private theorem eulerFormObj_covariant_triangleAdditive (F : C)
     [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
     IsTriangleAdditive (fun E ↦ eulerFormObj k C E F) where
@@ -421,10 +427,10 @@ private theorem eulerFormObj_covariant_triangleAdditive (F : C)
           T.mor₃ ≫ x⟦(1 : ℤ)⟧' ≫ (shiftFunctorAdd' C n 1 (n + 1) (by omega)).inv.app F
         map_add' := by
           intro x y
-          simp [Category.assoc, Functor.map_add]
+          simp [Functor.map_add]
         map_smul' := by
           intro r x
-          simp [Category.assoc, Functor.map_smul] }
+          simp [Functor.map_smul] }
     let r : ℤ → ℤ := fun n ↦ Module.finrank k (LinearMap.range (δ_lin n))
     have hδ_eq : ∀ n : ℤ,
         G.homologySequenceδ Top n (n + 1) rfl =
@@ -488,8 +494,7 @@ private theorem eulerFormObj_covariant_triangleAdditive (F : C)
               (LinearMap.ker (Linear.leftComp k (F⟦n - 1 + 1⟧) T.mor₂)) = r (n - 1) := by
           simpa using h_ker_f_aux (n - 1)
         have hshift : F⟦n - 1 + 1⟧ = F⟦n⟧ := by
-          simpa using congrArg (fun m : ℤ => (shiftFunctor C m).obj F) (show n - 1 + 1 = n by
-            omega)
+          exact congrArg (fun m : ℤ => (shiftFunctor C m).obj F) (by simp)
         rw [hshift] at h_ker_f'
         simpa [f_n] using h_ker_f'
       have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
@@ -528,7 +533,7 @@ private theorem eulerFormObj_covariant_triangleAdditive (F : C)
           ext x
           exact Subsingleton.elim _ _
         apply hnonzero
-        simp [r, hδ]
+        simp [r]
       exact ⟨n + 1, hnontrivial, by simp⟩
     let a : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₃ ⟶ F⟦n⟧)
     let b : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₂ ⟶ F⟦n⟧)
