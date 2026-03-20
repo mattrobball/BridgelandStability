@@ -4,13 +4,14 @@ This repository is an experimental AI-assisted formalization of the main
 results of Tom
 Bridgeland's paper
 [Stability conditions on triangulated categories](https://annals.math.princeton.edu/2007/166-2/p01)
-in Lean 4 and mathlib.
+in Lean 4 using Mathlib.
 
 The mathematical target is the deformation-theoretic core of the paper:
 the topology on `Stab(D)`, the local-homeomorphism theorem for the central
-charge, and the numerical finite-dimensional corollary. The engineering target
-is stricter: this should eventually become mathlib-quality code, not just code
-that happens to compile once.
+charge, and the consequent complex manifold structure on the space of
+numerically finite stability conditions. The engineering target is stricter:
+this should eventually become mathlib-quality code, not just code that happens
+to compile once.
 
 ## What Bridgeland stability conditions are
 

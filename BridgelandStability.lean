@@ -30,6 +30,7 @@ import BridgelandStability.Slicing.TStructure
 import BridgelandStability.StabilityCondition.Basic
 import BridgelandStability.StabilityCondition.Deformation
 import BridgelandStability.StabilityFunction.Basic
+import BridgelandStability.StabilityFunction.HarderNarasimhan
 import BridgelandStability.Strict
 import BridgelandStability.TStructure.AbelianSubcategory
 import BridgelandStability.TStructure.HeartAbelian
