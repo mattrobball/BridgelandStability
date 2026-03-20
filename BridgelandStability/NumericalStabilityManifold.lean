@@ -87,6 +87,11 @@ def numericalFactorSubmodule (χ : K₀ C →+ K₀ C →+ ℤ) :
     Submodule ℂ (AmbientChargeSpace C) :=
   LinearMap.range (precomposeNumericalQuotient C χ)
 
+section
+
+variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+
 theorem mem_numericalFactorSubmodule_iff {χ : K₀ C →+ K₀ C →+ ℤ} {Z : AmbientChargeSpace C} :
     Z ∈ numericalFactorSubmodule C χ ↔
       ∃ Z' : NumericalChargeSpace C χ, Z = Z'.comp (numericalQuotientMap C χ) := by
@@ -105,6 +110,8 @@ noncomputable def numericalChargeSpaceEquivFactorSubmodule (χ : K₀ C →+ K�
     ext x
     obtain ⟨y, rfl⟩ := QuotientAddGroup.mk'_surjective (eulerFormRad C χ) x
     exact congrArg (fun f : AmbientChargeSpace C => f y) h
+
+end
 
 /-- A numerical stability condition has ambient central charge in the numerical factor subspace. -/
 theorem NumericalStabilityCondition.charge_mem_numericalFactorSubmodule
@@ -189,6 +196,11 @@ theorem IsLocalHomeomorph.codRestrict_preimage
       simpa [hfe] using congrArg e hy
     simpa [hcomp] using emb.comp comm.isOpenEmbedding
 
+section
+
+variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+
 /-- Numerical finiteness implies that the numerical charge space is finite-dimensional over `ℂ`.
 This is the algebraic input behind Bridgeland's Corollary 1.3. -/
 theorem numericalChargeSpace_finiteDimensional (χ : K₀ C →+ K₀ C →+ ℤ)
@@ -237,6 +249,8 @@ theorem numericalChargeSpace_finiteDimensional (χ : K₀ C →+ K₀ C →+ ℤ
     intro i
     simpa [eval, Pi.basisFun_apply] using congr_fun hZ i
   exact FiniteDimensional.of_injective (eval ∘ₗ precomp) (heval.comp hprecomp)
+
+end
 
 variable (k : Type w) [Field k]
 
@@ -469,7 +483,7 @@ theorem ambientNumericalFactorSubmodule_finiteDimensional
 space. The genuinely nontrivial step is to build a charted space whose transition maps are
 restrictions of the identity. -/
 theorem exists_chartedSpace_and_hasGroupoid_idRestr_of_isLocalHomeomorph_to_complex_model
-    {E M : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [TopologicalSpace M]
+    {E M : Type*} [NormedAddCommGroup E] [TopologicalSpace M]
     (f : M → E) (hf : IsLocalHomeomorph f) :
     ∃ _ : ChartedSpace E M, HasGroupoid M (@idRestrGroupoid E _) := by
   classical
