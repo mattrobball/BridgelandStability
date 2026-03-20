@@ -214,7 +214,8 @@ theorem numericalChargeSpace_finiteDimensional (χ : K₀ C →+ K₀ C →+ ℤ
   have hg : Function.Surjective g := by
     intro x
     have hx : x ∈ AddMonoidHom.range g := by
-      simpa [hg_range]
+      rw [hg_range]
+      simp
     rcases hx with ⟨y, rfl⟩
     exact ⟨y, rfl⟩
   let precomp : NumericalChargeSpace C χ →ₗ[ℂ] ((Fin n → ℤ) →+ ℂ) := {
@@ -267,6 +268,9 @@ theorem isOpen_numericalAmbientLocus (χ : K₀ C →+ K₀ C →+ ℤ)
     IsOpen {σ : NumericalStabilityCondition C χ |
       ConnectedComponents.mk σ.toStabilityCondition = cc} := by
   let σ₀ := componentRep C cc
+  have hσ₀ : ConnectedComponents.mk σ₀ = cc := by
+    dsimp [σ₀]
+    exact mk_componentRep C cc
   have hopen : IsOpen (connectedComponent σ₀) := stabilityCondition_isOpen_connectedComponent C σ₀
   have hset :
       {σ : NumericalStabilityCondition C χ |
@@ -274,7 +278,11 @@ theorem isOpen_numericalAmbientLocus (χ : K₀ C →+ K₀ C →+ ℤ)
         NumericalStabilityCondition.toStabilityCondition ⁻¹' connectedComponent σ₀ := by
     ext σ
     rw [Set.mem_setOf_eq, Set.mem_preimage, ← ConnectedComponents.coe_eq_coe']
-    simpa [σ₀] using (mk_componentRep C cc).symm
+    constructor
+    · intro h
+      exact h.trans hσ₀.symm
+    · intro h
+      exact h.trans hσ₀
   rw [hset]
   exact hopen.preimage (NumericalStabilityCondition.continuous_toStabilityCondition (C := C) χ)
 
