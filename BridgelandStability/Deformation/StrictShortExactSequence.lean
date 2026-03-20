@@ -30,9 +30,11 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
 
-variable [IsTriangulated C] in
+section
+
+variable [IsTriangulated C]
+
 /-- A convenient left-heart version of the first strict short exact sequence wrapper. If the
 left-heart image of `X` has finite subobject lattice, then `X` admits Bridgeland's first strict
 short exact sequence whenever it is not `W`-semistable. -/
@@ -70,7 +72,7 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
     (C := C) (σ := σ) (a := a) (b := b) hX hT_fin hns hW_interval
 
 lemma interval_pullback_cokernel_bot_eq
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} (M : Subobject X) (hM : IsStrictMono M.arrow) :
     (Subobject.pullback (cokernel.π M.arrow)).obj ⊥ = M := by
@@ -88,7 +90,7 @@ lemma interval_pullback_cokernel_bot_eq
       (C := C) (s := s) (a := a) (b := b) M ⊥
 
 lemma interval_cokernel_nonzero_of_ne_top
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} {M : Subobject X} (hM : M ≠ ⊤)
     (hM_strict : IsStrictMono M.arrow) :
@@ -99,7 +101,7 @@ lemma interval_cokernel_nonzero_of_ne_top
   exact hM (Subobject.eq_top_of_isIso_arrow M)
 
 lemma interval_pullback_ofLE_comm
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} {M : Subobject X}
     {A' B' : Subobject (cokernel M.arrow)} (h : A' ≤ B') :
@@ -125,7 +127,7 @@ lemma interval_pullback_ofLE_comm
     _ = Subobject.pullbackπ q A' ≫ A'.arrow := (Subobject.isPullback q A').w.symm
 
 lemma SkewedStabilityFunction.Wobj_pullback_eq_add
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     {ssf : SkewedStabilityFunction C s a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} (M : Subobject X) (hM : IsStrictMono M.arrow)
@@ -147,7 +149,7 @@ lemma SkewedStabilityFunction.Wobj_pullback_eq_add
   simpa [S] using ssf.strict_additive (C := C) (s := s) (a := a) (b := b) hS
 
 lemma interval_lt_pullback_cokernel_of_ne_bot
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} {M : Subobject X}
     {B : Subobject (cokernel M.arrow)} (hB : B ≠ ⊥) :
@@ -178,13 +180,15 @@ lemma interval_lt_pullback_cokernel_of_ne_bot
     haveI : Epi (Subobject.pullbackπ q B) := hπ.epi
     have hBZ : IsZero (B : s.IntervalCat C a b) :=
       (IsZero.iff_id_eq_zero _).mpr <|
-        (cancel_epi (Subobject.pullbackπ q B)).1 (by simpa [hzero])
+        (cancel_epi (Subobject.pullbackπ q B)).1 (by
+          rw [hzero]
+          simp)
     exact hB ((intervalSubobject_isZero_iff_eq_bot
       (C := C) (s := s) (a := a) (b := b) (X := cokernel M.arrow) B).mp hBZ)
   exact lt_of_le_of_ne hle hne
 
 lemma interval_pullback_cokernel_ne_top_of_ne_top
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} {M : Subobject X}
     {B : Subobject (cokernel M.arrow)} (hB : B ≠ ⊤) (hB_strict : IsStrictMono B.arrow) :
@@ -213,7 +217,7 @@ lemma interval_pullback_cokernel_ne_top_of_ne_top
   exact hB (Subobject.eq_top_of_isIso_arrow B)
 
 lemma SkewedStabilityFunction.Wobj_cokernel_pullback_eq
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     {ssf : SkewedStabilityFunction C s a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} (M : Subobject X) (hM : IsStrictMono M.arrow)
@@ -296,7 +300,7 @@ lemma SkewedStabilityFunction.Wobj_cokernel_pullback_eq
   exact hsum₅.symm
 
 lemma SkewedStabilityFunction.Wobj_liftSub_cokernel_eq_add
-    {s : Slicing C} [IsTriangulated C] {a b : ℝ}
+    {s : Slicing C} {a b : ℝ}
     {ssf : SkewedStabilityFunction C s a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} (M : Subobject X) (hM : IsStrictMono M.arrow)
@@ -370,7 +374,6 @@ lemma SkewedStabilityFunction.Wobj_liftSub_cokernel_eq_add
     exact add_left_cancel hsumA
   simpa [liftA, add_comm, add_left_comm, add_assoc] using hsum'.symm
 
-variable [IsTriangulated C] in
 /-- The strict quotient attached to a minimal-phase strict kernel is semistable, provided
 all nonzero objects in the thin interval have `W`-phases in a common open window of width `< 1`.
 -/
@@ -417,7 +420,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
     simpa [Y, ψY] using
       ssf.phase_gt_of_maxPhase_strictSubobject_of_not_semistable
         (C := C) (σ := σ) (a := a) (b := b) (X := Y) (M := B)
-        hY_ne hns hB_ne hB_strict hB_max hW_interval
+        hY_ne hns hB_max hW_interval
   let pbB : Subobject X := (Subobject.pullback (cokernel.π M.arrow)).obj B
   have hpb_strict : IsStrictMono pbB.arrow :=
     interval_pullback_arrow_strictMono_of_strictMono
@@ -525,12 +528,12 @@ theorem semistable_of_lower_inclusion
     (Slicing.IntervalCat.strictMono_strictEpi_of_distTriang
       (C := C) (s := σ.slicing) (a := a₂) (b := b) (S := S₀) hT₂).1
   obtain ⟨X, Y, fX, gY, δY, hTK, hX₁, hY_le⟩ :=
-    exists_lower_boundary_triangle (C := C) (s := σ.slicing) ha₁ ha₂ ha hKI
+    exists_lower_boundary_triangle (C := C) (s := σ.slicing) ha₁ hKI
   have hX₂ : σ.slicing.intervalProp C a₂ b X :=
     σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hX₁
   have hY₂ : σ.slicing.intervalProp C a₂ b Y :=
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
-      ha₂ ha₁ ha hKI hX₁ hY_le hTK
+      ha₁ ha hKI hX₁ hY_le hTK
   let XI₁ : σ.slicing.IntervalCat C a₁ b := ⟨X, hX₁⟩
   let XI₂ : σ.slicing.IntervalCat C a₂ b := ⟨X, hX₂⟩
   let YI₂ : σ.slicing.IntervalCat C a₂ b := ⟨Y, hY₂⟩
@@ -564,7 +567,7 @@ theorem semistable_of_lower_inclusion
         wPhaseOf (W (K₀.of C K)) ((a₁ + b) / 2) =
           wPhaseOf (W (K₀.of C K)) ((a₂ + b) / 2) :=
       wPhaseOf_eq_of_intervalProp_lower_inclusion
-        (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha₂ ha hK₁ hKne
+        (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha hK₁ hKne
         hε₀ hε₀2 hthin₂ hsin
     rw [← hK_eq]
     exact hK_phase₁
@@ -572,7 +575,7 @@ theorem semistable_of_lower_inclusion
     · have hY_phase_lt :
           wPhaseOf (W (K₀.of C Y)) ((a₂ + b) / 2) < ψ :=
         wPhaseOf_lt_of_lower_boundary_triangle
-          (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha₂ ha
+          (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha
           hKI hX₁ hY_le hYZ hε₀ hε₀2 henv_lo henv_hi hthin₂ hsin hTK
       haveI : IsIso gY :=
         (Triangle.isZero₁_iff_isIso₂ (Triangle.mk fX gY δY) hTK).mp hXZ
@@ -611,7 +614,7 @@ theorem semistable_of_lower_inclusion
           wPhaseOf (W (K₀.of C X)) ((a₁ + b) / 2) =
             wPhaseOf (W (K₀.of C X)) ((a₂ + b) / 2) :=
         wPhaseOf_eq_of_intervalProp_lower_inclusion
-          (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha₂ ha hX₁ hXZ
+          (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha hX₁ hXZ
           hε₀ hε₀2 hthin₂ hsin
       have hX_phase_le :
           wPhaseOf (W (K₀.of C X)) ((a₂ + b) / 2) ≤ ψ := by
@@ -620,7 +623,7 @@ theorem semistable_of_lower_inclusion
       have hY_phase_lt :
           wPhaseOf (W (K₀.of C Y)) ((a₂ + b) / 2) < ψ :=
         wPhaseOf_lt_of_lower_boundary_triangle
-          (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha₂ ha
+          (C := C) (σ := σ) (W := W) (hW := hW) ha₁ ha
           hKI hX₁ hY_le hYZ hε₀ hε₀2 henv_lo henv_hi hthin₂ hsin hTK
       have hsum :
           W (K₀.of C K) = W (K₀.of C X) + W (K₀.of C Y) := by
@@ -647,7 +650,7 @@ theorem semistable_of_lower_inclusion
       have hYW_ne : W (K₀.of C Y) ≠ 0 := by
         exact σ.W_ne_zero_of_intervalProp C W hthin₂'
           (stabSeminorm_lt_cos_of_hsin_hthin
-            (C := C) (σ := σ) (W := W) ha₂ hε₀ hε₀2 hthin₂ hsin) hYZ hY₂
+            (C := C) (σ := σ) (W := W) ha₂ hε₀ hthin₂ hsin) hYZ hY₂
       have hK_phase_lt :
           wPhaseOf (W (K₀.of C K)) ((a₂ + b) / 2) < ψ :=
         wPhaseOf_lt_of_add_le_lt hsum.symm hX_range' hY_phase_lt hYW_ne hY_range hK_range
@@ -683,7 +686,6 @@ theorem semistable_of_interval_inclusion
 theorem semistable_of_target_subinterval
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b₂ b₁ ψ ε₀ : ℝ}
     (hab₁ : a₁ < b₁) (hab₂ : a₂ < b₂) (ha : a₁ ≤ a₂) (hb : b₂ ≤ b₁)
     {E : C}
@@ -717,7 +719,7 @@ theorem semistable_of_target_subinterval
       wPhaseOf (W (K₀.of C K)) ((a₂ + b₁) / 2) =
         wPhaseOf (W (K₀.of C K)) ((a₁ + b₁) / 2) :=
     wPhaseOf_eq_of_intervalProp_lower_inclusion
-      (C := C) (σ := σ) (W := W) (hW := hW) ha₂b₁ hab₁ ha hKI_mid hKne
+      (C := C) (σ := σ) (W := W) (hW := hW) ha₂b₁ ha hKI_mid hKne
       hε₀ hε₀2 hthin₁ hsin
   have hK_eq_upper :
       wPhaseOf (W (K₀.of C K)) ((a₂ + b₂) / 2) =
@@ -816,7 +818,6 @@ theorem semistable_of_target_envelope
       dsimp [b]
       exact min_le_right _ _) hmid hε₀ hε₀2 henv_lo henv_hi hthin₂ hsin
 
-variable [IsTriangulated C] in
 /-- A nonzero strict quotient of a `W`-semistable interval object has `W`-phase at least
 that of the source object, assuming all nonzero interval objects lie in a common branch
 window of width `< 1`. This is the thin-category analogue of the quotient-side
@@ -892,7 +893,6 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
           (a := a) (b := b) hS)
     exact wPhaseOf_seesaw hadd.symm hX.2.2.2.1 hK_range hY_Wne hY_range
 
-variable [IsTriangulated C] in
 /-- A minimal-phase strict kernel has semistable strict quotient. This is the mdq step used
 for the thin-interval HN recursion. The only quotient-side hypothesis needed is plain
 phase minimality among proper strict kernels. -/
@@ -966,5 +966,6 @@ theorem SkewedStabilityFunction.phase_cokernel_lt_of_phase_gt_strictSubobject
         (C := C) (s := σ.slicing) (a := a) (b := b) A.arrow hA_strict)
   exact wPhaseOf_seesaw_dual haddY.symm rfl hA_phase_gt hA_Wne hA_range hcokA_range
 
+end
 
 end CategoryTheory.Triangulated
