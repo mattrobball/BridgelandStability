@@ -20,6 +20,7 @@ import BridgelandStability.Deformation.Pullback
 import BridgelandStability.Deformation.Setup
 import BridgelandStability.Deformation.StrictShortExactSequence
 import BridgelandStability.Deformation.TStructure
+import BridgelandStability.Deformation.TargetEnvelope
 import BridgelandStability.Deformation.Theorem
 import BridgelandStability.Deformation.WPhase
 import BridgelandStability.EulerForm
