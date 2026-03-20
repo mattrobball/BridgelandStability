@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 
-import BridgelandStability.DeformationTheorem
+import BridgelandStability.StabilityCondition.Deformation
 import BridgelandStability.EulerForm
 import BridgelandStability.NumericalStability
 import Mathlib.Analysis.Normed.Module.Connected

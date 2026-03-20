@@ -18,7 +18,7 @@ import BridgelandStability.Deformation.StrictShortExactSequence
 import BridgelandStability.Deformation.TStructure
 import BridgelandStability.Deformation.Theorem
 import BridgelandStability.Deformation.WPhase
-import BridgelandStability.DeformationTheorem
+import BridgelandStability.StabilityCondition.Deformation
 import BridgelandStability.EulerForm
 import BridgelandStability.GrothendieckGroup
 import BridgelandStability.HeartEquivalence
@@ -27,7 +27,7 @@ import BridgelandStability.NumericalStability
 import BridgelandStability.NumericalStabilityManifold
 import BridgelandStability.PostnikovTower
 import BridgelandStability.Slicing
-import BridgelandStability.StabilityCondition
+import BridgelandStability.StabilityCondition.Basic
 import BridgelandStability.StabilityFunction
 import BridgelandStability.Strict
 import BridgelandStability.TStructure.AbelianSubcategory
