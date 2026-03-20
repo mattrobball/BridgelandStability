@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 import BridgelandStability.Deformation.TStructure
-import BridgelandStability.Deformation.PPhiAbelian
+import BridgelandStability.Deformation.IntervalAbelian
 import BridgelandStability.Deformation.PhiPlusReduction
 
 /-!

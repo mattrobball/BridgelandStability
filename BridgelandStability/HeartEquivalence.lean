@@ -15,7 +15,7 @@ import Mathlib.Algebra.Homology.SpectralObject.Basic
 import Mathlib.CategoryTheory.Shift.ShiftSequence
 import Mathlib.CategoryTheory.Abelian.FunctorCategory
 import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
-import BridgelandStability.Deformation.PPhiAbelian
+import BridgelandStability.Deformation.IntervalAbelian
 import BridgelandStability.Deformation.PhaseArithmetic
 
 open scoped BigOperators
