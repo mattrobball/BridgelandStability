@@ -220,7 +220,9 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
             -- x ≫ δ_mor = 0, factor x through T.mor₂⟦n⟧'
             -- Use coyoneda_exact₃ on shifted triangle
             set Tn := (Triangle.shiftFunctor C n).obj T
-            sorry -- Same sign handling as hexact_B
+            sorry -- coyoneda_exact₃ on shifted triangle with sign + iso handling
+                  -- Same pattern as hexact_B but mor₃ uses shiftFunctorComm
+                  -- while δ_lin uses shiftFunctorAdd' — need to reconcile
         rw [hRK]
       -- Combine: dim B[n] = dim(range f_n) + dim(range g_n) [h_mid]
       -- dim A[n] = dim(range f_n) + dim(ker f_n) = dim(range f_n) + r(n-1) [h_f + h_ker_f]
