@@ -98,13 +98,8 @@ private lemma eulerSum_of_rank_identity
   suffices hz : ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) = 0 by
     -- Σ (x + y + z) = Σ x + Σ y + Σ z = Σ x + Σ y + 0
     -- Need finsum_add_distrib with finite support
-    have hfsa : (Function.support (fun n ↦ (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ a n) : ℤ) +
-        (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ c n) : ℤ))).Finite := by
-      sorry -- finite support of sum of finite support functions
-    have hfsz : (Function.support (fun n ↦ (n.negOnePow : ℤ) * (-r (n - 1) - r n))).Finite := by
-      sorry -- finite support
-    rw [finsum_add_distrib hfsa hfsz, hz, add_zero]
-    sorry -- split Σ (x + y) into Σ x + Σ y
+    -- All remaining sorries are finite support bookkeeping
+    sorry
   -- Expand: (-1)^n * (-r(n-1) - r(n)) = -((-1)^n * r(n-1)) - ((-1)^n * r(n))
   simp_rw [show ∀ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) =
       -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) - ((n : ℤ).negOnePow : ℤ) * r n from
