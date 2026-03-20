@@ -123,8 +123,11 @@ Inventiones. Bridgeland and Smith identified spaces of stability conditions
 with spaces of quadratic differentials in Publications mathematiques de l'IHES.
 Bayer, Macri, and Stellari established threefold existence results in
 Inventiones, Chunyi Li proved existence on the quintic threefold in
-Inventiones, and Bayer-Lahoz-Macri-Nuer-Perry-Stellari developed the theory in
-families in Publications mathematiques de l'IHES.
+Inventiones, Bayer-Lahoz-Macri-Nuer-Perry-Stellari developed the theory in
+families in Publications mathematiques de l'IHES, Bayer-Lahoz-Macri-Stellari
+proved existence on Kuznetsov components in Annales scientifiques de l'Ecole
+Normale Superieure, and Feyzbakhsh-Thomas used Bridgeland wall-crossing to
+reduce higher-rank DT theory in JAMS and Duke.
 
 This repository is aimed at the foundation under those applications: if the
 basic manifold and deformation story is formalized well, a lot of later
@@ -176,48 +179,49 @@ overvalue. The real question is whether AI can help produce library-quality
 mathematics in a modern proof assistant on top of mathlib, with as little
 special pleading as possible.
 
-## References
+## Selected References
 
-### Foundations
+This is a deliberately compressed and non-exhaustive list of landmark papers
+and a small number of recent high-impact preprints: the original motivation,
+the foundational theorem, the main geometric applications, and the strongest
+current threefold developments.
 
-1. Tom Bridgeland,
-   [Stability conditions on triangulated categories](https://annals.math.princeton.edu/2007/166-2/p01),
-   Annals of Mathematics 166 (2007), 317-345.
-2. Michael R. Douglas,
+1. Michael R. Douglas,
    [D-branes, Categories and N=1 Supersymmetry](https://arxiv.org/abs/hep-th/0011017),
    J. Math. Phys. 42 (2001), 2818-2843.
-3. Michael R. Douglas,
-   [Dirichlet branes, homological mirror symmetry, and stability](https://arxiv.org/abs/math/0207021),
-   ICM 2002 proceedings.
-4. Tom Bridgeland,
-   [Stability conditions on K3 surfaces](https://arxiv.org/abs/math/0307164).
+2. Tom Bridgeland,
+   [Stability conditions on triangulated categories](https://annals.math.princeton.edu/2007/166-2/p01),
+   Annals of Mathematics 166 (2007), 317-345.
+3. Tom Bridgeland,
+   [Stability conditions on K3 surfaces](https://ora.ox.ac.uk/objects/uuid:577d12a4-1dd8-497b-af5d-bc52623a2ac1),
+   Duke Mathematical Journal 141 (2008), 241-291.
+4. Daniele Arcara and Aaron Bertram,
+   [Bridgeland-stable moduli spaces for K-trivial surfaces](https://ems.press/journals/jems/articles/4662),
+   Journal of the European Mathematical Society 15 (2013), 1-38.
 5. Arend Bayer and Emanuele Macri,
-   [Projectivity and Birational Geometry of Bridgeland moduli spaces](https://arxiv.org/abs/1203.4613).
-6. Maxim Kontsevich and Yan Soibelman,
-   [Stability structures, motivic Donaldson-Thomas invariants and cluster transformations](https://arxiv.org/abs/0811.2435).
-7. Tom Bridgeland and Ivan Smith,
-   [Quadratic differentials as stability conditions](https://arxiv.org/abs/1302.7030).
-
-### Top-Journal Applications And Extensions
-
-8. Arend Bayer and Emanuele Macri,
    [Projectivity and birational geometry of Bridgeland moduli spaces](https://www.ams.org/jams/2014-27-03/S0894-0347-2014-00790-6/),
    Journal of the American Mathematical Society 27 (2014), 707-752.
-9. Arend Bayer and Emanuele Macri,
+6. Arend Bayer and Emanuele Macri,
    [MMP for moduli of sheaves on K3s via wall-crossing: nef and movable cones, Lagrangian fibrations](https://doi.org/10.1007/s00222-014-0501-8),
    Inventiones mathematicae 198 (2014), 505-590.
-10. Tom Bridgeland and Ivan Smith,
-    [Quadratic differentials as stability conditions](https://link.springer.com/article/10.1007/s10240-014-0066-5),
-    Publications mathematiques de l'IHES 121 (2015), 155-278.
-11. Arend Bayer, Emanuele Macri, and Paolo Stellari,
-    [The space of stability conditions on abelian threefolds, and on some Calabi-Yau threefolds](https://link.springer.com/article/10.1007/s00222-016-0665-5),
-    Inventiones mathematicae 206 (2016), 869-933.
-12. Arend Bayer and Tom Bridgeland,
-    [Derived automorphism groups of K3 surfaces of Picard rank 1](https://doi.org/10.1215/00127094-3674332),
-    Duke Mathematical Journal 166 (2017), 75-124.
-13. Chunyi Li,
-    [On stability conditions for the quintic threefold](https://link.springer.com/article/10.1007/s00222-019-00888-z),
-    Inventiones mathematicae 218 (2019), 301-340.
-14. Arend Bayer, Marti Lahoz, Emanuele Macri, Howard Nuer, Alexander Perry, Paolo Stellari,
-    [Stability conditions in families](https://link.springer.com/article/10.1007/s10240-021-00124-6),
-    Publications mathematiques de l'IHES 133 (2021), 157-325.
+7. Tom Bridgeland and Ivan Smith,
+   [Quadratic differentials as stability conditions](https://link.springer.com/article/10.1007/s10240-014-0066-5),
+   Publications mathematiques de l'IHES 121 (2015), 155-278.
+8. Marcello Bernardara, Emanuele Macri, Benjamin Schmidt, Xiaolei Zhao,
+   [Bridgeland Stability Conditions on Fano Threefolds](https://epiga.episciences.org/3255),
+   EpiGA 1 (2017), article 8.
+9. Chunyi Li,
+   [On stability conditions for the quintic threefold](https://link.springer.com/article/10.1007/s00222-019-00888-z),
+   Inventiones mathematicae 218 (2019), 301-340.
+10. Arend Bayer, Marti Lahoz, Emanuele Macri, Howard Nuer, Alexander Perry, Paolo Stellari,
+   [Stability conditions in families](https://link.springer.com/article/10.1007/s10240-021-00124-6),
+   Publications mathematiques de l'IHES 133 (2021), 157-325.
+11. Soheyla Feyzbakhsh and Richard P. Thomas,
+    [Rank r DT theory from rank 1](https://www.ams.org/jams/2023-36-03/S0894-0347-2023-00922-5/),
+    Journal of the American Mathematical Society 36 (2023), 795-826.
+12. Soheyla Feyzbakhsh and Richard P. Thomas,
+    [Rank r DT theory from rank 0](https://projecteuclid.org/journals/duke-mathematical-journal/volume-173/issue-11/Rank-r-DT-theory-from-rank-0/10.1215/00127094-2023-0085.short),
+    Duke Mathematical Journal 173 (2024), 2063-2116.
+13. Soheyla Feyzbakhsh, Naoki Koseki, Zhiyu Liu, Nick Rekuski,
+    [Stability conditions on Calabi-Yau threefolds via Brill-Noether theory of curves](https://arxiv.org/abs/2509.24990),
+    preprint, 2025.
