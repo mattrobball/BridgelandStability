@@ -98,8 +98,9 @@ noncomputable def IsStrictEpi.isColimitCokernelCofork (hf : IsStrictEpi f) :
   let e : cokernel (kernel.ι f) ≅ Y :=
     asIso (Abelian.coimageImageComparison f ≫ kernel.ι (cokernel.π f))
   have hm : cokernel.π (kernel.ι f) ≫ e.hom = f := by
-    simpa [e] using
-      (Abelian.coimage_image_factorisation (f := f))
+    change cokernel.π (kernel.ι f) ≫ Abelian.coimageImageComparison f ≫
+        kernel.ι (cokernel.π f) = f
+    exact Abelian.coimage_image_factorisation (f := f)
   exact cokernel.cokernelIso (kernel.ι f) f e hm
 
 /-- A strict monomorphism is the kernel of its cokernel. -/
@@ -111,7 +112,9 @@ noncomputable def IsStrictMono.isLimitKernelFork (hf : IsStrictMono f) :
   let e : X ≅ kernel (cokernel.π f) :=
     asIso (cokernel.π (kernel.ι f) ≫ Abelian.coimageImageComparison f)
   have hm : e.hom ≫ kernel.ι (cokernel.π f) = f := by
-    simpa [e] using (Abelian.coimage_image_factorisation (f := f))
+    dsimp [e]
+    rw [Category.assoc]
+    exact Abelian.coimage_image_factorisation (f := f)
   exact kernel.isoKernel (cokernel.π f) f e hm
 
 /-- If `f` is the cokernel of its kernel, then `f` is a strict epimorphism. -/
@@ -135,7 +138,7 @@ theorem isStrictEpi_of_isColimitCokernelCofork
   change IsIso (Abelian.coimageImageComparison f)
   rw [show Abelian.coimageImageComparison f = e.hom ≫ inv (Abelian.image.ι f) from by
     apply (cancel_mono (Abelian.image.ι f)).1
-    simpa [Category.assoc] using hcomp]
+    simpa [Abelian.image] using hcomp]
   infer_instance
 
 /-- If `f` is the kernel of its cokernel, then `f` is a strict monomorphism. -/
@@ -169,7 +172,8 @@ theorem isStrictMono_of_isLimitKernelFork
   have hcomp : Abelian.coimage.π f ≫ Abelian.coimageImageComparison f = e.hom := by
     apply (cancel_mono (Abelian.image.ι f)).1
     rw [he]
-    simpa [Category.assoc] using (Abelian.coimage_image_factorisation (f := f))
+    rw [Category.assoc]
+    exact Abelian.coimage_image_factorisation (f := f)
   refine ⟨inferInstance, ?_⟩
   letI : IsIso (Abelian.coimage.π f) := cokernel.of_kernel_of_mono (f := f)
   letI : Epi (Abelian.coimage.π f) := by infer_instance
@@ -177,32 +181,32 @@ theorem isStrictMono_of_isLimitKernelFork
   change IsIso (Abelian.coimageImageComparison f)
   rw [show Abelian.coimageImageComparison f = inv (Abelian.coimage.π f) ≫ e.hom from by
     apply (cancel_epi (Abelian.coimage.π f)).1
-    simpa [Category.assoc] using hcomp]
+    simpa [Abelian.image] using hcomp]
   infer_instance
 
 /-- An isomorphism is a strict monomorphism. -/
 theorem isStrictMono_of_isIso [IsIso f] : IsStrictMono f := by
   apply isStrictMono_of_isLimitKernelFork
   have hk : cokernel.π f = 0 := (isZero_cokernel_of_epi f).eq_of_tgt _ _
-  refine KernelFork.IsLimit.ofι' f (by simpa [hk]) (fun {A} k hk' ↦ ?_)
+  refine KernelFork.IsLimit.ofι' f (by simp [hk]) (fun {A} k hk' ↦ ?_)
   refine ⟨k ≫ inv f, by simp [Category.assoc]⟩
 
 /-- An isomorphism is a strict epimorphism. -/
 theorem isStrictEpi_of_isIso [IsIso f] : IsStrictEpi f := by
   apply isStrictEpi_of_isColimitCokernelCofork
   have hk : kernel.ι f = 0 := (isZero_kernel_of_mono f).eq_of_src _ _
-  refine CokernelCofork.IsColimit.ofπ' f (by simpa [hk]) (fun {A} k hk' ↦ ?_)
-  refine ⟨inv f ≫ k, by simp [Category.assoc]⟩
+  refine CokernelCofork.IsColimit.ofπ' f (by simp [hk]) (fun {A} k hk' ↦ ?_)
+  refine ⟨inv f ≫ k, by simp⟩
 
 /-- A strict epimorphism that is also mono is an isomorphism. -/
 theorem IsStrictEpi.isIso (hf : IsStrictEpi f) [Mono f] : IsIso f := by
   letI : Epi f := hf.epi
   have hk : kernel.ι f = 0 := (isZero_kernel_of_mono f).eq_of_src _ _
   let s : Y ⟶ X :=
-    hf.isColimitCokernelCofork.desc (CokernelCofork.ofπ (𝟙 X) (by simpa [hk]))
+    hf.isColimitCokernelCofork.desc (CokernelCofork.ofπ (𝟙 X) (by simp [hk]))
   have hs : f ≫ s = 𝟙 X := by
     exact hf.isColimitCokernelCofork.fac
-      (CokernelCofork.ofπ (𝟙 X) (by simpa [hk]))
+      (CokernelCofork.ofπ (𝟙 X) (by simp [hk]))
       Limits.WalkingParallelPair.one
   letI : IsSplitMono f := IsSplitMono.mk' ⟨s, hs⟩
   exact isIso_of_epi_of_isSplitMono f
@@ -212,15 +216,16 @@ theorem IsStrictMono.isIso (hf : IsStrictMono f) [Epi f] : IsIso f := by
   letI : Mono f := hf.mono
   have hk : cokernel.π f = 0 := (isZero_cokernel_of_epi f).eq_of_tgt _ _
   let s : Y ⟶ X :=
-    hf.isLimitKernelFork.lift (KernelFork.ofι (𝟙 Y) (by simpa [hk]))
+    hf.isLimitKernelFork.lift (KernelFork.ofι (𝟙 Y) (by simp [hk]))
   have hs : s ≫ f = 𝟙 Y := by
     exact hf.isLimitKernelFork.fac
-      (KernelFork.ofι (𝟙 Y) (by simpa [hk]))
+      (KernelFork.ofι (𝟙 Y) (by simp [hk]))
       Limits.WalkingParallelPair.zero
   letI : IsSplitEpi f := IsSplitEpi.mk' ⟨s, hs⟩
   exact isIso_of_mono_of_isSplitEpi f
 
 /-- A strict epimorphism is a normal epimorphism. -/
+@[reducible]
 noncomputable def IsStrictEpi.normalEpi (hf : IsStrictEpi f) : NormalEpi f where
   W := kernel f
   g := kernel.ι f
@@ -245,6 +250,7 @@ theorem isStrictEpi_of_normalEpi [hf : NormalEpi f] : IsStrictEpi f := by
   exact isStrictEpi_of_isColimitCokernelCofork hcolim
 
 /-- A strict monomorphism is a normal monomorphism. -/
+@[reducible]
 noncomputable def IsStrictMono.normalMono (hf : IsStrictMono f) : NormalMono f where
   Z := cokernel f
   g := cokernel.π f
@@ -414,9 +420,15 @@ thin interval categories. -/
 def IsStrict (P : Subobject X) : Prop :=
   IsStrictMono P.arrow
 
+section
+
+omit [Preadditive C]
+
 @[simp]
 theorem isStrict_iff (P : Subobject X) : P.IsStrict ↔ IsStrictMono P.arrow :=
   Iff.rfl
+
+end
 
 end Subobject
 
@@ -450,6 +462,10 @@ abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
 instance [IsStrictNoetherianObject X] : WellFoundedGT (StrictSubobject X) :=
   isStrictNoetherianObject.prop_of_is X
 
+section
+
+omit [Preadditive C]
+
 /-- Ordinary Artinian objects are strict-Artinian, since strict subobjects form a subtype of
 all subobjects. -/
 theorem isStrictArtinianObject_of_isArtinianObject [IsArtinianObject X] :
@@ -475,6 +491,8 @@ theorem isStrictNoetherianObject_of_isNoetherianObject [IsNoetherianObject X] :
           ⟨InvImage.wf f
             (wellFounded_gt :
               WellFounded ((· > ·) : Subobject X → Subobject X → Prop))⟩))
+
+end
 
 end StrictSubobject
 
@@ -551,9 +569,8 @@ private theorem subobjectImageOfFaithfulPreservesMono_monotone (F : A ⥤ C) [F.
   rename_i S₁ f₁ _ S₂ f₂ _
   change Subobject.mk (F.map f₁) ≤ Subobject.mk (F.map f₂)
   exact Subobject.mk_le_mk_of_comm (F.map (Subobject.ofMkLEMk f₁ f₂ h)) (by
-    change F.map (Subobject.ofMkLEMk f₁ f₂ h) ≫ F.map f₂ = F.map f₁
     rw [← F.map_comp]
-    simpa using congrArg (F.map) (Subobject.ofMkLEMk_comp h))
+    exact congrArg (F.map) (Subobject.ofMkLEMk_comp h))
 
 /-- A faithful functor that preserves monomorphisms induces an injection on subobject
 lattices. If `F : A ⥤ C` is faithful and preserves monomorphisms, subobjects of `E`
@@ -627,6 +644,7 @@ private noncomputable def strictSubobjectImageOfFaithful (F : A ⥤ C) [F.Full] 
     letI : Mono (F.map B.1.arrow) := hstrict.mono
     exact Subobject.mk (F.map B.1.arrow)
 
+omit [Preadditive A] [Preadditive C] in
 private theorem strictSubobjectImageOfFaithful_monotone (F : A ⥤ C) [F.Full] [F.Faithful]
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} :
@@ -636,17 +654,16 @@ private theorem strictSubobjectImageOfFaithful_monotone (F : A ⥤ C) [F.Full] [
   let hstrict₂ : IsStrictMono (F.map B₂.1.arrow) := hF B₂.1.arrow B₂.2
   letI : Mono (F.map B₁.1.arrow) := hstrict₁.mono
   letI : Mono (F.map B₂.1.arrow) := hstrict₂.mono
-  have hB' : B₁.1 ≤ B₂.1 := hB
+  have hB' : B₁.1 ≤ B₂.1 := by simpa using hB
   have hmk : Subobject.mk B₁.1.arrow ≤ Subobject.mk B₂.1.arrow := by
     simpa [Subobject.mk_arrow] using hB'
   change
     Subobject.mk (F.map B₁.1.arrow) ≤ Subobject.mk (F.map B₂.1.arrow)
   exact Subobject.mk_le_mk_of_comm (F.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk)) (by
-    change F.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk) ≫ F.map B₂.1.arrow =
-      F.map B₁.1.arrow
     rw [← F.map_comp]
-    simpa using congrArg F.map (Subobject.ofMkLEMk_comp hmk))
+    exact congrArg F.map (Subobject.ofMkLEMk_comp hmk))
 
+omit [Preadditive A] [Preadditive C] in
 private theorem strictSubobjectImageOfFaithful_injective (F : A ⥤ C) [F.Full] [F.Faithful]
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} :
@@ -664,6 +681,10 @@ private theorem strictSubobjectImageOfFaithful_injective (F : A ⥤ C) [F.Full] 
       (F.map_injective (by
         simp only [Functor.preimageIso_hom, Functor.map_comp, Functor.map_preimage]
         exact Subobject.ofMkLEMk_comp hEq'.le)))
+
+section
+
+omit [Preadditive A] [Preadditive C]
 
 /-- Strict-Artinian objects transfer across full faithful functors that send strict
 monomorphisms to strict monomorphisms. -/
@@ -712,6 +733,8 @@ theorem isStrictNoetherianObject_of_faithful_map_strictMono (F : A ⥤ C) [F.Ful
           exact ⟨n, fun m hm ↦
             strictSubobjectImageOfFaithful_injective (A := A) (C := C) F hF (E := E)
               (hn m hm)⟩))
+
+end
 
 end StrictSubobjectTransfer
 
