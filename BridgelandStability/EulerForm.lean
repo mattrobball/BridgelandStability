@@ -167,8 +167,27 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
           have := comp_distTriang_mor_zero₁₂ T hT
           simp only [← Functor.map_comp, this, Functor.map_zero]
         · intro x hx
-          -- Exactness: if x ≫ T.mor₂⟦n⟧' = 0, then x factors through T.mor₁⟦n⟧'
-          sorry
+          -- Use coyoneda_exact₂ on the shifted triangle (sign-twisted morphisms).
+          set Tn := (Triangle.shiftFunctor C n).obj T
+          have hx' : x ≫ Tn.mor₂ = 0 := by
+            show x ≫ (n.negOnePow • T.mor₂⟦n⟧') = 0
+            simp [Preadditive.comp_zsmul, hx]
+          obtain ⟨y, hy⟩ := Triangle.coyoneda_exact₂ Tn
+            (Triangle.shift_distinguished T hT n) x hx'
+          -- hy : x = y ≫ Tn.mor₁ = y ≫ ((-1)^n • T.mor₁⟦n⟧')
+          refine ⟨(n.negOnePow : ℤˣ).val • y, ?_⟩
+          -- x = y ≫ Tn.mor₁ = y ≫ ((-1)^n • T.mor₁⟦n⟧') = (-1)^n • (y ≫ T.mor₁⟦n⟧')
+          -- Want: ((-1)^n • y) ≫ T.mor₁⟦n⟧' = (-1)^n • (y ≫ T.mor₁⟦n⟧') = x
+          have h1 : y ≫ Tn.mor₁ = (n.negOnePow : ℤˣ) • (y ≫ T.mor₁⟦n⟧') := by
+            simp [Tn, Triangle.shiftFunctor, Preadditive.comp_zsmul]
+          show ((n.negOnePow : ℤˣ).val • y) ≫ T.mor₁⟦n⟧' = x
+          rw [Preadditive.zsmul_comp]
+          -- Goal: ↑n.negOnePow • (y ≫ T.mor₁⟦n⟧') = x
+          -- From hy: x = y ≫ Tn.mor₁, h1: y ≫ Tn.mor₁ = n.negOnePow • (y ≫ T.mor₁⟦n⟧')
+          -- So x = n.negOnePow • (y ≫ T.mor₁⟦n⟧')
+          -- And ↑n.negOnePow • (y ≫ T.mor₁⟦n⟧') = n.negOnePow • (y ≫ T.mor₁⟦n⟧') = x
+          -- The ↑ vs non-↑ is just coercion
+          convert (hy.trans h1).symm
       -- Rank-nullity at B[n]: dim B[n] = dim(range f_n) + dim(range g_n)
       haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
       have h_mid := finrank_mid_of_exact k f_n g_n hexact_B
