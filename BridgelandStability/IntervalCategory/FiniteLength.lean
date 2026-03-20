@@ -76,7 +76,7 @@ noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesKernel (s : Slic
               (a := a) (b := b) f)).hom ≫ FL.map (kernel.ι f) =
               kernel.ι (FL.map f)
           rw [← hι]
-          simp [Category.assoc]
+          simp
 
 noncomputable instance Slicing.IntervalCat.toRightHeart_preservesCokernel (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {X Y : s.IntervalCat C a b} (f : X ⟶ Y) :
@@ -367,10 +367,16 @@ theorem Slicing.IntervalCat.strictMono_strictEpi_of_distTriang (s : Slicing C)
   exact Slicing.IntervalCat.strictMono_strictEpi_of_shortExact_toLeftRightHearts
     (C := C) (s := s) (a := a) (b := b) hL hR
 
+section
+
+variable {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+
+omit [Fact (a < b)]
+
 /-- A short exact sequence in the left heart `P((a,a+1])` with vertices in `P((a,b))`
 extends to a distinguished triangle in `C`. -/
 theorem Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart (s : Slicing C)
-    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {S : ShortComplex (s.IntervalCat C a b)}
+    {S : ShortComplex (s.IntervalCat C a b)}
     (hL :
       (S.map (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b
         (Fact.out : b - a ≤ 1))).ShortExact) :
@@ -417,6 +423,8 @@ theorem Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart (s : Sli
     rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, eKA.hom_inv_id,
       ι.map_id, Functor.map_id]
     simp
+
+end
 
 /-- A strict short exact sequence in `P((a,b))` extends to a distinguished triangle in `C`. -/
 theorem Slicing.IntervalCat.exists_distTriang_of_strictShortExact (s : Slicing C)
@@ -537,11 +545,12 @@ theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
         Limits.WalkingParallelPair.zero
   have hLift : kernel.lift S.g S.f S.zero = eK.hom := by
     apply (cancel_mono (kernel.ι S.g)).1
-    simpa [heK] using kernel.lift_ι S.g S.f S.zero
+    rw [heK]
+    exact kernel.lift_ι S.g S.f S.zero
   have hKernelComp : kernel.ι S.g ≫ cokernel.π S.f = 0 := by
     have hιEq : kernel.ι S.g = eK.inv ≫ S.f := by
       apply (cancel_epi eK.hom).1
-      simp [Category.assoc, heK]
+      simp [heK]
     rw [hιEq, Category.assoc, cokernel.condition]
     simp
   let eQ : cokernel S.f ≅ S.X₃ :=
@@ -552,7 +561,8 @@ theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
         Limits.WalkingParallelPair.one
   have hDesc : cokernel.desc S.f S.g S.zero = eQ.hom := by
     apply (cancel_epi (cokernel.π S.f)).1
-    simpa [heQ] using cokernel.π_desc S.f S.g S.zero
+    rw [heQ]
+    exact cokernel.π_desc S.f S.g S.zero
   let hLeft : S.LeftHomologyData := ShortComplex.LeftHomologyData.ofHasKernelOfHasCokernel S
   let hRight : S.RightHomologyData := ShortComplex.RightHomologyData.ofHasCokernelOfHasKernel S
   have hLeftZero : IsZero hLeft.H := by
