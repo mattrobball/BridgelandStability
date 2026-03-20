@@ -56,5 +56,5 @@ import BridgelandStability.StabilityFunction.HarderNarasimhan
 import BridgelandStability.StabilityFunction.MDQ
 import BridgelandStability.StabilityFunction.Uniqueness
 import BridgelandStability.Strict
-import BridgelandStability.TStructure.AbelianSubcategory
+import BridgelandStability.TStructure.AbelianSubcategoryImageFactorisation
 import BridgelandStability.TStructure.HeartAbelian
