@@ -450,6 +450,11 @@ theorem StabilityCondition.False_of_HN_phases_le_with_lt (σ τ : StabilityCondi
     rw [← hsum]; exact Complex.ofReal_im m
   linarith
 
+section
+
+variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+
 /-- **Auxiliary**: for a nonzero object with `s.gtProp φ`, the intrinsic minimum phase
 is `> φ`. -/
 lemma gt_phases_of_gtProp (s : Slicing C) {X : C} {φ : ℝ}
@@ -478,9 +483,11 @@ lemma phiPlus_le_of_leProp (s : Slicing C) {Y : C} {φ : ℝ}
       rw [HNFiltration.phiPlus, s.phiPlus_eq C Y hYne FY hnFY hfirst]
     linarith
 
+end
+
 /-- **Auxiliary for Lemma 6.4**: one direction of the biconditional. If `E ∈ Q(φ)` then
 `E ∈ P(φ)`, using the cross-slicing imaginary part argument and hom-vanishing. -/
-private theorem bridgeland_6_4_one_dir [IsTriangulated C]
+private theorem bridgeland_6_4_one_dir
     (σ τ : StabilityCondition C) (hZ : σ.Z = τ.Z)
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal 1)
     (φ : ℝ) (E : C) (hτ : (τ.slicing.P φ) E) : (σ.slicing.P φ) E := by
@@ -677,6 +684,12 @@ private theorem bridgeland_6_4_one_dir [IsTriangulated C]
           τ.slicing.phiMinus_eq C X hXne GX hnGX hGXlast
       _ ≤ GX.φ i := GX.hφ.antitone (Fin.mk_le_mk.mpr (by omega)))
 
+section
+
+variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+  [IsTriangulated C]
+
 /-- **Bridgeland's Lemma 6.4** (statement and proof). If two stability conditions have the
 same central charge and `d(P, Q) < 1`, then their slicings agree on all phases.
 
@@ -691,7 +704,7 @@ The proof proceeds as follows. Given `E ∈ Q(φ)`, we show `E ∈ P(φ)`:
    part argument (`False_of_gt_and_le_phases`) gives `X = 0`.
 4. So `E ≅ Y` has all σ-phases `≤ φ`. The imaginary part argument then forces
    all phases `= φ`, making `E` σ-semistable at `φ`. -/
-theorem bridgeland_lemma_6_4 [IsTriangulated C] (σ τ : StabilityCondition C) (hZ : σ.Z = τ.Z)
+theorem bridgeland_lemma_6_4 (σ τ : StabilityCondition C) (hZ : σ.Z = τ.Z)
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal 1)
     (φ : ℝ) (E : C) : (σ.slicing.P φ) E ↔ (τ.slicing.P φ) E := by
   constructor
@@ -699,6 +712,8 @@ theorem bridgeland_lemma_6_4 [IsTriangulated C] (σ τ : StabilityCondition C) (
     exact bridgeland_6_4_one_dir C τ σ hZ.symm
       (by rwa [slicingDist_symm]) φ E hσ
   · exact bridgeland_6_4_one_dir C σ τ hZ hd φ E
+
+end
 
 /-! ### Theorem 1.2 -/
 

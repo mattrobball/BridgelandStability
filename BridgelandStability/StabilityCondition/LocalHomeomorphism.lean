@@ -112,35 +112,33 @@ noncomputable instance componentNormedAddCommGroup
     NormedAddCommGroup (componentSeminormSubgroup C cc) :=
   AddGroupNorm.toNormedAddCommGroup (componentAddGroupNorm C cc)
 
-/-- The chosen Bridgeland norm makes `V(Σ)` into a normed complex vector space. -/
-noncomputable def componentNormedSpaceCore
-    (cc : ConnectedComponents (StabilityCondition C)) :
-    NormedSpace.Core ℂ (componentSeminormSubgroup C cc) where
-  norm_nonneg U := ENNReal.toReal_nonneg
-  norm_smul a U := by
-    change (stabSeminorm C (componentRep C cc) (((a • U : componentSeminormSubgroup C cc) :
-      K₀ C →+ ℂ))).toReal =
-        ‖a‖ * (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal
-    rw [show (((a • U : componentSeminormSubgroup C cc) : K₀ C →+ ℂ)) = a • (U : K₀ C →+ ℂ)
-      by rfl]
-    rw [stabSeminorm_smul_complex, ENNReal.toReal_mul, ENNReal.toReal_ofReal (norm_nonneg _)]
-  norm_triangle U V := by
-    exact (componentAddGroupNorm C cc).add_le' U V
-  norm_eq_zero_iff U := by
-    constructor
-    · intro hU
-      apply Subtype.ext
-      change (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal = 0 at hU
-      exact eq_zero_of_stabSeminorm_toReal_eq_zero C (componentRep C cc) U.2 hU
-    · intro hU
-      subst hU
-      change (stabSeminorm C (componentRep C cc) (0 : K₀ C →+ ℂ)).toReal = 0
-      rw [stabSeminorm_zero, ENNReal.toReal_zero]
-
 noncomputable instance componentNormedSpace
     (cc : ConnectedComponents (StabilityCondition C)) :
     NormedSpace ℂ (componentSeminormSubgroup C cc) :=
-  NormedSpace.ofCore (componentNormedSpaceCore C cc)
+  NormedSpace.ofCore
+    { norm_nonneg := fun U ↦ ENNReal.toReal_nonneg
+      norm_smul := by
+        intro a U
+        change (stabSeminorm C (componentRep C cc) (((a • U : componentSeminormSubgroup C cc) :
+          K₀ C →+ ℂ))).toReal =
+            ‖a‖ * (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal
+        rw [show (((a • U : componentSeminormSubgroup C cc) : K₀ C →+ ℂ)) =
+            a • (U : K₀ C →+ ℂ) by rfl]
+        rw [stabSeminorm_smul_complex, ENNReal.toReal_mul, ENNReal.toReal_ofReal (norm_nonneg _)]
+      norm_triangle := by
+        intro U V
+        exact (componentAddGroupNorm C cc).add_le' U V
+      norm_eq_zero_iff := by
+        intro U
+        constructor
+        · intro hU
+          apply Subtype.ext
+          change (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal = 0 at hU
+          exact eq_zero_of_stabSeminorm_toReal_eq_zero C (componentRep C cc) U.2 hU
+        · intro hU
+          subst hU
+          change (stabSeminorm C (componentRep C cc) (0 : K₀ C →+ ℂ)).toReal = 0
+          rw [stabSeminorm_zero, ENNReal.toReal_zero] }
 
 /-- The seminorm balls in `V(Σ)` coming from the representative `σ₀ ∈ Σ`. -/
 def componentSeminormBall (cc : ConnectedComponents (StabilityCondition C))
@@ -276,6 +274,7 @@ def componentZMap (cc : ConnectedComponents (StabilityCondition C)) :
 Theorem 1.2 on a fixed connected component. -/
 structure ComponentTopologicalLinearLocalModel
     (cc : ConnectedComponents (StabilityCondition C)) where
+  /-- The chosen complex-linear charge space `V(Σ)` for this connected component. -/
   V : Submodule ℂ (K₀ C →+ ℂ)
   instNormedAddCommGroup : NormedAddCommGroup V
   instNormedSpace : NormedSpace ℂ V
@@ -302,6 +301,8 @@ end ComponentTopologicalLinearLocalModel
 
 /-! ### Theorem 1.2 -/
 
+/-- The canonical componentwise local linear model used to state Bridgeland's
+Theorem 1.2 in terms of an explicit normed complex vector space `V(Σ)`. -/
 noncomputable def componentTopologicalLinearLocalModel
     (cc : ConnectedComponents (StabilityCondition C)) :
     ComponentTopologicalLinearLocalModel C cc := by

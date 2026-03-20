@@ -199,6 +199,11 @@ theorem exists_basisNhd_subset_of_mem_nhds (σ : StabilityCondition C)
   rcases exists_basisNhd_subset_basisNhd C τ σ hε hε8 hσt with ⟨δ, hδ, hδ8, hsub⟩
   exact ⟨δ, hδ, hδ8, hsub.trans hts⟩
 
+section
+
+variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+
 /-- An additive homomorphism out of `K₀ C` is zero if it vanishes on all object classes. -/
 theorem K₀_hom_eq_zero_of_vanishes_on_of (U : K₀ C →+ ℂ)
     (hU : ∀ E : C, U (K₀.of C E) = 0) :
@@ -239,6 +244,8 @@ theorem K₀_hom_eq_zero_of_vanishes_on_of (U : K₀ C →+ ℂ)
                       ((QuotientAddGroup.mk (x : FreeAbelianGroup C)) : K₀ C)
                       ((QuotientAddGroup.mk (y : FreeAbelianGroup C)) : K₀ C)
             _ = 0 := by simp [hx, hy]
+
+end
 
 /-- If the Bridgeland seminorm of `U` is finite and equal to zero, then `U = 0`. -/
 theorem eq_zero_of_stabSeminorm_toReal_eq_zero (σ : StabilityCondition C)
