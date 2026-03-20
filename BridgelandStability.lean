@@ -1,6 +1,7 @@
 import BridgelandStability.Deformation.BoundaryTriangle
 import BridgelandStability.Deformation.ExtensionClosure
 import BridgelandStability.Deformation.FiniteLengthHN
+import BridgelandStability.Deformation.HNFiltrationAssembly
 import BridgelandStability.Deformation.HomVanishing
 import BridgelandStability.Deformation.IntervalAbelian
 import BridgelandStability.Deformation.IntervalSelection
