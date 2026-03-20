@@ -203,9 +203,11 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       have h_ker_f : Module.finrank k (LinearMap.ker f_n) = r (n - 1) := by
         sorry -- connecting map exactness at A[n]
       -- dim(ker δ_n) = dim(range g_n): from exactness at C[n]
+      -- The exact sequence at C[n]: Hom(E, B[n]) →g Hom(E, C[n]) →δ Hom(E, A[n+1])
+      -- Exactness: ker δ_n = range g_n
       have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
           Module.finrank k (LinearMap.range g_n) := by
-        sorry -- connecting map exactness at C[n]
+        sorry
       -- Combine: dim B[n] = dim(range f_n) + dim(range g_n) [h_mid]
       -- dim A[n] = dim(range f_n) + dim(ker f_n) = dim(range f_n) + r(n-1) [h_f + h_ker_f]
       -- dim C[n] = dim(ker δ_n) + dim(range δ_n) = dim(range g_n) + r(n) [h_δ + h_ker_δ]
