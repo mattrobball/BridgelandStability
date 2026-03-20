@@ -75,12 +75,55 @@ private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
   rw [finsum_neg_distrib]
   linarith
 
+-- For a middle-exact sequence in AddCommGrpCat that is also k-linear,
+-- the range/ker equality lifts from abelian groups to k-modules.
+private lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
+    (f : A ⟶ B) (g : B ⟶ C') (hfg : f ≫ g = 0)
+    (hexact : ∀ (x : E ⟶ B), x ≫ g = 0 → ∃ y : E ⟶ A, y ≫ f = x) :
+    LinearMap.range (Linear.rightComp k E f) = LinearMap.ker (Linear.rightComp k E g) := by
+  ext x
+  simp only [LinearMap.mem_range, LinearMap.mem_ker, Linear.rightComp_apply]
+  constructor
+  · rintro ⟨y, rfl⟩; rw [Category.assoc, hfg, comp_zero]
+  · intro hx; exact hexact x hx
+
 private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
-    -- Goal: χ(E, T.obj₂) = χ(E, T.obj₁) + χ(E, T.obj₃)
-    -- The preadditiveCoyoneda.obj (op E) is homological, giving exactness at each degree.
-    -- By rank-nullity + telescoping, the alternating sum is additive.
+    simp only [eulerFormObj]
+    -- For each n: exact sequence Hom(E,A[n]) →f Hom(E,B[n]) →g Hom(E,C[n])
+    -- with connecting map δ_n : Hom(E,C[n]) → Hom(E,A[n+1])
+    -- Rank-nullity + exactness:
+    --   dim B[n] = dim(range f) + dim(range g)
+    --           = (dim A[n] - dim(range δ_{n-1})) + (dim C[n] - dim(range δ_n))
+    -- Set r(n) = dim(range δ_n). Then dim B[n] - dim A[n] - dim C[n] = -r(n-1) - r(n).
+    -- The alternating sum of -r(n-1) - r(n) vanishes by shift cancellation.
+    -- Define the connecting map as a k-linear map (postcomposition with δ)
+    let δ_lin : (n : ℤ) → ((E ⟶ T.obj₃⟦n⟧) →ₗ[k] (E ⟶ T.obj₁⟦(n + 1)⟧)) := fun n ↦
+      Linear.rightComp k E (T.mor₃⟦n⟧' ≫ (shiftFunctorAdd' C 1 n (n + 1) (by omega)).inv.app _)
+    let r : ℤ → ℤ := fun n ↦ Module.finrank k (LinearMap.range (δ_lin n))
+    -- Pointwise rank identity from exactness + rank-nullity:
+    -- dim B[n] = dim A[n] + dim C[n] - r(n-1) - r(n)
+    have hrank : ∀ n : ℤ,
+        (Module.finrank k (E ⟶ T.obj₂⟦n⟧) : ℤ) =
+        Module.finrank k (E ⟶ T.obj₁⟦n⟧) + Module.finrank k (E ⟶ T.obj₃⟦n⟧) -
+          r (n - 1) - r n := by
+      sorry -- Requires: long exact Hom sequence exactness at three positions,
+            -- rank-nullity applied to each, and connecting map range/ker identities
+    -- Now sum with alternating signs
+    have key : ∀ n : ℤ,
+        (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₂⟦n⟧) =
+        (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₁⟦n⟧) +
+        (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₃⟦n⟧) +
+        (n.negOnePow : ℤ) * (-r (n - 1) - r n) := by
+      intro n; rw [hrank n]; ring
+    simp_rw [key]
+    -- Split: Σ (a + b + c) = Σ a + Σ b + Σ c, then show Σ c = 0
+    -- First rewrite (-r(n-1) - r(n)) using mul_neg, mul_add
+    ring_nf
+    -- Goal: Σ (x + y + (-z + -w)) = Σ x + Σ y
+    -- where z involves r(n-1) and w involves r(n)
+    -- Use finsum_add_distrib repeatedly to split, then cancel the r terms
     sorry
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
