@@ -207,8 +207,17 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       -- Exactness: ker δ_n = range g_n
       have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
           Module.finrank k (LinearMap.range g_n) := by
-        sorry -- Connecting map exactness at C[n]: ker(δ_n) = range(g_n)
-              -- Same sign-handling as hexact_B + universe issue with linearRange_eq_linearKer
+        -- Direct proof: show range(g_n) = ker(δ_lin n) as submodules
+        have hRK : LinearMap.range g_n = LinearMap.ker (δ_lin n) := by
+          ext x; simp only [LinearMap.mem_range, LinearMap.mem_ker, Linear.rightComp_apply]
+          constructor
+          · rintro ⟨y, rfl⟩; sorry
+          · intro hx
+            -- x ≫ δ_mor = 0, factor x through T.mor₂⟦n⟧'
+            -- Use coyoneda_exact₃ on shifted triangle
+            set Tn := (Triangle.shiftFunctor C n).obj T
+            sorry -- Same sign handling as hexact_B
+        rw [hRK]
       -- Combine: dim B[n] = dim(range f_n) + dim(range g_n) [h_mid]
       -- dim A[n] = dim(range f_n) + dim(ker f_n) = dim(range f_n) + r(n-1) [h_f + h_ker_f]
       -- dim C[n] = dim(ker δ_n) + dim(range δ_n) = dim(range g_n) + r(n) [h_δ + h_ker_δ]
