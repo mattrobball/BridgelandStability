@@ -116,19 +116,6 @@ parts of modern geometry and mathematical physics.
   tying the theory to cluster structures, exact WKB, and mirror-symmetry
   phenomena.
 
-Some benchmark applications and extensions already sit in journals that are
-obviously first-rank. Bayer and Macri used Bridgeland wall-crossing to relate
-moduli of sheaves on K3 surfaces to the minimal model program in JAMS and
-Inventiones. Bridgeland and Smith identified spaces of stability conditions
-with spaces of quadratic differentials in Publications mathematiques de l'IHES.
-Bayer, Macri, and Stellari established threefold existence results in
-Inventiones, Chunyi Li proved existence on the quintic threefold in
-Inventiones, Bayer-Lahoz-Macri-Nuer-Perry-Stellari developed the theory in
-families in Publications mathematiques de l'IHES, Bayer-Lahoz-Macri-Stellari
-proved existence on Kuznetsov components in Annales scientifiques de l'Ecole
-Normale Superieure, and Feyzbakhsh-Thomas used Bridgeland wall-crossing to
-reduce higher-rank DT theory in JAMS and Duke.
-
 This repository is aimed at the foundation under those applications: if the
 basic manifold and deformation story is formalized well, a lot of later
 geometry becomes more approachable.
