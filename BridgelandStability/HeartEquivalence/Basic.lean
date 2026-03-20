@@ -98,7 +98,8 @@ variable [IsTriangulated C]
 /-- If the underlying object of a full-subcategory object is zero, then the
 full-subcategory object itself is zero. -/
 theorem ObjectProperty.FullSubcategory.isZero_of_obj_isZero
-    {P : ObjectProperty C} [HasZeroObject P.FullSubcategory]
+    {C : Type u} [Category.{v} C] [HasZeroMorphisms C] {P : ObjectProperty C}
+    [HasZeroMorphisms P.FullSubcategory] [HasZeroObject P.FullSubcategory]
     {X : P.FullSubcategory} (hX : IsZero X.obj) : IsZero X := by
   let Z : P.FullSubcategory := 0
   have hZ : IsZero Z.obj := (P.ι.map_isZero (show IsZero Z from isZero_zero _))
@@ -509,6 +510,7 @@ theorem HeartStabilityData.ZOnHeartK0_of (h : HeartStabilityData C)
   simpa using
     (FreeAbelianGroup.lift_apply_of (HeartStabilityData.heartZObj (C := C) h) E)
 
+omit [IsTriangulated C] in
 set_option backward.isDefEq.respectTransparency false in
 /-- A short exact sequence in the heart full subcategory extends to a distinguished
 triangle in the ambient triangulated category. -/
@@ -522,7 +524,6 @@ theorem TStructure.heartFullSubcategory_shortExact_triangle
     ∃ (h : Q.obj ⟶ A.obj⟦(1 : ℤ)⟧),
       Triangle.mk f.hom g.hom h ∈ distTriang C := by
   letI := t.hasHeartFullSubcategory
-  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
   let ι := t.heart.ι
   obtain ⟨K, i, δ, hT⟩ :=
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
@@ -634,6 +635,7 @@ theorem HeartStabilityData.heartK0ToK0_of
   simpa using
     (FreeAbelianGroup.lift_apply_of (fun E : h.t.heart.FullSubcategory => K₀.of C E.obj) E)
 
+omit [IsTriangulated C] in
 lemma K₀.of_shift_nat (X : C) :
     ∀ n : ℕ, K₀.of C (X⟦(n : ℤ)⟧) = (((-1 : ℤ) ^ n) • K₀.of C X) := by
   intro n
@@ -654,6 +656,7 @@ lemma K₀.of_shift_nat (X : C) :
                   (-1 : ℤ) • (((-1 : ℤ) ^ n) • K₀.of C X) by simp,
                 pow_succ', mul_zsmul, neg_one_zsmul]
 
+omit [IsTriangulated C] in
 lemma K₀.of_shift_negSucc (X : C) :
     ∀ n : ℕ, K₀.of C (X⟦(Int.negSucc n : ℤ)⟧) = (((-1 : ℤ) ^ (n + 1)) • K₀.of C X) := by
   intro n
@@ -673,6 +676,7 @@ lemma K₀.of_shift_negSucc (X : C) :
         _ = (((-1 : ℤ) ^ (n + 2)) • K₀.of C X) := by
               simpa [pow_succ', mul_zsmul, neg_one_zsmul]
 
+omit [IsTriangulated C] in
 /-- Shifting by `n : ℤ` multiplies the Grothendieck-group class by the parity sign
 `(-1)^(|n|)`. -/
 theorem K₀.of_shift_int (X : C) (n : ℤ) :
