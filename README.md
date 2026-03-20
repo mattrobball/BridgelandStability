@@ -172,10 +172,9 @@ special pleading as possible.
 
 ## Selected References
 
-This is a deliberately compressed and non-exhaustive list of landmark papers
-and a small number of recent high-impact preprints: the original motivation,
-the foundational theorem, the main geometric applications, and the strongest
-current threefold developments.
+This is a deliberately compressed and non-exhaustive list of papers and a small
+number of recent preprints: the original motivation, the foundational theorem,
+some geometric applications, and recent threefold developments.
 
 1. Michael R. Douglas,
    [D-branes, Categories and N=1 Supersymmetry](https://arxiv.org/abs/hep-th/0011017),
