@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Slicing.ExtensionClosure
+module
+
+public import BridgelandStability.Slicing.ExtensionClosure
 
 /-!
 # T-Structure from a Slicing
@@ -11,6 +13,12 @@ import BridgelandStability.Slicing.ExtensionClosure
 Single-factor HN filtrations, phase-shifted slicings, and construction of a
 bounded t-structure from a slicing.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

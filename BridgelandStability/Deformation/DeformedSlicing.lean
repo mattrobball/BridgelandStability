@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.DeformedSlicingHN
+module
+
+public import BridgelandStability.Deformation.DeformedSlicingHN
 
 /-!
 # Deformed Slicing Construction
@@ -11,6 +13,12 @@ import BridgelandStability.Deformation.DeformedSlicingHN
 Construction of the deformed slicing Q from a stability condition σ and a nearby
 central charge W. The slicing Q has Q(ψ) = deformedPred σ W ψ.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

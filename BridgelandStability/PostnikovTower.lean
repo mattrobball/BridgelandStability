@@ -3,8 +3,10 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.Pretriangulated
-import Mathlib.CategoryTheory.ComposableArrows.Basic
+module
+
+public import Mathlib.CategoryTheory.Triangulated.Pretriangulated
+public import Mathlib.CategoryTheory.ComposableArrows.Basic
 
 /-!
 # Postnikov Towers in Triangulated Categories
@@ -30,6 +32,12 @@ distinguished triangle with a factor object as the third vertex. The factor is
 derived directly as `obj₃` of the triangle — no separate `factor` field or
 `triangle_obj₃` isomorphism is needed.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

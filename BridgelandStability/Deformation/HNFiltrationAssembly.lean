@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Slicing.TStructure
+module
+
+public import BridgelandStability.Slicing.TStructure
 
 /-!
 # HN Filtration Assembly
@@ -11,6 +13,12 @@ import BridgelandStability.Slicing.TStructure
 Generic operations on HN filtrations: appending across triangles (with lower and upper
 phase bounds) and splitting at arbitrary cutoffs.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

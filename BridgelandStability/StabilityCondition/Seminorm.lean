@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityCondition.Basic
+module
+
+public import BridgelandStability.StabilityCondition.Basic
 
 /-!
 # Stability Seminorm
@@ -11,6 +13,12 @@ import BridgelandStability.StabilityCondition.Basic
 The generalized metric `slicingDist`, the stability seminorm `stabSeminorm`,
 the finite seminorm subgroup, and sector bound / comparison lemmas.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

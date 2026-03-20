@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.DeformedSlicing
+module
+
+public import BridgelandStability.Deformation.DeformedSlicing
 
 /-!
 # Deformation Theorem (Theorem 7.1)
@@ -11,6 +13,12 @@ import BridgelandStability.Deformation.DeformedSlicing
 The main deformation theorem: given a stability condition σ and a nearby central charge W,
 there exists a stability condition τ = (W, Q) with d(P, Q) ≤ ε.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

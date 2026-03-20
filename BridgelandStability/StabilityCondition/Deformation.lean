@@ -3,11 +3,13 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.Theorem
-import BridgelandStability.StabilityCondition.Topology
-import Mathlib.Topology.Bases
-import Mathlib.Topology.Maps.Basic
-import Mathlib.Topology.Connected.Clopen
+module
+
+public import BridgelandStability.Deformation.Theorem
+public import BridgelandStability.StabilityCondition.Topology
+public import Mathlib.Topology.Bases
+public import Mathlib.Topology.Maps.Basic
+public import Mathlib.Topology.Connected.Clopen
 
 /-!
 # Bridgeland's Theorem 1.2: Central charge is a local homeomorphism
@@ -18,6 +20,12 @@ Following Bridgeland's proof:
 - **Lemma 6.4** (`eq_of_same_Z_near`): Z locally injective.
 - **Theorem 7.1** (`bridgeland_7_1`): Z locally surjective.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 set_option linter.style.longFile 0
 

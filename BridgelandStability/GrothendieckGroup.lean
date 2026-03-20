@@ -3,10 +3,12 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.PostnikovTower
-import Mathlib.GroupTheory.FreeAbelianGroup
-import Mathlib.GroupTheory.QuotientGroup.Defs
-import Mathlib.Algebra.BigOperators.Fin
+module
+
+public import BridgelandStability.PostnikovTower
+public import Mathlib.GroupTheory.FreeAbelianGroup
+public import Mathlib.GroupTheory.QuotientGroup.Defs
+public import Mathlib.Algebra.BigOperators.Fin
 
 /-!
 # Grothendieck Group of a Triangulated Category
@@ -29,6 +31,12 @@ generator.
   respect distinguished triangle relations
 * `CategoryTheory.Triangulated.K₀.lift`: the universal property of `K₀`
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

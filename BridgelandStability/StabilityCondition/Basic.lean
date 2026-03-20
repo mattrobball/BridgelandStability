@@ -3,14 +3,22 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.GrothendieckGroup
-import BridgelandStability.IntervalCategory.FiniteLength
-import Mathlib.Topology.IsLocalHomeomorph
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Topology.Connected.Clopen
-import Mathlib.Data.ENNReal.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import BridgelandStability.GrothendieckGroup
+public import BridgelandStability.IntervalCategory.FiniteLength
+public import Mathlib.Topology.IsLocalHomeomorph
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.Topology.Connected.Clopen
+public import Mathlib.Data.ENNReal.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 set_option linter.style.longFile 1700
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityCondition.Topology
-import Mathlib.CategoryTheory.Linear.Basic
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.RingTheory.Finiteness.Defs
-import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.Algebra.Ring.NegOnePow
-import Mathlib.GroupTheory.Finiteness
+module
+
+public import BridgelandStability.StabilityCondition.Topology
+public import Mathlib.CategoryTheory.Linear.Basic
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Algebra.Ring.NegOnePow
+public import Mathlib.GroupTheory.Finiteness
 
 /-!
 # Numerical Stability Conditions
@@ -38,6 +40,12 @@ finite triangulated categories.
 
 * Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

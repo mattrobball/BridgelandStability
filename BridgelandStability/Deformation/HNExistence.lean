@@ -3,15 +3,23 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.TStructure
-import BridgelandStability.Deformation.IntervalAbelian
-import BridgelandStability.Deformation.PhiPlusHN
+module
+
+public import BridgelandStability.Deformation.TStructure
+public import BridgelandStability.Deformation.IntervalAbelian
+public import BridgelandStability.Deformation.PhiPlusHN
 
 /-!
 # Deformation of Stability Conditions — Theorem71
 
 Deformed slicing construction, main theorem, Theorem 1.2
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

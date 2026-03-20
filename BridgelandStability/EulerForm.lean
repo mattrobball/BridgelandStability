@@ -3,12 +3,14 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.NumericalStability
-import Mathlib.CategoryTheory.Triangulated.Yoneda
-import Mathlib.CategoryTheory.Linear.Yoneda
-import Mathlib.CategoryTheory.Shift.Linear
-import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+module
+
+public import BridgelandStability.NumericalStability
+public import Mathlib.CategoryTheory.Triangulated.Yoneda
+public import Mathlib.CategoryTheory.Linear.Yoneda
+public import Mathlib.CategoryTheory.Shift.Linear
+public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Euler form descends to K₀
@@ -19,6 +21,12 @@ triangle-additive in both arguments, providing an instance of `EulerFormDescends
 The proof uses the long exact Hom sequence from the homological Yoneda functor
 and the rank-nullity theorem for finite-dimensional vector spaces.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

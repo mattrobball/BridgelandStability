@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.IntervalCategory.Basic
+module
+
+public import BridgelandStability.IntervalCategory.Basic
 
 /-!
 # Two-Heart Embedding for Interval Categories
@@ -11,6 +13,12 @@ import BridgelandStability.IntervalCategory.Basic
 Heart containment, phase bounds for triangles with semistable middle term,
 kernel/image/cokernel containment in thin intervals (Lemma 4.3 and consequences).
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

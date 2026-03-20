@@ -3,16 +3,18 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Abelian.Basic
-import Mathlib.CategoryTheory.Abelian.Exact
-import Mathlib.CategoryTheory.Subobject.Lattice
-import Mathlib.CategoryTheory.Subobject.ArtinianObject
-import Mathlib.CategoryTheory.Subobject.NoetherianObject
-import Mathlib.CategoryTheory.Simple
-import Mathlib.Algebra.Homology.ShortComplex.ShortExact
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
-import Mathlib.Order.Minimal
-import Mathlib.Data.Fintype.Lattice
+module
+
+public import Mathlib.CategoryTheory.Abelian.Basic
+public import Mathlib.CategoryTheory.Abelian.Exact
+public import Mathlib.CategoryTheory.Subobject.Lattice
+public import Mathlib.CategoryTheory.Subobject.ArtinianObject
+public import Mathlib.CategoryTheory.Subobject.NoetherianObject
+public import Mathlib.CategoryTheory.Simple
+public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+public import Mathlib.Order.Minimal
+public import Mathlib.Data.Fintype.Lattice
 
 /-!
 # Stability Functions on Abelian Categories
@@ -42,6 +44,12 @@ sequences.
 
 * Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007, §2
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

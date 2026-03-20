@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.IntervalCategory.TwoHeartEmbedding
+module
+
+public import BridgelandStability.IntervalCategory.TwoHeartEmbedding
 
 /-!
 # Quasi-Abelian Structure of Interval Categories
@@ -11,6 +13,12 @@ import BridgelandStability.IntervalCategory.TwoHeartEmbedding
 Preabelian and quasi-abelian structure, strict morphisms, local finiteness,
 skewed stability functions, and K₀ relations for interval subcategories.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

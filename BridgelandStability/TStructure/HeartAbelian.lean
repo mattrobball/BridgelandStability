@@ -3,10 +3,12 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.TStructure.Heart
-import Mathlib.CategoryTheory.Triangulated.TStructure.AbelianSubcategory
-import Mathlib.CategoryTheory.Triangulated.TStructure.TruncLTGE
-import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
+module
+
+public import Mathlib.CategoryTheory.Triangulated.TStructure.Heart
+public import Mathlib.CategoryTheory.Triangulated.TStructure.AbelianSubcategory
+public import Mathlib.CategoryTheory.Triangulated.TStructure.TruncLTGE
+public import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
 
 /-!
 # The heart of a t-structure is abelian
@@ -32,6 +34,12 @@ The proof uses the criterion `AbelianSubcategory.abelian`, which requires:
 
 * [Beilinson, Bernstein, Deligne, Gabber, *Faisceaux pervers*, 1.2][bbd-1982]
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

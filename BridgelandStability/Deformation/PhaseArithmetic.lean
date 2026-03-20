@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.PhasePerturbation
+module
+
+public import BridgelandStability.Deformation.PhasePerturbation
 
 /-!
 # W-Phase Bounds for Deformation
@@ -14,6 +16,12 @@ W-phase see-saw lemma, K₀ imaginary-part decomposition, and Lemma 7.3(b)
 
 Builds on the pure complex analysis in `PhasePerturbation.lean`.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

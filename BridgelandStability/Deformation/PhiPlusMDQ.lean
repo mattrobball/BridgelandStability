@@ -3,11 +3,19 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.PhiPlusReduction
+module
+
+public import BridgelandStability.Deformation.PhiPlusReduction
 
 /-!
 # MDQ with Quotient Bound for φ⁺ Reduction
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

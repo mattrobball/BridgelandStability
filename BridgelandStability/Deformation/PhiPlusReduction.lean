@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.TStructure
+module
+
+public import BridgelandStability.Deformation.TStructure
 
 /-!
 # Deformation of Stability Conditions — φ⁺ Reduction
@@ -21,6 +23,12 @@ Bridgeland p.23: the φ⁺ reduction for the MDQ recursion.
 * `exists_strictMDQ_with_quotient_bound`: MDQ recursion using the new composition.
 * `hn_exists_with_phiPlus_reduction`: HN existence dropping `hHom`/`hDestabBound`.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

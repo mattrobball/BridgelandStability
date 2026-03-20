@@ -3,16 +3,17 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
+module
 
-import BridgelandStability.StabilityCondition.LocalHomeomorphism
-import BridgelandStability.EulerForm
-import BridgelandStability.NumericalStability
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.Geometry.Manifold.Complex
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import Mathlib.Topology.Connected.TotallyDisconnected
-import Mathlib.Topology.IsLocalHomeomorph
-import Mathlib.Topology.LocalAtTarget
+public import BridgelandStability.StabilityCondition.LocalHomeomorphism
+public import BridgelandStability.EulerForm
+public import BridgelandStability.NumericalStability
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.Geometry.Manifold.Complex
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Mathlib.Topology.Connected.TotallyDisconnected
+public import Mathlib.Topology.IsLocalHomeomorph
+public import Mathlib.Topology.LocalAtTarget
 
 /-!
 # Numerical Stability Manifolds
@@ -31,6 +32,12 @@ separate the work into the following stages:
 The declarations in this file are the intended interfaces for those steps. Once they are proved,
 Corollary 1.3 should be mechanical assembly.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

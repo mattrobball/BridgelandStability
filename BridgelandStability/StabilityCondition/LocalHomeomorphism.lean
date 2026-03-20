@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityCondition.ConnectedComponent
+module
+
+public import BridgelandStability.StabilityCondition.ConnectedComponent
 
 /-!
 # Local Homeomorphism of the Central Charge
@@ -12,6 +14,12 @@ Component normed space construction, charge map structure, and the proof of
 Bridgeland's Theorem 1.2: the central charge map is a local homeomorphism
 on each connected component of Stab(D).
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityCondition.Seminorm
+module
+
+public import BridgelandStability.StabilityCondition.Seminorm
 
 /-!
 # Topology on Stab(D)
@@ -11,6 +13,12 @@ import BridgelandStability.StabilityCondition.Seminorm
 Basis neighborhoods, the topology on the space of stability conditions,
 Lemma 6.4 (local injectivity), and the statement of Theorem 1.2.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

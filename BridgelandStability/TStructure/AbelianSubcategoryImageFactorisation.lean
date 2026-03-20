@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Triangulated.TStructure.AbelianSubcategory
+module
+
+public import Mathlib.CategoryTheory.Triangulated.TStructure.AbelianSubcategory
 
 /-!
 # Abelian Subcategory Image Factorisation
@@ -12,6 +14,12 @@ This file contains a local extension of Mathlib's API for abelian subcategories 
 triangulated categories. It isolates the image-factorisation triangle used in the
 phase 4 heart-factorisation arguments.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 namespace CategoryTheory
 

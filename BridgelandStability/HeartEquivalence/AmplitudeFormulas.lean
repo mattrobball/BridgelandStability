@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.HeartEquivalence.PureAdditivity
+module
+
+public import BridgelandStability.HeartEquivalence.PureAdditivity
 
 /-!
 # Amplitude Formulas and Bounded Triangle Additivity
@@ -11,6 +13,12 @@ import BridgelandStability.HeartEquivalence.PureAdditivity
 Specializations for objects of amplitude (-1, 0) and triangle additivity
 with explicit bounds.
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

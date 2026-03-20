@@ -3,16 +3,24 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityCondition.Seminorm
-import BridgelandStability.StabilityFunction.Uniqueness
-import BridgelandStability.IntervalCategory.FiniteLength
-import BridgelandStability.TStructure.HeartAbelian
+module
+
+public import BridgelandStability.StabilityCondition.Seminorm
+public import BridgelandStability.StabilityFunction.Uniqueness
+public import BridgelandStability.IntervalCategory.FiniteLength
+public import BridgelandStability.TStructure.HeartAbelian
 
 /-!
 # Deformation of Stability Conditions — Setup
 
 Setup for deformation of stability conditions (ε₀ extraction, phase confinement basics)
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

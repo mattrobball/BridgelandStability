@@ -3,20 +3,28 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityCondition.Topology
-import BridgelandStability.StabilityFunction.Uniqueness
-import BridgelandStability.IntervalCategory.FiniteLength
-import Mathlib.CategoryTheory.Triangulated.HomologicalFunctor
-import Mathlib.CategoryTheory.Triangulated.Yoneda
-import BridgelandStability.TStructure.HeartAbelian
-import Mathlib.CategoryTheory.Triangulated.TStructure.SpectralObject
-import Mathlib.CategoryTheory.Triangulated.TStructure.TruncLEGT
-import Mathlib.Algebra.Homology.SpectralObject.Basic
-import Mathlib.CategoryTheory.Shift.ShiftSequence
-import Mathlib.CategoryTheory.Abelian.FunctorCategory
-import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
-import BridgelandStability.Deformation.IntervalAbelian
-import BridgelandStability.Deformation.PhaseArithmetic
+module
+
+public import BridgelandStability.StabilityCondition.Topology
+public import BridgelandStability.StabilityFunction.Uniqueness
+public import BridgelandStability.IntervalCategory.FiniteLength
+public import Mathlib.CategoryTheory.Triangulated.HomologicalFunctor
+public import Mathlib.CategoryTheory.Triangulated.Yoneda
+public import BridgelandStability.TStructure.HeartAbelian
+public import Mathlib.CategoryTheory.Triangulated.TStructure.SpectralObject
+public import Mathlib.CategoryTheory.Triangulated.TStructure.TruncLEGT
+public import Mathlib.Algebra.Homology.SpectralObject.Basic
+public import Mathlib.CategoryTheory.Shift.ShiftSequence
+public import Mathlib.CategoryTheory.Abelian.FunctorCategory
+public import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
+public import BridgelandStability.Deformation.IntervalAbelian
+public import BridgelandStability.Deformation.PhaseArithmetic
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 open scoped BigOperators
 

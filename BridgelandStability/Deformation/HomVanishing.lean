@@ -3,15 +3,23 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.StrictShortExactSequence
-import BridgelandStability.Deformation.BoundaryTriangle
-import BridgelandStability.TStructure.AbelianSubcategoryImageFactorisation
+module
+
+public import BridgelandStability.Deformation.StrictShortExactSequence
+public import BridgelandStability.Deformation.BoundaryTriangle
+public import BridgelandStability.TStructure.AbelianSubcategoryImageFactorisation
 
 /-!
 # Deformation of Stability Conditions — HomVanishing
 
 Deformed predicate and sharp hom-vanishing for Q (Lemma 7.6)
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

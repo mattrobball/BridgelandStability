@@ -3,12 +3,14 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Abelian.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-import Mathlib.Algebra.Homology.ShortComplex.ShortExact
-import Mathlib.CategoryTheory.Subobject.Basic
-import Mathlib.CategoryTheory.Subobject.ArtinianObject
-import Mathlib.CategoryTheory.Subobject.NoetherianObject
+module
+
+public import Mathlib.CategoryTheory.Abelian.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
+public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
+public import Mathlib.CategoryTheory.Subobject.Basic
+public import Mathlib.CategoryTheory.Subobject.ArtinianObject
+public import Mathlib.CategoryTheory.Subobject.NoetherianObject
 
 /-!
 # Strict Morphisms and Quasi-Abelian Categories
@@ -38,6 +40,12 @@ pushouts of strict monomorphisms are strict monomorphisms.
 * Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007
 * Schneiders, "Quasi-abelian categories and sheaves", Mém. Soc. Math. Fr. 1999
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 open CategoryTheory CategoryTheory.Limits
 

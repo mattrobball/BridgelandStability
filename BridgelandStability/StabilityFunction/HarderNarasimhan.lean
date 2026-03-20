@@ -3,7 +3,9 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.StabilityFunction.Basic
+module
+
+public import BridgelandStability.StabilityFunction.Basic
 
 /-!
 # Harder-Narasimhan Filtrations for Stability Functions
@@ -12,6 +14,12 @@ HN filtrations in abelian categories, existence from finite length and from
 artinian+noetherian, uniqueness, maximally destabilizing quotients, and
 intrinsic phase bounds (phiPlus/phiMinus).
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

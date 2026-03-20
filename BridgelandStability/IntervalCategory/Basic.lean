@@ -3,17 +3,19 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Slicing.TStructureConstruction
-import BridgelandStability.GrothendieckGroup
-import BridgelandStability.Strict
-import BridgelandStability.TStructure.HeartAbelian
-import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
-import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
-import Mathlib.CategoryTheory.ObjectProperty.Retract
-import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
-import Mathlib.CategoryTheory.Preadditive.LeftExact
-import Mathlib.Data.Complex.Basic
+module
+
+public import BridgelandStability.Slicing.TStructureConstruction
+public import BridgelandStability.GrothendieckGroup
+public import BridgelandStability.Strict
+public import BridgelandStability.TStructure.HeartAbelian
+public import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
+public import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
+public import Mathlib.CategoryTheory.ObjectProperty.Retract
+public import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
+public import Mathlib.CategoryTheory.Preadditive.LeftExact
+public import Mathlib.Data.Complex.Basic
 
 /-!
 # Interval Subcategories of Slicings
@@ -45,6 +47,12 @@ subcategories.
 
 * Bridgeland, "Stability conditions on triangulated categories", §4, §7
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 

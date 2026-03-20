@@ -3,16 +3,24 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import BridgelandStability.Deformation.ExtensionClosure
-import BridgelandStability.Deformation.FiniteLengthHN
-import BridgelandStability.Deformation.HomVanishing
-import BridgelandStability.Deformation.HNFiltrationAssembly
+module
+
+public import BridgelandStability.Deformation.ExtensionClosure
+public import BridgelandStability.Deformation.FiniteLengthHN
+public import BridgelandStability.Deformation.HomVanishing
+public import BridgelandStability.Deformation.HNFiltrationAssembly
 
 /-!
 # Deformation of Stability Conditions — TStructure
 
 Q(>t), Q(≤t), orthogonality, HN splitting, deformedSlicing
 -/
+
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 
