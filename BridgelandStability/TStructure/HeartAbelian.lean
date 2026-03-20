@@ -145,6 +145,7 @@ theorem heart_admissible :
 variable [IsTriangulated C] [HasFiniteProducts H] in
 /-- **Heart abelianity.** The heart of a t-structure on a triangulated category is abelian,
 assuming the heart has finite products. -/
+@[reducible]
 noncomputable def heartAbelian : Abelian H :=
   AbelianSubcategory.abelian (t.ιHeart (H := H)) (heart_hι t) (heart_admissible t)
 
@@ -190,6 +191,7 @@ noncomputable instance heart_hasFiniteProducts :
 
 /-- **Heart abelianity (canonical form).** The full subcategory of heart objects of a
 t-structure on a triangulated category is abelian. -/
+@[reducible]
 noncomputable def heartFullSubcategoryAbelian [IsTriangulated C] :
     Abelian t.heart.FullSubcategory :=
   haveI := t.hasHeartFullSubcategory
