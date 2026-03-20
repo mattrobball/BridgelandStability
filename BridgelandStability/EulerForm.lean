@@ -156,8 +156,27 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
         (Module.finrank k (E ⟶ T.obj₂⟦n⟧) : ℤ) =
         Module.finrank k (E ⟶ T.obj₁⟦n⟧) + Module.finrank k (E ⟶ T.obj₃⟦n⟧) -
           r (n - 1) - r n := by
-      sorry -- Requires: long exact Hom sequence exactness at three positions,
-            -- rank-nullity applied to each, and connecting map range/ker identities
+      intro n
+      -- k-linear maps: postcomposition with T.mor₁⟦n⟧' and T.mor₂⟦n⟧'
+      let f_n := Linear.rightComp k E (T.mor₁⟦n⟧')
+      let g_n := Linear.rightComp k E (T.mor₂⟦n⟧')
+      -- Exactness at B[n]: range f_n = ker g_n (from coyoneda being homological)
+      have hexact_B : LinearMap.range f_n = LinearMap.ker g_n := by
+        apply linearRange_eq_linearKer_of_ab_exact k C E
+        · -- T.mor₁⟦n⟧' ≫ T.mor₂⟦n⟧' = 0
+          have := comp_distTriang_mor_zero₁₂ T hT
+          simp only [← Functor.map_comp, this, Functor.map_zero]
+        · intro x hx
+          -- Exactness: if x ≫ T.mor₂⟦n⟧' = 0, then x factors through T.mor₁⟦n⟧'
+          sorry -- Needs careful treatment of shifted triangle exactness
+      -- Rank-nullity at B[n]: dim B[n] = dim(range f_n) + dim(range g_n)
+      haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
+      have h_mid := finrank_mid_of_exact k f_n g_n hexact_B
+      -- Exactness at A[n] and C[n] give range/ker relationships with
+      -- the connecting maps. These are sorry'd for now.
+      -- dim(range f_n) = dim A[n] - r(n-1) by rank-nullity + exactness at A[n]
+      -- dim(range g_n) = dim C[n] - r(n) by rank-nullity + exactness at C[n]
+      sorry
     -- Now sum with alternating signs
     have key : ∀ n : ℤ,
         (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₂⟦n⟧) =
