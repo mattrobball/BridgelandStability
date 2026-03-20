@@ -1,6 +1,8 @@
 import BridgelandStability.Deformation.BoundaryTriangle
+import BridgelandStability.Deformation.DeformedSlicing
 import BridgelandStability.Deformation.ExtensionClosure
 import BridgelandStability.Deformation.FiniteLengthHN
+import BridgelandStability.Deformation.HNExistence
 import BridgelandStability.Deformation.HNFiltrationAssembly
 import BridgelandStability.Deformation.HomVanishing
 import BridgelandStability.Deformation.IntervalAbelian
@@ -14,7 +16,7 @@ import BridgelandStability.Deformation.Pullback
 import BridgelandStability.Deformation.Setup
 import BridgelandStability.Deformation.StrictShortExactSequence
 import BridgelandStability.Deformation.TStructure
-import BridgelandStability.Deformation.Theorem71
+import BridgelandStability.Deformation.Theorem
 import BridgelandStability.Deformation.WPhase
 import BridgelandStability.DeformationTheorem
 import BridgelandStability.EulerForm
