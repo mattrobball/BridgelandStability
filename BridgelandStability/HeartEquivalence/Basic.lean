@@ -504,7 +504,7 @@ private theorem HeartStabilityData.ZOnHeartK0_of (h : HeartStabilityData C)
 set_option backward.isDefEq.respectTransparency false in
 /-- A short exact sequence in the heart full subcategory extends to a distinguished
 triangle in the ambient triangulated category. -/
-private theorem TStructure.heartFullSubcategory_shortExact_triangle
+theorem TStructure.heartFullSubcategory_shortExact_triangle
     (t : TStructure C)
     {A B Q : t.heart.FullSubcategory}
     (f : A ⟶ B) (g : B ⟶ Q) (hfg : f ≫ g = 0)
@@ -565,7 +565,7 @@ private theorem TStructure.heartFullSubcategory_shortExact_triangle
 set_option backward.isDefEq.respectTransparency false in
 /-- A distinguished triangle whose three vertices lie in the heart induces a short
 exact sequence in the heart. -/
-private theorem TStructure.heartFullSubcategory_shortExact_of_distTriang
+theorem TStructure.heartFullSubcategory_shortExact_of_distTriang
     (t : TStructure C)
     {A B Q : t.heart.FullSubcategory}
     {f : A ⟶ B} {g : B ⟶ Q} {δ : Q.obj ⟶ A.obj⟦(1 : ℤ)⟧}
@@ -667,7 +667,7 @@ private lemma K₀.of_shift_negSucc (X : C) :
 
 /-- Shifting by `n : ℤ` multiplies the Grothendieck-group class by the parity sign
 `(-1)^(|n|)`. -/
-private theorem K₀.of_shift_int (X : C) (n : ℤ) :
+theorem K₀.of_shift_int (X : C) (n : ℤ) :
     K₀.of C (X⟦n⟧) = (((-1 : ℤ) ^ Int.natAbs n) • K₀.of C X) := by
   cases n with
   | ofNat m =>
@@ -676,7 +676,7 @@ private theorem K₀.of_shift_int (X : C) (n : ℤ) :
       simpa using K₀.of_shift_negSucc (C := C) X m
 
 /-- If `X` is concentrated in degree `n`, then `X⟦-n⟧` is an object of the heart. -/
-private def HeartStabilityData.heartShiftOfPure (h : HeartStabilityData C)
+def HeartStabilityData.heartShiftOfPure (h : HeartStabilityData C)
     {X : C} (n : ℤ) (hLE : h.t.IsLE X n) (hGE : h.t.IsGE X n) :
     h.t.heart.FullSubcategory := by
   letI := hLE
@@ -787,7 +787,7 @@ theorem HeartStabilityData.heartK0ToK0_surjective
 
 /-- The degree-`n` heart cohomology object of `E`, realized as the pure
 truncation `τ^[n,n]E` shifted into the heart. -/
-private def HeartStabilityData.heartCoh
+def HeartStabilityData.heartCoh
     (h : HeartStabilityData C) (n : ℤ) (E : C) :
     h.t.heart.FullSubcategory :=
   h.heartShiftOfPure (C := C) (X := (h.t.truncGELE n n).obj E) n inferInstance inferInstance
@@ -841,7 +841,7 @@ private noncomputable instance HeartStabilityData.H0Functor_shiftSequence
 
 /-- The degree-zero cohomology object, written in the alternative normal form
 `τ≤0(τ≥0 X)`. This is often a more convenient target for maps out of `H⁰(X)`. -/
-private def HeartStabilityData.H0prime
+def HeartStabilityData.H0prime
     (h : HeartStabilityData C) (X : C) : h.t.heart.FullSubcategory :=
   ⟨(h.t.truncLEGE 0 0).obj X, by
     rw [h.t.mem_heart_iff]
@@ -1864,7 +1864,7 @@ private theorem ShortComplex.exact_of_eval
     infer_instance
   exact (epi_comp_iff_of_isIso (E.map φ) (kernelComparison S.g E)).mp hCompEpi
 
-private theorem ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel
+theorem ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel
     {D : Type*} [Category D] [Preadditive D] {S : ShortComplex D}
     (hS : IsLimit (KernelFork.ofι S.f S.zero)) (E : D) :
     (S.map (preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
@@ -2051,7 +2051,7 @@ private theorem HeartStabilityData.H0Functor_five_term_relation
 /-- The `HeartK0` class corresponding to the degree-`n` heart cohomology object,
 with the usual alternating sign already built in so that its ambient image is the
 pure truncation class `[τ^[n,n]E]`. -/
-private def HeartStabilityData.heartCohClass
+def HeartStabilityData.heartCohClass
     (h : HeartStabilityData C) (n : ℤ) (E : C) : HeartK0 (C := C) h :=
   (((-1 : ℤ) ^ Int.natAbs n) • HeartK0.of (C := C) h (h.heartCoh (C := C) n E))
 
@@ -2066,7 +2066,7 @@ private theorem HeartStabilityData.heartCohClass_eq_H0FunctorShift
     HeartK0.of_iso (C := C) h (h.H0FunctorShiftObjIsoHeartCoh (C := C) n X)
   rw [HeartStabilityData.heartCohClass, ← hIso]
 
-private theorem negOnePow_natAbs_succ (n : ℤ) :
+theorem negOnePow_natAbs_succ (n : ℤ) :
     (-1 : ℤ) ^ Int.natAbs (n + 1) = -((-1 : ℤ) ^ Int.natAbs n) := by
   rw [← Int.coe_negOnePow ℤ (n + 1), Int.negOnePow_succ, ← Int.coe_negOnePow ℤ n]
   simp
@@ -2142,7 +2142,7 @@ private theorem HeartStabilityData.k0_truncLE_step
 
 /-- The finite alternating sum of heart cohomology classes from degrees `b` to
 `b + n`. -/
-private def HeartStabilityData.heartCohClassSum
+def HeartStabilityData.heartCohClassSum
     (h : HeartStabilityData C) (b : ℤ) (n : ℕ) (E : C) : HeartK0 (C := C) h :=
   Finset.sum (Finset.range (n + 1)) (fun j =>
     h.heartCohClass (C := C) (b + (j : ℤ)) E)
@@ -4284,7 +4284,7 @@ private theorem isSemistable_cokernel_mapMono_iff_local (Z : StabilityFunction A
   · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso_local f h) hs
   · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso_local f h).symm hs
 
-private theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
+theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
     (Z : StabilityFunction A) {E : A} (hss : Z.IsSemistable E) :
     ∃ F : AbelianHNFiltration Z E,
       F.φ ⟨F.n - 1, by have := F.hn; omega⟩ = Z.phase E := by
@@ -4328,7 +4328,7 @@ private theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
   }, by simp⟩
 
 set_option maxHeartbeats 2000000 in
-private theorem StabilityFunction.append_hn_filtration_of_mono_local
+theorem StabilityFunction.append_hn_filtration_of_mono_local
     (Z : StabilityFunction A) {X Y B : A}
     (i : X ⟶ Y) [Mono i] (F : AbelianHNFiltration Z X) (eB : cokernel i ≅ B)
     (hB : Z.IsSemistable B)
