@@ -124,7 +124,7 @@ abbrev Slicing.IntervalCat.toLeftHeart (s : Slicing C) (a b : ℝ) (hab : b - a 
 
 instance Slicing.IntervalCat.toLeftHeart_full (s : Slicing C) (a b : ℝ) (hab : b - a ≤ 1) :
     Functor.Full (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b hab) where
-  map_surjective {X Y} f := ⟨ObjectProperty.homMk f.hom, rfl⟩
+  map_surjective {_ _} f := ⟨ObjectProperty.homMk f.hom, rfl⟩
 
 instance Slicing.IntervalCat.toLeftHeart_faithful (s : Slicing C) (a b : ℝ)
     (hab : b - a ≤ 1) :
@@ -144,7 +144,7 @@ abbrev Slicing.IntervalCat.toRightHeart (s : Slicing C) (a b : ℝ) (hab : b - a
 
 instance Slicing.IntervalCat.toRightHeart_full (s : Slicing C) (a b : ℝ) (hab : b - a ≤ 1) :
     Functor.Full (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b hab) where
-  map_surjective {X Y} f := ⟨ObjectProperty.homMk f.hom, rfl⟩
+  map_surjective {_ _} f := ⟨ObjectProperty.homMk f.hom, rfl⟩
 
 instance Slicing.IntervalCat.toRightHeart_faithful (s : Slicing C) (a b : ℝ)
     (hab : b - a ≤ 1) :
@@ -572,11 +572,16 @@ theorem Slicing.third_intervalProp_of_triangle (s : Slicing C)
         hK_ge (by linarith) hT
     exact s.intervalProp_of_intrinsic_phases C hQ hQ_minus hQ_plus
 
+section
+
+variable {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+
+omit [Fact (b - a ≤ 1)]
+
 /-- If `f : X ⟶ Y` is a monomorphism in the left heart `P((a, a + 1])` and `Y` lies in the
 thin interval `P((a, b))`, then `X` also lies in `P((a, b))`. This is the concrete
 kernel-side closure condition from Bridgeland Lemma 4.2. -/
 theorem Slicing.intervalProp_of_mono_leftHeart (s : Slicing C)
-    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X Y : ((s.phaseShift C a).toTStructure).heart.FullSubcategory}
     (hY : s.intervalProp C a b Y.obj) (f : X ⟶ Y) [Mono f] :
     s.intervalProp C a b X.obj := by
@@ -612,15 +617,16 @@ theorem Slicing.intervalProp_of_mono_leftHeart (s : Slicing C)
       (TStructure.heart_hι t) i q δ hT)
   exact (s.intervalProp C a b).prop_of_iso
     ⟨e.inv.hom, e.hom.hom,
-      by simpa using congrArg InducedCategory.Hom.hom e.inv_hom_id,
-      by simpa using congrArg InducedCategory.Hom.hom e.hom_inv_id⟩
+      by
+        exact congrArg InducedCategory.Hom.hom e.inv_hom_id,
+      by
+        exact congrArg InducedCategory.Hom.hom e.hom_inv_id⟩
     hK_mem_aux
 
 /-- If `f : X ⟶ Y` is an epimorphism in the right heart `P([b - 1, b))` and `X` lies in the
 thin interval `P((a, b))`, then `Y` also lies in `P((a, b))`. This is the concrete
 cokernel-side closure condition from Bridgeland Lemma 4.2. -/
 theorem Slicing.intervalProp_of_epi_rightHeart (s : Slicing C)
-    {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X Y : ((s.phaseShift C (b - 1)).toTStructureGE).heart.FullSubcategory}
     (hX : s.intervalProp C a b X.obj) (f : X ⟶ Y) [Epi f] :
     s.intervalProp C a b Y.obj := by
@@ -646,6 +652,8 @@ theorem Slicing.intervalProp_of_epi_rightHeart (s : Slicing C)
   have hT' : Pretriangulated.Triangle.mk i.hom f.hom δ ∈ distTriang C := by
     simpa using hT
   exact s.third_intervalProp_of_triangle C (Fact.out : a < b) hX hKGe hYLt hT'
+
+end
 
 end TwoHeartEmbedding
 
