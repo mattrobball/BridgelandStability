@@ -191,10 +191,23 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       -- Rank-nullity at B[n]: dim B[n] = dim(range f_n) + dim(range g_n)
       haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
       have h_mid := finrank_mid_of_exact k f_n g_n hexact_B
-      -- Exactness at A[n] and C[n] give range/ker relationships with
-      -- the connecting maps. These are sorry'd for now.
-      -- dim(range f_n) = dim A[n] - r(n-1) by rank-nullity + exactness at A[n]
-      -- dim(range g_n) = dim C[n] - r(n) by rank-nullity + exactness at C[n]
+      -- The connecting map δ_{n-1} targets T.obj₁⟦(n-1)+1⟧ = T.obj₁⟦n⟧ (up to iso).
+      -- Exactness at A[n] and C[n] give dim constraints.
+      -- Rather than formalizing the connecting map exactness (same sign-handling
+      -- as hexact_B × 2), we compute directly from rank-nullity.
+      -- dim(range f_n) + dim(ker f_n) = dim A[n]
+      -- dim(range g_n) + dim(ker g_n) = dim B[n] ... wait, g_n maps FROM B[n]
+      -- Actually: dim B[n] = dim(range f_n) + dim(range g_n) [from h_mid]
+      -- dim A[n] = dim(range f_n) + dim(ker f_n) [rank-nullity on f_n]
+      -- dim C[n] = dim(range g_n) + dim(ker g_n) [rank-nullity on g_n FROM C[n]]
+      -- No: g_n : B[n] → C[n], so rank-nullity gives dim B[n] = dim(ker g_n) + dim(range g_n)
+      -- And ker g_n = range f_n [hexact_B]
+      -- We need ker f_n = range δ_{n-1} to get dim(ker f_n) = r(n-1).
+      -- And ker δ_n = range g_n to get dim(ker δ_n) ... hmm not directly useful.
+      -- Actually just need: dim(ker f_n) = r(n-1) and dim(range g_n) = dim C[n] - r(n).
+      -- For dim(range g_n): rank-nullity on δ_n gives dim C[n] = dim(ker δ_n) + r(n).
+      -- And exactness at C[n]: ker δ_n = range g_n. So dim(range g_n) = dim C[n] - r(n).
+      -- Same sorry structure — needs connecting map exactness.
       sorry
     -- Now sum with alternating signs
     have key : ∀ n : ℤ,
