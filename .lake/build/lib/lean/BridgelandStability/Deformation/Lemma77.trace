@@ -1,0 +1,95 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["b886520d16fde54a.olean"],
+  "i": "f0c0fe5d2fbdb5cc.ilean",
+  "c": "43713299c2acd41c.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/matt.linux/lean/bridgeland-extract/.lake/packages/Cli/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/batteries/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/Qq/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/aesop/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/importGraph/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/plausible/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/mathlib/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean /home/matt.linux/.elan/toolchains/leanprover--lean4---v4.29.0-rc6/bin/lean /home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/Lemma77.lean -o /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/Lemma77.olean -i /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/Lemma77.ilean -c /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/Lemma77.c --setup /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/Lemma77.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:112:52: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:120:8: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:122:27: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:202:12: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:244:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:290:8: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:48:9: unused variable `hE`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:50:9: unused variable `hF`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:122:76: 'omega' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:245:37: 'omega' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:122:76: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:245:37: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:321:9: unused variable `hE`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:323:9: unused variable `hF`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:377:9: unused variable `hE`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:379:9: unused variable `hF`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:423:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalProp_chain_of_postnikovTower`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:453:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalProp_of_postnikovTower`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:493:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.gtProp_of_postnikovTower`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Lemma77.lean:521:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.ltProp_of_postnikovTower`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"}],
+ "inputs":
+ [["BridgelandStability.Deformation.Lemma77:deps",
+   [["deps",
+     [["BridgelandStability/BridgelandStability:extraDep",
+       [["@BridgelandStability:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["BridgelandStability.Deformation.MDQKernel transitive imports (legacy)",
+         "b90b63b665346d32"],
+        ["BridgelandStability.Deformation.MDQKernel:importAllArts",
+         "37c609317750faef"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.29.0, commit 00659f8e6071d7e46131ed643bf8003b99b044e9",
+   "d4ef66a63896cd60"],
+  ["/home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/Lemma77.lean",
+   "1fc9dad1beb7fa9a"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: BridgelandStability.Deformation.Lemma77", "2fa2e7a62057fb7a"],
+  ["Package.id?: (some BridgelandStability)", "26eb1074d95a6ba6"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "fe854c355a034d54"}

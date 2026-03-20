@@ -1,0 +1,128 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["8bd10f7466df66fa.olean"],
+  "i": "e3ce140e7e47e3b8.ilean",
+  "c": "b5f81c5272f26db2.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/matt.linux/lean/bridgeland-extract/.lake/packages/Cli/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/batteries/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/Qq/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/aesop/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/importGraph/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/plausible/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/mathlib/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean /home/matt.linux/.elan/toolchains/leanprover--lean4---v4.29.0-rc6/bin/lean /home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/Theorem71.lean -o /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/Theorem71.olean -i /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/Theorem71.ilean -c /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/Theorem71.c --setup /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/Theorem71.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:38:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interior_has_enveloped_HN_ssf`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:261:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interior_has_enveloped_HN`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:308:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.sigmaSemistable_hasDeformedHN`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:352:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.P_in_deformedGtPred`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:439:19: This simp argument is unused:\n  Fin.val_mk\n\nHint: Omit it from the simp argument list.\n  simp only [F̵i̵n̵.̵v̵a̵l̵_̵m̵k̵,̵ ̵show k - 1 + 1 = k from by omega] at this\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:484:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.P_in_deformedLtPred`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:626:45: This simp argument is unused:\n  HNFiltration.phiPlus\n\nHint: Omit it from the simp argument list.\n  simp only [HNFiltration.shiftHN, H̵N̵F̵i̵l̵t̵r̵a̵t̵i̵o̵n̵.̵p̵h̵i̵P̵l̵u̵s̵,̵ ̵Int.cast_one]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:693:39: This simp argument is unused:\n  HNFiltration.phiPlus\n\nHint: Omit it from the simp argument list.\n  simp only [HNFiltration.ofIso,̵ ̵H̵N̵F̵i̵l̵t̵r̵a̵t̵i̵o̵n̵.̵p̵h̵i̵P̵l̵u̵s̵] at hphiPlus_le ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:691:14: 'change ¬IsZero _' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:711:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.sigmaSemistable_deformedGtLe_triangle`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:739:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.deformedGtLe_triangle`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:746:5: unused variable `hStep1`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:876:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.deformedPred_shift_one`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:950:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.deformedPred_of_shift_one`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1019:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.StabilityCondition.deformedGtPred_shift_one`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1038:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.StabilityCondition.deformedLePred_shift_one`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1057:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.StabilityCondition.deformedLePred_shift_neg_one`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1086:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.isZero_of_deformedGtPred_deformedLePred`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1101:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.deformedGtPred_of_triangle_obj₃`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1122:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.deformedLePred_of_triangle_obj₁`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1143:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.isZero_deformedLe_of_deformedGt_triangle`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1160:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.isZero_deformedGt_of_deformedLe_triangle`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1178:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.deformedSlicing_hn_exists`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1286:15: This simp argument is unused:\n  Nat.zero_eq\n\nHint: Omit it from the simp argument list.\n  simp only [Nat.z̵e̵r̵o̵_̵e̵q̵,̵ ̵N̵a̵t̵.̵cast_zero, zero_mul, sub_zero] at hGt\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1649:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.StabilityCondition.deformedSlicing_compat`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1684:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.sigma_semistable_intervalProp`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1750:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.bridgeland_7_1_le`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/Theorem71.lean:1925:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.bridgeland_7_1`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"}],
+ "inputs":
+ [["BridgelandStability.Deformation.Theorem71:deps",
+   [["deps",
+     [["BridgelandStability/BridgelandStability:extraDep",
+       [["@BridgelandStability:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["BridgelandStability.Deformation.TStructure transitive imports (legacy)",
+         "3389f83e16c8d19a"],
+        ["BridgelandStability.Deformation.TStructure:importAllArts",
+         "86b960afe3174706"],
+        ["BridgelandStability.Deformation.PPhiAbelian transitive imports (legacy)",
+         "c01f9989c58e1bae"],
+        ["BridgelandStability.Deformation.PPhiAbelian:importAllArts",
+         "f50723bcbe06bec7"],
+        ["BridgelandStability.Deformation.PhiPlusReduction transitive imports (legacy)",
+         "1d67e5c0089927eb"],
+        ["BridgelandStability.Deformation.PhiPlusReduction:importAllArts",
+         "a6026019235ee1f4"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.29.0, commit 00659f8e6071d7e46131ed643bf8003b99b044e9",
+   "d4ef66a63896cd60"],
+  ["/home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/Theorem71.lean",
+   "ad76bf5b2217b69d"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: BridgelandStability.Deformation.Theorem71",
+   "a67cbaa1f5a23d75"],
+  ["Package.id?: (some BridgelandStability)", "26eb1074d95a6ba6"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "9da9401f4a752b38"}

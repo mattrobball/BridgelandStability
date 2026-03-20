@@ -1,0 +1,162 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["215461f227ec7d1c.olean"],
+  "i": "82e04a873fc2cbb1.ilean",
+  "c": "53fbeb6192e6e0c0.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/matt.linux/lean/bridgeland-extract/.lake/packages/Cli/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/batteries/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/Qq/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/aesop/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/importGraph/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/plausible/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/mathlib/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean /home/matt.linux/.elan/toolchains/leanprover--lean4---v4.29.0-rc6/bin/lean /home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/IntervalSelection.lean -o /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/IntervalSelection.olean -i /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/IntervalSelection.ilean -c /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/IntervalSelection.c --setup /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/IntervalSelection.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:29:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalSubobject_isZero_iff_eq_bot`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:69:4: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:56:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalSubobject_arrow_strictMono_of_strictMono`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:73:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_strictShortExact_cokernel_of_strictMono`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:105:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalInclusion_map_strictMono`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:128:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_strictArtinianObject_of_inclusion`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:142:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_strictNoetherianObject_of_inclusion`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:156:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_strictFiniteLength_of_inclusion`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:171:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_thinFiniteLength_of_inclusion`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:244:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:190:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_strictArtinianObject_of_inclusion_strict`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:241:6: 'change I.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk) ≫ I.map B₂.1.arrow = I.map B₁.1.arrow' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:314:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:260:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_strictNoetherianObject_of_inclusion_strict`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:311:6: 'change I.map (Subobject.ofMkLEMk B₁.1.arrow B₂.1.arrow hmk) ≫ I.map B₂.1.arrow = I.map B₁.1.arrow' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:327:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_strictFiniteLength_of_inclusion_strict`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:342:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_thinFiniteLength_of_inclusion_strict`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:383:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_K0_of_strictMono`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:410:20: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:393:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.interval_card_subobject_lt_of_ne_top`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:420:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalLiftSub_le`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:428:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalLiftSub_bot`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:433:8: This simp argument is unused:\n  intervalLiftSub\n\nHint: Omit it from the simp argument list.\n  simp [̵i̵n̵t̵e̵r̵v̵a̵l̵L̵i̵f̵t̵S̵u̵b̵,̵ ̵S̵u̵b̵o̵b̵j̵e̵c̵t̵.̵b̵o̵t̵_̵a̵r̵r̵o̵w̵]̵[̲S̲u̲b̲o̲b̲j̲e̲c̲t̲.̲b̲o̲t̲_̲a̲r̲r̲o̲w̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:435:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalLiftSub_ne_bot`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:447:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalLiftSub_mono`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:452:8: This simp argument is unused:\n  intervalLiftSub\n\nHint: Omit it from the simp argument list.\n  simp [i̵n̵t̵e̵r̵v̵a̵l̵L̵i̵f̵t̵S̵u̵b̵,̵ ̵Category.assoc, Subobject.ofLE_arrow]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:452:25: This simp argument is unused:\n  Category.assoc\n\nHint: Omit it from the simp argument list.\n  simp [intervalLiftSub, C̵a̵t̵e̵g̵o̵r̵y̵.̵a̵s̵s̵o̵c̵,̵ ̵Subobject.ofLE_arrow]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:452:41: This simp argument is unused:\n  Subobject.ofLE_arrow\n\nHint: Omit it from the simp argument list.\n  simp [intervalLiftSub, Category.assoc,̵ ̵S̵u̵b̵o̵b̵j̵e̵c̵t̵.̵o̵f̵L̵E̵_̵a̵r̵r̵o̵w̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:465:4: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:468:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalSubobject_bot_arrow_strictMono`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:483:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalLiftSub_arrow_strictMono_of_strictMono`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:497:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.intervalLiftSub_wPhase_eq`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:523:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistable`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:640:4: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:753:6: Try `simp at hgt` instead of `simpa using hgt`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:666:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.exists_minPhase_maximal_strictKernel`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:781:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.exists_minPhase_minimal_strictKernel`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:826:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.exists_maxPhase_maximal_strictSubobject_of_finite`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:875:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.exists_maxPhase_maximal_strictSubobject`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:946:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:955:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/IntervalSelection.lean:894:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"}],
+ "inputs":
+ [["BridgelandStability.Deformation.IntervalSelection:deps",
+   [["deps",
+     [["BridgelandStability/BridgelandStability:extraDep",
+       [["@BridgelandStability:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["BridgelandStability.Deformation.WPhase transitive imports (legacy)",
+         "2cd6aac38414096f"],
+        ["BridgelandStability.Deformation.WPhase:importAllArts",
+         "65a097e14e0e786f"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.29.0, commit 00659f8e6071d7e46131ed643bf8003b99b044e9",
+   "d4ef66a63896cd60"],
+  ["/home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/IntervalSelection.lean",
+   "50faf302a05beb5b"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: BridgelandStability.Deformation.IntervalSelection",
+   "30a4a513f94b2db1"],
+  ["Package.id?: (some BridgelandStability)", "26eb1074d95a6ba6"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "7cbdda2be566e328"}

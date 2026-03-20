@@ -1,0 +1,63 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["d85690328e184822.olean"],
+  "i": "cd01a8fc32654c83.ilean",
+  "c": "c8da7afcf832b980.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/matt.linux/lean/bridgeland-extract/.lake/packages/Cli/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/batteries/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/Qq/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/aesop/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/importGraph/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/plausible/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/mathlib/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean /home/matt.linux/.elan/toolchains/leanprover--lean4---v4.29.0-rc6/bin/lean /home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/PhaseConfinement.lean -o /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/PhaseConfinement.olean -i /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/PhaseConfinement.ilean -c /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/PhaseConfinement.c --setup /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/PhaseConfinement.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:37:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.phiPlus_lt_of_wSemistable`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:268:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.phiMinus_gt_of_wSemistable`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:623:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.phase_confinement_of_wSemistable`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:644:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.hom_eq_zero_of_wSemistable_gap`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:680:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.phase_le_of_strictQuotient`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:800:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.phase_le_of_triangle_quotient`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:890:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.phase_confinement_from_stabSeminorm`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:1003:47: unused variable `hε₀2`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/PhaseConfinement.lean:1085:37: unused variable `ha₂`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"}],
+ "inputs":
+ [["BridgelandStability.Deformation.PhaseConfinement:deps",
+   [["deps",
+     [["BridgelandStability/BridgelandStability:extraDep",
+       [["@BridgelandStability:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["BridgelandStability.Deformation.PhaseArithmetic transitive imports (legacy)",
+         "907464aab467b650"],
+        ["BridgelandStability.Deformation.PhaseArithmetic:importAllArts",
+         "c41e7250f7e34d10"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.29.0, commit 00659f8e6071d7e46131ed643bf8003b99b044e9",
+   "d4ef66a63896cd60"],
+  ["/home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/PhaseConfinement.lean",
+   "2a9071ce7ad836b5"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: BridgelandStability.Deformation.PhaseConfinement",
+   "478a9abb46af8f75"],
+  ["Package.id?: (some BridgelandStability)", "26eb1074d95a6ba6"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "c93f25136bdab772"}

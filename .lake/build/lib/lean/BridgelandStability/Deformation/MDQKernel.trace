@@ -1,0 +1,102 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["94110893e254ccbc.olean"],
+  "i": "28272b7b21ad3fdd.ilean",
+  "c": "147d34a28736673a.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/matt.linux/lean/bridgeland-extract/.lake/packages/Cli/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/batteries/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/Qq/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/aesop/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/importGraph/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/plausible/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/mathlib/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean /home/matt.linux/.elan/toolchains/leanprover--lean4---v4.29.0-rc6/bin/lean /home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/MDQKernel.lean -o /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/MDQKernel.olean -i /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/Deformation/MDQKernel.ilean -c /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/MDQKernel.c --setup /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/Deformation/MDQKernel.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:48:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:64:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_minimal`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:176:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinian`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:275:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_strictArtinian`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:303:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKernel`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:391:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.thinFiniteLength_cokernel`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:396:5: unused variable `hM_ne_top`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:396:25: unused variable `hM_strict`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:402:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_finiteLength`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:505:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:517:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:520:29: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:619:14: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:435:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:520:78: 'omega' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:620:39: 'omega' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:520:78: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:620:39: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:654:30: This simp argument is unused:\n  Subobject.map_eq_mk_mono\n\nHint: Omit it from the simp argument list.\n  simp [Subobject.mapMonoIso, S̵u̵b̵o̵b̵j̵e̵c̵t̵.̵m̵a̵p̵_̵e̵q̵_̵m̵k̵_̵m̵o̵n̵o̵,̵ ̵Category.assoc]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:665:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.wPhaseOf_cokernel_mapMono_eq`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:690:0: automatically included section variable(s) unused in theorem `CategoryTheory.Triangulated.wPhaseOf_cokernel_ofLE_top_eq`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/Deformation/MDQKernel.lean:736:2: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"}],
+ "inputs":
+ [["BridgelandStability.Deformation.MDQKernel:deps",
+   [["deps",
+     [["BridgelandStability/BridgelandStability:extraDep",
+       [["@BridgelandStability:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["BridgelandStability.Deformation.MDQ transitive imports (legacy)",
+         "0e2d9336cb3b5f03"],
+        ["BridgelandStability.Deformation.MDQ:importAllArts",
+         "79f66e024f642845"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.29.0, commit 00659f8e6071d7e46131ed643bf8003b99b044e9",
+   "d4ef66a63896cd60"],
+  ["/home/matt.linux/lean/bridgeland-extract/BridgelandStability/Deformation/MDQKernel.lean",
+   "9fc08f839893e04c"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: BridgelandStability.Deformation.MDQKernel",
+   "3ac9b756162e3857"],
+  ["Package.id?: (some BridgelandStability)", "26eb1074d95a6ba6"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "793cef5c9300f07e"}

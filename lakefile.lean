@@ -7,7 +7,7 @@ package BridgelandStability where
     ⟨`autoImplicit, false⟩
   ]
 
-require "leanprover-community" / "mathlib" @ git "efe911a4cad7ab54c187dabca7f8ee633f099be9"
+require "leanprover-community" / "mathlib" @ git "master"
 
 @[default_target]
 lean_lib BridgelandStability where

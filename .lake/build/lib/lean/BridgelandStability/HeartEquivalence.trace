@@ -1,0 +1,237 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["749c5bcbaee8111c.olean"],
+  "i": "606c1fb2f1bc3531.ilean",
+  "c": "f9f9a43ed49c9711.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/matt.linux/lean/bridgeland-extract/.lake/packages/Cli/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/batteries/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/Qq/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/aesop/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/importGraph/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/plausible/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/packages/mathlib/.lake/build/lib/lean:/home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean /home/matt.linux/.elan/toolchains/leanprover--lean4---v4.29.0-rc6/bin/lean /home/matt.linux/lean/bridgeland-extract/BridgelandStability/HeartEquivalence.lean -o /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/HeartEquivalence.olean -i /home/matt.linux/lean/bridgeland-extract/.lake/build/lib/lean/BridgelandStability/HeartEquivalence.ilean -c /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/HeartEquivalence.c --setup /home/matt.linux/lean/bridgeland-extract/.lake/build/ir/BridgelandStability/HeartEquivalence.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:92:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.ObjectProperty.FullSubcategory.isZero_of_obj_isZero`:\n  [HasZeroObject C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive]\n  [Pretriangulated C]\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [HasZeroObject C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:501:2: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:561:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:507:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.heartFullSubcategory_shortExact_triangle`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:626:2: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:629:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.K₀.of_shift_nat`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:654:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:666:14: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:649:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.K₀.of_shift_negSucc`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:935:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.truncGE_map_comp_descTruncGE`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:947:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.descTruncGE_zero`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:956:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.descTruncGE_add`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:1113:8: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:1344:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.isIso_truncLT_pred_map_of_isGE`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:1358:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.exists_truncLT_octahedral_split`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:1622:18: This simp argument is unused:\n  Category.assoc\n\nHint: Omit it from the simp argument list.\n  simp [f', hn,̵ ̵C̵a̵t̵e̵g̵o̵r̵y̵.̵a̵s̵s̵o̵c̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:1683:5: unused variable `hm₁`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:1755:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.isIso_truncLT_negOne_map_of_heart_source`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:2648:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:2650:65: 'omega' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:2650:65: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:2673:6: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:2675:65: 'omega' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:2675:65: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:2774:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.comp_shift_truncGEπ_zero_of_truncLT_negOne`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3043:5: unused variable `hLE`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3069:26: unused variable `hGE`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3132:52: This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [HeartStabilityData.heartCohClassSum, hzero, add_a̵s̵s̵o̵c̵,̵ ̵a̵d̵d̵_̵left_comm, add_comm]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3372:4: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3594:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.TStructure.triangleLTGE_iso_of_amp_negOne_zero`:\n  [IsTriangulated C]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [IsTriangulated C] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3635:12: 'change IsIso ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3663:12: 'change IsIso ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:3864:28: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4241:8: automatically included section variable(s) unused in theorem `_private.BridgelandStability.HeartEquivalence.0.CategoryTheory.Triangulated.Subobject.map_eq_mk_mono_local`:\n  [Abelian A]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Abelian A] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4261:36: This simp argument is unused:\n  Subobject.map_eq_mk_mono_local\n\nHint: Omit it from the simp argument list.\n  simp [Subobject.mapMonoIso_local, S̵u̵b̵o̵b̵j̵e̵c̵t̵.̵m̵a̵p̵_̵e̵q̵_̵m̵k̵_̵m̵o̵n̵o̵_̵l̵o̵c̵a̵l̵,̵ ̵Category.assoc]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4346:12: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4409:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4413:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4448:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4452:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4521:10: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4617:45: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4695:5: unused variable `h`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4699:5: unused variable `h`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4717:2: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:4723:2: try 'simp' instead of 'simpa'\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:5264:23: unused variable `φ₁`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:5264:26: unused variable `φ₂`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:5264:29: unused variable `A`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"},
+  {"message":
+   "BridgelandStability/HeartEquivalence.lean:5264:31: unused variable `B`\n\nNote: This linter can be disabled with `set_option linter.unusedVariables false`",
+   "level": "warning"}],
+ "inputs":
+ [["BridgelandStability.HeartEquivalence:deps",
+   [["deps",
+     [["BridgelandStability/BridgelandStability:extraDep",
+       [["@BridgelandStability:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["BridgelandStability.StabilityCondition transitive imports (legacy)",
+         "3c3ae31d93dab2c2"],
+        ["BridgelandStability.StabilityCondition:importAllArts",
+         "a8c25dd41a6e0185"],
+        ["BridgelandStability.StabilityFunction transitive imports (legacy)",
+         "dc068b804c0a5364"],
+        ["BridgelandStability.StabilityFunction:importAllArts",
+         "34e51025425ae5c0"],
+        ["BridgelandStability.IntervalCategory transitive imports (legacy)",
+         "3b8a0515f995b688"],
+        ["BridgelandStability.IntervalCategory:importAllArts",
+         "00623c45d2afce45"],
+        ["Mathlib.CategoryTheory.Triangulated.HomologicalFunctor transitive imports (legacy)",
+         "e81954df1a20df49"],
+        ["Mathlib.CategoryTheory.Triangulated.HomologicalFunctor:importAllArts",
+         "eb06c64a8835e0b1"],
+        ["Mathlib.CategoryTheory.Triangulated.Yoneda transitive imports (legacy)",
+         "56f45ffeb38a907a"],
+        ["Mathlib.CategoryTheory.Triangulated.Yoneda:importAllArts",
+         "ef60e9f54cf5a964"],
+        ["BridgelandStability.TStructure.HeartAbelian transitive imports (legacy)",
+         "514b31ceb32d50f6"],
+        ["BridgelandStability.TStructure.HeartAbelian:importAllArts",
+         "d64d4d3433605ffe"],
+        ["Mathlib.CategoryTheory.Triangulated.TStructure.SpectralObject transitive imports (legacy)",
+         "0bf503c2be24539f"],
+        ["Mathlib.CategoryTheory.Triangulated.TStructure.SpectralObject:importAllArts",
+         "646666f00dd2d000"],
+        ["Mathlib.CategoryTheory.Triangulated.TStructure.TruncLEGT transitive imports (legacy)",
+         "0f4d9ec4f49f9148"],
+        ["Mathlib.CategoryTheory.Triangulated.TStructure.TruncLEGT:importAllArts",
+         "c4f20dd6582d4992"],
+        ["Mathlib.Algebra.Homology.SpectralObject.Basic transitive imports (legacy)",
+         "0379d804bfbdf103"],
+        ["Mathlib.Algebra.Homology.SpectralObject.Basic:importAllArts",
+         "74983d3fc924a8a8"],
+        ["Mathlib.CategoryTheory.Shift.ShiftSequence transitive imports (legacy)",
+         "7fb5c76bbeac244e"],
+        ["Mathlib.CategoryTheory.Shift.ShiftSequence:importAllArts",
+         "4614ca7219519696"],
+        ["Mathlib.CategoryTheory.Abelian.FunctorCategory transitive imports (legacy)",
+         "af33c609f9a41369"],
+        ["Mathlib.CategoryTheory.Abelian.FunctorCategory:importAllArts",
+         "543550a77f0174b8"],
+        ["Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono transitive imports (legacy)",
+         "ed5a3c4444b82243"],
+        ["Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono:importAllArts",
+         "d4e2b68c4092a757"],
+        ["BridgelandStability.Deformation.PPhiAbelian transitive imports (legacy)",
+         "c01f9989c58e1bae"],
+        ["BridgelandStability.Deformation.PPhiAbelian:importAllArts",
+         "f50723bcbe06bec7"],
+        ["BridgelandStability.Deformation.PhaseArithmetic transitive imports (legacy)",
+         "907464aab467b650"],
+        ["BridgelandStability.Deformation.PhaseArithmetic:importAllArts",
+         "c41e7250f7e34d10"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.29.0, commit 00659f8e6071d7e46131ed643bf8003b99b044e9",
+   "d4ef66a63896cd60"],
+  ["/home/matt.linux/lean/bridgeland-extract/BridgelandStability/HeartEquivalence.lean",
+   "d345f4c1808a1ac2"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: BridgelandStability.HeartEquivalence", "ecfe50125d8fc77b"],
+  ["Package.id?: (some BridgelandStability)", "26eb1074d95a6ba6"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "6371e25399ef252e"}
