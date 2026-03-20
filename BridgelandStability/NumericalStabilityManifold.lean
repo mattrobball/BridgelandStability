@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
 
+import Mathlib.CategoryTheory.Triangulated.DeformationTheorem
 import Mathlib.CategoryTheory.Triangulated.NumericalStability
+import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.Geometry.Manifold.Complex
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import Mathlib.Topology.Connected.TotallyDisconnected
@@ -104,6 +106,15 @@ theorem NumericalStabilityCondition.charge_mem_numericalFactorSubmodule
   rw [mem_numericalFactorSubmodule_iff]
   exact ⟨Z', hZ'⟩
 
+theorem NumericalStabilityCondition.ext_toStabilityCondition
+    {χ : K₀ C →+ K₀ C →+ ℤ} {σ τ : NumericalStabilityCondition C χ}
+    (h : σ.toStabilityCondition = τ.toStabilityCondition) :
+    σ = τ := by
+  cases σ
+  cases τ
+  cases h
+  simp
+
 /-- The inclusion of numerical stability conditions into ordinary stability conditions is continuous
 for the induced topology. -/
 theorem NumericalStabilityCondition.continuous_toStabilityCondition
@@ -170,55 +181,9 @@ theorem IsLocalHomeomorph.codRestrict_preimage
       simpa [hfe] using congrArg e hy
     simpa [hcomp] using emb.comp comm.isOpenEmbedding
 
-/-- A topological complex-linear local model for a connected component of numerical stability
-conditions. This packages the local-homeomorphism part of Corollary 1.3, before using numerical
-finiteness to prove finite-dimensionality. -/
-structure NumericalComponentTopologicalLinearLocalModel (χ : K₀ C →+ K₀ C →+ ℤ)
-    (cc : ConnectedComponents (NumericalStabilityCondition C χ)) where
-  /-- Bridgeland's `V(Σ)`, formalized as a complex-linear subspace of numerical charges. -/
-  V : Submodule ℂ (NumericalChargeSpace C χ)
-  instTopologicalSpace : TopologicalSpace V
-  instIsTopologicalAddGroup : IsTopologicalAddGroup V
-  instContinuousSMul : ContinuousSMul ℂ V
-  instT2Space : T2Space V
-  instPolynormableSpace : PolynormableSpace ℂ V
-  /-- The factored central charge lands in `V`. -/
-  mem_charge : ∀ σ : NumericalStabilityCondition C χ,
-    ConnectedComponents.mk σ = cc → σ.factors.choose ∈ V
-  /-- The factored central charge map is a local homeomorphism into `V`. -/
-  isLocalHomeomorph :
-    @IsLocalHomeomorph (NumericalComponent C χ cc) V inferInstance instTopologicalSpace
-      (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, mem_charge σ hσ⟩)
-
-attribute [instance] NumericalComponentTopologicalLinearLocalModel.instTopologicalSpace
-attribute [instance] NumericalComponentTopologicalLinearLocalModel.instIsTopologicalAddGroup
-attribute [instance] NumericalComponentTopologicalLinearLocalModel.instContinuousSMul
-attribute [instance] NumericalComponentTopologicalLinearLocalModel.instT2Space
-attribute [instance] NumericalComponentTopologicalLinearLocalModel.instPolynormableSpace
-
-/-- The full strengthened Corollary 1.3 package: local-homeomorphism data plus finite
-dimensionality. -/
-structure NumericalComponentTopologicalLinearModel (χ : K₀ C →+ K₀ C →+ ℤ)
-    (cc : ConnectedComponents (NumericalStabilityCondition C χ))
-    extends NumericalComponentTopologicalLinearLocalModel C χ cc where
-  instFiniteDimensional : FiniteDimensional ℂ V
-
-attribute [instance] NumericalComponentTopologicalLinearModel.instFiniteDimensional
-
-namespace NumericalComponentTopologicalLinearLocalModel
-
-variable {C} {χ : K₀ C →+ K₀ C →+ ℤ}
-variable {cc : ConnectedComponents (NumericalStabilityCondition C χ)}
-
-/-- The local-homeomorphism chart map associated to a topological linear local model. -/
-def chargeMap (M : NumericalComponentTopologicalLinearLocalModel C χ cc) :
-    NumericalComponent C χ cc → M.V :=
-  fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, M.mem_charge σ hσ⟩
-
-/-- Numerical finiteness should imply that the numerical charge space is finite-dimensional over
-`ℂ`. This is the algebraic input needed to upgrade a local linear model to the full
-Corollary 1.3 package. -/
-  theorem numericalChargeSpace_finiteDimensional (χ : K₀ C →+ K₀ C →+ ℤ)
+/-- Numerical finiteness implies that the numerical charge space is finite-dimensional over `ℂ`.
+This is the algebraic input behind Bridgeland's Corollary 1.3. -/
+theorem numericalChargeSpace_finiteDimensional (χ : K₀ C →+ K₀ C →+ ℤ)
     [NumericallyFinite C χ] :
     FiniteDimensional ℂ (NumericalChargeSpace C χ) := by
   let A := NumericalK₀ C χ
@@ -265,61 +230,232 @@ Corollary 1.3 package. -/
     simpa [eval, Pi.basisFun_apply] using congr_fun hZ i
   exact FiniteDimensional.of_injective (eval ∘ₗ precomp) (heval.comp hprecomp)
 
-/-- Upgrade a local linear model to a full topological linear model once the ambient numerical
-charge space is known to be finite-dimensional. -/
-noncomputable def toTopologicalLinearModel (M : NumericalComponentTopologicalLinearLocalModel C χ cc)
-    [FiniteDimensional ℂ (NumericalChargeSpace C χ)] :
-    NumericalComponentTopologicalLinearModel C χ cc where
-  toNumericalComponentTopologicalLinearLocalModel := M
-  instFiniteDimensional := inferInstance
-
-end NumericalComponentTopologicalLinearLocalModel
-
-namespace NumericalComponentTopologicalLinearModel
-
-variable {C} {χ : K₀ C →+ K₀ C →+ ℤ}
-variable {cc : ConnectedComponents (NumericalStabilityCondition C χ)}
-
-/-- The local-homeomorphism chart map associated to a topological linear model. -/
-def chargeMap (M : NumericalComponentTopologicalLinearModel C χ cc) :
-    NumericalComponent C χ cc → M.V :=
-  M.toNumericalComponentTopologicalLinearLocalModel.chargeMap
-
-/-- Replace the abstract topological complex vector space `V` by a chosen finite-dimensional
-normed complex model space. Proving this should make the manifold step for Corollary 1.3
-purely formal. -/
-theorem exists_normedComplexModel (M : NumericalComponentTopologicalLinearModel C χ cc) :
-    ∃ n : ℕ, ∃ f : NumericalComponent C χ cc → Fin n → ℂ,
-      IsLocalHomeomorph f := by
-  let e : M.V ≃L[ℂ] (Fin (Module.finrank ℂ M.V) → ℂ) :=
-    ContinuousLinearEquiv.ofFinrankEq (by simp)
-  refine ⟨Module.finrank ℂ M.V, fun x => e (M.chargeMap x), ?_⟩
-  simpa [chargeMap, NumericalComponentTopologicalLinearLocalModel.chargeMap] using
-    e.toHomeomorph.isLocalHomeomorph.comp M.isLocalHomeomorph
-
-end NumericalComponentTopologicalLinearModel
-
 variable (k : Type w) [Field k]
 
-/-- The local-homeomorphism part of Corollary 1.3, before using numerical finiteness to promote
-the target to a finite-dimensional complex vector space. -/
-noncomputable def bridgelandCorollary_1_3_localLinearModel [Linear k C] [IsFiniteType k C]
-    [EulerFormDescends k C] (hnum : NumericallyFinite C (eulerForm k C))
-    (cc : ConnectedComponents (NumericalStabilityCondition C (eulerForm k C))) :
-    NumericalComponentTopologicalLinearLocalModel C (eulerForm k C) cc := by
-  sorry
+/-- The part of `Stab_N(D)` lying over a fixed connected component of `Stab(D)`. -/
+abbrev NumericalAmbientLocus (χ : K₀ C →+ K₀ C →+ ℤ)
+    (cc : ConnectedComponents (StabilityCondition C)) :=
+  {σ : NumericalStabilityCondition C χ //
+    ConnectedComponents.mk σ.toStabilityCondition = cc}
 
-/-- A strengthened, theorem-shaped version of Corollary 1.3. This is the numerical analogue of
-the stronger form Theorem 1.2 should eventually export. -/
-noncomputable def bridgelandCorollary_1_3_topologicalLinearModel [Linear k C] [IsFiniteType k C]
-    [EulerFormDescends k C] (hnum : NumericallyFinite C (eulerForm k C))
-    (cc : ConnectedComponents (NumericalStabilityCondition C (eulerForm k C))) :
-    NumericalComponentTopologicalLinearModel C (eulerForm k C) cc := by
-  letI : FiniteDimensional ℂ (NumericalChargeSpace C (eulerForm k C)) :=
-    NumericalComponentTopologicalLinearLocalModel.numericalChargeSpace_finiteDimensional
-      (C := C) (χ := eulerForm k C)
-  exact
-    (bridgelandCorollary_1_3_localLinearModel (C := C) (k := k) hnum cc).toTopologicalLinearModel
+/-- The ambient numerical locus is open inside `Stab_N(D)` because ambient connected components
+of `StabilityCondition C` are open. -/
+theorem isOpen_numericalAmbientLocus (χ : K₀ C →+ K₀ C →+ ℤ)
+    (cc : ConnectedComponents (StabilityCondition C)) :
+    IsOpen {σ : NumericalStabilityCondition C χ |
+      ConnectedComponents.mk σ.toStabilityCondition = cc} := by
+  let σ₀ := componentRep C cc
+  have hopen : IsOpen (connectedComponent σ₀) := stabilityCondition_isOpen_connectedComponent C σ₀
+  have hset :
+      {σ : NumericalStabilityCondition C χ |
+        ConnectedComponents.mk σ.toStabilityCondition = cc} =
+        NumericalStabilityCondition.toStabilityCondition ⁻¹' connectedComponent σ₀ := by
+    ext σ
+    rw [Set.mem_setOf_eq, Set.mem_preimage, ← ConnectedComponents.coe_eq_coe']
+    simpa [σ₀] using (mk_componentRep C cc).symm
+  rw [hset]
+  exact hopen.preimage (NumericalStabilityCondition.continuous_toStabilityCondition (C := C) χ)
+
+namespace ComponentTopologicalLinearLocalModel
+
+variable {cc : ConnectedComponents (StabilityCondition C)}
+
+/-- The numerical part of the ambient codomain `V(Σ)`, cut out as a submodule of `V(Σ)` itself.
+
+Keeping this codomain inside `M.V` avoids any induced-instance transport on the numerical charge
+side; it inherits its normed complex-vector-space structure directly as a submodule. -/
+def ambientNumericalFactorSubmodule (χ : K₀ C →+ K₀ C →+ ℤ)
+    (M : ComponentTopologicalLinearLocalModel C cc) :
+    Submodule ℂ M.V :=
+  (numericalFactorSubmodule C χ).comap M.V.subtype
+
+/-- The charge map on the ambient numerical locus `Σ ∩ Stab_N(D)`. -/
+def ambientNumericalChargeMap (χ : K₀ C →+ K₀ C →+ ℤ)
+    (M : ComponentTopologicalLinearLocalModel C cc) :
+    NumericalAmbientLocus C χ cc → ambientNumericalFactorSubmodule C χ M :=
+  fun σ => ⟨⟨σ.1.toStabilityCondition.Z, M.mem_charge _ σ.2⟩, by
+    change σ.1.toStabilityCondition.Z ∈ numericalFactorSubmodule C χ
+    exact σ.1.charge_mem_numericalFactorSubmodule⟩
+
+/-- The ambient numerical locus is exactly the preimage of the numerical codomain subset under the
+ambient component charge map. -/
+noncomputable def numericalAmbientLocusHomeomorphChargePreimage
+    (χ : K₀ C →+ K₀ C →+ ℤ) (M : ComponentTopologicalLinearLocalModel C cc) :
+    NumericalAmbientLocus C χ cc ≃ₜ
+      {x : componentStabilityCondition C cc //
+        ComponentTopologicalLinearLocalModel.chargeMap (C := C) M x ∈
+          ambientNumericalFactorSubmodule C χ M} where
+  toFun := fun σ => ⟨⟨σ.1.toStabilityCondition, σ.2⟩, by
+    change σ.1.toStabilityCondition.Z ∈ numericalFactorSubmodule C χ
+    exact σ.1.charge_mem_numericalFactorSubmodule⟩
+  invFun := fun x => by
+    have hx : x.1.1.Z ∈ numericalFactorSubmodule C χ := by
+      change (((ComponentTopologicalLinearLocalModel.chargeMap (C := C) M x.1 : M.V) :
+        AmbientChargeSpace C) ∈ numericalFactorSubmodule C χ)
+      exact x.2
+    have hx' := (mem_numericalFactorSubmodule_iff (C := C) (χ := χ) (Z := x.1.1.Z)).mp hx
+    exact ⟨⟨x.1.1, ⟨Classical.choose hx', Classical.choose_spec hx'⟩⟩, x.1.2⟩
+  left_inv σ := by
+    apply Subtype.ext
+    exact NumericalStabilityCondition.ext_toStabilityCondition (C := C) rfl
+  right_inv x := by
+    apply Subtype.ext
+    apply Subtype.ext
+    rfl
+  continuous_toFun := by
+    refine Continuous.subtype_mk
+      (Continuous.subtype_mk
+        ((NumericalStabilityCondition.continuous_toStabilityCondition (C := C) χ).comp
+          continuous_subtype_val)
+        (fun σ => σ.2))
+      (fun σ => by
+        change σ.1.toStabilityCondition.Z ∈ numericalFactorSubmodule C χ
+        exact σ.1.charge_mem_numericalFactorSubmodule)
+  continuous_invFun := by
+    refine Continuous.subtype_mk ?_ (fun x => x.1.2)
+    refine continuous_induced_rng.2 ?_
+    exact continuous_subtype_val.comp continuous_subtype_val
+
+/-- Bridgeland's Theorem 1.2 restricted to the ambient numerical locus `Σ ∩ Stab_N(D)`. -/
+theorem ambientNumericalChargeMap_isLocalHomeomorph (χ : K₀ C →+ K₀ C →+ ℤ)
+    (M : ComponentTopologicalLinearLocalModel C cc) :
+    IsLocalHomeomorph (ambientNumericalChargeMap (C := C) χ M) := by
+  let e := numericalAmbientLocusHomeomorphChargePreimage (C := C) χ M
+  let hf :=
+    (IsLocalHomeomorph.codRestrict_preimage M.isLocalHomeomorph_chargeMap
+      (s := ambientNumericalFactorSubmodule (C := C) χ M))
+  simpa [ambientNumericalChargeMap, ComponentTopologicalLinearLocalModel.chargeMap, e]
+    using hf.comp e.isLocalHomeomorph
+
+end ComponentTopologicalLinearLocalModel
+
+/-- A chosen representative of a connected component of numerical stability conditions. -/
+def numericalComponentRep (χ : K₀ C →+ K₀ C →+ ℤ)
+    (cc : ConnectedComponents (NumericalStabilityCondition C χ)) :
+    NumericalStabilityCondition C χ :=
+  Classical.choose cc.exists_rep
+
+@[simp] theorem mk_numericalComponentRep (χ : K₀ C →+ K₀ C →+ ℤ)
+    (cc : ConnectedComponents (NumericalStabilityCondition C χ)) :
+    ConnectedComponents.mk (numericalComponentRep C χ cc) = cc :=
+  Classical.choose_spec cc.exists_rep
+
+/-- The chosen representative of a numerical connected component, regarded inside the ambient
+numerical locus. -/
+abbrev numericalAmbientLocusRep (χ : K₀ C →+ K₀ C →+ ℤ)
+    (cc : ConnectedComponents (NumericalStabilityCondition C χ)) :
+    NumericalAmbientLocus C χ (NumericalStabilityCondition.ambientComponentMap (C := C) χ cc) :=
+  ⟨numericalComponentRep C χ cc, by
+    simpa [mk_numericalComponentRep (C := C) χ cc] using
+      (NumericalStabilityCondition.ambientComponentMap_apply
+        (C := C) χ (numericalComponentRep C χ cc)).symm⟩
+
+/-- Inside `Stab_N(D)`, the connected component `cc` is exactly the connected component of a
+chosen representative inside the ambient restriction `Σ ∩ Stab_N(D)`. -/
+theorem numericalComponent_set_eq_connectedComponentIn_numericalAmbientLocus
+    {χ : K₀ C →+ K₀ C →+ ℤ}
+    (cc : ConnectedComponents (NumericalStabilityCondition C χ)) :
+    {σ : NumericalStabilityCondition C χ | ConnectedComponents.mk σ = cc} =
+      connectedComponentIn
+        {σ : NumericalStabilityCondition C χ |
+          ConnectedComponents.mk σ.toStabilityCondition =
+            NumericalStabilityCondition.ambientComponentMap (C := C) χ cc}
+        (numericalComponentRep C χ cc) := by
+  let ambientcc := NumericalStabilityCondition.ambientComponentMap (C := C) χ cc
+  let x0 := numericalComponentRep C χ cc
+  let F : Set (NumericalStabilityCondition C χ) := {σ |
+    ConnectedComponents.mk σ.toStabilityCondition = ambientcc}
+  ext σ
+  constructor
+  · intro hσ
+    have hx0F : x0 ∈ F := by
+      change ConnectedComponents.mk x0.toStabilityCondition = ambientcc
+      simpa [ambientcc, x0, mk_numericalComponentRep (C := C) χ cc] using
+        (NumericalStabilityCondition.ambientComponentMap_apply (C := C) χ x0).symm
+    have hσconn : σ ∈ connectedComponent x0 := by
+      apply (ConnectedComponents.coe_eq_coe').1
+      rw [hσ, mk_numericalComponentRep (C := C) χ cc]
+    have hsub : connectedComponent x0 ⊆ F := by
+      intro τ hτ
+      have hτcc : ConnectedComponents.mk τ = cc := by
+        rw [← mk_numericalComponentRep (C := C) χ cc]
+        exact (ConnectedComponents.coe_eq_coe').2 hτ
+      change ConnectedComponents.mk τ.toStabilityCondition = ambientcc
+      rw [← NumericalStabilityCondition.ambientComponentMap_apply (C := C) χ τ, hτcc]
+    exact (isPreconnected_connectedComponent.subset_connectedComponentIn
+      mem_connectedComponent hsub) hσconn
+  · intro hσ
+    have hσconn : σ ∈ connectedComponent x0 := by
+      exact isPreconnected_connectedComponentIn.subset_connectedComponent
+        (mem_connectedComponentIn <| by
+          change ConnectedComponents.mk x0.toStabilityCondition = ambientcc
+          simpa [ambientcc, x0, mk_numericalComponentRep (C := C) χ cc] using
+            (NumericalStabilityCondition.ambientComponentMap_apply (C := C) χ x0).symm)
+        hσ
+    have : ConnectedComponents.mk σ = ConnectedComponents.mk x0 :=
+      (ConnectedComponents.coe_eq_coe').2 hσconn
+    simpa [x0, mk_numericalComponentRep (C := C) χ cc] using this
+
+/-- The actual numerical connected component is homeomorphic to the connected component of the
+chosen basepoint inside the ambient numerical locus. -/
+noncomputable def connectedComponentNumericalAmbientLocusRepHomeomorphNumericalComponent
+    {χ : K₀ C →+ K₀ C →+ ℤ}
+    (cc : ConnectedComponents (NumericalStabilityCondition C χ)) :
+    connectedComponent (numericalAmbientLocusRep (C := C) (χ := χ) cc) ≃ₜ
+      NumericalComponent C χ cc := by
+  let ambientcc := NumericalStabilityCondition.ambientComponentMap (C := C) χ cc
+  let x0 : NumericalAmbientLocus C χ ambientcc := numericalAmbientLocusRep (C := C) (χ := χ) cc
+  let F : Set (NumericalStabilityCondition C χ) := {σ |
+    ConnectedComponents.mk σ.toStabilityCondition = ambientcc}
+  let hEmb : Topology.IsOpenEmbedding
+      ((↑) : NumericalAmbientLocus C χ ambientcc → NumericalStabilityCondition C χ) :=
+    (isOpen_numericalAmbientLocus (C := C) (χ := χ) ambientcc).isOpenEmbedding_subtypeVal
+  let hImage :
+      connectedComponent x0 ≃ₜ
+        {σ : NumericalStabilityCondition C χ //
+          σ ∈ connectedComponentIn F x0.1} :=
+    (hEmb.toIsEmbedding.homeomorphImage (connectedComponent x0)).trans
+      (Homeomorph.setCongr <| by
+        simpa [F, x0] using (connectedComponentIn_eq_image (F := F) x0.2).symm)
+  let hEq :
+      {σ : NumericalStabilityCondition C χ | ConnectedComponents.mk σ = cc} =
+      connectedComponentIn F x0.1 :=
+    numericalComponent_set_eq_connectedComponentIn_numericalAmbientLocus
+      (C := C) (χ := χ) cc
+  exact hImage.trans (Homeomorph.ofEqSubtypes hEq.symm)
+
+/-- The ambient numerical codomain is finite-dimensional whenever `C` is numerically finite. -/
+theorem ambientNumericalFactorSubmodule_finiteDimensional
+    {χ : K₀ C →+ K₀ C →+ ℤ} [NumericallyFinite C χ]
+    {cc : ConnectedComponents (StabilityCondition C)}
+    (M : ComponentTopologicalLinearLocalModel C cc) :
+    FiniteDimensional ℂ
+      (ComponentTopologicalLinearLocalModel.ambientNumericalFactorSubmodule (C := C) χ M) := by
+  let toFactor :
+      ComponentTopologicalLinearLocalModel.ambientNumericalFactorSubmodule (C := C) χ M →ₗ[ℂ]
+        numericalFactorSubmodule C χ := {
+    toFun := fun v => ⟨((v.1 : M.V) : AmbientChargeSpace C), v.2⟩
+    map_add' := by
+      intro v w
+      ext x
+      rfl
+    map_smul' := by
+      intro a v
+      ext x
+      rfl }
+  have htoFactor : Function.Injective toFactor := by
+    intro v w h
+    apply Subtype.ext
+    apply Subtype.ext
+    exact congrArg (fun z : numericalFactorSubmodule C χ => (z : AmbientChargeSpace C)) h
+  let toNumerical :
+      ComponentTopologicalLinearLocalModel.ambientNumericalFactorSubmodule (C := C) χ M →ₗ[ℂ]
+        NumericalChargeSpace C χ :=
+    (numericalChargeSpaceEquivFactorSubmodule (C := C) χ).symm.toLinearMap.comp toFactor
+  letI : FiniteDimensional ℂ (NumericalChargeSpace C χ) :=
+    numericalChargeSpace_finiteDimensional (C := C) χ
+  exact FiniteDimensional.of_injective toNumerical
+    ((numericalChargeSpaceEquivFactorSubmodule (C := C) χ).symm.injective.comp htoFactor)
 
 /-- A generic manifold-construction theorem for complex local homeomorphisms into a normed model
 space. The genuinely nontrivial step is to build a charted space whose transition maps are
@@ -390,14 +526,87 @@ without a large bespoke proof. -/
 theorem bridgelandCorollary_1_3_complexManifold [Linear k C] [IsFiniteType k C]
     [EulerFormDescends k C] (hnum : NumericallyFinite C (eulerForm k C))
     (cc : ConnectedComponents (NumericalStabilityCondition C (eulerForm k C))) :
-    ∃ n : ℕ,
-      ∃ _ : ChartedSpace (Fin n → ℂ) (NumericalComponent C (eulerForm k C) cc),
-      IsManifold (𝓘(ℂ, Fin n → ℂ)) (⊤ : WithTop ℕ∞)
+    ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
+      (_ : FiniteDimensional ℂ E)
+      (_ : ChartedSpace E (NumericalComponent C (eulerForm k C) cc)),
+      IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
         (NumericalComponent C (eulerForm k C) cc) := by
-  let M := bridgelandCorollary_1_3_topologicalLinearModel (C := C) (k := k) hnum cc
-  rcases M.exists_normedComplexModel with ⟨n, f, hf⟩
-  rcases exists_chartedSpace_and_complexManifold_of_isLocalHomeomorph_to_complex_model f hf with
-    ⟨_inst4, hmanifold⟩
-  exact ⟨n, _inst4, hmanifold⟩
+  let χ := eulerForm k C
+  let ambientcc := NumericalStabilityCondition.ambientComponentMap (C := C) χ cc
+  let M := componentTopologicalLinearLocalModel C ambientcc
+  letI : Module ℂ M.V := M.instNormedSpace.toModule
+  have hTower : IsScalarTower ℂ ℂ M.V := {
+    smul_assoc := by
+      intro a b x
+      simpa [smul_eq_mul] using (mul_smul a b x) }
+  letI : IsScalarTower ℂ ℂ M.V := hTower
+  let V := ComponentTopologicalLinearLocalModel.ambientNumericalFactorSubmodule (C := C) χ M
+  let E := ↥V
+  letI : Module ℂ E := V.module
+  letI : NormedSpace ℂ E := by
+    exact @Submodule.normedSpace ℂ ℂ (inferInstance : SMul ℂ ℂ) inferInstance inferInstance M.V
+      inferInstance M.instNormedSpace M.instNormedSpace.toModule hTower V
+  letI : FiniteDimensional ℂ E := ambientNumericalFactorSubmodule_finiteDimensional
+    (C := C) (χ := χ) (M := M)
+  let f₀ : NumericalAmbientLocus C χ ambientcc → E :=
+    ComponentTopologicalLinearLocalModel.ambientNumericalChargeMap (C := C) χ M
+  have hf₀ : IsLocalHomeomorph f₀ :=
+    ComponentTopologicalLinearLocalModel.ambientNumericalChargeMap_isLocalHomeomorph
+      (C := C) χ M
+  let x0 : NumericalAmbientLocus C χ ambientcc := numericalAmbientLocusRep (C := C) (χ := χ) cc
+  have hopenCC : IsOpen (connectedComponent x0 : Set (NumericalAmbientLocus C χ ambientcc)) := by
+    rw [isOpen_iff_mem_nhds]
+    intro y hy
+    obtain ⟨e, hy_source, hfe⟩ := hf₀ y
+    have hy_target : f₀ y ∈ e.target := by
+      simpa [hfe] using e.map_source hy_source
+    letI : NormedSpace ℝ E := NormedSpace.complexToReal
+    obtain ⟨r, hrpos, hrsub⟩ := Metric.isOpen_iff.mp e.open_target (f₀ y) hy_target
+    let B : Set E := Metric.ball (f₀ y) r
+    let Bsub : Set e.target := Subtype.val ⁻¹' B
+    have hBconn : _root_.IsConnected B := Metric.isConnected_ball hrpos
+    have hBsubconn : _root_.IsConnected Bsub := by
+      refine hBconn.preimage_of_isOpenMap Subtype.val_injective
+        (e.open_target.isOpenEmbedding_subtypeVal.isOpenMap) ?_
+      intro z hz
+      exact ⟨⟨z, hrsub hz⟩, rfl⟩
+    let Wsource : Set e.source := e.toHomeomorphSourceTarget ⁻¹' Bsub
+    have hWsourceconn : _root_.IsConnected Wsource := by
+      rw [e.toHomeomorphSourceTarget.isConnected_preimage]
+      exact hBsubconn
+    have hBsubopen : IsOpen Bsub := by
+      exact Metric.isOpen_ball.preimage continuous_subtype_val
+    have hWsourceopen : IsOpen Wsource := hBsubopen.preimage e.toHomeomorphSourceTarget.continuous
+    let W : Set (NumericalAmbientLocus C χ ambientcc) := Subtype.val '' Wsource
+    have hWopen : IsOpen W :=
+      e.open_source.isOpenEmbedding_subtypeVal.isOpenMap _ hWsourceopen
+    have hyWsource : ⟨y, hy_source⟩ ∈ Wsource := by
+      change e.toHomeomorphSourceTarget ⟨y, hy_source⟩ ∈ Bsub
+      change e y ∈ B
+      simpa [B, hfe] using (Metric.mem_ball_self (x := f₀ y) hrpos)
+    have hyW : y ∈ W := ⟨⟨y, hy_source⟩, hyWsource, rfl⟩
+    have hWconn : _root_.IsConnected W := hWsourceconn.image _ continuous_subtype_val.continuousOn
+    have hWsub_y : W ⊆ connectedComponent y := hWconn.subset_connectedComponent hyW
+    have hcc_eq : connectedComponent x0 = connectedComponent y := connectedComponent_eq hy
+    have hWsub_x0 : W ⊆ connectedComponent x0 := by
+      simpa [W, hcc_eq] using hWsub_y
+    exact mem_nhds_iff.mpr ⟨W, hWsub_x0, hWopen, hyW⟩
+  let hcc :=
+    connectedComponentNumericalAmbientLocusRepHomeomorphNumericalComponent
+      (C := C) (χ := χ) cc
+  let i : connectedComponent x0 → NumericalAmbientLocus C χ ambientcc := Subtype.val
+  have hi : IsLocalHomeomorph i :=
+    hopenCC.isOpenEmbedding_subtypeVal.isLocalHomeomorph
+  let f : NumericalComponent C χ cc → E :=
+    fun x => f₀ (i (hcc.symm x))
+  have hf : IsLocalHomeomorph f := by
+    simpa [f, f₀, i] using hf₀.comp (hi.comp hcc.symm.isLocalHomeomorph)
+  let hNum :=
+    exists_chartedSpace_and_complexManifold_of_isLocalHomeomorph_to_complex_model
+      (E := E) (M := NumericalComponent C χ cc) f hf
+  refine ⟨(show Type _ from E), (show NormedAddCommGroup E from inferInstance),
+    (show NormedSpace ℂ E from inferInstance), (show FiniteDimensional ℂ E from inferInstance),
+    Classical.choose hNum, ?_⟩
+  exact Classical.choose_spec hNum
 
 end CategoryTheory.Triangulated
