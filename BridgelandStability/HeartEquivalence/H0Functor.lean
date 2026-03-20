@@ -178,9 +178,13 @@ noncomputable def HeartStabilityData.H0FunctorIsoH0primeFunctor
   NatIso.ofComponents (fun X ↦ h.H0ObjIsoH0prime (C := C) X) fun f ↦
     h.H0ObjIsoH0prime_hom_naturality (C := C) f
 
+section
+
+omit [IsTriangulated C]
+
 @[reassoc]
 theorem TStructure.truncGE_map_comp_descTruncGE
-    (t : TStructure C) [IsTriangulated C]
+    (t : TStructure C)
     {X Y Z : C} (g : X ⟶ Y) (f : Y ⟶ Z) (n : ℤ) [t.IsGE Z n] :
     (t.truncGE n).map g ≫ t.descTruncGE f n = t.descTruncGE (g ≫ f) n := by
   apply t.from_truncGE_obj_ext
@@ -190,26 +194,32 @@ theorem TStructure.truncGE_map_comp_descTruncGE
       congrArg (fun k => g ≫ k) (t.π_descTruncGE (f := f) (n := n))
   exact h₁.trans (t.π_descTruncGE (f := g ≫ f) (n := n)).symm
 
+omit [IsTriangulated C] in
 @[simp]
 theorem TStructure.descTruncGE_zero
-    (t : TStructure C) [IsTriangulated C]
+    (t : TStructure C)
     {X Y : C} (n : ℤ) [t.IsGE Y n] :
     t.descTruncGE (0 : X ⟶ Y) n = 0 := by
   apply t.from_truncGE_obj_ext
   rw [t.π_descTruncGE]
   simp
 
+omit [IsTriangulated C] in
 @[simp]
 theorem TStructure.descTruncGE_add
-    (t : TStructure C) [IsTriangulated C]
+    (t : TStructure C)
     {X Y : C} (f g : X ⟶ Y) (n : ℤ) [t.IsGE Y n] :
     t.descTruncGE (f + g) n = t.descTruncGE f n + t.descTruncGE g n := by
   apply t.from_truncGE_obj_ext
   rw [t.π_descTruncGE, CategoryTheory.Preadditive.comp_add, t.π_descTruncGE, t.π_descTruncGE]
   rfl
 
+end
+
+/-- A morphism from a heart object into `X` factors canonically through the
+degree-zero normal form `H0prime X = τ≤0(τ≥0 X)`. -/
 noncomputable def HeartStabilityData.toH0primeHom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} (f : E.obj ⟶ X) :
     E ⟶ h.H0prime (C := C) X :=
   letI : h.t.IsLE E.obj 0 := (h.t.mem_heart_iff _).mp E.property |>.1
@@ -217,7 +227,7 @@ noncomputable def HeartStabilityData.toH0primeHom
 
 @[reassoc (attr := simp)]
 theorem HeartStabilityData.toH0primeHom_hom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} (f : E.obj ⟶ X) :
     (h.toH0primeHom (C := C) E f).hom ≫
         (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) =
@@ -229,7 +239,7 @@ theorem HeartStabilityData.toH0primeHom_hom
   simpa using h.t.liftTruncLE_ι (f ≫ (h.t.truncGEπ 0).app X) 0
 
 theorem HeartStabilityData.hom_ext_toH0prime
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C}
     {β₁ β₂ : E ⟶ h.H0prime (C := C) X}
     (hβ :
@@ -241,7 +251,7 @@ theorem HeartStabilityData.hom_ext_toH0prime
   exact h.t.to_truncLE_obj_ext hβ
 
 theorem HeartStabilityData.toH0primeHom_eq
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} (f : E.obj ⟶ X)
     (β : E ⟶ h.H0prime (C := C) X)
     (hβ :
@@ -253,7 +263,7 @@ theorem HeartStabilityData.toH0primeHom_eq
 
 @[reassoc]
 theorem HeartStabilityData.toH0primeHom_comp_H0primeFunctor_map
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X Y : C} (f : E.obj ⟶ X) (g : X ⟶ Y) :
     h.toH0primeHom (C := C) E f ≫ (h.H0primeFunctor (C := C)).map g =
       h.toH0primeHom (C := C) E (f ≫ g) := by
@@ -293,7 +303,7 @@ theorem HeartStabilityData.toH0primeHom_comp_H0primeFunctor_map
 
 @[simp]
 theorem HeartStabilityData.toH0primeHom_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} :
     h.toH0primeHom (C := C) E (0 : E.obj ⟶ X) = 0 := by
   apply h.hom_ext_toH0prime (C := C) E
@@ -302,7 +312,7 @@ theorem HeartStabilityData.toH0primeHom_zero
 
 @[simp]
 theorem HeartStabilityData.toH0primeHom_add
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} (f g : E.obj ⟶ X) :
     h.toH0primeHom (C := C) E (f + g) =
       h.toH0primeHom (C := C) E f + h.toH0primeHom (C := C) E g := by
@@ -320,7 +330,7 @@ theorem HeartStabilityData.toH0primeHom_add
 /-- For a heart object `E`, maps `E.obj ⟶ X` in the ambient triangulated category induce
 maps `E ⟶ H⁰'(X)` in the heart, naturally in `X`. -/
 noncomputable def HeartStabilityData.toH0primeNatTrans
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     preadditiveCoyoneda.obj (Opposite.op E.obj) ⟶
       h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E) where
@@ -333,8 +343,10 @@ noncomputable def HeartStabilityData.toH0primeNatTrans
     simpa [Functor.comp_map] using
       (h.toH0primeHom_comp_H0primeFunctor_map (C := C) E f g).symm
 
+/-- If `X ∈ t.≥0`, a morphism into `H0prime X` can be read as a morphism into
+`X` by composing with the canonical map `τ≥0 X ⟶ X`. -/
 noncomputable def HeartStabilityData.fromH0primeHom_of_isGE
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β : E ⟶ h.H0prime (C := C) X) :
     E.obj ⟶ X :=
@@ -342,7 +354,7 @@ noncomputable def HeartStabilityData.fromH0primeHom_of_isGE
 
 @[reassoc (attr := simp)]
 theorem HeartStabilityData.fromH0primeHom_of_isGE_hom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β : E ⟶ h.H0prime (C := C) X) :
     h.fromH0primeHom_of_isGE (C := C) E β ≫ (h.t.truncGEπ 0).app X =
@@ -350,7 +362,7 @@ theorem HeartStabilityData.fromH0primeHom_of_isGE_hom
   simp [HeartStabilityData.fromH0primeHom_of_isGE, Category.assoc]
 
 theorem HeartStabilityData.toH0primeHom_fromH0primeHom_of_isGE
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β : E ⟶ h.H0prime (C := C) X) :
     h.toH0primeHom (C := C) E (h.fromH0primeHom_of_isGE (C := C) E β) = β := by
@@ -360,7 +372,7 @@ theorem HeartStabilityData.toH0primeHom_fromH0primeHom_of_isGE
     (by simpa using h.fromH0primeHom_of_isGE_hom (C := C) E β)
 
 theorem HeartStabilityData.fromH0primeHom_of_isGE_toH0primeHom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (f : E.obj ⟶ X) :
     h.fromH0primeHom_of_isGE (C := C) E (h.toH0primeHom (C := C) E f) = f := by
@@ -371,13 +383,13 @@ theorem HeartStabilityData.fromH0primeHom_of_isGE_toH0primeHom
 
 @[simp]
 theorem HeartStabilityData.fromH0primeHom_of_isGE_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0] :
     h.fromH0primeHom_of_isGE (C := C) E (0 : E ⟶ h.H0prime (C := C) X) = 0 := by
   simp [HeartStabilityData.fromH0primeHom_of_isGE]
 
 theorem HeartStabilityData.fromH0primeHom_of_isGE_add
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β₁ β₂ : E ⟶ h.H0prime (C := C) X) :
     h.fromH0primeHom_of_isGE (C := C) E (β₁ + β₂) =
@@ -392,8 +404,10 @@ theorem HeartStabilityData.fromH0primeHom_of_isGE_add
           (asIso ((h.t.truncGEπ 0).app X)).inv
   repeat rw [CategoryTheory.Preadditive.add_comp]
 
+/-- For `X ∈ t.≥0`, morphisms from a heart object to `X` are additively equivalent
+to morphisms into `H0prime X`. -/
 noncomputable def HeartStabilityData.toH0primeIsoOfIsGE
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) (X : C) [h.t.IsGE X 0] :
     (E.obj ⟶ X) ≃+ (E ⟶ h.H0prime (C := C) X) where
   toFun := h.toH0primeHom (C := C) E
@@ -402,8 +416,10 @@ noncomputable def HeartStabilityData.toH0primeIsoOfIsGE
   right_inv := h.toH0primeHom_fromH0primeHom_of_isGE (C := C) E
   map_add' := h.toH0primeHom_add (C := C) E
 
+/-- `H0prime X` is canonically unchanged by replacing `X` with its truncation
+`τ≥0 X`. -/
 noncomputable def HeartStabilityData.H0primeObjIsoTruncGE
-    (h : HeartStabilityData C) [IsTriangulated C] (X : C) :
+    (h : HeartStabilityData C) (X : C) :
     h.H0prime (C := C) X ≅ h.H0prime (C := C) ((h.t.truncGE 0).obj X) := by
   refine ObjectProperty.isoMk _ ?_
   simpa [HeartStabilityData.H0prime] using
@@ -411,7 +427,7 @@ noncomputable def HeartStabilityData.H0primeObjIsoTruncGE
 
 @[reassoc]
 theorem HeartStabilityData.H0primeObjIsoTruncGE_hom_naturality
-    (h : HeartStabilityData C) [IsTriangulated C] {X Y : C} (g : X ⟶ Y) :
+    (h : HeartStabilityData C) {X Y : C} (g : X ⟶ Y) :
     (h.H0primeObjIsoTruncGE (C := C) X).hom ≫
         (h.H0primeFunctor (C := C)).map ((h.t.truncGE 0).map g) =
       (h.H0primeFunctor (C := C)).map g ≫
@@ -424,7 +440,7 @@ theorem HeartStabilityData.H0primeObjIsoTruncGE_hom_naturality
 
 @[reassoc]
 theorem HeartStabilityData.H0primeObjIsoTruncGE_inv_naturality
-    (h : HeartStabilityData C) [IsTriangulated C] {X Y : C} (g : X ⟶ Y) :
+    (h : HeartStabilityData C) {X Y : C} (g : X ⟶ Y) :
     (h.H0primeObjIsoTruncGE (C := C) X).inv ≫ (h.H0primeFunctor (C := C)).map g =
       (h.H0primeFunctor (C := C)).map ((h.t.truncGE 0).map g) ≫
         (h.H0primeObjIsoTruncGE (C := C) Y).inv := by
@@ -441,8 +457,10 @@ theorem HeartStabilityData.H0primeObjIsoTruncGE_inv_naturality
         (Iso.inv_comp_eq (h.H0primeObjIsoTruncGE (C := C) X)).2
           ((h.H0primeObjIsoTruncGE_hom_naturality (C := C) g).symm)
 
+/-- Transport the comparison for `τ≥0 X` along `H0prime X ≅ H0prime (τ≥0 X)` to
+compare morphisms into `τ≥0 X` with morphisms into `H0prime X`. -/
 noncomputable def HeartStabilityData.toH0primeIsoViaTruncGE
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) (X : C) :
     (E.obj ⟶ (h.t.truncGE 0).obj X) ≃+ (E ⟶ h.H0prime (C := C) X) where
   toFun := fun f =>
@@ -461,8 +479,17 @@ noncomputable def HeartStabilityData.toH0primeIsoViaTruncGE
     intro f g
     simp
 
+-- `docBlame` currently misses the attached docstrings on these public
+-- `noncomputable def`s, even though `findDocString?` and hover both see them.
+attribute [nolint docBlame]
+  HeartStabilityData.toH0primeHom
+  HeartStabilityData.fromH0primeHom_of_isGE
+  HeartStabilityData.toH0primeIsoOfIsGE
+  HeartStabilityData.H0primeObjIsoTruncGE
+  HeartStabilityData.toH0primeIsoViaTruncGE
+
 theorem HeartStabilityData.toH0primeIsoViaTruncGE_naturality
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X Y : C}
     (f : E.obj ⟶ (h.t.truncGE 0).obj X) (g : X ⟶ Y) :
     h.toH0primeIsoViaTruncGE (C := C) E Y (f ≫ (h.t.truncGE 0).map g) =
@@ -481,7 +508,7 @@ theorem HeartStabilityData.toH0primeIsoViaTruncGE_naturality
 /-- For a heart object `E`, the `H0prime`-evaluation functor is naturally isomorphic
 to evaluation of the ambient `τ≥0` truncation functor at `E.obj`. -/
 noncomputable def HeartStabilityData.toH0primeNatIsoViaTruncGE
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     h.t.truncGE 0 ⋙ preadditiveCoyoneda.obj (Opposite.op E.obj) ≅
       h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E) :=
@@ -492,7 +519,7 @@ noncomputable def HeartStabilityData.toH0primeNatIsoViaTruncGE
       exact h.toH0primeIsoViaTruncGE_naturality (C := C) E f g)
 
 theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_iff_truncGE
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (T : Triangle C) (hT : T ∈ distTriang C) (E : h.t.heart.FullSubcategory) :
     ((shortComplexOfDistTriangle T hT).map
       (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact ↔
