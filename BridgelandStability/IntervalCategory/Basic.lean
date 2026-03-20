@@ -101,9 +101,11 @@ theorem Slicing.IntervalCat.isZero_of_obj_isZero (s : Slicing C) {a b : ℝ}
   let e' : X ≅ Z := by
     refine ⟨ObjectProperty.homMk e.hom, ObjectProperty.homMk e.inv, ?_, ?_⟩
     · ext
-      simpa using congrArg InducedCategory.Hom.hom e.hom_inv_id
+      change e.hom ≫ e.inv = 𝟙 X.obj
+      exact e.hom_inv_id
     · ext
-      simpa using congrArg InducedCategory.Hom.hom e.inv_hom_id
+      change e.inv ≫ e.hom = 𝟙 Z.obj
+      exact e.inv_hom_id
   exact (show IsZero Z from isZero_zero _).of_iso e'
 
 /-! ### Finite length in thin intervals -/
@@ -181,7 +183,7 @@ lemma Slicing.intervalProp_mono (s : Slicing C) {E : C}
 abbrev Slicing.IntervalCat.inclusion (s : Slicing C)
     {a₁ b₁ a₂ b₂ : ℝ} (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) :
     s.IntervalCat C a₁ b₁ ⥤ s.IntervalCat C a₂ b₂ :=
-  ObjectProperty.ιOfLE (fun X hX ↦ s.intervalProp_mono C ha hb hX)
+  ObjectProperty.ιOfLE (fun _ hX ↦ s.intervalProp_mono C ha hb hX)
 
 /-- The interval property is closed under isomorphisms. -/
 instance Slicing.intervalProp_closedUnderIso (s : Slicing C) (a b : ℝ) :
@@ -248,7 +250,7 @@ instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
           intro β
           have hrβ : h.r ≫ β = 0 := hzeroY (h.r ≫ β)
           calc β = (𝟙 X) ≫ β := by simp
-          _ = h.i ≫ (h.r ≫ β) := by rw [← h.retract]; simp [Category.assoc]
+          _ = h.i ≫ (h.r ≫ β) := by rw [← h.retract]; simp
           _ = 0 := by rw [hrβ, comp_zero]
         exact hneX' (GX.isZero_factor_last_of_hom_eq_zero C s hnX' hzeroX)
       exact s.intervalProp_of_intrinsic_phases C hX hX_gt hX_lt
