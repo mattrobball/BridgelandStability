@@ -29,6 +29,7 @@ import BridgelandStability.Slicing.Basic
 import BridgelandStability.Slicing.TStructure
 import BridgelandStability.StabilityCondition.Basic
 import BridgelandStability.StabilityCondition.Deformation
+import BridgelandStability.StabilityCondition.LocalHomeomorphism
 import BridgelandStability.StabilityFunction.Basic
 import BridgelandStability.StabilityFunction.HarderNarasimhan
 import BridgelandStability.Strict
