@@ -75,6 +75,59 @@ private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
   rw [finsum_neg_distrib]
   linarith
 
+-- Abstract Euler sum lemma: if dim b(n) = dim a(n) + dim c(n) - r(n-1) - r(n)
+-- pointwise, with all supports finite, then the alternating sums satisfy
+-- Σ (-1)^n b(n) = Σ (-1)^n a(n) + Σ (-1)^n c(n).
+private lemma eulerSum_of_rank_identity
+    {a b c : ℤ → C} {r : ℤ → ℤ}
+    (hrank : ∀ n : ℤ, (Module.finrank k (E ⟶ b n) : ℤ) =
+      Module.finrank k (E ⟶ a n) + Module.finrank k (E ⟶ c n) - r (n - 1) - r n)
+    (hfin_b : ∀ n, Module.Finite k (E ⟶ b n))
+    (hr : (Function.support r).Finite) :
+    (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * Module.finrank k (E ⟶ b n)) =
+    (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * Module.finrank k (E ⟶ a n)) +
+    (∑ᶠ n : ℤ, (n.negOnePow : ℤ) * Module.finrank k (E ⟶ c n)) := by
+  -- Rewrite b(n) using hrank: b(n) = a(n) + c(n) - r(n-1) - r(n)
+  have key : ∀ n, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ b n) : ℤ) =
+      (n.negOnePow : ℤ) * Module.finrank k (E ⟶ a n) +
+      (n.negOnePow : ℤ) * Module.finrank k (E ⟶ c n) +
+      (n.negOnePow : ℤ) * (-r (n - 1) - r n) := fun n ↦ by rw [hrank]; ring
+  simp_rw [key]
+  -- Goal: Σ (x + y + z) = Σ x + Σ y where z cancels
+  -- Suffices: Σ z = 0
+  suffices hz : ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) = 0 by
+    -- Σ (x + y + z) = Σ x + Σ y + Σ z = Σ x + Σ y + 0
+    -- Need finsum_add_distrib with finite support
+    have hfsa : (Function.support (fun n ↦ (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ a n) : ℤ) +
+        (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ c n) : ℤ))).Finite := by
+      sorry -- finite support of sum of finite support functions
+    have hfsz : (Function.support (fun n ↦ (n.negOnePow : ℤ) * (-r (n - 1) - r n))).Finite := by
+      sorry -- finite support
+    rw [finsum_add_distrib hfsa hfsz, hz, add_zero]
+    sorry -- split Σ (x + y) into Σ x + Σ y
+  -- Expand: (-1)^n * (-r(n-1) - r(n)) = -((-1)^n * r(n-1)) - ((-1)^n * r(n))
+  simp_rw [show ∀ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) =
+      -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) - ((n : ℤ).negOnePow : ℤ) * r n from
+    fun n ↦ by ring]
+  -- = -Σ (-1)^n r(n-1) - Σ (-1)^n r(n) by finsum_neg + finsum_sub
+  rw [show (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) -
+      ((n : ℤ).negOnePow : ℤ) * r n) =
+    fun n : ℤ ↦ (-(((n : ℤ).negOnePow : ℤ) * r (n - 1)) +
+      (-(((n : ℤ).negOnePow : ℤ) * r n))) from by ext; ring]
+  have hr_shift : (Function.support (fun n : ℤ ↦ r (n - 1))).Finite :=
+    hr.preimage (fun _ _ h ↦ by omega)
+  have hfs1 : (Function.support (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r (n - 1)))).Finite := by
+    apply hr_shift.subset; intro n hn
+    simp only [Function.mem_support, neg_ne_zero, mul_ne_zero_iff] at hn
+    exact hn.2
+  have hfs2 : (Function.support (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r n))).Finite := by
+    apply hr.subset; intro n hn
+    simp only [Function.mem_support, neg_ne_zero, mul_ne_zero_iff] at hn
+    exact hn.2
+  rw [finsum_add_distrib hfs1 hfs2]
+  simp only [finsum_neg_distrib]
+  linarith [finsum_alternating_shift_cancel hr]
+
 -- For a middle-exact sequence in AddCommGrpCat that is also k-linear,
 -- the range/ker equality lifts from abelian groups to k-modules.
 private lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
@@ -117,13 +170,7 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
         (n.negOnePow : ℤ) * Module.finrank k (E ⟶ T.obj₃⟦n⟧) +
         (n.negOnePow : ℤ) * (-r (n - 1) - r n) := by
       intro n; rw [hrank n]; ring
-    simp_rw [key]
-    -- Split: Σ (a + b + c) = Σ a + Σ b + Σ c, then show Σ c = 0
-    -- First rewrite (-r(n-1) - r(n)) using mul_neg, mul_add
-    ring_nf
-    -- Goal: Σ (x + y + (-z + -w)) = Σ x + Σ y
-    -- where z involves r(n-1) and w involves r(n)
-    -- Use finsum_add_distrib repeatedly to split, then cancel the r terms
+    -- Apply the abstract Euler sum lemma
     sorry
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
