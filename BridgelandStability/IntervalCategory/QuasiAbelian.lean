@@ -45,7 +45,7 @@ abbrev Slicing.LeftHeart (s : Slicing C) (a : ℝ) :=
 abbrev Slicing.RightHeart (s : Slicing C) (b : ℝ) :=
   ((s.phaseShift C (b - 1)).toTStructureGE).heart.FullSubcategory
 
-noncomputable def Slicing.intervalCat_hasKernel (s : Slicing C)
+theorem Slicing.intervalCat_hasKernel (s : Slicing C)
     {X Y : s.IntervalCat C a b} (f : X ⟶ Y) : HasKernel f := by
   have hab : b - a ≤ 1 := Fact.out
   have hab' : a < b := Fact.out
@@ -85,8 +85,8 @@ noncomputable def Slicing.intervalCat_hasKernel (s : Slicing C)
     s.first_intervalProp_of_triangle C hab' X.property hQLe hKGt hT'
   let eK0 : K.obj ≅ (kernel fH).obj :=
     ⟨eK.hom.hom, eK.inv.hom,
-      by simpa using congrArg InducedCategory.Hom.hom eK.hom_inv_id,
-      by simpa using congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
+      by exact congrArg InducedCategory.Hom.hom eK.hom_inv_id,
+      by exact congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
   have hKer_mem : s.intervalProp C a b (kernel fH).obj :=
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel fH).obj, hKer_mem⟩
@@ -138,7 +138,7 @@ noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
   ⟨fun {X Y} f ↦ Slicing.intervalCat_hasKernel (C := C) (s := s)
     (a := a) (b := b) (X := X) (Y := Y) f⟩
 
-noncomputable def Slicing.intervalCat_hasCokernel (s : Slicing C)
+theorem Slicing.intervalCat_hasCokernel (s : Slicing C)
     {X Y : s.IntervalCat C a b} (f : X ⟶ Y) : HasCokernel f := by
   have hab : b - a ≤ 1 := Fact.out
   have hab' : a < b := Fact.out
@@ -587,8 +587,8 @@ theorem Slicing.IntervalCat.mono_toLeftHeart_of_strictMono (s : Slicing C)
       (TStructure.heart_hι t) i π δ hT) hKerπ
   let eK0 : K.obj ≅ (kernel qH).obj :=
     ⟨eK.hom.hom, eK.inv.hom,
-      by simpa using congrArg InducedCategory.Hom.hom eK.hom_inv_id,
-      by simpa using congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
+      by exact congrArg InducedCategory.Hom.hom eK.hom_inv_id,
+      by exact congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
   have hKer_mem : s.intervalProp C a b (kernel qH).obj :=
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel qH).obj, hKer_mem⟩
