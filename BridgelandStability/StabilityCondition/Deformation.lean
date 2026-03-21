@@ -334,7 +334,7 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
         ≤ ENNReal.ofReal ((stabSeminorm C τ U).toReal / (c - N_Z)) := hbound'
       _ = ENNReal.ofReal (1 / (c - N_Z)) * stabSeminorm C τ U := by
           rw [div_eq_mul_inv, ENNReal.ofReal_mul ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hU]
-          simp [one_div, mul_comm, mul_left_comm, mul_assoc]
+          simp [one_div, mul_comm]
 
 /-- Local forward domination inside a Bridgeland basis neighborhood. -/
 theorem stabSeminorm_center_dominates_of_basisNhd (σ τ : StabilityCondition C)
@@ -787,8 +787,8 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
   let p : Path σ τ :=
     { toFun := γ
       continuous_toFun := hγcont
-      source' := by simpa [hγ0]
-      target' := by simpa [hγ1] }
+      source' := by simp [hγ0]
+      target' := by simp [hγ1] }
   have hpath : τ ∈ pathComponent σ := ⟨p⟩
   exact ConnectedComponents.coe_eq_coe'.2 <| pathComponent_subset_component σ hpath
 
