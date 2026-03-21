@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.Deformation.ExtensionClosure
+public import BridgelandStability.ExtensionClosure
 public import BridgelandStability.Deformation.FiniteLengthHN
 public import BridgelandStability.Deformation.HomVanishing
 public import BridgelandStability.Deformation.HNFiltrationAssembly

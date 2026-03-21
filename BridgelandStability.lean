@@ -4,7 +4,7 @@ public import BridgelandStability.Deformation.BoundaryTriangle
 public import BridgelandStability.Deformation.DeformedGtLe
 public import BridgelandStability.Deformation.DeformedSlicing
 public import BridgelandStability.Deformation.DeformedSlicingHN
-public import BridgelandStability.Deformation.ExtensionClosure
+public import BridgelandStability.ExtensionClosure
 public import BridgelandStability.Deformation.FiniteLengthHN
 public import BridgelandStability.Deformation.FirstStrictSES
 public import BridgelandStability.Deformation.HNExistence
