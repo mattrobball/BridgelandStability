@@ -7,6 +7,14 @@ module
 
 public import BridgelandStability.HeartEquivalence.H0Functor
 
+/-!
+# H0 Homological Properties
+
+Exactness properties of the H0' functor: preadditive Yoneda exactness
+for octahedral splits, vanishing outside the amplitude range, and the
+five-term exact sequence for heart cohomology.
+-/
+
 @[expose] public section
 
 set_option backward.privateInPublic true
@@ -104,8 +112,7 @@ noncomputable def TStructure.truncGELEObjShiftIso
       TStructure.truncGEObjShiftIso (C := C) t n ((t.truncLE n).obj X)
   let e₂ :
       (t.truncGE 0).obj (((t.truncLE n).obj X)⟦(n : ℤ)⟧) ≅
-        (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) :=
-    by
+        (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) := by
       simpa [TStructure.truncGELE] using
         (t.truncGE 0).mapIso (TStructure.truncLEObjShiftIso (C := C) t n X)
   exact e₁ ≪≫ e₂
@@ -592,8 +599,7 @@ theorem eq_zero_congr_hasZeroMorphisms
     {X Y : D} {f : X ⟶ Y}
     (h : by
       letI : HasZeroMorphisms D := I
-      exact f = 0) :
-    by
+      exact f = 0) : by
       letI : HasZeroMorphisms D := J
       exact f = 0 := by
   cases Subsingleton.elim I J
@@ -610,8 +616,7 @@ theorem shortComplex_exact_congr_hasZeroMorphisms
       exact f ≫ g = 0}
     (h : by
       letI : HasZeroMorphisms D := I
-      exact (ShortComplex.mk f g wI).Exact) :
-    by
+      exact (ShortComplex.mk f g wI).Exact) : by
       letI : HasZeroMorphisms D := J
       exact (ShortComplex.mk f g wJ).Exact := by
   cases Subsingleton.elim I J

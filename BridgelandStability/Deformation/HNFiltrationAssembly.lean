@@ -31,7 +31,6 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
 
 theorem semistable_of_hn_length_one
     {P : ℝ → ObjectProperty C}
@@ -52,12 +51,12 @@ theorem semistable_of_hn_length_one
   letI : (P (GY.φ j0)).IsClosedUnderIsomorphisms := hPiso (GY.φ j0)
   exact (P (GY.φ j0)).prop_of_iso ((e₂Y.symm.trans (asIso T.mor₂)).symm) (GY.semistable j0)
 
-variable [IsTriangulated C] in
 /-- Concatenate HN filtrations across a distinguished triangle `X → E → Y → X[1]`,
 provided every phase in the filtration on `Y` is strictly smaller than every phase in the
 filtration on `X`. This is the generic Postnikov-splicing step needed to assemble the
 faithful Section 7 HN filtration from filtrations on successive σ-semistable factors. -/
 theorem append_hn_filtration_of_triangle
+    [IsTriangulated C]
     {P : ℝ → ObjectProperty C} {X E Y : C}
     (hPiso : ∀ φ : ℝ, (P φ).IsClosedUnderIsomorphisms)
     (GX : HNFiltration C P X)
@@ -187,11 +186,11 @@ theorem append_hn_filtration_of_triangle
               simp [HNFiltration.appendFactor, hj]
             exact hjLast.symm ▸ hlast_gt_t
 
-variable [IsTriangulated C] in
 /-- Upper-bound companion for `append_hn_filtration_of_triangle`: if all input phases
 are `≤ U`, so are all output phases. Follows from `appendFactor`'s phase structure
 (`φ j = if j < G.n then G.φ j else ψ`). -/
 theorem append_hn_filtration_of_triangle_le
+    [IsTriangulated C]
     {P : ℝ → ObjectProperty C} {X E Y : C}
     (hPiso : ∀ φ : ℝ, (P φ).IsClosedUnderIsomorphisms)
     (GX : HNFiltration C P X) (GY : HNFiltration C P Y)
@@ -318,7 +317,6 @@ theorem append_hn_filtration_of_triangle_le
             · simp only [HNFiltration.appendFactor, hj, dite_false]
               exact hY_le jLast
 
-variable [IsTriangulated C] in
 /-- Split an HN filtration at an arbitrary cutoff `t`. The `X`-part carries a filtration whose
 phases are all `> t`, and the `Y`-part carries a filtration whose phases are all `≤ t`.
 
@@ -326,6 +324,7 @@ The strengthened conclusion tracks that every phase of the `Y`-part is bounded b
 last phase of the original filtration. This is the generic cutoff invariant needed to append the
 last factor in the mixed case, exactly as in Bridgeland's p.24 argument. -/
 theorem split_hn_filtration_at_cutoff
+    [IsTriangulated C]
     {P : ℝ → ObjectProperty C} {A : C}
     (F : HNFiltration C P A) (t : ℝ) :
     ∃ (X Y : C) (GX : HNFiltration C P X) (GY : HNFiltration C P Y)
@@ -387,7 +386,7 @@ theorem split_hn_filtration_at_cutoff
               subst j; simpa [HNFiltration.phiPlus, hFone] using hlast_le
             · intro _ j
               have hj : j = ⟨0, by omega⟩ := by apply Fin.ext; omega
-              subst j; simpa [hFone]
+              subst j; simp [hFone]
             · intro j; exact Fin.elim0 j
           · have hn2 : 2 ≤ F.n := by omega
             let G := F.prefix C (F.n - 1) (by omega) (by omega)
@@ -458,6 +457,5 @@ theorem split_hn_filtration_at_cutoff
               have hi_lt := i_G.isLt; change i_G.val < F.n - 1 at hi_lt
               exact ⟨⟨i_G.val, by omega⟩,
                 by simp [G, HNFiltration.prefix] at hi_G; exact hi_G⟩
-
 
 end CategoryTheory.Triangulated

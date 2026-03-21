@@ -33,8 +33,8 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [IsTriangulated C]
 
 theorem exists_upper_boundary_triangle
-    (s : Slicing C) [IsTriangulated C] {a b₁ b₂ : ℝ}
-    (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
+    (s : Slicing C) {a b₁ b₂ : ℝ}
+    (hab₁ : a < b₁)
     {Q : C} (hQ : s.intervalProp C a b₂ Q) :
     ∃ (X Y : C) (f : X ⟶ Q) (g : Q ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C ∧
@@ -67,14 +67,14 @@ theorem exists_upper_boundary_triangle
       calc
         a < s.phiMinus C Y hYZ := hY_minus
         _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C Y hYZ F hn hlast
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)),
-      by
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)), by
         calc
           F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
           _ = s.phiPlus C Y hYZ := (s.phiPlus_eq C Y hYZ F hn hfirst).symm
           _ < b₁ := hY_plus⟩⟩
 
+omit [IsTriangulated C] in
 theorem gtProp_of_geProp_of_lt
     (s : Slicing C) {a b : ℝ} (hab : a < b) {E : C}
     (hE : s.geProp C b E) :
@@ -86,7 +86,7 @@ theorem gtProp_of_geProp_of_lt
 theorem wPhaseOf_gt_of_geProp_target
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {a b ψ ε₀ : ℝ} (hab : a < b) {E : C}
+    {a b ψ ε₀ : ℝ} {E : C}
     (hI : σ.slicing.intervalProp C a b E) (hEne : ¬IsZero E)
     (hGe : σ.slicing.geProp C (ψ + ε₀) E)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
@@ -201,8 +201,12 @@ theorem wPhaseOf_gt_of_geProp_target
       linarith
   exact wPhaseOf_gt_of_im_pos him_pos hrange
 
+section
+
+omit [IsTriangulated C]
+
 theorem intervalProp_of_upper_boundary_triangle
-    (s : Slicing C) [IsTriangulated C] {a b₁ b₂ : ℝ}
+    (s : Slicing C) {a b₁ b₂ : ℝ}
     (hab₁ : a < b₁) (hab₂ : a < b₂) (hb₁ : b₁ ≤ a + 1)
     {Q X Y : C}
     (hQ : s.intervalProp C a b₂ Q)
@@ -218,10 +222,11 @@ theorem intervalProp_of_upper_boundary_triangle
     gtProp_of_geProp_of_lt (C := C) (s := s) hab₁ hX_ge
   exact s.first_intervalProp_of_triangle C hab₂ hQ hY_le hX_gt hT
 
+end
+
 theorem wPhaseOf_gt_of_upper_boundary_triangle
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a b₁ b₂ ψ ε₀ : ℝ}
     (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
     {Q X Y : C}
@@ -249,13 +254,12 @@ theorem wPhaseOf_gt_of_upper_boundary_triangle
       (by linarith)) X) hX_ge
   have henv_hi₂ : ψ ≤ b₂ - ε₀ := by
     linarith
-  exact wPhaseOf_gt_of_geProp_target (C := C) σ W hW hab₂
+  exact wPhaseOf_gt_of_geProp_target (C := C) σ W hW
     hXI hXne hX_ge' hε₀ hε₀2 henv_lo henv_hi₂ hthin hsin
 
 theorem wPhaseOf_gt_of_upper_source_boundary_target
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {φ ψ ε₀ : ℝ} {Q X Y : C}
     (hQ : σ.slicing.intervalProp C (ψ - ε₀) (φ + ε₀) Q)
     (hX_ge : σ.slicing.geProp C (ψ + ε₀) X)
@@ -279,7 +283,6 @@ theorem wPhaseOf_gt_of_upper_source_boundary_target
 theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {φ ψ ε₀ : ℝ} {Q X Y : C}
     (hQ : σ.slicing.intervalProp C (ψ - ε₀) (φ + ε₀) Q)
     (hX_ge : σ.slicing.geProp C (ψ + ε₀) X)
@@ -302,7 +305,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
 theorem wPhaseOf_lt_of_leProp_source
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {a b ψ ε₀ : ℝ} (hab : a < b) {E : C}
+    {a b ψ ε₀ : ℝ} {E : C}
     (hI : σ.slicing.intervalProp C a b E) (hEne : ¬IsZero E)
     (hLe : σ.slicing.leProp C (ψ - ε₀) E)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
@@ -421,8 +424,8 @@ theorem wPhaseOf_lt_of_leProp_source
   exact wPhaseOf_lt_of_im_neg him_neg hrange
 
 theorem exists_lower_boundary_triangle
-    (s : Slicing C) [IsTriangulated C] {a₁ a₂ b : ℝ}
-    (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₂ ≤ a₁)
+    (s : Slicing C) {a₁ a₂ b : ℝ}
+    (ha₁ : a₁ < b)
     {K : C} (hK : s.intervalProp C a₂ b K) :
     ∃ (X Y : C) (f : X ⟶ K) (g : K ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C ∧
@@ -452,9 +455,13 @@ theorem exists_lower_boundary_triangle
       exact s.intervalProp_of_intrinsic_phases C hXZ hX_minus hX_plus
   exact ⟨X, Y, f, g, h, hT, hX_I, hY_le⟩
 
+section
+
+omit [IsTriangulated C]
+
 theorem intervalProp_of_lower_boundary_triangle
-    (s : Slicing C) [IsTriangulated C] {a₁ a₂ b : ℝ}
-    (hb : a₂ < b) (ha₁ : a₁ < b) (ha : a₂ ≤ a₁)
+    (s : Slicing C) {a₁ a₂ b : ℝ}
+    (ha₁ : a₁ < b) (ha : a₂ ≤ a₁)
     {K X Y : C}
     (hK : s.intervalProp C a₂ b K)
     (hX : s.intervalProp C a₁ b X)
@@ -477,12 +484,13 @@ theorem intervalProp_of_lower_boundary_triangle
         hX_ge (by linarith) hT
     exact s.intervalProp_of_intrinsic_phases C hY0 hY_minus hY_plus
 
+end
+
 theorem wPhaseOf_lt_of_lower_boundary_triangle
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b ψ ε₀ : ℝ}
-    (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₂ ≤ a₁)
+    (ha₁ : a₁ < b) (ha : a₂ ≤ a₁)
     {K X Y : C}
     (hK : σ.slicing.intervalProp C a₂ b K)
     (hX : σ.slicing.intervalProp C a₁ b X)
@@ -498,23 +506,22 @@ theorem wPhaseOf_lt_of_lower_boundary_triangle
     wPhaseOf (W (K₀.of C Y)) ((a₂ + b) / 2) < ψ := by
   have hY_I : σ.slicing.intervalProp C a₂ b Y :=
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
-      ha₂ ha₁ ha hK hX hY_le hT
+      ha₁ ha hK hX hY_le hT
   have hY_le' : σ.slicing.leProp C (ψ - ε₀) Y := by
     exact ((σ.slicing.leProp_mono (C := C) (t₁ := a₁) (t₂ := ψ - ε₀) (by linarith)) Y) hY_le
-  exact wPhaseOf_lt_of_leProp_source (C := C) σ W hW ha₂
+  exact wPhaseOf_lt_of_leProp_source (C := C) σ W hW
     hY_I hYne hY_le' hε₀ hε₀2 (by linarith) henv_hi hthin hsin
 
 theorem wPhaseOf_lt_of_lower_source_boundary_target
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {φ ψ ε₀ : ℝ} {K X Y : C}
     (hK : σ.slicing.intervalProp C (φ - ε₀) (ψ + ε₀) K)
     (hX : σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) X)
     (hY_le : σ.slicing.leProp C (ψ - ε₀) Y)
     (hYne : ¬IsZero Y)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
-    (hψ_lo : φ - ε₀ < ψ) (hψ_hi : ψ < φ + ε₀) (hφ_le : φ ≤ ψ)
+    (hψ_hi : ψ < φ + ε₀) (hφ_le : φ ≤ ψ)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ K} {g : K ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
@@ -525,20 +532,19 @@ theorem wPhaseOf_lt_of_lower_source_boundary_target
   exact wPhaseOf_lt_of_lower_boundary_triangle
     (C := C) (σ := σ) (W := W) (hW := hW)
     (a₁ := ψ - ε₀) (a₂ := φ - ε₀) (b := ψ + ε₀) (ψ := ψ) (ε₀ := ε₀)
-    (by linarith) (by linarith) (by linarith [hφ_le]) hK hX hY_le hYne
+    (by linarith) (by linarith [hφ_le]) hK hX hY_le hYne
     hε₀ hε₀2 (by linarith) (by linarith) hthin hsin hT
 
 theorem wPhaseOf_lt_of_lower_source_boundary_P_phi
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {φ ψ ε₀ : ℝ} {K X Y : C}
     (hK : σ.slicing.intervalProp C (φ - ε₀) (ψ + ε₀) K)
     (hX_Pφ : σ.slicing.P φ X)
     (hY_le : σ.slicing.leProp C (ψ - ε₀) Y)
     (hYne : ¬IsZero Y)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
-    (hψ_lo : φ - ε₀ < ψ) (hψ_hi : ψ < φ + ε₀) (hφ_le : φ ≤ ψ)
+    (hψ_hi : ψ < φ + ε₀) (hφ_le : φ ≤ ψ)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ K} {g : K ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
@@ -549,9 +555,8 @@ theorem wPhaseOf_lt_of_lower_source_boundary_P_phi
     exact σ.slicing.intervalProp_of_semistable C hX_Pφ (by linarith) (by linarith)
   exact wPhaseOf_lt_of_lower_source_boundary_target
     (C := C) (σ := σ) (W := W) (hW := hW)
-    hK hX hY_le hYne hε₀ hε₀2 hε₀8 hψ_lo hψ_hi hφ_le hsin hT
+    hK hX hY_le hYne hε₀ hε₀2 hε₀8 hψ_hi hφ_le hsin hT
 
-variable [IsTriangulated C] in
 /-- Package the upper-boundary truncation as a strict short exact sequence in the larger thin
 interval category. This is the Section 7 reduction step `0 → A → E → E' → 0`, with the
 subobject supported on the upper boundary strip and the quotient still lying in the larger thin
@@ -570,7 +575,7 @@ theorem exists_upper_boundary_strictShortExact
   have hthin₂ : b₂ - a ≤ 1 := Fact.out
   obtain ⟨X, Y, f, g, h, hT, hX_ge, hY_small⟩ :=
     exists_upper_boundary_triangle (C := C) (s := s)
-      (a := a) (b₁ := b₁) (b₂ := b₂) hab₁ hab₂ hb hQ
+      (a := a) (b₁ := b₁) (b₂ := b₂) hab₁ hQ
   have hb₁_le : b₁ ≤ a + 1 := by
     linarith
   let XI : s.IntervalCat C a b₂ := ⟨X,
@@ -589,9 +594,8 @@ theorem exists_upper_boundary_strictShortExact
   refine ⟨S, ?_, ?_, hX_ge, hY_small⟩
   · exact Slicing.IntervalCat.strictShortExact_of_distTriang
       (C := C) (s := s) (a := a) (b := b₂) hTS
-  · simp [S, QI, XI, YI]
+  · simp [S, QI]
 
-variable [IsTriangulated C] in
 /-- Package the lower-boundary truncation as a strict short exact sequence in the larger thin
 interval category. This is the dual Section 7 reduction step, with the kernel already lying in
 the smaller target interval and the quotient supported on the lower boundary strip. -/
@@ -609,12 +613,12 @@ theorem exists_lower_boundary_strictShortExact
   have hthin : b - a₂ ≤ 1 := Fact.out
   obtain ⟨X, Y, f, g, h, hT, hX_small, hY_le⟩ :=
     exists_lower_boundary_triangle (C := C) (s := s)
-      (a₁ := a₁) (a₂ := a₂) (b := b) ha₁ ha₂b ha hK
+      (a₁ := a₁) (a₂ := a₂) (b := b) ha₁ hK
   let XI : s.IntervalCat C a₂ b := ⟨X,
     s.intervalProp_mono C ha (show b ≤ b by linarith) hX_small⟩
   let YI : s.IntervalCat C a₂ b := ⟨Y,
     intervalProp_of_lower_boundary_triangle (C := C) (s := s)
-      (a₁ := a₁) (a₂ := a₂) (b := b) ha₂b ha₁ ha
+      (a₁ := a₁) (a₂ := a₂) (b := b) ha₁ ha
       hK hX_small hY_le hT⟩
   let KI : s.IntervalCat C a₂ b := ⟨K, hK⟩
   let fi : XI ⟶ KI := ObjectProperty.homMk f
@@ -627,12 +631,11 @@ theorem exists_lower_boundary_strictShortExact
   refine ⟨S, ?_, ?_, hX_small, hY_le⟩
   · exact Slicing.IntervalCat.strictShortExact_of_distTriang
       (C := C) (s := s) (a := a₂) (b := b) hTS
-  · simp [S, KI, XI, YI]
+  · simp [S, KI]
 
 theorem intervalProp_of_wSemistable_upper_target
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a b₁ b₂ ψ ε₀ : ℝ} (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
     {E : C}
     (hSS : (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ)
@@ -646,7 +649,7 @@ theorem intervalProp_of_wSemistable_upper_target
     linarith
   obtain ⟨X, Y, fX, gY, δY, hTQ, hX_ge, hY₁⟩ :=
     exists_upper_boundary_triangle (C := C) (s := σ.slicing)
-      hab₁ hab₂ hb hSS.1
+      hab₁ hSS.1
   have hb₁_le : b₁ ≤ a + 1 := by
     linarith
   have hX₂ : σ.slicing.intervalProp C a b₂ X :=
@@ -692,7 +695,7 @@ theorem intervalProp_of_wSemistable_upper_target
         intro F hF hFne
         exact σ.W_ne_zero_of_intervalProp C W hthin₂'
           (stabSeminorm_lt_cos_of_hsin_hthin
-            (C := C) (σ := σ) (W := W) hab₂ hε₀ hε₀2 hthin₂ hsin) hFne hF
+            (C := C) (σ := σ) (W := W) hab₂ hε₀ hthin₂ hsin) hFne hF
       have hY_phase_ge :
           ψ ≤ wPhaseOf (W (K₀.of C Y)) ((a + b₂) / 2) := by
         let ssf₂ := σ.skewedStabilityFunction_of_near C W hW hab₂
@@ -738,16 +741,16 @@ theorem intervalProp_of_wSemistable_lower_target
     σ.slicing.intervalProp C a₂ b E := by
   obtain ⟨X, Y, fX, gY, δY, hTQ, hX₂, hY_le⟩ :=
     exists_lower_boundary_triangle (C := C) (s := σ.slicing)
-      (a₁ := a₂) (a₂ := a₁) (b := b) ha₂ ha₁ ha hSS.1
+      (a₁ := a₂) (a₂ := a₁) (b := b) ha₂ hSS.1
   have hY₁ : σ.slicing.intervalProp C a₁ b Y :=
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
-      (a₁ := a₂) (a₂ := a₁) (b := b) ha₁ ha₂ ha hSS.1 hX₂ hY_le hTQ
+      (a₁ := a₂) (a₂ := a₁) (b := b) ha₂ ha hSS.1 hX₂ hY_le hTQ
   by_cases hY_zero : IsZero Y
   · exact σ.slicing.intervalProp_of_triangle C hX₂ (Or.inl hY_zero) hTQ
   · have hY_phase_lt :
-        wPhaseOf (W (K₀.of C Y)) ((a₁ + b) / 2) < ψ :=
+      wPhaseOf (W (K₀.of C Y)) ((a₁ + b) / 2) < ψ :=
       wPhaseOf_lt_of_lower_boundary_triangle
-        (C := C) (σ := σ) (W := W) (hW := hW) ha₂ ha₁ ha hSS.1 hX₂ hY_le hY_zero
+        (C := C) (σ := σ) (W := W) (hW := hW) ha₂ ha hSS.1 hX₂ hY_le hY_zero
         hε₀ hε₀2 henv_lo henv_hi hthin₁ hsin hTQ
     letI : Fact (a₁ < b) := ⟨ha₁⟩
     letI : Fact (b - a₁ ≤ 1) := ⟨by linarith⟩
@@ -776,7 +779,7 @@ theorem intervalProp_of_wSemistable_lower_target
       intro F hF hFne
       exact σ.W_ne_zero_of_intervalProp C W hthin₁'
         (stabSeminorm_lt_cos_of_hsin_hthin
-          (C := C) (σ := σ) (W := W) ha₁ hε₀ hε₀2 hthin₁ hsin) hFne hF
+          (C := C) (σ := σ) (W := W) ha₁ hε₀ hthin₁ hsin) hFne hF
     have hY_phase_ge :
         ψ ≤ wPhaseOf (W (K₀.of C Y)) ((a₁ + b) / 2) := by
       let ssf₁ := σ.skewedStabilityFunction_of_near C W hW ha₁

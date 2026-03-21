@@ -219,6 +219,10 @@ theorem StabilityCondition.W_ne_zero_of_intervalProp (σ : StabilityCondition C)
   rw [hWZ, hw0, zero_sub, norm_neg] at hWZ_bound
   nlinarith
 
+section
+
+omit [IsTriangulated C]
+
 /-! ### W-phase definition -/
 
 /-- The **W-phase** of a complex number `w ≠ 0` relative to a skewing parameter `α`.
@@ -403,6 +407,8 @@ lemma SkewedStabilityFunction.Semistable.polar
     ssf.W (K₀.of C E) = ↑‖ssf.W (K₀.of C E)‖ *
       Complex.exp (↑(Real.pi * ψ) * Complex.I) :=
   h.2.2.2.1 ▸ wPhaseOf_compat _ _
+
+end
 
 
 end CategoryTheory.Triangulated

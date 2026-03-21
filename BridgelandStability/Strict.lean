@@ -159,12 +159,10 @@ theorem isStrictMono_of_isLimitKernelFork
       (KernelFork.ofι (Abelian.image.ι f) (kernel.condition (cokernel.π f)))
       Limits.WalkingParallelPair.zero
   let e : X ≅ Abelian.image f :=
-    ⟨u, v,
-      by
+    ⟨u, v, by
         apply (cancel_mono f).1
         rw [Category.assoc, hv, hu]
-        simp,
-      by
+        simp, by
         apply (cancel_mono (Abelian.image.ι f)).1
         rw [Category.assoc, hu, hv]
         simp⟩

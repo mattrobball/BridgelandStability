@@ -7,6 +7,14 @@ module
 
 public import BridgelandStability.HeartEquivalence.Basic
 
+/-!
+# H0 Functor Construction
+
+Construction of the cohomological functor H0 and the variant H0' from a
+bounded t-structure with heart stability data. Includes naturality, additivity,
+and the descent/truncation-GE factorization.
+-/
+
 @[expose] public section
 
 set_option backward.privateInPublic true

@@ -7,6 +7,15 @@ module
 
 public import BridgelandStability.HeartEquivalence.Forward
 
+/-!
+# Reverse Direction and Roundtrips
+
+Construction of a stability condition from heart stability data
+(Proposition 5.3, reverse direction), the roundtrip identity, and
+infrastructure for the heart short exact sequence bridge used in
+the deformation theorem.
+-/
+
 @[expose] public section
 
 set_option backward.privateInPublic true
@@ -686,8 +695,7 @@ theorem phasePredicate_shift_int
           (phasePredicate_shift_iff (C := C) h (φ + (-(n : ℤ) : ℝ) - 1) (Y⟦(-1 : ℤ)⟧)).mp h1
         have h0 : phasePredicate (C := C) h (φ + (-(n : ℤ) : ℝ)) Y := by
           have h0'' : phasePredicate (C := C) h (φ + (-(n : ℤ) : ℝ))
-              ((shiftFunctor C (1 : ℤ)).obj ((shiftFunctor C (-1 : ℤ)).obj Y)) :=
-            by
+              ((shiftFunctor C (1 : ℤ)).obj ((shiftFunctor C (-1 : ℤ)).obj Y)) := by
               simpa [sub_eq_add_neg, add_assoc] using h0'
           exact (phasePredicate (C := C) h (φ + (-(n : ℤ) : ℝ))).prop_of_iso
             (shiftNegShift (X := Y) (i := (1 : ℤ))) h0''

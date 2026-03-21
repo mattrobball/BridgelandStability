@@ -8,6 +8,15 @@ module
 public import BridgelandStability.HeartEquivalence.H0Homological
 import all Mathlib.CategoryTheory.Triangulated.TStructure.TruncLTGE
 
+/-!
+# Euler Lift and K0 Isomorphism
+
+The heartCohClass map, its five-term relation, the heartCohClassSum
+telescoping, and the Euler class lift from the ambient K0 to the heart K0.
+Establishes that heartK0ToK0 intertwines the Euler class with the
+heart cohomology sum.
+-/
+
 @[expose] public section
 
 set_option backward.privateInPublic true

@@ -67,9 +67,7 @@ theorem phiPlus_bound_of_destabilizing_subobject
     (hA_ss : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C
       (A : σ.slicing.IntervalCat C a b).obj
       (wPhaseOf (W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2)))
-    (hA_strict : IsStrictMono A.arrow)
-    (_hA_dest : wPhaseOf (W (K₀.of C Y.obj)) ((a + b) / 2) <
-      wPhaseOf (W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2)) :
+    (hA_strict : IsStrictMono A.arrow) :
     wPhaseOf (W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2) <
       b - ε := by
   let AI : σ.slicing.IntervalCat C a b := (A : σ.slicing.IntervalCat C a b)
@@ -97,39 +95,34 @@ theorem hom_eq_zero_of_enveloped_semistable
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
-    [Fact (a < b)] [Fact (b - a ≤ 1)]
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hthin : b - a + 2 * ε < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
-    {E F : σ.slicing.IntervalCat C a b}
-    {ssf : SkewedStabilityFunction C σ.slicing a b}
-    (hssf : ssf = σ.skewedStabilityFunction_of_near C W hW hab)
-    (hE : ssf.Semistable C E.obj (wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α))
-    (hF : ssf.Semistable C F.obj (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α))
-    (hgap : wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
-      wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α)
+    {E F : C}
+    (hE : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E
+      (wPhaseOf (W (K₀.of C E)) ((a + b) / 2)))
+    (hF : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C F
+      (wPhaseOf (W (K₀.of C F)) ((a + b) / 2)))
+    (hgap : wPhaseOf (W (K₀.of C F)) ((a + b) / 2) <
+      wPhaseOf (W (K₀.of C E)) ((a + b) / 2))
     -- Enveloping: both phases in [a+ε, b−ε]
-    (hE_lo : a + ε ≤ wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α)
-    (hE_hi : wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α ≤ b - ε)
-    (hF_lo : a + ε ≤ wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)
-    (hF_hi : wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α ≤ b - ε)
+    (hE_lo : a + ε ≤ wPhaseOf (W (K₀.of C E)) ((a + b) / 2))
+    (hE_hi : wPhaseOf (W (K₀.of C E)) ((a + b) / 2) ≤ b - ε)
+    (hF_lo : a + ε ≤ wPhaseOf (W (K₀.of C F)) ((a + b) / 2))
+    (hF_hi : wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ≤ b - ε)
     (f : E ⟶ F) : f = 0 := by
-  subst hssf
   -- Convert E to deformedPred using (a, b) as witness interval
-  have hE_dp : σ.deformedPred C W hW ε hε hε2 hsin
-      (wPhaseOf (W (K₀.of C E.obj)) ((a + b) / 2)) E.obj :=
+  have hE_dp : σ.deformedPred C W hW ε
+      (wPhaseOf (W (K₀.of C E)) ((a + b) / 2)) E :=
     Or.inr ⟨a, b, hab, hthin, hE_lo, hE_hi, hE⟩
   -- Convert F to deformedPred using (a, b) as witness interval
-  have hF_dp : σ.deformedPred C W hW ε hε hε2 hsin
-      (wPhaseOf (W (K₀.of C F.obj)) ((a + b) / 2)) F.obj :=
+  have hF_dp : σ.deformedPred C W hW ε
+      (wPhaseOf (W (K₀.of C F)) ((a + b) / 2)) F :=
     Or.inr ⟨a, b, hab, hthin, hF_lo, hF_hi, hF⟩
   -- Apply Lemma 7.6 (sorry-free)
-  have h0 := σ.hom_eq_zero_of_deformedPred C W hW hε hε2 hε8 hsin hE_dp hF_dp hgap f.hom
-  ext; exact h0
+  exact σ.hom_eq_zero_of_deformedPred C W hW hε hε2 hε8 hsin hE_dp hF_dp hgap f
 
 /-! ### MDQ composition with quotient bound -/
-
-variable [IsTriangulated C] in
 /-- MDQ composition with quotient-bound Hom vanishing (Bridgeland p.23).
 
 Same as `comp_of_destabilizing_semistable_subobject` but replaces the universal `hHom`
@@ -233,10 +226,13 @@ theorem comp_of_destabilizing_with_quotient_bound
           wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
         A.arrow ≫ q' = 0 := by
       intro hB'_lt_A
-      exact hom_eq_zero_of_enveloped_semistable (C := C) σ W hW_stab hab hε hε2 hε8 hthin hsin
-        hssf hA_ss hB'_ss hB'_lt_A hA_lo (le_of_lt hA_phase_upper) hB'_lo
-        (le_of_lt (lt_trans (by linarith [hB_lt_A]) hA_phase_upper))
-        (A.arrow ≫ q')
+      subst hssf
+      ext
+      exact hom_eq_zero_of_enveloped_semistable
+        (C := C) (σ := σ) (W := W) (hW := hW_stab) hab hε hε2 hε8 hthin hsin
+        hA_ss hB'_ss hB'_lt_A hA_lo (le_of_lt hA_phase_upper) hB'_lo
+        (le_of_lt (lt_trans hB'_lt_A hA_phase_upper))
+        (A.arrow ≫ q').hom
     -- Case split (same structure as original)
     by_cases hle :
         wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
@@ -250,10 +246,9 @@ theorem comp_of_destabilizing_with_quotient_bound
       have hzero : A.arrow ≫ q' = 0 := hvanish hB'_lt_A
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
       have hq'' : IsStrictEpi q'' := by
-        apply interval_strictEpi_of_strictEpi_comp
+        exact interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) (cokernel.π A.arrow) q''
-          (isStrictEpi_cokernel A.arrow)
-        simpa [q''] using hq'
+          (by simpa [q''] using hq')
       obtain ⟨t, ht⟩ := (hq.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
       refine ⟨t, ?_⟩
       calc
@@ -272,17 +267,15 @@ theorem comp_of_destabilizing_with_quotient_bound
       have hzero : A.arrow ≫ q' = 0 := hvanish hB'_lt_A
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
       have hq'' : IsStrictEpi q'' := by
-        apply interval_strictEpi_of_strictEpi_comp
+        exact interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) (cokernel.π A.arrow) q''
-          (isStrictEpi_cokernel A.arrow)
-        simpa [q''] using hq'
+          (by simpa [q''] using hq')
       have hmin :
           wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
             wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α :=
         (hq.minimal q'' hq'' hB'_nz hB'_ss).1
       exact False.elim ((not_lt_of_ge hmin) hlt)
 
-variable [IsTriangulated C] in
 /-- **MDQ lifting through σ-phase split** (Bridgeland p.23 "I can always assume φ⁺(E) < ψ(E)+ε").
 
 Given `E ∈ IntervalCat(a,b)` with a strict SES `0 → X_hi → E → E_lo → 0` from the
@@ -299,27 +292,16 @@ theorem mdq_of_sigma_phase_split
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
-    (hFiniteLength : ThinFiniteLengthInInterval (C := C) σ a b)
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (K₀.of C F) ≠ 0)
-    {L U : ℝ}
-    (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-        wPhaseOf (ssf.W (K₀.of C F)) ssf.α < U)
-    (hWidth : U - L < 1)
     -- The object E being split
     {E : σ.slicing.IntervalCat C a b}
     -- The σ-phase split data
     {X_hi E_lo : σ.slicing.IntervalCat C a b}
     {p_hi : X_hi ⟶ E} {p_lo : E ⟶ E_lo}
-    (_hp_hi : IsStrictMono p_hi) (hp_lo : IsStrictEpi p_lo)
+    (hp_lo : IsStrictEpi p_lo)
     -- σ-phase separation: X_hi has high phases, E_lo has low phases
     {t_cut : ℝ}
     (hX_hi_ge : σ.slicing.geProp C t_cut X_hi.obj)
-    (_hE_lo_lt : σ.slicing.ltProp C t_cut E_lo.obj)
     -- Distinguished triangle in C
-    {δ : E_lo.obj ⟶ X_hi.obj⟦(1 : ℤ)⟧}
-    (hT : Triangle.mk p_hi.hom p_lo.hom δ ∈ distTriang C)
     -- Cokernel compatibility: p_lo is the cokernel of p_hi (from the strict SES)
     (hcokernel : ∀ {D : σ.slicing.IntervalCat C a b} (f : E ⟶ D),
       p_hi ≫ f = 0 → ∃ r : E_lo ⟶ D, f = p_lo ≫ r)
@@ -368,9 +350,9 @@ theorem mdq_of_sigma_phase_split
       -- Factor q' through p_lo using cokernel property
       obtain ⟨q'', hq'_eq⟩ := hcokernel q' hzero
       have hq'' : IsStrictEpi q'' := by
-        apply interval_strictEpi_of_strictEpi_comp
-          (C := C) (σ := σ) (a := a) (b := b) p_lo q'' hp_lo
-        simpa [hq'_eq] using hq'
+        exact interval_strictEpi_of_strictEpi_comp
+          (C := C) (σ := σ) (a := a) (b := b) p_lo q''
+          (by simpa [hq'_eq] using hq')
       obtain ⟨t, ht⟩ := (hq.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
       refine ⟨t, ?_⟩
       calc q' = p_lo ≫ q'' := hq'_eq
@@ -385,9 +367,9 @@ theorem mdq_of_sigma_phase_split
       -- Factor through p_lo → MDQ minimality → contradiction
       obtain ⟨q'', hq'_eq⟩ := hcokernel q' hzero
       have hq'' : IsStrictEpi q'' := by
-        apply interval_strictEpi_of_strictEpi_comp
-          (C := C) (σ := σ) (a := a) (b := b) p_lo q'' hp_lo
-        simpa [hq'_eq] using hq'
+        exact interval_strictEpi_of_strictEpi_comp
+          (C := C) (σ := σ) (a := a) (b := b) p_lo q''
+          (by simpa [hq'_eq] using hq')
       have hmin :
           wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
             wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α :=

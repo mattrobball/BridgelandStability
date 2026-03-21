@@ -30,7 +30,10 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
+
+section
+
+variable [IsTriangulated C]
 
 /- The faithful 7.7 recursion with the paper's `G/H`-style input exposed explicitly:
 for a fixed interval object `X`, it is enough to know a lower phase bound for all
@@ -53,9 +56,9 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (hE : ssf.Semistable C E.obj
+        (_hE : ssf.Semistable C E.obj
           (wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α))
-        (hF : ssf.Semistable C F.obj
+        (_hF : ssf.Semistable C F.obj
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
@@ -102,7 +105,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
     let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
     by_cases hss : ssf.Semistable C Y.obj ψY
-    · refine ⟨HNFiltration.single C Y.obj ψY hss, ?_⟩
+    · let Gsingle : HNFiltration C Psem Y.obj := HNFiltration.single C Y.obj ψY hss
+      refine ⟨Gsingle, ?_⟩
       intro j
       have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := by
         intro hEq
@@ -117,22 +121,24 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       have hbot_eq :
           wPhaseOf (ssf.W (K₀.of C (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α = ψY := by
         let eI : cokernel ((⊥ : Subobject Y).arrow) ≅ Y := by
-          rw [show ((⊥ : Subobject Y).arrow) = 0 by simpa [Subobject.bot_arrow]]
+          rw [show ((⊥ : Subobject Y).arrow) = 0 by simp [Subobject.bot_arrow]]
           exact cokernelZeroIsoTarget
         let eC : (cokernel ((⊥ : Subobject Y).arrow)).obj ≅ Y.obj :=
           (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
         simpa [ψY] using
           congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC)
       have hψY_hi : ψY < U := (hWindow Y.property hS_obj).2
+      have hsingle_n : Gsingle.n = 1 := by
+        simp [Gsingle, HNFiltration.single]
       have hj_lt : j.val < 1 := by
-        simpa [HNFiltration.single] using j.is_lt
+        omega
       have hj0 : j.val = 0 := by omega
-      have hj : j = ⟨0, by simpa [HNFiltration.single] using (show 0 < 1 by omega)⟩ :=
+      have hj : j = ⟨0, by simp [Gsingle, HNFiltration.single]⟩ :=
         Fin.ext hj0
       subst j
       have hψY_gt : t < ψY := by
         exact hbot_eq ▸ hbot_gt
-      exact ⟨by simpa [HNFiltration.single] using hψY_gt, hψY_hi⟩
+      exact ⟨by simpa [Gsingle, HNFiltration.single] using hψY_gt, hψY_hi⟩
     · letI : IsStrictArtinianObject Y := (hFiniteLength Y).1
       letI : IsStrictNoetherianObject Y := (hFiniteLength Y).2
       obtain ⟨B, q, hq⟩ := ssf.exists_strictMDQ_of_finiteLength
@@ -207,7 +213,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
           let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
             (Subobject.mapMonoIso eK.hom A).symm
           have hw : A.arrow ≫ eK.hom = eA.hom ≫ A'.arrow := by
-            simpa [eA, A', Subobject.mapMonoIso, Subobject.map_eq_mk_mono, Category.assoc]
+            simp [eA, A', Subobject.mapMonoIso]
           let eC : cokernel A.arrow ≅ cokernel A'.arrow :=
             cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA eK hw
           let eC' :=
@@ -249,8 +255,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         have hjEq : j.val = GK.n := by
           omega
         have hG_last : GK.n < H.n := by
-          simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor] using
-            (show GK.n < GK.n + 1 by omega)
+          simp [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor]
         have hjLast : j = ⟨GK.n, hG_last⟩ := Fin.ext hjEq
         subst j
         have hjFalse : ¬GK.n < GK.n := by omega
@@ -295,7 +300,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
         (Subobject.mapMonoIso e0.hom A).symm
       have hw : A.arrow ≫ e0.hom = eA.hom ≫ A'.arrow := by
-        simpa [eA, A', Subobject.mapMonoIso, Subobject.map_eq_mk_mono, Category.assoc]
+        simp [eA, A', Subobject.mapMonoIso]
       let eC : cokernel A.arrow ≅ cokernel A'.arrow :=
         cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA e0 hw
       let eC' :=
@@ -326,9 +331,9 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (hE : ssf.Semistable C E.obj
+        (_hE : ssf.Semistable C E.obj
           (wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α))
-        (hF : ssf.Semistable C F.obj
+        (_hF : ssf.Semistable C F.obj
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
@@ -382,9 +387,9 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (hE : ssf.Semistable C E.obj
+        (_hE : ssf.Semistable C E.obj
           (wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α))
-        (hF : ssf.Semistable C F.obj
+        (_hF : ssf.Semistable C F.obj
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
@@ -421,6 +426,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
     SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       (C := C) (σ := σ) (a := a) (b := b) (ssf := ssf)
       hFiniteLength hW_interval hWindow hWidth hHom hDestabBound t X hX hquot'
+
+end
 
 /-! ### Extension-closure of `intervalProp` over Postnikov towers -/
 

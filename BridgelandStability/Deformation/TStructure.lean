@@ -37,7 +37,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 /-! ### Extension-closed subcategories Q(> t), Q(≤ t) (Node 7.8a) -/
 
-variable [IsTriangulated C] in
 /-- Auxiliary: any morphism from a `Q(ψ)`-semistable object to the `k`-th chain object of a
 `Q`-HN filtration whose phases are all strictly less than `ψ` is zero. This is the direct
 `deformedPred` analogue of `Slicing.chain_hom_eq_zero_of_gt`. -/
@@ -47,8 +46,8 @@ lemma chain_hom_eq_zero_of_gt_deformed
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {A E : C} {ψ : ℝ}
-    (hA : σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ A)
-    (F : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) E)
+    (hA : σ.deformedPred C W hW ε₀ ψ A)
+    (F : HNFiltration C (σ.deformedPred C W hW ε₀) E)
     (hlt : ∀ i, F.φ i < ψ) :
     ∀ (k : ℕ) (hk : k < F.n + 1) (f : A ⟶ F.chain.obj ⟨k, hk⟩), f = 0 := by
   intro k
@@ -77,7 +76,6 @@ lemma chain_hom_eq_zero_of_gt_deformed
         rw [Category.assoc, e₂.inv_hom_id, Category.comp_id]
       rw [this, hfe, zero_comp]
 
-variable [IsTriangulated C] in
 /-- A morphism from a `Q(ψ)`-semistable object to an HN-filtered object whose phases are all
 strictly less than `ψ` is zero. -/
 lemma hom_eq_zero_of_gt_phases_deformed
@@ -86,8 +84,8 @@ lemma hom_eq_zero_of_gt_phases_deformed
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {A E : C} {ψ : ℝ}
-    (hA : σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ A)
-    (F : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) E)
+    (hA : σ.deformedPred C W hW ε₀ ψ A)
+    (F : HNFiltration C (σ.deformedPred C W hW ε₀) E)
     (hlt : ∀ i, F.φ i < ψ) (f : A ⟶ E) : f = 0 := by
   let eE := Classical.choice F.top_iso
   have h1 : f ≫ eE.inv = 0 :=
@@ -97,7 +95,6 @@ lemma hom_eq_zero_of_gt_phases_deformed
     rw [Category.assoc, eE.inv_hom_id, Category.comp_id]
   rw [this, h1, zero_comp]
 
-variable [IsTriangulated C] in
 /-- Auxiliary: any morphism from the `k`-th chain object of a `Q`-HN filtration (with all
 phases strictly greater than those of a second `Q`-HN filtration) to the target of the second
 filtration is zero. This is the `deformedPred` analogue of
@@ -108,8 +105,8 @@ lemma chain_hom_eq_zero_gap_deformed
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {X Y : C}
-    (Fx : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) X)
-    (Fy : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) Y)
+    (Fx : HNFiltration C (σ.deformedPred C W hW ε₀) X)
+    (Fy : HNFiltration C (σ.deformedPred C W hW ε₀) Y)
     (hgap : ∀ i j, Fy.φ j < Fx.φ i) :
     ∀ (k : ℕ) (hk : k < Fx.n + 1) (f : Fx.chain.obj ⟨k, hk⟩ ⟶ Y), f = 0 := by
   intro k
@@ -143,7 +140,6 @@ lemma chain_hom_eq_zero_gap_deformed
         rw [← Category.assoc, e₂.inv_hom_id, Category.id_comp]
       rw [this, hef, comp_zero]
 
-variable [IsTriangulated C] in
 /-- Morphisms between `Q`-HN filtered objects with a phase gap are zero. -/
 lemma hom_eq_zero_of_phase_gap_deformed
     (σ : StabilityCondition C)
@@ -151,8 +147,8 @@ lemma hom_eq_zero_of_phase_gap_deformed
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {X Y : C}
-    (Fx : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) X)
-    (Fy : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) Y)
+    (Fx : HNFiltration C (σ.deformedPred C W hW ε₀) X)
+    (Fy : HNFiltration C (σ.deformedPred C W hW ε₀) Y)
     (hgap : ∀ i j, Fy.φ j < Fx.φ i) (f : X ⟶ Y) : f = 0 := by
   let eX := Classical.choice Fx.top_iso
   have h1 : eX.hom ≫ f = 0 :=
@@ -162,7 +158,6 @@ lemma hom_eq_zero_of_phase_gap_deformed
     rw [← Category.assoc, eX.inv_hom_id, Category.id_comp]
   rw [this, h1, comp_zero]
 
-variable [IsTriangulated C] in
 /-- Inside a thin interval whose `W`-phase window already sits `ε₀` away from the
 boundaries, the Lemma 7.6 hom-vanishing theorem applies directly to the interval-semistable
 objects, because they are `deformedPred` objects witnessed by that same interval. -/
@@ -170,43 +165,40 @@ theorem hom_eq_zero_of_enveloped_interval_semistable
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b ε₀ : ℝ} (hab : a < b)
-    [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
     (hthin : b - a + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       a + ε₀ < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
         wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b - ε₀)
-    {E F : σ.slicing.IntervalCat C a b}
-    (hE : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E.obj
-      (wPhaseOf (W (K₀.of C E.obj)) ((a + b) / 2)))
-    (hF : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C F.obj
-      (wPhaseOf (W (K₀.of C F.obj)) ((a + b) / 2)))
+    {E F : C}
+    (hE_interval : σ.slicing.intervalProp C a b E)
+    (hF_interval : σ.slicing.intervalProp C a b F)
+    (hE : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E
+      (wPhaseOf (W (K₀.of C E)) ((a + b) / 2)))
+    (hF : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C F
+      (wPhaseOf (W (K₀.of C F)) ((a + b) / 2)))
     (hlt :
-      wPhaseOf (W (K₀.of C F.obj)) ((a + b) / 2) <
-        wPhaseOf (W (K₀.of C E.obj)) ((a + b) / 2))
+      wPhaseOf (W (K₀.of C F)) ((a + b) / 2) <
+        wPhaseOf (W (K₀.of C E)) ((a + b) / 2))
     (f : E ⟶ F) :
     f = 0 := by
   have hEQ :
-      σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin
-        (wPhaseOf (W (K₀.of C E.obj)) ((a + b) / 2)) E.obj := by
+      σ.deformedPred C W hW ε₀
+        (wPhaseOf (W (K₀.of C E)) ((a + b) / 2)) E := by
     refine Or.inr ⟨a, b, hab, hthin, ?_, ?_, ?_⟩
-    · exact le_of_lt (hWindow E.property hE.2.1).1
-    · exact le_of_lt (hWindow E.property hE.2.1).2
+    · exact le_of_lt (hWindow hE_interval hE.2.1).1
+    · exact le_of_lt (hWindow hE_interval hE.2.1).2
     · simpa using hE
   have hFQ :
-      σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin
-        (wPhaseOf (W (K₀.of C F.obj)) ((a + b) / 2)) F.obj := by
+      σ.deformedPred C W hW ε₀
+        (wPhaseOf (W (K₀.of C F)) ((a + b) / 2)) F := by
     refine Or.inr ⟨a, b, hab, hthin, ?_, ?_, ?_⟩
-    · exact le_of_lt (hWindow F.property hF.2.1).1
-    · exact le_of_lt (hWindow F.property hF.2.1).2
+    · exact le_of_lt (hWindow hF_interval hF.2.1).1
+    · exact le_of_lt (hWindow hF_interval hF.2.1).2
     · simpa using hF
-  have h0 : f.hom = 0 :=
-    σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hEQ hFQ hlt f.hom
-  ext
-  exact h0
+  exact σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hEQ hFQ hlt f
 
-variable [IsTriangulated C] in
 /-- Lemma 7.7 packaged directly for the deformed slicing: if a thin interval carries the
 strict finite-length input and every nonzero object has `W`-phase at least `ε₀` away from
 the interval boundaries, then the thin-interval HN factors are already `Q`-factors, using
@@ -226,7 +218,7 @@ theorem exists_deformedHN_of_enveloped_interval
       a + ε₀ < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
         wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b - ε₀)
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X) :
-    ∃ G : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) X.obj,
+    ∃ G : HNFiltration C (σ.deformedPred C W hW ε₀) X.obj,
       ∀ j, a + ε₀ < G.φ j ∧ G.φ j < b - ε₀ := by
   let ssf : SkewedStabilityFunction C σ.slicing a b :=
     σ.skewedStabilityFunction_of_near C W hW hab
@@ -238,14 +230,17 @@ theorem exists_deformedHN_of_enveloped_interval
       (fun {F} hF hFne ↦ hWindow hF hFne)
       (by linarith [hthin])
       (fun {E F} hE hF hlt _hguard f ↦
-        hom_eq_zero_of_enveloped_interval_semistable
-          (C := C) (σ := σ) (W := W) (hW := hW) hab
-          hε₀ hε₀2 hε₀8 hthin hsin hWindow hE hF hlt f)
+        by
+          ext
+          exact hom_eq_zero_of_enveloped_interval_semistable
+            (C := C) (σ := σ) (W := W) (hW := hW) hab
+            hε₀ hε₀2 hε₀8 hthin hsin hWindow
+            E.property F.property hE hF hlt f.hom)
       (fun {Y} _hY {A} hA_ss _hA_strict _hA_dest ↦ by
         simpa [ssf, StabilityCondition.skewedStabilityFunction_of_near] using
           (hWindow hA_ss.1 hA_ss.2.1).2)
       X hX
-  let GQ : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) X.obj :=
+  let GQ : HNFiltration C (σ.deformedPred C W hW ε₀) X.obj :=
     { n := G.n
       chain := G.chain
       triangle := G.triangle
@@ -270,105 +265,90 @@ theorem exists_deformedHN_of_enveloped_interval
 (Bridgeland Node 7.8a). -/
 def StabilityCondition.deformedGtGen (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε₀ : ℝ)
     (t : ℝ) : ObjectProperty C :=
-  fun E ↦ ∃ ψ, t < ψ ∧ σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ E
+  fun E ↦ ∃ ψ, t < ψ ∧ σ.deformedPred C W hW ε₀ ψ E
 
 /-- **Generators of Q(≤ t)**: Q-semistable objects with some phase `ψ ≤ t`
 (Bridgeland Node 7.8a). -/
 def StabilityCondition.deformedLeGen (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε₀ : ℝ)
     (t : ℝ) : ObjectProperty C :=
-  fun E ↦ ∃ ψ, ψ ≤ t ∧ σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ E
+  fun E ↦ ∃ ψ, ψ ≤ t ∧ σ.deformedPred C W hW ε₀ ψ E
 
 /-- **Generators of Q(< t)**: Q-semistable objects with some phase `ψ < t`
 (Bridgeland Node 7.8a / 7.9). -/
 def StabilityCondition.deformedLtGen (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε₀ : ℝ)
     (t : ℝ) : ObjectProperty C :=
-  fun E ↦ ∃ ψ, ψ < t ∧ σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ E
+  fun E ↦ ∃ ψ, ψ < t ∧ σ.deformedPred C W hW ε₀ ψ E
 
 /-- **Q(> t)**: the extension-closed subcategory generated by the `Q(ψ)` with `ψ > t`
 (Bridgeland p.6, Node 7.8a). -/
 def StabilityCondition.deformedGtPred (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε₀ : ℝ)
     (t : ℝ) : ObjectProperty C :=
-  (σ.deformedGtGen C W hW ε₀ hε₀ hε₀2 hsin t).ExtensionClosure
+  (σ.deformedGtGen C W hW ε₀ t).ExtensionClosure
 
 /-- **Q(≤ t)**: the extension-closed subcategory generated by the `Q(ψ)` with `ψ ≤ t`
 (Bridgeland p.6, Node 7.8a). -/
 def StabilityCondition.deformedLePred (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε₀ : ℝ)
     (t : ℝ) : ObjectProperty C :=
-  (σ.deformedLeGen C W hW ε₀ hε₀ hε₀2 hsin t).ExtensionClosure
+  (σ.deformedLeGen C W hW ε₀ t).ExtensionClosure
 
 /-- **Q(< t)**: the extension-closed subcategory generated by the `Q(ψ)` with `ψ < t`
 (Bridgeland p.6, Node 7.8a / 7.9). -/
 def StabilityCondition.deformedLtPred (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    (ε₀ : ℝ)
     (t : ℝ) : ObjectProperty C :=
-  (σ.deformedLtGen C W hW ε₀ hε₀ hε₀2 hsin t).ExtensionClosure
+  (σ.deformedLtGen C W hW ε₀ t).ExtensionClosure
 
-variable [IsTriangulated C] in
 /-- Monotonicity of the provisional `Q(≤ t)` predicate. -/
 theorem StabilityCondition.deformedLePred_mono
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    {ε₀ : ℝ}
     {t₁ t₂ : ℝ} (ht : t₁ ≤ t₂) :
-    σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t₁ ≤
-      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t₂ :=
-  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, le_trans hψ ht, hP⟩)
+    σ.deformedLePred C W hW ε₀ t₁ ≤
+      σ.deformedLePred C W hW ε₀ t₂ :=
+  ObjectProperty.ExtensionClosure.mono (fun _ ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, le_trans hψ ht, hP⟩)
 
-variable [IsTriangulated C] in
 /-- Monotonicity of the provisional `Q(< t)` predicate. -/
 theorem StabilityCondition.deformedLtPred_mono
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    {ε₀ : ℝ}
     {t₁ t₂ : ℝ} (ht : t₁ ≤ t₂) :
-    σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t₁ ≤
-      σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t₂ :=
-  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, lt_of_lt_of_le hψ ht, hP⟩)
+    σ.deformedLtPred C W hW ε₀ t₁ ≤
+      σ.deformedLtPred C W hW ε₀ t₂ :=
+  ObjectProperty.ExtensionClosure.mono (fun _ ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, lt_of_lt_of_le hψ ht, hP⟩)
 
-variable [IsTriangulated C] in
 /-- Any `Q(< t)`-object is in `Q(≤ t)`. -/
 theorem StabilityCondition.deformedLePred_of_deformedLtPred
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    {ε₀ : ℝ}
     {t : ℝ} :
-    σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t ≤
-      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t :=
-  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, le_of_lt hψ, hP⟩)
+    σ.deformedLtPred C W hW ε₀ t ≤
+      σ.deformedLePred C W hW ε₀ t :=
+  ObjectProperty.ExtensionClosure.mono (fun _ ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, le_of_lt hψ, hP⟩)
 
-variable [IsTriangulated C] in
 /-- Anti-monotonicity of `Q(> t)`: if `t₁ ≤ t₂` then `Q(> t₂) ⊆ Q(> t₁)`. -/
 theorem StabilityCondition.deformedGtPred_anti
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    {ε₀ : ℝ}
     {t₁ t₂ : ℝ} (ht : t₁ ≤ t₂) :
-    σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t₂ ≤
-      σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t₁ :=
-  ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, lt_of_le_of_lt ht hψ, hP⟩)
+    σ.deformedGtPred C W hW ε₀ t₂ ≤
+      σ.deformedGtPred C W hW ε₀ t₁ :=
+  ObjectProperty.ExtensionClosure.mono (fun _ ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, lt_of_le_of_lt ht hψ, hP⟩)
 
-variable [IsTriangulated C] in
 /-- **Orthogonality of Q(> t) and Q(≤ t)** (**Node 7.8b**). Every morphism from a
 `Q(> t)`-object to a `Q(≤ t)`-object is zero, by the sharp hom-vanishing (Node 7.6). -/
 theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLe
@@ -378,15 +358,14 @@ theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLe
     (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {E F : C} {t : ℝ}
-    (hE : σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t E)
-    (hF : σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t F)
+    (hE : σ.deformedGtPred C W hW ε₀ t E)
+    (hF : σ.deformedLePred C W hW ε₀ t F)
     (f : E ⟶ F) : f = 0 :=
   ObjectProperty.ExtensionClosure.hom_eq_zero
     (fun E F ⟨ψ₁, hψ₁, hE'⟩ ⟨ψ₂, hψ₂, hF'⟩ f ↦
       σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by linarith) f)
     hE hF f
 
-variable [IsTriangulated C] in
 /-- Orthogonality of `Q(> t)` and `Q(< t)`. This is the strict version of Node 7.8b used
 later for the strip categories `Q((t, t + δ))`. -/
 theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLt
@@ -396,28 +375,26 @@ theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLt
     (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {E F : C} {t : ℝ}
-    (hE : σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t E)
-    (hF : σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin t F)
+    (hE : σ.deformedGtPred C W hW ε₀ t E)
+    (hF : σ.deformedLtPred C W hW ε₀ t F)
     (f : E ⟶ F) : f = 0 :=
   ObjectProperty.ExtensionClosure.hom_eq_zero
     (fun E F ⟨ψ₁, hψ₁, hE'⟩ ⟨ψ₂, hψ₂, hF'⟩ f ↦
       σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by linarith) f)
     hE hF f
-variable [IsTriangulated C] in
 /-- A `Q`-HN filtration split at cutoff `t` gives the paper's truncation triangle whose two
 pieces lie in `Q(> t)` and `Q(≤ t)`. -/
 theorem exists_deformedGt_deformedLe_triangle_of_hn
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    {ε₀ : ℝ}
     {E : C}
-    (G : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) E)
+    (G : HNFiltration C (σ.deformedPred C W hW ε₀) E)
     (t : ℝ) :
     ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C ∧
-      σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t X ∧
-      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t Y := by
+      σ.deformedGtPred C W hW ε₀ t X ∧
+      σ.deformedLePred C W hW ε₀ t Y := by
   obtain ⟨X, Y, GX, GY, f, g, h, hT, hprops⟩ :=
     split_hn_filtration_at_cutoff (C := C) G t
   have hGX := And.left hprops; have hGY := And.left (And.right hprops)
@@ -427,27 +404,24 @@ theorem exists_deformedGt_deformedLe_triangle_of_hn
     ObjectProperty.ExtensionClosure.of_postnikovTower GY.toPostnikovTower
       (fun j ↦ ⟨GY.φ j, hGY j, GY.semistable j⟩)⟩
 
-variable [IsTriangulated C] in
 /-- A `Q`-HN filtration split at cutoff `t` also gives the strip-style truncation triangle
 used in Node 7.9, with the right-hand term in `Q(< t + δ)` for any `δ > 0`. -/
 theorem exists_deformedGt_deformedLt_triangle_of_hn
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
+    {ε₀ : ℝ}
     {E : C}
-    (G : HNFiltration C (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin) E)
+    (G : HNFiltration C (σ.deformedPred C W hW ε₀) E)
     (t δ : ℝ) (hδ : 0 < δ) :
     ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C ∧
-      σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t X ∧
-      σ.deformedLtPred C W hW ε₀ hε₀ hε₀2 hsin (t + δ) Y := by
+      σ.deformedGtPred C W hW ε₀ t X ∧
+      σ.deformedLtPred C W hW ε₀ (t + δ) Y := by
   obtain ⟨X, Y, f, g, h, hT, hX, hY⟩ :=
-    exists_deformedGt_deformedLe_triangle_of_hn C σ W hW hε₀ hε₀2 hsin G t
+    exists_deformedGt_deformedLe_triangle_of_hn C σ W hW G t
   exact ⟨X, Y, f, g, h, hT, hX,
     ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, by linarith, hP⟩) _ hY⟩
 
-variable [IsTriangulated C] in
 /-- Faithful Node 7.8c wrapper: once an object in a thin interval admits a `Q`-HN filtration
 whose factors stay inside the same enveloping window, splitting that HN filtration at a cutoff
 `t` gives the paper's `Q(> t) / Q(≤ t)` truncation triangle. -/
@@ -469,8 +443,8 @@ theorem exists_deformedGt_deformedLe_triangle_of_enveloped_interval
     (t : ℝ) :
     ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C ∧
-      σ.deformedGtPred C W hW ε₀ hε₀ hε₀2 hsin t X ∧
-      σ.deformedLePred C W hW ε₀ hε₀ hε₀2 hsin t Y := by
+      σ.deformedGtPred C W hW ε₀ t X ∧
+      σ.deformedLePred C W hW ε₀ t Y := by
   let EI : σ.slicing.IntervalCat C a b := ⟨E, hE⟩
   have hEIne : ¬IsZero EI := by
     intro hZ
@@ -481,7 +455,7 @@ theorem exists_deformedGt_deformedLe_triangle_of_enveloped_interval
       hFiniteLength hε₀ hε₀2 hε₀8 hthin hsin hW_interval hWindow
       (X := EI) hEIne
   exact exists_deformedGt_deformedLe_triangle_of_hn
-    (C := C) (σ := σ) (W := W) (hW := hW) hε₀ hε₀2 hsin G t
+    (C := C) (σ := σ) (W := W) (hW := hW) G t
 
 
 end CategoryTheory.Triangulated

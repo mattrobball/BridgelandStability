@@ -7,6 +7,15 @@ module
 
 public import BridgelandStability.HeartEquivalence.AmplitudeFormulas
 
+/-!
+# Forward Direction: StabilityCondition to HeartStabilityData
+
+Construction of the stability function on the heart from a stability
+condition on the ambient triangulated category (Proposition 5.3, forward
+direction). Includes phase computation, semistability lifting, and
+HN filtration assembly in the heart.
+-/
+
 @[expose] public section
 
 set_option backward.privateInPublic true

@@ -90,7 +90,6 @@ Same recursion as `exists_strictMDQ_of_finiteLength` but replaces:
 When `φ⁺(QS) > ψ(QS) + ε`, the σ-phase split branch applies. The degenerate cases
 (X_hi = 0, Ahi = ⊤) are excluded by `wPhaseOf_gt_of_narrow_interval`. -/
 theorem exists_strictMDQ_with_quotient_bound
-    [IsTriangulated C]
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -141,7 +140,7 @@ theorem exists_strictMDQ_with_quotient_bound
         (C := C) (s := σ.slicing) (a := a) (b := b)⟩
     have hS0_ne : ¬IsZero (cokernel S0.1.arrow) := by
       let e0 : cokernel ((⊥ : Subobject X).arrow) ≅ X := by
-        rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [Subobject.bot_arrow]]
+        rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
         exact cokernelZeroIsoTarget
       intro hZ; exact hX (hZ.of_iso e0.symm)
     have hQLo0 : ∀ {B' : σ.slicing.IntervalCat C a b} (q' : cokernel S0.1.arrow ⟶ B'),
@@ -150,7 +149,7 @@ theorem exists_strictMDQ_with_quotient_bound
         t_lo < wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α := by
       intro B' q' hq' hB'_ne hB'_ss
       let e0 : cokernel S0.1.arrow ≅ X := by
-        rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [S0, Subobject.bot_arrow]]
+        rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
         exact cokernelZeroIsoTarget
       exact hQuotLo_ss (e0.inv ≫ q')
         (Slicing.IntervalCat.comp_strictEpi (C := C) (s := σ.slicing) (a := a) (b := b)
@@ -158,7 +157,7 @@ theorem exists_strictMDQ_with_quotient_bound
     have hψ_S0 : wPhaseOf (ssf.W (K₀.of C (cokernel S0.1.arrow).obj)) ssf.α < b - 3 * ε := by
       -- cokernel(⊥.arrow) ≅ X, so ψ is the same
       have e0 : cokernel S0.1.arrow ≅ X := by
-        rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [S0, Subobject.bot_arrow]]
+        rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
         exact cokernelZeroIsoTarget
       have hiso : (cokernel S0.1.arrow).obj ≅ X.obj :=
         ((σ.slicing.intervalProp C a b).ι).mapIso e0
@@ -167,7 +166,7 @@ theorem exists_strictMDQ_with_quotient_bound
       rw [this]; exact hψ_X_upper
     obtain ⟨B, q, hq⟩ := h S0 hS0_ne hψ_S0 hQLo0
     let e0 : cokernel S0.1.arrow ≅ X := by
-      rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [S0, Subobject.bot_arrow]]
+      rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
       exact cokernelZeroIsoTarget
     exact ⟨B, e0.inv ≫ q,
       IsStrictMDQ.precomposeIso (C := C) (σ := σ) (a := a) (b := b) hq e0.symm⟩
@@ -196,7 +195,7 @@ theorem exists_strictMDQ_with_quotient_bound
               wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < b - ε := by
             subst hssf
             exact phiPlus_bound_of_destabilizing_subobject C σ W hW_stab hab hε hε2 hthin hsin
-              hQS_obj_ne hphiPlus_QS hψ_QS_upper hA_ss hA_strict hA_phase_gt
+              hQS_obj_ne hphiPlus_QS hψ_QS_upper hA_ss hA_strict
           let Tsub : Subobject X := (Subobject.pullback (cokernel.π S.1.arrow)).obj A
           have hT_strict : IsStrictMono Tsub.arrow :=
             interval_pullback_arrow_strictMono_of_strictMono
@@ -594,11 +593,10 @@ theorem exists_strictMDQ_with_quotient_bound
                   let q'' : cokernel Ahi.arrow ⟶ B' :=
                     cokernel.desc Ahi.arrow q' hzero
                   have hq'' : IsStrictEpi q'' := by
-                    apply interval_strictEpi_of_strictEpi_comp
+                    exact interval_strictEpi_of_strictEpi_comp
                       (C := C) (σ := σ) (a := a) (b := b)
-                      (cokernel.π Ahi.arrow) q''
-                      (isStrictEpi_cokernel Ahi.arrow)
-                    simpa [q''] using hq'
+                      (cokernel.π Ahi.arrow) q'' <| by
+                        simpa [q''] using hq'
                   obtain ⟨t, ht⟩ := (hqAhi.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
                   exact ⟨t, by
                     have h1 : q' = cokernel.π Ahi.arrow ≫ q'' := by
@@ -612,11 +610,10 @@ theorem exists_strictMDQ_with_quotient_bound
                   let q'' : cokernel Ahi.arrow ⟶ B' :=
                     cokernel.desc Ahi.arrow q' hzero
                   have hq'' : IsStrictEpi q'' := by
-                    apply interval_strictEpi_of_strictEpi_comp
+                    exact interval_strictEpi_of_strictEpi_comp
                       (C := C) (σ := σ) (a := a) (b := b)
-                      (cokernel.π Ahi.arrow) q''
-                      (isStrictEpi_cokernel Ahi.arrow)
-                    simpa [q''] using hq'
+                      (cokernel.π Ahi.arrow) q'' <| by
+                        simpa [q''] using hq'
                   have hmin :
                       wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
                         wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α :=

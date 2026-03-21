@@ -46,9 +46,7 @@ inside the interval, which is needed for heart factorization arguments in hom-va
 (Lemma 7.6) and interval independence (Lemma 7.5). -/
 def StabilityCondition.deformedPred (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (_hε₀ : 0 < ε₀) (_hε₀2 : ε₀ < 1 / 4)
-    (_hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
-    (ψ : ℝ) : ObjectProperty C :=
+    (ε₀ : ℝ) (ψ : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (a b : ℝ) (hab : a < b) (_ : b - a + 2 * ε₀ < 1)
     (_ : a + ε₀ ≤ ψ) (_ : ψ ≤ b - ε₀),
     (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ
@@ -56,18 +54,14 @@ def StabilityCondition.deformedPred (σ : StabilityCondition C)
 /-- Zero objects are in every `Q(ψ)`. -/
 lemma StabilityCondition.deformedPred_zero (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
-    (ψ : ℝ) {E : C} (hE : IsZero E) :
-    σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ E :=
+    (ε₀ ψ : ℝ) {E : C} (hE : IsZero E) :
+    σ.deformedPred C W hW ε₀ ψ E :=
   Or.inl hE
 
 lemma StabilityCondition.deformedPred_closedUnderIso (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    (ε₀ : ℝ) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
-    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
-    (ψ : ℝ) :
-    (σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ).IsClosedUnderIsomorphisms := by
+    (ε₀ ψ : ℝ) :
+    (σ.deformedPred C W hW ε₀ ψ).IsClosedUnderIsomorphisms := by
   constructor
   intro E E' e h
   rcases h with hZ | ⟨a, b, hab, hthin, henv_lo, henv_hi, hSS⟩
@@ -88,43 +82,6 @@ lemma StabilityCondition.deformedPred_closedUnderIso (σ : StabilityCondition C)
             (by simp) (by simp) (by simp))
       exact hSS.2.2.2.2 hT' hK hQ hKne
 
-variable [IsTriangulated C] in
-theorem gtProp_of_lt_phiMinus_smallGap
-    (s : Slicing C) {E : C} (hE : ¬IsZero E) {t : ℝ}
-    (h : t < s.phiMinus C E hE) :
-    s.gtProp C t E := by
-  obtain ⟨F, hn, hlast⟩ := HNFiltration.exists_nonzero_last C s hE
-  refine s.gtProp_of_hn C F t (fun j ↦ ?_) hn
-  calc
-    t < s.phiMinus C E hE := h
-    _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C E hE F hn hlast
-    _ ≤ F.φ j := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
-
-variable [IsTriangulated C] in
-theorem leProp_of_phiPlus_le_smallGap
-    (s : Slicing C) {E : C} (hE : ¬IsZero E) {t : ℝ}
-    (h : s.phiPlus C E hE ≤ t) :
-    s.leProp C t E := by
-  obtain ⟨F, hn, hfirst⟩ := HNFiltration.exists_nonzero_first C s hE
-  refine s.leProp_of_hn C F t (fun j ↦ ?_) hn
-  calc
-    F.φ j ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))
-    _ = s.phiPlus C E hE := (s.phiPlus_eq C E hE F hn hfirst).symm
-    _ ≤ t := h
-
-variable [IsTriangulated C] in
-theorem geProp_of_phiMinus_ge_smallGap
-    (s : Slicing C) {E : C} (hE : ¬IsZero E) {t : ℝ}
-    (h : t ≤ s.phiMinus C E hE) :
-    s.geProp C t E := by
-  obtain ⟨F, hn, hlast⟩ := HNFiltration.exists_nonzero_last C s hE
-  refine s.geProp_of_hn C F t (fun j ↦ ?_) hn
-  calc
-    t ≤ s.phiMinus C E hE := h
-    _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C E hE F hn hlast
-    _ ≤ F.φ j := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
-
-variable [IsTriangulated C] in
 theorem mem_phaseShiftHeart_of_phaseBounds_smallGap
     (s : Slicing C) {E : C} (hE : ¬IsZero E) {t : ℝ}
     (hgt : t < s.phiMinus C E hE)
@@ -135,9 +92,9 @@ theorem mem_phaseShiftHeart_of_phaseBounds_smallGap
   have cast_le : (-↑(0 : ℤ) : ℝ) = 0 := by simp
   have cast_ge : (1 - ↑(0 : ℤ) : ℝ) = 1 := by simp
   have hE_gt : s.gtProp C t E :=
-    gtProp_of_lt_phiMinus_smallGap (C := C) (s := s) hE hgt
+    s.gtProp_of_phiMinus_gt C hE hgt
   have hE_le : s.leProp C (t + 1) E :=
-    leProp_of_phiPlus_le_smallGap (C := C) (s := s) hE hle
+    s.leProp_of_phiPlus_le C hE hle
   have hE_le' : s.leProp C (1 + t) E := by
     simpa [add_comm] using hE_le
   haveI : u.IsLE E 0 := ⟨by
@@ -150,7 +107,6 @@ theorem mem_phaseShiftHeart_of_phaseBounds_smallGap
     simpa [ss] using (s.phaseShift_leProp C t 1 E).mpr hE_le'⟩
   exact (u.mem_heart_iff E).mpr ⟨inferInstance, inferInstance⟩
 
-variable [IsTriangulated C] in
 theorem gtProp_leProp_of_phaseShiftHeart
     (s : Slicing C) {E : C} {a u : ℝ}
     (hHeart : ((s.phaseShift C a).toTStructure).heart E)
@@ -161,9 +117,8 @@ theorem gtProp_leProp_of_phaseShiftHeart
   rw [(s.phaseShift C a).toTStructure_heart_iff] at hHeart'
   constructor
   · exact (s.phaseShift_gtProp_zero C a E).mp hHeart'.1
-  · exact leProp_of_phiPlus_le_smallGap (C := C) (s := s) hE hu
+  · exact s.leProp_of_phiPlus_le C hE hu
 
-variable [IsTriangulated C] in
 theorem geProp_leProp_of_phaseShiftHeart
     (s : Slicing C) {E : C} {a l : ℝ}
     (hHeart : ((s.phaseShift C a).toTStructure).heart E)
@@ -173,7 +128,7 @@ theorem geProp_leProp_of_phaseShiftHeart
   have hHeart' := hHeart
   rw [(s.phaseShift C a).toTStructure_heart_iff] at hHeart'
   constructor
-  · exact geProp_of_phiMinus_ge_smallGap (C := C) (s := s) hE hl
+  · exact s.geProp_of_phiMinus_ge C hE hl
   · have hle : s.leProp C (1 + a) E := by
       simpa [add_comm] using
         (s.phaseShift_leProp C a 1 E).mp hHeart'.2
@@ -195,7 +150,6 @@ theorem midpoint_image_window_thin
     (ψ₂ + ε₀) - (ψ₁ - ε₀) + 2 * ε₀ < 1 := by
   linarith
 
-variable [IsTriangulated C] in
 theorem mem_phaseShiftHeart_of_midpoint_left
     (s : Slicing C) {E : C} (hE : ¬IsZero E) {ψ₁ ψ₂ ε₀ : ℝ}
     (hlo : ψ₁ - ε₀ ≤ s.phiMinus C E hE)
@@ -214,7 +168,6 @@ theorem mem_phaseShiftHeart_of_midpoint_left
       exact le_trans hhi h'
     exact hmid
 
-variable [IsTriangulated C] in
 theorem mem_phaseShiftHeart_of_midpoint_right
     (s : Slicing C) {E : C} (hE : ¬IsZero E) {ψ₁ ψ₂ ε₀ : ℝ}
     (hlo : ψ₂ - ε₀ ≤ s.phiMinus C E hE)
@@ -235,7 +188,6 @@ theorem mem_phaseShiftHeart_of_midpoint_right
 
 /-! ### Sharp hom-vanishing for Q (Node 7.6) -/
 
-variable [IsTriangulated C] in
 /-- **Sharp hom-vanishing for Q** (**Bridgeland's Lemma 7.6**). If `E ∈ Q(ψ₁)` and
 `F ∈ Q(ψ₂)` with `ψ₁ > ψ₂`, then every morphism `E → F` is zero.
 
@@ -260,8 +212,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
     (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {E F : C} {ψ₁ ψ₂ : ℝ}
-    (hE : σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ₁ E)
-    (hF : σ.deformedPred C W hW ε₀ hε₀ hε₀2 hsin ψ₂ F)
+    (hE : σ.deformedPred C W hW ε₀ ψ₁ E)
+    (hF : σ.deformedPred C W hW ε₀ ψ₂ F)
     (hgap : ψ₁ > ψ₂)
     (f : E ⟶ F) : f = 0 := by
   -- Dispatch IsZero cases
@@ -503,7 +455,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have hWneI : W (K₀.of C I_H.obj) ≠ 0 := by
         exact σ.W_ne_zero_of_intervalProp C W hleftThin'
           (stabSeminorm_lt_cos_of_hsin_hthin
-            (C := C) (σ := σ) (W := W) hab_left hε₀ hε₀2 hleftThin hsin) hIne hI_left
+            (C := C) (σ := σ) (W := W) hab_left hε₀ hleftThin hsin) hIne hI_left
       have hI_phase_eq_left_right :
           wPhaseOf (W (K₀.of C I_H.obj)) αL =
             wPhaseOf (W (K₀.of C I_H.obj)) αR := by
@@ -534,7 +486,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         intro G hG hGne
         exact σ.W_ne_zero_of_intervalProp C W hleftThin'
           (stabSeminorm_lt_cos_of_hsin_hthin
-            (C := C) (σ := σ) (W := W) hab_left hε₀ hε₀2 hleftThin hsin) hGne hG
+            (C := C) (σ := σ) (W := W) hab_left hε₀ hleftThin hsin) hGne hG
       have hI_phase_ge_left :
           ψ₁ ≤ wPhaseOf (W (K₀.of C I_H.obj)) αL := by
         let ssfL := σ.skewedStabilityFunction_of_near C W hW habE_left

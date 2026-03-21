@@ -126,6 +126,10 @@ theorem StabilityCondition.exists_epsilon0_sector (σ : StabilityCondition C) :
   subst a b
   simpa using hlf t E
 
+omit [IsTriangulated C] in
+/-- The local-finiteness input on windows of radius `2 ε₀`: every interval
+`P((t - 2 ε₀, t + 2 ε₀))` has strict finite length. This is the thin-sector
+hypothesis used to start the deformation argument. -/
 def SectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) : Prop :=
   ∀ t : ℝ,
@@ -140,6 +144,7 @@ def SectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
     ∀ E : σ.slicing.IntervalCat C a b,
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
 
+omit [IsTriangulated C] in
 /-- The wide local-finiteness input used in Bridgeland's p.24 Nodes 7.8–7.9: every interval of
 radius `4 ε₀` has strict finite length. This is the witness needed to apply Lemma 7.7 in the
 windows `P((t - 3 ε₀, t + 5 ε₀))` and `P((t - 3 ε₀, t + 5 ε₀ + δ))`. -/
@@ -183,6 +188,10 @@ theorem intervalProp_of_semistable_near (σ τ : StabilityCondition C) {E : C} {
           (σ.slicing.phiPlus_eq C E hE F hn hfirst).symm
       _ < φ + ε := hP_bds.2
 
+section
+
+omit [IsTriangulated C]
+
 /-- Embedding an interval in a wider one centered at the same point. -/
 theorem intervalProp_widen (s : Slicing C) {E : C} {φ ε ε' : ℝ}
     (hI : s.intervalProp C (φ - ε) (φ + ε) E) (hle : ε ≤ ε') :
@@ -200,6 +209,8 @@ theorem phiPlus_phiMinus_in_interval (s : Slicing C) {E : C} (hE : ¬IsZero E)
     φ - ε < s.phiMinus C E hE ∧ s.phiMinus C E hE < φ + ε :=
   ⟨s.phiPlus_gt_of_intervalProp C hE hI, s.phiPlus_lt_of_intervalProp C hE hI,
    s.phiMinus_gt_of_intervalProp C hE hI, s.phiMinus_lt_of_intervalProp C hE hI⟩
+
+end
 
 /-- If `d(P, Q) < ε` and `E` is `τ`-semistable of phase `φ`, then both `σ.φ⁺(E)` and
 `σ.φ⁻(E)` lie in `(φ - ε, φ + ε)`. -/

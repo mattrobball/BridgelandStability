@@ -7,6 +7,13 @@ module
 
 public import BridgelandStability.Deformation.HNExistence
 
+/-!
+# P(s) in Q(>t)/Q(<t) and Truncation Triangles
+
+Embedding sigma-semistable objects into Q-predicates, and construction of
+Q(>t)/Q(<=t) truncation triangles for arbitrary objects.
+-/
+
 @[expose] public section
 
 set_option backward.privateInPublic true
@@ -27,16 +34,8 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [IsTriangulated C]
 
 
-/-!
-# P(s) ⊂ Q(>t)/Q(<t) and Truncation Triangles
-
-Embedding σ-semistable objects into Q-predicates, and construction of
-Q(>t)/Q(≤t) truncation triangles for arbitrary objects.
--/
-
 /-! ### P(s) ⊂ Q(>t) and P(s) ⊂ Q(<t) -/
 
-variable [IsTriangulated C] in
 /-- **P(s) ⊂ Q(>t) for s ≥ t + ε** (Bridgeland p.24 ¶3). A σ-semistable object of
 phase `s ≥ t + ε` lies in `Q(>t)`: get Q-HN via `sigmaSemistable_hasDeformedHN`,
 split at `t`, then show the Q(≤t) part vanishes by the phiMinus/phiPlus squeeze
@@ -50,7 +49,7 @@ theorem P_in_deformedGtPred
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     {s t : ℝ} (hst : s ≥ t + ε)
     {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
-    σ.deformedGtPred C W hW ε hε (by linarith) hsin t E := by
+    σ.deformedGtPred C W hW ε t E := by
   -- Step 1: Q-HN filtration with phases in (s-2ε, s+4ε)
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
   have hGn : 0 < G.n := by
@@ -128,7 +127,7 @@ theorem P_in_deformedGtPred
           (Triangle.isZero₂_iff _ (P.triangle_dist ⟨k - 1, hk1⟩)).mpr
             ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩
         have := (Iso.isZero_iff (Classical.choice (P.triangle_obj₂ ⟨k - 1, hk1⟩))).mp hobj2_z
-        simp only [Fin.val_mk, show k - 1 + 1 = k from by omega] at this
+        simp only [show k - 1 + 1 = k from by omega] at this
         exact this
     exact (Iso.isZero_iff (Classical.choice P.top_iso)).mp
       (this (G.n - (j₀.val + 1)) G.n le_rfl (by omega))
@@ -171,7 +170,6 @@ theorem P_in_deformedGtPred
         · exact ⟨t + 1, by linarith, Or.inl hfz⟩
         · exact ⟨G.φ j, by linarith [G.hφ.antitone (hj₀_max j hfz)], G.semistable j⟩)
 
-variable [IsTriangulated C] in
 /-- **P(s) ⊂ Q(<t) for s ≤ t − ε** (Bridgeland p.24 ¶3, dual). -/
 theorem P_in_deformedLtPred
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -182,7 +180,7 @@ theorem P_in_deformedLtPred
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     {s t : ℝ} (hst : s ≤ t - ε)
     {E : C} (hP : σ.slicing.P s E) (hE : ¬IsZero E) :
-    σ.deformedLtPred C W hW ε hε (by linarith) hsin t E := by
+    σ.deformedLtPred C W hW ε t E := by
   -- Dual of P_in_deformedGtPred: get Q-HN, show all phases < t
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
   have hGn : 0 < G.n := by
@@ -315,7 +313,7 @@ theorem P_in_deformedLtPred
               exact fun hZ ↦ hneF (IsZero.of_full_of_faithful_of_isZero
                 (shiftFunctor C (1 : ℤ)) _ hZ)
             rw [σ.slicing.phiPlus_eq C _ hshift_ne (F.shiftHN C σ.slicing 1) hnF hneF_shift]
-            simp only [HNFiltration.shiftHN, HNFiltration.phiPlus, Int.cast_one]
+            simp only [HNFiltration.shiftHN, Int.cast_one]
             rw [σ.slicing.phiPlus_eq C _ hTk_ne₁ F hnF hneF]
           -- φ⁺(factor(k)) = φ⁺(Tk.obj₁⟦1⟧) via iso invariance
           have hiso_phiPlus : σ.slicing.phiPlus C (P.factor ⟨k, hkn⟩) hfact_ne =
@@ -380,9 +378,9 @@ theorem P_in_deformedLtPred
         change σ.slicing.phiPlus C (P.factor j₁) hj₁ne ≤ s
         rw [σ.slicing.phiPlus_eq C _ hj₁ne
           ((F.ofIso C (ej₁₂.symm.trans ej₁23))) (by change 0 < F.n; exact hnF)
-          (by change ¬IsZero _; exact hneF)]
+          hneF]
         rw [σ.slicing.phiPlus_eq C _ hchain_j₁1_ne F hnF hneF] at hphiPlus_le
-        simp only [HNFiltration.ofIso, HNFiltration.phiPlus] at hphiPlus_le ⊢
+        simp only [HNFiltration.ofIso] at hphiPlus_le ⊢
         exact hphiPlus_le
       have h1 : G.φ j₁ - ε < σ.slicing.phiMinus C Tj₁.obj₃ hj₁ne := hconf₁.1
       have h2 := σ.slicing.phiMinus_le_phiPlus C Tj₁.obj₃ hj₁ne
@@ -395,7 +393,6 @@ theorem P_in_deformedLtPred
 
 /-! ### Q(>t)/Q(≤t) truncation triangles (Bridgeland p.24, Steps 1–2) -/
 
-variable [IsTriangulated C] in
 /-- **Step 1** (Bridgeland p.24): Every σ-semistable object E ∈ P(φ) admits a Q(>t)/Q(≤t)
 truncation triangle for any t. Obtains a Q-HN filtration from
 `sigmaSemistable_hasDeformedHN` and splits it at t via
@@ -411,12 +408,11 @@ theorem sigmaSemistable_deformedGtLe_triangle
     (t : ℝ) :
     ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C ∧
-      σ.deformedGtPred C W hW ε hε (by linarith) hsin t X ∧
-      σ.deformedLePred C W hW ε hε (by linarith) hsin t Y := by
+      σ.deformedGtPred C W hW ε t X ∧
+      σ.deformedLePred C W hW ε t Y := by
   obtain ⟨G, _⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
-  exact exists_deformedGt_deformedLe_triangle_of_hn C σ W hW hε (by linarith) hsin G t
+  exact exists_deformedGt_deformedLe_triangle_of_hn C σ W hW G t
 
-variable [IsTriangulated C] in
 /-- **Step 2** (Bridgeland p.24): If every σ-semistable object admits a Q(>t)/Q(≤t)
 truncation triangle (Step 1), then EVERY object admits one. The proof reduces via σ-HN
 to the semistable case and assembles the pieces via the octahedral axiom.
@@ -435,16 +431,11 @@ theorem deformedGtLe_triangle
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
     {ε : ℝ} (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
-    (hStep1 : ∀ {E : C} {φ : ℝ}, σ.slicing.P φ E → ¬IsZero E → ∀ t : ℝ,
-      ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
-        Triangle.mk f g h ∈ distTriang C ∧
-        σ.deformedGtPred C W hW ε hε (by linarith) hsin t X ∧
-        σ.deformedLePred C W hW ε hε (by linarith) hsin t Y)
     (E : C) (t : ℝ) :
     ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
       Triangle.mk f g h ∈ distTriang C ∧
-      σ.deformedGtPred C W hW ε hε (by linarith) hsin t X ∧
-      σ.deformedLePred C W hW ε hε (by linarith) hsin t Y := by
+      σ.deformedGtPred C W hW ε t X ∧
+      σ.deformedLePred C W hW ε t Y := by
   -- Step 0: Get σ-HN of E
   obtain ⟨F⟩ := σ.slicing.hn_exists E
   -- Step 1: Split σ-HN at cutoff (t + ε)
@@ -460,21 +451,21 @@ theorem deformedGtLe_triangle
   have hGM_contain := And.right (And.right (And.right hprops2))
   -- Helper: ExtensionClosure is idempotent
   have ec_idem_gt : ∀ {X : C},
-      (σ.deformedGtPred C W hW ε hε (by linarith) hsin t).ExtensionClosure X →
-      σ.deformedGtPred C W hW ε hε (by linarith) hsin t X := by
+      (σ.deformedGtPred C W hW ε t).ExtensionClosure X →
+      σ.deformedGtPred C W hW ε t X := by
     intro X hX; induction hX with
     | zero hZ => exact .zero hZ
     | mem h => exact h
     | ext hT _ _ ihX ihY => exact .ext hT ihX ihY
   have ec_idem_le : ∀ {X : C},
-      (σ.deformedLePred C W hW ε hε (by linarith) hsin t).ExtensionClosure X →
-      σ.deformedLePred C W hW ε hε (by linarith) hsin t X := by
+      (σ.deformedLePred C W hW ε t).ExtensionClosure X →
+      σ.deformedLePred C W hW ε t X := by
     intro X hX; induction hX with
     | zero hZ => exact .zero hZ
     | mem h => exact h
     | ext hT _ _ ihX ihY => exact .ext hT ihX ihY
   -- Step 3: HIGH ∈ Q(>t) — each factor has phase > t+ε ≥ t+ε, use P_in_deformedGtPred
-  have hHIGH : σ.deformedGtPred C W hW ε hε (by linarith) hsin t HIGH := by
+  have hHIGH : σ.deformedGtPred C W hW ε t HIGH := by
     apply ec_idem_gt
     exact ObjectProperty.ExtensionClosure.of_postnikovTower GH.toPostnikovTower (fun j ↦ by
       by_cases hjz : IsZero (GH.toPostnikovTower.factor j)
@@ -482,18 +473,18 @@ theorem deformedGtLe_triangle
       · exact P_in_deformedGtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
           (show GH.φ j ≥ t + ε by linarith [hH_phases j]) (GH.semistable j) hjz)
   -- Step 4: LOW ∈ Q(≤t) — each factor has phase ≤ t-ε, use P_in_deformedLtPred → Q(≤t)
-  have hLOW : σ.deformedLePred C W hW ε hε (by linarith) hsin t LOW := by
+  have hLOW : σ.deformedLePred C W hW ε t LOW := by
     apply ec_idem_le
     exact ObjectProperty.ExtensionClosure.of_postnikovTower GL.toPostnikovTower (fun j ↦ by
       by_cases hjz : IsZero (GL.toPostnikovTower.factor j)
       · exact ObjectProperty.ExtensionClosure.zero hjz
-      · exact σ.deformedLePred_of_deformedLtPred C W hW hε (by linarith) hsin _ <|
+      · exact σ.deformedLePred_of_deformedLtPred C W hW _ <|
           P_in_deformedLtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
             (show GL.φ j ≤ t - ε by linarith [hL_phases j]) (GL.semistable j) hjz)
   -- Step 5: Handle MID
   by_cases hMIDz : IsZero MID
   · -- MID = 0 ⟹ REST is extension of MID (zero) and LOW (∈ Q(≤t)), so REST ∈ Q(≤t).
-    have hREST : σ.deformedLePred C W hW ε hε (by linarith) hsin t REST :=
+    have hREST : σ.deformedLePred C W hW ε t REST :=
       .ext hT2 (.zero hMIDz) hLOW
     exact ⟨HIGH, REST, fH, gR, hR, hT1, hHIGH, hREST⟩
   · -- MID nonzero: get Q-HN of MID via finite-length subcategory, then truncation
@@ -503,8 +494,8 @@ theorem deformedGtLe_triangle
     have hMID_trunc :
         ∃ (XM YM : C) (fXM : XM ⟶ MID) (gYM : MID ⟶ YM) (hYM : YM ⟶ XM⟦(1 : ℤ)⟧),
           Triangle.mk fXM gYM hYM ∈ distTriang C ∧
-          σ.deformedGtPred C W hW ε hε (by linarith) hsin t XM ∧
-          σ.deformedLePred C W hW ε hε (by linarith) hsin t YM := by
+          σ.deformedGtPred C W hW ε t XM ∧
+          σ.deformedLePred C W hW ε t YM := by
       -- Each factor of MID is σ-semistable with phase in (t-ε, t+ε].
       -- Embed MID in P((t-ε₀, t+ε₀)) ⊂ P((t-2ε-ε₀, t+4ε+ε₀)) and use
       -- interior_has_enveloped_HN to get Q-HN of MID, then split at cutoff t.
@@ -539,8 +530,7 @@ theorem deformedGtLe_triangle
       obtain ⟨G_mid, hG_mid_phases⟩ := interior_has_enveloped_HN C σ W hW hab
         hε (by linarith : ε < 1 / 10) hthin_ab hsin hFL_ab hMIDne hMID_int
       -- Split Q-HN at cutoff t → truncation triangle
-      exact exists_deformedGt_deformedLe_triangle_of_hn C σ W hW hε (by linarith) hsin
-        G_mid t
+      exact exists_deformedGt_deformedLe_triangle_of_hn C σ W hW G_mid t
     obtain ⟨XM, YM, fXM, gYM, hYM, hTM, hXM, hYM_pred⟩ := hMID_trunc
     -- Step 5b: First octahedral — combine MID truncation with LOW to get REST's Q(≤t) part
     -- Compose: XM → MID → REST (= fXM ≫ fM)
@@ -548,7 +538,7 @@ theorem deformedGtLe_triangle
     -- Octahedral: h₁₂ = XM → MID → YM, h₂₃ = MID → REST → LOW, h₁₃ = XM → REST → V
     let oct1 := Triangulated.someOctahedron rfl hTM hT2 hTV
     -- oct1.mem: YM → V → LOW → YM[1] (distinguished)
-    have hV : σ.deformedLePred C W hW ε hε (by linarith) hsin t V :=
+    have hV : σ.deformedLePred C W hW ε t V :=
       .ext oct1.mem hYM_pred hLOW
     -- Step 5c: Second octahedral — combine HIGH with REST's Q(>t) part
     -- Compose: E → REST → V (= gR ≫ vR) and use Octahedron' since gR is second morphism
@@ -556,7 +546,7 @@ theorem deformedGtLe_triangle
     -- Octahedron': h₁₂ = HIGH → E → REST, h₂₃ = XM → REST → V, h₁₃ = Z13 → E → V
     let oct2 := Triangulated.someOctahedron' rfl hT1 hTV hTZ
     -- oct2.mem: HIGH → Z13 → XM → HIGH[1] (distinguished)
-    have hZ13 : σ.deformedGtPred C W hW ε hε (by linarith) hsin t Z13 :=
+    have hZ13 : σ.deformedGtPred C W hW ε t Z13 :=
       .ext oct2.mem hHIGH hXM
     exact ⟨Z13, V, vE, gR ≫ vR, wZ13, hTZ, hZ13, hV⟩
 

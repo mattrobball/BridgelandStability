@@ -34,7 +34,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 /-! ### Node 7.3: Phase confinement of W-semistable objects -/
 
-variable [IsTriangulated C] in
 /-- **Bridgeland's Lemma 7.3 (upper bound).** If `E` is W-semistable of W-phase `ψ` in
 `P((a, b))`, the interval is thin enough (`b - a + 2ε₀ < 1`), and each nonzero semistable
 factor has W-phase within `ε₀` of its σ-phase, then `σ.phiPlus(E) ≤ ψ + ε₀`.
@@ -263,7 +262,6 @@ theorem phiPlus_lt_of_wSemistable
       -- W-semistability: wPhaseOf(W(K)) ≤ ψ. But wPhaseOf > φ-ε₀ ≥ ψ. Contradiction.
       linarith [hsemistable hT hKI hYI hKne]
 
-variable [IsTriangulated C] in
 /-- **Bridgeland's Lemma 7.3 (lower bound).** If `E` is W-semistable of W-phase `ψ` in
 `P((a, b))`, the interval is thin enough (`b - a + 2ε₀ < 1`), and each nonzero semistable
 factor has W-phase within `ε₀` of its σ-phase, then `ψ - ε₀ ≤ σ.phiMinus(E)`.
@@ -622,7 +620,6 @@ theorem phiMinus_gt_of_wSemistable
         ⟨by linarith, by linarith⟩),
       hsemistable hT hKI hYI hKZ]
 
-variable [IsTriangulated C] in
 /-- **Bridgeland's Lemma 7.3 (phase confinement).** If `E` is W-semistable of W-phase `ψ`
 in `P((a, b))`, the interval is thin enough, and each nonzero semistable factor has W-phase
 within `ε₀` of its σ-phase, then `σ.phiMinus(E) ∈ [ψ - ε₀, ψ + ε₀]` and
@@ -642,7 +639,6 @@ theorem phase_confinement_of_wSemistable
   ⟨phiMinus_gt_of_wSemistable C σ hSS hε₀ hthin hperturb,
    phiPlus_lt_of_wSemistable C σ hSS hε₀ hthin hperturb⟩
 
-variable [IsTriangulated C] in
 /-- **Weak hom-vanishing for W-semistable objects.** If `E` is W-semistable of W-phase `ψ₁`
 and `F` is W-semistable of W-phase `ψ₂` with `ψ₁ > ψ₂ + 2ε₀`, then `Hom(E, F) = 0`.
 
@@ -681,7 +677,6 @@ theorem hom_eq_zero_of_wSemistable_gap
   exact σ.slicing.intervalHom_eq_zero C hEI hFI hdisjoint f
 
 set_option maxHeartbeats 800000 in
-variable [IsTriangulated C] in
 /-- A nonzero strict quotient of a `W`-semistable interval object has `W`-phase at least
 that of the middle term. This is the quotient-side semistability inequality needed for the
 thin-interval HN recursion. -/
@@ -791,15 +786,13 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
           have : ψ - 1 < a - ε₀ := by
             have hmid : b + ε₀ - 1 < a - ε₀ := by linarith
             linarith
-          linarith,
-        by
+          linarith, by
           have hψ_up : b + ε₀ < ψ + 1 := by
             have hmid : b + ε₀ < a - ε₀ + 1 := by linarith
             linarith
           linarith⟩
 
 set_option maxHeartbeats 800000 in
-variable [IsTriangulated C] in
 /-- A nonzero quotient term in a distinguished triangle of a `W`-semistable interval object
 has `W`-phase at least that of the middle term, provided both outer terms remain in the same
 thin interval. This is the triangle-form quotient inequality used when the quotient is
@@ -883,8 +876,7 @@ theorem SkewedStabilityFunction.phase_le_of_triangle_quotient
           have : ψ - 1 < a - ε₀ := by
             have hmid : b + ε₀ - 1 < a - ε₀ := by linarith
             linarith
-          linarith,
-        by
+          linarith, by
           have : b + ε₀ < ψ + 1 := by
             have hmid : b + ε₀ < a - ε₀ + 1 := by linarith
             linarith

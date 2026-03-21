@@ -30,9 +30,11 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
 
-variable [IsTriangulated C] in
+section
+
+variable [IsTriangulated C]
+
 /-- A minimal-phase strict kernel has semistable strict quotient. This is the mdq step used
 for the thin-interval HN recursion. The only quotient-side hypothesis needed is plain
 phase minimality among proper strict kernels. -/
@@ -50,7 +52,6 @@ structure IsStrictMDQKernel
     wPhaseOf (ssf.W (K₀.of C (cokernel M.arrow).obj)) ssf.α ≤
       wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α
 
-variable [IsTriangulated C] in
 /-- A proper strict kernel with semistable quotient of minimal quotient phase packages into the
 strict-kernel mdq object used in the faithful Node 7.7 refactor. -/
 theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel
@@ -68,7 +69,6 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel
     IsStrictMDQKernel (C := C) σ ssf M := by
   exact ⟨hM_ne_top, hM_strict, hM_ss, hM_min⟩
 
-variable [IsTriangulated C] in
 theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_minimal
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -112,7 +112,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
     simpa [Y, ψY] using
       ssf.phase_gt_of_maxPhase_strictSubobject_of_not_semistable
         (C := C) (σ := σ) (a := a) (b := b) (X := Y) (M := B)
-        hY_ne hns hB_ne hB_strict hB_max hW_interval
+        hY_ne hns hB_max hW_interval
   let pbB : Subobject X := (Subobject.pullback (cokernel.π M.arrow)).obj B
   have hpb_strict : IsStrictMono pbB.arrow :=
     interval_pullback_arrow_strictMono_of_strictMono
@@ -175,7 +175,6 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
     hM_min pbB hpb_ne_top hpb_strict
   linarith
 
-variable [IsTriangulated C] in
 /-- The quotient-semistability step for Node 7.7 using the paper-faithful strict-Artinian
 input. If a proper strict kernel has minimal quotient phase, then its strict quotient is
 semistable. The proof follows the same pullback contradiction as the legacy finite-subobject
@@ -277,7 +276,6 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
     hM_min pbB hpb_ne_top hpb_strict
   linarith
 
-variable [IsTriangulated C] in
 /-- The strict-Artinian quotient-semistability step packages a minimal-phase strict kernel into
 the mdq-kernel structure used by the faithful Lemma 7.7 recursion. -/
 theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_strictArtinian
@@ -304,7 +302,6 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_st
     (C := C) (σ := σ) (a := a) (b := b) hM_ne_top hM_strict hM_min
     hW_interval hWindow hWidth
 
-variable [IsTriangulated C] in
 /-- Every proper strict quotient of a minimal-phase minimal strict kernel has phase strictly
 larger than the phase of the ambient minimal quotient. This is the kernel-recursion step
 for thin-interval HN existence. -/
@@ -395,18 +392,15 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
     exact wPhaseOf_seesaw_strict hsum.symm rfl hLift_phase_gt hM_Wne hM_range hA_range
   linarith
 
-variable [IsTriangulated C] in
 theorem thinFiniteLength_cokernel
     (σ : StabilityCondition C) {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hFiniteLength : ThinFiniteLengthInInterval (C := C) σ a b)
-    {X : σ.slicing.IntervalCat C a b} {M : Subobject X}
-    (hM_ne_top : M ≠ ⊤) (hM_strict : IsStrictMono M.arrow) :
+    {X : σ.slicing.IntervalCat C a b} {M : Subobject X} :
     IsStrictArtinianObject (cokernel M.arrow) ∧
       IsStrictNoetherianObject (cokernel M.arrow) := by
   exact hFiniteLength (cokernel M.arrow)
 
-variable [IsTriangulated C] in
 theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_finiteLength
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -427,12 +421,11 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_fi
     IsStrictMDQKernel (C := C) σ ssf M := by
   letI : IsStrictArtinianObject (cokernel M.arrow) :=
     (thinFiniteLength_cokernel (C := C) (σ := σ) (a := a) (b := b)
-      hFiniteLength hM_ne_top hM_strict).1
+      hFiniteLength).1
   refine ssf.isStrictMDQKernel_of_minPhase_strictKernel_of_strictArtinian
     (C := C) (σ := σ) (a := a) (b := b) hM_ne_top hM_strict hM_min
     hW_interval hWindow hWidth
 
-variable [IsTriangulated C] in
 /-- Legacy thin-interval HN existence, kept temporarily while Node 7.7 is refactored to the
 paper-faithful finite-length interface.
 
@@ -510,7 +503,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
         have hbot_zero :
             ((⊥ : Subobject Y).arrow) =
               (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y) := by
-          simpa using (Subobject.bot_arrow : (⊥ : Subobject Y).arrow = 0)
+          simp
         let eI : cokernel ((⊥ : Subobject Y).arrow) ≅ Y := by
           rw [hbot_zero]
           exact cokernelZeroIsoTarget
@@ -522,10 +515,10 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
             congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC)
         have hψY_hi : ψY < U := (hWindow Y.property hY_obj_ne).2
         have hj_lt : j.val < 1 := by
-          simpa [HNFiltration.single] using j.is_lt
+          exact j.is_lt
         have hj0 : j.val = 0 := by
           omega
-        have hj : j = ⟨0, by simpa [HNFiltration.single] using (show 0 < 1 by omega)⟩ :=
+        have hj : j = ⟨0, by simp [HNFiltration.single]⟩ :=
           Fin.ext hj0
         subst j
         have hbot_phase_gt_zero :
@@ -624,19 +617,17 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
             have hjEq : j.val = G.n := by
               omega
             have hG_last : G.n < H.n := by
-              simpa [H, HNFiltration.appendStrictFactor, HNFiltration.appendFactor] using
-                (show G.n < G.n + 1 by omega)
+              simp [H, HNFiltration.appendStrictFactor, HNFiltration.appendFactor]
             have hjLast : j = ⟨G.n, hG_last⟩ := Fin.ext hjEq
             subst j
             have hjFalse : ¬G.n < G.n := by omega
             simpa [H, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hjFalse,
               ψQ] using ⟨hψQ_gt, hψQ_hi⟩
 
-variable [IsTriangulated C] in
-/-- **Node 7.7 (paper-facing statement).** This is the thin-interval HN theorem in the
-shape required by Bridgeland's Lemma 7.7: the thin quasi-abelian category `P((a, b))`
-itself is assumed to have finite length, encoded as ACC/DCC on strict subobjects.
-The remaining input is the semistable Hom-vanishing supplied by Lemma 7.6. -/
+end
+
+/-- Mapping a subobject along a monomorphism identifies it with the subobject cut out by the
+composite arrow. -/
 theorem Subobject.map_eq_mk_mono
     {D : Type*} [Category D] {X Y : D} (f : X ⟶ Y) [Mono f] (S : Subobject X) :
     (Subobject.map f).obj S = Subobject.mk (S.arrow ≫ f) := by
@@ -646,6 +637,8 @@ theorem Subobject.map_eq_mk_mono
     _ = Subobject.mk (S.arrow ≫ f) := by
       simpa using (Subobject.map_mk S.arrow f)
 
+/-- Mapping a subobject along a monomorphism identifies it canonically with the original
+subobject. -/
 noncomputable def Subobject.mapMonoIso
     {D : Type*} [Category D] {X Y : D} (f : X ⟶ Y) [Mono f] (S : Subobject X) :
     ((Subobject.map f).obj S : D) ≅ (S : D) :=
@@ -659,8 +652,10 @@ theorem Subobject.ofLE_map_comp_mapMonoIso_hom
       (Subobject.mapMonoIso f S).hom ≫ Subobject.ofLE S T h := by
   apply Subobject.eq_of_comp_arrow_eq
   apply (cancel_mono f).1
-  simp [Subobject.mapMonoIso, Subobject.map_eq_mk_mono, Category.assoc]
+  simp [Subobject.mapMonoIso, Category.assoc]
 
+/-- Mapping nested subobjects along a monomorphism preserves the cokernel of the induced
+inclusion. -/
 noncomputable def Subobject.cokernelMapMonoIso
     {D : Type*} [Category D] [HasZeroMorphisms D] [HasCokernels D]
     {X Y : D} (f : X ⟶ Y) [Mono f] {S T : Subobject X} (h : S ≤ T) :
@@ -687,8 +682,10 @@ theorem wPhaseOf_cokernel_mapMono_eq
       (Subobject.cokernelMapMonoIso f h)
   simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC)
 
+/-- The cokernel of the inclusion `A ≤ ⊤` in an interval category is canonically the cokernel
+of `A.arrow`. -/
 noncomputable def interval_cokernelTopIso
-    {s : Slicing C} {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {s : Slicing C} {a b : ℝ}
     [HasCokernels (s.IntervalCat C a b)]
     {X : s.IntervalCat C a b} (A : Subobject X) :
     cokernel (Subobject.ofLE A ⊤ le_top) ≅ cokernel A.arrow :=
@@ -696,18 +693,19 @@ noncomputable def interval_cokernelTopIso
     cokernelIsoOfEq (Subobject.ofLE_arrow (X := A) (Y := ⊤) le_top)
 
 theorem wPhaseOf_cokernel_ofLE_top_eq
-    {s : Slicing C} {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
-    {ssf : SkewedStabilityFunction C s a b}
+    {s : Slicing C} {a b α : ℝ}
+    (W : K₀ C →+ ℂ)
     [HasCokernels (s.IntervalCat C a b)]
     {X : s.IntervalCat C a b} (A : Subobject X) :
-    wPhaseOf (ssf.W (K₀.of C (cokernel (Subobject.ofLE A ⊤ le_top)).obj)) ssf.α =
-      wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α := by
+    wPhaseOf (W (K₀.of C (cokernel (Subobject.ofLE A ⊤ le_top)).obj)) α =
+      wPhaseOf (W (K₀.of C (cokernel A.arrow).obj)) α := by
   let eC :=
     (Slicing.IntervalCat.ι (C := C) (s := s) a b).mapIso
       (interval_cokernelTopIso (C := C) (s := s) (a := a) (b := b) A)
-  simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC)
+  simpa using congrArg (fun x ↦ wPhaseOf (W x) α) (K₀.of_iso C eC)
 
 theorem wPhaseOf_cokernel_kernelSubobject_eq
+    [IsTriangulated C]
     {s : Slicing C} {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
     {ssf : SkewedStabilityFunction C s a b}
     {E B : s.IntervalCat C a b} (q : E ⟶ B) (hq : IsStrictEpi q) :
@@ -741,7 +739,7 @@ theorem wPhaseOf_cokernel_kernelSubobject_eq
     apply add_left_cancel
       (a := ssf.W (K₀.of C (kernelSubobject q : s.IntervalCat C a b).obj))
     exact hsumB.symm.trans hsumC
-  simpa [hWB] using congrArg (fun x ↦ wPhaseOf x ssf.α) hWB.symm
+  exact congrArg (fun x ↦ wPhaseOf x ssf.α) hWB.symm
 
 
 end CategoryTheory.Triangulated

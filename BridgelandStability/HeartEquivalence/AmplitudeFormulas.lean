@@ -79,8 +79,7 @@ noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
       ((h.t.truncGELE (-1) (-1)).obj X) ≅ ((h.t.truncGELT (-1) 0).obj X) :=
     (h.t.truncGELEIsoTruncGELT (-1) (-1) 0 rfl).app X
   let e₂ :
-      ((h.t.truncGELT (-1) 0).obj X) ≅ (h.t.truncLT 0).obj X :=
-    by
+      ((h.t.truncGELT (-1) 0).obj X) ≅ (h.t.truncLT 0).obj X := by
       simpa [TStructure.truncGELT] using
         ((@asIso _ _ _ _ ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))
           (by
@@ -108,8 +107,7 @@ noncomputable def HeartStabilityData.heartCoh_zero_iso_of_amp_negOne_zero
     (C := C) (t := h.t) (X := X) (K := K) (Q := Q) hK hQ hT
   let eT := Classical.choose hEx
   let e₁ :
-      ((h.t.truncGELE 0 0).obj X) ≅ (h.t.truncGE 0).obj X :=
-    by
+      ((h.t.truncGELE 0 0).obj X) ≅ (h.t.truncGE 0).obj X := by
       refine ((h.t.truncGELEIsoLEGE 0 0).app X) ≪≫ ?_
       simpa [TStructure.truncLEGE] using
         (@asIso _ _ _ _ ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))

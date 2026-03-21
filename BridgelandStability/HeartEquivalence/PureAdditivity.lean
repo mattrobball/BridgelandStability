@@ -7,6 +7,14 @@ module
 
 public import BridgelandStability.HeartEquivalence.EulerLift
 
+/-!
+# Pure Additivity and K0 Roundtrip
+
+Heart cohomology class formulas for pure (heart-shifted) objects, the K0
+roundtrip isomorphism (heartK0FromK0 and heartK0ToK0 are mutual inverses),
+and triangle additivity of the Euler form on the ambient category.
+-/
+
 @[expose] public section
 
 set_option backward.privateInPublic true

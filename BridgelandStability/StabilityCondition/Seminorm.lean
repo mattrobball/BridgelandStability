@@ -31,7 +31,6 @@ namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C]
 
 /-! ### Generalized metric and seminorm -/
 
@@ -130,6 +129,12 @@ theorem phiMinus_sub_lt_of_slicingDist (s₁ s₂ : Slicing C) {E : C} (hE : ¬I
       ≤ slicingDist C s₁ s₂ := le_iSup_of_le E (le_iSup_of_le hE le_rfl)
   exact absurd hd (not_lt.mpr (h1.trans h2))
 
+variable [IsTriangulated C]
+
+section
+
+omit [IsTriangulated C]
+
 /-- **Lemma 6.1** (one direction). If the slicing distance `d(P, Q) < ε`, then every
 `Q`-semistable object of phase `φ` has all `P`-HN phases in the interval `(φ - ε, φ + ε)`.
 In terms of intrinsic phases: `|φ⁺_P(E) - φ| < ε` and `|φ⁻_P(E) - φ| < ε`. -/
@@ -158,6 +163,8 @@ theorem slicingDist_le_of_phase_bounds (s₁ s₂ : Slicing C) {ε : ℝ}
   apply iSup_le; intro E
   apply iSup_le; intro hE
   exact ENNReal.ofReal_le_ofReal (max_le (hP E hE) (hM E hE))
+
+end
 
 /-- The seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)` (blueprint A9). For a stability condition
 `σ = (Z, P)` and a group homomorphism `U : K₀(D) → ℂ`, this is

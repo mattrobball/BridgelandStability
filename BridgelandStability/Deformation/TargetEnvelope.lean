@@ -146,7 +146,7 @@ theorem semistable_of_target_envelope_triangleTest
 
 theorem stabSeminorm_lt_cos_of_hsin_hthin
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
-    {a b ε₀ : ℝ} (hab : a < b) (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
+    {a b ε₀ : ℝ} (hab : a < b) (hε₀ : 0 < ε₀)
     (hthin : b - a + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
@@ -158,7 +158,7 @@ theorem stabSeminorm_lt_cos_of_hsin_hthin
     apply Real.cos_lt_cos_of_nonneg_of_le_pi_div_two
     · nlinarith [Real.pi_pos, hab]
     · nlinarith [Real.pi_pos, hthin]
-    · nlinarith [Real.pi_pos, hε₀2]
+    · nlinarith [Real.pi_pos, hthin, hε₀]
   have hcos_pos : 0 < Real.cos (Real.pi * (b - a) / 2) := by
     apply Real.cos_pos_of_mem_Ioo
     constructor
@@ -169,7 +169,6 @@ theorem stabSeminorm_lt_cos_of_hsin_hthin
 theorem wPhaseOf_eq_of_intervalProp_upper_inclusion
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a b₁ b₂ ε₀ : ℝ} (hab₁ : a < b₁) (hb : b₁ ≤ b₂)
     {E : C} (hI : σ.slicing.intervalProp C a b₁ E) (hEne : ¬IsZero E)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
@@ -221,14 +220,13 @@ theorem wPhaseOf_eq_of_intervalProp_upper_inclusion
   have hWneE : W (K₀.of C E) ≠ 0 := by
     exact σ.W_ne_zero_of_intervalProp C W hthin₁'
       (stabSeminorm_lt_cos_of_hsin_hthin
-        (C := C) (σ := σ) (W := W) hab₁ hε₀ hε₀2 hthin₁ hsin) hEne hI
+        (C := C) (σ := σ) (W := W) hab₁ hε₀ hthin₁ hsin) hEne hI
   exact wPhaseOf_indep hWneE _ _ hbranch
 
 theorem wPhaseOf_eq_of_intervalProp_lower_inclusion
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
-    {a₁ a₂ b ε₀ : ℝ} (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₂ ≤ a₁)
+    {a₁ a₂ b ε₀ : ℝ} (ha₁ : a₁ < b) (ha : a₂ ≤ a₁)
     {E : C} (hI : σ.slicing.intervalProp C a₁ b E) (hEne : ¬IsZero E)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (hthin₂ : b - a₂ + 2 * ε₀ < 1)
@@ -279,13 +277,12 @@ theorem wPhaseOf_eq_of_intervalProp_lower_inclusion
   have hWneE : W (K₀.of C E) ≠ 0 := by
     exact σ.W_ne_zero_of_intervalProp C W hthin₁'
       (stabSeminorm_lt_cos_of_hsin_hthin
-        (C := C) (σ := σ) (W := W) ha₁ hε₀ hε₀2 hthin₁ hsin) hEne hI
+        (C := C) (σ := σ) (W := W) ha₁ hε₀ hthin₁ hsin) hEne hI
   exact wPhaseOf_indep hWneE _ _ hbranch
 
 theorem wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a b ψ ε₀ : ℝ} {E : C}
     (hI : σ.slicing.intervalProp C a b E) (hEne : ¬IsZero E)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
