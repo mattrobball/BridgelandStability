@@ -175,12 +175,14 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
     hM_min pbB hpb_ne_top hpb_strict
   linarith
 
+namespace SkewedStabilityFunction
+
 /-- The quotient-semistability step for Node 7.7 using the paper-faithful strict-Artinian
 input. If a proper strict kernel has minimal quotient phase, then its strict quotient is
 semistable. The proof follows the same pullback contradiction as the legacy finite-subobject
 version, but the destabilising strict subobject of the quotient is now chosen by
 strict-Artinian descent rather than by finite enumeration. -/
-theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinian
+theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinian
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -275,6 +277,8 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
       ψY ≤ wPhaseOf (ssf.W (K₀.of C (cokernel pbB.arrow).obj)) ssf.α :=
     hM_min pbB hpb_ne_top hpb_strict
   linarith
+
+end SkewedStabilityFunction
 
 /-- The strict-Artinian quotient-semistability step packages a minimal-phase strict kernel into
 the mdq-kernel structure used by the faithful Lemma 7.7 recursion. -/

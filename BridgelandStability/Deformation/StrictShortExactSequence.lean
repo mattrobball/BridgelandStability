@@ -35,10 +35,12 @@ section
 
 variable [IsTriangulated C]
 
+namespace SkewedStabilityFunction
+
 /-- A convenient left-heart version of the first strict short exact sequence wrapper. If the
 left-heart image of `X` has finite subobject lattice, then `X` admits Bridgeland's first strict
 short exact sequence whenever it is not `W`-semistable. -/
-theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_of_finite_leftHeartSubobjects
+theorem exists_first_strictShortExact_of_not_semistable_of_finite_leftHeartSubobjects
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -70,6 +72,8 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
     exact T.toFinite
   exact ssf.exists_first_strictShortExact_of_not_semistable
     (C := C) (σ := σ) (a := a) (b := b) hX hT_fin hns hW_interval
+
+end SkewedStabilityFunction
 
 lemma interval_pullback_cokernel_bot_eq
     {s : Slicing C} {a b : ℝ}
