@@ -543,7 +543,8 @@ private theorem eulerFormObj_covariant_triangleAdditive (F : C)
       intro n hn
       have hfinrank_ne : (Module.finrank k (T.obj₃ ⟶ F⟦n⟧) : ℤ) ≠ 0 := hn
       letI : Nontrivial (T.obj₃ ⟶ F⟦n⟧) :=
-        Module.nontrivial_of_finrank_pos (R := k) (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
+        Module.nontrivial_of_finrank_pos (R := k)
+          (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
       show Nontrivial (T.obj₃ ⟶ F⟦n⟧)
       infer_instance
     have hfc : (Function.support c).Finite := by
@@ -551,7 +552,8 @@ private theorem eulerFormObj_covariant_triangleAdditive (F : C)
       intro n hn
       have hfinrank_ne : (Module.finrank k (T.obj₁ ⟶ F⟦n⟧) : ℤ) ≠ 0 := hn
       letI : Nontrivial (T.obj₁ ⟶ F⟦n⟧) :=
-        Module.nontrivial_of_finrank_pos (R := k) (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
+        Module.nontrivial_of_finrank_pos (R := k)
+          (Nat.pos_of_ne_zero (by exact_mod_cast hfinrank_ne))
       show Nontrivial (T.obj₁ ⟶ F⟦n⟧)
       infer_instance
     simpa [a, b, c, add_comm] using

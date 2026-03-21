@@ -802,7 +802,8 @@ theorem HeartStabilityData.H0Functor_five_term_relation
           (Limits.image (((h.H0Functor (C := C)).shift (n + 1)).map T.mor₁)) := by
   let A : Abelian h.t.heart.FullSubcategory := inferInstance
   let P : Preadditive h.t.heart.FullSubcategory := A.toPreadditive
-  let J : HasZeroMorphisms h.t.heart.FullSubcategory := h.t.heart.instHasZeroMorphismsFullSubcategory
+  let J : HasZeroMorphisms h.t.heart.FullSubcategory :=
+    h.t.heart.instHasZeroMorphismsFullSubcategory
   have hw₀ :
       ((h.H0Functor (C := C)).shift n).map T.mor₁ ≫
           ((h.H0Functor (C := C)).shift n).map T.mor₂ = 0 :=

@@ -125,7 +125,8 @@ theorem SkewedStabilityFunction.exists_semistable_strictQuotient_le_phase_of_fin
           phaseQ T.1 ≤ phaseQ S.1 := by
     intro S hQS_ne
     revert hQS_ne
-    induction S using IsWellFounded.induction (· > · : StrictSubobject X → StrictSubobject X → Prop) with
+    induction S using IsWellFounded.induction
+      (· > · : StrictSubobject X → StrictSubobject X → Prop) with
     | ind S ih =>
         intro hQS_ne
         have hS_ne_top : S.1 ≠ ⊤ := by
@@ -510,7 +511,8 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
       have hzero : q = 0 := zero_of_source_iso_zero _ <|
         (Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ).isoZero
-      exact hq.nonzero (((σ.slicing.intervalProp C a b).ι).map_isZero (IsZero.of_epi_eq_zero q hzero))
+      exact hq.nonzero (((σ.slicing.intervalProp C a b).ι).map_isZero
+        (IsZero.of_epi_eq_zero q hzero))
     have hB_le_cok :
         wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
           wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α :=

@@ -290,7 +290,8 @@ theorem exists_mdq_of_artinian_noetherian
         let qA : cokernel A'.arrow ⟶ B := eT.inv ≫ qT
         have hqA : IsMDQ Z qA := IsMDQ.precomposeIso Z hqT eT.symm
         letI : IsArtinianObject (cokernel A'.arrow) := isArtinianObject_of_epi (cokernel.π A'.arrow)
-        letI : IsNoetherianObject (cokernel A'.arrow) := isNoetherianObject_of_epi (cokernel.π A'.arrow)
+        letI : IsNoetherianObject (cokernel A'.arrow) :=
+          isNoetherianObject_of_epi (cokernel.π A'.arrow)
         exact ⟨B, cokernel.π A'.arrow ≫ qA,
           IsMDQ.comp_of_destabilizing_semistable_subobject Z hA'_ss hA'_phase hA'_top hqA⟩
 
@@ -362,7 +363,8 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
         exact Subobject.map_mk K'.arrow K.arrow
   have hT_le_K : T ≤ K := by
     change (Subobject.map K.arrow).obj K' ≤ K
-    simpa [K, Subobject.map_top] using (Subobject.map K.arrow).monotone (show K' ≤ ⊤ by exact le_top)
+    simpa [K, Subobject.map_top] using
+      (Subobject.map K.arrow).monotone (show K' ≤ ⊤ by exact le_top)
   have hTq : T.arrow ≫ q = 0 := by
     rw [hT_mk]
     let e := Subobject.underlyingIso (K'.arrow ≫ K.arrow)
@@ -488,8 +490,9 @@ private noncomputable def Subobject.cokernelMapIso {E : A} (K : Subobject E)
 
 private theorem phase_cokernel_map_eq (Z : StabilityFunction A) {E : A} (K : Subobject E)
     {S T : Subobject (K : A)} (h : S ≤ T) :
-    Z.phase (cokernel (Subobject.ofLE ((Subobject.map K.arrow).obj S) ((Subobject.map K.arrow).obj T)
-      ((Subobject.map K.arrow).monotone h))) =
+    Z.phase (cokernel (Subobject.ofLE ((Subobject.map K.arrow).obj S)
+      ((Subobject.map K.arrow).obj T)
+        ((Subobject.map K.arrow).monotone h))) =
       Z.phase (cokernel (Subobject.ofLE S T h)) :=
   Z.phase_eq_of_iso (Subobject.cokernelMapIso K h)
 
@@ -786,7 +789,8 @@ noncomputable def AbelianHNFiltration.ofIso {Z : StabilityFunction A} {E E' : A}
     simpa [Subobject.map_bot] using congrArg ((Subobject.map e.hom).obj) F.chain_bot
   chain_top := by
     calc
-      (Subobject.map e.hom).obj (F.chain ⟨F.n, F.n.lt_succ_iff.mpr le_rfl⟩) = Subobject.mk e.hom := by
+      (Subobject.map e.hom).obj
+        (F.chain ⟨F.n, F.n.lt_succ_iff.mpr le_rfl⟩) = Subobject.mk e.hom := by
         simpa [Subobject.map_top] using congrArg ((Subobject.map e.hom).obj) F.chain_top
       _ = ⊤ := Subobject.mk_eq_top_of_isIso e.hom
   φ := F.φ

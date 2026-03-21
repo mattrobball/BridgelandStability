@@ -964,7 +964,8 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
   have hB_ne : B ≠ ⊥ := by
     intro hB
     have hzero : iKM ≫ M.arrow = 0 := by
-      exact (Subobject.mk_eq_bot_iff_zero).mp (show Subobject.mk (iKM ≫ M.arrow) = ⊥ by simpa [B] using hB)
+      exact (Subobject.mk_eq_bot_iff_zero).mp
+        (show Subobject.mk (iKM ≫ M.arrow) = ⊥ by simpa [B] using hB)
     have hId : 𝟙 KI = 0 := by
       apply (cancel_mono (iKM ≫ M.arrow)).1
       rw [hzero]

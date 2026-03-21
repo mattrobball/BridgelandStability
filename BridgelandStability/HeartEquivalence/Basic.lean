@@ -459,7 +459,8 @@ theorem of_iso (h : HeartStabilityData C)
     refine ShortComplex.ShortExact.mk' ?_ inferInstance inferInstance
     exact ((S.exact_iff_epi (by simp [S])).2 inferInstance)
   calc
-    HeartK0.of (C := C) h E = HeartK0.of (C := C) h E + HeartK0.of (C := C) h (0 : h.t.heart.FullSubcategory) := by
+    HeartK0.of (C := C) h E = HeartK0.of (C := C) h E +
+      HeartK0.of (C := C) h (0 : h.t.heart.FullSubcategory) := by
       rw [HeartK0.of_zero (C := C) h, add_zero]
     _ = HeartK0.of (C := C) h F := by
       simpa [S] using (HeartK0.of_shortExact (C := C) h hS).symm
@@ -566,7 +567,8 @@ theorem TStructure.heartFullSubcategory_shortExact_triangle
     rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, hβγ]
     change δ ≫ (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = δ
     have hmap :
-        (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = 𝟙 ((shiftFunctor C (1 : ℤ)).obj (ι.obj K)) := by
+        (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) =
+          𝟙 ((shiftFunctor C (1 : ℤ)).obj (ι.obj K)) := by
       exact Functor.map_id (shiftFunctor C (1 : ℤ)) (ι.obj K)
     rw [hmap]
     exact Category.comp_id δ
@@ -619,7 +621,8 @@ def HeartStabilityData.heartK0ToK0
               (fun {W} α hα ↦ by
                 have hker : IsLimit (KernelFork.ofι S.f S.zero) := hS.fIsKernel
                 exact ⟨hker.lift (KernelFork.ofι α hα), hker.fac _ WalkingParallelPair.zero⟩)
-          simp only [SetLike.mem_coe, AddMonoidHom.mem_ker, hx, map_sub, FreeAbelianGroup.lift_apply_of]
+          simp only [SetLike.mem_coe, AddMonoidHom.mem_ker, hx, map_sub,
+            FreeAbelianGroup.lift_apply_of]
           have htri : K₀.of C S.X₂.obj = K₀.of C S.X₁.obj + K₀.of C S.X₃.obj := by
             simpa using (K₀.of_triangle C (Triangle.mk S.f.hom S.g.hom δ) hT)
           rw [htri]
@@ -648,7 +651,8 @@ lemma K₀.of_shift_nat (X : C) :
             = K₀.of C ((X⟦(n : ℤ)⟧)⟦(1 : ℤ)⟧) := by
                 simpa only [Functor.comp_obj] using
                   (K₀.of_iso C
-                    (((shiftFunctorAdd' C (n : ℤ) (1 : ℤ) ((n : ℤ) + 1) (by omega)).app X).symm)).symm
+                    (((shiftFunctorAdd' C (n : ℤ) (1 : ℤ) ((n : ℤ) + 1)
+                      (by omega)).app X).symm)).symm
         _ = -K₀.of C (X⟦(n : ℤ)⟧) := K₀.of_shift_one C (X⟦(n : ℤ)⟧)
         _ = -((((-1 : ℤ) ^ n) • K₀.of C X)) := by rw [ih]
         _ = (((-1 : ℤ) ^ (n + 1)) • K₀.of C X) := by

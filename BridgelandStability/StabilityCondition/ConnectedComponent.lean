@@ -223,9 +223,12 @@ theorem K₀_hom_eq_zero_of_vanishes_on_of (U : K₀ C →+ ℂ)
           calc
             U (QuotientAddGroup.mk (-FreeAbelianGroup.of x : FreeAbelianGroup C)) =
                 -U (QuotientAddGroup.mk (FreeAbelianGroup.of x : FreeAbelianGroup C)) := by
-                  show U (-((QuotientAddGroup.mk (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)) =
-                    -U ((QuotientAddGroup.mk (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)
-                  exact U.map_neg ((QuotientAddGroup.mk (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)
+                  show U (-((QuotientAddGroup.mk
+                    (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)) =
+                    -U ((QuotientAddGroup.mk
+                      (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)
+                  exact U.map_neg ((QuotientAddGroup.mk
+                    (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)
             _ = 0 := by simp [hx]
       | add x y hx hy =>
           change U (QuotientAddGroup.mk (x + y : FreeAbelianGroup C)) = 0

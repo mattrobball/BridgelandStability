@@ -339,7 +339,8 @@ noncomputable def componentTopologicalLinearLocalModel
             rw [slicingDist_self]; exact ENNReal.ofReal_pos.mpr hε_pos
       · -- Continuity (Prop 6.3 + Lemma 6.2)
         have hZcont : Continuous Zmap := by
-          change @Continuous comp ↥V instTopologicalSpaceSubtype (TopologicalSpace.generateFrom (componentSeminormBasis C cc)) Zmap
+          change @Continuous comp ↥V instTopologicalSpaceSubtype
+            (TopologicalSpace.generateFrom (componentSeminormBasis C cc)) Zmap
           rw [continuous_generateFrom_iff]
           rintro S ⟨W, r, hr, rfl⟩
           rw [isOpen_iff_mem_nhds]

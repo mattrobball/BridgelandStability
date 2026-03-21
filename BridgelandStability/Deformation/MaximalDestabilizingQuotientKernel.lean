@@ -528,10 +528,10 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
                   (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y)).obj)) ssf.α := by
           simpa [hbot_zero] using hbot_phase_gt
         have hbot_phase_eq_zero :
-            wPhaseOf
-              (ssf.W (K₀.of C
+            wPhaseOf (ssf.W (K₀.of C
                 (cokernel
-                  (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y)).obj)) ssf.α = ψY := by
+                  (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y)).obj))
+              ssf.α = ψY := by
           simpa [hbot_zero] using hbot_phase_eq
         have hψY_gt : t < ψY := by
           exact hbot_phase_eq_zero ▸ hbot_phase_gt_zero

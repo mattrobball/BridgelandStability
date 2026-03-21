@@ -96,7 +96,8 @@ object itself is zero. -/
 theorem Slicing.IntervalCat.isZero_of_obj_isZero (s : Slicing C) {a b : ℝ}
     {X : s.IntervalCat C a b} (hX : IsZero X.obj) : IsZero X := by
   let Z : s.IntervalCat C a b := 0
-  have hZ : IsZero Z.obj := ((Slicing.IntervalCat.ι (C := C) (s := s) a b).map_isZero (isZero_zero _))
+  have hZ : IsZero Z.obj :=
+    ((Slicing.IntervalCat.ι (C := C) (s := s) a b).map_isZero (isZero_zero _))
   let e : X.obj ≅ Z.obj := hX.iso hZ
   let e' : X ≅ Z := by
     refine ⟨ObjectProperty.homMk e.hom, ObjectProperty.homMk e.inv, ?_, ?_⟩

@@ -608,7 +608,8 @@ theorem Slicing.IntervalCat.strictShortExact_inclusion (s : Slicing C)
       (C := C) (s := s) (a := a₁) (b := b₁) hS
   have hT' :
       Triangle.mk ((S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)).f.hom)
-        ((S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)).g.hom) δ ∈ distTriang C := by
+        ((S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)).g.hom)
+          δ ∈ distTriang C := by
     simpa [Slicing.IntervalCat.inclusion] using hT
   exact Slicing.IntervalCat.strictShortExact_of_distTriang
     (C := C) (s := s) (a := a₂) (b := b₂) hT'
