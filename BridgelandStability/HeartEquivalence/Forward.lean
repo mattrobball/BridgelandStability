@@ -31,6 +31,8 @@ variable [IsTriangulated C]
 
 /-! ## Forward: StabilityCondition → HeartStabilityData -/
 
+/-- Restrict a Bridgeland stability condition to the heart of its associated
+t-structure, producing the induced stability function on that abelian heart. -/
 def StabilityCondition.stabilityFunctionOnHeart
     (σ : StabilityCondition C) :
     @StabilityFunction (σ.slicing.toTStructure.heart.FullSubcategory) _
@@ -325,6 +327,7 @@ theorem isSemistable_cokernel_ofLE_congr_local (Z : StabilityFunction A) {E : A}
   subst hB
   exact hs
 
+omit [Abelian A] in
 theorem Subobject.map_eq_mk_mono_local {X Y : A} (f : X ⟶ Y) [Mono f] (S : Subobject X) :
     (Subobject.map f).obj S = Subobject.mk (S.arrow ≫ f) := by
   calc
@@ -333,11 +336,14 @@ theorem Subobject.map_eq_mk_mono_local {X Y : A} (f : X ⟶ Y) [Mono f] (S : Sub
     _ = Subobject.mk (S.arrow ≫ f) := by
       simpa using (Subobject.map_mk S.arrow f)
 
+/-- The image of a subobject along a monomorphism is canonically isomorphic to
+the original subobject. -/
 noncomputable def Subobject.mapMonoIso_local {X Y : A} (f : X ⟶ Y) [Mono f]
     (S : Subobject X) :
     ((Subobject.map f).obj S : A) ≅ (S : A) :=
   Subobject.isoOfEqMk _ (S.arrow ≫ f) (Subobject.map_eq_mk_mono_local f S)
 
+omit [Abelian A] in
 theorem Subobject.ofLE_map_comp_mapMonoIso_hom_local {X Y : A} (f : X ⟶ Y) [Mono f]
     {S T : Subobject X} (h : S ≤ T) :
     Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
@@ -345,8 +351,10 @@ theorem Subobject.ofLE_map_comp_mapMonoIso_hom_local {X Y : A} (f : X ⟶ Y) [Mo
       (Subobject.mapMonoIso_local f S).hom ≫ Subobject.ofLE S T h := by
   apply Subobject.eq_of_comp_arrow_eq
   apply (cancel_mono f).1
-  simp [Subobject.mapMonoIso_local, Subobject.map_eq_mk_mono_local, Category.assoc]
+  simp [Subobject.mapMonoIso_local, Category.assoc]
 
+/-- Taking cokernels after mapping a short exact quotient along a monomorphism
+does not change the resulting quotient object. -/
 noncomputable def Subobject.cokernelMapMonoIso_local {X Y : A} (f : X ⟶ Y) [Mono f]
     {S T : Subobject X} (h : S ≤ T) :
     cokernel (Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
@@ -430,7 +438,7 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
       calc
         K.arrow ≫ (Iso.refl Y).hom = K.arrow := by simp
         _ = (Subobject.underlyingIso i).hom ≫ i := by
-            simpa [K] using (Subobject.underlyingIso_hom_comp_eq_mk i).symm
+          simp [K]
     exact eKi ≪≫ eB
   have hK_ne_top : K ≠ ⊤ := by
     intro hK
@@ -493,11 +501,11 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
           have hj_le : (j : ℕ) ≤ F.n := by omega
-          simpa [newChain, j', hj_le]
+          simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
           have hj1_le : (j : ℕ) + 1 ≤ F.n := by omega
-          simpa [newChain, j', hj1_le]
+          simp [newChain, j', hj1_le]
         have hphase :
             Z.phase (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
               ((Subobject.map i).obj (F.chain j'.succ))
@@ -532,11 +540,11 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
           have hj_le : (j : ℕ) ≤ F.n := by omega
-          simpa [newChain, j', hj_le]
+          simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
           have hj1_le : (j : ℕ) + 1 ≤ F.n := by omega
-          simpa [newChain, j', hj1_le]
+          simp [newChain, j', hj1_le]
         have hsemistable :
             Z.IsSemistable
               (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
