@@ -352,6 +352,24 @@ theorem im_pos_of_sum_zero_and_neg {w₁ w₂ w : ℂ} {ψ : ℝ}
   simp only [Complex.add_im] at him
   linarith
 
+/-! ### Rotated imaginary part -/
+
+/-- **Rotated imaginary part identity.** For any `w : ℂ` and `α ψ : ℝ`,
+`Im(w · exp(-iπψ)) = ‖w‖ · sin(π · (wPhaseOf w α - ψ))`. This is the
+core computation shared by all see-saw and phase-comparison lemmas. -/
+theorem im_mul_exp_neg_eq_norm_mul_sin (w : ℂ) (α ψ : ℝ) :
+    (w * Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im =
+    ‖w‖ * Real.sin (Real.pi * (wPhaseOf w α - ψ)) := by
+  conv_lhs => rw [wPhaseOf_compat w α]
+  rw [mul_assoc, ← Complex.exp_add]
+  have harg : ↑(Real.pi * wPhaseOf w α) * Complex.I +
+      -(↑(Real.pi * ψ) * Complex.I) =
+      ↑(Real.pi * (wPhaseOf w α - ψ)) * Complex.I := by
+    push_cast; ring
+  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
+    zero_mul, add_zero]
+
 /-! ### Phase see-saw lemma -/
 
 /-- **Phase see-saw**: if `w = w₁ + w₂` with `wPhaseOf(w, α) = ψ`,
@@ -370,38 +388,20 @@ theorem wPhaseOf_seesaw {w w₁ w₂ : ℂ} {α ψ : ℝ}
     ψ ≤ wPhaseOf w₂ α := by
   by_contra h
   push_neg at h
-  -- w₂ has phase < ψ in (ψ-1, ψ), so Im(w₂ · rot) < 0
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   have him_w : (w * rot).im = 0 := im_eq_zero_of_wPhaseOf_eq hψ
-  -- Im(w₁ · rot) ≤ 0
   have him_w₁ : (w₁ * rot).im ≤ 0 := by
-    have hw₁_compat := wPhaseOf_compat w₁ α
-    rw [hw₁_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₁ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₁ α - ψ)) * Complex.I := by push_cast; ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₁ α ψ]
     exact mul_nonpos_of_nonneg_of_nonpos (norm_nonneg w₁)
       (Real.sin_nonpos_of_nonpos_of_neg_pi_le
         (by nlinarith [Real.pi_pos, hw₁_range.2])
         (by nlinarith [Real.pi_pos, hw₁_range.1]))
-  -- Im(w₂ · rot) < 0
   have him_w₂ : (w₂ * rot).im < 0 := by
-    have hw₂_compat := wPhaseOf_compat w₂ α
-    rw [hw₂_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₂ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₂ α - ψ)) * Complex.I := by push_cast; ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₂ α ψ]
     exact mul_neg_of_pos_of_neg (norm_pos_iff.mpr hw₂_ne)
       (Real.sin_neg_of_neg_of_neg_pi_lt
         (by nlinarith [Real.pi_pos, h])
         (by nlinarith [Real.pi_pos, hw₂_range.1]))
-  -- Contradiction: Im(w · rot) = Im(w₁ · rot) + Im(w₂ · rot) < 0
   have hsum_im : (w * rot).im = (w₁ * rot).im + (w₂ * rot).im := by
     rw [← hsum, add_mul, Complex.add_im]
   linarith
@@ -421,26 +421,16 @@ theorem wPhaseOf_seesaw_strict {w w₁ w₂ : ℂ} {α ψ : ℝ}
     ψ < wPhaseOf w₁ α := by
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   have him_w : (w * rot).im = 0 := im_eq_zero_of_wPhaseOf_eq hψ
-  -- Im(w₂ · rot) < 0
   have him_w₂ : (w₂ * rot).im < 0 := by
-    have hw₂_compat := wPhaseOf_compat w₂ α
-    rw [hw₂_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₂ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₂ α - ψ)) * Complex.I := by push_cast; ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₂ α ψ]
     exact mul_neg_of_pos_of_neg (norm_pos_iff.mpr hw₂_ne)
       (Real.sin_neg_of_neg_of_neg_pi_lt
         (by nlinarith [Real.pi_pos, hw₂_lt])
         (by nlinarith [Real.pi_pos, hw₂_range.1]))
-  -- Im(w₁ · rot) > 0
   have him_w₁ : 0 < (w₁ * rot).im := by
-    have hsum_im : (w * rot).im = (w₁ * rot).im + (w₂ * rot).im := by
+    have : (w * rot).im = (w₁ * rot).im + (w₂ * rot).im := by
       rw [← hsum, add_mul, Complex.add_im]
     linarith
-  -- Conclude phase(w₁) > ψ
   exact wPhaseOf_gt_of_im_pos him_w₁ hw₁_range
 
 /-- **Dual strict phase see-saw**: if `w = w₁ + w₂` with `wPhaseOf(w, α) = ψ`,
@@ -462,32 +452,18 @@ theorem wPhaseOf_seesaw_dual {w w₁ w₂ : ℂ} {α ψ : ℝ}
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   have him_w : (w * rot).im = 0 := im_eq_zero_of_wPhaseOf_eq hψ
   have him_w₁ : 0 < (w₁ * rot).im := by
-    have hw₁_compat := wPhaseOf_compat w₁ α
-    rw [hw₁_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₁ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₁ α - ψ)) * Complex.I := by push_cast; ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₁ α ψ]
     exact mul_pos (norm_pos_iff.mpr hw₁_ne)
       (Real.sin_pos_of_pos_of_lt_pi
         (by nlinarith [Real.pi_pos, hw₁_gt])
         (by nlinarith [Real.pi_pos, hw₁_range.2]))
   have him_w₂ : 0 ≤ (w₂ * rot).im := by
-    have hw₂_compat := wPhaseOf_compat w₂ α
-    rw [hw₂_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₂ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₂ α - ψ)) * Complex.I := by push_cast; ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₂ α ψ]
     exact mul_nonneg (norm_nonneg w₂)
       (Real.sin_nonneg_of_nonneg_of_le_pi
         (by nlinarith [Real.pi_pos, h])
         (by nlinarith [Real.pi_pos, hw₂_range.2]))
-  have hsum_im : (w * rot).im = (w₁ * rot).im + (w₂ * rot).im := by
+  have : (w * rot).im = (w₁ * rot).im + (w₂ * rot).im := by
     rw [← hsum, add_mul, Complex.add_im]
   linarith
 
@@ -501,38 +477,19 @@ theorem wPhaseOf_lt_of_add_le_lt {w w₁ w₂ : ℂ} {α ψ : ℝ}
     wPhaseOf w α < ψ := by
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   have him_w₁ : (w₁ * rot).im ≤ 0 := by
-    have hw₁_compat := wPhaseOf_compat w₁ α
-    rw [hw₁_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₁ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₁ α - ψ)) * Complex.I := by
-      push_cast
-      ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₁ α ψ]
     exact mul_nonpos_of_nonneg_of_nonpos (norm_nonneg w₁)
       (Real.sin_nonpos_of_nonpos_of_neg_pi_le
         (by nlinarith [Real.pi_pos, hw₁_range.2])
         (by nlinarith [Real.pi_pos, hw₁_range.1]))
   have him_w₂ : (w₂ * rot).im < 0 := by
-    have hw₂_compat := wPhaseOf_compat w₂ α
-    rw [hw₂_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₂ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₂ α - ψ)) * Complex.I := by
-      push_cast
-      ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₂ α ψ]
     exact mul_neg_of_pos_of_neg (norm_pos_iff.mpr hw₂_ne)
       (Real.sin_neg_of_neg_of_neg_pi_lt
         (by nlinarith [Real.pi_pos, hw₂_lt])
         (by nlinarith [Real.pi_pos, hw₂_range.1]))
   have him_w : (w * rot).im < 0 := by
-    rw [← hsum, add_mul, Complex.add_im]
-    linarith
+    rw [← hsum, add_mul, Complex.add_im]; linarith
   exact wPhaseOf_lt_of_im_neg him_w hw_range
 
 /-- If `w = w₁ + w₂`, the total phase is at most `ψ`, and one summand has phase strictly
@@ -549,38 +506,19 @@ theorem wPhaseOf_lt_of_add_le_gt {w w₁ w₂ : ℂ} {α ψ : ℝ}
     wPhaseOf w₂ α < ψ := by
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   have him_w : (w * rot).im ≤ 0 := by
-    have hw_compat := wPhaseOf_compat w α
-    rw [hw_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w α - ψ)) * Complex.I := by
-      push_cast
-      ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w α ψ]
     exact mul_nonpos_of_nonneg_of_nonpos (norm_nonneg w)
       (Real.sin_nonpos_of_nonpos_of_neg_pi_le
         (by nlinarith [Real.pi_pos, hw_le])
         (by nlinarith [Real.pi_pos, hw_range.1]))
   have him_w₁ : 0 < (w₁ * rot).im := by
-    have hw₁_compat := wPhaseOf_compat w₁ α
-    rw [hw₁_compat, mul_assoc, ← Complex.exp_add]
-    have harg : ↑(Real.pi * wPhaseOf w₁ α) * Complex.I +
-        -(↑(Real.pi * ψ) * Complex.I) =
-        ↑(Real.pi * (wPhaseOf w₁ α - ψ)) * Complex.I := by
-      push_cast
-      ring
-    rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-      Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      zero_mul, add_zero]
+    rw [im_mul_exp_neg_eq_norm_mul_sin w₁ α ψ]
     exact mul_pos (norm_pos_iff.mpr hw₁_ne)
       (Real.sin_pos_of_pos_of_lt_pi
         (by nlinarith [Real.pi_pos, hw₁_gt])
         (by nlinarith [Real.pi_pos, hw₁_range.2]))
   have him_w₂ : (w₂ * rot).im < 0 := by
-    rw [← hsum, add_mul, Complex.add_im] at him_w
-    linarith
+    rw [← hsum, add_mul, Complex.add_im] at him_w; linarith
   exact wPhaseOf_lt_of_im_neg him_w₂ hw₂_range
 
 /-! ### K₀ decomposition of imaginary parts -/
