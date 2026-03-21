@@ -298,7 +298,7 @@ theorem wPhaseOf_of_exp {m φ α : ℝ} (hm : 0 < m)
       Complex.exp (-(↑(Real.pi * α) * Complex.I)) =
       ↑m * Complex.exp (↑(Real.pi * (φ - α)) * Complex.I) := by
     rw [mul_assoc, ← Complex.exp_add]
-    congr 1; push_cast; ring
+    congr 1; push_cast; ring_nf
   rw [hexp, Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I,
     toIocMod_eq_self]
   exact ⟨by nlinarith [Real.pi_pos, hφ.1], by nlinarith [Real.pi_pos, hφ.2]⟩
