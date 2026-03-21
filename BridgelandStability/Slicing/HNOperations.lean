@@ -180,7 +180,7 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
     · simp only [show i ≤ G.n from by omega, h1, dite_true]
       exact G.chain.map' i (i + 1) (by omega) (by omega)
     · simp only [show i ≤ G.n from by omega, h1, dite_true, dite_false]
-      exact eqToHom (by congr 1; ext; simp [Fin.last]; omega) ≫ lastMor
+      exact eqToHom (by congr 1; ext; grind) ≫ lastMor
   exact
   { n := G.n + 1
     chain := ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn
@@ -206,7 +206,7 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
           (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj' j.val _
         simp only [ComposableArrows.obj', ComposableArrows.mkOfObjOfMapSucc_obj, objFn,
           show j.val ≤ G.n from by omega, dite_true]
-        congr 1; ext; simp [Fin.last]; omega
+        congr 1; ext; grind
     triangle_obj₂ := fun j ↦ by
       have newChainObj : ∀ k (hk : k ≤ G.n),
           (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj ⟨k, by omega⟩ =

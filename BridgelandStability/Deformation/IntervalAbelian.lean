@@ -549,7 +549,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
         fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiPlus]; linarith⟩
+        dsimp only [HNFiltration.phiPlus]; grind⟩
   -- L has s-phases in (φ, φ+1]
   have hL_sgt : s.gtProp C φ ((t.truncLT 0).obj X₃) := by
     have h : ss.gtProp C 1 ((t.truncLT 0).obj X₃) := by
@@ -560,7 +560,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · simp only [HNFiltration.phiMinus] at hgt
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
         fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiMinus]; linarith⟩
+        dsimp only [HNFiltration.phiMinus]; grind⟩
   have hL_sle : s.leProp C (φ + 1) ((t.truncLT 0).obj X₃) := by
     have h : ss.leProp C (1 + 1) ((t.truncLT 0).obj X₃) := by
       have h := (inferInstance : t.IsGE ((t.truncLT 0).obj X₃) (-1)).ge
@@ -571,7 +571,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
         fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiPlus]; linarith⟩
+        dsimp only [HNFiltration.phiPlus]; grind⟩
   -- === Epi approach for Q, K₀ for L ===
   have hB_heart : t.heart B := (t.mem_heart_iff _).mpr ⟨hB_le, inferInstance⟩
   have hQ_heart : t.heart ((t.truncGE 0).obj X₃) :=
@@ -644,7 +644,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
         fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiPlus]; linarith⟩
+        dsimp only [HNFiltration.phiPlus]; grind⟩
   -- === K₀ + Im(Z·rot) ===
   -- P(φ) objects lie on the real axis after rotation by exp(-iπφ)
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))

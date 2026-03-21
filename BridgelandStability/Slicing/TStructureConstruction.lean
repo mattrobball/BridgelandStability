@@ -116,7 +116,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
         let eA := Classical.choice F.top_iso
         have hchainN : F.chain.obj' (F.n - 1 + 1) (by omega) =
             F.chain.obj (Fin.last F.n) :=
-          congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+          congrArg F.chain.obj (Fin.ext (by grind))
         let e₂A : T.obj₂ ≅ A :=
           e₂.trans ((eqToIso hchainN).trans eA)
         let u₂₃ : F.chain.obj' (F.n - 1) (by omega) ⟶ A :=
@@ -267,7 +267,7 @@ theorem Slicing.tStructureAuxGE (s : Slicing C)
         let eA := Classical.choice F.top_iso
         have hchainN : F.chain.obj' (F.n - 1 + 1) (by omega) =
             F.chain.obj (Fin.last F.n) :=
-          congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+          congrArg F.chain.obj (Fin.ext (by grind))
         let e₂A : T.obj₂ ≅ A :=
           e₂.trans ((eqToIso hchainN).trans eA)
         let u₂₃ : F.chain.obj' (F.n - 1) (by omega) ⟶ A :=

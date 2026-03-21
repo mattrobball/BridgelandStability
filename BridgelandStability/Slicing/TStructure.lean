@@ -311,7 +311,7 @@ theorem Slicing.phaseShift_gtProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       simp only [HNFiltration.phiMinus] at hgt
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
-      dsimp only [HNFiltration.phiMinus]; linarith
+      dsimp only [HNFiltration.phiMinus]; grind
   · rintro (hZ | ⟨F, hF, hgt⟩)
     · exact Or.inl hZ
     · simp only [HNFiltration.phiMinus] at hgt
@@ -320,7 +320,7 @@ theorem Slicing.phaseShift_gtProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       · change s.P (F.φ j - t + t) _
         rw [show F.φ j - t + t = F.φ j from by ring]
         exact F.semistable j
-      · dsimp only [HNFiltration.phiMinus]; linarith
+      · dsimp only [HNFiltration.phiMinus]; grind
 
 /-- `gtProp` of a phase-shifted slicing at cutoff `u` equals `gtProp` of the
 original slicing at cutoff `u + t`. -/
@@ -355,7 +355,7 @@ theorem Slicing.phaseShift_leProp_zero (s : Slicing C) (t : ℝ) (E : C) :
     · simp only [HNFiltration.phiPlus] at hle
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
-      dsimp only [HNFiltration.phiPlus]; linarith
+      dsimp only [HNFiltration.phiPlus]; grind
   · rintro (hZ | ⟨F, hF, hle⟩)
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hle
@@ -364,7 +364,7 @@ theorem Slicing.phaseShift_leProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       · change s.P (F.φ j - t + t) _
         rw [show F.φ j - t + t = F.φ j from by ring]
         exact F.semistable j
-      · dsimp only [HNFiltration.phiPlus]; linarith
+      · dsimp only [HNFiltration.phiPlus]; grind
 
 /-- `leProp` of a phase-shifted slicing at cutoff `u` equals `leProp` of the
 original slicing at cutoff `u + t`. -/
@@ -399,7 +399,7 @@ theorem Slicing.phaseShift_ltProp_zero (s : Slicing C) (t : ℝ) (E : C) :
     · simp only [HNFiltration.phiPlus] at hlt
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
-      dsimp only [HNFiltration.phiPlus]; linarith
+      dsimp only [HNFiltration.phiPlus]; grind
   · rintro (hZ | ⟨F, hF, hlt⟩)
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hlt
@@ -408,7 +408,7 @@ theorem Slicing.phaseShift_ltProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       · change s.P (F.φ j - t + t) _
         rw [show F.φ j - t + t = F.φ j from by ring]
         exact F.semistable j
-      · dsimp only [HNFiltration.phiPlus]; linarith
+      · dsimp only [HNFiltration.phiPlus]; grind
 
 /-- `ltProp` of a phase-shifted slicing at cutoff `u` equals `ltProp` of the
 original slicing at cutoff `u + t`. -/
@@ -443,7 +443,7 @@ theorem Slicing.phaseShift_geProp_zero (s : Slicing C) (t : ℝ) (E : C) :
     · simp only [HNFiltration.phiMinus] at hge
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ F.semistable j⟩, hF, ?_⟩
-      dsimp only [HNFiltration.phiMinus]; linarith
+      dsimp only [HNFiltration.phiMinus]; grind
   · rintro (hZ | ⟨F, hF, hge⟩)
     · exact Or.inl hZ
     · simp only [HNFiltration.phiMinus] at hge
@@ -452,7 +452,7 @@ theorem Slicing.phaseShift_geProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       · change s.P (F.φ j - t + t) _
         rw [show F.φ j - t + t = F.φ j from by ring]
         exact F.semistable j
-      · dsimp only [HNFiltration.phiMinus]; linarith
+      · dsimp only [HNFiltration.phiMinus]; grind
 
 /-- `geProp` of a phase-shifted slicing at cutoff `u` equals `geProp` of the
 original slicing at cutoff `u + t`. -/

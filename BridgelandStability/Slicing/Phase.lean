@@ -222,7 +222,7 @@ lemma HNFiltration.isZero_factor_last_of_hom_eq_zero (s : Slicing C) {E : C}
   let eE := Classical.choice G.top_iso
   have hobj₂_eq : G.chain.obj' (G.n - 1 + 1) (by omega) = G.chain.right := by
     simp only [ComposableArrows.obj']
-    congr 1; ext; simp; omega
+    congr 1; ext; grind
   let eR : T.obj₂ ≅ E := e₂.trans (eqToIso hobj₂_eq |>.trans eE)
   have hmor₂ : T.mor₂ = 0 := by
     have h1 : eR.inv ≫ T.mor₂ = 0 := hzero _
@@ -240,7 +240,7 @@ lemma HNFiltration.isZero_factor_last_of_hom_eq_zero (s : Slicing C) {E : C}
   by_cases hn1 : G.n = 1
   · -- If G.n = 1, T.obj₁ ≅ chain(0) = chain.left = 0, so T.obj₁⟦1⟧ is zero
     have he : G.chain.obj' (G.n - 1) (by omega) = G.chain.left := by
-      simp only [ComposableArrows.obj']; congr 1; ext; simp; omega
+      simp only [ComposableArrows.obj']; congr 1; ext; grind
     have hZ : IsZero T.obj₁ :=
       G.base_isZero.of_iso (e₁.trans (eqToIso he))
     exact ((shiftFunctor C (1 : ℤ)).map_isZero hZ).eq_of_src _ _
@@ -365,7 +365,7 @@ def HNFiltration.dropFirst {P : ℝ → ObjectProperty C} {E : C}
     top_iso := ⟨by
       change (ComposableArrows.mkOfObjOfMapSucc _ _).obj ⟨F.n - 1, _⟩ ≅ E
       simp only [ComposableArrows.mkOfObjOfMapSucc_obj]
-      exact (eqToIso (by congr 1; ext; simp; omega)).trans (Classical.choice F.top_iso)⟩
+      exact (eqToIso (by congr 1; ext; grind)).trans (Classical.choice F.top_iso)⟩
     zero_isZero := fun h ↦ by omega
     φ := fun j ↦ F.φ ⟨j.val + 1, by omega⟩
     hφ := by
@@ -433,7 +433,7 @@ def HNFiltration.dropLast {P : ℝ → ObjectProperty C} {E : C}
       (e₁.symm.trans ((asIso Tn.mor₁).trans
         (e₂.trans ((eqToIso (by
           simp only [ComposableArrows.obj']
-          congr 1; ext; simp; omega)).trans
+          congr 1; ext; grind)).trans
           (Classical.choice F.top_iso)))))⟩
     zero_isZero := fun h ↦ by omega
     φ := pfx.φ

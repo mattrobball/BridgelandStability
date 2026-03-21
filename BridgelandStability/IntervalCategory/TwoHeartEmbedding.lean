@@ -264,7 +264,7 @@ theorem Slicing.phiPlus_lt_of_triangle_with_leProp (s : Slicing C)
       · obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_first C s hEZ
         have hE_gap : ∀ j : Fin FE.n, FE.φ j < FK.φ ⟨0, hnK⟩ := fun j ↦ by
           have h1 : FE.φ j ≤ FE.φ ⟨0, hnE⟩ := by
-            apply FE.hφ.antitone; simp only [Fin.le_def]; omega
+            apply FE.hφ.antitone; grind
           have h2 : FE.φ ⟨0, hnE⟩ = s.phiPlus C E hEZ :=
             (s.phiPlus_eq C E hEZ FE hnE hneE).symm
           linarith [hE_lt hEZ]
@@ -286,7 +286,7 @@ theorem Slicing.phiPlus_lt_of_triangle_with_leProp (s : Slicing C)
           intro j
           change GQ.φ j + ((-1 : ℤ) : ℝ) < FK.φ ⟨0, hnK⟩
           have h1 : GQ.φ j ≤ GQ.φ ⟨0, hnQ⟩ := by
-            apply GQ.hφ.antitone; simp only [Fin.le_def]; omega
+            apply GQ.hφ.antitone; grind
           have h2 : GQ.φ ⟨0, hnQ⟩ ≤ c := by
             have := hGQ_le; change GQ.phiPlus C hnQ ≤ c at this; exact this
           have h3 : ((-1 : ℤ) : ℝ) = -1 := by norm_num
@@ -330,7 +330,7 @@ theorem Slicing.phiMinus_gt_of_triangle_with_gtProp (s : Slicing C)
             have := hE_gt hEZ
             rw [s.phiMinus_eq C E hEZ FE hnE hneE] at this; exact this
           have h2 : FE.φ ⟨FE.n - 1, by omega⟩ ≤ FE.φ j := by
-            apply FE.hφ.antitone; simp only [Fin.le_def]; omega
+            apply FE.hφ.antitone; grind
           linarith
         exact s.hom_eq_zero_of_lt_phases C
           (FQ.semistable ⟨FQ.n - 1, by omega⟩) FE hE_gap _
