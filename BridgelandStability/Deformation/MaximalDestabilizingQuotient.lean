@@ -32,6 +32,10 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
+omit [IsTriangulated C] in
+/-- The thin interval category `P((a,b))` has strict finite length when every interval object is
+both strict artinian and strict noetherian. This is the finite-length hypothesis used in the mdq
+construction. -/
 def ThinFiniteLengthInInterval (σ : StabilityCondition C) (a b : ℝ)
     [Fact (a < b)] [Fact (b - a ≤ 1)] : Prop :=
   ∀ Y : σ.slicing.IntervalCat C a b,
@@ -87,7 +91,6 @@ theorem thinFiniteLength_of_node78_window
   · dsimp
     linarith
 
-variable [IsTriangulated C] in
 /-- Faithful strict finite-length quotient selection for thin interval categories:
 every nonzero interval object admits a semistable strict quotient whose phase is at most
 that of the object. This is the strict-kernel analogue of Proposition 2.4's first
@@ -172,7 +175,7 @@ theorem SkewedStabilityFunction.exists_semistable_strictQuotient_le_phase_of_fin
       (C := C) (s := σ.slicing) (a := a) (b := b)⟩
   have hS0_ne : ¬IsZero (cokernel S0.1.arrow) := by
     let eI : cokernel ((⊥ : Subobject X).arrow) ≅ X := by
-      rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [Subobject.bot_arrow]]
+      rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
       exact cokernelZeroIsoTarget
     intro hZ
     exact hX (hZ.of_iso eI.symm)
@@ -187,7 +190,7 @@ theorem SkewedStabilityFunction.exists_semistable_strictQuotient_le_phase_of_fin
   have hphase0 :
       phaseQ S0.1 = wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := by
     let eI : cokernel ((⊥ : Subobject X).arrow) ≅ X := by
-      rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [Subobject.bot_arrow]]
+      rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
       exact cokernelZeroIsoTarget
     let eC : (cokernel ((⊥ : Subobject X).arrow)).obj ≅ X.obj :=
       (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
@@ -221,7 +224,6 @@ structure IsStrictMDQ
             wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α →
           ∃ t : B ⟶ B', q' = q ≫ t)
 
-variable [IsTriangulated C] in
 /-- A semistable interval object is its own strict mdq. -/
 theorem IsStrictMDQ.id_of_semistable
     (σ : StabilityCondition C) {a b : ℝ}
@@ -248,9 +250,8 @@ theorem IsStrictMDQ.id_of_semistable
     · exact ssf.phase_le_of_strictQuotient_of_window
         (C := C) (σ := σ) (a := a) (b := b) hss hW_interval hWindow hWidth q' hq' hB'_nz
     · intro hEq
-      exact ⟨q', by simpa [hEq] using (Category.id_comp q').symm⟩
+      exact ⟨q', by exact (Category.id_comp q').symm⟩
 
-variable [IsTriangulated C] in
 /-- Precomposing a strict mdq with an isomorphism of sources preserves the strict mdq property. -/
 theorem IsStrictMDQ.precomposeIso
     (σ : StabilityCondition C) {a b : ℝ}
@@ -278,11 +279,10 @@ theorem IsStrictMDQ.precomposeIso
     refine ⟨t, ?_⟩
     change q' = (e.hom ≫ q) ≫ t
     calc
-      q' = e.hom ≫ (e.inv ≫ q') := by simp [Category.assoc]
+      q' = e.hom ≫ (e.inv ≫ q') := by simp
       _ = e.hom ≫ (q ≫ t) := by simpa [q''] using congrArg (fun f : X ⟶ B' => e.hom ≫ f) ht
       _ = (e.hom ≫ q) ≫ t := by rw [Category.assoc]
 
-variable [IsTriangulated C] in
 /-- If `p` and `p ≫ q` are strict epimorphisms in a thin interval category, then `q` is a
 strict epimorphism. This is detected in the left heart, where it reduces to the usual
 epimorphism factor property in an abelian category. -/
@@ -291,12 +291,9 @@ theorem interval_strictEpi_of_strictEpi_comp
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X Q B : σ.slicing.IntervalCat C a b}
     (p : X ⟶ Q) (q : Q ⟶ B)
-    (hp : IsStrictEpi p) (hpq : IsStrictEpi (p ≫ q)) :
+    (hpq : IsStrictEpi (p ≫ q)) :
     IsStrictEpi q := by
   let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := σ.slicing) a b (Fact.out : b - a ≤ 1)
-  haveI : Epi (FL.map p) :=
-    Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
-      (C := C) (s := σ.slicing) (a := a) (b := b) p hp
   haveI : Epi (FL.map (p ≫ q)) :=
     Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
       (C := C) (s := σ.slicing) (a := a) (b := b) (p ≫ q) hpq
@@ -305,7 +302,6 @@ theorem interval_strictEpi_of_strictEpi_comp
   exact Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart
     (C := C) (s := σ.slicing) (a := a) (b := b) q
 
-variable [IsTriangulated C] in
 /-- If a strict mdq factors through a strict epi `X ↠ Q`, then the induced quotient `Q ↠ B`
 is again a strict mdq. -/
 theorem IsStrictMDQ.of_strictEpi_factor
@@ -317,7 +313,7 @@ theorem IsStrictMDQ.of_strictEpi_factor
     (hp : IsStrictEpi p) {πQ : Q ⟶ B} (hfac : p ≫ πQ = q) :
     IsStrictMDQ (C := C) σ ssf πQ where
   strictEpi := by
-    apply interval_strictEpi_of_strictEpi_comp (C := C) (σ := σ) (a := a) (b := b) p πQ hp
+    apply interval_strictEpi_of_strictEpi_comp (C := C) (σ := σ) (a := a) (b := b) p πQ
     simpa [hfac] using hq.strictEpi
   nonzero := hq.nonzero
   semistable := hq.semistable
@@ -334,10 +330,9 @@ theorem IsStrictMDQ.of_strictEpi_factor
     apply (cancel_epi p).1
     calc
       p ≫ q' = q ≫ t := ht
-      _ = (p ≫ πQ) ≫ t := by simpa [hfac]
+      _ = (p ≫ πQ) ≫ t := by simp [hfac]
       _ = p ≫ (πQ ≫ t) := by rw [Category.assoc]
 
-variable [IsTriangulated C] in
 /-- The phase of a strict mdq is bounded above by the phase of any nonzero strict quotient
 of its source. -/
 theorem IsStrictMDQ.phase_le_of_strictQuotient
@@ -375,7 +370,6 @@ theorem IsStrictMDQ.phase_le_of_strictQuotient
     hcokM_obj_ne
     hM_ss).1.trans hM_phase
 
-variable [IsTriangulated C] in
 /-- If a nonzero strict quotient of the source has the same phase as a strict mdq, then it is
 already semistable. Otherwise a destabilizing semistable strict subobject would produce a
 smaller-phase strict quotient, contradicting mdq minimality. -/
@@ -434,7 +428,6 @@ theorem IsStrictMDQ.isSemistable_of_strictQuotient_phase_eq
       _ = wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α := hEq
   exact (not_lt_of_ge hmin) hlt
 
-variable [IsTriangulated C] in
 /-- Equality of phase with a strict mdq forces factorization through that mdq. -/
 theorem IsStrictMDQ.factor_of_phase_eq_of_strictQuotient
     (σ : StabilityCondition C) {a b : ℝ}
@@ -461,7 +454,6 @@ theorem IsStrictMDQ.factor_of_phase_eq_of_strictQuotient
   obtain ⟨t, ht⟩ := (hq.minimal p hp hQ hQ_ss).2 hEq
   exact ⟨t, ht⟩
 
-variable [IsTriangulated C] in
 /-- Recursive mdq step in a thin interval category: if `0 → A → X → X' → 0` is a strict short
 exact sequence with `A` semistable of larger phase, then any strict mdq of `X'` pulls back to a
 strict mdq of `X`, provided maps from higher-phase semistables to lower-phase semistables vanish.
@@ -482,9 +474,9 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (hE : ssf.Semistable C E.obj
+        (_hE : ssf.Semistable C E.obj
           (wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α))
-        (hF : ssf.Semistable C F.obj
+        (_hF : ssf.Semistable C F.obj
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
@@ -558,7 +550,6 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
       have hq'' : IsStrictEpi q'' := by
         apply interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) (cokernel.π A.arrow) q''
-          (isStrictEpi_cokernel A.arrow)
         simpa [q''] using hq'
       obtain ⟨t, ht⟩ := (hq.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
       refine ⟨t, ?_⟩
@@ -581,7 +572,6 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
       have hq'' : IsStrictEpi q'' := by
         apply interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) (cokernel.π A.arrow) q''
-          (isStrictEpi_cokernel A.arrow)
         simpa [q''] using hq'
       have hmin :
           wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
@@ -589,7 +579,6 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
         (hq.minimal q'' hq'' hB'_nz hB'_ss).1
       exact False.elim ((not_lt_of_ge hmin) hlt)
 
-variable [IsTriangulated C] in
 /-- Existence of strict maximally destabilizing quotients under the paper-faithful strict
 finite-length hypothesis on the thin interval category. -/
 theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
@@ -607,9 +596,9 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (hE : ssf.Semistable C E.obj
+        (_hE : ssf.Semistable C E.obj
           (wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α))
-        (hF : ssf.Semistable C F.obj
+        (_hF : ssf.Semistable C F.obj
           (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
         wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α <
           wPhaseOf (ssf.W (K₀.of C E.obj)) ssf.α →
@@ -635,13 +624,13 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
         (C := C) (s := σ.slicing) (a := a) (b := b)⟩
     have hS0_ne : ¬IsZero (cokernel S0.1.arrow) := by
       let e0 : cokernel ((⊥ : Subobject X).arrow) ≅ X := by
-        rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [Subobject.bot_arrow]]
+        rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
         exact cokernelZeroIsoTarget
       intro hZ
       exact hX (hZ.of_iso e0.symm)
     obtain ⟨B, q, hq⟩ := h S0 hS0_ne
     let e0 : cokernel S0.1.arrow ≅ X := by
-      rw [show ((⊥ : Subobject X).arrow) = 0 by simpa [S0, Subobject.bot_arrow]]
+      rw [show ((⊥ : Subobject X).arrow) = 0 by simp [Subobject.bot_arrow]]
       exact cokernelZeroIsoTarget
     exact ⟨B, e0.inv ≫ q, IsStrictMDQ.precomposeIso (C := C) (σ := σ) (a := a) (b := b) hq e0.symm⟩
   intro S
@@ -688,7 +677,7 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
             hFiniteLength hW_interval hWindow hWidth hHom hA_ss hA_strict hA_phase_gt hA_ne_top
             (hDestabBound hQS_ne hA_ss hA_strict hA_phase_gt) hqA⟩
 
-variable [IsTriangulated C] in
+/-- The interval-theoretic kernel subobject of `q` is a limit kernel fork for `q`. -/
 noncomputable def interval_kernelSubobject_isLimitKernelFork
     {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -703,7 +692,8 @@ noncomputable def interval_kernelSubobject_isLimitKernelFork
         = u ≫ kernel.ι q := by simp [Category.assoc]
     _ = g := kernel.lift_ι q g hg
 
-variable [IsTriangulated C] in
+/-- A strict epimorphism in the interval category gives a strict short exact sequence with its
+kernel subobject. -/
 theorem interval_strictShortExact_of_kernelSubobject_strictEpi
     {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -724,12 +714,13 @@ theorem Subobject.map_eq_mk {D : Type*} [Category D] {E : D}
     _ = Subobject.mk (S.arrow ≫ K.arrow) := by
       simpa using (Subobject.map_mk S.arrow K.arrow)
 
+/-- The subobject obtained by mapping `S ≤ K ≤ E` along `K.arrow` is canonically isomorphic to
+`S` itself. -/
 noncomputable def Subobject.mapSubIso {D : Type*} [Category D] {E : D}
     (K : Subobject E) (S : Subobject (K : D)) :
     ((Subobject.map K.arrow).obj S : D) ≅ (S : D) :=
   Subobject.isoOfEqMk _ (S.arrow ≫ K.arrow) (Subobject.map_eq_mk K S)
 
-variable [IsTriangulated C] in
 theorem interval_kernelSubobject_ne_top_of_strictEpi_nonzero
     {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -741,11 +732,10 @@ theorem interval_kernelSubobject_ne_top_of_strictEpi_nonzero
     (by simpa [Subobject.mk_arrow] using hK)
   have hzero : q = 0 := by
     apply (cancel_epi ((kernelSubobject q).arrow)).1
-    simpa using (kernelSubobject_arrow_comp (f := q))
+    simp [kernelSubobject_arrow_comp (f := q)]
   have hY_zero : IsZero Y := IsZero.of_epi_eq_zero q hzero
   exact hY (((s.intervalProp C a b).ι).map_isZero hY_zero)
 
-variable [IsTriangulated C] in
 /-- Lemma 3.4 in the quotient form needed for Bridgeland's class `G`: a nonzero strict
 quotient of an object from the inner strip `P((a + 2ε₀, b - 4ε₀))`, taken inside the
 thin category `P((a, b))`, has `W`-phase strictly bigger than `a + ε₀`. -/
@@ -797,10 +787,9 @@ theorem wPhaseOf_gt_of_strictQuotient_of_inner_strip
   exact wPhaseOf_gt_of_geProp_target
     (C := C) (σ := σ) (W := W) (hW := hW) (a := a) (b := b) (ψ := a + ε₀) (ε₀ := ε₀)
     (E := B.obj)
-    (hab := Fact.out) (hI := B.property) (hEne := hBne) (hGe := hBge') hε₀ hε₀2
+    (hI := B.property) (hEne := hBne) (hGe := hBge') hε₀ hε₀2
     (by linarith) (by linarith [hab_inner]) hthin hsin
 
-variable [IsTriangulated C] in
 theorem IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -830,7 +819,6 @@ theorem IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
         (C := C) (s := σ.slicing) (a := a) (b := b) eX.symm hq.semistable)
   exact hns hssX
 
-variable [IsTriangulated C] in
 theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -995,6 +983,5 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
         wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α := by
     exact wPhaseOf_seesaw_strict hsum.symm rfl hLift_phase_gt_M hM_Wne hM_range hA_range
   exact lt_trans hLift_phase_gt hA_phase_gt_lift
-
 
 end CategoryTheory.Triangulated
