@@ -74,7 +74,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
         have hφm : σ.slicing.phiMinus C X.obj hXobj = φ := by
           rw [σ.slicing.phiMinus_eq C X.obj hXobj F hnF hlast]
           have hidx : (⟨F.n - 1, by omega⟩ : Fin F.n) = ⟨0, hnF⟩ := Fin.ext (by omega)
-          simpa [φ, hidx]
+          simp [φ, hidx]
         have hφp : σ.slicing.phiPlus C X.obj hXobj = φ := by
           simpa [φ] using (σ.slicing.phiPlus_eq C X.obj hXobj F hnF hfirst)
         have hφ : φ ∈ Set.Ioc (0 : ℝ) 1 := by
@@ -170,7 +170,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
               (F.φ jLast) <|
               fun j ↦ by
                 have hjlt : (⟨j.val, by omega⟩ : Fin F.n) < jLast := by
-                  exact Fin.mk_lt_mk.mpr (by simpa [jLast] using j.is_lt)
+                  exact Fin.mk_lt_mk.mpr (by omega)
                 exact F.hφ hjlt
           have hphase_lt :
               @StabilityFunction.phase _ _ t.heartFullSubcategoryAbelian
@@ -247,53 +247,59 @@ def StabilityCondition.toHeartStabilityData
   Z := σ.stabilityFunctionOnHeart C
   hasHN := σ.stabilityFunctionOnHeart_hasHN_local C
 
+/-- Normalize a real phase into the standard Bridgeland interval `(0,1]`. -/
 noncomputable def phaseBase
-    (h : HeartStabilityData C) (φ : ℝ) : ℝ :=
+    (φ : ℝ) : ℝ :=
   toIocMod zero_lt_one (0 : ℝ) φ
 
+/-- Record the integral shift needed to move a phase into `(0,1]`. -/
 noncomputable def phaseIndex
-    (h : HeartStabilityData C) (φ : ℝ) : ℤ :=
+    (φ : ℝ) : ℤ :=
   toIocDiv zero_lt_one (0 : ℝ) φ
 
 theorem phaseBase_mem
-    (h : HeartStabilityData C) (φ : ℝ) :
-    phaseBase (C := C) h φ ∈ Set.Ioc (0 : ℝ) 1 := by
+    (φ : ℝ) :
+    phaseBase φ ∈ Set.Ioc (0 : ℝ) 1 := by
   simpa [phaseBase] using
     (toIocMod_mem_Ioc zero_lt_one (0 : ℝ) φ)
 
 theorem phaseBase_add_phaseIndex
-    (h : HeartStabilityData C) (φ : ℝ) :
-    phaseBase (C := C) h φ + phaseIndex (C := C) h φ = φ := by
+    (φ : ℝ) :
+    phaseBase φ + phaseIndex φ = φ := by
   simpa [phaseBase, phaseIndex] using
     (toIocMod_add_toIocDiv_mul zero_lt_one (0 : ℝ) φ)
 
 theorem phaseBase_add_one
-    (h : HeartStabilityData C) (φ : ℝ) :
-    phaseBase (C := C) h (φ + (1 : ℝ)) = phaseBase (C := C) h φ := by
-  simpa [phaseBase] using
-    (toIocMod_add_intCast_mul zero_lt_one (0 : ℝ) φ 1)
+    (φ : ℝ) :
+    phaseBase (φ + (1 : ℝ)) = phaseBase φ := by
+  change toIocMod zero_lt_one (0 : ℝ) (φ + (1 : ℝ)) = toIocMod zero_lt_one (0 : ℝ) φ
+  convert toIocMod_add_intCast_mul zero_lt_one (0 : ℝ) φ 1 using 1
+  ring_nf
 
 theorem phaseIndex_add_one
-    (h : HeartStabilityData C) (φ : ℝ) :
-    phaseIndex (C := C) h (φ + (1 : ℝ)) = phaseIndex (C := C) h φ + (1 : ℤ) := by
-  simpa [phaseIndex] using
-    (toIocDiv_add_intCast_mul zero_lt_one (0 : ℝ) φ 1)
+    (φ : ℝ) :
+    phaseIndex (φ + (1 : ℝ)) = phaseIndex φ + (1 : ℤ) := by
+  change toIocDiv zero_lt_one (0 : ℝ) (φ + (1 : ℝ)) = toIocDiv zero_lt_one (0 : ℝ) φ + (1 : ℤ)
+  convert toIocDiv_add_intCast_mul zero_lt_one (0 : ℝ) φ 1 using 1
+  ring_nf
 
 theorem phaseBase_eq_of_mem_Ioc
-    (h : HeartStabilityData C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
-    phaseBase (C := C) h φ = φ := by
+    {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
+    phaseBase φ = φ := by
   exact (toIocMod_eq_self zero_lt_one).2 (by simpa using hφ)
 
 theorem phaseIndex_eq_zero_of_mem_Ioc
-    (h : HeartStabilityData C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
-    phaseIndex (C := C) h φ = 0 := by
+    {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
+    phaseIndex φ = 0 := by
   exact (toIocDiv_eq_of_sub_zsmul_mem_Ioc (hp := zero_lt_one) (a := (0 : ℝ))
     (b := φ) (n := (0 : ℤ))) (by simpa using hφ)
 
+/-- Semistability in the heart with respect to the heart stability function. -/
 abbrev HeartSemistable
     (h : HeartStabilityData C) (E : h.t.heart.FullSubcategory) : Prop :=
   @StabilityFunction.IsSemistable _ _ h.t.heartFullSubcategoryAbelian h.Z E
 
+/-- The phase of a heart object measured by the heart stability function. -/
 abbrev HeartPhase
     (h : HeartStabilityData C) (E : h.t.heart.FullSubcategory) : ℝ :=
   @StabilityFunction.phase _ _ h.t.heartFullSubcategoryAbelian h.Z E
@@ -313,7 +319,7 @@ def shiftedHeartSemistable
 into `(0,1]`, then shift the object back by the corresponding integer. -/
 def phasePredicate
     (h : HeartStabilityData C) (φ : ℝ) : ObjectProperty C :=
-  shiftedHeartSemistable (C := C) h (phaseBase (C := C) h φ) (phaseIndex (C := C) h φ)
+  shiftedHeartSemistable (C := C) h (phaseBase φ) (phaseIndex φ)
 
 theorem shiftedHeartSemistable_zero_iff
     (h : HeartStabilityData C) (ψ : ℝ) (X : C) :
@@ -354,8 +360,7 @@ theorem phasePredicate_iff_of_mem_Ioc
         ∃ hX : h.t.heart X,
           let XH : h.t.heart.FullSubcategory := ⟨X, hX⟩
           HeartSemistable (C := C) h XH ∧ HeartPhase (C := C) h XH = φ := by
-  simpa [phasePredicate, phaseBase_eq_of_mem_Ioc (C := C) h hφ,
-    phaseIndex_eq_zero_of_mem_Ioc (C := C) h hφ] using
+  simpa [phasePredicate, phaseBase_eq_of_mem_Ioc hφ, phaseIndex_eq_zero_of_mem_Ioc hφ] using
     (shiftedHeartSemistable_zero_iff (C := C) h φ X)
 
 theorem arg_add_lt_max_local {z₁ z₂ : ℂ}
@@ -556,7 +561,7 @@ theorem phasePredicate_closedUnderIso
     (h : HeartStabilityData C) (φ : ℝ) :
     (phasePredicate (C := C) h φ).IsClosedUnderIsomorphisms :=
   shiftedHeartSemistable_closedUnderIso (C := C) h
-    (phaseBase (C := C) h φ) (phaseIndex (C := C) h φ)
+    (phaseBase φ) (phaseIndex φ)
 
 instance phasePredicate_instClosedUnderIso
     (h : HeartStabilityData C) (φ : ℝ) :
@@ -606,9 +611,9 @@ theorem phasePredicate_shift_iff
     (h : HeartStabilityData C) (φ : ℝ) (X : C) :
     phasePredicate (C := C) h φ X ↔
       phasePredicate (C := C) h (φ + (1 : ℝ)) (X⟦(1 : ℤ)⟧) := by
-  simpa [phasePredicate, phaseBase_add_one (C := C) h φ, phaseIndex_add_one (C := C) h φ] using
+  simpa [phasePredicate, phaseBase_add_one φ, phaseIndex_add_one φ] using
     (shiftedHeartSemistable_shift_iff (C := C) h
-      (phaseBase (C := C) h φ) (phaseIndex (C := C) h φ) X)
+      (phaseBase φ) (phaseIndex φ) X)
 
 theorem phasePredicate_shift_int
     (h : HeartStabilityData C) (φ : ℝ) (X : C) (n : ℤ) :
@@ -689,27 +694,27 @@ theorem phasePredicate_shift_int
         exact (ih φ X).mpr (by simpa [Y] using h0)
 
 theorem phaseIndex_lt_phase
-    (h : HeartStabilityData C) (φ : ℝ) :
-    (phaseIndex (C := C) h φ : ℝ) < φ := by
-  have hmem := phaseBase_mem (C := C) h φ
-  have hpos : 0 < phaseBase (C := C) h φ := hmem.1
-  nlinarith [phaseBase_add_phaseIndex (C := C) h φ]
+    (φ : ℝ) :
+    (phaseIndex φ : ℝ) < φ := by
+  have hmem := phaseBase_mem φ
+  have hpos : 0 < phaseBase φ := hmem.1
+  nlinarith [phaseBase_add_phaseIndex φ]
 
 theorem phase_le_phaseIndex_add_one
-    (h : HeartStabilityData C) (φ : ℝ) :
-    φ ≤ (phaseIndex (C := C) h φ : ℝ) + 1 := by
-  have hmem := phaseBase_mem (C := C) h φ
-  have hle : phaseBase (C := C) h φ ≤ 1 := hmem.2
-  nlinarith [phaseBase_add_phaseIndex (C := C) h φ]
+    (φ : ℝ) :
+    φ ≤ (phaseIndex φ : ℝ) + 1 := by
+  have hmem := phaseBase_mem φ
+  have hle : phaseBase φ ≤ 1 := hmem.2
+  nlinarith [phaseBase_add_phaseIndex φ]
 
 theorem phaseIndex_le_of_lt
-    (h : HeartStabilityData C) {φ₁ φ₂ : ℝ} (hlt : φ₂ < φ₁) :
-    phaseIndex (C := C) h φ₂ ≤ phaseIndex (C := C) h φ₁ := by
+    {φ₁ φ₂ : ℝ} (hlt : φ₂ < φ₁) :
+    phaseIndex φ₂ ≤ phaseIndex φ₁ := by
   by_contra hle
-  have hgt : phaseIndex (C := C) h φ₁ < phaseIndex (C := C) h φ₂ := lt_of_not_ge hle
-  have hstep : (phaseIndex (C := C) h φ₁ : ℝ) + 1 ≤ phaseIndex (C := C) h φ₂ := by
+  have hgt : phaseIndex φ₁ < phaseIndex φ₂ := lt_of_not_ge hle
+  have hstep : (phaseIndex φ₁ : ℝ) + 1 ≤ phaseIndex φ₂ := by
     exact_mod_cast (Int.add_one_le_iff.mpr hgt)
-  linarith [phaseIndex_lt_phase (C := C) h φ₂, phase_le_phaseIndex_add_one (C := C) h φ₁]
+  linarith [phaseIndex_lt_phase φ₂, phase_le_phaseIndex_add_one φ₁]
 
 theorem phasePredicate_hom_zero
     (h : HeartStabilityData C)
@@ -718,15 +723,15 @@ theorem phasePredicate_hom_zero
     (hF : phasePredicate (C := C) h φ₂ F)
     (hgap : φ₂ < φ₁)
     (f : E ⟶ F) : f = 0 := by
-  let n₁ := phaseIndex (C := C) h φ₁
-  let n₂ := phaseIndex (C := C) h φ₂
-  let ψ₁ := phaseBase (C := C) h φ₁
-  let ψ₂ := phaseBase (C := C) h φ₂
+  let n₁ := phaseIndex φ₁
+  let n₂ := phaseIndex φ₂
+  let ψ₁ := phaseBase φ₁
+  let ψ₂ := phaseBase φ₂
   rcases hE with hEZ | ⟨hEheart, hEss, hEphase⟩
   · exact hEZ.eq_of_src f 0
   rcases hF with hFZ | ⟨hFheart, hFss, hFphase⟩
   · exact hFZ.eq_of_tgt f 0
-  have hle : n₂ ≤ n₁ := phaseIndex_le_of_lt (C := C) h hgap
+  have hle : n₂ ≤ n₁ := phaseIndex_le_of_lt hgap
   by_cases hidx : n₂ = n₁
   · let EH : h.t.heart.FullSubcategory := ⟨E⟦(-n₁ : ℤ)⟧, by simpa [n₁] using hEheart⟩
     let FH : h.t.heart.FullSubcategory := ⟨F⟦(-n₁ : ℤ)⟧, by simpa [n₁, n₂, hidx] using hFheart⟩
@@ -740,9 +745,9 @@ theorem phasePredicate_hom_zero
       simpa [FH, ψ₂, n₁, n₂, hidx] using hFphase
     have hψ : ψ₂ < ψ₁ := by
       have hφ₂ : φ₂ = ψ₂ + (n₁ : ℝ) := by
-        simpa [ψ₂, n₁, n₂, hidx] using (phaseBase_add_phaseIndex (C := C) h φ₂).symm
+        simpa [ψ₂, n₁, n₂, hidx] using (phaseBase_add_phaseIndex φ₂).symm
       have hφ₁ : φ₁ = ψ₁ + (n₁ : ℝ) := by
-        simpa [ψ₁, n₁] using (phaseBase_add_phaseIndex (C := C) h φ₁).symm
+        simpa [ψ₁, n₁] using (phaseBase_add_phaseIndex φ₁).symm
       linarith [hgap, hφ₂, hφ₁]
     let g : EH.obj ⟶ FH.obj := (shiftFunctor C (-n₁ : ℤ)).map f
     have hg_zero :
@@ -817,7 +822,7 @@ def HeartStabilityData.toPreStabilityCondition
   closedUnderIso := phasePredicate_closedUnderIso (C := C) h
   zero_mem := fun _ ↦ Or.inl (isZero_zero C)
   shift_iff := phasePredicate_shift_iff (C := C) h
-  hom_vanishing := fun φ₁ φ₂ A B hlt hA hB f ↦
+  hom_vanishing := fun _φ₁ _φ₂ _A _B hlt hA hB f ↦
     phasePredicate_hom_zero (C := C) h hA hB hlt f
 
 /-- The corresponding reverse-direction package extracted from an honest stability
