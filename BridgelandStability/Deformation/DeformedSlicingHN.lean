@@ -423,7 +423,7 @@ theorem deformedSlicing_hn_exists
   intro n; induction n with
   | zero =>
     intro t R hLe hGt
-    simp only [Nat.zero_eq, Nat.cast_zero, zero_mul, sub_zero] at hGt
+    simp only [Nat.cast_zero, zero_mul, sub_zero] at hGt
     have hRz := isZero_of_deformedGtPred_deformedLePred C σ W hW hε hε2 hε8 hsin hGt hLe
     exact ⟨HNFiltration.zero C R hRz, fun j ↦ Fin.elim0 j, fun j ↦ Fin.elim0 j⟩
   | succ n ih =>
