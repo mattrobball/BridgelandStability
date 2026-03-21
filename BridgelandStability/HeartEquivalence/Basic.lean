@@ -507,8 +507,8 @@ theorem HeartStabilityData.ZOnHeartK0_of (h : HeartStabilityData C)
       HeartStabilityData.heartZObj (C := C) h E := by
   change (FreeAbelianGroup.lift (HeartStabilityData.heartZObj (C := C) h))
       (FreeAbelianGroup.of E) = HeartStabilityData.heartZObj (C := C) h E
-  simpa using
-    (FreeAbelianGroup.lift_apply_of (HeartStabilityData.heartZObj (C := C) h) E)
+  exact
+    FreeAbelianGroup.lift_apply_of (HeartStabilityData.heartZObj (C := C) h) E
 
 omit [IsTriangulated C] in
 set_option backward.isDefEq.respectTransparency false in
@@ -567,7 +567,7 @@ theorem TStructure.heartFullSubcategory_shortExact_triangle
     change δ ≫ (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = δ
     have hmap :
         (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = 𝟙 ((shiftFunctor C (1 : ℤ)).obj (ι.obj K)) := by
-      simpa using (Functor.map_id (shiftFunctor C (1 : ℤ)) (ι.obj K))
+      exact Functor.map_id (shiftFunctor C (1 : ℤ)) (ι.obj K)
     rw [hmap]
     exact Category.comp_id δ
 
@@ -632,8 +632,8 @@ theorem HeartStabilityData.heartK0ToK0_of
     h.heartK0ToK0 C (HeartK0.of (C := C) h E) = K₀.of C E.obj := by
   change (FreeAbelianGroup.lift fun E : h.t.heart.FullSubcategory => K₀.of C E.obj)
       (FreeAbelianGroup.of E) = K₀.of C E.obj
-  simpa using
-    (FreeAbelianGroup.lift_apply_of (fun E : h.t.heart.FullSubcategory => K₀.of C E.obj) E)
+  exact
+    FreeAbelianGroup.lift_apply_of (fun E : h.t.heart.FullSubcategory => K₀.of C E.obj) E
 
 omit [IsTriangulated C] in
 lemma K₀.of_shift_nat (X : C) :
@@ -662,7 +662,8 @@ lemma K₀.of_shift_negSucc (X : C) :
   intro n
   induction n with
   | zero =>
-      simpa using K₀.of_shift_neg_one C X
+      rw [show (((-1 : ℤ) ^ (0 + 1)) • K₀.of C X) = -K₀.of C X by simp]
+      exact K₀.of_shift_neg_one C X
   | succ n ih =>
       calc
         K₀.of C (X⟦(Int.negSucc (n + 1) : ℤ)⟧)
@@ -674,7 +675,7 @@ lemma K₀.of_shift_negSucc (X : C) :
         _ = -K₀.of C (X⟦(Int.negSucc n : ℤ)⟧) := K₀.of_shift_neg_one C (X⟦(Int.negSucc n : ℤ)⟧)
         _ = -((((-1 : ℤ) ^ (n + 1)) • K₀.of C X)) := by rw [ih]
         _ = (((-1 : ℤ) ^ (n + 2)) • K₀.of C X) := by
-              simpa [pow_succ', mul_zsmul, neg_one_zsmul]
+              simp [pow_succ']
 
 omit [IsTriangulated C] in
 /-- Shifting by `n : ℤ` multiplies the Grothendieck-group class by the parity sign
