@@ -3,8 +3,10 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
-import Mathlib.CategoryTheory.Linear.LinearFunctor
-import Mathlib.CategoryTheory.Shift.Basic
+module
+
+public import Mathlib.CategoryTheory.Linear.LinearFunctor
+public import Mathlib.CategoryTheory.Shift.Basic
 
 /-!
 # Linearity of Shift Functors
