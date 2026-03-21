@@ -33,12 +33,14 @@ variable [IsTriangulated C]
 
 /-! ## Euler Lift and K₀ Isomorphism -/
 
+/-- The `n`th heart cohomology class of `E`, weighted by the parity sign relating shifts in
+`K₀(C)` to classes in `K₀(heart)`. -/
 def HeartStabilityData.heartCohClass
     (h : HeartStabilityData C) (n : ℤ) (E : C) : HeartK0 (C := C) h :=
   (((-1 : ℤ) ^ Int.natAbs n) • HeartK0.of (C := C) h (h.heartCoh (C := C) n E))
 
 theorem HeartStabilityData.heartCohClass_eq_H0FunctorShift
-    (h : HeartStabilityData C) [IsTriangulated C] (n : ℤ) (X : C) :
+    (h : HeartStabilityData C) (n : ℤ) (X : C) :
     h.heartCohClass (C := C) n X =
       (((-1 : ℤ) ^ Int.natAbs n) •
         HeartK0.of (C := C) h (((h.H0Functor (C := C)).shift n).obj X)) := by
@@ -54,7 +56,7 @@ theorem negOnePow_natAbs_succ (n : ℤ) :
   simp
 
 theorem HeartStabilityData.heartCohClass_five_term_relation
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     [Abelian h.t.heart.FullSubcategory]
     [Functor.IsHomological (h.H0Functor (C := C))]
     (T : Triangle C) (hT : T ∈ distTriang C) (n : ℤ) :
@@ -261,7 +263,7 @@ theorem HeartStabilityData.lowerBound_le_upperBound
 alternating sum of the chosen bounded heart cohomology classes. If the chosen
 bounds are reversed, then `E` is zero and we return `0`. -/
 noncomputable def HeartStabilityData.heartEulerClassObj
-    (h : HeartStabilityData C) [IsTriangulated C] (E : C) : HeartK0 (C := C) h := by
+    (h : HeartStabilityData C) (E : C) : HeartK0 (C := C) h := by
   classical
   let a := h.upperBound (C := C) E
   let b := h.lowerBound (C := C) E
@@ -285,8 +287,10 @@ theorem HeartStabilityData.heartK0ToK0_heartEulerClassObj
   · have hzero : IsZero E := h.t.isZero E a b (by omega)
     rw [HeartStabilityData.heartEulerClassObj, dif_neg hab, map_zero, K₀.of_isZero C hzero]
 
+/-- On an object already in the heart, the `H0` functor is canonically isomorphic to the
+identity. -/
 noncomputable def HeartStabilityData.H0FunctorObjIsoOfHeart
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     (h.H0Functor (C := C)).obj E.obj ≅ E := by
   have hLE0 : h.t.IsLE E.obj 0 := (h.t.mem_heart_iff E.obj).mp E.property |>.1
@@ -305,8 +309,9 @@ noncomputable def HeartStabilityData.H0FunctorObjIsoOfHeart
       ((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj E.obj) ≪≫ e0)
   exact ObjectProperty.isoMk _ e0'
 
+/-- The primed `H0` functor also restricts to the identity on heart objects. -/
 noncomputable def HeartStabilityData.H0primeObjIsoOfHeart
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     h.H0prime (C := C) E.obj ≅ E :=
   (h.H0ObjIsoH0prime (C := C) E.obj).symm ≪≫ h.H0FunctorObjIsoOfHeart (C := C) E
@@ -441,8 +446,10 @@ theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
         (h.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι (C := C) A)
   exact hstep₁.trans (hstep₂.trans (by simpa using h.t.truncGEπ_naturality 0 f))
 
+/-- The short complex in the heart obtained by applying `H0'` to a triangle whose source lies in
+the heart. -/
 noncomputable def HeartStabilityData.heartSourceH0primeShortComplex
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
     ShortComplex h.t.heart.FullSubcategory :=
@@ -462,8 +469,10 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_f_eq_toH0primeHom
       h.toH0primeHom (C := C) A f := by
   exact h.H0primeObjIsoOfHeart_inv_comp_H0primeFunctor_map (C := C) A f
 
+/-- Comparison isomorphism between the heart-source `H0'` short complex and the image of the
+ambient distinguished-triangle short complex under `H0'`. -/
 noncomputable def HeartStabilityData.heartSourceH0primeShortComplexIso
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g δ ∈ distTriang C) :
@@ -484,7 +493,7 @@ noncomputable def HeartStabilityData.heartSourceH0primeShortComplexIso
   · simp [HeartStabilityData.heartSourceH0primeShortComplex, shortComplexOfDistTriangle]
 
 theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_iff
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g δ ∈ distTriang C)
@@ -500,7 +509,7 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_ex
         (h.heartSourceH0primeShortComplexIso (C := C) A hT))).symm
 
 theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_of_f_is_kernel
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} (hfg : f ≫ g = 0)
     (hKer :
@@ -512,8 +521,9 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_ex
       (preadditiveCoyoneda.obj (Opposite.op E))).Exact :=
   ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel hKer E
 
+/-- The canonical map from the cokernel of the heart-source `H0'` short complex to `H0' X₃`. -/
 noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_cokernelDesc
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
     cokernel (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f ⟶
@@ -525,7 +535,7 @@ noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_cokernelDesc
 
 @[reassoc (attr := simp)]
 theorem HeartStabilityData.heartSourceH0primeShortComplex_cokernelπ_comp_cokernelDesc
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
     cokernel.π (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f ≫
@@ -536,8 +546,10 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_cokernelπ_comp_cokern
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).zero
 
+/-- In the heart-source `H0'` short complex induced by a distinguished triangle, the first map is
+a kernel. -/
 noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_f_is_kernel_of_distTriang
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} (hfg : f ≫ g = 0)
     {δ : (h.H0prime (C := C) X₃).obj ⟶ A.obj⟦(1 : ℤ)⟧}
@@ -565,7 +577,7 @@ noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_f_is_kernel_
   exact hSE.fIsKernel
 
 theorem HeartStabilityData.H0Functor_isHomological_of_eval_of_heartSourceH0primeShortComplex
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (hHeart :
       ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
         {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
@@ -580,7 +592,7 @@ theorem HeartStabilityData.H0Functor_isHomological_of_eval_of_heartSourceH0prime
     (C := C) A hT E).mpr (hHeart A hT E)
 
 theorem HeartStabilityData.H0Functor_isHomological_of_heartSourceH0primeShortComplex_f_is_kernel
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (hKer :
       ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
         {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
@@ -597,7 +609,7 @@ theorem HeartStabilityData.H0Functor_isHomological_of_heartSourceH0primeShortCom
     (C := C) A (comp_distTriang_mor_zero₁₂ _ hT) (hKer A hT) E
 
 theorem HeartStabilityData.H0Functor_isHomological_of_heartSourceH0primeShortComplex_distTriang
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (hTri :
       ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
         {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
@@ -616,20 +628,27 @@ theorem HeartStabilityData.H0Functor_isHomological_of_heartSourceH0primeShortCom
   exact h.heartSourceH0primeShortComplex_f_is_kernel_of_distTriang
     (C := C) A (comp_distTriang_mor_zero₁₂ _ hT) hδ'.2
 
+/-- The morphism from the `(-1,0)` truncation of `X₃` to `A[1]` induced by a morphism
+`X₃ ⟶ A[1]` with `A` in the heart. -/
 noncomputable def HeartStabilityData.heartSourceNegOneToAShiftHom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₃ : C}
     (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) :
     (h.t.truncGELT (-1) 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := by
   let s : (h.t.truncLT 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := (h.t.truncLTι 0).app X₃ ≫ δ
+  have hnegLe : (-1 : ℤ) ≤ 0 := by norm_num
   have hs :
-      (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s = 0 := by
+      (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s = 0 := by
     have hs' :
-        (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s =
+        (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s =
           (h.t.truncLTι (-1)).app X₃ ≫ δ := by
-      simpa [s, Category.assoc] using
-        congrArg (fun k => k ≫ δ)
-          ((h.t.truncLTι_comp_natTransTruncLTOfLE_app (-1) 0 (by omega) X₃))
+      calc
+        (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s
+            = ((h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ (h.t.truncLTι 0).app X₃) ≫ δ := by
+                dsimp [s]
+                rw [Category.assoc]
+        _ = (h.t.truncLTι (-1)).app X₃ ≫ δ := by
+              rw [h.t.natTransTruncLTOfLE_ι_app (-1) 0 hnegLe X₃]
     rw [hs']
     letI : h.t.IsGE A.obj 0 := (h.t.mem_heart_iff A.obj).mp A.property |>.2
     letI : h.t.IsLE ((h.t.truncLT (-1)).obj X₃) (-2) := h.t.isLE_truncLT_obj ..
@@ -640,21 +659,26 @@ noncomputable def HeartStabilityData.heartSourceNegOneToAShiftHom
 
 @[reassoc]
 theorem HeartStabilityData.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₃ : C}
     (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) :
     (h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X₃) ≫
         h.heartSourceNegOneToAShiftHom (C := C) A δ =
       (h.t.truncLTι 0).app X₃ ≫ δ := by
   let s : (h.t.truncLT 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := (h.t.truncLTι 0).app X₃ ≫ δ
+  have hnegLe : (-1 : ℤ) ≤ 0 := by norm_num
   have hs :
-      (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s = 0 := by
+      (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s = 0 := by
     have hs' :
-        (h.t.natTransTruncLTOfLE (-1) 0 (by omega)).app X₃ ≫ s =
+        (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s =
           (h.t.truncLTι (-1)).app X₃ ≫ δ := by
-      simpa [s, Category.assoc] using
-        congrArg (fun k => k ≫ δ)
-          ((h.t.truncLTι_comp_natTransTruncLTOfLE_app (-1) 0 (by omega) X₃))
+      calc
+        (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s
+            = ((h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ (h.t.truncLTι 0).app X₃) ≫ δ := by
+                dsimp [s]
+                rw [Category.assoc]
+        _ = (h.t.truncLTι (-1)).app X₃ ≫ δ := by
+              rw [h.t.natTransTruncLTOfLE_ι_app (-1) 0 hnegLe X₃]
     rw [hs']
     letI : h.t.IsGE A.obj 0 := (h.t.mem_heart_iff A.obj).mp A.property |>.2
     letI : h.t.IsLE ((h.t.truncLT (-1)).obj X₃) (-2) := h.t.isLE_truncLT_obj ..
@@ -663,8 +687,10 @@ theorem HeartStabilityData.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftH
   exact (Triangle.yoneda_exact₂ _
     (h.t.triangleLTLTGELT_distinguished (-1) 0 (by omega) X₃) s hs).choose_spec.symm
 
+/-- After shifting back by `-1`, `heartSourceNegOneToAShiftHom` becomes a morphism from
+`H^{-1}(X₃)` to the heart object `A`. -/
 noncomputable def HeartStabilityData.heartSourceNegOneToAHom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₃ : C}
     (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) :
     h.heartCoh (C := C) (-1) X₃ ⟶ A := by
@@ -678,7 +704,7 @@ noncomputable def HeartStabilityData.heartSourceNegOneToAHom
       (shiftShiftNeg (X := A.obj) (i := (1 : ℤ))).hom)
 
 theorem HeartStabilityData.exists_heartSourceNegOneToAShiftHom_comp_shift_map_factor
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g δ ∈ distTriang C) :
@@ -708,7 +734,7 @@ theorem HeartStabilityData.exists_heartSourceNegOneToAShiftHom_comp_shift_map_fa
   exact ⟨φ, by simpa [TStructure.triangleLTLTGELT] using hφ⟩
 
 theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_comp_truncGEπ_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E A : h.t.heart.FullSubcategory) {X₃ : C}
     (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) (m : E.obj ⟶ X₃)
     (hm : m ≫ (h.t.truncGEπ 0).app X₃ = 0) :
@@ -729,7 +755,7 @@ theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_comp_t
           simpa [Category.assoc] using congrArg (fun k => k ≫ δ) hu₀.symm
 
 theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_toH0prime_comp_kernel
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : E.obj ⟶ X₂) (g : X₂ ⟶ X₃)
     {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
@@ -753,8 +779,9 @@ theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_toH0pr
       (C := C) E A δ
       (f ≫ g) (by simpa [Category.assoc] using hfgπ)
 
+omit [IsTriangulated C] in
 theorem TStructure.comp_shift_truncGEπ_zero_of_truncLT_negOne
-    (t : TStructure C) [IsTriangulated C] {X₂ X₃ : C}
+    (t : TStructure C) {X₂ X₃ : C}
     (φ : ((t.truncLT (-1)).obj X₃)⟦(1 : ℤ)⟧ ⟶ X₂⟦(1 : ℤ)⟧) :
     φ ≫ (shiftFunctor C (1 : ℤ)).map ((t.truncGEπ 0).app X₂) = 0 := by
   letI : t.IsLE ((t.truncLT (-1)).obj X₃) (-1) := t.isLE_truncLT_obj ..
@@ -766,8 +793,10 @@ theorem TStructure.comp_shift_truncGEπ_zero_of_truncLT_negOne
   exact t.zero (φ ≫ (shiftFunctor C (1 : ℤ)).map ((t.truncGEπ 0).app X₂)) (-2) (-1) (by
     norm_num)
 
+/-- The underlying object of `heartCoh n (E[-n])` is canonically isomorphic to `E` when `E`
+already lies in the heart. -/
 noncomputable def HeartStabilityData.heartCohObjIsoOfHeartShift
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) (n : ℤ) :
     (h.heartCoh (C := C) n (E.obj⟦(-n : ℤ)⟧)).obj ≅ E.obj := by
   let X : C := E.obj⟦(-n : ℤ)⟧
@@ -790,7 +819,7 @@ noncomputable def HeartStabilityData.heartCohObjIsoOfHeartShift
     ((shiftFunctor C n).mapIso e0 ≪≫ shiftNegShift (X := E.obj) (i := n))
 
 theorem HeartStabilityData.heartCohClass_zero_of_heart
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     h.heartCohClass (C := C) 0 E.obj = HeartK0.of (C := C) h E := by
   simpa [HeartStabilityData.heartCohClass, HeartStabilityData.heartCoh] using
