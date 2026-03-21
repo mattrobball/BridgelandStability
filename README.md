@@ -60,7 +60,12 @@ conditions, the central charge map is a local homeomorphism
 So `Stab(D)` is not just a set of structures: locally, each connected component
 looks like a linear space of possible central charges.
 
-In the current formalization, the paper statement is packaged as the proposition
+> For each connected component `Σ ⊂ Stab(D)` there are a linear subspace
+> `V(Σ) ⊂ Hom_Z(K(D), C)`, with a well-defined linear topology, and a local
+> homeomorphism `Z : Σ → V(Σ)` which maps a stability condition `(Z, P)` to
+> its central charge `Z`.
+
+In the current formalization, this paper statement is packaged as the proposition
 `CategoryTheory.Triangulated.bridgelandTheorem_1_2` in
 `BridgelandStability/StabilityCondition/Topology.lean`:
 
@@ -94,6 +99,11 @@ again given by the central charge map into `Hom_Z(N(D), C)`.
 That is the formal geometric payoff of the paper: the stability condition
 itself is a point in a manifold, and wall-crossing can be studied by moving in
 that manifold.
+
+> Suppose `D` is numerically finite. For each connected component
+> `Σ ⊂ Stab_N(D)` there are a subspace `V(Σ) ⊂ Hom_Z(N(D), C)` and a local
+> homeomorphism `Z : Σ → V(Σ)` which maps a stability condition to its central
+> charge `Z`. In particular `Σ` is a finite-dimensional complex manifold.
 
 The numerical topological statement is formalized as
 `CategoryTheory.Triangulated.bridgelandCorollary_1_3` in
