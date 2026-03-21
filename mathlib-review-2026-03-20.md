@@ -85,16 +85,17 @@ Largest proofs:
 - No `erw` usage (no missing API signals)
 - `by exact` usage: 32 total (within healthy bounds)
 - No excessively long `simp` lemma lists
-- `linarith` frequency appropriate for phase-bound arithmetic (29 uses in PhaseConfinement alone)
+- `grind` adopted: 49 uses across 12 files (replacing `simp+omega` and `simp+linarith` combos)
+- Remaining `omega` (1,023), `linarith` (927), `nlinarith` (169) — further `grind` adoption possible
 
-### Systematic duplication
+### ~~Systematic duplication~~ PARTIALLY RESOLVED
 
-- **PhaseArithmetic.lean**: 5 theorems (`wPhaseOf_seesaw`, `_strict`, `_dual`, `_lt_of_add_le_lt`, `_lt_of_add_le_gt`) each recompute `wPhaseOf_compat` expansion. A helper lemma could deduplicate.
-- **TStructureConstruction.lean**: Manual `HNFiltration` struct construction duplicated between `exists_split_with_interval` and `exists_split_at_cutoff`
+- **PhaseArithmetic.lean**: 5 theorems each recompute `wPhaseOf_compat` expansion. A helper lemma could deduplicate.
+- ~~**TStructureConstruction.lean**: `HNFiltration` struct construction duplication~~ — `exists_split_with_interval` now delegates to `exists_split_at_cutoff`
 
-### ~~Missing `@[simp]` candidates~~ RESOLVED
+### ~~Missing `@[simp]` candidates~~ PARTIALLY RESOLVED
 
-`toTStructure_heart_iff`, `toTStructureGE_heart_iff`, and `intervalSubobject_isZero_iff_eq_bot` now have `@[simp]`. Various other `_iff` lemmas across the codebase (~15 candidates) remain unannotated.
+9 `@[simp]` lemmas added: `toTStructure_heart_iff`, `toTStructureGE_heart_iff`, `intervalSubobject_isZero_iff_eq_bot`, `subobject_isZero_iff_eq_bot`, `heartCohClass_eq_zero_of_isZero`, `heartCohClassSum_eq_zero_of_isZero`, `heartEulerClassObj_eq_zero_of_isZero`, `eulerZObj_eq_zero_of_isZero`, `mem_numericalFactorSubmodule_iff`. Various other `_iff` lemmas (~10 candidates) remain.
 
 ### All `noncomputable section` usage justified
 
@@ -160,10 +161,31 @@ Remaining files unchanged:
 
 | Category | Remaining | Resolved |
 |----------|-----------|----------|
-| Style | 4 `Type _` (justified by universe constraints), 300+ CamelCase names | ~~22 long lines~~, ~~11 standalone `by`~~ |
+| Style | 4 `Type _` (justified), 300+ CamelCase names | ~~22 long lines~~, ~~11 standalone `by`~~ |
 | Documentation | — | ~~6 missing docstrings~~, ~~2 missing titles~~ |
-| Proof quality | 5 proofs >300 lines, ~15 missing `@[simp]`, 2 duplication sites | ~~3 `@[simp]` candidates~~ |
-| Generality | 34 `omit` blocks, 55 `private` decls, `ExtensionClosure` placement, amplitude hardcoding | ~~35 pure-analysis lemmas extracted~~, ~~22 `omit` blocks eliminated~~ |
+| Proof quality | 5 proofs >300 lines, ~10 missing `@[simp]`, 1 duplication site | ~~9 `@[simp]` added~~, ~~HNFiltration dedup~~, ~~49 `grind` adoptions~~ |
+| Generality | 34 `omit` blocks, 55 `private` decls, amplitude hardcoding | ~~35 pure-analysis lemmas extracted~~, ~~22 `omit` blocks eliminated~~, ~~`ExtensionClosure` verified~~ |
+| Lean conformance | 200 `backward.*` options (64 files), 8 `backward.isDefEq`, 1 `import all`, 11 `maxHeartbeats` | ~~`grind` adopted (49 uses)~~ |
+
+---
+
+## 5. Lean v4.29 Conformance
+
+### `grind` tactic adoption (PARTIALLY RESOLVED)
+
+49 `grind` uses across 12 files, replacing `simp+omega` and `simp+linarith` combos. Remaining opportunities: ~2,100 standalone `omega`/`linarith`/`nlinarith` calls could potentially use `grind` but require case-by-case testing.
+
+### `backward.*` temporary options (200 occurrences, 64 files)
+
+Every file uses `backward.privateInPublic true`, `backward.privateInPublic.warn false`, `backward.proofsInPublic true`. These are documented as temporary migration aids subject to removal. Additionally, 8 instances of `backward.isDefEq.respectTransparency false` in HeartEquivalence/Basic.lean (5), AbelianSubcategoryImageFactorisation.lean (1), IntervalAbelian.lean (1), Reverse.lean (1).
+
+### `import all` deprecated syntax (1 instance)
+
+`HeartEquivalence/EulerLift.lean:9`: `import all Mathlib.CategoryTheory.Triangulated.TStructure.TruncLTGE`
+
+### `maxHeartbeats` overrides (11 instances)
+
+Performance tuning in MDQ.lean (2M), Forward.lean (2M), Uniqueness.lean (1.6M), HarderNarasimhan.lean (1.6M), PhiPlusMDQ.lean (800K), FiniteLengthHN.lean (800K ×3), PhaseConfinement.lean (800K ×2).
 
 ---
 
@@ -171,13 +193,12 @@ Remaining files unchanged:
 
 ### PhaseArithmetic.lean
 
-- **Systematic duplication of Im/sin computation blocks**: `wPhaseOf_seesaw`, `wPhaseOf_seesaw_strict`, `wPhaseOf_seesaw_dual`, `wPhaseOf_lt_of_add_le_lt`, `wPhaseOf_lt_of_add_le_gt` each recompute the `wPhaseOf_compat` expansion inline. Extract a helper like `wPhaseOf_expand_eq` stating `w = ||w|| * exp(i*pi * wPhaseOf(w, alpha))` and reference it in all five proofs.
-- `im_pos_of_phase_above`, `im_neg_of_phase_below` are pure polar-form facts about `m * exp(i*pi*phi) * exp(-i*pi*psi)`. The core R-computation could be extracted as a standalone lemma.
+- **Systematic duplication of Im/sin computation blocks**: 5 theorems each recompute `wPhaseOf_compat` expansion inline. Extract sign-analysis helpers.
 
-### TStructureConstruction.lean
+### ~~TStructureConstruction.lean~~ RESOLVED
 
-- **Duplicated `HNFiltration` struct construction** between `exists_split_with_interval` and `exists_split_at_cutoff`. Both manually build `GXorig : HNFiltration C s.P X` by copying all fields and adjusting `phi := fun j => GX.phi j + t`. Extract `HNFiltration.phaseShiftCoordinates` helper.
-- `tStructureAux` and `tStructureAuxGE` have `aux` in public names — consider renaming to `tStructure_exists_triangle` or similar.
+- ~~Duplicated HNFiltration construction~~ — `exists_split_with_interval` now delegates to `exists_split_at_cutoff`.
+- `tStructureAux` and `tStructureAuxGE` have `aux` in public names — consider renaming.
 
 ### AmplitudeFormulas.lean
 
