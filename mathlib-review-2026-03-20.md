@@ -117,19 +117,20 @@ All extracted files use proper namespaces (no `CategoryTheory.Triangulated` wrap
 
 `ExtensionClosure.lean` exists at project root (defining `ObjectProperty.ExtensionClosure`) and `Slicing/ExtensionClosure.lean` also exists. The root definition is a generic triangulated category construct requiring only `HasZeroObject`, `HasShift`, `Preadditive`, `Pretriangulated`. Relationship between the two files should be clarified.
 
-### Overly broad section variables
+### Overly broad section variables (PARTIALLY RESOLVED)
 
-Many files declare `[IsTriangulated C]` at section level then use `omit` repeatedly (56 total `omit` blocks across 20 files):
-- `IntervalCategory/TwoHeartEmbedding.lean`: 12 `omit` blocks
-- `StabilityFunction/MDQ.lean`: 6 `omit` blocks
+Reduced from 56 to 34 `omit` blocks across 19 files by restructuring sections:
+- ~~`IntervalCategory/TwoHeartEmbedding.lean`: 12~~ → 0 `omit` blocks
+- ~~`StabilityFunction/MDQ.lean`: 6~~ → 2 (section-level)
+- ~~`HeartEquivalence/Basic.lean`: 5~~ → 3
+- ~~`EulerForm.lean`: 4~~ → 3
+- ~~`HeartEquivalence/H0Functor.lean`: 3~~ → 1
+- ~~`Deformation/Setup.lean`: 3~~ → 2
+
+Remaining files unchanged:
 - `ForMathlib/CategoryTheory/QuasiAbelian/Basic.lean`: 5 `omit` blocks
-- `HeartEquivalence/Basic.lean`: 5 `omit` blocks
-- `EulerForm.lean`: 4 `omit` blocks
-- `HeartEquivalence/H0Functor.lean`: 3 `omit` blocks
-- `Deformation/BoundaryTriangle.lean`: 3 `omit` blocks
-- `Deformation/Setup.lean`: 3 `omit` blocks
-
-Suggests section variables should be restructured.
+- `Deformation/BoundaryTriangle.lean`: 3 `omit` blocks (already well-structured)
+- Others: 1-2 each (isolated inline omits, not worth restructuring)
 
 ### Private declarations blocking reuse
 
@@ -159,10 +160,10 @@ Suggests section variables should be restructured.
 
 | Category | Remaining | Resolved |
 |----------|-----------|----------|
-| Style | 4 `Type _`, 300+ CamelCase names | ~~22 long lines~~, ~~11 standalone `by`~~ |
+| Style | 4 `Type _` (justified by universe constraints), 300+ CamelCase names | ~~22 long lines~~, ~~11 standalone `by`~~ |
 | Documentation | — | ~~6 missing docstrings~~, ~~2 missing titles~~ |
 | Proof quality | 5 proofs >300 lines, ~15 missing `@[simp]`, 2 duplication sites | ~~3 `@[simp]` candidates~~ |
-| Generality | 56 `omit` blocks, 55 `private` decls, `ExtensionClosure` placement, amplitude hardcoding | ~~35 pure-analysis lemmas extracted~~ |
+| Generality | 34 `omit` blocks, 55 `private` decls, `ExtensionClosure` placement, amplitude hardcoding | ~~35 pure-analysis lemmas extracted~~, ~~22 `omit` blocks eliminated~~ |
 
 ---
 
