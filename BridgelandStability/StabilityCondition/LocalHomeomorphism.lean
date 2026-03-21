@@ -644,7 +644,7 @@ theorem bridgeland_theorem_1_2' :
     bridgelandTheorem_1_2 C := by
   intro cc
   let M := componentTopologicalLinearLocalModel C cc
-  let τ_V : TopologicalSpace M.V.toAddSubgroup := inferInstanceAs (TopologicalSpace M.V)
-  exact ⟨M.V.toAddSubgroup, τ_V, M.mem_charge, M.isLocalHomeomorph_chargeMap⟩
+  exact ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace,
+    M.mem_charge, M.isLocalHomeomorph_chargeMap⟩
 
 end CategoryTheory.Triangulated

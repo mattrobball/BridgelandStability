@@ -170,28 +170,29 @@ instance NumericalStabilityCondition.topologicalSpace (χ : K₀ C →+ K₀ C �
 
 /-! ### Corollary 1.3 -/
 
-/-- **Bridgeland's Corollary 1.3** (corrected statement). Assume `C` is numerically
-finite with respect to the Euler form. Then for each connected component of
-`Stab_N(D)` (the space of numerical stability conditions), the factored central
-charge map is a local homeomorphism into a subspace of `Hom_ℤ(N(D), ℂ)`.
+/-- **Bridgeland's Corollary 1.3**. Assume `C` is numerically finite with
+respect to the Euler form. Then for each connected component of `Stab_N(D)`
+(the space of numerical stability conditions), there exists a ℂ-linear
+subspace of `Hom_ℤ(N(D), ℂ)` carrying a normed space structure, and the
+factored central charge map is a local homeomorphism into it.
 
-Since `N(D)` is finitely generated, the target is finite-dimensional, making each
-connected component a finite-dimensional complex manifold (blueprint B5).
-
-This uses `IsLocalHomeomorph` from `Mathlib.Topology.IsLocalHomeomorph` and
-replaces the abstract `χ` parameter with the concrete `eulerForm k C` under
-`[EulerFormDescends k C]`. -/
-def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C] [EulerFormDescends k C] : Prop :=
+Since `N(D)` is finitely generated, the target is finite-dimensional, making
+each connected component a finite-dimensional complex manifold. -/
+def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C]
+    [EulerFormDescends k C] : Prop :=
   let χ := eulerForm k C
   NumericallyFinite C χ →
     ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
-      ∃ (V : AddSubgroup (NumericalK₀ C χ →+ ℂ))
-        (τ_V : TopologicalSpace V)
+      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
+        (_ : NormedAddCommGroup V)
+        (_ : NormedSpace ℂ V)
         (hZ : ∀ σ : NumericalStabilityCondition C χ,
-          ConnectedComponents.mk σ = cc → σ.factors.choose ∈ V),
+          ConnectedComponents.mk σ = cc →
+            σ.factors.choose ∈ V),
         @IsLocalHomeomorph
-          {σ : NumericalStabilityCondition C χ // ConnectedComponents.mk σ = cc}
-          V inferInstance τ_V
+          {σ : NumericalStabilityCondition C χ //
+            ConnectedComponents.mk σ = cc}
+          V inferInstance inferInstance
           (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
 
 end CategoryTheory.Triangulated

@@ -717,25 +717,24 @@ end
 
 /-! ### Theorem 1.2 -/
 
-/-- **Bridgeland's Theorem 1.2** (corrected statement). For each connected component
-`Σ` of the topological space `Stab(D)` (with the Bridgeland topology), there exists
-a linear subspace `V(Σ) ⊆ Hom_ℤ(K₀(D), ℂ)` with a topology such that the central
-charge map `σ ↦ Z(σ)`, restricted to the component `Σ` and landing in `V(Σ)`, is a
-local homeomorphism.
+/-- **Bridgeland's Theorem 1.2**. For each connected component `Σ` of the
+topological space `Stab(D)` (with the Bridgeland topology), there exists a
+ℂ-linear subspace `V(Σ) ⊆ Hom_ℤ(K₀(D), ℂ)` carrying a normed space
+structure, such that the central charge map `σ ↦ Z(σ)`, restricted to `Σ`
+and landing in `V(Σ)`, is a local homeomorphism.
 
-This uses `IsLocalHomeomorph` from `Mathlib.Topology.IsLocalHomeomorph`, avoiding
-raw `PartialHomeomorph` with `@`-threaded topologies. The statement implies that each
-connected component of `Stab(D)` is a manifold locally modelled on the topological
-vector space `V(Σ)`. -/
+This implies each connected component of `Stab(D)` is a manifold locally
+modelled on the topological vector space `V(Σ)`. -/
 def bridgelandTheorem_1_2 : Prop :=
   ∀ (cc : ConnectedComponents (StabilityCondition C)),
-    ∃ (V : AddSubgroup (K₀ C →+ ℂ))
-      (τ_V : TopologicalSpace V)
+    ∃ (V : Submodule ℂ (K₀ C →+ ℂ))
+      (_ : NormedAddCommGroup V)
+      (_ : NormedSpace ℂ V)
       (hZ : ∀ σ : StabilityCondition C,
         ConnectedComponents.mk σ = cc → σ.Z ∈ V),
       @IsLocalHomeomorph
         {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
-        V inferInstance τ_V
+        V inferInstance inferInstance
         (fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, hZ σ hσ⟩)
 
 end CategoryTheory.Triangulated
