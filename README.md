@@ -60,6 +60,28 @@ conditions, the central charge map is a local homeomorphism
 So `Stab(D)` is not just a set of structures: locally, each connected component
 looks like a linear space of possible central charges.
 
+In the current formalization, the paper statement is packaged as the proposition
+`CategoryTheory.Triangulated.bridgelandTheorem_1_2` in
+`BridgelandStability/StabilityCondition/Topology.lean`:
+
+```lean
+def bridgelandTheorem_1_2 : Prop :=
+  ∀ (cc : ConnectedComponents (StabilityCondition C)),
+    ∃ (V : Submodule ℂ (K₀ C →+ ℂ))
+      (_ : NormedAddCommGroup V)
+      (_ : NormedSpace ℂ V)
+      (hZ : ∀ σ : StabilityCondition C,
+        ConnectedComponents.mk σ = cc → σ.Z ∈ V),
+      @IsLocalHomeomorph
+        {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
+        V inferInstance inferInstance
+        (fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, hZ σ hσ⟩)
+```
+
+The corresponding proof term is assembled in
+`BridgelandStability/StabilityCondition/LocalHomeomorphism.lean` as
+`bridgeland_theorem_1_2'`.
+
 Corollary 1.3 is the numerically finite version. When the Euler form on `K(D)`
 has finite-rank numerical quotient
 
@@ -72,6 +94,36 @@ again given by the central charge map into `Hom_Z(N(D), C)`.
 That is the formal geometric payoff of the paper: the stability condition
 itself is a point in a manifold, and wall-crossing can be studied by moving in
 that manifold.
+
+The numerical topological statement is formalized as
+`CategoryTheory.Triangulated.bridgelandCorollary_1_3` in
+`BridgelandStability/NumericalStability.lean`:
+
+```lean
+def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C]
+    [EulerFormDescends k C] : Prop :=
+  let χ := eulerForm k C
+  NumericallyFinite C χ →
+    ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
+      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
+        (_ : NormedAddCommGroup V)
+        (_ : NormedSpace ℂ V)
+        (hZ : ∀ σ : NumericalStabilityCondition C χ,
+          ConnectedComponents.mk σ = cc →
+            σ.factors.choose ∈ V),
+        @IsLocalHomeomorph
+          {σ : NumericalStabilityCondition C χ //
+            ConnectedComponents.mk σ = cc}
+          V inferInstance inferInstance
+          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
+```
+
+The consequent complex-manifold packaging now lives separately in
+`BridgelandStability/NumericalStabilityManifold.lean`, whose theorem
+`bridgelandCorollary_1_3_complexManifold` builds the charted-space and
+`IsManifold` structures for numerical connected components. The Euler-form
+descent used to define the numerical quotient is proved in
+`BridgelandStability/EulerForm.lean`.
 
 ## Techniques from the paper
 
@@ -124,28 +176,43 @@ geometry becomes more approachable.
 ## What is formalized in this repository
 
 The current codebase formalizes a large part of the paper-level infrastructure.
-The most important files are:
+The root file [`BridgelandStability.lean`](BridgelandStability.lean) is now an
+umbrella import over the actual module tree. The main pieces are:
 
-- [`BridgelandStability/StabilityFunction.lean`](BridgelandStability/StabilityFunction.lean):
-  stability functions on abelian categories, phases, semistability, and
-  Harder-Narasimhan filtrations.
-- [`BridgelandStability/Slicing.lean`](BridgelandStability/Slicing.lean):
-  slicings, HN data, phase bounds, interval predicates, and the passage to
-  t-structures.
-- [`BridgelandStability/StabilityCondition.lean`](BridgelandStability/StabilityCondition.lean):
-  Bridgeland stability conditions, the topology on `Stab(D)`, the seminorm
-  machinery, and the paper-style statement of Theorem 1.2.
-- [`BridgelandStability/Deformation/*.lean`](BridgelandStability/Deformation):
-  the local deformation infrastructure behind Bridgeland's Section 7 proof.
-- [`BridgelandStability/DeformationTheorem.lean`](BridgelandStability/DeformationTheorem.lean):
-  componentwise local-homeomorphism machinery and the proof package for
-  Theorem 1.2.
-- [`BridgelandStability/NumericalStability.lean`](BridgelandStability/NumericalStability.lean):
-  Euler forms, numerical Grothendieck groups, numerical stability conditions,
-  and a paper-style statement of Corollary 1.3.
-- [`BridgelandStability/NumericalStabilityManifold.lean`](BridgelandStability/NumericalStabilityManifold.lean):
-  finite-dimensional packaging of the numerical charge space and a complex
-  manifold theorem for numerical connected components.
+- [`BridgelandStability/StabilityFunction/Basic.lean`](BridgelandStability/StabilityFunction/Basic.lean),
+  [`BridgelandStability/StabilityFunction/HarderNarasimhan.lean`](BridgelandStability/StabilityFunction/HarderNarasimhan.lean),
+  [`BridgelandStability/StabilityFunction/MDQ.lean`](BridgelandStability/StabilityFunction/MDQ.lean),
+  and [`BridgelandStability/StabilityFunction/Uniqueness.lean`](BridgelandStability/StabilityFunction/Uniqueness.lean):
+  stability functions, phases, semistability, HN filtrations, maximal
+  destabilizing quotients, and uniqueness.
+- [`BridgelandStability/Slicing/*.lean`](BridgelandStability/Slicing):
+  slicings, phase arithmetic, extension-closure properties, HN operations, and
+  the passage between slicings and t-structures.
+- [`BridgelandStability/StabilityCondition/Basic.lean`](BridgelandStability/StabilityCondition/Basic.lean),
+  [`BridgelandStability/StabilityCondition/ConnectedComponent.lean`](BridgelandStability/StabilityCondition/ConnectedComponent.lean),
+  [`BridgelandStability/StabilityCondition/Deformation.lean`](BridgelandStability/StabilityCondition/Deformation.lean),
+  [`BridgelandStability/StabilityCondition/Seminorm.lean`](BridgelandStability/StabilityCondition/Seminorm.lean),
+  [`BridgelandStability/StabilityCondition/Topology.lean`](BridgelandStability/StabilityCondition/Topology.lean),
+  and [`BridgelandStability/StabilityCondition/LocalHomeomorphism.lean`](BridgelandStability/StabilityCondition/LocalHomeomorphism.lean):
+  stability conditions, the Bridgeland topology, the seminorm machinery, and
+  the connected-component and deformation glue, and the componentwise local
+  linear model behind Theorem 1.2.
+- [`BridgelandStability/Deformation/*.lean`](BridgelandStability/Deformation),
+  culminating in [`BridgelandStability/Deformation/Theorem.lean`](BridgelandStability/Deformation/Theorem.lean):
+  the Section 7 deformation package, including deformed slicings, phase
+  control, HN existence, hom-vanishing, maximal destabilizing quotients, and
+  the proof of the deformation theorem.
+- [`BridgelandStability/HeartEquivalence/*.lean`](BridgelandStability/HeartEquivalence)
+  and [`BridgelandStability/IntervalCategory/*.lean`](BridgelandStability/IntervalCategory):
+  the bridge between slicings and hearts, and the interval-category exactness
+  infrastructure used in the deformation argument.
+- [`BridgelandStability/NumericalStability.lean`](BridgelandStability/NumericalStability.lean),
+  [`BridgelandStability/EulerForm.lean`](BridgelandStability/EulerForm.lean),
+  and [`BridgelandStability/NumericalStabilityManifold.lean`](BridgelandStability/NumericalStabilityManifold.lean):
+  the descent of the Euler form to `K₀`, numerical Grothendieck groups,
+  numerical stability conditions, Corollary 1.3 as a local-homeomorphism
+  statement, and the separate complex manifold assembly for numerical
+  connected components.
 
 The code should be read as an active formalization project, not as a polished
 final library. Some files already expose reusable APIs; others still need the
