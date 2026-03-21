@@ -354,7 +354,7 @@ noncomputable def componentTopologicalLinearLocalModel
           --                   < K*sin(πδ) + ‖Z(τ')-W‖_{σ₀}
           -- Choose δ so K*sin(πδ) < gap = r - ‖Z(τ')-W‖_{σ₀}.
           -- Unfold preimage membership to direct inequality
-          simp only [Set.mem_preimage, Set.mem_setOf_eq] at hτ'_mem
+          simp only [Set.mem_preimage] at hτ'_mem
           -- hτ'_mem : stabSeminorm C σ₀ (↑(Zmap ⟨τ', hτ'cc⟩) - ↑W) < ENNReal.ofReal r
           change stabSeminorm C σ₀ (τ'.Z - ↑W) < ENNReal.ofReal r at hτ'_mem
           -- Finiteness and gap
@@ -598,10 +598,9 @@ noncomputable def componentTopologicalLinearLocalModel
               stabSeminorm C σ_x ((F : V) - σ_x.Z)
                   ≤ K_rev * stabSeminorm C σ₀ ((F : V) - σ_x.Z) := hdom_rev _
               _ ≤ K_rev * ENNReal.ofReal d := by rw [hd_eq]
-              _ = ENNReal.ofReal K_rev.toReal * ENNReal.ofReal d := by simpa [hK_eq]
+              _ = ENNReal.ofReal K_rev.toReal * ENNReal.ofReal d := by simp [hK_eq]
               _ = ENNReal.ofReal (K_rev.toReal * d) := by
-                  simpa using
-                    (ENNReal.ofReal_mul ENNReal.toReal_nonneg (a := K_rev.toReal) (b := d)).symm
+                  rw [ENNReal.ofReal_mul ENNReal.toReal_nonneg]
               _ < ENNReal.ofReal (Real.sin (Real.pi * δ)) :=
                   (ENNReal.ofReal_lt_ofReal_iff hsinδ_pos).2 hmul
           have hsinδ_lt_one : Real.sin (Real.pi * δ) < 1 := by
