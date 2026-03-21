@@ -324,6 +324,7 @@ theorem HeartStabilityData.heartCohClassSum_eq_zero_of_gt_bound
   exact h.heartCohClass_eq_zero_of_gt_bound (C := C) (X := X) (m := b + (j : ℤ))
     (n := c) hjc hLE
 
+@[simp]
 theorem HeartStabilityData.heartCohClass_eq_zero_of_isZero
     (h : HeartStabilityData C)
     {X : C} (hX : IsZero X) (n : ℤ) :
@@ -337,6 +338,7 @@ theorem HeartStabilityData.heartCohClass_eq_zero_of_isZero
   rw [HeartStabilityData.heartCohClass]
   simp [HeartK0.of_isZero (C := C) h hzeroHeart]
 
+@[simp]
 theorem HeartStabilityData.heartCohClassSum_eq_zero_of_isZero
     (h : HeartStabilityData C)
     {X : C} (hX : IsZero X) (b : ℤ) (n : ℕ) :
@@ -522,6 +524,7 @@ theorem HeartStabilityData.heartEulerClassObj_eq_heartCohClassSum
     symm
     exact h.heartCohClassSum_eq_zero_of_isZero (C := C) hzero b (Int.toNat (a - b))
 
+@[simp]
 theorem HeartStabilityData.heartEulerClassObj_eq_zero_of_isZero
     (h : HeartStabilityData C)
     {X : C} (hX : IsZero X) :
@@ -532,6 +535,7 @@ theorem HeartStabilityData.heartEulerClassObj_eq_zero_of_isZero
     le_rfl hLE hGE]
   simpa using h.heartCohClassSum_eq_zero_of_isZero (C := C) hX 0 0
 
+@[simp]
 theorem HeartStabilityData.eulerZObj_eq_zero_of_isZero
     (h : HeartStabilityData C)
     {X : C} (hX : IsZero X) :

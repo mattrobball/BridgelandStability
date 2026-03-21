@@ -206,6 +206,7 @@ lemma isSemistable_of_iso {X Y : A} (e : X ≅ Y) (h : Z.IsSemistable X) :
 /-! ### Subobject lifting and bot/top helpers -/
 
 /-- A subobject is zero iff it equals ⊥. -/
+@[simp]
 lemma subobject_isZero_iff_eq_bot {E : A} (B : Subobject E) :
     IsZero (B : A) ↔ B = ⊥ := by
   constructor

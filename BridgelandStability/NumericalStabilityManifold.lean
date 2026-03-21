@@ -92,6 +92,7 @@ section
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
+@[simp]
 theorem mem_numericalFactorSubmodule_iff {χ : K₀ C →+ K₀ C →+ ℤ} {Z : AmbientChargeSpace C} :
     Z ∈ numericalFactorSubmodule C χ ↔
       ∃ Z' : NumericalChargeSpace C χ, Z = Z'.comp (numericalQuotientMap C χ) := by
