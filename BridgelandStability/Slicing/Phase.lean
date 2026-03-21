@@ -80,7 +80,7 @@ at a high phase, no other filtration can have all phases below that threshold.
 /-- Auxiliary: if `Hom(factor(0), E) = 0` for an HN filtration `F`, then all maps from
 `factor(0)` to any chain object are zero. Proved by downward induction on the chain
 using the coYoneda exact sequence on the inverted rotation. -/
-private lemma chain_hom_eq_zero_of_factor_zero (s : Slicing C) {E : C}
+lemma chain_hom_eq_zero_of_factor_zero (s : Slicing C) {E : C}
     (F : HNFiltration C s.P E) (hn : 0 < F.n)
     (hzero : ∀ f : (F.triangle ⟨0, hn⟩).obj₃ ⟶ E, f = 0) :
     ∀ (k : ℕ) (hk : k < F.n + 1)

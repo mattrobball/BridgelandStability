@@ -45,7 +45,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 -- For a middle-exact sequence K →f M →g N of f.d. k-vector spaces (im f = ker g),
 -- dim M = dim(ker g) + dim(im g) = dim(im f) + dim(im g).
 -- This is just rank-nullity applied to g, combined with exactness.
-private lemma finrank_mid_of_exact {K M N : Type v} [AddCommGroup K] [Module k K]
+lemma finrank_mid_of_exact {K M N : Type v} [AddCommGroup K] [Module k K]
     [AddCommGroup M] [Module k M] [AddCommGroup N] [Module k N]
     [Module.Finite k M]
     (f : K →ₗ[k] M) (g : M →ₗ[k] N) (hfg : LinearMap.range f = LinearMap.ker g) :
@@ -63,8 +63,7 @@ private lemma finrank_mid_of_exact {K M N : Type v} [AddCommGroup K] [Module k K
 -- This is the heart of the Euler characteristic telescoping.
 -- Key cancellation: Σ (-1)^n r(n-1) + Σ (-1)^n r(n) = 0 for finitely supported r.
 -- Proof: shift index in the first sum, use (-1)^(n+1) = -(-1)^n.
-private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
-    (_hr : (Function.support r).Finite) :
+lemma finsum_alternating_shift_cancel {r : ℤ → ℤ} :
     ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * r (n - 1) +
     ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * r n = 0 := by
   -- Shift the first sum: n ↦ n-1 becomes m ↦ m+1
@@ -91,7 +90,7 @@ private lemma finsum_alternating_shift_cancel {r : ℤ → ℤ}
 -- Σ (-1)^n b(n) = Σ (-1)^n a(n) + Σ (-1)^n c(n).
 omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
   [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
-private lemma eulerSum_of_rank_identity
+lemma eulerSum_of_rank_identity
     (E : C) {a b c : ℤ → C} {r : ℤ → ℤ}
     (hrank : ∀ n : ℤ, (Module.finrank k (E ⟶ b n) : ℤ) =
       Module.finrank k (E ⟶ a n) + Module.finrank k (E ⟶ c n) - r (n - 1) - r n)
@@ -198,12 +197,12 @@ private lemma eulerSum_of_rank_identity
     exact hn.2
   rw [finsum_add_distrib hfs1 hfs2]
   simp only [finsum_neg_distrib]
-  linarith [finsum_alternating_shift_cancel hr]
+  linarith [finsum_alternating_shift_cancel (r := r)]
 
 -- A version of `eulerSum_of_rank_identity` for arbitrary finitely-supported integer-valued
 -- sequences. This is used for the covariant Euler form, where the varying object appears in the
 -- first argument of `Hom`.
-private lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
+lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
     (hrank : ∀ n : ℤ, b n = a n + c n - r (n - 1) - r n)
     (hfa : (Function.support a).Finite)
     (hfc : (Function.support c).Finite)
@@ -285,13 +284,13 @@ private lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
     ring]
   rw [finsum_add_distrib hfs1 hfs2]
   simp only [finsum_neg_distrib]
-  linarith [finsum_alternating_shift_cancel hr]
+  linarith [finsum_alternating_shift_cancel (r := r)]
 
 -- For a middle-exact sequence in AddCommGrpCat that is also k-linear,
 -- the range/ker equality lifts from abelian groups to k-modules.
 omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
   [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
-private lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
+lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
     (f : A ⟶ B) (g : B ⟶ C') (hfg : f ≫ g = 0)
     (hexact : ∀ (x : E ⟶ B), x ≫ g = 0 → ∃ y : E ⟶ A, y ≫ f = x) :
     LinearMap.range (Linear.rightComp k E f) = LinearMap.ker (Linear.rightComp k E g) := by
@@ -301,7 +300,7 @@ private lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
   · rintro ⟨y, rfl⟩; rw [Category.assoc, hfg, comp_zero]
   · intro hx; exact hexact x hx
 
-private lemma linearMap_range_eq_ker_of_addMonoidHom {V W X : Type v}
+lemma linearMap_range_eq_ker_of_addMonoidHom {V W X : Type v}
     [AddCommGroup V] [Module k V]
     [AddCommGroup W] [Module k W]
     [AddCommGroup X] [Module k X]
@@ -312,14 +311,14 @@ private lemma linearMap_range_eq_ker_of_addMonoidHom {V W X : Type v}
   change x ∈ f.toAddMonoidHom.range ↔ x ∈ g.toAddMonoidHom.ker
   rw [h]
 
-private noncomputable instance linearCoyonedaObjIsHomological (E : C) :
+noncomputable instance linearCoyonedaObjIsHomological (E : C) :
     (((linearCoyoneda k C).obj (Opposite.op E)) : C ⥤ ModuleCat k).IsHomological where
   exact T hT := by
     rw [ShortComplex.exact_iff_exact_map_forget₂]
     simpa using ((preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT)
 
 omit [IsTriangulated C] in
-private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
+theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
     simp only [eulerFormObj]
@@ -414,7 +413,7 @@ private theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
 -- Same argument applied to the preadditiveYoneda functor.
 omit [IsTriangulated C] in
-private theorem eulerFormObj_covariant_triangleAdditive (F : C)
+theorem eulerFormObj_covariant_triangleAdditive (F : C)
     [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
     IsTriangleAdditive (fun E ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by

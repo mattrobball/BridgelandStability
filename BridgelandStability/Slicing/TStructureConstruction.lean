@@ -429,7 +429,7 @@ theorem Slicing.toTStructureGE_bounded (s : Slicing C) :
 An object `E` lies in the heart of the slicing-induced t-structure if and only
 if it satisfies both `gtProp 0` (all HN phases > 0) and `leProp 1` (all HN
 phases ≤ 1). This identifies the heart with the half-open interval `P((0, 1])`. -/
-theorem Slicing.toTStructure_heart_iff (s : Slicing C) (E : C) :
+@[simp] theorem Slicing.toTStructure_heart_iff (s : Slicing C) (E : C) :
     (s.toTStructure).heart E ↔ s.gtProp C 0 E ∧ s.leProp C 1 E := by
   change s.toTStructure.le 0 E ∧ s.toTStructure.ge 0 E ↔ _
   simp only [toTStructure, Int.cast_zero, neg_zero, sub_zero]
@@ -437,7 +437,7 @@ theorem Slicing.toTStructure_heart_iff (s : Slicing C) (E : C) :
 /-- **Heart identification for the dual half-open convention.**
 An object `E` lies in the heart of `toTStructureGE` if and only if it satisfies
 `geProp 0` and `ltProp 1`, i.e. its HN phases lie in `[0,1)`. -/
-theorem Slicing.toTStructureGE_heart_iff (s : Slicing C) (E : C) :
+@[simp] theorem Slicing.toTStructureGE_heart_iff (s : Slicing C) (E : C) :
     (s.toTStructureGE).heart E ↔ s.geProp C 0 E ∧ s.ltProp C 1 E := by
   change s.toTStructureGE.le 0 E ∧ s.toTStructureGE.ge 0 E ↔ _
   simp only [toTStructureGE, Int.cast_zero, neg_zero, sub_zero]

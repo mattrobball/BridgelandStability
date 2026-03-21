@@ -96,13 +96,13 @@ variable [Linear k C] [IsFiniteType k C] [EulerFormDescends k C]
 
 /-- The inner lift: for fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism
 `K₀ C →+ ℤ` via the universal property. -/
-private def eulerFormInner (E : C) : K₀ C →+ ℤ :=
+def eulerFormInner (E : C) : K₀ C →+ ℤ :=
   letI := (EulerFormDescends.contravariant (k := k) (C := C) E)
   K₀.lift C (fun F ↦ eulerFormObj k C E F)
 
 /-- The outer function `E ↦ eulerFormInner E` is triangle-additive: for a
 distinguished triangle `T`, the lifted functions agree additively. -/
-private instance eulerFormInner_isTriangleAdditive :
+instance eulerFormInner_isTriangleAdditive :
     IsTriangleAdditive (eulerFormInner k C) where
   additive T hT := by
     -- Goal: eulerFormInner k C T.obj₂ = eulerFormInner k C T.obj₁ + eulerFormInner k C T.obj₃

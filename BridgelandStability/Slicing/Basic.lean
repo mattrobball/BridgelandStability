@@ -111,7 +111,7 @@ instance (s : Slicing C) (φ : ℝ) : (s.P φ).ContainsZero where
   exists_zero := ⟨0, isZero_zero C, s.zero_mem φ⟩
 
 /-- Forward shift by a natural number: if `(P φ) X` then `(P (φ + n)) (X⟦n⟧)`. -/
-private lemma Slicing.shift_nat (s : Slicing C) (φ : ℝ) (X : C) (n : ℕ) :
+lemma Slicing.shift_nat (s : Slicing C) (φ : ℝ) (X : C) (n : ℕ) :
     (s.P φ) X → (s.P (φ + (n : ℝ))) (X⟦(n : ℤ)⟧) := by
   induction n with
   | zero =>
@@ -127,7 +127,7 @@ private lemma Slicing.shift_nat (s : Slicing C) (φ : ℝ) (X : C) (n : ℕ) :
       ((shiftFunctorAdd' C (↑n : ℤ) 1 ((↑n : ℤ) + 1) (by omega)).app X).symm h1
 
 /-- Backward shift by a natural number: if `(P (φ + n)) (X⟦n⟧)` then `(P φ) X`. -/
-private lemma Slicing.unshift_nat (s : Slicing C) (φ : ℝ) (X : C) (n : ℕ) :
+lemma Slicing.unshift_nat (s : Slicing C) (φ : ℝ) (X : C) (n : ℕ) :
     (s.P (φ + (n : ℝ))) (X⟦(n : ℤ)⟧) → (s.P φ) X := by
   induction n with
   | zero =>
@@ -323,7 +323,7 @@ from the distinguished triangles in the Postnikov tower.
 /-- Auxiliary: any morphism from a semistable object of phase `ψ` to the `k`-th chain
 object of an HN filtration (with all phases strictly less than `ψ`) is zero.
 Proved by induction on `k`, using the coYoneda exact sequence. -/
-private lemma chain_hom_eq_zero_of_gt (s : Slicing C) {A E : C} {ψ : ℝ}
+lemma chain_hom_eq_zero_of_gt (s : Slicing C) {A E : C} {ψ : ℝ}
     (hA : (s.P ψ) A) (F : HNFiltration C s.P E) (hlt : ∀ i, F.φ i < ψ) :
     ∀ (k : ℕ) (hk : k < F.n + 1) (f : A ⟶ F.chain.obj ⟨k, hk⟩), f = 0 := by
   intro k
@@ -367,7 +367,7 @@ lemma Slicing.hom_eq_zero_of_gt_phases (s : Slicing C) {A E : C} {ψ : ℝ}
 /-- Auxiliary: any morphism from the `k`-th chain object of an HN filtration (with all
 phases strictly greater than those of another filtration) to the target of the second
 filtration is zero. Uses the Yoneda exact sequence and `hom_eq_zero_of_gt_phases`. -/
-private lemma chain_hom_eq_zero_gap (s : Slicing C) {X Y : C}
+lemma chain_hom_eq_zero_gap (s : Slicing C) {X Y : C}
     (Fx : HNFiltration C s.P X) (Fy : HNFiltration C s.P Y)
     (hgap : ∀ i j, Fy.φ j < Fx.φ i) :
     ∀ (k : ℕ) (hk : k < Fx.n + 1) (f : Fx.chain.obj ⟨k, hk⟩ ⟶ Y), f = 0 := by
@@ -416,7 +416,7 @@ lemma Slicing.hom_eq_zero_of_phase_gap (s : Slicing C) {X Y : C}
 /-- Auxiliary: any morphism from the `k`-th chain object of an HN filtration to a
 semistable object of phase `ψ` (with all HN phases strictly greater than `ψ`) is zero.
 Proved by induction on `k`, using the Yoneda exact sequence. -/
-private lemma chain_hom_eq_zero_of_lt (s : Slicing C) {B E : C} {ψ : ℝ}
+lemma chain_hom_eq_zero_of_lt (s : Slicing C) {B E : C} {ψ : ℝ}
     (hB : (s.P ψ) B) (F : HNFiltration C s.P E) (hgt : ∀ i, ψ < F.φ i) :
     ∀ (k : ℕ) (hk : k < F.n + 1) (f : F.chain.obj ⟨k, hk⟩ ⟶ B), f = 0 := by
   intro k

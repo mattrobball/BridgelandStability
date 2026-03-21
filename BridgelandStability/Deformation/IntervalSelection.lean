@@ -35,7 +35,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 section
 
-lemma intervalSubobject_isZero_iff_eq_bot
+@[simp] lemma intervalSubobject_isZero_iff_eq_bot
     {s : Slicing C} {a b : ℝ} {X : s.IntervalCat C a b} (B : Subobject X) :
     IsZero (B : s.IntervalCat C a b) ↔ B = ⊥ := by
   constructor

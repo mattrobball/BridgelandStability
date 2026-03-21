@@ -130,7 +130,7 @@ in the upper half plane. The algebraic identities
 
 /-- The "cross product" `z₁.re * z₂.im - z₁.im * z₂.re` equals
 `‖z₁‖ * ‖z₂‖ * sin(arg z₂ - arg z₁)`. -/
-private lemma cross_eq_norm_mul_sin (z₁ z₂ : ℂ) :
+lemma cross_eq_norm_mul_sin (z₁ z₂ : ℂ) :
     z₁.re * z₂.im - z₁.im * z₂.re =
       ‖z₁‖ * ‖z₂‖ * Real.sin (arg z₂ - arg z₁) := by
   rw [← norm_mul_cos_arg z₁, ← norm_mul_sin_arg z₁,
@@ -139,7 +139,7 @@ private lemma cross_eq_norm_mul_sin (z₁ z₂ : ℂ) :
 
 /-- If `arg z₁ ≤ arg z₂` (with both in the closed upper half plane), then
 the cross product `z₁.re * z₂.im - z₁.im * z₂.re` is nonneg. -/
-private lemma cross_nonneg_of_arg_le {z₁ z₂ : ℂ}
+lemma cross_nonneg_of_arg_le {z₁ z₂ : ℂ}
     (him₁ : 0 ≤ z₁.im) (hz₁ : z₁ ≠ 0) (hz₂ : z₂ ≠ 0)
     (h : arg z₁ ≤ arg z₂) :
     0 ≤ z₁.re * z₂.im - z₁.im * z₂.re := by
@@ -150,7 +150,7 @@ private lemma cross_nonneg_of_arg_le {z₁ z₂ : ℂ}
 
 /-- If the cross product is nonneg and both args are positive (in the open upper half plane
 or negative real axis), then `arg z₁ ≤ arg z₂`. -/
-private lemma arg_le_of_cross_nonneg {z₁ z₂ : ℂ}
+lemma arg_le_of_cross_nonneg {z₁ z₂ : ℂ}
     (hz₁ : z₁ ≠ 0) (hz₂ : z₂ ≠ 0) (harg₂ : 0 < arg z₂)
     (hcross : 0 ≤ z₁.re * z₂.im - z₁.im * z₂.re) :
     arg z₁ ≤ arg z₂ := by
@@ -164,7 +164,7 @@ private lemma arg_le_of_cross_nonneg {z₁ z₂ : ℂ}
 
 /-- Strict version: if `arg z₁ < arg z₂` (with both in the closed upper half plane), then
 the cross product is strictly positive. -/
-private lemma cross_pos_of_arg_lt {z₁ z₂ : ℂ}
+lemma cross_pos_of_arg_lt {z₁ z₂ : ℂ}
     (harg₁ : 0 < arg z₁) (hz₁ : z₁ ≠ 0) (hz₂ : z₂ ≠ 0)
     (h : arg z₁ < arg z₂) :
     0 < z₁.re * z₂.im - z₁.im * z₂.re := by
@@ -175,7 +175,7 @@ private lemma cross_pos_of_arg_lt {z₁ z₂ : ℂ}
 
 /-- Strict version: if the cross product is positive and both args are positive (in the UHP),
 then `arg z₁ < arg z₂`. -/
-private lemma arg_lt_of_cross_pos {z₁ z₂ : ℂ}
+lemma arg_lt_of_cross_pos {z₁ z₂ : ℂ}
     (hz₁ : z₁ ≠ 0) (hz₂ : z₂ ≠ 0) (harg₂ : 0 < arg z₂)
     (hcross : 0 < z₁.re * z₂.im - z₁.im * z₂.re) :
     arg z₁ < arg z₂ := by
@@ -470,7 +470,7 @@ lemma phase_eq_of_iso {E F : A} (e : E ≅ F) : Z.phase E = Z.phase F := by
 
 /-- In an abelian category, for any morphism `f`, the short complex
 `X →f→ Y →cokernel.π→ cokernel f` is exact. If `f` is mono, it is short exact. -/
-private lemma shortExact_of_mono {X Y : A} (f : X ⟶ Y) [Mono f] :
+lemma shortExact_of_mono {X Y : A} (f : X ⟶ Y) [Mono f] :
     (ShortComplex.mk f (cokernel.π f) (by simp)).ShortExact :=
   ShortComplex.ShortExact.mk' (ShortComplex.exact_cokernel f) inferInstance inferInstance
 
@@ -531,31 +531,31 @@ def Subobject.cokernelBotIso {E : A} (S : Subobject E) (h : ⊥ ≤ S) :
 
 /-- Given B : Subobject E and C : Subobject (B : A), lift C to a subobject of E
 by composing the arrows. -/
-private def liftSub {E : A} (B : Subobject E) (C : Subobject (B : A)) :
+def liftSub {E : A} (B : Subobject E) (C : Subobject (B : A)) :
     Subobject E :=
   Subobject.mk (C.arrow ≫ B.arrow)
 
 omit [Abelian A] in
 /-- The lifted subobject is below B. -/
-private lemma liftSub_le {E : A} (B : Subobject E) (C : Subobject (B : A)) :
+lemma liftSub_le {E : A} (B : Subobject E) (C : Subobject (B : A)) :
     liftSub B C ≤ B := by
   have h := Subobject.mk_le_mk_of_comm C.arrow
     (show C.arrow ≫ B.arrow = C.arrow ≫ B.arrow from rfl)
   rwa [Subobject.mk_arrow] at h
 
 /-- The phase of the lifted subobject equals the phase of C. -/
-private lemma phase_liftSub {E : A} (B : Subobject E) (C : Subobject (B : A)) :
+lemma phase_liftSub {E : A} (B : Subobject E) (C : Subobject (B : A)) :
     Z.phase (liftSub B C : A) = Z.phase (C : A) :=
   Z.phase_eq_of_iso (Subobject.underlyingIso _)
 
 /-- Lifting ⊥ gives ⊥. -/
-private lemma liftSub_bot {E : A} (B : Subobject E) :
+lemma liftSub_bot {E : A} (B : Subobject E) :
     liftSub B ⊥ = ⊥ := by
   apply (Subobject.mk_eq_bot_iff_zero).mpr
   simp [Subobject.bot_arrow]
 
 /-- Lifting a nonzero subobject gives a nonzero subobject. -/
-private lemma liftSub_ne_bot {E : A} (B : Subobject E)
+lemma liftSub_ne_bot {E : A} (B : Subobject E)
     (C : Subobject (B : A)) (hC : C ≠ ⊥) :
     liftSub B C ≠ ⊥ := by
   intro h
@@ -579,7 +579,7 @@ variable {Z}
 /-- In an Artinian object, repeated destabilizing subobjects terminate. Hence every nonzero
 subobject contains a semistable subobject of at least the same phase. This is the first
 chain-condition step in Bridgeland's Proposition 2.4. -/
-private theorem exists_semistable_subobject_ge_phase_of_artinian {E : A}
+theorem exists_semistable_subobject_ge_phase_of_artinian {E : A}
     [IsArtinianObject E] {B : Subobject E} (hB : B ≠ ⊥) :
     ∃ C : Subobject E, C ≤ B ∧ C ≠ ⊥ ∧ Z.IsSemistable (C : A) ∧
       Z.phase (B : A) ≤ Z.phase (C : A) := by
