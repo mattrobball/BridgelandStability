@@ -442,63 +442,15 @@ An object `E` lies in the heart of `toTStructureGE` if and only if it satisfies
   change s.toTStructureGE.le 0 E ∧ s.toTStructureGE.ge 0 E ↔ _
   simp only [toTStructureGE, Int.cast_zero, neg_zero, sub_zero]
 
-/-- **HN filtration splitting with interval data**. Given an HN filtration `F`
-of `E` (wrt slicing `s`) with all phases in the open interval `(a, b)`, and a
-cutoff `t ∈ (a, b)`, produce a distinguished triangle `X → E → Y` where:
-- `X ∈ s.gtProp(t)` (all phases `> t`)
-- `Y ∈ s.leProp(t)` (all phases `≤ t`)
-- If `X` is nonzero, its maximum phase is `< b` (preserving the interval bound)
-
-This is used in **Lemma 6.4** to split at the τ-semistable phase while preserving
-the interval property from `d(σ, τ) < 1`. -/
-theorem Slicing.exists_split_with_interval (s : Slicing C)
-    {E : C} (F : HNFiltration C s.P E)
-    {a b : ℝ} (hI : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b)
-    (hn : 0 < F.n) :
-    ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
-      Triangle.mk f g h ∈ distTriang C ∧
-      s.gtProp C a X ∧ s.leProp C a Y ∧
-      (∀ (hXne : ¬IsZero X), s.phiPlus C X hXne < b) := by
-  -- Phase-shift by a, so the cutoff becomes 0
-  let Fs := F.phaseShift (C := C) a
-  have hFs_phases : ∀ i : Fin Fs.n, 0 < Fs.φ i ∧ Fs.φ i < b - a := by
-    intro i; constructor
-    · change 0 < F.φ i - a; linarith [(hI i).1]
-    · change F.φ i - a < b - a; linarith [(hI i).2]
-  -- Apply tStructureAux to the shifted filtration
-  obtain ⟨X, Y, hX, hY, f, g, h, hT, hXdata⟩ :=
-    Slicing.tStructureAux C (s.phaseShift C a) E Fs
-  -- Convert gtProp/leProp from shifted to original
-  have hXgt : s.gtProp C a X := (s.phaseShift_gtProp_zero C a X).mp hX
-  have hYle : s.leProp C a Y := (s.phaseShift_leProp_zero C a Y).mp hY
-  refine ⟨X, Y, f, g, h, hT, hXgt, hYle, fun hXne ↦ ?_⟩
-  -- Extract X's phase bound from tStructureAux data
-  rcases hXdata with hXZ | ⟨GX, hGX, _, hbd, _⟩
-  · exact absurd hXZ hXne
-  · -- GX is an HN filtration of X wrt the shifted slicing, with phiPlus ≤ Fs.φ(0)
-    have hFsn : 0 < Fs.n := hn
-    have hGX_phiPlus_le := hbd hFsn
-    -- Fs.φ(0) = F.φ(0) - a < b - a, so GX.phiPlus (shifted) < b - a
-    have hFsφ0 : Fs.φ ⟨0, hFsn⟩ < b - a := (hFs_phases ⟨0, hFsn⟩).2
-    -- Convert GX from shifted slicing to original via unphaseShift
-    calc s.phiPlus C X hXne
-        ≤ GX.unphaseShift.phiPlus C hGX :=
-          s.phiPlus_le_phiPlus_of_hn C hXne GX.unphaseShift hGX
-      _ = GX.phiPlus C hGX + a :=
-          GX.unphaseShift_phiPlus C hGX
-      _ ≤ Fs.φ ⟨0, hFsn⟩ + a := by linarith
-      _ < (b - a) + a := by linarith
-      _ = b := by ring
-
-/-- **Generalized splitting at an arbitrary cutoff**. Given an HN filtration `F`
+/-- **Splitting at an arbitrary cutoff**. Given an HN filtration `F`
 of `E` with all phases in `(a, b)` and a cutoff `t`, produce a
 distinguished triangle `X → E → Y → X⟦1⟧` where:
 - `X ∈ s.gtProp(t)` (all phases `> t`)
 - `Y ∈ s.leProp(t)` (all phases `≤ t`)
 - If `X` is nonzero, `φ⁺(X) < b` (preserving the upper interval bound)
 
-This generalizes `exists_split_with_interval` which always splits at `a`.
-The generalized version is needed for the deformation theorem (§7). -/
+Used in the deformation theorem (§7) to split at the τ-semistable phase
+while preserving the interval property from `d(σ, τ) < 1`. -/
 theorem Slicing.exists_split_at_cutoff (s : Slicing C)
     {E : C} (F : HNFiltration C s.P E)
     {a b t : ℝ} (hI : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b)
@@ -533,5 +485,17 @@ theorem Slicing.exists_split_at_cutoff (s : Slicing C)
       _ = (F.φ ⟨0, hn⟩ - t) + t := rfl
       _ = F.φ ⟨0, hn⟩ := by ring
       _ < b := hFφ0_lt
+
+/-- **HN filtration splitting at the lower interval bound**. Special case of
+`exists_split_at_cutoff` with `t = a`. -/
+theorem Slicing.exists_split_with_interval (s : Slicing C)
+    {E : C} (F : HNFiltration C s.P E)
+    {a b : ℝ} (hI : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b)
+    (hn : 0 < F.n) :
+    ∃ (X Y : C) (f : X ⟶ E) (g : E ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
+      Triangle.mk f g h ∈ distTriang C ∧
+      s.gtProp C a X ∧ s.leProp C a Y ∧
+      (∀ (hXne : ¬IsZero X), s.phiPlus C X hXne < b) :=
+  s.exists_split_at_cutoff C F hI hn
 
 end Slicing
