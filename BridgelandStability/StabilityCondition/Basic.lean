@@ -136,7 +136,7 @@ theorem no_exp_decomp_below {ψ : ℝ} {n : ℕ} (hn : 0 < n)
   have := map_sum Complex.imAddGroupHom
     (fun i : Fin n ↦ (b i : ℂ) * exp (↑(Real.pi * (θ i - ψ)) * I)) Finset.univ
   simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
-  linarith
+  grind
 
 /-- Symmetric version: a real multiple of `exp(iπψ)` cannot equal a sum of positive
 real multiples of `exp(iπθⱼ)` where all `θⱼ` lie strictly above `ψ` and below `ψ + 1`. -/
@@ -175,7 +175,7 @@ theorem no_exp_decomp_above {ψ : ℝ} {n : ℕ} (hn : 0 < n)
   have := map_sum Complex.imAddGroupHom
     (fun i : Fin n ↦ (b i : ℂ) * exp (↑(Real.pi * (θ i - ψ)) * I)) Finset.univ
   simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
-  linarith
+  grind
 
 
 end CategoryTheory.Triangulated

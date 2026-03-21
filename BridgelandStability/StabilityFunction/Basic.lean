@@ -324,7 +324,7 @@ theorem exists_semistable_subobject_ge_phase_of_artinian {E : A}
                 _ = Z.phase (B : A) := by
                     simpa [D'] using
                       congrArg (fun X : Subobject E => Z.phase (X : A)) hEq
-            linarith
+            grind
           rcases ih D' hD'_lt hD'_ne with ⟨C, hCB, hC_ne, hC_ss, hBC⟩
           refine ⟨C, hCB.trans hD'_le, hC_ne, hC_ss, ?_⟩
           have hBD : Z.phase (B : A) < Z.phase (D' : A) := by

@@ -38,7 +38,7 @@ private lemma shiftFunctor_linear_negOne :
   letI : (shiftFunctor C (0 : ℤ)).Linear R :=
     Functor.linear_of_iso R (shiftFunctorZero C ℤ).symm
   letI : (shiftFunctor C (1 : ℤ) ⋙ shiftFunctor C (-1 : ℤ)).Linear R :=
-    Functor.linear_of_iso R (shiftFunctorAdd' C 1 (-1) 0 (by omega))
+    Functor.linear_of_iso R (shiftFunctorAdd' C 1 (-1) 0 (by grind))
   exact Functor.linear_of_full_essSurj_comp
     (R := R) (shiftFunctor C (1 : ℤ)) (shiftFunctor C (-1 : ℤ))
 
@@ -50,7 +50,7 @@ private lemma shiftFunctor_linear_nat (n : ℕ) :
     letI := ih
     exact Functor.linear_of_iso R
       (shiftFunctorAdd' C (n : ℤ) 1 (↑(n + 1) : ℤ)
-        (by omega)).symm
+        (by grind)).symm
 
 /-- If the shift-by-1 functor on a `R`-linear category is `R`-linear,
 then every shift functor is `R`-linear. -/
@@ -65,6 +65,6 @@ instance shiftFunctor_linear (n : ℤ) :
       letI := shiftFunctor_linear_negOne (R := R) (C := C)
       exact Functor.linear_of_iso R
         (shiftFunctorAdd' C (Int.negSucc n) (-1)
-          (Int.negSucc (n + 1)) (by omega)).symm
+          (Int.negSucc (n + 1)) (by grind)).symm
 
 end CategoryTheory

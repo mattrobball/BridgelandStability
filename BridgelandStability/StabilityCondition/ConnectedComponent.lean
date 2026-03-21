@@ -46,10 +46,10 @@ theorem exists_basisNhd_subset_connectedComponent (σ : StabilityCondition C) :
     positivity
   have hε_lt_ε₀ : ε < ε₀ := by
     dsimp [ε]
-    linarith
+    grind
   have hε8 : ε < 1 / 8 := by
     dsimp [ε]
-    linarith [hε₀10]
+    grind
   refine ⟨ε, hε, hε8, ?_⟩
   exact basisNhd_subset_connectedComponent_small C σ hε₀ hε₀10 hWide hε hε_lt_ε₀
 
@@ -91,10 +91,10 @@ theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
       positivity
     have hδ_lt_ε₀ : δ < ε₀ := by
       dsimp [δ]
-      linarith
+      grind
     have hδ8 : δ < 1 / 8 := by
       dsimp [δ]
-      linarith [hε₀10]
+      grind
     have hU_mem : basisNhd C x δ ∈ 𝓝 x := by
       apply IsOpen.mem_nhds
       · change TopologicalSpace.GenerateOpen
@@ -159,7 +159,7 @@ theorem exists_basisNhd_subset_of_mem_open (σ : StabilityCondition C)
       rcases hu with ⟨τ, ε, hε, hε8, rfl⟩
       exact exists_basisNhd_subset_basisNhd C τ σ hε hε8 hσ
   | univ =>
-      refine ⟨1 / 16, by norm_num, by norm_num, ?_⟩
+      refine ⟨1 / 16, by grind, by grind, ?_⟩
       intro τ _
       simp
   | inter s t hs ht ihs iht =>

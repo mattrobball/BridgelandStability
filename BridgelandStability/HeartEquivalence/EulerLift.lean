@@ -102,7 +102,7 @@ theorem HeartStabilityData.heartK0ToK0_heartCohClass
       K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C X := by
     calc
       K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C (X⟦(0 : ℤ)⟧) := by
-        exact (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by omega)).app X)).symm
+        exact (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by grind)).app X)).symm
       _ = K₀.of C X := K₀.of_iso C ((shiftFunctorZero C ℤ).app X)
   rw [hX] at hshift
   simpa [X, H, HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure]
@@ -116,8 +116,8 @@ theorem HeartStabilityData.k0_truncLE_step
       K₀.of C ((h.t.truncLE (n - 1)).obj E) +
         h.heartK0ToK0 C (h.heartCohClass (C := C) n E) := by
   have htri :=
-    K₀.of_triangle C ((h.t.triangleLTLTGELT n (n + 1) (by omega)).obj E)
-      (h.t.triangleLTLTGELT_distinguished n (n + 1) (by omega) E)
+    K₀.of_triangle C ((h.t.triangleLTLTGELT n (n + 1) (by grind)).obj E)
+      (h.t.triangleLTLTGELT_distinguished n (n + 1) (by grind) E)
   calc
     K₀.of C ((h.t.truncLE n).obj E)
         = K₀.of C ((h.t.truncLE (n - 1)).obj E) +
@@ -166,7 +166,7 @@ theorem HeartStabilityData.heartK0ToK0_heartCohClassSum_truncLE
         h.k0_truncLE_step (C := C) b E
       have hzero : IsZero ((h.t.truncLE (b - 1)).obj E) := by
         letI := hGE
-        exact h.t.isZero_truncLE_obj_of_isGE (b - 1) b (by omega) E
+        exact h.t.isZero_truncLE_obj_of_isGE (b - 1) b (by grind) E
       calc
         h.heartK0ToK0 C (h.heartCohClassSum (C := C) b 0 E)
             = h.heartK0ToK0 C (h.heartCohClass (C := C) b E) := by
@@ -207,7 +207,7 @@ theorem HeartStabilityData.heartK0ToK0_heartCohClassSum
     h.heartK0ToK0_heartCohClassSum_truncLE (C := C) b (Int.toNat (a - b)) (E := E) hGE
   have ha : b + (Int.toNat (a - b) : ℤ) = a := by
     rw [Int.toNat_of_nonneg (sub_nonneg.mpr hab)]
-    omega
+    grind
   rw [ha] at hsum
   have hτ : K₀.of C ((h.t.truncLE a).obj E) = K₀.of C E := by
     have hIso : IsIso ((h.t.truncLEι a).app E) :=
@@ -260,7 +260,7 @@ theorem HeartStabilityData.lowerBound_le_upperBound
     have hLE : h.t.IsLE E (h.upperBound (C := C) E) := h.isLE_upperBound (C := C) E
     have hGE : h.t.IsGE E (h.lowerBound (C := C) E) := h.isGE_lowerBound (C := C) E
     have hzero : IsZero E := h.t.isZero E (h.upperBound (C := C) E) (h.lowerBound (C := C) E)
-      (by omega)
+      (by grind)
     have hzero_heart : h.t.heart E := by
       have h0 : h.t.heart (0 : C) := by
         rw [h.t.mem_heart_iff]
@@ -293,7 +293,7 @@ theorem HeartStabilityData.heartK0ToK0_heartEulerClassObj
   by_cases hab : b ≤ a
   · simpa [HeartStabilityData.heartEulerClassObj, a, b, hab] using
       h.heartK0ToK0_heartCohClassSum (C := C) (E := E) a b hab hLE hGE
-  · have hzero : IsZero E := h.t.isZero E a b (by omega)
+  · have hzero : IsZero E := h.t.isZero E a b (by grind)
     rw [HeartStabilityData.heartEulerClassObj, dif_neg hab, map_zero, K₀.of_isZero C hzero]
 
 /-- On an object already in the heart, the `H0` functor is canonically isomorphic to the
@@ -645,7 +645,7 @@ noncomputable def HeartStabilityData.heartSourceNegOneToAShiftHom
     (δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧) :
     (h.t.truncGELT (-1) 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := by
   let s : (h.t.truncLT 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := (h.t.truncLTι 0).app X₃ ≫ δ
-  have hnegLe : (-1 : ℤ) ≤ 0 := by norm_num
+  have hnegLe : (-1 : ℤ) ≤ 0 := by grind
   have hs :
       (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s = 0 := by
     have hs' :
@@ -662,9 +662,9 @@ noncomputable def HeartStabilityData.heartSourceNegOneToAShiftHom
     letI : h.t.IsGE A.obj 0 := (h.t.mem_heart_iff A.obj).mp A.property |>.2
     letI : h.t.IsLE ((h.t.truncLT (-1)).obj X₃) (-2) := h.t.isLE_truncLT_obj ..
     letI : h.t.IsGE (A.obj⟦(1 : ℤ)⟧) (-1) := h.t.isGE_shift _ 0 1 (-1)
-    exact h.t.zero _ (-2) (-1) (by omega)
+    exact h.t.zero _ (-2) (-1) (by grind)
   exact Triangle.yoneda_exact₂ _
-    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by omega) X₃) s hs |>.choose
+    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by grind) X₃) s hs |>.choose
 
 @[reassoc]
 theorem HeartStabilityData.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom
@@ -675,7 +675,7 @@ theorem HeartStabilityData.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftH
         h.heartSourceNegOneToAShiftHom (C := C) A δ =
       (h.t.truncLTι 0).app X₃ ≫ δ := by
   let s : (h.t.truncLT 0).obj X₃ ⟶ A.obj⟦(1 : ℤ)⟧ := (h.t.truncLTι 0).app X₃ ≫ δ
-  have hnegLe : (-1 : ℤ) ≤ 0 := by norm_num
+  have hnegLe : (-1 : ℤ) ≤ 0 := by grind
   have hs :
       (h.t.natTransTruncLTOfLE (-1) 0 hnegLe).app X₃ ≫ s = 0 := by
     have hs' :
@@ -692,9 +692,9 @@ theorem HeartStabilityData.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftH
     letI : h.t.IsGE A.obj 0 := (h.t.mem_heart_iff A.obj).mp A.property |>.2
     letI : h.t.IsLE ((h.t.truncLT (-1)).obj X₃) (-2) := h.t.isLE_truncLT_obj ..
     letI : h.t.IsGE (A.obj⟦(1 : ℤ)⟧) (-1) := h.t.isGE_shift _ 0 1 (-1)
-    exact h.t.zero _ (-2) (-1) (by omega)
+    exact h.t.zero _ (-2) (-1) (by grind)
   exact (Triangle.yoneda_exact₂ _
-    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by omega) X₃) s hs).choose_spec.symm
+    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by grind) X₃) s hs).choose_spec.symm
 
 /-- After shifting back by `-1`, `heartSourceNegOneToAShiftHom` becomes a morphism from
 `H^{-1}(X₃)` to the heart object `A`. -/
@@ -737,7 +737,7 @@ theorem HeartStabilityData.exists_heartSourceNegOneToAShiftHom_comp_shift_map_fa
             congrArg (fun k => (h.t.truncLTι 0).app X₃ ≫ k) (comp_distTriang_mor_zero₃₁ _ hT)
       _ = 0 := comp_zero
   obtain ⟨φ, hφ⟩ := Triangle.yoneda_exact₃ _
-    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by omega) X₃)
+    (h.t.triangleLTLTGELT_distinguished (-1) 0 (by grind) X₃)
     (h.heartSourceNegOneToAShiftHom (C := C) A δ ≫ (shiftFunctor C (1 : ℤ)).map f)
     hzero
   exact ⟨φ, by simpa [TStructure.triangleLTLTGELT] using hφ⟩
@@ -795,10 +795,10 @@ theorem TStructure.comp_shift_truncGEπ_zero_of_truncLT_negOne
     φ ≫ (shiftFunctor C (1 : ℤ)).map ((t.truncGEπ 0).app X₂) = 0 := by
   letI : t.IsLE ((t.truncLT (-1)).obj X₃) (-1) := t.isLE_truncLT_obj ..
   letI : t.IsLE (((t.truncLT (-1)).obj X₃)⟦(1 : ℤ)⟧) (-2) := by
-    simpa using t.isLE_shift ((t.truncLT (-1)).obj X₃) (-1) 1 (-2) (by norm_num)
+    simpa using t.isLE_shift ((t.truncLT (-1)).obj X₃) (-1) 1 (-2) (by grind)
   letI : t.IsGE ((t.truncGE 0).obj X₂) 0 := t.isGE_truncGE_obj ..
   letI : t.IsGE (((t.truncGE 0).obj X₂)⟦(1 : ℤ)⟧) (-1 : ℤ) := by
-    simpa using t.isGE_shift ((t.truncGE 0).obj X₂) 0 1 (-1) (by norm_num)
+    simpa using t.isGE_shift ((t.truncGE 0).obj X₂) 0 1 (-1) (by grind)
   exact t.zero (φ ≫ (shiftFunctor C (1 : ℤ)).map ((t.truncGEπ 0).app X₂)) (-2) (-1) (by
     norm_num)
 
@@ -813,9 +813,9 @@ noncomputable def HeartStabilityData.heartCohObjIsoOfHeartShift
   letI : h.t.IsLE E.obj 0 := hE'.1
   letI : h.t.IsGE E.obj 0 := hE'.2
   have hLE : h.t.IsLE X n := by
-    simpa [X] using (h.t.isLE_shift E.obj 0 (-n : ℤ) n (by omega))
+    simpa [X] using (h.t.isLE_shift E.obj 0 (-n : ℤ) n (by grind))
   have hGE : h.t.IsGE X n := by
-    simpa [X] using (h.t.isGE_shift E.obj 0 (-n : ℤ) n (by omega))
+    simpa [X] using (h.t.isGE_shift E.obj 0 (-n : ℤ) n (by grind))
   letI := hLE
   letI := hGE
   let eLE : (h.t.truncLE n).obj X ≅ X :=

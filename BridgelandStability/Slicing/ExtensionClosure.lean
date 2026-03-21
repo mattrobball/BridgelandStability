@@ -151,29 +151,29 @@ lemma Slicing.gtProp_of_triangle (s : Slicing C) {A E B : C} (t : ℝ)
   -- F⁻ = FE.factor(n-1) is semistable of phase φ⁻(E) ≤ t
   -- All maps A → F⁻ vanish
   have hA_vanish :
-      ∀ α : A ⟶ (FE.triangle ⟨FE.n - 1, by omega⟩).obj₃, α = 0 := by
+      ∀ α : A ⟶ (FE.triangle ⟨FE.n - 1, by grind⟩).obj₃, α = 0 := by
     intro α
     rcases hA with hAZ | ⟨FA, hnA, hFA_gt⟩
     · exact hAZ.eq_of_src α 0
     · exact s.hom_eq_zero_of_lt_phases C
-        (FE.semistable ⟨FE.n - 1, by omega⟩) FA
+        (FE.semistable ⟨FE.n - 1, by grind⟩) FA
         (fun i ↦ lt_of_le_of_lt hle
           (lt_of_lt_of_le hFA_gt
-            (FA.hφ.antitone (Fin.mk_le_mk.mpr (by omega))))) α
+            (FA.hφ.antitone (Fin.mk_le_mk.mpr (by grind))))) α
   -- All maps B → F⁻ vanish
   have hB_vanish :
-      ∀ β : B ⟶ (FE.triangle ⟨FE.n - 1, by omega⟩).obj₃, β = 0 := by
+      ∀ β : B ⟶ (FE.triangle ⟨FE.n - 1, by grind⟩).obj₃, β = 0 := by
     intro β
     rcases hB with hBZ | ⟨FB, hnB, hFB_gt⟩
     · exact hBZ.eq_of_src β 0
     · exact s.hom_eq_zero_of_lt_phases C
-        (FE.semistable ⟨FE.n - 1, by omega⟩) FB
+        (FE.semistable ⟨FE.n - 1, by grind⟩) FB
         (fun i ↦ lt_of_le_of_lt hle
           (lt_of_lt_of_le hFB_gt
-            (FB.hφ.antitone (Fin.mk_le_mk.mpr (by omega))))) β
+            (FB.hφ.antitone (Fin.mk_le_mk.mpr (by grind))))) β
   -- All maps E → F⁻ vanish (by Yoneda exactness)
   have hE_vanish :
-      ∀ γ : E ⟶ (FE.triangle ⟨FE.n - 1, by omega⟩).obj₃, γ = 0 := by
+      ∀ γ : E ⟶ (FE.triangle ⟨FE.n - 1, by grind⟩).obj₃, γ = 0 := by
     intro γ
     obtain ⟨δ, hδ⟩ :=
       Triangle.yoneda_exact₂ (Triangle.mk f g h) hT γ
@@ -245,41 +245,41 @@ lemma Slicing.phiMinus_gt_of_triangle (s : Slicing C) {A E B : C}
   push_neg at hle
   obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hE
   -- F⁻ has phase φ⁻(E) ≤ t
-  have hFE_le : FE.φ ⟨FE.n - 1, by omega⟩ ≤ t := by
+  have hFE_le : FE.φ ⟨FE.n - 1, by grind⟩ ≤ t := by
     rw [← s.phiMinus_eq C E hE FE hnE hneE]; exact hle
   -- All maps A → F⁻ vanish
   have hA_vanish :
-      ∀ α : A ⟶ (FE.triangle ⟨FE.n - 1, by omega⟩).obj₃, α = 0 := by
+      ∀ α : A ⟶ (FE.triangle ⟨FE.n - 1, by grind⟩).obj₃, α = 0 := by
     intro α
     by_cases hAZ : IsZero A
     · exact hAZ.eq_of_src α 0
     · obtain ⟨FA, hnA, hneA⟩ :=
         HNFiltration.exists_nonzero_last C s hAZ
-      have hFA_gt : t < FA.φ ⟨FA.n - 1, by omega⟩ := by
+      have hFA_gt : t < FA.φ ⟨FA.n - 1, by grind⟩ := by
         rw [← s.phiMinus_eq C A hAZ FA hnA hneA]; exact hA_gt hAZ
       exact s.hom_eq_zero_of_lt_phases C
-        (FE.semistable ⟨FE.n - 1, by omega⟩) FA
+        (FE.semistable ⟨FE.n - 1, by grind⟩) FA
         (fun i ↦ lt_of_le_of_lt hFE_le
           (lt_of_lt_of_le hFA_gt
-            (FA.hφ.antitone (Fin.mk_le_mk.mpr (by omega))))) α
+            (FA.hφ.antitone (Fin.mk_le_mk.mpr (by grind))))) α
   -- All maps B → F⁻ vanish
   have hB_vanish :
-      ∀ β : B ⟶ (FE.triangle ⟨FE.n - 1, by omega⟩).obj₃, β = 0 := by
+      ∀ β : B ⟶ (FE.triangle ⟨FE.n - 1, by grind⟩).obj₃, β = 0 := by
     intro β
     by_cases hBZ : IsZero B
     · exact hBZ.eq_of_src β 0
     · obtain ⟨FB, hnB, hneB⟩ :=
         HNFiltration.exists_nonzero_last C s hBZ
-      have hFB_gt : t < FB.φ ⟨FB.n - 1, by omega⟩ := by
+      have hFB_gt : t < FB.φ ⟨FB.n - 1, by grind⟩ := by
         rw [← s.phiMinus_eq C B hBZ FB hnB hneB]; exact hB_gt hBZ
       exact s.hom_eq_zero_of_lt_phases C
-        (FE.semistable ⟨FE.n - 1, by omega⟩) FB
+        (FE.semistable ⟨FE.n - 1, by grind⟩) FB
         (fun i ↦ lt_of_le_of_lt hFE_le
           (lt_of_lt_of_le hFB_gt
-            (FB.hφ.antitone (Fin.mk_le_mk.mpr (by omega))))) β
+            (FB.hφ.antitone (Fin.mk_le_mk.mpr (by grind))))) β
   -- All maps E → F⁻ vanish, contradiction
   have hE_vanish :
-      ∀ γ : E ⟶ (FE.triangle ⟨FE.n - 1, by omega⟩).obj₃, γ = 0 := by
+      ∀ γ : E ⟶ (FE.triangle ⟨FE.n - 1, by grind⟩).obj₃, γ = 0 := by
     intro γ
     obtain ⟨δ, hδ⟩ :=
       Triangle.yoneda_exact₂ (Triangle.mk f g h) hT γ
@@ -309,8 +309,8 @@ lemma Slicing.intervalProp_of_triangle (s : Slicing C) {A E B : C} {a b : ℝ}
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hEZ
   exact ⟨F, fun i ↦ ⟨by
     calc a < s.phiMinus C E hEZ := hMinus
-      _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C E hEZ F hn hlast
-      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)),
+      _ = F.φ ⟨F.n - 1, by grind⟩ := s.phiMinus_eq C E hEZ F hn hlast
+      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
     by calc F.φ i
         ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
       _ = s.phiPlus C E hEZ := (s.phiPlus_eq C E hEZ F hn hfirst).symm
@@ -371,8 +371,8 @@ theorem Slicing.phiPlus_triangle_le (s : Slicing C) {A E B : C}
           have h2 : a < FA.φ ⟨0, hnA⟩ := by
             rw [← s.phiPlus_eq C A hA FA hnA hneA]
             exact s.phiPlus_gt_of_intervalProp C hA hA_int
-          have h3 : ((-1 : ℤ) : ℝ) = -1 := by norm_num
-          linarith
+          have h3 : ((-1 : ℤ) : ℝ) = -1 := by grind
+          grind
         exact s.hom_eq_zero_of_gt_phases C (FA.semistable ⟨0, hnA⟩) GBs hBs_gap β
   -- But A⁺ is nonzero, and all maps to A are zero — contradiction
   exact hneA (FA.isZero_factor_zero_of_hom_eq_zero C s hnA hA_factor_zero)
@@ -401,15 +401,15 @@ theorem Slicing.phiMinus_triangle_le (s : Slicing C) {A E B : C}
   by_contra hlt
   push_neg at hlt
   -- All E-phases > FB.φ(n-1)
-  have hE_gap : ∀ j : Fin FE.n, FB.φ ⟨FB.n - 1, by omega⟩ < FE.φ j := fun j ↦
-    lt_of_lt_of_le hlt (FE.hφ.antitone (Fin.mk_le_mk.mpr (by omega)))
+  have hE_gap : ∀ j : Fin FE.n, FB.φ ⟨FB.n - 1, by grind⟩ < FE.φ j := fun j ↦
+    lt_of_lt_of_le hlt (FE.hφ.antitone (Fin.mk_le_mk.mpr (by grind)))
   -- All maps B → B⁻ are zero
   have hB_factor_zero :
-      ∀ α : B ⟶ (FB.triangle ⟨FB.n - 1, by omega⟩).obj₃, α = 0 := by
+      ∀ α : B ⟶ (FB.triangle ⟨FB.n - 1, by grind⟩).obj₃, α = 0 := by
     intro α
     -- g ≫ α : E → B⁻ is zero by hom-vanishing
     have hgα : g ≫ α = 0 :=
-      s.hom_eq_zero_of_lt_phases C (FB.semistable ⟨FB.n - 1, by omega⟩) FE hE_gap _
+      s.hom_eq_zero_of_lt_phases C (FB.semistable ⟨FB.n - 1, by grind⟩) FE hE_gap _
     -- By yoneda_exact₃ on T, α = h ≫ γ for some γ : A⟦1⟧ → B⁻
     obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ (Triangle.mk f g h) hT α hgα
     -- Show γ = 0
@@ -423,20 +423,20 @@ theorem Slicing.phiMinus_triangle_le (s : Slicing C) {A E B : C}
         let GAs := GA.shiftHN C s (1 : ℤ)
         -- GAs.φ(j) = GA.φ(j) + 1 > a + 1 ≥ b > FB.φ(n-1)
         have hAs_gap : ∀ j : Fin GAs.n,
-            FB.φ ⟨FB.n - 1, by omega⟩ < GAs.φ j := by
+            FB.φ ⟨FB.n - 1, by grind⟩ < GAs.φ j := by
           intro j
-          change FB.φ ⟨FB.n - 1, by omega⟩ < GA.φ j + ((1 : ℤ) : ℝ)
+          change FB.φ ⟨FB.n - 1, by grind⟩ < GA.φ j + ((1 : ℤ) : ℝ)
           have h1 : GA.φ j > a := (hGA j).1
-          have h2 : FB.φ ⟨FB.n - 1, by omega⟩ < b := by
-            calc FB.φ ⟨FB.n - 1, by omega⟩
+          have h2 : FB.φ ⟨FB.n - 1, by grind⟩ < b := by
+            calc FB.φ ⟨FB.n - 1, by grind⟩
                 = s.phiMinus C B hB :=
                   (s.phiMinus_eq C B hB FB hnB hneB).symm
               _ ≤ s.phiPlus C B hB := s.phiMinus_le_phiPlus C B hB
               _ < b := s.phiPlus_lt_of_intervalProp C hB hB_int
-          have h3 : ((1 : ℤ) : ℝ) = 1 := by norm_num
-          linarith
+          have h3 : ((1 : ℤ) : ℝ) = 1 := by grind
+          grind
         exact s.hom_eq_zero_of_lt_phases C
-          (FB.semistable ⟨FB.n - 1, by omega⟩) GAs hAs_gap γ
+          (FB.semistable ⟨FB.n - 1, by grind⟩) GAs hAs_gap γ
   -- But B⁻ is nonzero and all maps B → B⁻ vanish — contradiction
   exact hneB (FB.isZero_factor_last_of_hom_eq_zero C s hnB hB_factor_zero)
 
@@ -456,13 +456,13 @@ theorem Slicing.phiMinus_triangle_le' (s : Slicing C) {A E B : C}
   rw [s.phiMinus_eq C E hE FE hnE hneE, s.phiMinus_eq C B hB FB hnB hneB]
   by_contra hlt
   push_neg at hlt
-  have hE_gap : ∀ j : Fin FE.n, FB.φ ⟨FB.n - 1, by omega⟩ < FE.φ j := fun j ↦
-    lt_of_lt_of_le hlt (FE.hφ.antitone (Fin.mk_le_mk.mpr (by omega)))
+  have hE_gap : ∀ j : Fin FE.n, FB.φ ⟨FB.n - 1, by grind⟩ < FE.φ j := fun j ↦
+    lt_of_lt_of_le hlt (FE.hφ.antitone (Fin.mk_le_mk.mpr (by grind)))
   have hB_factor_zero :
-      ∀ α : B ⟶ (FB.triangle ⟨FB.n - 1, by omega⟩).obj₃, α = 0 := by
+      ∀ α : B ⟶ (FB.triangle ⟨FB.n - 1, by grind⟩).obj₃, α = 0 := by
     intro α
     have hgα : g ≫ α = 0 :=
-      s.hom_eq_zero_of_lt_phases C (FB.semistable ⟨FB.n - 1, by omega⟩) FE hE_gap _
+      s.hom_eq_zero_of_lt_phases C (FB.semistable ⟨FB.n - 1, by grind⟩) FE hE_gap _
     obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ (Triangle.mk f g h) hT α hgα
     suffices hγ0 : γ = 0 by rw [hγ, hγ0]; exact comp_zero
     by_cases hAZ : IsZero A
@@ -471,20 +471,20 @@ theorem Slicing.phiMinus_triangle_le' (s : Slicing C) {A E B : C}
       · exact absurd hAZ' hAZ
       · let GAs := GA.shiftHN C s (1 : ℤ)
         have hAs_gap : ∀ j : Fin GAs.n,
-            FB.φ ⟨FB.n - 1, by omega⟩ < GAs.φ j := by
+            FB.φ ⟨FB.n - 1, by grind⟩ < GAs.φ j := by
           intro j
-          change FB.φ ⟨FB.n - 1, by omega⟩ < GA.φ j + ((1 : ℤ) : ℝ)
+          change FB.φ ⟨FB.n - 1, by grind⟩ < GA.φ j + ((1 : ℤ) : ℝ)
           have h1 : GA.φ j > a := (hGA j).1
-          have h2 : FB.φ ⟨FB.n - 1, by omega⟩ < b := by
-            calc FB.φ ⟨FB.n - 1, by omega⟩
+          have h2 : FB.φ ⟨FB.n - 1, by grind⟩ < b := by
+            calc FB.φ ⟨FB.n - 1, by grind⟩
                 = s.phiMinus C B hB :=
                   (s.phiMinus_eq C B hB FB hnB hneB).symm
               _ ≤ s.phiPlus C B hB := s.phiMinus_le_phiPlus C B hB
               _ < b := hB_phiPlus_lt
-          have h3 : ((1 : ℤ) : ℝ) = 1 := by norm_num
-          linarith
+          have h3 : ((1 : ℤ) : ℝ) = 1 := by grind
+          grind
         exact s.hom_eq_zero_of_lt_phases C
-          (FB.semistable ⟨FB.n - 1, by omega⟩) GAs hAs_gap γ
+          (FB.semistable ⟨FB.n - 1, by grind⟩) GAs hAs_gap γ
   exact hneB (FB.isZero_factor_last_of_hom_eq_zero C s hnB hB_factor_zero)
 
 

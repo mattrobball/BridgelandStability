@@ -164,7 +164,7 @@ theorem Slicing.intervalCat_hasCokernel (s : Slicing C)
       (cokernel fH).obj).mp
       (cokernel fH).property |>.2
   have hQLt : s.ltProp C b (cokernel fH).obj := by
-    simpa [show 1 + (b - 1) = b by ring] using
+    simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel fH).obj).mp hQLtShift
   have hT' : Triangle.mk i.hom (cokernel.π fH).hom δ ∈ distTriang C := by
     simpa using hT
@@ -260,7 +260,7 @@ noncomputable def Slicing.IntervalCat.toRightHeartCokernelIso (s : Slicing C)
       (cokernel fH).obj).mp
       (cokernel fH).property |>.2
   have hQLt : s.ltProp C b (cokernel fH).obj := by
-    simpa [show 1 + (b - 1) = b by ring] using
+    simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel fH).obj).mp hQLtShift
   have hT' : Triangle.mk i.hom (cokernel.π fH).hom δ ∈ distTriang C := by
     simpa using hT
@@ -358,7 +358,7 @@ theorem Slicing.IntervalCat.toRightHeartCokernelIso_π_comp_hom (s : Slicing C)
       (cokernel fH).obj).mp
       (cokernel fH).property |>.2
   have hQLt : s.ltProp C b (cokernel fH).obj := by
-    simpa [show 1 + (b - 1) = b by ring] using
+    simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel fH).obj).mp hQLtShift
   have hT' : Triangle.mk i.hom (cokernel.π fH).hom δ ∈ distTriang C := by
     simpa using hT
@@ -464,7 +464,7 @@ theorem Slicing.IntervalCat.epi_toRightHeart_of_strictEpi (s : Slicing C)
       (cokernel kH).obj).mp
       (cokernel kH).property |>.2
   have hQLt : s.ltProp C b (cokernel kH).obj := by
-    simpa [show 1 + (b - 1) = b by ring] using
+    simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel kH).obj).mp hQLtShift
   have hT' : Pretriangulated.Triangle.mk i.hom (cokernel.π kH).hom δ ∈ distTriang C := by
     simpa using hT

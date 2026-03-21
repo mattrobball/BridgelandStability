@@ -138,7 +138,7 @@ theorem Slicing.intervalFiniteLength (s : Slicing C)
       · -- t - η ≤ a < F.φ i
         by_contra h
         push_neg at h
-        linarith
+        grind
       · -- F.φ i < b ≤ t + η
         by_contra h
         push_neg at h
@@ -160,9 +160,9 @@ lemma Slicing.intervalProp_of_semistable (s : Slicing C)
       constructor
       · calc a < φ := ha
           _ = s.phiMinus C E hE := hpM.symm
-          _ = F.φ ⟨F.n - 1, by omega⟩ :=
+          _ = F.φ ⟨F.n - 1, by grind⟩ :=
               s.phiMinus_eq C E hE F hn hlast
-          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
       · calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
               F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
           _ = s.phiPlus C E hE :=
@@ -178,7 +178,7 @@ lemma Slicing.intervalProp_mono (s : Slicing C) {E : C}
   rcases hI with hEZ | ⟨F, hF⟩
   · exact Or.inl hEZ
   · right
-    exact ⟨F, fun i ↦ ⟨by linarith [(hF i).1], by linarith [(hF i).2]⟩⟩
+    exact ⟨F, fun i ↦ ⟨by grind, by grind⟩⟩
 
 /-- The inclusion functor between nested interval subcategories. -/
 abbrev Slicing.IntervalCat.inclusion (s : Slicing C)
@@ -214,11 +214,11 @@ instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
               have h1 : FY.φ j ≤ FY.φ ⟨0, hnY⟩ := by
                 apply FY.hφ.antitone
                 simp only [Fin.le_def]
-                omega
+                grind
               have h2 : FY.φ ⟨0, hnY⟩ = s.phiPlus C Y hY0 := by
                 exact (s.phiPlus_eq C Y hY0 FY hnY hneY).symm
               have h3 : s.phiPlus C Y hY0 < b := s.phiPlus_lt_of_intervalProp C hY0 hY
-              linarith
+              grind
             exact s.hom_eq_zero_of_gt_phases C (FX.semistable ⟨0, hnX⟩) FY hgap α
         have hzeroX : ∀ α : (FX.triangle ⟨0, hnX⟩).obj₃ ⟶ X, α = 0 := by
           intro α
@@ -231,23 +231,23 @@ instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
         rw [s.phiMinus_eq C X hX GX hnX' hneX']
         by_contra hge
         push_neg at hge
-        have hzeroY : ∀ β : Y ⟶ (GX.triangle ⟨GX.n - 1, by omega⟩).obj₃, β = 0 := by
+        have hzeroY : ∀ β : Y ⟶ (GX.triangle ⟨GX.n - 1, by grind⟩).obj₃, β = 0 := by
           intro β
           by_cases hY0 : IsZero Y
           · exact hY0.eq_of_src β 0
           · obtain ⟨GY, hnY, hneY⟩ := HNFiltration.exists_nonzero_last C s hY0
-            have hgap : ∀ j : Fin GY.n, GX.φ ⟨GX.n - 1, by omega⟩ < GY.φ j := by
+            have hgap : ∀ j : Fin GY.n, GX.φ ⟨GX.n - 1, by grind⟩ < GY.φ j := by
               intro j
-              have h1 : GY.φ ⟨GY.n - 1, by omega⟩ ≤ GY.φ j := by
+              have h1 : GY.φ ⟨GY.n - 1, by grind⟩ ≤ GY.φ j := by
                 apply GY.hφ.antitone
                 simp only [Fin.le_def]
-                omega
-              have h2 : s.phiMinus C Y hY0 = GY.φ ⟨GY.n - 1, by omega⟩ := by
+                grind
+              have h2 : s.phiMinus C Y hY0 = GY.φ ⟨GY.n - 1, by grind⟩ := by
                 exact s.phiMinus_eq C Y hY0 GY hnY hneY
               have h3 : a < s.phiMinus C Y hY0 := s.phiMinus_gt_of_intervalProp C hY0 hY
-              linarith
-            exact s.hom_eq_zero_of_lt_phases C (GX.semistable ⟨GX.n - 1, by omega⟩) GY hgap β
-        have hzeroX : ∀ β : X ⟶ (GX.triangle ⟨GX.n - 1, by omega⟩).obj₃, β = 0 := by
+              grind
+            exact s.hom_eq_zero_of_lt_phases C (GX.semistable ⟨GX.n - 1, by grind⟩) GY hgap β
+        have hzeroX : ∀ β : X ⟶ (GX.triangle ⟨GX.n - 1, by grind⟩).obj₃, β = 0 := by
           intro β
           have hrβ : h.r ≫ β = 0 := hzeroY (h.r ≫ β)
           calc β = (𝟙 X) ≫ β := by simp
@@ -309,7 +309,7 @@ theorem Slicing.intervalHom_eq_zero (s : Slicing C) {A B : C}
   rcases hB with hBZ | ⟨FB, hFB⟩
   · exact hBZ.eq_of_tgt f 0
   exact s.hom_eq_zero_of_phase_gap C FA FB
-    (fun i j ↦ by linarith [(hFB j).2, (hFA i).1]) f
+    (fun i j ↦ by grind) f
 
 
 end CategoryTheory.Triangulated

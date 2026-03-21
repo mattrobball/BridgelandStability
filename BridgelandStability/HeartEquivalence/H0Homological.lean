@@ -56,17 +56,17 @@ noncomputable def TStructure.truncGEObjShiftIso
   let eEx := t.triangle_iso_exists hT₁ hT₂ (Iso.refl _) (-1) 0
     (by
       dsimp [T₁]
-      simpa using t.isLE_shift ((t.truncLT n).obj X) (n - 1) n (-1) (by omega))
+      simpa using t.isLE_shift ((t.truncLT n).obj X) (n - 1) n (-1) (by grind))
     (by
       dsimp [T₁]
-      simpa using t.isGE_shift ((t.truncGE n).obj X) n n 0 (by omega))
+      simpa using t.isGE_shift ((t.truncGE n).obj X) n n 0 (by grind))
     (by
       dsimp [T₂]
-      simpa using t.isLE_truncLT_obj ((X⟦(n : ℤ)⟧)) 0 (-1) (by omega))
+      simpa using t.isLE_truncLT_obj ((X⟦(n : ℤ)⟧)) 0 (-1) (by grind))
     (by
       dsimp [T₂]
       infer_instance)
-    (by omega)
+    (by grind)
   let e := Classical.choose eEx
   exact Triangle.π₃.mapIso e
 
@@ -86,17 +86,17 @@ noncomputable def TStructure.truncLEObjShiftIso
   let eEx := t.triangle_iso_exists hT₁ hT₂ (Iso.refl _) 0 1
     (by
       dsimp [T₁]
-      simpa using t.isLE_shift ((t.truncLE n).obj X) n n 0 (by omega))
+      simpa using t.isLE_shift ((t.truncLE n).obj X) n n 0 (by grind))
     (by
       dsimp [T₁]
-      simpa using t.isGE_shift ((t.truncGE (n + 1)).obj X) (n + 1) n 1 (by omega))
+      simpa using t.isGE_shift ((t.truncGE (n + 1)).obj X) (n + 1) n 1 (by grind))
     (by
       dsimp [T₂]
       infer_instance)
     (by
       dsimp [T₂]
       infer_instance)
-    (by omega)
+    (by grind)
   let e := Classical.choose eEx
   exact Triangle.π₁.mapIso e
 
@@ -141,7 +141,7 @@ theorem TStructure.isIso_truncLT_pred_map_of_isGE
     simpa [T] using rot_of_distTriang _ hT
   have hGE : t.IsGE (T.rotate.obj₃) (a - 1) := by
     change t.IsGE (A⟦(1 : ℤ)⟧) (a - 1)
-    simpa [T] using t.isGE_shift A a 1 (a - 1) (by omega)
+    simpa [T] using t.isGE_shift A a 1 (a - 1) (by grind)
   simpa [T] using t.isIso₁_truncLT_map_of_isGE T.rotate hrot (a - 1) hGE
 
 theorem TStructure.exists_truncLT_octahedral_split
@@ -181,7 +181,7 @@ noncomputable def TStructure.shortComplexOfDistTriangle_map_truncGEIsoOfSplit
         (t.truncGE 0)) := by
   let e₁ : (t.truncGE 0).obj X₁ ≅ (t.truncGE 0).obj ((t.truncGE 0).obj X₁) :=
     @asIso _ _ _ _ ((t.truncGE 0).map ((t.truncGEπ 0).app X₁))
-      (t.isIso_truncGE_map_truncGEπ_app 0 0 (by omega) X₁)
+      (t.isIso_truncGE_map_truncGEπ_app 0 0 (by grind) X₁)
   let e₂ : (t.truncGE 0).obj X₂ ≅ (t.truncGE 0).obj Z :=
     @asIso _ _ _ _ ((t.truncGE 0).map v) hvIso
   refine ShortComplex.isoMk
@@ -237,7 +237,7 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_iff_octahedr
     h.t.exists_truncLT_octahedral_split (C := C) hT 0
   have hvIso : IsIso ((h.t.truncGE 0).map v) := by
     exact h.t.isIso₂_truncGE_map_of_isLE _ h13 (-1) 0 rfl
-      (h.t.isLE_truncLT_obj T.obj₁ 0 (-1) (by omega))
+      (h.t.isLE_truncLT_obj T.obj₁ 0 (-1) (by grind))
   refine ⟨Z, v, w, m₁, m₃, h13, h23, hm₁, hmw, hm₃, ?_⟩
   rw [h.H0primeFunctor_preadditiveCoyoneda_exact_iff_truncGE (C := C) T hT E]
   exact (h.truncGE_preadditiveCoyoneda_exact_iff_of_split
@@ -448,14 +448,14 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_one
     (E : h.t.heart.FullSubcategory) :
     ((shortComplexOfDistTriangle (Triangle.mk m₁ m₃ δ) hT).map
       (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
-  letI : h.t.IsGE A 0 := h.t.isGE_of_ge A 0 1 (by omega)
+  letI : h.t.IsGE A 0 := h.t.isGE_of_ge A 0 1 (by grind)
   have hm₃LT : IsIso ((h.t.truncLT 0).map m₃) := by
     let T : Triangle C := Triangle.mk m₁ m₃ δ
     have hrot : T.rotate ∈ distTriang C := by
       simpa [T] using rot_of_distTriang _ hT
     have hGE : h.t.IsGE (T.rotate.obj₃) 0 := by
       change h.t.IsGE (A⟦(1 : ℤ)⟧) 0
-      simpa [T] using h.t.isGE_shift A 1 1 0 (by omega)
+      simpa [T] using h.t.isGE_shift A 1 1 0 (by grind)
     simpa [T] using h.t.isIso₁_truncLT_map_of_isGE T.rotate hrot 0 hGE
   exact h.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_truncLT_map
     (C := C) hT hm₃LT E
@@ -531,7 +531,7 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_zero
       (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
   let A0 : h.t.heart.FullSubcategory :=
     ⟨(h.t.truncLT 1).obj A, (h.t.mem_heart_iff _).mpr
-      ⟨h.t.isLE_truncLT_obj A 1 0 (by omega), inferInstance⟩⟩
+      ⟨h.t.isLE_truncLT_obj A 1 0 (by grind), inferInstance⟩⟩
   obtain ⟨Z, v, w, m₁, m₃, h13, h23, hm₁, hmw, hm₃⟩ :=
     h.t.exists_truncLT_octahedral_split (C := C) hT 1
   have hex13 :
@@ -563,11 +563,11 @@ theorem HeartStabilityData.isZero_H0Functor_shift_obj_of_lt_bound
     {X : C} {m n : ℤ} (hmn : m < n) (hGE : h.t.IsGE X n) :
     IsZero (((@HeartStabilityData.H0Functor C _ _ _ _ _ _ inst h).shift m).obj X) := by
   letI := inst
-  have hGE' : h.t.IsGE X (m + 1) := h.t.isGE_of_ge X (m + 1) n (by omega)
+  have hGE' : h.t.IsGE X (m + 1) := h.t.isGE_of_ge X (m + 1) n (by grind)
   have hzeroObj : IsZero ((h.t.truncGELE m m).obj X) := by
     dsimp [TStructure.truncGELE]
     exact Functor.map_isZero (h.t.truncGE m)
-      (h.t.isZero_truncLE_obj_of_isGE m (m + 1) (by omega) X)
+      (h.t.isZero_truncLE_obj_of_isGE m (m + 1) (by grind) X)
   have hzeroHeart : IsZero (h.heartCoh (C := C) m X) := by
     refine ObjectProperty.FullSubcategory.isZero_of_obj_isZero (C := C) ?_
     simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
@@ -579,15 +579,15 @@ theorem HeartStabilityData.isZero_H0Functor_shift_obj_of_gt_bound
     {X : C} {m n : ℤ} (hmn : n < m) (hLE : h.t.IsLE X n) :
     IsZero (((@HeartStabilityData.H0Functor C _ _ _ _ _ _ inst h).shift m).obj X) := by
   letI := inst
-  have hLE' : h.t.IsLE X (m - 1) := h.t.isLE_of_le X n (m - 1) (by omega)
+  have hLE' : h.t.IsLE X (m - 1) := h.t.isLE_of_le X n (m - 1) (by grind)
   have hzeroObj : IsZero ((h.t.truncGELE m m).obj X) := by
     dsimp [TStructure.truncGELE]
     letI : h.t.IsLE ((h.t.truncLE m).obj X) (m - 1) := by
-      have hm : h.t.IsLE X m := h.t.isLE_of_le X n m (by omega)
+      have hm : h.t.IsLE X m := h.t.isLE_of_le X n m (by grind)
       let e : (h.t.truncLE m).obj X ≅ X :=
         @asIso _ _ _ _ ((h.t.truncLEι m).app X) ((h.t.isLE_iff_isIso_truncLEι_app m X).mp hm)
       exact h.t.isLE_of_iso e.symm (m - 1)
-    exact h.t.isZero_truncGE_obj_of_isLE (m - 1) m (by omega) ((h.t.truncLE m).obj X)
+    exact h.t.isZero_truncGE_obj_of_isLE (m - 1) m (by grind) ((h.t.truncLE m).obj X)
   have hzeroHeart : IsZero (h.heartCoh (C := C) m X) := by
     refine ObjectProperty.FullSubcategory.isZero_of_obj_isZero (C := C) ?_
     simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using

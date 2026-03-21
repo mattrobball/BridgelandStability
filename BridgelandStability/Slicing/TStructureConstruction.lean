@@ -59,7 +59,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
         (IsZero Y ∨ ∃ (GY : HNFiltration C s.P Y) (hGY : 0 < GY.n),
           GY.phiPlus C hGY ≤ 0 ∧
           (∀ (_ : 0 < F.n) (j : Fin GY.n),
-            F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) ∧
+            F.φ ⟨F.n - 1, by grind⟩ ≤ GY.φ j) ∧
           (∀ j : Fin GY.n, ∃ i : Fin F.n, GY.φ j = F.φ i)) by
     obtain ⟨X, Y, hX, f, g, h, hT, hXdata, hY⟩ := hmain F.n A F le_rfl
     exact ⟨X, Y, hX,
@@ -71,7 +71,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
   induction m with
   | zero =>
     intro A F hFn
-    have hn : F.n = 0 := by omega
+    have hn : F.n = 0 := by grind
     exact ⟨A, 0, Or.inl (F.zero_isZero hn), 𝟙 A, 0, 0,
       contractible_distinguished A, Or.inl (F.zero_isZero hn), Or.inl (isZero_zero C)⟩
   | succ m ih =>
@@ -84,7 +84,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
     · -- All phases > 0: X = A, Y = 0
       exact ⟨A, 0, s.gtProp_of_hn C F 0 hall_pos hn0, 𝟙 A, 0, 0,
         contractible_distinguished A,
-        Or.inr ⟨F, hn0, by simp only [HNFiltration.phiMinus]; exact hall_pos ⟨F.n - 1, by omega⟩,
+        Or.inr ⟨F, hn0, by simp only [HNFiltration.phiMinus]; exact hall_pos ⟨F.n - 1, by grind⟩,
           fun hn0 ↦ le_refl _, fun j ↦ ⟨j, rfl⟩⟩,
         Or.inl (isZero_zero C)⟩
     · push_neg at hall_pos
@@ -94,32 +94,32 @@ theorem Slicing.tStructureAux (s : Slicing C)
           contractible_distinguished₁ A,
           Or.inl (isZero_zero C),
           Or.inr ⟨F, hn0, hall_neg ⟨0, hn0⟩, fun _ j ↦
-            F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)), fun j ↦ ⟨j, rfl⟩⟩⟩
+            F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)), fun j ↦ ⟨j, rfl⟩⟩⟩
       · -- Mixed case: some phases > 0 and some ≤ 0
         push_neg at hall_neg
         -- F.n ≥ 2: can't be mixed with only one factor
         have hn2 : 2 ≤ F.n := by
           by_contra hlt; push_neg at hlt
           obtain ⟨j, hj⟩ := hall_neg; obtain ⟨j', hj'⟩ := hall_pos
-          have heq : F.φ j = F.φ j' := congrArg F.φ (Fin.ext (by omega))
-          linarith
+          have heq : F.φ j = F.φ j' := congrArg F.φ (Fin.ext (by grind))
+          grind
         -- Consider the prefix filtration with n-1 factors
-        let G := F.prefix C (F.n - 1) (by omega) (by omega)
+        let G := F.prefix C (F.n - 1) (by grind) (by grind)
         -- Apply IH to chain(n-1) with the prefix filtration (n-1 ≤ m)
         obtain ⟨X, Y', hX, f', g', h', hT', hXdata, hY'⟩ :=
-          ih (F.chain.obj' (F.n - 1) (by omega)) G
-            (by have : G.n = F.n - 1 := rfl; omega)
+          ih (F.chain.obj' (F.n - 1) (by grind)) G
+            (by have : G.n = F.n - 1 := rfl; grind)
         -- Transport the last HN triangle to chain objects
-        let T := F.triangle ⟨F.n - 1, by omega⟩
-        let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by omega⟩)
-        let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by omega⟩)
+        let T := F.triangle ⟨F.n - 1, by grind⟩
+        let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by grind⟩)
+        let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by grind⟩)
         let eA := Classical.choice F.top_iso
-        have hchainN : F.chain.obj' (F.n - 1 + 1) (by omega) =
+        have hchainN : F.chain.obj' (F.n - 1 + 1) (by grind) =
             F.chain.obj (Fin.last F.n) :=
           congrArg F.chain.obj (Fin.ext (by grind))
         let e₂A : T.obj₂ ≅ A :=
           e₂.trans ((eqToIso hchainN).trans eA)
-        let u₂₃ : F.chain.obj' (F.n - 1) (by omega) ⟶ A :=
+        let u₂₃ : F.chain.obj' (F.n - 1) (by grind) ⟶ A :=
           e₁.inv ≫ T.mor₁ ≫ e₂A.hom
         let Tisoₘ := Triangle.isoMk (Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧')) T e₁.symm e₂A.symm (Iso.refl _)
@@ -128,18 +128,18 @@ theorem Slicing.tStructureAux (s : Slicing C)
           (by simp)
         have hTu₂₃ : Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧') ∈ distTriang C :=
-          isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by omega⟩) _ Tisoₘ
+          isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by grind⟩) _ Tisoₘ
         -- The last phase is ≤ 0
         obtain ⟨j₀, hj₀⟩ := hall_pos
-        have hφlast : F.φ ⟨F.n - 1, by omega⟩ ≤ 0 :=
-          le_trans (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))) hj₀
+        have hφlast : F.φ ⟨F.n - 1, by grind⟩ ≤ 0 :=
+          le_trans (F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))) hj₀
         -- Case split on whether the prefix decomposition gave Y' = 0
         rcases hY' with hY'Z | ⟨GY', hGY', hGY'_le, hGY'_bound, hGY'_contain⟩
         · -- Y' is zero (prefix was all-positive): f' is iso
           have hf'Iso : IsIso f' :=
             (Triangle.isZero₃_iff_isIso₁ _ hT').mp hY'Z
-          let eX : X ≅ F.chain.obj' (F.n - 1) (by omega) := asIso f'
-          have hGn0 : 0 < G.n := by change 0 < F.n - 1; omega
+          let eX : X ≅ F.chain.obj' (F.n - 1) (by grind) := asIso f'
+          have hGn0 : 0 < G.n := by change 0 < F.n - 1; grind
           refine ⟨X, T.obj₃, hX, eX.hom ≫ u₂₃, e₂A.inv ≫ T.mor₂,
             T.mor₃ ≫ (shiftFunctor C (1 : ℤ)).map e₁.hom ≫
               (shiftFunctor C (1 : ℤ)).map eX.inv, ?_,
@@ -147,37 +147,37 @@ theorem Slicing.tStructureAux (s : Slicing C)
               ⟨GX, hGX, hpos, fun _ ↦ hbd hGn0, fun j ↦ by
                 obtain ⟨i, hi⟩ := hcontain j
                 have hi_lt := i.isLt; change i.val < F.n - 1 at hi_lt
-                exact ⟨⟨i.val, by omega⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
+                exact ⟨⟨i.val, by grind⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
             Or.inr ⟨?_, ?_, ?_, ?_, ?_⟩⟩
           · -- Distinguished triangle via transport
-            apply isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by omega⟩)
+            apply isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by grind⟩)
             exact Triangle.isoMk _ T (eX.trans e₁.symm) e₂A.symm (Iso.refl _)
               (by simp [u₂₃, eX, e₂A])
               (by simp [e₂A])
               (by simp [eX])
           · -- Single-factor HN filtration of T.obj₃
-            exact HNFiltration.single C T.obj₃ (F.φ ⟨F.n - 1, by omega⟩)
-              (F.semistable ⟨F.n - 1, by omega⟩)
+            exact HNFiltration.single C T.obj₃ (F.φ ⟨F.n - 1, by grind⟩)
+              (F.semistable ⟨F.n - 1, by grind⟩)
           · -- 0 < 1
-            change 0 < 1; omega
+            change 0 < 1; grind
           · -- phiPlus ≤ 0: single.φ 0 = F.φ(n-1) ≤ 0
             exact hφlast
           · -- Phase bound: F.φ(n-1) ≤ single.φ j = F.φ(n-1)
             intro _ _; exact le_rfl
           · -- Phase containment: single.φ j = F.φ(n-1)
-            intro j; exact ⟨⟨F.n - 1, by omega⟩, by simp [HNFiltration.single]⟩
+            intro j; exact ⟨⟨F.n - 1, by grind⟩, by simp [HNFiltration.single]⟩
         · -- Y' has filtration with phase bound: use octahedral + appendFactor
           -- Extract the phase bound from the IH
-          have hGn : 0 < G.n := by change 0 < F.n - 1; omega
+          have hGn : 0 < G.n := by change 0 < F.n - 1; grind
           have hφlast_lt : ∀ j : Fin GY'.n,
-              F.φ ⟨F.n - 1, by omega⟩ < GY'.φ j := by
+              F.φ ⟨F.n - 1, by grind⟩ < GY'.φ j := by
             intro j
-            calc F.φ ⟨F.n - 1, by omega⟩
-                < F.φ ⟨F.n - 2, by omega⟩ :=
-                  F.hφ (show (⟨F.n - 2, by omega⟩ : Fin F.n) <
-                    ⟨F.n - 1, by omega⟩ from
-                      Fin.mk_lt_mk.mpr (by omega))
-              _ = G.φ ⟨G.n - 1, by omega⟩ := by
+            calc F.φ ⟨F.n - 1, by grind⟩
+                < F.φ ⟨F.n - 2, by grind⟩ :=
+                  F.hφ (show (⟨F.n - 2, by grind⟩ : Fin F.n) <
+                    ⟨F.n - 1, by grind⟩ from
+                      Fin.mk_lt_mk.mpr (by grind))
+              _ = G.φ ⟨G.n - 1, by grind⟩ := by
                   change F.φ ⟨F.n - 2, _⟩ = F.φ ⟨(F.n - 1) - 1, _⟩; congr 1
               _ ≤ GY'.φ j := hGY'_bound hGn j
           -- Complete f' ≫ u₂₃ to a distinguished triangle
@@ -185,22 +185,22 @@ theorem Slicing.tStructureAux (s : Slicing C)
           -- Octahedral: Y' → Z → Factor(n-1) → Y'[1] is distinguished
           let oct := Triangulated.someOctahedron rfl hT' hTu₂₃ h₁₃
           let GZ := GY'.appendFactor C oct.triangle oct.mem (Iso.refl _)
-            (Iso.refl _) (F.φ ⟨F.n - 1, by omega⟩)
-            (F.semistable ⟨F.n - 1, by omega⟩) hφlast_lt
+            (Iso.refl _) (F.φ ⟨F.n - 1, by grind⟩)
+            (F.semistable ⟨F.n - 1, by grind⟩) hφlast_lt
           have hGZn : GZ.n = GY'.n + 1 := rfl
           refine ⟨X, Z, hX, f' ≫ u₂₃, v₁₃, w₁₃, h₁₃,
             hXdata.imp id (fun ⟨GX, hGX, hpos, hbd, hcontain⟩ ↦
-              ⟨GX, hGX, hpos, fun _ ↦ hbd (by change 0 < F.n - 1; omega), fun j ↦ by
+              ⟨GX, hGX, hpos, fun _ ↦ hbd (by change 0 < F.n - 1; grind), fun j ↦ by
                 obtain ⟨i, hi⟩ := hcontain j
                 have hi_lt := i.isLt; change i.val < F.n - 1 at hi_lt
-                exact ⟨⟨i.val, by omega⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
-            Or.inr ⟨GZ, by omega, ?_, fun _ j ↦ ?_, fun j ↦ ?_⟩⟩
+                exact ⟨⟨i.val, by grind⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
+            Or.inr ⟨GZ, by grind, ?_, fun _ j ↦ ?_, fun j ↦ ?_⟩⟩
           · -- GZ.phiPlus ≤ 0: first phase comes from GY'
-            change GZ.φ ⟨0, by omega⟩ ≤ 0
+            change GZ.φ ⟨0, by grind⟩ ≤ 0
             simp only [GZ, HNFiltration.appendFactor, dif_pos hGY']
             exact hGY'_le
           · -- Phase bound: F.φ(n-1) ≤ GZ.φ j
-            change F.φ ⟨F.n - 1, by omega⟩ ≤ GZ.φ j
+            change F.φ ⟨F.n - 1, by grind⟩ ≤ GZ.φ j
             simp only [GZ, HNFiltration.appendFactor]
             split_ifs with hj
             · exact le_of_lt (hφlast_lt ⟨j.val, hj⟩)
@@ -212,10 +212,10 @@ theorem Slicing.tStructureAux (s : Slicing C)
             · -- j < GY'.n: GZ.φ j = GY'.φ ⟨j, hj⟩
               obtain ⟨i_G, hi_G⟩ := hGY'_contain ⟨j.val, hj⟩
               have hi_lt := i_G.isLt; change i_G.val < F.n - 1 at hi_lt
-              exact ⟨⟨i_G.val, by omega⟩,
+              exact ⟨⟨i_G.val, by grind⟩,
                 by simp [G, HNFiltration.prefix] at hi_G; exact hi_G⟩
             · -- j = GY'.n: GZ.φ j = F.φ(n-1)
-              exact ⟨⟨F.n - 1, by omega⟩, rfl⟩
+              exact ⟨⟨F.n - 1, by grind⟩, rfl⟩
 
 /-- Auxiliary: given an HN filtration, produce the dual half-open t-structure
 decomposition triangle for the convention `geProp 0` / `ltProp 0`. -/
@@ -233,7 +233,7 @@ theorem Slicing.tStructureAuxGE (s : Slicing C)
   induction m with
   | zero =>
     intro A F hFn
-    have hn : F.n = 0 := by omega
+    have hn : F.n = 0 := by grind
     exact ⟨A, 0, Or.inl (F.zero_isZero hn), Or.inl (isZero_zero C), 𝟙 A, 0, 0,
       contractible_distinguished A⟩
   | succ m ih =>
@@ -255,22 +255,22 @@ theorem Slicing.tStructureAuxGE (s : Slicing C)
           push_neg at hlt
           obtain ⟨j, hj⟩ := hall_nonneg
           obtain ⟨j', hj'⟩ := hall_neg
-          have heq : F.φ j = F.φ j' := congrArg F.φ (Fin.ext (by omega))
-          linarith
-        let G := F.prefix C (F.n - 1) (by omega) (by omega)
+          have heq : F.φ j = F.φ j' := congrArg F.φ (Fin.ext (by grind))
+          grind
+        let G := F.prefix C (F.n - 1) (by grind) (by grind)
         obtain ⟨X, Y', hX, hY', f', g', h', hT'⟩ :=
-          ih (F.chain.obj' (F.n - 1) (by omega)) G
-            (by have : G.n = F.n - 1 := rfl; omega)
-        let T := F.triangle ⟨F.n - 1, by omega⟩
-        let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by omega⟩)
-        let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by omega⟩)
+          ih (F.chain.obj' (F.n - 1) (by grind)) G
+            (by have : G.n = F.n - 1 := rfl; grind)
+        let T := F.triangle ⟨F.n - 1, by grind⟩
+        let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by grind⟩)
+        let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by grind⟩)
         let eA := Classical.choice F.top_iso
-        have hchainN : F.chain.obj' (F.n - 1 + 1) (by omega) =
+        have hchainN : F.chain.obj' (F.n - 1 + 1) (by grind) =
             F.chain.obj (Fin.last F.n) :=
           congrArg F.chain.obj (Fin.ext (by grind))
         let e₂A : T.obj₂ ≅ A :=
           e₂.trans ((eqToIso hchainN).trans eA)
-        let u₂₃ : F.chain.obj' (F.n - 1) (by omega) ⟶ A :=
+        let u₂₃ : F.chain.obj' (F.n - 1) (by grind) ⟶ A :=
           e₁.inv ≫ T.mor₁ ≫ e₂A.hom
         let Tisoₘ := Triangle.isoMk (Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧')) T e₁.symm e₂A.symm (Iso.refl _)
@@ -279,17 +279,17 @@ theorem Slicing.tStructureAuxGE (s : Slicing C)
           (by simp)
         have hTu₂₃ : Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧') ∈ distTriang C :=
-          isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by omega⟩) _ Tisoₘ
-        have hφlast : F.φ ⟨F.n - 1, by omega⟩ < 0 := by
+          isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by grind⟩) _ Tisoₘ
+        have hφlast : F.φ ⟨F.n - 1, by grind⟩ < 0 := by
           obtain ⟨j, hj⟩ := hall_nonneg
           exact lt_of_le_of_lt
-            (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))) hj
+            (F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))) hj
         obtain ⟨Z, v₁₃, w₁₃, h₁₃⟩ := distinguished_cocone_triangle (f' ≫ u₂₃)
         let oct := Triangulated.someOctahedron rfl hT' hTu₂₃ h₁₃
         have hLast : s.ltProp C 0 T.obj₃ := by
           exact s.ltProp_of_hn C
-            (HNFiltration.single C T.obj₃ (F.φ ⟨F.n - 1, by omega⟩)
-              (F.semistable ⟨F.n - 1, by omega⟩))
+            (HNFiltration.single C T.obj₃ (F.φ ⟨F.n - 1, by grind⟩)
+              (F.semistable ⟨F.n - 1, by grind⟩))
             0 (fun _ ↦ hφlast) (by
               change 0 < 1
               omega)
@@ -312,29 +312,29 @@ def Slicing.toTStructure (s : Slicing C) : TStructure C where
   le_shift n a n' h X hX := by
     show s.gtProp C (-↑n') (X⟦a⟧)
     have hcast : (↑a : ℝ) + ↑n' = ↑n := by exact_mod_cast h
-    have : (-↑n' : ℝ) = -↑n + ↑a := by linarith
+    have : (-↑n' : ℝ) = -↑n + ↑a := by grind
     rw [this]
     exact s.gtProp_shift C _ X a hX
   ge_shift n a n' h X hX := by
     show s.leProp C (1 - ↑n') (X⟦a⟧)
     have hcast : (↑a : ℝ) + ↑n' = ↑n := by exact_mod_cast h
-    have : (1 - ↑n' : ℝ) = (1 - ↑n) + ↑a := by linarith
+    have : (1 - ↑n' : ℝ) = (1 - ↑n) + ↑a := by grind
     rw [this]
     exact s.leProp_shift C _ X a hX
   zero' {X Y} f hX hY := by
     have hX' : s.gtProp C 0 X := by
-      simpa [show (-↑(0 : ℤ) : ℝ) = 0 from by norm_num] using hX
+      simpa [show (-↑(0 : ℤ) : ℝ) = 0 from by grind] using hX
     have hY' : s.leProp C 0 Y := by
-      simpa [show (1 - ↑(1 : ℤ) : ℝ) = 0 from by norm_num] using hY
+      simpa [show (1 - ↑(1 : ℤ) : ℝ) = 0 from by grind] using hY
     exact s.zero_of_gtProp_leProp C hX' hY' f
   le_zero_le := by
     show s.gtProp C (-↑(0 : ℤ)) ≤ s.gtProp C (-↑(1 : ℤ))
     simp only [Int.cast_zero, neg_zero, Int.cast_one]
-    exact s.gtProp_anti C (by norm_num : (-1 : ℝ) ≤ 0)
+    exact s.gtProp_anti C (by grind : (-1 : ℝ) ≤ 0)
   ge_one_le := by
     show s.leProp C (1 - ↑(1 : ℤ)) ≤ s.leProp C (1 - ↑(0 : ℤ))
     simp only [Int.cast_one, sub_self, Int.cast_zero, sub_zero]
-    exact s.leProp_mono C (by norm_num : (0 : ℝ) ≤ 1)
+    exact s.leProp_mono C (by grind : (0 : ℝ) ≤ 1)
   exists_triangle_zero_one A := by
     obtain ⟨F⟩ := s.hn_exists A
     obtain ⟨X, Y, hX, hY, f, g, h, hT, _⟩ := Slicing.tStructureAux C s A F
@@ -359,29 +359,29 @@ def Slicing.toTStructureGE (s : Slicing C) : TStructure C where
   le_shift n a n' h X hX := by
     show s.geProp C (-↑n') (X⟦a⟧)
     have hcast : (↑a : ℝ) + ↑n' = ↑n := by exact_mod_cast h
-    have : (-↑n' : ℝ) = -↑n + ↑a := by linarith
+    have : (-↑n' : ℝ) = -↑n + ↑a := by grind
     rw [this]
     exact s.geProp_shift C _ X a hX
   ge_shift n a n' h X hX := by
     show s.ltProp C (1 - ↑n') (X⟦a⟧)
     have hcast : (↑a : ℝ) + ↑n' = ↑n := by exact_mod_cast h
-    have : (1 - ↑n' : ℝ) = (1 - ↑n) + ↑a := by linarith
+    have : (1 - ↑n' : ℝ) = (1 - ↑n) + ↑a := by grind
     rw [this]
     exact s.ltProp_shift C _ X a hX
   zero' {X Y} f hX hY := by
     have hX' : s.geProp C 0 X := by
-      simpa [show (-↑(0 : ℤ) : ℝ) = 0 from by norm_num] using hX
+      simpa [show (-↑(0 : ℤ) : ℝ) = 0 from by grind] using hX
     have hY' : s.ltProp C 0 Y := by
-      simpa [show (1 - ↑(1 : ℤ) : ℝ) = 0 from by norm_num] using hY
+      simpa [show (1 - ↑(1 : ℤ) : ℝ) = 0 from by grind] using hY
     exact s.zero_of_geProp_ltProp C hX' hY' f
   le_zero_le := by
     show s.geProp C (-↑(0 : ℤ)) ≤ s.geProp C (-↑(1 : ℤ))
     simp only [Int.cast_zero, neg_zero, Int.cast_one]
-    exact s.geProp_anti C (by norm_num : (-1 : ℝ) ≤ 0)
+    exact s.geProp_anti C (by grind : (-1 : ℝ) ≤ 0)
   ge_one_le := by
     show s.ltProp C (1 - ↑(1 : ℤ)) ≤ s.ltProp C (1 - ↑(0 : ℤ))
     simp only [Int.cast_one, sub_self, Int.cast_zero, sub_zero]
-    exact s.ltProp_mono C (by norm_num : (0 : ℝ) ≤ 1)
+    exact s.ltProp_mono C (by grind : (0 : ℝ) ≤ 1)
   exists_triangle_zero_one A := by
     obtain ⟨F⟩ := s.hn_exists A
     obtain ⟨X, Y, hX, hY, f, g, h, hT⟩ := Slicing.tStructureAuxGE C s A F
@@ -406,7 +406,7 @@ theorem Slicing.toTStructure_bounded (s : Slicing C) :
       Or.inr ⟨F, hn, ?_⟩⟩
     · have := Int.le_ceil (-(F.phiMinus C hn))
       push_cast
-      linarith
+      grind
     · linarith [Int.floor_le (1 - F.phiPlus C hn)]
 
 /-- **Bounded t-structure from the dual half-open convention.**
@@ -481,9 +481,9 @@ theorem Slicing.exists_split_at_cutoff (s : Slicing C)
           s.phiPlus_le_phiPlus_of_hn C hXne GX.unphaseShift hGX
       _ = GX.phiPlus C hGX + t :=
           GX.unphaseShift_phiPlus C hGX
-      _ ≤ Fs.φ ⟨0, hFsn⟩ + t := by linarith
+      _ ≤ Fs.φ ⟨0, hFsn⟩ + t := by grind
       _ = (F.φ ⟨0, hn⟩ - t) + t := rfl
-      _ = F.φ ⟨0, hn⟩ := by ring
+      _ = F.φ ⟨0, hn⟩ := by grind
       _ < b := hFφ0_lt
 
 /-- **HN filtration splitting at the lower interval bound**. Special case of

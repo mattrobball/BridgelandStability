@@ -147,7 +147,7 @@ lemma K₀.of_shift_one (X : C) : K₀.of C (X⟦(1 : ℤ)⟧) = -K₀.of C X :=
 @[simp]
 lemma K₀.of_shift_neg_one (X : C) : K₀.of C (X⟦(-1 : ℤ)⟧) = -K₀.of C X := by
   have h1 := K₀.of_shift_one C (X⟦(-1 : ℤ)⟧)
-  have h2 := K₀.of_iso C ((shiftFunctorCompIsoId C (-1 : ℤ) (1 : ℤ) (by omega)).app X)
+  have h2 := K₀.of_iso C ((shiftFunctorCompIsoId C (-1 : ℤ) (1 : ℤ) (by grind)).app X)
   simp only [Functor.comp_obj] at h2
   rw [h2] at h1
   exact (neg_eq_iff_eq_neg.mpr h1).symm
@@ -180,8 +180,8 @@ lemma K₀.lift_of {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditiv
 /-- The K₀ class of the `(i+1)`-th chain object equals the class of the `i`-th plus
 the class of the `i`-th factor, using the `i`-th distinguished triangle. -/
 private lemma K₀.of_chain_succ {E : C} (P : PostnikovTower C E) (i : Fin P.n) :
-    K₀.of C (P.chain.obj' (i.val + 1) (by omega)) =
-    K₀.of C (P.chain.obj' i.val (by omega)) + K₀.of C (P.factor i) := by
+    K₀.of C (P.chain.obj' (i.val + 1) (by grind)) =
+    K₀.of C (P.chain.obj' i.val (by grind)) + K₀.of C (P.factor i) := by
   have h := K₀.of_triangle C (P.triangle i) (P.triangle_dist i)
   have h₂ := K₀.of_iso C (Classical.choice (P.triangle_obj₂ i))
   have h₁ := K₀.of_iso C (Classical.choice (P.triangle_obj₁ i))
@@ -192,15 +192,15 @@ private lemma K₀.of_chain_succ {E : C} (P : PostnikovTower C E) (i : Fin P.n) 
 of K₀ classes of the first `k` factors. -/
 private lemma K₀.of_chain_eq_partial_sum {E : C} (P : PostnikovTower C E)
     (k : ℕ) (hk : k ≤ P.n) :
-    K₀.of C (P.chain.obj' k (by omega)) =
-    ∑ i : Fin k, K₀.of C (P.factor ⟨i.val, by omega⟩) := by
+    K₀.of C (P.chain.obj' k (by grind)) =
+    ∑ i : Fin k, K₀.of C (P.factor ⟨i.val, by grind⟩) := by
   induction k with
   | zero =>
     simp only [Finset.univ_eq_empty, Finset.sum_empty]
-    rw [show P.chain.obj' 0 (by omega) = P.chain.left from rfl]
+    rw [show P.chain.obj' 0 (by grind) = P.chain.left from rfl]
     exact K₀.of_isZero C P.base_isZero
   | succ k ih =>
-    rw [K₀.of_chain_succ C P ⟨k, by omega⟩, ih (by omega)]
+    rw [K₀.of_chain_succ C P ⟨k, by grind⟩, ih (by grind)]
     rw [Fin.sum_univ_castSucc]; congr 1
 
 /-- **K₀ additivity for Postnikov towers**. The K₀ class of `E` equals the sum of
@@ -208,8 +208,8 @@ the K₀ classes of the factors: `[E] = ∑ᵢ [Fᵢ]` in K₀. This is the key 
 identity used in the sector bound (**Lemma 6.2**). -/
 theorem K₀.of_postnikovTower_eq_sum {E : C} (P : PostnikovTower C E) :
     K₀.of C E = ∑ i : Fin P.n, K₀.of C (P.factor i) := by
-  rw [show K₀.of C E = K₀.of C (P.chain.obj' P.n (by omega)) from by
-    rw [show P.chain.obj' P.n (by omega) = P.chain.right from rfl]
+  rw [show K₀.of C E = K₀.of C (P.chain.obj' P.n (by grind)) from by
+    rw [show P.chain.obj' P.n (by grind) = P.chain.right from rfl]
     exact (K₀.of_iso C (Classical.choice P.top_iso)).symm]
   exact K₀.of_chain_eq_partial_sum C P P.n le_rfl
 
