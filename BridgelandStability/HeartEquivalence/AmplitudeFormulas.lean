@@ -36,12 +36,12 @@ section Proposition53
 
 variable [IsTriangulated C]
 
+omit [IsTriangulated C] in
 theorem TStructure.triangleLTGE_iso_of_amp_negOne_zero
-    (t : TStructure C) [IsTriangulated C]
+    (t : TStructure C)
     {X K Q : C} (hK : t.heart K) (hQ : t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
-    (hT : Triangle.mk α β γ ∈ distTriang C)
-    [t.IsLE X 0] [t.IsGE X (-1)] :
+    (hT : Triangle.mk α β γ ∈ distTriang C) :
     ∃ e : Triangle.mk α β γ ≅ (t.triangleLTGE 0).obj X, e.hom.hom₂ = 𝟙 X := by
   obtain ⟨e, he⟩ := t.triangle_iso_exists hT (t.triangleLTGE_distinguished 0 X) (Iso.refl X) (-1) 0
     (by
@@ -57,12 +57,19 @@ theorem TStructure.triangleLTGE_iso_of_amp_negOne_zero
     (by infer_instance)
   exact ⟨e, he⟩
 
+/-! The next two isomorphisms identify the only nonzero heart cohomology objects
+of an object of amplitude `(-1, 0)` with the heart objects at the ends of a
+distinguished triangle realizing that amplitude. -/
+
+/-- For an object of amplitude `(-1, 0)` presented by a triangle
+`K⟦1⟧ ⟶ X ⟶ Q ⟶ K⟦2⟧` with `K, Q` in the heart, the `(-1)`-st heart
+cohomology of `X` is canonically isomorphic to `K`. -/
 noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
     (h : HeartStabilityData C) [IsTriangulated C]
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
-    [h.t.IsLE X 0] [h.t.IsGE X (-1)] :
+    [h.t.IsGE X (-1)] :
     h.heartCoh (C := C) (-1) X ≅ ⟨K, hK⟩ := by
   classical
   let hEx := TStructure.triangleLTGE_iso_of_amp_negOne_zero
@@ -77,7 +84,6 @@ noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
       simpa [TStructure.truncGELT] using
         ((@asIso _ _ _ _ ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))
           (by
-            change IsIso ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))
             infer_instance)).symm)
   let e₃ : (h.t.truncLT 0).obj X ≅ K⟦(1 : ℤ)⟧ :=
     (asIso eT.hom.hom₁).symm
@@ -87,12 +93,15 @@ noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
       ((shiftFunctor C (-1 : ℤ)).mapIso e ≪≫ shiftShiftNeg (X := K) (i := (1 : ℤ)))
   exact ObjectProperty.isoMk _ e'
 
+/-- For an object of amplitude `(-1, 0)` presented by a triangle
+`K⟦1⟧ ⟶ X ⟶ Q ⟶ K⟦2⟧` with `K, Q` in the heart, the `0`-th heart
+cohomology of `X` is canonically isomorphic to `Q`. -/
 noncomputable def HeartStabilityData.heartCoh_zero_iso_of_amp_negOne_zero
     (h : HeartStabilityData C) [IsTriangulated C]
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
-    [h.t.IsLE X 0] [h.t.IsGE X (-1)] :
+    [h.t.IsLE X 0] :
     h.heartCoh (C := C) 0 X ≅ ⟨Q, hQ⟩ := by
   classical
   let hEx := TStructure.triangleLTGE_iso_of_amp_negOne_zero
@@ -105,7 +114,6 @@ noncomputable def HeartStabilityData.heartCoh_zero_iso_of_amp_negOne_zero
       simpa [TStructure.truncLEGE] using
         (@asIso _ _ _ _ ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))
           (by
-            change IsIso ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))
             infer_instance))
   let e₂ : (h.t.truncGE 0).obj X ≅ Q :=
     (asIso eT.hom.hom₃).symm
@@ -306,7 +314,7 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
               (fun j => imgTerm (b + (j : ℤ)) - imgTerm (b + (j : ℤ) + 1)) :=
             hsum
       _ = imgTerm b - imgTerm (b + ((m + 1 : ℕ) : ℤ)) := htel
-      _ = 0 := by rw [hm1]; simpa [himg_b, himg_a1]
+      _ = 0 := by rw [hm1]; simp [himg_b, himg_a1]
   have hsum_sub :
       h.heartCohClassSum (C := C) b m T.obj₂ -
           h.heartCohClassSum (C := C) b m T.obj₃ =
