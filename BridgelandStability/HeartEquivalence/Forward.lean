@@ -88,9 +88,9 @@ def StabilityCondition.stabilityFunctionOnHeart
         constructor
         · calc
             0 < σ.slicing.phiMinus C E.obj hEobj := hphiMinus
-            _ = F.φ ⟨F.n - 1, by omega⟩ := by
+            _ = F.φ ⟨F.n - 1, by grind⟩ := by
               rw [σ.slicing.phiMinus_eq C E.obj hEobj F hn hlast]
-            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
         · calc
             F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
             _ = σ.slicing.phiPlus C E.obj hEobj := by
@@ -180,9 +180,9 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
     constructor
     · calc
         0 < σ.slicing.phiMinus C E.obj hEobj := hphiMinus
-        _ = F.φ ⟨F.n - 1, by omega⟩ := by
+        _ = F.φ ⟨F.n - 1, by grind⟩ := by
           rw [σ.slicing.phiMinus_eq C E.obj hEobj F hn hlast]
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
     · calc
         F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
         _ = σ.slicing.phiPlus C E.obj hEobj := by
@@ -399,8 +399,8 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
     chain_strictMono := by
       intro ⟨i, hi⟩ ⟨j, hj⟩ h
       simp only [Fin.lt_def] at h
-      have hi0 : i = 0 := by omega
-      have hj1 : j = 1 := by omega
+      have hi0 : i = 0 := by grind
+      have hj1 : j = 1 := by grind
       subst hi0; subst hj1
       simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, ↓reduceIte,
         Fin.mk_one, one_ne_zero, gt_iff_lt]
@@ -409,10 +409,10 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
     chain_bot := by simp
     chain_top := by simp
     φ := fun _ ↦ Z.phase E
-    φ_anti := fun a b h ↦ by exfalso; exact absurd h (by omega)
+    φ_anti := fun a b h ↦ by exfalso; exact absurd h (by grind)
     factor_phase := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by omega
+      have hj0 : j = 0 := by grind
       subst hj0
       change Z.phase (cokernel (Subobject.ofLE (⊥ : Subobject E) (⊤ : Subobject E) bot_le)) =
         Z.phase E
@@ -423,7 +423,7 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
       exact h₁.trans (Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow))
     factor_semistable := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by omega
+      have hj0 : j = 0 := by grind
       subst hj0
       change Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ _))
       exact Z.isSemistable_of_iso
@@ -457,28 +457,28 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
   have hK_lt_top : K < ⊤ := lt_of_le_of_ne le_top hK_ne_top
   let newChain : Fin (F.n + 2) → Subobject Y := fun j =>
     if h : (j : ℕ) ≤ F.n then
-      (Subobject.map i).obj (F.chain ⟨j, by omega⟩)
+      (Subobject.map i).obj (F.chain ⟨j, by grind⟩)
     else ⊤
-  have hNewBot : newChain ⟨0, by omega⟩ = ⊥ := by
-    change (Subobject.map i).obj (F.chain ⟨0, by omega⟩) = ⊥
+  have hNewBot : newChain ⟨0, by grind⟩ = ⊥ := by
+    change (Subobject.map i).obj (F.chain ⟨0, by grind⟩) = ⊥
     rw [F.chain_bot]
     simpa using (Subobject.map_bot i)
-  have hNewK : newChain ⟨F.n, by omega⟩ = K := by
+  have hNewK : newChain ⟨F.n, by grind⟩ = K := by
     simp [newChain, K, Subobject.map_top, F.chain_top]
-  have hNewTop : newChain ⟨F.n + 1, by omega⟩ = ⊤ := by
+  have hNewTop : newChain ⟨F.n + 1, by grind⟩ = ⊤ := by
     simp [newChain]
   have hNewMono : StrictMono newChain := by
     apply Fin.strictMono_iff_lt_succ.mpr
     intro ⟨j, hj⟩
-    change newChain ⟨j, by omega⟩ < newChain ⟨j + 1, by omega⟩
+    change newChain ⟨j, by grind⟩ < newChain ⟨j + 1, by grind⟩
     by_cases hjn : j = F.n
     · subst hjn
       rw [hNewK, hNewTop]
       exact hK_lt_top
-    · have hjle : j + 1 ≤ F.n := by omega
-      simp [newChain, show (j : ℕ) ≤ F.n by omega, hjle]
+    · have hjle : j + 1 ≤ F.n := by grind
+      simp [newChain, show (j : ℕ) ≤ F.n by grind, hjle]
       apply (Subobject.map i).monotone.strictMono_of_injective (Subobject.map_obj_injective i)
-      exact F.chain_strictMono (Fin.mk_lt_mk.mpr (by omega))
+      exact F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
   let φ : Fin (F.n + 1) → ℝ := fun j =>
     if h : (j : ℕ) < F.n then F.φ ⟨j, h⟩ else Z.phase B
   refine ⟨{
@@ -497,10 +497,10 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
           exact lt_trans (Fin.mk_lt_mk.mp hab) hb
         simp [ha, hb]
         exact F.φ_anti (Fin.mk_lt_mk.mpr (Fin.mk_lt_mk.mp hab))
-      · have ha : (a : ℕ) < F.n := by omega
+      · have ha : (a : ℕ) < F.n := by grind
         have hlast_le :
             F.φ ⟨F.n - 1, by have := F.hn; omega⟩ ≤ F.φ ⟨a, ha⟩ := by
-          exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by omega))
+          exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by grind))
         simp [ha, hb]
         linarith
     factor_phase := by
@@ -509,11 +509,11 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
       · let j' : Fin F.n := ⟨j, hj⟩
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
-          have hj_le : (j : ℕ) ≤ F.n := by omega
+          have hj_le : (j : ℕ) ≤ F.n := by grind
           simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
-          have hj1_le : (j : ℕ) + 1 ≤ F.n := by omega
+          have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
           simp [newChain, j', hj1_le]
         have hphase :
             Z.phase (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
@@ -526,9 +526,9 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
         have hφj : φ j = F.φ j' := by
           simp [φ, hj, j']
         exact ((phase_cokernel_ofLE_congr_local Z hcast hsucc).trans hphase).trans hφj.symm
-      · have hj_eq : (j : ℕ) = F.n := by omega
-        have hcast : j.castSucc = ⟨F.n, by omega⟩ := Fin.ext hj_eq
-        have hsucc : j.succ = ⟨F.n + 1, by omega⟩ := Fin.ext (by simp [hj_eq])
+      · have hj_eq : (j : ℕ) = F.n := by grind
+        have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
+        have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
         have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
         have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
         have hφj : φ j = Z.phase B := by
@@ -548,11 +548,11 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
       · let j' : Fin F.n := ⟨j, hj⟩
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
-          have hj_le : (j : ℕ) ≤ F.n := by omega
+          have hj_le : (j : ℕ) ≤ F.n := by grind
           simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
-          have hj1_le : (j : ℕ) + 1 ≤ F.n := by omega
+          have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
           simp [newChain, j', hj1_le]
         have hsemistable :
             Z.IsSemistable
@@ -563,9 +563,9 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
           (isSemistable_cokernel_mapMono_iff_local Z i
             (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))).2 (F.factor_semistable j')
         exact isSemistable_cokernel_ofLE_congr_local Z hcast hsucc hsemistable
-      · have hj_eq : (j : ℕ) = F.n := by omega
-        have hcast : j.castSucc = ⟨F.n, by omega⟩ := Fin.ext hj_eq
-        have hsucc : j.succ = ⟨F.n + 1, by omega⟩ := Fin.ext (by simp [hj_eq])
+      · have hj_eq : (j : ℕ) = F.n := by grind
+        have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
+        have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
         have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
         have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
         let eTop : B ≅ cokernel (Subobject.ofLE K ⊤ le_top) :=

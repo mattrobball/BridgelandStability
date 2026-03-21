@@ -131,7 +131,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
           have hQ' : Q.P ψ E' := by
             simpa [Q, StabilityCondition.deformedSlicing] using hQ
           exact Or.inr ⟨HNFiltration.single C E' ψ hQ',
-            show 0 < 1 from by omega, hψ⟩
+            show 0 < 1 from by grind, hψ⟩
       | ext hT _ _ ihX ihY =>
           exact Q.ltProp_of_triangle C t ihX ihY hT
     -- Forward: Q-HN factors → phase confinement → σ-intervalProp
@@ -155,7 +155,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
             exact G.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
           have hGi_ge : Q.phiMinus C E hE ≤ G.φ i := by
             rw [Q.phiMinus_eq C E hE G hnG hlastG]
-            exact G.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+            exact G.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
           exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
             (by linarith) (by linarith)
     -- Reverse: σ-HN factors → reverse phase confinement → Q-intervalProp
@@ -173,7 +173,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
         · exact Or.inl hFi
         · have hFi_ge : σ.slicing.phiMinus C E hE ≤ F.φ i := by
             rw [σ.slicing.phiMinus_eq C E hE F hnF hlastF]
-            exact F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+            exact F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
           exact deformedGtPred_subset_gtProp <|
             P_in_deformedGtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
               (by linarith [hFi_ge, hδ]) (F.semistable i) hFi

@@ -105,7 +105,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           -- to get K⟦-1⟧ → X → Q⟦-1⟧ (dist), apply X's semistability
           have hT_sh := Triangle.shift_distinguished _ hT (-1 : ℤ)
           -- Build triangle with obj₂ = X via iso (X⟦1⟧)⟦-1⟧ ≅ X
-          have h10 : (1 : ℤ) + (-1 : ℤ) = 0 := by omega
+          have h10 : (1 : ℤ) + (-1 : ℤ) = 0 := by grind
           let eX := (shiftFunctorCompIsoId C (1 : ℤ) (-1 : ℤ) h10).app X
           let shT := (Triangle.shiftFunctor C (-1)).obj (Triangle.mk f₁ f₂ f₃)
           set T' := Triangle.mk (shT.mor₁ ≫ eX.hom) (eX.inv ≫ shT.mor₂) shT.mor₃
@@ -159,7 +159,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           rcases hSS.1 with hZ' | ⟨F, hF⟩
           · exact absurd hZ' hSS.2.1
           · exact Or.inr ⟨(F.shiftHN C σ.slicing (-1)).ofIso C
-              ((shiftFunctorCompIsoId C (1 : ℤ) (-1 : ℤ) (by omega)).app X),
+              ((shiftFunctorCompIsoId C (1 : ℤ) (-1 : ℤ) (by grind)).app X),
               fun i ↦ by
                 change a - 1 < (F.shiftHN C σ.slicing (-1)).φ i ∧
                   (F.shiftHN C σ.slicing (-1)).φ i < b - 1

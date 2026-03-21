@@ -54,7 +54,7 @@ theorem P_in_deformedGtPred
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
   have hGn : 0 < G.n := by
     by_contra h; push_neg at h
-    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by grind))
   set P := G.toPostnikovTower
   -- Step 2: All factors have σ-intervalProp
   have hfactors_int : ∀ j, σ.slicing.intervalProp C (s - 3 * ε) (s + 5 * ε)
@@ -81,23 +81,23 @@ theorem P_in_deformedGtPred
   have hj₀_max : ∀ i : Fin G.n, ¬IsZero (P.factor i) → i ≤ j₀ :=
     fun i hi ↦ Finset.le_max' S i (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hi⟩)
   have hzero_suffix : ∀ i : Fin G.n, j₀.val < i.val → IsZero (P.factor i) := by
-    intro i hi; by_contra hine; exact absurd (hj₀_max i hine) (by omega)
+    intro i hi; by_contra hine; exact absurd (hj₀_max i hine) (by grind)
   -- chain(j₀+1) has P s via downward induction (zero factors → iso → closedUnderIso)
   have hj₀_lt : j₀.val < G.n := j₀.isLt
-  have hPchain : σ.slicing.P s (P.chain.obj' (j₀.val + 1) (by omega)) := by
+  have hPchain : σ.slicing.P s (P.chain.obj' (j₀.val + 1) (by grind)) := by
     have : ∀ d k (hle : k ≤ G.n), k + d = G.n → j₀.val < k →
-        σ.slicing.P s (P.chain.obj' k (by omega)) := by
+        σ.slicing.P s (P.chain.obj' k (by grind)) := by
       intro d; induction d with
       | zero =>
         intro k hle hk _
-        have hkG : k = G.n := by omega
+        have hkG : k = G.n := by grind
         subst hkG
         exact (σ.slicing.closedUnderIso s).of_iso
           (Classical.choice P.top_iso).symm hP
       | succ d ih =>
         intro k hle hk hjk
-        have hkn : k < G.n := by omega
-        have hfz : IsZero (P.factor ⟨k, hkn⟩) := hzero_suffix ⟨k, hkn⟩ (by omega)
+        have hkn : k < G.n := by grind
+        have hfz : IsZero (P.factor ⟨k, hkn⟩) := hzero_suffix ⟨k, hkn⟩ (by grind)
         let Tk := P.triangle ⟨k, hkn⟩
         haveI : IsIso Tk.mor₁ :=
           (Triangle.isZero₃_iff_isIso₁ Tk (P.triangle_dist ⟨k, hkn⟩)).mp hfz
@@ -105,20 +105,20 @@ theorem P_in_deformedGtPred
         let e₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
         exact (σ.slicing.closedUnderIso s).of_iso
           (e₁.symm.trans ((asIso Tk.mor₁).trans e₂)).symm
-          (ih (k + 1) (by omega) (by omega) (by omega))
-    exact this (G.n - (j₀.val + 1)) (j₀.val + 1) (by omega) (by omega) (by omega)
+          (ih (k + 1) (by grind) (by grind) (by grind))
+    exact this (G.n - (j₀.val + 1)) (j₀.val + 1) (by grind) (by grind) (by grind)
   -- chain(j₀+1) is nonzero (zero would propagate to chain(n) ≅ E, contradicting hE)
-  have hchain_ne : ¬IsZero (P.chain.obj' (j₀.val + 1) (by omega)) := by
+  have hchain_ne : ¬IsZero (P.chain.obj' (j₀.val + 1) (by grind)) := by
     intro hZ; apply hE
     have : ∀ m k (hle : k ≤ G.n), k = j₀.val + 1 + m →
-        IsZero (P.chain.obj' k (by omega)) := by
+        IsZero (P.chain.obj' k (by grind)) := by
       intro m; induction m with
       | zero => intro k hle hk; exact hk ▸ hZ
       | succ m ihm =>
         intro k hle hk
-        have hk1 : k - 1 < G.n := by omega
-        have hj₀k : j₀.val < k - 1 := by omega
-        have hZprev := ihm (k - 1) (by omega) (by omega)
+        have hk1 : k - 1 < G.n := by grind
+        have hj₀k : j₀.val < k - 1 := by grind
+        have hZprev := ihm (k - 1) (by grind) (by grind)
         let Tk1 := P.triangle ⟨k - 1, hk1⟩
         have hobj1_z : IsZero Tk1.obj₁ :=
           (Iso.isZero_iff (Classical.choice (P.triangle_obj₁ ⟨k - 1, hk1⟩))).mpr hZprev
@@ -127,10 +127,10 @@ theorem P_in_deformedGtPred
           (Triangle.isZero₂_iff _ (P.triangle_dist ⟨k - 1, hk1⟩)).mpr
             ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩
         have := (Iso.isZero_iff (Classical.choice (P.triangle_obj₂ ⟨k - 1, hk1⟩))).mp hobj2_z
-        simp only [show k - 1 + 1 = k from by omega] at this
+        simp only [show k - 1 + 1 = k from by grind] at this
         exact this
     exact (Iso.isZero_iff (Classical.choice P.top_iso)).mp
-      (this (G.n - (j₀.val + 1)) G.n le_rfl (by omega))
+      (this (G.n - (j₀.val + 1)) G.n le_rfl (by grind))
   -- Apply Lemma 3.4 to the triangle at j₀
   let ej₁ := Classical.choice (P.triangle_obj₁ j₀)
   let ej₂ := Classical.choice (P.triangle_obj₂ j₀)
@@ -138,7 +138,7 @@ theorem P_in_deformedGtPred
     fun hZ ↦ hchain_ne ((Iso.isZero_iff ej₂).mp hZ)
   have hTj₁_int : σ.slicing.intervalProp C (s - 3 * ε) (s + 5 * ε) (P.triangle j₀).obj₁ := by
     have hchain_int := intervalProp_chain_of_postnikovTower σ.slicing (C := C) (P := P)
-      hfactors_int j₀.val (show j₀.val ≤ G.n from by omega)
+      hfactors_int j₀.val (show j₀.val ≤ G.n from by grind)
     rcases hchain_int with hZ | ⟨F, hF⟩
     · exact Or.inl ((Iso.isZero_iff ej₁.symm).mp hZ)
     · exact Or.inr ⟨F.ofIso C ej₁.symm, hF⟩
@@ -185,7 +185,7 @@ theorem P_in_deformedLtPred
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
   have hGn : 0 < G.n := by
     by_contra h; push_neg at h
-    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by grind))
   set P := G.toPostnikovTower
   -- All factors have σ-intervalProp
   have hfactors_int : ∀ j, σ.slicing.intervalProp C (s - 3 * ε) (s + 5 * ε)
@@ -224,27 +224,27 @@ theorem P_in_deformedLtPred
     -- phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1)) at each step,
     -- so φ⁺(chain(j₁+1)) ≤ φ⁺(chain(n)) = φ⁺(E) = s.
     have hzero_prefix : ∀ i : Fin G.n, i.val < j₁.val → IsZero (P.factor i) := by
-      intro i hi; by_contra hine; exact absurd (hj₁_min i hine) (by omega)
+      intro i hi; by_contra hine; exact absurd (hj₁_min i hine) (by grind)
     have hj₁_lt : j₁.val < G.n := j₁.isLt
     have hj₁_lt_n : j₁.val < G.n := j₁.isLt
-    have hchain_j₁_zero : IsZero (P.chain.obj' j₁.val (by omega)) := by
+    have hchain_j₁_zero : IsZero (P.chain.obj' j₁.val (by grind)) := by
       have : ∀ m (hle : m ≤ G.n), m ≤ j₁.val →
           (∀ i : Fin G.n, i.val < m → IsZero (P.factor i)) →
-          IsZero (P.chain.obj' m (by omega)) := by
+          IsZero (P.chain.obj' m (by grind)) := by
         intro m; induction m with
         | zero => intro _ _ _; exact P.base_isZero
         | succ k ih =>
           intro hle hkj₁ hpref
-          have hkn : k < G.n := by omega
+          have hkn : k < G.n := by grind
           have hfz : IsZero (P.factor ⟨k, hkn⟩) := hpref ⟨k, hkn⟩ (Nat.lt_succ_of_le le_rfl)
           let Tk := P.triangle ⟨k, hkn⟩
           have hobj1_z : IsZero Tk.obj₁ :=
             (Iso.isZero_iff (Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩))).mpr
-              (ih (by omega) (by omega) (fun i hi ↦ hpref i (by omega)))
+              (ih (by grind) (by grind) (fun i hi ↦ hpref i (by grind)))
           exact (Iso.isZero_iff (Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩))).mp
             ((Triangle.isZero₂_iff _ (P.triangle_dist ⟨k, hkn⟩)).mpr
               ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩)
-      exact this j₁.val (by omega) le_rfl hzero_prefix
+      exact this j₁.val (by grind) le_rfl hzero_prefix
     -- chain(j₁+1) ≅ factor(j₁) via isZero₁_iff_isIso₂ on the triangle at j₁
     let Tj₁ := P.triangle j₁
     have hTj₁_obj1_z : IsZero Tj₁.obj₁ :=
@@ -255,35 +255,35 @@ theorem P_in_deformedLtPred
     let ej₁₂ := Classical.choice (P.triangle_obj₂ j₁)
     have hTj₁_obj2_ne : ¬IsZero Tj₁.obj₂ := fun hZ ↦
       hj₁ne ((Iso.isZero_iff (asIso Tj₁.mor₂)).mp hZ)
-    have hchain_j₁1_ne : ¬IsZero (P.chain.obj' (j₁.val + 1) (by omega)) :=
+    have hchain_j₁1_ne : ¬IsZero (P.chain.obj' (j₁.val + 1) (by grind)) :=
       fun hZ ↦ hTj₁_obj2_ne ((Iso.isZero_iff ej₁₂).mpr hZ)
     -- φ⁺(chain(j₁+1)) ≤ s by downward induction from chain(n)
     -- At each step: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1))
     -- φ⁺(chain(j₁+1)) ≤ φ⁺(chain(n)) = s by downward induction.
     -- At each step: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1)).
-    have hphiPlus_le : σ.slicing.phiPlus C (P.chain.obj' (j₁.val + 1) (by omega))
+    have hphiPlus_le : σ.slicing.phiPlus C (P.chain.obj' (j₁.val + 1) (by grind))
         hchain_j₁1_ne ≤ s := by
       -- Prove: for all k with j₁+1 ≤ k ≤ n, if chain(k) nonzero then φ⁺(chain(k)) ≤ s
       suffices hmain : ∀ d k (hle : k ≤ G.n), k + d = G.n → 0 < k →
-          (hne : ¬IsZero (P.chain.obj' k (by omega))) →
-          σ.slicing.phiPlus C (P.chain.obj' k (by omega)) hne ≤ s from
-        hmain (G.n - (j₁.val + 1)) (j₁.val + 1) (by omega) (by omega) (by omega) hchain_j₁1_ne
+          (hne : ¬IsZero (P.chain.obj' k (by grind))) →
+          σ.slicing.phiPlus C (P.chain.obj' k (by grind)) hne ≤ s from
+        hmain (G.n - (j₁.val + 1)) (j₁.val + 1) (by grind) (by grind) (by grind) hchain_j₁1_ne
       intro d; induction d with
       | zero =>
         intro k hle hk hkpos hne
-        have hkG : k = G.n := by omega
+        have hkG : k = G.n := by grind
         subst hkG
         exact le_of_eq (σ.slicing.phiPlus_eq_phiMinus_of_semistable C
           ((σ.slicing.closedUnderIso s).of_iso (Classical.choice P.top_iso).symm hP) hne).1
       | succ d ih =>
         intro k hle hk hkpos hne
-        have hkn : k < G.n := by omega
+        have hkn : k < G.n := by grind
         -- Triangle at k: chain(k) → chain(k+1) → factor(k) → chain(k)[1]
         let Tk := P.triangle ⟨k, hkn⟩
         let ek₁ := Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)
         let ek₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)
         have hTk_ne₁ : ¬IsZero Tk.obj₁ := fun hZ ↦ hne ((Iso.isZero_iff ek₁).mp hZ)
-        by_cases hk1ne : IsZero (P.chain.obj' (k + 1) (show k + 1 ≤ G.n from by omega))
+        by_cases hk1ne : IsZero (P.chain.obj' (k + 1) (show k + 1 ≤ G.n from by grind))
         · -- chain(k+1) = 0 → factor(k) ≅ chain(k)[1] → φ⁺(chain(k)) = φ⁺(factor(k)) - 1 < s
           have hTk_obj2_z : IsZero Tk.obj₂ :=
             (Iso.isZero_iff ek₂).mpr hk1ne
@@ -335,20 +335,20 @@ theorem P_in_deformedLtPred
           rw [hchain_phiPlus]
           have : σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ =
               σ.slicing.phiPlus C (P.factor ⟨k, hkn⟩) hfact_ne - 1 := by
-            rw [hiso_phiPlus, hphiPlus_shift]; ring
+            rw [hiso_phiPlus, hphiPlus_shift]; grind
           linarith
         · -- chain(k+1) nonzero: phiPlus_triangle_le gives φ⁺(chain(k)) ≤ φ⁺(chain(k+1)) ≤ s
           have hTk_ne₂ : ¬IsZero Tk.obj₂ := fun hZ ↦ hk1ne ((Iso.isZero_iff ek₂).mp hZ)
           have hTk_obj1_int : σ.slicing.intervalProp C (s - 3 * ε) (s + 5 * ε) Tk.obj₁ :=
             (σ.slicing.intervalProp_closedUnderIso C _ _).of_iso ek₁.symm
               (intervalProp_chain_of_postnikovTower σ.slicing (C := C) (P := P)
-                hfactors_int k (show k ≤ G.n from by omega))
+                hfactors_int k (show k ≤ G.n from by grind))
           have hle_step := σ.slicing.phiPlus_triangle_le C hTk_ne₁ hTk_ne₂
             (by linarith [hεε₀, hε₀10] : s + 5 * ε ≤ s - 3 * ε + 1) hTk_obj1_int
             (hfactors_int ⟨k, hkn⟩) (P.triangle_dist ⟨k, hkn⟩)
           -- hle_step : φ⁺(Tk.obj₁) ≤ φ⁺(Tk.obj₂)
           -- Transport: φ⁺(chain(k)) = φ⁺(Tk.obj₁), φ⁺(chain(k+1)) = φ⁺(Tk.obj₂)
-          have hk1_le := ih (k + 1) (by omega) (by omega) (by omega) hk1ne
+          have hk1_le := ih (k + 1) (by grind) (by grind) (by grind) hk1ne
           -- φ⁺ is iso-invariant (closedUnderIso → phiPlus preserved)
           have h_eq₁ : σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ =
               σ.slicing.phiPlus C _ hne := by
@@ -501,7 +501,7 @@ theorem deformedGtLe_triangle
       -- interior_has_enveloped_HN to get Q-HN of MID, then split at cutoff t.
       set a := t - 2 * ε - ε₀ with ha_def
       set b := t + 4 * ε + ε₀ with hb_def
-      have hab : a < b := by linarith
+      have hab : a < b := by grind
       haveI : Fact (a < b) := ⟨hab⟩
       haveI : Fact (b - a ≤ 1) := ⟨by simp [a, b]; grind⟩
       have hthin_ab : b - a + 2 * ε < 1 := by simp [a, b]; grind

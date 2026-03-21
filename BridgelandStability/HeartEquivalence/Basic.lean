@@ -251,8 +251,8 @@ theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
     chain_strictMono := by
       intro ⟨i, hi⟩ ⟨j, hj⟩ h
       simp only [Fin.lt_def] at h
-      have hi0 : i = 0 := by omega
-      have hj1 : j = 1 := by omega
+      have hi0 : i = 0 := by grind
+      have hj1 : j = 1 := by grind
       subst hi0
       subst hj1
       simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, ↓reduceIte,
@@ -264,10 +264,10 @@ theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
     φ := fun _ => φ
     φ_anti := by
       intro i j hij
-      exact False.elim (by omega)
+      exact False.elim (by grind)
     factor_phase := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by omega
+      have hj0 : j = 0 := by grind
       subst hj0
       change Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ bot_le)) = φ
       have htop :
@@ -282,7 +282,7 @@ theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
         _ = φ := σ.phase_eq_of_mem_P_phi C hφ E hE
     factor_semistable := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by omega
+      have hj0 : j = 0 := by grind
       subst hj0
       change Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ bot_le))
       refine Z.isSemistable_of_iso
@@ -655,7 +655,7 @@ lemma K₀.of_shift_nat (X : C) :
                 simpa only [Functor.comp_obj] using
                   (K₀.of_iso C
                     (((shiftFunctorAdd' C (n : ℤ) (1 : ℤ) ((n : ℤ) + 1)
-                      (by omega)).app X).symm)).symm
+                      (by grind)).app X).symm)).symm
         _ = -K₀.of C (X⟦(n : ℤ)⟧) := K₀.of_shift_one C (X⟦(n : ℤ)⟧)
         _ = -((((-1 : ℤ) ^ n) • K₀.of C X)) := by rw [ih]
         _ = (((-1 : ℤ) ^ (n + 1)) • K₀.of C X) := by
@@ -677,7 +677,7 @@ lemma K₀.of_shift_negSucc (X : C) :
                 simpa only [Functor.comp_obj] using
                   (K₀.of_iso C
                     (((shiftFunctorAdd' C (Int.negSucc n : ℤ) (-1 : ℤ)
-                      (Int.negSucc (n + 1) : ℤ) (by omega)).app X).symm)).symm
+                      (Int.negSucc (n + 1) : ℤ) (by grind)).app X).symm)).symm
         _ = -K₀.of C (X⟦(Int.negSucc n : ℤ)⟧) := K₀.of_shift_neg_one C (X⟦(Int.negSucc n : ℤ)⟧)
         _ = -((((-1 : ℤ) ^ (n + 1)) • K₀.of C X)) := by rw [ih]
         _ = (((-1 : ℤ) ^ (n + 2)) • K₀.of C X) := by
@@ -702,8 +702,8 @@ def HeartStabilityData.heartShiftOfPure (h : HeartStabilityData C)
   letI := hLE
   letI := hGE
   exact ⟨X⟦(n : ℤ)⟧, (h.t.mem_heart_iff _).mpr ⟨by
-    simpa using (h.t.isLE_shift X n (n : ℤ) 0 (by omega)),
-    by simpa using (h.t.isGE_shift X n (n : ℤ) 0 (by omega))⟩⟩
+    simpa using (h.t.isLE_shift X n (n : ℤ) 0 (by grind)),
+    by simpa using (h.t.isGE_shift X n (n : ℤ) 0 (by grind))⟩⟩
 
 /-- A `t`-pure object contributes a class coming from the heart. -/
 theorem HeartStabilityData.exists_preimage_of_pure
@@ -719,7 +719,7 @@ theorem HeartStabilityData.exists_preimage_of_pure
       K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C X := by
     calc
       K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C (X⟦(0 : ℤ)⟧) := by
-        exact (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by omega)).app X)).symm
+        exact (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by grind)).app X)).symm
       _ = K₀.of C X := K₀.of_iso C ((shiftFunctorZero C ℤ).app X)
   rw [hX] at hshift
   simpa [H, HeartStabilityData.heartShiftOfPure] using hshift.symm
@@ -779,18 +779,18 @@ theorem HeartStabilityData.heartK0ToK0_surjective
           obtain ⟨a, b, hLE, hGE⟩ := h.bounded E
           by_cases hba : b ≤ a
           · have ha : b + (Int.toNat (a - b) : ℤ) = a := by
-              have hnonneg : 0 ≤ a - b := by omega
+              have hnonneg : 0 ≤ a - b := by grind
               rw [Int.toNat_of_nonneg hnonneg]
               omega
             have hLE' : h.t.IsLE E (b + (Int.toNat (a - b) : ℤ)) := by
               have hLE'' : h.t.IsLE E a := ⟨hLE⟩
-              rw [Int.toNat_of_nonneg (show 0 ≤ a - b by omega)]
+              rw [Int.toNat_of_nonneg (show 0 ≤ a - b by grind)]
               simpa using hLE''
             have hGE' : h.t.IsGE E b := ⟨hGE⟩
             exact h.exists_preimage_of_width (C := C) b (Int.toNat (a - b)) (E := E) hLE' hGE'
           · letI : h.t.IsLE E a := ⟨hLE⟩
             letI : h.t.IsGE E b := ⟨hGE⟩
-            have hzero : IsZero E := h.t.isZero E a b (by omega)
+            have hzero : IsZero E := h.t.isZero E a b (by grind)
             refine ⟨0, ?_⟩
             simpa [K₀.of] using (K₀.of_isZero C hzero).symm
       | neg E ih =>

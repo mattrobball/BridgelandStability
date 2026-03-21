@@ -36,14 +36,14 @@ theorem semistable_of_hn_length_one
     {P : ℝ → ObjectProperty C}
     (hPiso : ∀ φ : ℝ, (P φ).IsClosedUnderIsomorphisms)
     {Y : C} (GY : HNFiltration C P Y) (h1 : GY.n = 1) :
-    P (GY.φ ⟨0, by omega⟩) Y := by
-  let j0 : Fin GY.n := ⟨0, by omega⟩
+    P (GY.φ ⟨0, by grind⟩) Y := by
+  let j0 : Fin GY.n := ⟨0, by grind⟩
   let T := GY.triangle j0
   have hZ1 : IsZero T.obj₁ :=
     IsZero.of_iso GY.base_isZero (Classical.choice (GY.triangle_obj₁ j0))
   have hIso₂ : IsIso T.mor₂ :=
     (Triangle.isZero₁_iff_isIso₂ T (GY.triangle_dist j0)).mp hZ1
-  have hobj₂_eq : GY.chain.obj' (0 + 1) (by omega) = GY.chain.obj (Fin.last GY.n) :=
+  have hobj₂_eq : GY.chain.obj' (0 + 1) (by grind) = GY.chain.obj (Fin.last GY.n) :=
     congrArg GY.chain.obj (Fin.ext (by simp [Fin.last, h1]))
   let e₂Y : T.obj₂ ≅ Y :=
     (Classical.choice (GY.triangle_obj₂ j0)).trans
@@ -82,7 +82,7 @@ theorem append_hn_filtration_of_triangle
   induction m with
   | zero =>
       intro Y GY hn E f g h hT t hX_gt hY_gt hsep
-      have hYn : GY.n = 0 := by omega
+      have hYn : GY.n = 0 := by grind
       have hYz : IsZero Y := GY.zero_isZero hYn
       haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
       refine ⟨GX.ofIso C (asIso f), ?_⟩
@@ -98,7 +98,7 @@ theorem append_hn_filtration_of_triangle
         simpa using hX_gt j
       · have hYpos : 0 < GY.n := Nat.pos_of_ne_zero hYn
         by_cases hYone : GY.n = 1
-        · let j0 : Fin GY.n := ⟨0, by omega⟩
+        · let j0 : Fin GY.n := ⟨0, by grind⟩
           have hsep0 : ∀ j : Fin GX.n, GY.φ j0 < GX.φ j := by
             intro j
             exact hsep j0 j
@@ -119,22 +119,22 @@ theorem append_hn_filtration_of_triangle
                   (GY.φ j0) hYss hsep0).φ j = GY.φ j0 := by
               simp [HNFiltration.appendFactor, hj]
             exact hjLast.symm ▸ hY_gt j0
-        · have hYtwo : 2 ≤ GY.n := by omega
-          let jLast : Fin GY.n := ⟨GY.n - 1, by omega⟩
-          let GY' := GY.prefix C (GY.n - 1) (by omega) (by omega)
+        · have hYtwo : 2 ≤ GY.n := by grind
+          let jLast : Fin GY.n := ⟨GY.n - 1, by grind⟩
+          let GY' := GY.prefix C (GY.n - 1) (by grind) (by grind)
           let Tlast := GY.triangle jLast
           let e₁ := Classical.choice (GY.triangle_obj₁ jLast)
           let e₂ := Classical.choice (GY.triangle_obj₂ jLast)
           let eY := by
-            have hchainN : GY.chain.obj' (GY.n - 1 + 1) (by omega) =
+            have hchainN : GY.chain.obj' (GY.n - 1 + 1) (by grind) =
                 GY.chain.obj (Fin.last GY.n) :=
-              congrArg GY.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+              congrArg GY.chain.obj (Fin.ext (by simp [Fin.last]; grind))
             exact e₂.trans ((eqToIso hchainN).trans (Classical.choice GY.top_iso))
-          let f23 : GY.chain.obj ⟨GY.n - 1, by omega⟩ ⟶ Y :=
+          let f23 : GY.chain.obj ⟨GY.n - 1, by grind⟩ ⟶ Y :=
             e₁.inv ≫ Tlast.mor₁ ≫ eY.hom
           let g23 : Y ⟶ Tlast.obj₃ :=
             eY.inv ≫ Tlast.mor₂
-          let h23 : Tlast.obj₃ ⟶ GY.chain.obj ⟨GY.n - 1, by omega⟩⟦(1 : ℤ)⟧ :=
+          let h23 : Tlast.obj₃ ⟶ GY.chain.obj ⟨GY.n - 1, by grind⟩⟦(1 : ℤ)⟧ :=
             Tlast.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧'
           have hT23 : Triangle.mk f23 g23 h23 ∈ distTriang C := by
             refine isomorphic_distinguished _ (GY.triangle_dist jLast) _ ?_
@@ -151,7 +151,7 @@ theorem append_hn_filtration_of_triangle
             have hEqn : GY'.n = GY.n - 1 := rfl
             have hi : i.val < GY.n - 1 := by
               simpa [hEqn] using i.is_lt
-            exact hsep ⟨i.val, by omega⟩ j
+            exact hsep ⟨i.val, by grind⟩ j
           have hX_gt_last : ∀ j : Fin GX.n, GY.φ jLast < GX.φ j := by
             intro j
             exact hsep jLast j
@@ -160,9 +160,9 @@ theorem append_hn_filtration_of_triangle
             have hEqn : GY'.n = GY.n - 1 := rfl
             have hi : i.val < GY.n - 1 := by
               simpa [hEqn] using i.is_lt
-            change GY.φ jLast < GY.φ ⟨i.val, by omega⟩
-            exact GY.hφ (show (⟨i.val, by omega⟩ : Fin GY.n) < jLast by
-              exact Fin.mk_lt_mk.mpr (by omega))
+            change GY.φ jLast < GY.φ ⟨i.val, by grind⟩
+            exact GY.hφ (show (⟨i.val, by grind⟩ : Fin GY.n) < jLast by
+              exact Fin.mk_lt_mk.mpr (by grind))
           obtain ⟨GZ, hGZ⟩ := ih GY' (by
             change GY.n - 1 ≤ m
             omega) oct.triangle.mor₁ oct.triangle.mor₂ oct.triangle.mor₃ oct.mem
@@ -220,7 +220,7 @@ theorem append_hn_filtration_of_triangle_le
   induction m with
   | zero =>
       intro Y GY hn E f g h hT t hX_gt hY_gt hsep hX_le hY_le
-      have hYn : GY.n = 0 := by omega
+      have hYn : GY.n = 0 := by grind
       have hYz : IsZero Y := GY.zero_isZero hYn
       haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
       refine ⟨GX.ofIso C (asIso f), fun j ↦ ?_, fun j ↦ ?_⟩
@@ -236,7 +236,7 @@ theorem append_hn_filtration_of_triangle_le
         · simpa using hX_le j
       · have hYpos : 0 < GY.n := Nat.pos_of_ne_zero hYn
         by_cases hYone : GY.n = 1
-        · let j0 : Fin GY.n := ⟨0, by omega⟩
+        · let j0 : Fin GY.n := ⟨0, by grind⟩
           have hsep0 : ∀ j : Fin GX.n, GY.φ j0 < GX.φ j := fun j ↦ hsep j0 j
           have hYss : P (GY.φ j0) Y :=
             semistable_of_hn_length_one (C := C) hPiso GY hYone
@@ -256,21 +256,21 @@ theorem append_hn_filtration_of_triangle_le
               exact hX_le ⟨j.val, hj⟩
             · simp only [HNFiltration.appendFactor, hj, dite_false]
               exact hY_le j0
-        · have hYtwo : 2 ≤ GY.n := by omega
-          let jLast : Fin GY.n := ⟨GY.n - 1, by omega⟩
-          let GY' := GY.prefix C (GY.n - 1) (by omega) (by omega)
+        · have hYtwo : 2 ≤ GY.n := by grind
+          let jLast : Fin GY.n := ⟨GY.n - 1, by grind⟩
+          let GY' := GY.prefix C (GY.n - 1) (by grind) (by grind)
           let Tlast := GY.triangle jLast
           let e₁ := Classical.choice (GY.triangle_obj₁ jLast)
           let e₂ := Classical.choice (GY.triangle_obj₂ jLast)
           let eY := by
-            have hchainN : GY.chain.obj' (GY.n - 1 + 1) (by omega) =
+            have hchainN : GY.chain.obj' (GY.n - 1 + 1) (by grind) =
                 GY.chain.obj (Fin.last GY.n) :=
-              congrArg GY.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+              congrArg GY.chain.obj (Fin.ext (by simp [Fin.last]; grind))
             exact e₂.trans ((eqToIso hchainN).trans (Classical.choice GY.top_iso))
-          let f23 : GY.chain.obj ⟨GY.n - 1, by omega⟩ ⟶ Y :=
+          let f23 : GY.chain.obj ⟨GY.n - 1, by grind⟩ ⟶ Y :=
             e₁.inv ≫ Tlast.mor₁ ≫ eY.hom
           let g23 : Y ⟶ Tlast.obj₃ := eY.inv ≫ Tlast.mor₂
-          let h23 : Tlast.obj₃ ⟶ GY.chain.obj ⟨GY.n - 1, by omega⟩⟦(1 : ℤ)⟧ :=
+          let h23 : Tlast.obj₃ ⟶ GY.chain.obj ⟨GY.n - 1, by grind⟩⟦(1 : ℤ)⟧ :=
             Tlast.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧'
           have hT23 : Triangle.mk f23 g23 h23 ∈ distTriang C := by
             refine isomorphic_distinguished _ (GY.triangle_dist jLast) _ ?_
@@ -282,21 +282,21 @@ theorem append_hn_filtration_of_triangle_le
           have hsep' : ∀ i : Fin GY'.n, ∀ j : Fin GX.n, GY'.φ i < GX.φ j := by
             intro i j
             have hi : i.val < GY.n - 1 := i.is_lt
-            exact hsep ⟨i.val, by omega⟩ j
+            exact hsep ⟨i.val, by grind⟩ j
           have hX_gt_last : ∀ j : Fin GX.n, GY.φ jLast < GX.φ j := fun j ↦ hsep jLast j
           have hY'_gt_last : ∀ i : Fin GY'.n, GY.φ jLast < GY'.φ i := by
             intro i
             have hi : i.val < GY.n - 1 := i.is_lt
-            change GY.φ jLast < GY.φ ⟨i.val, by omega⟩
-            exact GY.hφ (Fin.mk_lt_mk.mpr (by omega))
+            change GY.φ jLast < GY.φ ⟨i.val, by grind⟩
+            exact GY.hφ (Fin.mk_lt_mk.mpr (by grind))
           obtain ⟨GZ, hGZ_lo, hGZ_le⟩ := ih GY' (by
-            change GY.n - 1 ≤ m; omega)
+            change GY.n - 1 ≤ m; grind)
             oct.triangle.mor₁ oct.triangle.mor₂ oct.triangle.mor₃ oct.mem
             (GY.φ jLast) hX_gt_last hY'_gt_last hsep'
             (fun j ↦ hX_le j)
             (fun i ↦ by
               have hi : i.val < GY.n - 1 := i.is_lt
-              exact hY_le ⟨i.val, by omega⟩)
+              exact hY_le ⟨i.val, by grind⟩)
           have hlast_gt_t : t < GY.φ jLast := hY_gt jLast
           refine ⟨GZ.appendFactor C (Triangle.mk f13 (g ≫ g23) h13) hT13
             (Iso.refl _) (Iso.refl _) (GY.φ jLast) (GY.semistable jLast) hGZ_lo,
@@ -333,7 +333,7 @@ theorem split_hn_filtration_at_cutoff
       (∀ j : Fin GX.n, t < GX.φ j) ∧
       (∀ j : Fin GY.n, GY.φ j ≤ t) ∧
       (∀ (_ : 0 < F.n) (j : Fin GY.n),
-        F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) ∧
+        F.φ ⟨F.n - 1, by grind⟩ ≤ GY.φ j) ∧
       (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i) := by
   suffices hmain :
       ∀ (m : ℕ) (A : C) (F : HNFiltration C P A), F.n ≤ m →
@@ -343,19 +343,19 @@ theorem split_hn_filtration_at_cutoff
           (∀ j : Fin GX.n, t < GX.φ j) ∧
           (∀ j : Fin GY.n, GY.φ j ≤ t) ∧
           (∀ (_ : 0 < F.n) (j : Fin GY.n),
-            F.φ ⟨F.n - 1, by omega⟩ ≤ GY.φ j) ∧
+            F.φ ⟨F.n - 1, by grind⟩ ≤ GY.φ j) ∧
           (∀ j : Fin GX.n, ∃ i : Fin F.n, GX.φ j = F.φ i) by
     exact hmain F.n A F le_rfl
   intro m
   induction m with
   | zero =>
       intro A F hFn
-      have hn : F.n = 0 := by omega
+      have hn : F.n = 0 := by grind
       refine ⟨A, 0, F, HNFiltration.zero C (P := P) 0 (isZero_zero C),
         𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_, ?_⟩
       · intro j; exact False.elim (by simpa [hn] using j.is_lt)
       · intro j; exact Fin.elim0 j
-      · intro hn0 j; exact False.elim (by omega)
+      · intro hn0 j; exact False.elim (by grind)
       · intro j; exact False.elim (by simpa [hn] using j.isLt)
   | succ m ih =>
       intro A F hFn
@@ -364,49 +364,49 @@ theorem split_hn_filtration_at_cutoff
           𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_, ?_⟩
         · intro j; exact False.elim (by simpa [hn] using j.is_lt)
         · intro j; exact Fin.elim0 j
-        · intro hn0 j; exact False.elim (by omega)
+        · intro hn0 j; exact False.elim (by grind)
         · intro j; exact False.elim (by simpa [hn] using j.isLt)
       · have hn0 : 0 < F.n := Nat.pos_of_ne_zero hn
-        by_cases hlast_gt : t < F.φ ⟨F.n - 1, by omega⟩
+        by_cases hlast_gt : t < F.φ ⟨F.n - 1, by grind⟩
         · refine ⟨A, 0, F, HNFiltration.zero C (P := P) 0 (isZero_zero C),
             𝟙 A, 0, 0, contractible_distinguished A, ?_, ?_, ?_, ?_⟩
           · intro j; exact lt_of_lt_of_le hlast_gt
-              (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)))
+              (F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)))
           · intro j; exact Fin.elim0 j
           · intro _ j; exact Fin.elim0 j
           · intro j; exact ⟨j, rfl⟩
-        · have hlast_le : F.φ ⟨F.n - 1, by omega⟩ ≤ t := by
-            linarith
+        · have hlast_le : F.φ ⟨F.n - 1, by grind⟩ ≤ t := by
+            grind
           by_cases hFone : F.n = 1
           · refine ⟨0, A, HNFiltration.zero C (P := P) 0 (isZero_zero C), F,
               0, 𝟙 A, 0, contractible_distinguished₁ A, ?_, ?_, ?_, ?_⟩
             · intro j; exact Fin.elim0 j
             · intro j
-              have hj : j = ⟨0, by omega⟩ := by apply Fin.ext; omega
+              have hj : j = ⟨0, by grind⟩ := by apply Fin.ext; grind
               subst j; simpa [HNFiltration.phiPlus, hFone] using hlast_le
             · intro _ j
-              have hj : j = ⟨0, by omega⟩ := by apply Fin.ext; omega
+              have hj : j = ⟨0, by grind⟩ := by apply Fin.ext; grind
               subst j; simp [hFone]
             · intro j; exact Fin.elim0 j
-          · have hn2 : 2 ≤ F.n := by omega
-            let G := F.prefix C (F.n - 1) (by omega) (by omega)
+          · have hn2 : 2 ≤ F.n := by grind
+            let G := F.prefix C (F.n - 1) (by grind) (by grind)
             obtain ⟨X, Y', GX, GY', f', g', h', hT', hprops⟩ :=
-              ih (F.chain.obj' (F.n - 1) (by omega)) G
-                (by change F.n - 1 ≤ m; omega)
+              ih (F.chain.obj' (F.n - 1) (by grind)) G
+                (by change F.n - 1 ≤ m; grind)
             have hGX_gt := And.left hprops
             have hGY'_le := And.left (And.right hprops)
             have hGY'_bound := And.left (And.right (And.right hprops))
             have hGX_contain := And.right (And.right (And.right hprops))
-            let T := F.triangle ⟨F.n - 1, by omega⟩
-            let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by omega⟩)
-            let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by omega⟩)
+            let T := F.triangle ⟨F.n - 1, by grind⟩
+            let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by grind⟩)
+            let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by grind⟩)
             let eA := Classical.choice F.top_iso
-            have hchainN : F.chain.obj' (F.n - 1 + 1) (by omega) =
+            have hchainN : F.chain.obj' (F.n - 1 + 1) (by grind) =
                 F.chain.obj (Fin.last F.n) :=
-              congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+              congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; grind))
             let e₂A : T.obj₂ ≅ A :=
               e₂.trans ((eqToIso hchainN).trans eA)
-            let u₂₃ : F.chain.obj' (F.n - 1) (by omega) ⟶ A :=
+            let u₂₃ : F.chain.obj' (F.n - 1) (by grind) ⟶ A :=
               e₁.inv ≫ T.mor₁ ≫ e₂A.hom
             let Tisoₘ := Triangle.isoMk
               (Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂) (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧')) T
@@ -417,27 +417,27 @@ theorem split_hn_filtration_at_cutoff
             have hTu₂₃ :
                 Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂) (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧') ∈
                   distTriang C :=
-              isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by omega⟩) _ Tisoₘ
+              isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by grind⟩) _ Tisoₘ
             have hGn : 0 < G.n := by
               change 0 < F.n - 1
-              omega
-            have hφlast_lt : ∀ j : Fin GY'.n, F.φ ⟨F.n - 1, by omega⟩ < GY'.φ j := by
+              grind
+            have hφlast_lt : ∀ j : Fin GY'.n, F.φ ⟨F.n - 1, by grind⟩ < GY'.φ j := by
               intro j
               calc
-                F.φ ⟨F.n - 1, by omega⟩
-                    < F.φ ⟨F.n - 2, by omega⟩ :=
-                  F.hφ (show (⟨F.n - 2, by omega⟩ : Fin F.n) <
-                    ⟨F.n - 1, by omega⟩ from
-                      Fin.mk_lt_mk.mpr (by omega))
-                _ = G.φ ⟨G.n - 1, by omega⟩ := by
+                F.φ ⟨F.n - 1, by grind⟩
+                    < F.φ ⟨F.n - 2, by grind⟩ :=
+                  F.hφ (show (⟨F.n - 2, by grind⟩ : Fin F.n) <
+                    ⟨F.n - 1, by grind⟩ from
+                      Fin.mk_lt_mk.mpr (by grind))
+                _ = G.φ ⟨G.n - 1, by grind⟩ := by
                     change F.φ ⟨F.n - 2, _⟩ = F.φ ⟨(F.n - 1) - 1, _⟩
                     congr 1
                 _ ≤ GY'.φ j := hGY'_bound hGn j
             obtain ⟨Z, v₁₃, w₁₃, h₁₃⟩ := distinguished_cocone_triangle (f' ≫ u₂₃)
             let oct := Triangulated.someOctahedron rfl hT' hTu₂₃ h₁₃
             let GZ := GY'.appendFactor C oct.triangle oct.mem (Iso.refl _)
-              (Iso.refl _) (F.φ ⟨F.n - 1, by omega⟩)
-              (F.semistable ⟨F.n - 1, by omega⟩) hφlast_lt
+              (Iso.refl _) (F.φ ⟨F.n - 1, by grind⟩)
+              (F.semistable ⟨F.n - 1, by grind⟩) hφlast_lt
             refine ⟨X, Z, GX, GZ, f' ≫ u₂₃, v₁₃, w₁₃, h₁₃, hGX_gt, ?_, ?_, ?_⟩
             · intro j
               change GZ.φ j ≤ t
@@ -446,7 +446,7 @@ theorem split_hn_filtration_at_cutoff
               · exact hGY'_le ⟨j.val, hj⟩
               · exact hlast_le
             · intro _ j
-              change F.φ ⟨F.n - 1, by omega⟩ ≤ GZ.φ j
+              change F.φ ⟨F.n - 1, by grind⟩ ≤ GZ.φ j
               simp only [GZ, HNFiltration.appendFactor]
               split_ifs with hj
               · exact le_of_lt (hφlast_lt ⟨j.val, hj⟩)
@@ -455,7 +455,7 @@ theorem split_hn_filtration_at_cutoff
               intro j
               obtain ⟨i_G, hi_G⟩ := hGX_contain j
               have hi_lt := i_G.isLt; change i_G.val < F.n - 1 at hi_lt
-              exact ⟨⟨i_G.val, by omega⟩,
+              exact ⟨⟨i_G.val, by grind⟩,
                 by simp [G, HNFiltration.prefix] at hi_G; exact hi_G⟩
 
 end CategoryTheory.Triangulated

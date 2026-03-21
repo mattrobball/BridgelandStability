@@ -71,18 +71,18 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
       have hXheart := (σ.slicing.toTStructure_heart_iff C X.obj).mp X.property
       by_cases h1 : F.n = 1
       · let φ := F.φ ⟨0, hnF⟩
-        have hlast : ¬IsZero (F.triangle ⟨F.n - 1, by omega⟩).obj₃ := by
-          have hidx : (⟨F.n - 1, by omega⟩ : Fin F.n) = ⟨0, hnF⟩ := Fin.ext (by omega)
+        have hlast : ¬IsZero (F.triangle ⟨F.n - 1, by grind⟩).obj₃ := by
+          have hidx : (⟨F.n - 1, by grind⟩ : Fin F.n) = ⟨0, hnF⟩ := Fin.ext (by grind)
           simpa [hidx] using hfirst
         have hall : ∀ i : Fin F.n, F.φ i = φ := by
           intro i
-          have hidx : i = ⟨0, hnF⟩ := Fin.ext (by omega)
+          have hidx : i = ⟨0, hnF⟩ := Fin.ext (by grind)
           subst hidx
           rfl
         have hP : (σ.slicing.P φ) X.obj := σ.slicing.semistable_of_HN_all_eq C F hall
         have hφm : σ.slicing.phiMinus C X.obj hXobj = φ := by
           rw [σ.slicing.phiMinus_eq C X.obj hXobj F hnF hlast]
-          have hidx : (⟨F.n - 1, by omega⟩ : Fin F.n) = ⟨0, hnF⟩ := Fin.ext (by omega)
+          have hidx : (⟨F.n - 1, by grind⟩ : Fin F.n) = ⟨0, hnF⟩ := Fin.ext (by grind)
           simp [φ, hidx]
         have hφp : σ.slicing.phiPlus C X.obj hXobj = φ := by
           simpa [φ] using (σ.slicing.phiPlus_eq C X.obj hXobj F hnF hfirst)
@@ -104,9 +104,9 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
                 (σ.stabilityFunctionOnHeart C) X := hG
           _ = φ := σ.stabilityFunctionOnHeart_phase_eq_of_mem_P_phi C hφ X hP hX
           _ = σ.slicing.phiMinus C X.obj hXobj := hφm.symm
-      · have htwo : 2 ≤ F.n := by omega
-        by_cases hlast : IsZero (F.triangle ⟨F.n - 1, by omega⟩).obj₃
-        · let F' := F.dropLast C (by omega) hlast
+      · have htwo : 2 ≤ F.n := by grind
+        by_cases hlast : IsZero (F.triangle ⟨F.n - 1, by grind⟩).obj₃
+        · let F' := F.dropLast C (by grind) hlast
           have hnF' : 0 < F'.n := F'.n_pos C hXobj
           have hF'm : F'.n ≤ m := by
             change F.n - 1 ≤ m
@@ -120,41 +120,41 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
             · calc
                 0 < σ.slicing.phiMinus C X.obj hXobj :=
                   gt_phases_of_gtProp C σ.slicing hXobj hXheart.1
-                _ = F.φ ⟨F.n - 1, by omega⟩ :=
+                _ = F.φ ⟨F.n - 1, by grind⟩ :=
                   σ.slicing.phiMinus_eq C X.obj hXobj F hnF hlast
-                _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+                _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
             · calc
                 F.φ i ≤ F.φ ⟨0, hnF⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
                 _ = σ.slicing.phiPlus C X.obj hXobj := by
                   symm
                   exact σ.slicing.phiPlus_eq C X.obj hXobj F hnF hfirst
                 _ ≤ 1 := σ.slicing.phiPlus_le_of_leProp C hXobj hXheart.2
-          let FX : HNFiltration C σ.slicing.P (F.chain.obj ⟨F.n - 1, by omega⟩) :=
-            F.prefix C (F.n - 1) (by omega) (by omega)
+          let FX : HNFiltration C σ.slicing.P (F.chain.obj ⟨F.n - 1, by grind⟩) :=
+            F.prefix C (F.n - 1) (by grind) (by grind)
           have hFXn : 0 < FX.n := by
             change 0 < F.n - 1
             omega
-          have hFXheart : t.heart (F.chain.obj ⟨F.n - 1, by omega⟩) := by
+          have hFXheart : t.heart (F.chain.obj ⟨F.n - 1, by grind⟩) := by
             rw [σ.slicing.toTStructure_heart_iff C]
             constructor
-            · exact HNFiltration.chain_obj_gtProp C σ.slicing F (F.n - 1) (by omega) (by omega) 0
-                (fun j ↦ (hall_mem ⟨j, by omega⟩).1)
-            · exact HNFiltration.chain_obj_leProp C σ.slicing F (F.n - 1) (by omega) (by omega) 1
-                (fun j ↦ (hall_mem ⟨j, by omega⟩).2)
-          let X' : t.heart.FullSubcategory := ⟨F.chain.obj ⟨F.n - 1, by omega⟩, hFXheart⟩
+            · exact HNFiltration.chain_obj_gtProp C σ.slicing F (F.n - 1) (by grind) (by grind) 0
+                (fun j ↦ (hall_mem ⟨j, by grind⟩).1)
+            · exact HNFiltration.chain_obj_leProp C σ.slicing F (F.n - 1) (by grind) (by grind) 1
+                (fun j ↦ (hall_mem ⟨j, by grind⟩).2)
+          let X' : t.heart.FullSubcategory := ⟨F.chain.obj ⟨F.n - 1, by grind⟩, hFXheart⟩
           have hfirstFX : ¬IsZero (FX.triangle ⟨0, hFXn⟩).obj₃ := by
             simpa [FX, HNFiltration.prefix] using hfirst
           have hX'obj : ¬IsZero X'.obj := by
             intro hZ
             have hzero :
-                ∀ f : (FX.triangle ⟨0, hFXn⟩).obj₃ ⟶ F.chain.obj ⟨F.n - 1, by omega⟩, f = 0 :=
+                ∀ f : (FX.triangle ⟨0, hFXn⟩).obj₃ ⟶ F.chain.obj ⟨F.n - 1, by grind⟩, f = 0 :=
               fun f ↦ hZ.eq_of_tgt _ _
             exact hfirstFX <|
               HNFiltration.isZero_factor_zero_of_hom_eq_zero C σ.slicing FX hFXn hzero
           obtain ⟨GX, hGX⟩ := ih hX'obj FX hFXn (by
             change F.n - 1 ≤ m
             omega) hfirstFX
-          let jLast : Fin F.n := ⟨F.n - 1, by omega⟩
+          let jLast : Fin F.n := ⟨F.n - 1, by grind⟩
           have hBheart : t.heart (F.triangle jLast).obj₃ := by
             rw [σ.slicing.toTStructure_heart_iff C]
             exact ⟨σ.slicing.gtProp_of_semistable C (F.φ jLast) 0 _ (F.semistable jLast)
@@ -175,11 +175,11 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
               B (F.semistable jLast) hB
           have hX'gt :
               σ.slicing.gtProp C (F.φ jLast) X'.obj :=
-            HNFiltration.chain_obj_gtProp C σ.slicing F (F.n - 1) (by omega) (by omega)
+            HNFiltration.chain_obj_gtProp C σ.slicing F (F.n - 1) (by grind) (by grind)
               (F.φ jLast) <|
               fun j ↦ by
-                have hjlt : (⟨j.val, by omega⟩ : Fin F.n) < jLast := by
-                  exact Fin.mk_lt_mk.mpr (by omega)
+                have hjlt : (⟨j.val, by grind⟩ : Fin F.n) < jLast := by
+                  exact Fin.mk_lt_mk.mpr (by grind)
                 exact F.hφ hjlt
           have hphase_lt :
               @StabilityFunction.phase _ _ t.heartFullSubcategoryAbelian
@@ -194,7 +194,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
           let Tlast := F.triangle jLast
           let e₁ := Classical.choice (F.triangle_obj₁ jLast)
           let e₂ := Classical.choice (F.triangle_obj₂ jLast)
-          have hobj₂_eq : F.chain.obj' (F.n - 1 + 1) (by omega) = F.chain.right := by
+          have hobj₂_eq : F.chain.obj' (F.n - 1 + 1) (by grind) = F.chain.right := by
             simp only [ComposableArrows.obj']
             congr 1
             ext
@@ -585,7 +585,7 @@ theorem shiftedHeartSemistable_shift_iff
   letI : Abelian h.t.heart.FullSubcategory := h.t.heartFullSubcategoryAbelian
   let eShift :
       (X⟦(1 : ℤ)⟧)⟦(-(n + 1) : ℤ)⟧ ≅ X⟦(-n : ℤ)⟧ :=
-    ((shiftFunctorAdd' C (1 : ℤ) (-(n + 1) : ℤ) (-n : ℤ) (by omega)).app X).symm
+    ((shiftFunctorAdd' C (1 : ℤ) (-(n + 1) : ℤ) (-n : ℤ) (by grind)).app X).symm
   constructor
   · intro hX
     rcases hX with hX | ⟨hXheart, hXss, hXphase⟩
@@ -649,13 +649,13 @@ theorem phasePredicate_shift_int
           (phasePredicate_shift_iff (C := C) h (φ + (n : ℝ)) Y).mp h0
         simpa [Y, Nat.cast_succ, add_assoc] using
           (phasePredicate (C := C) h (φ + (n : ℝ) + 1)).prop_of_iso
-            ((shiftFunctorAdd' C (n : ℤ) 1 ((n : ℤ) + 1) (by omega)).app X).symm h1
+            ((shiftFunctorAdd' C (n : ℤ) 1 ((n : ℤ) + 1) (by grind)).app X).symm h1
       · intro hX
         let Y : C := X⟦(n : ℤ)⟧
         have h1 : phasePredicate (C := C) h (φ + (n : ℝ) + 1) (Y⟦(1 : ℤ)⟧) := by
           simpa [Y, Nat.cast_succ, add_assoc] using
             (phasePredicate (C := C) h (φ + ((n + 1 : ℕ) : ℝ))).prop_of_iso
-              ((shiftFunctorAdd' C (n : ℤ) 1 ((n : ℤ) + 1) (by omega)).app X) hX
+              ((shiftFunctorAdd' C (n : ℤ) 1 ((n : ℤ) + 1) (by grind)).app X) hX
         have h0 : phasePredicate (C := C) h (φ + (n : ℝ)) Y :=
           (phasePredicate_shift_iff (C := C) h (φ + (n : ℝ)) Y).mpr h1
         exact (ih φ X).mpr (by simpa [Y] using h0)
@@ -676,7 +676,7 @@ theorem phasePredicate_shift_int
         have h2 : phasePredicate (C := C) h (φ + (-(n : ℤ) : ℝ) - 1)
             ((shiftFunctor C (Int.negSucc n)).obj X) :=
           (phasePredicate (C := C) h (φ + (-(n : ℤ) : ℝ) - 1)).prop_of_iso
-            ((shiftFunctorAdd' C (-(n : ℤ)) (-1 : ℤ) (Int.negSucc n) (by omega)).app X).symm h1
+            ((shiftFunctorAdd' C (-(n : ℤ)) (-1 : ℤ) (Int.negSucc n) (by grind)).app X).symm h1
         simpa [Y, Int.negSucc_eq, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h2
       · intro hX
         let Y : C := X⟦(-(n : ℤ))⟧
@@ -687,7 +687,7 @@ theorem phasePredicate_shift_int
           have h2 : phasePredicate (C := C) h (φ + (Int.negSucc n : ℝ))
               ((shiftFunctor C (-1 : ℤ)).obj Y) :=
             (phasePredicate (C := C) h (φ + (Int.negSucc n : ℝ))).prop_of_iso
-              ((shiftFunctorAdd' C (-(n : ℤ)) (-1 : ℤ) (Int.negSucc n) (by omega)).app X) hX'
+              ((shiftFunctorAdd' C (-(n : ℤ)) (-1 : ℤ) (Int.negSucc n) (by grind)).app X) hX'
           simpa [Y, Int.negSucc_eq, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h2
         have h0' :
             phasePredicate (C := C) h ((φ + (-(n : ℤ) : ℝ) - 1) + 1)
@@ -782,9 +782,9 @@ theorem phasePredicate_hom_zero
     haveI : h.t.IsGE FH.obj 0 := by
       exact (by simpa [FH, n₂] using hFheart.2 : h.t.IsGE FH.obj 0)
     haveI : h.t.IsLE (EH.obj⟦d⟧) (-d) :=
-      h.t.isLE_shift EH.obj 0 d (-d) (by omega)
+      h.t.isLE_shift EH.obj 0 d (-d) (by grind)
     have hg : g = 0 := by
-      simpa using h.t.zero_of_isLE_of_isGE g (-d) 0 (by omega)
+      simpa using h.t.zero_of_isLE_of_isGE g (-d) 0 (by grind)
         (show h.t.IsLE (EH.obj⟦d⟧) (-d) by infer_instance)
         (show h.t.IsGE FH.obj 0 by infer_instance)
     have hshift : (shiftFunctor C (-n₂ : ℤ)).map f = 0 := by
