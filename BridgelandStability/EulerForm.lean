@@ -317,7 +317,10 @@ noncomputable instance linearCoyonedaObjIsHomological (E : C) :
     rw [ShortComplex.exact_iff_exact_map_forget₂]
     simpa using ((preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT)
 
-omit [IsTriangulated C] in
+section EulerTriangleAdditivity
+
+omit [IsTriangulated C]
+
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
@@ -412,7 +415,6 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
 -- Same argument applied to the preadditiveYoneda functor.
-omit [IsTriangulated C] in
 theorem eulerFormObj_covariant_triangleAdditive (F : C)
     [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
     IsTriangleAdditive (fun E ↦ eulerFormObj k C E F) where
@@ -557,6 +559,8 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
       infer_instance
     simpa [a, b, c, add_comm] using
       eulerSum_of_rank_identity_int (hrank := hrank) hfa hfc hr
+
+end EulerTriangleAdditivity
 
 instance [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] : EulerFormDescends k C where
   covariant := fun F ↦ eulerFormObj_covariant_triangleAdditive k C F

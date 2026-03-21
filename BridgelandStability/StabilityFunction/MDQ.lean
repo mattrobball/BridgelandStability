@@ -454,7 +454,8 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
 
 section
 
-omit [Abelian A] in
+omit [Abelian A]
+
 private theorem Subobject.map_eq_mk {E : A} (K : Subobject E) (S : Subobject (K : A)) :
     (Subobject.map K.arrow).obj S = Subobject.mk (S.arrow ≫ K.arrow) := by
   calc
@@ -463,12 +464,10 @@ private theorem Subobject.map_eq_mk {E : A} (K : Subobject E) (S : Subobject (K 
     _ = Subobject.mk (S.arrow ≫ K.arrow) := by
       exact Subobject.map_mk S.arrow K.arrow
 
-omit [Abelian A] in
 private noncomputable def Subobject.mapSubIso {E : A} (K : Subobject E) (S : Subobject (K : A)) :
     ((Subobject.map K.arrow).obj S : A) ≅ (S : A) :=
   Subobject.isoOfEqMk _ (S.arrow ≫ K.arrow) (Subobject.map_eq_mk K S)
 
-omit [Abelian A] in
 private theorem Subobject.ofLE_map_comp_mapSubIso_hom {E : A} (K : Subobject E)
     {S T : Subobject (K : A)} (h : S ≤ T) :
     Subobject.ofLE ((Subobject.map K.arrow).obj S) ((Subobject.map K.arrow).obj T)
@@ -528,7 +527,8 @@ private noncomputable def Subobject.cokernelOfLEMapKernelIsoTarget
 
 section
 
-omit [Abelian A] in
+omit [Abelian A]
+
 private theorem Subobject.map_eq_mk_mono {X Y : A} (f : X ⟶ Y) [Mono f] (S : Subobject X) :
     (Subobject.map f).obj S = Subobject.mk (S.arrow ≫ f) := by
   calc
@@ -537,12 +537,10 @@ private theorem Subobject.map_eq_mk_mono {X Y : A} (f : X ⟶ Y) [Mono f] (S : S
     _ = Subobject.mk (S.arrow ≫ f) := by
       exact Subobject.map_mk S.arrow f
 
-omit [Abelian A] in
 private noncomputable def Subobject.mapMonoIso {X Y : A} (f : X ⟶ Y) [Mono f] (S : Subobject X) :
     ((Subobject.map f).obj S : A) ≅ (S : A) :=
   Subobject.isoOfEqMk _ (S.arrow ≫ f) (Subobject.map_eq_mk_mono f S)
 
-omit [Abelian A] in
 private theorem Subobject.ofLE_map_comp_mapMonoIso_hom {X Y : A} (f : X ⟶ Y) [Mono f]
     {S T : Subobject X} (h : S ≤ T) :
     Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)

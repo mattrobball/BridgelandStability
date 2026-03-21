@@ -47,9 +47,6 @@ the two hearts make up for each other's deficiencies.
 
 section TwoHeartEmbedding
 
-variable [IsTriangulated C]
-
-omit [IsTriangulated C] in
 /-- **Interval to gtProp.** If all HN phases lie in `(a, b)`, then phiMinus > `a`. -/
 lemma Slicing.gtProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
     (hE : s.intervalProp C a b E) : s.gtProp C a E := by
@@ -59,7 +56,6 @@ lemma Slicing.gtProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
     · exact Or.inr ⟨F, hn, (hF ⟨F.n - 1, by omega⟩).1⟩
     · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
 
-omit [IsTriangulated C] in
 /-- **Interval to leProp.** If all HN phases lie in `(a, b)`, then phiPlus ≤ `b`. -/
 lemma Slicing.leProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
     (hE : s.intervalProp C a b E) : s.leProp C b E := by
@@ -68,6 +64,10 @@ lemma Slicing.leProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
   · by_cases hn : 0 < F.n
     · exact Or.inr ⟨F, hn, le_of_lt (hF ⟨0, hn⟩).2⟩
     · exact Or.inl (F.toPostnikovTower.zero_isZero (by omega))
+
+section HeartContainment
+
+variable [IsTriangulated C]
 
 /-- **Left heart containment (Lemma 4.3a).** If `b - a ≤ 1` and `E ∈ P((a, b))`,
 then `E` lies in the heart of the t-structure induced by the slicing shifted by `a`.
@@ -156,7 +156,8 @@ instance Slicing.IntervalCat.toRightHeart_faithful (s : Slicing C) (a b : ℝ)
     cases h
     rfl
 
-omit [IsTriangulated C] in
+end HeartContainment
+
 /-- **Right-window bounds.** If `b - a ≤ 1` and `E ∈ P((a, b))`, then `E` satisfies
 the phase-window conditions `geProp (b - 1)` and `ltProp b`.
 
@@ -189,7 +190,6 @@ See the counterexample in `HeartEquivalence.lean`. The full triangle test requir
 the quasi-abelian theory or W-semistability arguments.
 -/
 
-omit [IsTriangulated C] in
 /-- **Phase upper bound from Lemma 3.4.** In a triangle `K → F → Q → K⟦1⟧` with
 `F ∈ P(φ)` σ-semistable and `K, Q` in a thin interval `P((a, b))` with `b ≤ a + 1`
 and `φ ∈ (a, b)`, if `K` is nonzero then `φ⁺(K) ≤ φ`. -/
@@ -205,7 +205,6 @@ theorem Slicing.phiPlus_le_of_semistable_triangle (s : Slicing C) {φ : ℝ}
   rw [← hFplus]
   exact s.phiPlus_triangle_le C hKne hFne hab hKI hQI hT
 
-omit [IsTriangulated C] in
 /-- **Phase lower bound from Lemma 3.4.** In a triangle `K → F → Q → K⟦1⟧` with
 `F ∈ P(φ)` σ-semistable and `K, Q` in a thin interval `P((a, b))` with `b ≤ a + 1`,
 if `Q` is nonzero then `φ ≤ φ⁻(Q)`. -/
@@ -231,7 +230,6 @@ gives only a `leProp`/`gtProp` bound, not full `intervalProp`. These lemmas reco
 the full interval containment from the weaker one-sided bound.
 -/
 
-omit [IsTriangulated C] in
 /-- **Phase upper bound from one-sided containment.** In a triangle `K → E → Q → K⟦1⟧`,
 if `E` has `φ⁺(E) < b` and `Q` satisfies `leProp c` (all phases ≤ c) with `c < b + 1`,
 then if `K` is nonzero, `φ⁺(K) < b`.
@@ -297,7 +295,6 @@ theorem Slicing.phiPlus_lt_of_triangle_with_leProp (s : Slicing C)
   -- Top factor is zero — contradiction
   exact hneK (FK.isZero_factor_zero_of_hom_eq_zero C s hnK hK_factor_zero)
 
-omit [IsTriangulated C] in
 /-- **Phase lower bound from one-sided containment** (dual of
 `phiPlus_lt_of_triangle_with_leProp`). In a triangle `K → E → Q → K⟦1⟧`,
 if `E` has `φ⁻(E) > a` and `K` satisfies `gtProp c` (all phases > c) with `a < c + 1`,
@@ -381,7 +378,6 @@ in the left heart can have phases up to `a + 1 > b`. For cokernels, the right he
 quasi-abelian theory (Bridgeland §4).
 -/
 
-omit [IsTriangulated C] in
 /-- **Kernel/image containment in thin intervals.** In a distinguished triangle
 `K → E → Q → K[1]` where `E ∈ P((a,b))` and both `K` and `Q` satisfy basic phase
 bounds (`gtProp a` and `leProp (a+1)`), then `K ∈ P((a, b))`.
@@ -425,7 +421,6 @@ theorem Slicing.first_intervalProp_of_triangle (s : Slicing C)
           _ = s.phiPlus C K hK := (s.phiPlus_eq C K hK FK hnK hfirstK).symm
           _ < b := hK_lt⟩
 
-omit [IsTriangulated C] in
 /-- **Extension closure for thin intervals.** In a distinguished triangle
 `A → E → B → A[1]` where `A` and `B` are in `P((a, b))` with `b - a ≤ 1`,
 then `E ∈ P((a, b))`.
@@ -477,7 +472,6 @@ Given a triangle `K → E → Q → K[1]` with `E ∈ P((a, b))`, if `K` has `ge
   yoneda_exact₃. Since K[1] has phases ≥ b > a, the factoring morphism vanishes too.
 -/
 
-omit [IsTriangulated C] in
 /-- **Phase lower bound from non-strict one-sided containment.** In a triangle
 `K → E → Q → K[1]`, if `E` has `φ⁻(E) > a` and `K` satisfies `geProp c` (all phases ≥ c)
 with `a < c + 1`, then if `Q` is nonzero, `a < φ⁻(Q)`.
@@ -542,7 +536,6 @@ theorem Slicing.phiMinus_gt_of_triangle_with_geProp (s : Slicing C)
   -- Bottom factor is zero — contradiction
   exact hneQ (FQ.isZero_factor_last_of_hom_eq_zero C s hnQ hQ_factor_zero)
 
-omit [IsTriangulated C] in
 /-- **Cokernel/quotient containment in thin intervals (Lemma 4.3 dual).** In a
 distinguished triangle `K → E → Q → K[1]` where `E ∈ P((a,b))` and `K` has
 `geProp(b-1)` (from right heart membership) and `Q` has `ltProp(b)` (from right
@@ -572,11 +565,9 @@ theorem Slicing.third_intervalProp_of_triangle (s : Slicing C)
         hK_ge (by linarith) hT
     exact s.intervalProp_of_intrinsic_phases C hQ hQ_minus hQ_plus
 
-section
+section HeartClosure
 
-variable {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
-
-omit [Fact (b - a ≤ 1)]
+variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)]
 
 /-- If `f : X ⟶ Y` is a monomorphism in the left heart `P((a, a + 1])` and `Y` lies in the
 thin interval `P((a, b))`, then `X` also lies in `P((a, b))`. This is the concrete
@@ -653,7 +644,7 @@ theorem Slicing.intervalProp_of_epi_rightHeart (s : Slicing C)
     simpa using hT
   exact s.third_intervalProp_of_triangle C (Fact.out : a < b) hX hKGe hYLt hT'
 
-end
+end HeartClosure
 
 end TwoHeartEmbedding
 

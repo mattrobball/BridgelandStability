@@ -638,7 +638,10 @@ theorem HeartStabilityData.heartK0ToK0_of
   exact
     FreeAbelianGroup.lift_apply_of (fun E : h.t.heart.FullSubcategory => K₀.of C E.obj) E
 
-omit [IsTriangulated C] in
+section K₀ShiftParity
+
+omit [IsTriangulated C]
+
 lemma K₀.of_shift_nat (X : C) :
     ∀ n : ℕ, K₀.of C (X⟦(n : ℤ)⟧) = (((-1 : ℤ) ^ n) • K₀.of C X) := by
   intro n
@@ -660,7 +663,6 @@ lemma K₀.of_shift_nat (X : C) :
                   (-1 : ℤ) • (((-1 : ℤ) ^ n) • K₀.of C X) by simp,
                 pow_succ', mul_zsmul, neg_one_zsmul]
 
-omit [IsTriangulated C] in
 lemma K₀.of_shift_negSucc (X : C) :
     ∀ n : ℕ, K₀.of C (X⟦(Int.negSucc n : ℤ)⟧) = (((-1 : ℤ) ^ (n + 1)) • K₀.of C X) := by
   intro n
@@ -681,7 +683,6 @@ lemma K₀.of_shift_negSucc (X : C) :
         _ = (((-1 : ℤ) ^ (n + 2)) • K₀.of C X) := by
               simp [pow_succ']
 
-omit [IsTriangulated C] in
 /-- Shifting by `n : ℤ` multiplies the Grothendieck-group class by the parity sign
 `(-1)^(|n|)`. -/
 theorem K₀.of_shift_int (X : C) (n : ℤ) :
@@ -691,6 +692,8 @@ theorem K₀.of_shift_int (X : C) (n : ℤ) :
       simpa using K₀.of_shift_nat (C := C) X m
   | negSucc m =>
       simpa using K₀.of_shift_negSucc (C := C) X m
+
+end K₀ShiftParity
 
 /-- If `X` is concentrated in degree `n`, then `X⟦-n⟧` is an object of the heart. -/
 def HeartStabilityData.heartShiftOfPure (h : HeartStabilityData C)

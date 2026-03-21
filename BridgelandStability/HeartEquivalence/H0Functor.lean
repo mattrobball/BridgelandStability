@@ -202,7 +202,6 @@ theorem TStructure.truncGE_map_comp_descTruncGE
       congrArg (fun k => g ≫ k) (t.π_descTruncGE (f := f) (n := n))
   exact h₁.trans (t.π_descTruncGE (f := g ≫ f) (n := n)).symm
 
-omit [IsTriangulated C] in
 @[simp]
 theorem TStructure.descTruncGE_zero
     (t : TStructure C)
@@ -212,7 +211,6 @@ theorem TStructure.descTruncGE_zero
   rw [t.π_descTruncGE]
   simp
 
-omit [IsTriangulated C] in
 @[simp]
 theorem TStructure.descTruncGE_add
     (t : TStructure C)

@@ -126,7 +126,10 @@ theorem StabilityCondition.exists_epsilon0_sector (σ : StabilityCondition C) :
   subst a b
   simpa using hlf t E
 
-omit [IsTriangulated C] in
+section FiniteLengthDefs
+
+omit [IsTriangulated C]
+
 /-- The local-finiteness input on windows of radius `2 ε₀`: every interval
 `P((t - 2 ε₀, t + 2 ε₀))` has strict finite length. This is the thin-sector
 hypothesis used to start the deformation argument. -/
@@ -144,7 +147,6 @@ def SectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
     ∀ E : σ.slicing.IntervalCat C a b,
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
 
-omit [IsTriangulated C] in
 /-- The wide local-finiteness input used in Bridgeland's p.24 Nodes 7.8–7.9: every interval of
 radius `4 ε₀` has strict finite length. This is the witness needed to apply Lemma 7.7 in the
 windows `P((t - 3 ε₀, t + 5 ε₀))` and `P((t - 3 ε₀, t + 5 ε₀ + δ))`. -/
@@ -161,6 +163,8 @@ def WideSectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
       linarith [hε₀8]⟩
     ∀ E : σ.slicing.IntervalCat C a b,
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
+
+end FiniteLengthDefs
 
 /-! ### Phase confinement for nearby stability conditions -/
 
