@@ -494,6 +494,38 @@ lemma Slicing.zero_of_geProp_ltProp_general (s : Slicing C) (t : ℝ) {X Y : C}
   exact (s.phaseShift C t).zero_of_geProp_ltProp C hX' hY' f
 
 
+/-! ### Inverse phase shift for HN filtrations -/
+
+/-- Inverse phase shift: given an HN filtration of `E` with respect to
+the shifted slicing `(s.phaseShift t).P`, produce an HN filtration with
+respect to `s.P` by adding `t` to all phases. -/
+def HNFiltration.unphaseShift {s : Slicing C} {E : C} {t : ℝ}
+    (G : HNFiltration C (s.phaseShift C t).P E) :
+    HNFiltration C s.P E where
+  n := G.n
+  chain := G.chain
+  triangle := G.triangle
+  triangle_dist := G.triangle_dist
+  triangle_obj₁ := G.triangle_obj₁
+  triangle_obj₂ := G.triangle_obj₂
+  base_isZero := G.base_isZero
+  top_iso := G.top_iso
+  zero_isZero := G.zero_isZero
+  φ := fun j ↦ G.φ j + t
+  hφ := by intro i j hij; linarith [G.hφ hij]
+  semistable := fun j ↦ G.semistable j
+
+theorem HNFiltration.unphaseShift_n {s : Slicing C}
+    {E : C} {t : ℝ}
+    (G : HNFiltration C (s.phaseShift C t).P E) :
+    G.unphaseShift.n = G.n := rfl
+
+theorem HNFiltration.unphaseShift_phiPlus {s : Slicing C}
+    {E : C} {t : ℝ}
+    (G : HNFiltration C (s.phaseShift C t).P E)
+    (hn : 0 < G.n) :
+    G.unphaseShift.phiPlus C hn = G.phiPlus C hn + t := rfl
+
 end Slicing
 
 end CategoryTheory.Triangulated

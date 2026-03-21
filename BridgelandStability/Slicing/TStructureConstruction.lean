@@ -480,30 +480,12 @@ theorem Slicing.exists_split_with_interval (s : Slicing C)
     have hGX_phiPlus_le := hbd hFsn
     -- Fs.φ(0) = F.φ(0) - a < b - a, so GX.phiPlus (shifted) < b - a
     have hFsφ0 : Fs.φ ⟨0, hFsn⟩ < b - a := (hFs_phases ⟨0, hFsn⟩).2
-    -- GX is a filtration wrt (s.phaseShift a).P = fun ψ ↦ s.P(ψ + a)
-    -- Convert GX to original slicing: phases become GX.φ j + a
-    -- phiPlus of the original-coords filtration = GX.phiPlus + a < (b - a) + a = b
-    -- But phiPlus(X) is intrinsic, so phiPlus(X) ≤ original-coords phiPlus
-    -- Build an HN filtration of X wrt s.P with known phases
-    let GXorig : HNFiltration C s.P X :=
-      { n := GX.n
-        chain := GX.chain
-        triangle := GX.triangle
-        triangle_dist := GX.triangle_dist
-        triangle_obj₁ := GX.triangle_obj₁
-        triangle_obj₂ := GX.triangle_obj₂
-        base_isZero := GX.base_isZero
-        top_iso := GX.top_iso
-        zero_isZero := GX.zero_isZero
-        φ := fun j ↦ GX.φ j + a
-        hφ := by intro i j hij; linarith [GX.hφ hij]
-        semistable := fun j ↦ GX.semistable j }
-    have hGXorig_phiPlus : GXorig.phiPlus C hGX = GX.phiPlus C hGX + a := by
-      simp only [HNFiltration.phiPlus]; rfl
+    -- Convert GX from shifted slicing to original via unphaseShift
     calc s.phiPlus C X hXne
-        ≤ GXorig.phiPlus C hGX :=
-          s.phiPlus_le_phiPlus_of_hn C hXne GXorig hGX
-      _ = GX.phiPlus C hGX + a := hGXorig_phiPlus
+        ≤ GX.unphaseShift.phiPlus C hGX :=
+          s.phiPlus_le_phiPlus_of_hn C hXne GX.unphaseShift hGX
+      _ = GX.phiPlus C hGX + a :=
+          GX.unphaseShift_phiPlus C hGX
       _ ≤ Fs.φ ⟨0, hFsn⟩ + a := by linarith
       _ < (b - a) + a := by linarith
       _ = b := by ring
@@ -541,26 +523,12 @@ theorem Slicing.exists_split_at_cutoff (s : Slicing C)
     have hGX_phiPlus_le := hbd hFsn
     -- Fs.φ ⟨0, _⟩ = F.φ ⟨0, _⟩ - t, and F.φ ⟨0, _⟩ < b
     have hFφ0_lt : F.φ ⟨0, hn⟩ < b := (hI ⟨0, hn⟩).2
-    -- Build an HN filtration of X wrt s.P with known phases
-    let GXorig : HNFiltration C s.P X :=
-      { n := GX.n
-        chain := GX.chain
-        triangle := GX.triangle
-        triangle_dist := GX.triangle_dist
-        triangle_obj₁ := GX.triangle_obj₁
-        triangle_obj₂ := GX.triangle_obj₂
-        base_isZero := GX.base_isZero
-        top_iso := GX.top_iso
-        zero_isZero := GX.zero_isZero
-        φ := fun j ↦ GX.φ j + t
-        hφ := by intro i j hij; linarith [GX.hφ hij]
-        semistable := fun j ↦ GX.semistable j }
-    have hGXorig_phiPlus : GXorig.phiPlus C hGX = GX.phiPlus C hGX + t := by
-      simp only [HNFiltration.phiPlus]; rfl
+    -- Convert GX from shifted slicing to original via unphaseShift
     calc s.phiPlus C X hXne
-        ≤ GXorig.phiPlus C hGX :=
-          s.phiPlus_le_phiPlus_of_hn C hXne GXorig hGX
-      _ = GX.phiPlus C hGX + t := hGXorig_phiPlus
+        ≤ GX.unphaseShift.phiPlus C hGX :=
+          s.phiPlus_le_phiPlus_of_hn C hXne GX.unphaseShift hGX
+      _ = GX.phiPlus C hGX + t :=
+          GX.unphaseShift_phiPlus C hGX
       _ ≤ Fs.φ ⟨0, hFsn⟩ + t := by linarith
       _ = (F.φ ⟨0, hn⟩ - t) + t := rfl
       _ = F.φ ⟨0, hn⟩ := by ring
