@@ -250,7 +250,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.2.1
         (by linarith) (by linarith)
     have hdisjoint : ψ₂ + ε₀ + δ' ≤ ψ₁ - ε₀ - δ' := by
-      simp only [hδ'_def]; linarith
+      simp only [hδ'_def]; grind
     exact σ.slicing.intervalHom_eq_zero C hEI hFI hdisjoint f
   · -- Small gap: 0 < ψ₁ - ψ₂ ≤ 2ε₀.
     -- Faithful Lemma 7.6 route:

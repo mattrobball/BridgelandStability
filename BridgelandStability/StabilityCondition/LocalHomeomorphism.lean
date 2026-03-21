@@ -322,7 +322,7 @@ noncomputable def componentTopologicalLinearLocalModel
       obtain ⟨ε₀, hε₀, hε₀8, hWide⟩ := σ.exists_epsilon0 C
       let ε := ε₀ / 2
       have hε_pos : 0 < ε := by positivity
-      have hε_lt : ε < 1 / 8 := by dsimp [ε]; linarith
+      have hε_lt : ε < 1 / 8 := by dsimp [ε]; grind
       let U : Set comp := {τ | τ.val ∈ basisNhd C σ ε}
       refine ⟨U, ?_, ?_⟩
       · refine IsOpen.mem_nhds ?_ ?_
@@ -472,7 +472,7 @@ noncomputable def componentTopologicalLinearLocalModel
                   (ENNReal.ofReal_add (le_of_lt hε_pos) (le_of_lt hε_pos)).symm
               _ < ENNReal.ofReal 1 := by
                   rw [ENNReal.ofReal_lt_ofReal_iff one_pos]
-                  dsimp [ε]; linarith
+                  dsimp [ε]; grind
           exact Subtype.ext (Subtype.ext
             (StabilityCondition.eq_of_same_Z_near C τ₁ τ₂ hZval hd))
         -- Open map (Theorem 7.1 + Lemma 6.2). With seminorm topology: no far-fiber issues.

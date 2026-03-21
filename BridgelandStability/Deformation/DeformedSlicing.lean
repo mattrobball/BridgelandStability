@@ -140,7 +140,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           change wPhaseOf (W (K₀.of C K)) ((a + 1 + (b + 1)) / 2) ≤ φ + 1
           rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
           by_cases hWK : W (K₀.of C K) = 0
-          · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; linarith
+          · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
           · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
             rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
             have key2 := wPhaseOf_add_two hWK ((a + b) / 2 - 1)
@@ -210,7 +210,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           change wPhaseOf (W (K₀.of C K)) ((a - 1 + (b - 1)) / 2) ≤ φ
           rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
           by_cases hWK : W (K₀.of C K) = 0
-          · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; linarith
+          · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
           · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
             rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
             linarith

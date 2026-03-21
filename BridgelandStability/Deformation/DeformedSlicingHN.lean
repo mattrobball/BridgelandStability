@@ -101,7 +101,7 @@ theorem deformedPred_shift_one
       change wPhaseOf (W (K₀.of C K)) ((a + 1 + (b + 1)) / 2) ≤ φ + 1
       rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
       by_cases hWK : W (K₀.of C K) = 0
-      · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; linarith
+      · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
       · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
         rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
         have key2 := wPhaseOf_add_two hWK ((a + b) / 2 - 1)
@@ -171,7 +171,7 @@ theorem deformedPred_of_shift_one
       change wPhaseOf (W (K₀.of C K)) ((a - 1 + (b - 1)) / 2) ≤ φ
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
       by_cases hWK : W (K₀.of C K) = 0
-      · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; linarith
+      · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
       · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
         rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
         linarith
@@ -390,7 +390,7 @@ theorem deformedSlicing_hn_exists
   -- Step C: Iterative truncation
   -- Main claim: for R ∈ Q(≤t) ∩ Q(>t-nδ), R has Q-HN
   set δ := 4 * (ε₀ - ε) with hδ_def
-  have hδ : 0 < δ := by simp [δ]; linarith
+  have hδ : 0 < δ := by simp [δ]; grind
   suffices hmain : ∀ (n : ℕ) (t : ℝ) (R : C),
       σ.deformedLePred C W hW ε t R →
       σ.deformedGtPred C W hW ε (t - ↑n * δ) R →
@@ -404,12 +404,12 @@ theorem deformedSlicing_hn_exists
       hE_le t (fun j ↦ by
         have : F.φ j ≤ F.φ ⟨0, hFn⟩ :=
           F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))
-        simp only [t]; linarith)
+        simp only [t]; grind)
     have hE_gt_s : σ.deformedGtPred C W hW ε s E :=
       hE_gt s (fun j ↦ by
         have : F.φ ⟨F.n - 1, by omega⟩ ≤ F.φ j :=
           F.hφ.antitone (Fin.mk_le_mk.mpr (by omega : j.val ≤ F.n - 1))
-        simp only [s, δ]; linarith)
+        simp only [s, δ]; grind)
     have hNδ : t - ↑N * δ ≤ s := by
       have h1 : (t - s) / δ ≤ ↑(Nat.ceil ((t - s) / δ)) := Nat.le_ceil _
       have h2 : ↑N = (↑(Nat.ceil ((t - s) / δ)) : ℝ) + 1 := by
@@ -434,7 +434,7 @@ theorem deformedSlicing_hn_exists
       deformedGtLe_triangle C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin R t'
     -- Y ∈ Q(≤t') ⊆ Q(≤t) (monotonicity since t' ≤ t)
     have hY_le_t : σ.deformedLePred C W hW ε t Y :=
-      σ.deformedLePred_mono C W hW (show t' ≤ t by simp [t']; linarith) _ hY_le
+      σ.deformedLePred_mono C W hW (show t' ≤ t by simp [t']; grind) _ hY_le
     -- Strip membership: X ∈ Q(≤t) (first-vertex closure)
     have hX_le : σ.deformedLePred C W hW ε t X :=
       deformedLePred_of_triangle_obj₁ C σ W hW hε hT hLe hY_le_t
@@ -462,7 +462,7 @@ theorem deformedSlicing_hn_exists
         have : t' - ↑n * δ = t - ↑(n + 1) * δ := by push_cast; simp [t']; ring
         linarith [hGY_lo j]
       · show GY.φ j ≤ t
-        exact le_trans (hGY_hi j) (by simp [t']; linarith)
+        exact le_trans (hGY_hi j) (by simp [t']; grind)
     · -- X nonzero: get Q-HN of X with phases in (t', t], combine with GY
       -- Step 1: Q(>t') ⊆ σ.gtProp(t'-ε) and Q(≤t) ⊆ σ.leProp(t+ε) for X
       have hX_sigmaGt : σ.slicing.gtProp C (t' - ε) X := by
@@ -511,8 +511,8 @@ theorem deformedSlicing_hn_exists
         simp only [a_int, b_int, t', δ]; nlinarith
       have hFL_int : ThinFiniteLengthInInterval (C := C) σ a_int b_int :=
         ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ (by linarith)
-          (show (t + ε) - 4 * ε₀ ≤ a_int by simp only [a_int, t', δ]; linarith)
-          (show b_int ≤ (t + ε) + 4 * ε₀ by simp only [b_int, η]; linarith) hWide
+          (show (t + ε) - 4 * ε₀ ≤ a_int by simp only [a_int, t', δ]; grind)
+          (show b_int ≤ (t + ε) + 4 * ε₀ by simp only [b_int, η]; grind) hWide
       have hX_interior : σ.slicing.intervalProp C (a_int + 2 * ε) (b_int - 4 * ε) X := by
         have ha : a_int + 2 * ε = t' - ε := by simp only [a_int]; ring
         have hb : b_int - 4 * ε = t + ε + η := by simp only [b_int]; ring
@@ -592,7 +592,7 @@ theorem deformedSlicing_hn_exists
           have : t' - ↑n * δ = t - ↑(n + 1) * δ := by push_cast; simp [t']; ring
           linarith [hGY_lo i]) hsep
         hGX_hi_bound
-        (fun i ↦ le_trans (hGY_hi i) (by simp [t']; linarith))
+        (fun i ↦ le_trans (hGY_hi i) (by simp [t']; grind))
       exact ⟨G, hG_lo, hG_hi⟩
 
 

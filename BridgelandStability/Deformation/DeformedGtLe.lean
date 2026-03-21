@@ -503,13 +503,13 @@ theorem deformedGtLe_triangle
       set b := t + 4 * ε + ε₀ with hb_def
       have hab : a < b := by linarith
       haveI : Fact (a < b) := ⟨hab⟩
-      haveI : Fact (b - a ≤ 1) := ⟨by simp [a, b]; linarith⟩
-      have hthin_ab : b - a + 2 * ε < 1 := by simp [a, b]; linarith
+      haveI : Fact (b - a ≤ 1) := ⟨by simp [a, b]; grind⟩
+      have hthin_ab : b - a + 2 * ε < 1 := by simp [a, b]; grind
       -- ThinFiniteLengthInInterval from WideSectorFiniteLength (center t+ε₀)
       have hFL_ab : ThinFiniteLengthInInterval (C := C) σ a b :=
         ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ (by linarith)
-          (show (t + ε₀) - 4 * ε₀ ≤ a by simp [a]; linarith)
-          (show b ≤ (t + ε₀) + 4 * ε₀ by simp [b]; linarith) hWide
+          (show (t + ε₀) - 4 * ε₀ ≤ a by simp [a]; grind)
+          (show b ≤ (t + ε₀) + 4 * ε₀ by simp [b]; grind) hWide
       -- MID ∈ intervalProp(a+2ε, b-4ε) = intervalProp(t-ε₀, t+ε₀)
       have hMID_int : σ.slicing.intervalProp C (a + 2 * ε) (b - 4 * ε) MID := by
         -- GM's phases satisfy t-ε < φ_j (from hM_phases) and φ_j ≤ t+ε (inherited from GR).
@@ -517,14 +517,14 @@ theorem deformedGtLe_triangle
         right; refine ⟨GM, fun j ↦ ?_⟩
         constructor
         · -- a + 2ε = t - ε₀ < t - ε < GM.φ j
-          have := hM_phases j; simp [a]; linarith
+          have := hM_phases j; simp [a]; grind
         · -- GM.φ j ≤ t + ε < t + ε₀ = b - 4ε
           -- GM's phases come from GR's phases (which satisfy ≤ t+ε)
           -- The split preserves this bound.
           have : GM.φ j ≤ t + ε := by
             obtain ⟨i, hi⟩ := hGM_contain j
             rw [hi]; exact hR_phases i
-          simp [b]; linarith
+          simp [b]; grind
       -- Apply interior_has_enveloped_HN to get Q-HN of MID
       have hMIDne : ¬IsZero MID := hMIDz
       obtain ⟨G_mid, hG_mid_phases⟩ := interior_has_enveloped_HN C σ W hW hab
