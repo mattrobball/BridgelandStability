@@ -255,7 +255,7 @@ theorem no_exp_decomp_below {ψ : ℝ} {n : ℕ} (hn : 0 < n)
         (b i : ℂ) * exp (↑(Real.pi * (θ i - ψ)) * I) *
           exp (↑(Real.pi * ψ) * I) := by
       intro i; rw [mul_assoc, ← exp_add]
-      congr 1; push_cast; ring
+      congr 1; push_cast; ring_nf
     rw [show ∑ i : Fin n, (b i : ℂ) * exp (↑(Real.pi * θ i) * I) =
       (∑ i : Fin n, (b i : ℂ) * exp (↑(Real.pi * (θ i - ψ)) * I)) *
         exp (↑(Real.pi * ψ) * I) from by
@@ -296,7 +296,7 @@ theorem no_exp_decomp_above {ψ : ℝ} {n : ℕ} (hn : 0 < n)
         (b i : ℂ) * exp (↑(Real.pi * (θ i - ψ)) * I) *
           exp (↑(Real.pi * ψ) * I) := by
       intro i; rw [mul_assoc, ← exp_add]
-      congr 1; push_cast; ring
+      congr 1; push_cast; ring_nf
     rw [show ∑ i : Fin n, (b i : ℂ) * exp (↑(Real.pi * θ i) * I) =
       (∑ i : Fin n, (b i : ℂ) * exp (↑(Real.pi * (θ i - ψ)) * I)) *
         exp (↑(Real.pi * ψ) * I) from by
