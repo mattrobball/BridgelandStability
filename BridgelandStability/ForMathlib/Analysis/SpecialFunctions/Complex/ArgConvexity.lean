@@ -322,4 +322,70 @@ lemma min_arg_lt_arg_add {z₁ z₂ : ℂ}
     linarith
 
 
+/-! ### Arg convexity for finite sums -/
+
+open Complex
+
+/-- A Finset sum of upper half-plane vectors is in the upper half-plane union. -/
+theorem sum_mem_upperHalfPlane {ι : Type*} {s : Finset ι} (hs : s.Nonempty)
+    {f : ι → ℂ} (hf : ∀ i ∈ s, f i ∈ upperHalfPlaneUnion) :
+    ∑ i ∈ s, f i ∈ upperHalfPlaneUnion := by
+  induction hs using Finset.Nonempty.cons_induction with
+  | singleton j => simpa using hf j (Finset.mem_singleton_self j)
+  | cons j s hjs hs ih =>
+    rw [Finset.sum_cons]
+    exact mem_upperHalfPlaneUnion_of_add
+      (hf j (Finset.mem_cons_self j s))
+      (ih (fun i hi ↦ hf i (Finset.mem_cons.mpr (Or.inr hi))))
+
+/-- **Arg upper bound for Finset sums**. If every `f i` is in the
+upper half-plane union, then
+`arg(∑ i ∈ s, f i) ≤ s.sup' hs (arg ∘ f)`. -/
+theorem arg_sum_le_sup'_of_upperHalfPlane {ι : Type*}
+    {s : Finset ι} (hs : s.Nonempty)
+    {f : ι → ℂ} (hf : ∀ i ∈ s, f i ∈ upperHalfPlaneUnion) :
+    arg (∑ i ∈ s, f i) ≤ s.sup' hs (arg ∘ f) := by
+  induction hs using Finset.Nonempty.cons_induction with
+  | singleton j => simp
+  | cons j s hjs hs ih =>
+    rw [Finset.sum_cons]
+    have hfj : f j ∈ upperHalfPlaneUnion :=
+      hf j (Finset.mem_cons_self j s)
+    have hfs : ∀ i ∈ s, f i ∈ upperHalfPlaneUnion :=
+      fun i hi ↦ hf i (Finset.mem_cons.mpr (Or.inr hi))
+    calc arg (f j + ∑ i ∈ s, f i)
+        ≤ max (arg (f j)) (arg (∑ i ∈ s, f i)) :=
+          arg_add_le_max hfj (sum_mem_upperHalfPlane hs hfs)
+      _ ≤ max (arg (f j)) (s.sup' hs (arg ∘ f)) :=
+          max_le_max_left _ (ih hfs)
+      _ = max ((arg ∘ f) j) (s.sup' hs (arg ∘ f)) := rfl
+      _ ≤ (Finset.cons j s hjs).sup'
+            ⟨j, Finset.mem_cons_self j s⟩ (arg ∘ f) := by
+          rw [Finset.sup'_cons hs]
+
+/-- **Arg lower bound for Finset sums**. Dual of
+`arg_sum_le_sup'_of_upperHalfPlane`. -/
+theorem inf'_le_arg_sum_of_upperHalfPlane {ι : Type*}
+    {s : Finset ι} (hs : s.Nonempty)
+    {f : ι → ℂ} (hf : ∀ i ∈ s, f i ∈ upperHalfPlaneUnion) :
+    s.inf' hs (arg ∘ f) ≤ arg (∑ i ∈ s, f i) := by
+  induction hs using Finset.Nonempty.cons_induction with
+  | singleton j => simp
+  | cons j s hjs hs ih =>
+    rw [Finset.sum_cons]
+    have hfj : f j ∈ upperHalfPlaneUnion :=
+      hf j (Finset.mem_cons_self j s)
+    have hfs : ∀ i ∈ s, f i ∈ upperHalfPlaneUnion :=
+      fun i hi ↦ hf i (Finset.mem_cons.mpr (Or.inr hi))
+    calc (Finset.cons j s hjs).inf'
+            ⟨j, Finset.mem_cons_self j s⟩ (arg ∘ f)
+        = min ((arg ∘ f) j) (s.inf' hs (arg ∘ f)) := by
+          rw [Finset.inf'_cons hs]
+      _ = min (arg (f j)) (s.inf' hs (arg ∘ f)) := rfl
+      _ ≤ min (arg (f j)) (arg (∑ i ∈ s, f i)) :=
+          min_le_min_left _ (ih hfs)
+      _ ≤ arg (f j + ∑ i ∈ s, f i) :=
+          min_arg_le_arg_add hfj
+            (sum_mem_upperHalfPlane hs hfs)
+
 end CategoryTheory
