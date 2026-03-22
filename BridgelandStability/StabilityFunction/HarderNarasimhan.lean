@@ -388,8 +388,6 @@ lemma phase_cokernel_pullback_eq
       Z.phase (cokernel (Subobject.ofLE A' B' h)) := by
   simp only [StabilityFunction.phase, Zobj_cokernel_pullback_eq Z M' h]
 
-set_option maxHeartbeats 1600000 in
--- The iso involves many compositions; the default heartbeat limit is insufficient.
 set_option synthInstance.maxHeartbeats 40000 in
 /-- The cokernel of consecutive pulled-back subobjects is isomorphic to the original
 cokernel factor. -/
@@ -429,8 +427,7 @@ def cokernelPullbackIso (Z : StabilityFunction A) {E : A} (M' : Subobject E)
   -- φ is mono: kernel must be zero since Z-values match
   haveI : Mono φ := by
     suffices hk : kernel.ι φ = 0 from Preadditive.mono_of_kernel_zero hk
-    have hse_φ : (ShortComplex.mk (kernel.ι φ) φ
-        (by simp [kernel.condition])).ShortExact :=
+    have hse_φ : (ShortComplex.mk (kernel.ι φ) φ (kernel.condition φ)).ShortExact :=
       ShortComplex.ShortExact.mk' (ShortComplex.exact_kernel φ) inferInstance inferInstance
     have hZ_add := Z.additive _ hse_φ
     -- hZ_add : Z(cokernel₁) = Z(kernel φ) + Z(cokernel₂)

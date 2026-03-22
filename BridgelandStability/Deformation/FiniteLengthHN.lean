@@ -40,7 +40,7 @@ for a fixed interval object `X`, it is enough to know a lower phase bound for al
 proper strict quotients of `X`; the recursive kernel step propagates that bound to
 smaller strict subobjects. The older `hn_exists_in_thin_interval` theorem is recovered
 by feeding in the global lower window bound. -/
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -315,7 +315,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
   intro j
   simpa using hG0 j
 
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 theorem SkewedStabilityFunction.hn_exists_in_thin_interval
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -371,7 +371,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
 to Bridgeland's classes `G` and `H`: the lower phase bound is stated directly for
 nonzero strict quotients `X ↠ B`, and converted internally to the kernel/cokernel
 subobject language used by the recursion. -/
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowerBound
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}

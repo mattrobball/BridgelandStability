@@ -80,7 +80,7 @@ theorem wPhaseOf_gt_of_narrow_interval
       (by nlinarith [Real.pi_pos, hE_width])
   linarith [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg (W (K₀.of C E))) hsin]
 
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 /-- **MDQ existence with φ⁺ case split** (Bridgeland p.23).
 
 Same recursion as `exists_strictMDQ_of_finiteLength` but replaces:

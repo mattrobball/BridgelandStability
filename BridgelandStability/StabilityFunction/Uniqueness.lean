@@ -365,8 +365,6 @@ private lemma n_ge_two_of_not_semistable {Z : StabilityFunction A} {E : A}
     (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le ≪≫
       asIso (⊤ : Subobject E).arrow) h1
 
-set_option maxHeartbeats 1600000 in
--- The proof involves many Fin-indexed compositions; the default heartbeat limit is insufficient.
 /-- The tail HN filtration of the quotient `E / chain(1)`, constructed by pushing
 the chain forward via `imageSubobject(_.arrow ≫ cokernel.π chain(1).arrow)`. -/
 private noncomputable def tailHNFiltration {Z : StabilityFunction A} {E : A}
@@ -424,14 +422,12 @@ private noncomputable def tailHNFiltration {Z : StabilityFunction A} {E : A}
     exact F.φ_anti (Fin.mk_lt_mk.mpr (by grind))
   factor_phase := by
     intro ⟨j, _⟩
-    have hM1 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 1, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    have hM2 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 2, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
     exact ((phase_cokernel_pullback_eq Z (F.chain ⟨1, by grind⟩) _).symm.trans
       ((phase_cokernel_ofLE_congr Z
-        (pullback_imageSubobject_eq Z hM1)
-        (pullback_imageSubobject_eq Z hM2)).trans
+        (pullback_imageSubobject_eq Z
+          (F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))))
+        (pullback_imageSubobject_eq Z
+          (F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))))).trans
       (F.factor_phase ⟨j + 1, by grind⟩)))
   factor_semistable := by
     intro ⟨j, hj⟩
@@ -439,28 +435,24 @@ private noncomputable def tailHNFiltration {Z : StabilityFunction A} {E : A}
       F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
     have hM2 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 2, by grind⟩ :=
       F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    have hlt : imageSubobject ((F.chain ⟨j + 1, by grind⟩).arrow ≫
-          cokernel.π (F.chain ⟨1, by grind⟩).arrow) <
+    have hS₁S₂ : F.chain ⟨j + 1, by grind⟩ < F.chain ⟨j + 2, by grind⟩ :=
+      F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
+    have h_le : imageSubobject ((F.chain ⟨j + 1, by grind⟩).arrow ≫
+          cokernel.π (F.chain ⟨1, by grind⟩).arrow) ≤
         imageSubobject ((F.chain ⟨j + 2, by grind⟩).arrow ≫
           cokernel.π (F.chain ⟨1, by grind⟩).arrow) := by
-      have hS₁S₂ : F.chain ⟨j + 1, by grind⟩ < F.chain ⟨j + 2, by grind⟩ :=
-        F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
-      have h_le : imageSubobject ((F.chain ⟨j + 1, by grind⟩).arrow ≫
-            cokernel.π (F.chain ⟨1, by grind⟩).arrow) ≤
-          imageSubobject ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-            cokernel.π (F.chain ⟨1, by grind⟩).arrow) := by
-        rw [show (F.chain ⟨j + 1, by grind⟩).arrow ≫
-              cokernel.π (F.chain ⟨1, by grind⟩).arrow =
-            Subobject.ofLE _ _ hS₁S₂.le ≫ ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-              cokernel.π (F.chain ⟨1, by grind⟩).arrow) from
-          by rw [← Category.assoc, Subobject.ofLE_arrow]]
-        exact imageSubobject_comp_le _ _
-      exact lt_of_le_of_ne h_le (fun heq ↦ absurd
-        ((pullback_imageSubobject_eq Z hM1).symm.trans
-          (heq ▸ pullback_imageSubobject_eq Z hM2))
-        (ne_of_lt hS₁S₂))
+      rw [show (F.chain ⟨j + 1, by grind⟩).arrow ≫
+            cokernel.π (F.chain ⟨1, by grind⟩).arrow =
+          Subobject.ofLE _ _ hS₁S₂.le ≫ ((F.chain ⟨j + 2, by grind⟩).arrow ≫
+            cokernel.π (F.chain ⟨1, by grind⟩).arrow) from
+        by rw [← Category.assoc, Subobject.ofLE_arrow]]
+      exact imageSubobject_comp_le _ _
     exact Z.isSemistable_of_iso
-      (cokernelPullbackIso Z (F.chain ⟨1, by grind⟩) hlt)
+      (cokernelPullbackIso Z (F.chain ⟨1, by grind⟩)
+        (lt_of_le_of_ne h_le (fun heq ↦ absurd
+          ((pullback_imageSubobject_eq Z hM1).symm.trans
+            (heq ▸ pullback_imageSubobject_eq Z hM2))
+          (ne_of_lt hS₁S₂))))
       (isSemistable_cokernel_ofLE_congr Z
         (pullback_imageSubobject_eq Z hM1)
         (pullback_imageSubobject_eq Z hM2)

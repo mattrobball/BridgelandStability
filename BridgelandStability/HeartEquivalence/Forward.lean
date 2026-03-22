@@ -431,7 +431,6 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
           (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le).symm) hss
   }, by simp⟩
 
-set_option maxHeartbeats 2000000 in
 theorem StabilityFunction.append_hn_filtration_of_mono_local
     (Z : StabilityFunction A) {X Y B : A}
     (i : X ⟶ Y) [Mono i] (F : AbelianHNFiltration Z X) (eB : cokernel i ≅ B)
@@ -489,90 +488,95 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
     chain_bot := hNewBot
     chain_top := hNewTop
     φ := φ
-    φ_anti := by
-      intro a b hab
-      dsimp [φ]
-      by_cases hb : (b : ℕ) < F.n
-      · have ha : (a : ℕ) < F.n := by
-          exact lt_trans (Fin.mk_lt_mk.mp hab) hb
-        simp [ha, hb]
-        exact F.φ_anti (Fin.mk_lt_mk.mpr (Fin.mk_lt_mk.mp hab))
-      · have ha : (a : ℕ) < F.n := by grind
-        have hlast_le :
-            F.φ ⟨F.n - 1, by have := F.hn; omega⟩ ≤ F.φ ⟨a, ha⟩ := by
-          exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by grind))
-        simp [ha, hb]
-        linarith
-    factor_phase := by
-      intro j
-      by_cases hj : (j : ℕ) < F.n
-      · let j' : Fin F.n := ⟨j, hj⟩
-        have hcast :
-            newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
-          have hj_le : (j : ℕ) ≤ F.n := by grind
-          simp [newChain, j', hj_le]
-        have hsucc :
-            newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
-          have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
-          simp [newChain, j', hj1_le]
-        have hphase :
-            Z.phase (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
+    φ_anti := ?_
+    factor_phase := ?_
+    factor_semistable := ?_
+  }, ?_⟩
+  · -- φ_anti
+    intro a b hab
+    dsimp [φ]
+    by_cases hb : (b : ℕ) < F.n
+    · have ha : (a : ℕ) < F.n := by
+        exact lt_trans (Fin.mk_lt_mk.mp hab) hb
+      simp [ha, hb]
+      exact F.φ_anti (Fin.mk_lt_mk.mpr (Fin.mk_lt_mk.mp hab))
+    · have ha : (a : ℕ) < F.n := by grind
+      have hlast_le :
+          F.φ ⟨F.n - 1, by have := F.hn; omega⟩ ≤ F.φ ⟨a, ha⟩ := by
+        exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by grind))
+      simp [ha, hb]
+      linarith
+  · -- factor_phase
+    intro j
+    by_cases hj : (j : ℕ) < F.n
+    · let j' : Fin F.n := ⟨j, hj⟩
+      have hcast :
+          newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
+        have hj_le : (j : ℕ) ≤ F.n := by grind
+        simp [newChain, j', hj_le]
+      have hsucc :
+          newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
+        have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
+        simp [newChain, j', hj1_le]
+      have hphase :
+          Z.phase (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
+            ((Subobject.map i).obj (F.chain j'.succ))
+            ((Subobject.map i).monotone
+              (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))))) =
+            F.φ j' :=
+        (phase_cokernel_mapMono_eq_local Z i
+          (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))).trans (F.factor_phase j')
+      have hφj : φ j = F.φ j' := by
+        simp [φ, hj, j']
+      exact ((phase_cokernel_ofLE_congr_local Z hcast hsucc).trans hphase).trans hφj.symm
+    · have hj_eq : (j : ℕ) = F.n := by grind
+      have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
+      have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
+      have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
+      have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
+      have hφj : φ j = Z.phase B := by
+        simp [φ, hj]
+      have htarget :
+          Z.phase (cokernel (Subobject.ofLE K ⊤ le_top)) =
+            Z.phase (cokernel K.arrow) := by
+        exact Z.phase_eq_of_iso
+          ((cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _).symm)
+      have htarget' : Z.phase (cokernel (Subobject.ofLE K ⊤ le_top)) = Z.phase B := by
+        exact htarget.trans (Z.phase_eq_of_iso eK)
+      exact ((phase_cokernel_ofLE_congr_local Z hcast_obj hsucc_obj).trans htarget').trans
+        hφj.symm
+  · -- factor_semistable
+    intro j
+    by_cases hj : (j : ℕ) < F.n
+    · let j' : Fin F.n := ⟨j, hj⟩
+      have hcast :
+          newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
+        have hj_le : (j : ℕ) ≤ F.n := by grind
+        simp [newChain, j', hj_le]
+      have hsucc :
+          newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
+        have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
+        simp [newChain, j', hj1_le]
+      have hsemistable :
+          Z.IsSemistable
+            (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
               ((Subobject.map i).obj (F.chain j'.succ))
               ((Subobject.map i).monotone
-                (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))))) =
-              F.φ j' :=
-          (phase_cokernel_mapMono_eq_local Z i
-            (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))).trans (F.factor_phase j')
-        have hφj : φ j = F.φ j' := by
-          simp [φ, hj, j']
-        exact ((phase_cokernel_ofLE_congr_local Z hcast hsucc).trans hphase).trans hφj.symm
-      · have hj_eq : (j : ℕ) = F.n := by grind
-        have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
-        have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
-        have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
-        have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
-        have hφj : φ j = Z.phase B := by
-          simp [φ, hj]
-        have htarget :
-            Z.phase (cokernel (Subobject.ofLE K ⊤ le_top)) =
-              Z.phase (cokernel K.arrow) := by
-          exact Z.phase_eq_of_iso
-            ((cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _).symm)
-        have htarget' : Z.phase (cokernel (Subobject.ofLE K ⊤ le_top)) = Z.phase B := by
-          exact htarget.trans (Z.phase_eq_of_iso eK)
-        exact ((phase_cokernel_ofLE_congr_local Z hcast_obj hsucc_obj).trans htarget').trans
-          hφj.symm
-    factor_semistable := by
-      intro j
-      by_cases hj : (j : ℕ) < F.n
-      · let j' : Fin F.n := ⟨j, hj⟩
-        have hcast :
-            newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
-          have hj_le : (j : ℕ) ≤ F.n := by grind
-          simp [newChain, j', hj_le]
-        have hsucc :
-            newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
-          have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
-          simp [newChain, j', hj1_le]
-        have hsemistable :
-            Z.IsSemistable
-              (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
-                ((Subobject.map i).obj (F.chain j'.succ))
-                ((Subobject.map i).monotone
-                  (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))))) :=
-          (isSemistable_cokernel_mapMono_iff_local Z i
-            (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))).2 (F.factor_semistable j')
-        exact isSemistable_cokernel_ofLE_congr_local Z hcast hsucc hsemistable
-      · have hj_eq : (j : ℕ) = F.n := by grind
-        have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
-        have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
-        have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
-        have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
-        let eTop : B ≅ cokernel (Subobject.ofLE K ⊤ le_top) :=
-          eK.symm ≪≫ (cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _)
-        exact isSemistable_cokernel_ofLE_congr_local Z hcast_obj hsucc_obj <|
-          Z.isSemistable_of_iso eTop hB
-  }, by simp [φ]⟩
+                (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))))) :=
+        (isSemistable_cokernel_mapMono_iff_local Z i
+          (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))).2 (F.factor_semistable j')
+      exact isSemistable_cokernel_ofLE_congr_local Z hcast hsucc hsemistable
+    · have hj_eq : (j : ℕ) = F.n := by grind
+      have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
+      have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
+      have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
+      have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
+      let eTop : B ≅ cokernel (Subobject.ofLE K ⊤ le_top) :=
+        eK.symm ≪≫ (cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _)
+      exact isSemistable_cokernel_ofLE_congr_local Z hcast_obj hsucc_obj <|
+        Z.isSemistable_of_iso eTop hB
+  · -- existential witness
+    simp [φ]
 
 end AbelianHelpers
 
