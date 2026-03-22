@@ -471,11 +471,11 @@ theorem heart_phase_le_of_epi
     have pi_pos := Real.pi_pos
     have hargK : Complex.arg (h.Z.Zobj (kernel p)) ≤ Complex.arg (h.Z.Zobj E) := by
       unfold StabilityFunction.phase at hK_sub
-      exact le_of_mul_le_mul_left (by linarith) (div_pos one_pos pi_pos)
+      exact le_of_mul_le_mul_left (by grind) (div_pos one_pos pi_pos)
     have hargQ : Complex.arg (h.Z.Zobj Q) < Complex.arg (h.Z.Zobj E) := by
       unfold HeartPhase at hlt
       unfold StabilityFunction.phase at hlt
-      exact lt_of_mul_lt_mul_left (by linarith) (div_pos one_pos pi_pos).le
+      exact lt_of_mul_lt_mul_left (by grind) (div_pos one_pos pi_pos).le
     rw [hadd] at hargK hargQ
     have hub := arg_add_le_max hK_mem hQ_mem
     have hQ_lt_max :

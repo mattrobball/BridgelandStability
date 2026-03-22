@@ -385,7 +385,7 @@ theorem SectorFiniteLength.of_wide
       σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) ≤
         σ.slicing.intervalProp C (t - 4 * ε₀) (t + 4 * ε₀) := by
     intro F hF
-    exact σ.slicing.intervalProp_mono C (by linarith) (by linarith) hF
+    exact σ.slicing.intervalProp_mono C (by grind) (by grind) hF
   exact interval_thinFiniteLength_of_inclusion_strict
     (C := C) (s₁ := σ.slicing) (s₂ := σ.slicing)
     (a₁ := t - 2 * ε₀) (b₁ := t + 2 * ε₀)

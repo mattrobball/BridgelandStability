@@ -64,7 +64,7 @@ theorem P_in_deformedGtPred
     · rcases G.semistable j with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
       · exact absurd hZ hj
       · have hc := phase_confinement_from_stabSeminorm C σ W hW hab' hε
-          (by linarith) hthin' hsin hSS'
+          (by grind) hthin' hsin hSS'
         exact σ.slicing.intervalProp_of_intrinsic_phases C hj
           (by linarith [(hGφ j).1, hc.1]) (by linarith [(hGφ j).2, hc.2])
   -- Step 3: Find last nonzero factor j₀, prove G.φ j₀ > s - ε ≥ t via Lemma 3.4.
@@ -153,7 +153,7 @@ theorem P_in_deformedGtPred
   rcases G.semistable j₀ with hZ₀ | ⟨a₀, b₀, hab₀, hthin₀, _, _, hSS₀⟩
   · exact absurd hZ₀ hj₀ne
   · have hconf₀ := phase_confinement_from_stabSeminorm C σ W hW hab₀ hε
-      (by linarith) hthin₀ hsin hSS₀
+      (by grind) hthin₀ hsin hSS₀
     -- s ≤ φ⁻(factor j₀) ≤ φ⁺(factor j₀) < G.φ j₀ + ε
     have hj₀_gt : s - ε < G.φ j₀ := by
       have h1 : s ≤ σ.slicing.phiMinus C (P.triangle j₀).obj₃ hj₀ne := by
@@ -195,7 +195,7 @@ theorem P_in_deformedLtPred
     · rcases G.semistable j with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
       · exact absurd hZ hj
       · have hc := phase_confinement_from_stabSeminorm C σ W hW hab' hε
-          (by linarith) hthin' hsin hSS'
+          (by grind) hthin' hsin hSS'
         exact σ.slicing.intervalProp_of_intrinsic_phases C hj
           (by linarith [(hGφ j).1, hc.1]) (by linarith [(hGφ j).2, hc.2])
   -- Find first nonzero factor j₁ (min index). Dual of P_in_deformedGtPred:
@@ -214,7 +214,7 @@ theorem P_in_deformedLtPred
   rcases G.semistable j₁ with hZ₁ | ⟨a₁, b₁, hab₁, hthin₁, _, _, hSS₁⟩
   · exact absurd hZ₁ hj₁ne
   · have hconf₁ := phase_confinement_from_stabSeminorm C σ W hW hab₁ hε
-      (by linarith) hthin₁ hsin hSS₁
+      (by grind) hthin₁ hsin hSS₁
     -- Dual Lemma 3.4: σ.φ⁺(factor j₁) ≤ σ.φ⁺(E) = s
     -- All factors before j₁ are zero → chain(j₁) ≅ 0 → chain(j₁+1) ≅ factor(j₁)
     -- then phiPlus monotone along chain to chain(n) ≅ E.
@@ -507,7 +507,7 @@ theorem deformedGtLe_triangle
       have hthin_ab : b - a + 2 * ε < 1 := by simp [a, b]; grind
       -- ThinFiniteLengthInInterval from WideSectorFiniteLength (center t+ε₀)
       have hFL_ab : ThinFiniteLengthInInterval (C := C) σ a b :=
-        ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ (by linarith)
+        ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ (by grind)
           (show (t + ε₀) - 4 * ε₀ ≤ a by simp [a]; grind)
           (show b ≤ (t + ε₀) + 4 * ε₀ by simp [b]; grind) hWide
       -- MID ∈ intervalProp(a+2ε, b-4ε) = intervalProp(t-ε₀, t+ε₀)

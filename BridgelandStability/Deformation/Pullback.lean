@@ -462,7 +462,7 @@ theorem semistable_of_upper_inclusion
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
     (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
   have hEI₂ : σ.slicing.intervalProp C a b₂ E :=
-    σ.slicing.intervalProp_mono C (show a ≤ a by linarith) hb hSS.1
+    σ.slicing.intervalProp_mono C (show a ≤ a by grind) hb hSS.1
   have henv_hi₂ : ψ ≤ b₂ - ε₀ := by
     linarith
   have hb₁_le : b₁ ≤ a + 1 := by
@@ -487,7 +487,7 @@ theorem semistable_of_upper_inclusion
           wPhaseOf (W (K₀.of C F)) ((a + b₂) / 2) < a - ε₀ + 1 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert₂ F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   have hpert₂_hi :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b₂ →
@@ -495,14 +495,14 @@ theorem semistable_of_upper_inclusion
           wPhaseOf (W (K₀.of C F)) ((a + b₂) / 2) < b₂ + ε₀ := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert₂ F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   have hWindow₂ :
       ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G →
         a - ε₀ < wPhaseOf (W (K₀.of C G)) ((a + b₂) / 2) ∧
           wPhaseOf (W (K₀.of C G)) ((a + b₂) / 2) < b₂ + ε₀ := by
     intro G hG hGne
-    exact ⟨wPhaseOf_gt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_lo,
-      wPhaseOf_lt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_hi⟩
+    exact ⟨wPhaseOf_gt_of_intervalProp C σ hGne W (by grind) hG hW_ne₂ hpert₂_lo,
+      wPhaseOf_lt_of_intervalProp C σ hGne W (by grind) hG hW_ne₂ hpert₂_hi⟩
   have hW_ne_big :
       ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G → W (K₀.of C G) ≠ 0 := by
     intro G hG hGne
@@ -512,7 +512,7 @@ theorem semistable_of_upper_inclusion
     hthin₂ ?_
   intro K Q f₁ f₂ f₃ hT hKI hQI hKne
   letI : Fact (a < b₂) := ⟨hab₂⟩
-  letI : Fact (b₂ - a ≤ 1) := ⟨by linarith⟩
+  letI : Fact (b₂ - a ≤ 1) := ⟨by grind⟩
   let KI₂ : σ.slicing.IntervalCat C a b₂ := ⟨K, hKI⟩
   let EI₂ : σ.slicing.IntervalCat C a b₂ := ⟨E, hEI₂⟩
   let QI₂ : σ.slicing.IntervalCat C a b₂ := ⟨Q, hQI⟩
@@ -538,7 +538,7 @@ theorem semistable_of_upper_inclusion
     intervalProp_of_upper_boundary_triangle (C := C) (s := σ.slicing)
       hab₁ hab₂ hb₁_le hQI hX_ge hY₁ hTQ
   have hY₂ : σ.slicing.intervalProp C a b₂ Y :=
-    σ.slicing.intervalProp_mono C (show a ≤ a by linarith) hb hY₁
+    σ.slicing.intervalProp_mono C (show a ≤ a by grind) hb hY₁
   let XI₂ : σ.slicing.IntervalCat C a b₂ := ⟨X, hX₂⟩
   let YI₂ : σ.slicing.IntervalCat C a b₂ := ⟨Y, hY₂⟩
   let xQ : XI₂ ⟶ QI₂ := ObjectProperty.homMk fX

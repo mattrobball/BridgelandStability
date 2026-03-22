@@ -96,11 +96,11 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           exact neg_ne_zero.mpr hSS.2.2.1
         · -- wPhaseOf(W(K₀.of C (X⟦1⟧))) ((a+b)/2 + 1) = φ + 1
           change wPhaseOf (W (K₀.of C (X⟦(1 : ℤ)⟧))) ((a + 1 + (b + 1)) / 2) = φ + 1
-          rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
+          rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by grind]
           rw [K₀.of_shift_one, map_neg]
           have hphase : wPhaseOf (W (K₀.of C X)) ((a + b) / 2) = φ := hSS.2.2.2.1
           have hWne : W (K₀.of C X) ≠ 0 := hSS.2.2.1
-          exact (wPhaseOf_neg hWne _).trans (by linarith)
+          exact (wPhaseOf_neg hWne _).trans (by grind)
         · -- Semistability transport: shift K → X⟦1⟧ → Q by -1, compose with iso
           -- to get K⟦-1⟧ → X → Q⟦-1⟧ (dist), apply X's semistability
           have hT_sh := Triangle.shift_distinguished _ hT (-1 : ℤ)
@@ -138,13 +138,13 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           rw [K₀.of_shift_neg_one, map_neg] at hsem
           -- hsem : wPhaseOf (-W (K₀.of C K)) ((a + b) / 2) ≤ φ
           change wPhaseOf (W (K₀.of C K)) ((a + 1 + (b + 1)) / 2) ≤ φ + 1
-          rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
+          rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by grind]
           by_cases hWK : W (K₀.of C K) = 0
           · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
           · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
-            rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
+            rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by grind] at key
             have key2 := wPhaseOf_add_two hWK ((a + b) / 2 - 1)
-            rw [show (a + b) / 2 - 1 + 2 = (a + b) / 2 + 1 from by ring] at key2
+            rw [show (a + b) / 2 - 1 + 2 = (a + b) / 2 + 1 from by grind] at key2
             linarith
     · -- Backward: deformedPred (φ+1) (X⟦1⟧) → deformedPred φ X
       intro h
@@ -171,7 +171,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
             rw [K₀.of_shift_one, map_neg, h, neg_zero])
         · -- wPhaseOf(W(K₀.of C X)) ((a-1+b-1)/2) = φ
           change wPhaseOf (W (K₀.of C X)) ((a - 1 + (b - 1)) / 2) = φ
-          rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
+          rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by grind]
           -- hSS.2.2.2.1 : wPhaseOf (W (K₀.of C (X⟦1⟧))) ((a+b)/2) = φ + 1
           have hphase : wPhaseOf (-W (K₀.of C X)) ((a + b) / 2) = φ + 1 := by
             have := hSS.2.2.2.1
@@ -182,7 +182,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
             rw [K₀.of_shift_one, map_neg, neg_eq_zero]
             exact h
           have key := wPhaseOf_neg hWne ((a + b) / 2 - 1)
-          rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
+          rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by grind] at key
           linarith
         · -- Semistability: transport via ⟦1⟧
           -- Shift triangle K → X → Q by 1 to get K⟦1⟧ → X⟦1⟧ → Q⟦1⟧
@@ -208,14 +208,14 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           rw [K₀.of_shift_one, map_neg] at hsem
           -- hsem : wPhaseOf (-W (K₀.of C K)) ((a + b) / 2) ≤ φ + 1
           change wPhaseOf (W (K₀.of C K)) ((a - 1 + (b - 1)) / 2) ≤ φ
-          rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
+          rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by grind]
           by_cases hWK : W (K₀.of C K) = 0
           · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
           · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
-            rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
+            rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by grind] at key
             linarith
   hom_vanishing ψ₁ ψ₂ A B hlt hA hB f :=
-    σ.hom_eq_zero_of_deformedPred C W hW hε (by linarith) (by linarith) hsin hA hB hlt f
+    σ.hom_eq_zero_of_deformedPred C W hW hε (by grind) (by grind) hsin hA hB hlt f
   hn_exists := fun E ↦
     deformedSlicing_hn_exists C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin E
 
@@ -296,7 +296,7 @@ theorem deformed_intervalProp_subset_sigma_intervalProp
     rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
     · exact Or.inl hZ_i
     · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
-        hε (by linarith) hthin_i hsin hSS_i
+        hε (by grind) hthin_i hsin hSS_i
       exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
         (by
           have hleft := (hF i).1

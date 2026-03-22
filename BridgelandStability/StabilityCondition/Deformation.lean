@@ -117,7 +117,7 @@ theorem StabilityCondition.exists_epsilon0_tenth (σ : StabilityCondition C) :
   obtain ⟨ε₁, hε₁, hε₁8, hWide₁⟩ := σ.exists_epsilon0 C
   refine ⟨ε₁ / 2, by positivity, by linarith, ?_⟩
   exact wideSectorFiniteLength_mono C σ hε₁ hε₁8 hWide₁
-    (by positivity) (by linarith) (by linarith)
+    (by positivity) (by grind) (by grind)
 
 /-- The affine interpolation between the central charges of `σ` and `τ`. -/
 def linearInterpolationZ (σ τ : StabilityCondition C) (t : ℝ) : K₀ C →+ ℂ :=
@@ -273,11 +273,11 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
   have hMZ_bound : M_Z * (1 + c) < c ^ 2 := by
     calc M_Z * (1 + c)
         < Real.sin (Real.pi * ε) * (1 + c) :=
-          mul_lt_mul_of_pos_right hMZ_lt_sin (by linarith)
+          mul_lt_mul_of_pos_right hMZ_lt_sin (by grind)
       _ ≤ (Real.pi * ε) * 2 := by
           have hcos_le : c ≤ 1 := Real.cos_le_one _
           have : 1 + c ≤ 2 := by linarith
-          exact mul_le_mul hsin_le this (by linarith) (by nlinarith [Real.pi_pos])
+          exact mul_le_mul hsin_le this (by grind) (by nlinarith [Real.pi_pos])
       _ = 2 * (Real.pi * ε) := by ring
       _ < 1 - (Real.pi * ε) ^ 2 := by linarith
       _ ≤ c ^ 2 := by
@@ -305,7 +305,7 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
       rw [norm_sub_rev]
     rw [this]
     exact lt_of_le_of_lt hZbound
-      ((ENNReal.ofReal_lt_ofReal_iff (by linarith)).mpr hbound_lt_cos)
+      ((ENNReal.ofReal_lt_ofReal_iff (by grind)).mpr hbound_lt_cos)
   have hZτ_ne : stabSeminorm C τ (σ.Z - τ.Z) ≠ ⊤ :=
     ne_top_of_lt (lt_trans hZτ_bound ENNReal.ofReal_lt_top)
   set N_Z := (stabSeminorm C τ (σ.Z - τ.Z)).toReal with hNZ_def
@@ -455,13 +455,13 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ
     min (1 / 16) (min (gapZ / ((K.toReal + 1) * (2 * Real.pi))) (gapd / 2))
   have hδ_pos : 0 < δ := by
     dsimp [δ]
-    refine lt_min (by norm_num) ?_
+    refine lt_min (by grind) ?_
     refine lt_min ?_ ?_
     · exact div_pos hgapZ (by positivity)
     · linarith
   have hδ_lt : δ < 1 / 8 := by
     dsimp [δ]
-    exact lt_of_le_of_lt (min_le_left _ _) (by norm_num)
+    exact lt_of_le_of_lt (min_le_left _ _) (by grind)
   have hπδ : 0 < Real.pi * δ := by positivity
   have hsinδ_nn : 0 ≤ Real.sin (Real.pi * δ) :=
     (Real.sin_pos_of_pos_of_lt_pi hπδ (by nlinarith [Real.pi_pos])).le
@@ -641,7 +641,7 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       have h0' : slicingDist C (γ 0).slicing σ.slicing < ENNReal.ofReal ε := by
         simpa [slicingDist_symm] using h0
       exact lt_trans h0' <|
-        (ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 (by linarith)
+        (ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 (by grind)
   have hγ1 : γ 1 = τ := by
     apply StabilityCondition.eq_of_same_Z_near C (γ 1) τ
     · simpa [γ, W] using (hγZ 1).trans (linearInterpolationZ_one C σ τ)

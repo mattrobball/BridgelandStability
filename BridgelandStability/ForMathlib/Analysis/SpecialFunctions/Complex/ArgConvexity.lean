@@ -92,7 +92,7 @@ lemma mem_upperHalfPlaneUnion_of_add {z₁ z₂ : ℂ}
         rcases h₂ with h | ⟨_, h_re⟩
         · exact absurd him₂ (ne_of_gt h)
         · exact h_re
-      exact ⟨by linarith, by linarith⟩
+      exact ⟨by linarith, by grind⟩
 
 /-! ### Arg convexity for sums in the upper half plane
 

@@ -371,8 +371,8 @@ noncomputable def componentTopologicalLinearLocalModel
           set gap := r - d
           have hgap : 0 < gap := sub_pos.mpr hd_lt
           set δ := min (1/16 : ℝ) (gap / ((K.toReal + 1) * (2 * Real.pi)))
-          have hδ_pos : 0 < δ := lt_min (by norm_num) (div_pos hgap (by positivity))
-          have hδ_lt : δ < 1/8 := lt_of_le_of_lt (min_le_left _ _) (by norm_num)
+          have hδ_pos : 0 < δ := lt_min (by grind) (div_pos hgap (by positivity))
+          have hδ_lt : δ < 1/8 := lt_of_le_of_lt (min_le_left _ _) (by grind)
           have hπδ : 0 < Real.pi * δ := by positivity
           have hsin_nn : 0 ≤ Real.sin (Real.pi * δ) :=
             (Real.sin_pos_of_pos_of_lt_pi hπδ (by nlinarith [Real.pi_pos])).le

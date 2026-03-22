@@ -72,7 +72,7 @@ def StabilityCondition.skewedStabilityFunction_of_near (σ : StabilityCondition 
     SkewedStabilityFunction C σ.slicing a b where
   W := W
   α := (a + b) / 2
-  hα_mem := ⟨by linarith, by linarith⟩
+  hα_mem := ⟨by linarith, by grind⟩
   nonzero := fun E φ _ _ hP hE ↦
     σ.W_ne_zero_of_seminorm_lt_one C W hW hP hE
 
@@ -93,9 +93,9 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
     constructor
     · calc a < σ.slicing.phiMinus C E hE :=
             σ.slicing.phiMinus_gt_of_intervalProp C hE hI
-        _ = F.φ ⟨F.n - 1, by omega⟩ :=
+        _ = F.φ ⟨F.n - 1, by grind⟩ :=
             σ.slicing.phiMinus_eq C E hE F hn hlast
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
     · calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
         _ = σ.slicing.phiPlus C E hE :=
@@ -181,7 +181,7 @@ theorem StabilityCondition.W_ne_zero_of_intervalProp (σ : StabilityCondition C)
     rcases hI with hZ | ⟨F, hF⟩
     · exact absurd hZ hE
     · have hn : 0 < F.n := by
-        by_contra h; exact hE (F.toPostnikovTower.zero_isZero (by omega))
+        by_contra h; exact hE (F.toPostnikovTower.zero_isZero (by grind))
       linarith [(hF ⟨0, hn⟩).1, (hF ⟨0, hn⟩).2]
   have hcos_pos : 0 < Real.cos (Real.pi * (b - a) / 2) :=
     Real.cos_pos_of_mem_Ioo
@@ -351,7 +351,7 @@ theorem wPhaseOf_add_two {w : ℂ} (hw : w ≠ 0) (α : ℝ) :
     wPhaseOf w (α + 2) = wPhaseOf w α + 2 := by
   have h1 := wPhaseOf_neg hw α
   have h2 := wPhaseOf_neg (neg_ne_zero.mpr hw) (α + 1)
-  rw [neg_neg, show (α + 1 : ℝ) + 1 = α + 2 from by ring] at h2
+  rw [neg_neg, show (α + 1 : ℝ) + 1 = α + 2 from by grind] at h2
   linarith
 
 /-! ### W-semistability in interval categories -/

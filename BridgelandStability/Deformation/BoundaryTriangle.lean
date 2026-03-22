@@ -60,14 +60,14 @@ theorem exists_upper_boundary_triangle
   · have hY_minus : a < s.phiMinus C Y hYZ :=
       s.phiMinus_gt_of_triangle_with_geProp C hYZ
         (fun hQZ ↦ s.phiMinus_gt_of_intervalProp C hQZ hQ)
-        hX_ge (by linarith) hT
+        hX_ge (by grind) hT
     have hY_plus : s.phiPlus C Y hYZ < b₁ := s.phiPlus_lt_of_ltProp C hYZ hY_lt
     obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hYZ
     exact Or.inr ⟨F, fun i ↦ ⟨by
       calc
         a < s.phiMinus C Y hYZ := hY_minus
-        _ = F.φ ⟨F.n - 1, by omega⟩ := s.phiMinus_eq C Y hYZ F hn hlast
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)), by
+        _ = F.φ ⟨F.n - 1, by grind⟩ := s.phiMinus_eq C Y hYZ F hn hlast
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)), by
         calc
           F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
@@ -106,8 +106,8 @@ theorem wPhaseOf_gt_of_geProp_target
     constructor
     · calc
         ψ + ε₀ ≤ σ.slicing.phiMinus C E hEne := hphi_lower
-        _ = F.φ ⟨F.n - 1, by omega⟩ := σ.slicing.phiMinus_eq C E hEne F hn hlast
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+        _ = F.φ ⟨F.n - 1, by grind⟩ := σ.slicing.phiMinus_eq C E hEne F hn hlast
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
     · calc
         F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
         _ = σ.slicing.phiPlus C E hEne := (σ.slicing.phiPlus_eq C E hEne F hn hfirst).symm
@@ -176,20 +176,20 @@ theorem wPhaseOf_gt_of_geProp_target
         wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < a - ε₀ + 1 := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   have hpert_lt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
       b + ε₀ - 1 < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
         wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < b + ε₀ := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   have hphase_lo :
       a - ε₀ < wPhaseOf (W (K₀.of C E)) ((a + b) / 2) :=
-    wPhaseOf_gt_of_intervalProp C σ hEne W (by linarith) hI hW_ne_ab hpert_gt
+    wPhaseOf_gt_of_intervalProp C σ hEne W (by grind) hI hW_ne_ab hpert_gt
   have hphase_hi :
       wPhaseOf (W (K₀.of C E)) ((a + b) / 2) < b + ε₀ :=
-    wPhaseOf_lt_of_intervalProp C σ hEne W (by linarith) hI hW_ne_ab hpert_lt
+    wPhaseOf_lt_of_intervalProp C σ hEne W (by grind) hI hW_ne_ab hpert_lt
   have hrange :
       wPhaseOf (W (K₀.of C E)) ((a + b) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) := by
     constructor
@@ -251,7 +251,7 @@ theorem wPhaseOf_gt_of_upper_boundary_triangle
       hab₁ hab₂ hb₁ hQ hX_ge hY hT
   have hX_ge' : σ.slicing.geProp C (ψ + ε₀) X := by
     exact ((σ.slicing.geProp_anti (C := C) (t₁ := ψ + ε₀) (t₂ := b₁)
-      (by linarith)) X) hX_ge
+      (by grind)) X) hX_ge
   have henv_hi₂ : ψ ≤ b₂ - ε₀ := by
     linarith
   exact wPhaseOf_gt_of_geProp_target (C := C) σ W hW
@@ -277,8 +277,8 @@ theorem wPhaseOf_gt_of_upper_source_boundary_target
   exact wPhaseOf_gt_of_upper_boundary_triangle
     (C := C) (σ := σ) (W := W) (hW := hW)
     (a := ψ - ε₀) (b₁ := ψ + ε₀) (b₂ := φ + ε₀) (ψ := ψ) (ε₀ := ε₀)
-    (by linarith) (by linarith) (by linarith [hψ_le]) hQ hX_ge hY hXne
-    hε₀ hε₀2 (by linarith) (by linarith) hthin hsin hT
+    (by grind) (by grind) (by linarith [hψ_le]) hQ hX_ge hY hXne
+    hε₀ hε₀2 (by grind) (by grind) hthin hsin hT
 
 theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -297,7 +297,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
     ψ < wPhaseOf (W (K₀.of C X)) (((ψ - ε₀) + (φ + ε₀)) / 2) := by
   have hY :
       σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) Y := by
-    exact σ.slicing.intervalProp_of_semistable C hY_Pφ (by linarith) (by linarith)
+    exact σ.slicing.intervalProp_of_semistable C hY_Pφ (by grind) (by grind)
   exact wPhaseOf_gt_of_upper_source_boundary_target
     (C := C) (σ := σ) (W := W) (hW := hW)
     hQ hX_ge hY hXne hε₀ hε₀2 hε₀8 hψ_lo hψ_hi hψ_le hsin hT
@@ -325,8 +325,8 @@ theorem wPhaseOf_lt_of_leProp_source
     constructor
     · calc
         a < σ.slicing.phiMinus C E hEne := σ.slicing.phiMinus_gt_of_intervalProp C hEne hI
-        _ = F.φ ⟨F.n - 1, by omega⟩ := σ.slicing.phiMinus_eq C E hEne F hn hlast
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+        _ = F.φ ⟨F.n - 1, by grind⟩ := σ.slicing.phiMinus_eq C E hEne F hn hlast
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
     · calc
         F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
         _ = σ.slicing.phiPlus C E hEne := (σ.slicing.phiPlus_eq C E hEne F hn hfirst).symm
@@ -349,7 +349,7 @@ theorem wPhaseOf_lt_of_leProp_source
       (f := fun i ↦ -(W (K₀.of C (P.factor i)) * rot).im)
       (fun i _ ↦ ?_) (Finset.mem_univ ⟨0, hn⟩))
     · obtain ⟨hlo_pert, hhi_pert⟩ := hpert _ _ (F.semistable ⟨0, hn⟩) hfirst
-          (hphases ⟨0, hn⟩).1 (lt_of_le_of_lt (hphases ⟨0, hn⟩).2 <| by linarith)
+          (hphases ⟨0, hn⟩).1 (lt_of_le_of_lt (hphases ⟨0, hn⟩).2 <| by grind)
       have hlo_pert' :
           F.φ ⟨0, hn⟩ - ε₀ <
             wPhaseOf (W (K₀.of C (P.factor ⟨0, hn⟩))) ((a + b) / 2) := by
@@ -370,7 +370,7 @@ theorem wPhaseOf_lt_of_leProp_source
     · by_cases hi : IsZero (P.factor i)
       · simp [P, K₀.of_isZero C hi]
       · obtain ⟨hlo_pert, hhi_pert⟩ := hpert _ _ (F.semistable i) hi (hphases i).1
-            (lt_of_le_of_lt (hphases i).2 <| by linarith)
+            (lt_of_le_of_lt (hphases i).2 <| by grind)
         have hlo_pert' :
             F.φ i - ε₀ <
               wPhaseOf (W (K₀.of C (P.factor i))) ((a + b) / 2) := by
@@ -396,22 +396,22 @@ theorem wPhaseOf_lt_of_leProp_source
         wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < a - ε₀ + 1 := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   have hpert_lt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
       b + ε₀ - 1 < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
         wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < b + ε₀ := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   have hphase_lo :
       a - ε₀ < wPhaseOf (W (K₀.of C E)) ((a + b) / 2) :=
     wPhaseOf_gt_of_intervalProp C σ hEne W
-      (by linarith) hI hW_ne_ab hpert_gt
+      (by grind) hI hW_ne_ab hpert_gt
   have hphase_hi :
       wPhaseOf (W (K₀.of C E)) ((a + b) / 2) < b + ε₀ :=
     wPhaseOf_lt_of_intervalProp C σ hEne W
-      (by linarith) hI hW_ne_ab hpert_lt
+      (by grind) hI hW_ne_ab hpert_lt
   have hrange :
       wPhaseOf (W (K₀.of C E)) ((a + b) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) := by
     constructor
@@ -449,7 +449,7 @@ theorem exists_lower_boundary_triangle
     · exact Or.inl hXZ
     · have hX_plus : s.phiPlus C X hXZ < b :=
         s.phiPlus_lt_of_triangle_with_leProp C hXZ
-          (fun hKZ ↦ s.phiPlus_lt_of_intervalProp C hKZ hK) hY_le (by linarith) hT
+          (fun hKZ ↦ s.phiPlus_lt_of_intervalProp C hKZ hK) hY_le (by grind) hT
       have hX_minus : a₁ < s.phiMinus C X hXZ :=
         s.phiMinus_gt_of_gtProp C hXZ hX_gt
       exact s.intervalProp_of_intrinsic_phases C hXZ hX_minus hX_plus
@@ -481,7 +481,7 @@ theorem intervalProp_of_lower_boundary_triangle
     have hY_minus : a₂ < s.phiMinus C Y hY0 :=
       s.phiMinus_gt_of_triangle_with_geProp C hY0
         (fun hK0 ↦ s.phiMinus_gt_of_intervalProp C hK0 hK)
-        hX_ge (by linarith) hT
+        hX_ge (by grind) hT
     exact s.intervalProp_of_intrinsic_phases C hY0 hY_minus hY_plus
 
 end
@@ -508,9 +508,9 @@ theorem wPhaseOf_lt_of_lower_boundary_triangle
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
       ha₁ ha hK hX hY_le hT
   have hY_le' : σ.slicing.leProp C (ψ - ε₀) Y := by
-    exact ((σ.slicing.leProp_mono (C := C) (t₁ := a₁) (t₂ := ψ - ε₀) (by linarith)) Y) hY_le
+    exact ((σ.slicing.leProp_mono (C := C) (t₁ := a₁) (t₂ := ψ - ε₀) (by grind)) Y) hY_le
   exact wPhaseOf_lt_of_leProp_source (C := C) σ W hW
-    hY_I hYne hY_le' hε₀ hε₀2 (by linarith) henv_hi hthin hsin
+    hY_I hYne hY_le' hε₀ hε₀2 (by grind) henv_hi hthin hsin
 
 theorem wPhaseOf_lt_of_lower_source_boundary_target
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -532,8 +532,8 @@ theorem wPhaseOf_lt_of_lower_source_boundary_target
   exact wPhaseOf_lt_of_lower_boundary_triangle
     (C := C) (σ := σ) (W := W) (hW := hW)
     (a₁ := ψ - ε₀) (a₂ := φ - ε₀) (b := ψ + ε₀) (ψ := ψ) (ε₀ := ε₀)
-    (by linarith) (by linarith [hφ_le]) hK hX hY_le hYne
-    hε₀ hε₀2 (by linarith) (by linarith) hthin hsin hT
+    (by grind) (by linarith [hφ_le]) hK hX hY_le hYne
+    hε₀ hε₀2 (by grind) (by grind) hthin hsin hT
 
 theorem wPhaseOf_lt_of_lower_source_boundary_P_phi
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -552,7 +552,7 @@ theorem wPhaseOf_lt_of_lower_source_boundary_P_phi
     wPhaseOf (W (K₀.of C Y)) (((φ - ε₀) + (ψ + ε₀)) / 2) < ψ := by
   have hX :
       σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) X := by
-    exact σ.slicing.intervalProp_of_semistable C hX_Pφ (by linarith) (by linarith)
+    exact σ.slicing.intervalProp_of_semistable C hX_Pφ (by grind) (by grind)
   exact wPhaseOf_lt_of_lower_source_boundary_target
     (C := C) (σ := σ) (W := W) (hW := hW)
     hK hX hY_le hYne hε₀ hε₀2 hε₀8 hψ_hi hφ_le hsin hT
@@ -582,7 +582,7 @@ theorem exists_upper_boundary_strictShortExact
     intervalProp_of_upper_boundary_triangle (C := C) (s := s)
       (a := a) (b₁ := b₁) (b₂ := b₂) hab₁ hab₂ hb₁_le hQ hX_ge hY_small hT⟩
   let YI : s.IntervalCat C a b₂ := ⟨Y,
-    s.intervalProp_mono C (show a ≤ a by linarith) hb hY_small⟩
+    s.intervalProp_mono C (show a ≤ a by grind) hb hY_small⟩
   let QI : s.IntervalCat C a b₂ := ⟨Q, hQ⟩
   let fi : XI ⟶ QI := ObjectProperty.homMk f
   let gi : QI ⟶ YI := ObjectProperty.homMk g
@@ -615,7 +615,7 @@ theorem exists_lower_boundary_strictShortExact
     exists_lower_boundary_triangle (C := C) (s := s)
       (a₁ := a₁) (a₂ := a₂) (b := b) ha₁ hK
   let XI : s.IntervalCat C a₂ b := ⟨X,
-    s.intervalProp_mono C ha (show b ≤ b by linarith) hX_small⟩
+    s.intervalProp_mono C ha (show b ≤ b by grind) hX_small⟩
   let YI : s.IntervalCat C a₂ b := ⟨Y,
     intervalProp_of_lower_boundary_triangle (C := C) (s := s)
       (a₁ := a₁) (a₂ := a₂) (b := b) ha₁ ha
@@ -656,7 +656,7 @@ theorem intervalProp_of_wSemistable_upper_target
     intervalProp_of_upper_boundary_triangle (C := C) (s := σ.slicing)
       hab₁ hab₂ hb₁_le hSS.1 hX_ge hY₁ hTQ
   have hY₂ : σ.slicing.intervalProp C a b₂ Y :=
-    σ.slicing.intervalProp_mono C (show a ≤ a by linarith) hb hY₁
+    σ.slicing.intervalProp_mono C (show a ≤ a by grind) hb hY₁
   by_cases hX_zero : IsZero X
   · exact σ.slicing.intervalProp_of_triangle C (Or.inl hX_zero) hY₁ hTQ
   · have hX_phase_gt :
@@ -673,7 +673,7 @@ theorem intervalProp_of_wSemistable_upper_target
         simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.2.2.2.1
       linarith
     · letI : Fact (a < b₂) := ⟨hab₂⟩
-      letI : Fact (b₂ - a ≤ 1) := ⟨by linarith⟩
+      letI : Fact (b₂ - a ≤ 1) := ⟨by grind⟩
       let EI₂ : σ.slicing.IntervalCat C a b₂ := ⟨E, hSS.1⟩
       let XI₂ : σ.slicing.IntervalCat C a b₂ := ⟨X, hX₂⟩
       let YI₂ : σ.slicing.IntervalCat C a b₂ := ⟨Y, hY₂⟩
@@ -753,9 +753,9 @@ theorem intervalProp_of_wSemistable_lower_target
         (C := C) (σ := σ) (W := W) (hW := hW) ha₂ ha hSS.1 hX₂ hY_le hY_zero
         hε₀ hε₀2 henv_lo henv_hi hthin₁ hsin hTQ
     letI : Fact (a₁ < b) := ⟨ha₁⟩
-    letI : Fact (b - a₁ ≤ 1) := ⟨by linarith⟩
+    letI : Fact (b - a₁ ≤ 1) := ⟨by grind⟩
     have hX₁ : σ.slicing.intervalProp C a₁ b X :=
-      σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hX₂
+      σ.slicing.intervalProp_mono C ha (show b ≤ b by grind) hX₂
     let EI₁ : σ.slicing.IntervalCat C a₁ b := ⟨E, hSS.1⟩
     let XI₁ : σ.slicing.IntervalCat C a₁ b := ⟨X, hX₁⟩
     let YI₁ : σ.slicing.IntervalCat C a₁ b := ⟨Y, hY₁⟩

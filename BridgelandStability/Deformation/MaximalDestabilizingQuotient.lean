@@ -790,7 +790,7 @@ theorem wPhaseOf_gt_of_strictQuotient_of_inner_strip
     (C := C) (σ := σ) (W := W) (hW := hW) (a := a) (b := b) (ψ := a + ε₀) (ε₀ := ε₀)
     (E := B.obj)
     (hI := B.property) (hEne := hBne) (hGe := hBge') hε₀ hε₀2
-    (by linarith) (by linarith [hab_inner]) hthin hsin
+    (by grind) (by linarith [hab_inner]) hthin hsin
 
 theorem IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
     (σ : StabilityCondition C) {a b : ℝ}

@@ -69,11 +69,11 @@ def HNFiltration.single {P : ℝ → ObjectProperty C} (S : C) (φ : ℝ)
     exact ⟨eqToIso (by simp [ComposableArrows.obj', ComposableArrows.mk₁_obj])⟩
   base_isZero := isZero_zero C
   top_iso := ⟨eqToIso (by simp [ComposableArrows.right, ComposableArrows.mk₁_obj])⟩
-  zero_isZero := fun h ↦ absurd h (by omega)
+  zero_isZero := fun h ↦ absurd h (by grind)
   φ := fun _ ↦ φ
-  hφ := fun i j h ↦ absurd h (by omega)
+  hφ := fun i j h ↦ absurd h (by grind)
   semistable := fun j ↦ by
-    have : j = ⟨0, by omega⟩ := Fin.ext (by omega)
+    have : j = ⟨0, by grind⟩ := Fin.ext (by grind)
     subst this; exact hS
 
 /-- A semistable object of phase `≤ t` satisfies `leProp t`. -/
@@ -81,14 +81,14 @@ lemma Slicing.leProp_of_semistable (s : Slicing C) (φ t : ℝ) (S : C)
     (hS : (s.P φ) S) (hle : φ ≤ t) :
     s.leProp C t S :=
   Or.inr ⟨HNFiltration.single C S φ hS,
-    show 0 < 1 from by omega, hle⟩
+    show 0 < 1 from by grind, hle⟩
 
 /-- A semistable object of phase `> t` satisfies `gtProp t`. -/
 lemma Slicing.gtProp_of_semistable (s : Slicing C) (φ t : ℝ) (S : C)
     (hS : (s.P φ) S) (hgt : t < φ) :
     s.gtProp C t S :=
   Or.inr ⟨HNFiltration.single C S φ hS,
-    show 0 < 1 from by omega, hgt⟩
+    show 0 < 1 from by grind, hgt⟩
 
 /-- For a semistable nonzero object, `phiPlus = phiMinus = φ`. -/
 theorem Slicing.phiPlus_eq_phiMinus_of_semistable (s : Slicing C) {E : C} {φ : ℝ}
@@ -101,7 +101,7 @@ theorem Slicing.phiPlus_eq_phiMinus_of_semistable (s : Slicing C) {E : C} {φ : 
     exact hE
   constructor
   · exact s.phiPlus_eq C E hE F hn hne
-  · have hneL : ¬IsZero (F.triangle ⟨F.n - 1, by omega⟩).obj₃ := by
+  · have hneL : ¬IsZero (F.triangle ⟨F.n - 1, by grind⟩).obj₃ := by
       change ¬IsZero (F.triangle ⟨0, hn⟩).obj₃; exact hne
     exact s.phiMinus_eq C E hE F hn hneL
 
@@ -120,7 +120,7 @@ theorem Slicing.semistable_of_phiPlus_eq_phiMinus (s : Slicing C) {E : C}
     by_contra h
     have hn' : F.n - 1 < F.n := by omega
     exact absurd (by rw [h0, hn1, ← heq] : F.φ ⟨0, hn⟩ = F.φ ⟨F.n - 1, hn'⟩)
-      (ne_of_gt (F.hφ (Fin.mk_lt_mk.mpr (by omega))))
+      (ne_of_gt (F.hφ (Fin.mk_lt_mk.mpr (by grind))))
   -- T.obj₁ is zero, so T.mor₂ is an isomorphism
   let T := F.triangle ⟨0, hn⟩
   have hZ1 : IsZero T.obj₁ :=
@@ -128,7 +128,7 @@ theorem Slicing.semistable_of_phiPlus_eq_phiMinus (s : Slicing C) {E : C}
   have : IsIso T.mor₂ :=
     (Triangle.isZero₁_iff_isIso₂ T (F.triangle_dist ⟨0, hn⟩)).mp hZ1
   -- T.obj₂ ≅ chain(1) = chain.right ≅ E
-  have hobj₂_eq : F.chain.obj' (0 + 1) (by omega) = F.chain.obj (Fin.last F.n) :=
+  have hobj₂_eq : F.chain.obj' (0 + 1) (by grind) = F.chain.obj (Fin.last F.n) :=
     congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; omega))
   let e₂E : T.obj₂ ≅ E :=
     (Classical.choice (F.triangle_obj₂ ⟨0, hn⟩)).trans
@@ -187,7 +187,7 @@ lemma Slicing.semistable_of_HN_all_eq (s : Slicing C) {E : C} {φ : ℝ}
   by_cases hE : IsZero E
   · exact s.zero_mem' C φ E hE
   -- Each chain object is P(φ)-semistable, by induction on the chain index
-  have hchain : ∀ k (hk : k ≤ F.n), (s.P φ) (F.chain.obj' k (by omega)) := by
+  have hchain : ∀ k (hk : k ≤ F.n), (s.P φ) (F.chain.obj' k (by grind)) := by
     intro k hk
     induction k with
     | zero => exact s.zero_mem' C φ _ F.base_isZero
@@ -197,7 +197,7 @@ lemma Slicing.semistable_of_HN_all_eq (s : Slicing C) {E : C} {φ : ℝ}
       -- T.obj₁ ≅ chain(k), T.obj₃ = factor(k) ∈ P(φ)
       have hT1 : (s.P φ) T.obj₁ :=
         (s.P φ).prop_of_iso (Classical.choice (F.triangle_obj₁ ⟨k, hkn⟩)).symm
-          (ih (by omega))
+          (ih (by grind))
       have hT3 : (s.P φ) T.obj₃ := by rw [← hall ⟨k, hkn⟩]; exact F.semistable ⟨k, hkn⟩
       -- By semistable_of_triangle: T.obj₂ ∈ P(φ)
       have hT2 : (s.P φ) T.obj₂ :=
@@ -283,7 +283,7 @@ def HNFiltration.phaseShift {s : Slicing C} {E : C}
   hφ := by intro i j hij; change F.φ j - t < F.φ i - t; linarith [F.hφ hij]
   semistable := by
     intro i; show s.P (F.φ i - t + t) _
-    rw [show F.φ i - t + t = F.φ i from by ring]
+    rw [show F.φ i - t + t = F.φ i from by grind]
     exact F.semistable i
 
 /-- Phase-shifted slicing: `(s.phaseShift t).P ψ = s.P (ψ + t)`. This shifts
@@ -294,10 +294,10 @@ def Slicing.phaseShift (s : Slicing C) (t : ℝ) : Slicing C where
   zero_mem φ := s.zero_mem (φ + t)
   shift_iff φ X := by
     show s.P (φ + t) X ↔ s.P (φ + 1 + t) (X⟦(1 : ℤ)⟧)
-    rw [show φ + 1 + t = (φ + t) + 1 from by ring]
+    rw [show φ + 1 + t = (φ + t) + 1 from by grind]
     exact s.shift_iff (φ + t) X
   hom_vanishing φ₁ φ₂ A B h hA hB := by
-    exact s.hom_vanishing (φ₁ + t) (φ₂ + t) A B (by linarith) hA hB
+    exact s.hom_vanishing (φ₁ + t) (φ₂ + t) A B (by grind) hA hB
   hn_exists E := ⟨(s.hn_exists E).some.phaseShift (C := C) t⟩
 
 /-- `gtProp` of a phase-shifted slicing at cutoff `0` equals `gtProp` of the
@@ -318,7 +318,7 @@ theorem Slicing.phaseShift_gtProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiMinus]; grind
 
@@ -340,7 +340,7 @@ theorem Slicing.phaseShift_gtProp (s : Slicing C) (t u : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiMinus]
         linarith
@@ -362,7 +362,7 @@ theorem Slicing.phaseShift_leProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiPlus]; grind
 
@@ -384,7 +384,7 @@ theorem Slicing.phaseShift_leProp (s : Slicing C) (t u : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiPlus]
         linarith
@@ -406,7 +406,7 @@ theorem Slicing.phaseShift_ltProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiPlus]; grind
 
@@ -428,7 +428,7 @@ theorem Slicing.phaseShift_ltProp (s : Slicing C) (t u : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiPlus]
         linarith
@@ -450,7 +450,7 @@ theorem Slicing.phaseShift_geProp_zero (s : Slicing C) (t : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiMinus]; grind
 
@@ -472,7 +472,7 @@ theorem Slicing.phaseShift_geProp (s : Slicing C) (t u : ℝ) (E : C) :
       refine Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - t,
         fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hF, ?_⟩
       · change s.P (F.φ j - t + t) _
-        rw [show F.φ j - t + t = F.φ j from by ring]
+        rw [show F.φ j - t + t = F.φ j from by grind]
         exact F.semistable j
       · dsimp only [HNFiltration.phiMinus]
         linarith

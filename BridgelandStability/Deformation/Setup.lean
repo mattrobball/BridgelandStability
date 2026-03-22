@@ -184,8 +184,8 @@ theorem intervalProp_of_semistable_near (σ τ : StabilityCondition C) {E : C} {
   rw [Set.mem_Ioo] at hP_bds hM_bds
   constructor
   · calc φ - ε < σ.slicing.phiMinus C E hE := hM_bds.1
-      _ = F.φ ⟨F.n - 1, by omega⟩ := σ.slicing.phiMinus_eq C E hE F hn hlast
-      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+      _ = F.φ ⟨F.n - 1, by grind⟩ := σ.slicing.phiMinus_eq C E hE F hn hlast
+      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
   · calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
           F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
       _ = σ.slicing.phiPlus C E hE :=
@@ -200,7 +200,7 @@ omit [IsTriangulated C]
 theorem intervalProp_widen (s : Slicing C) {E : C} {φ ε ε' : ℝ}
     (hI : s.intervalProp C (φ - ε) (φ + ε) E) (hle : ε ≤ ε') :
     s.intervalProp C (φ - ε') (φ + ε') E :=
-  s.intervalProp_mono C (by linarith) (by linarith) hI
+  s.intervalProp_mono C (by grind) (by grind) hI
 
 /-! ### Intrinsic phase bounds from interval membership -/
 

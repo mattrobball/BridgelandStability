@@ -149,7 +149,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
         rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
         · exact absurd hZ_i hGi
         · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
-            hε (by linarith) hthin_i hsin hSS_i
+            hε (by grind) hthin_i hsin hSS_i
           have hGi_le : G.φ i ≤ Q.phiPlus C E hE := by
             rw [Q.phiPlus_eq C E hE G hnG hfirstG]
             exact G.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
@@ -157,7 +157,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
             rw [Q.phiMinus_eq C E hE G hnG hlastG]
             exact G.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
           exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
-            (by linarith) (by linarith)
+            (by grind) (by grind)
     -- Reverse: σ-HN factors → reverse phase confinement → Q-intervalProp
     have reverse : ∀ (E : C) (hE : ¬IsZero E) (δ : ℝ), 0 < δ →
         Q.intervalProp C

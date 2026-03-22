@@ -60,7 +60,7 @@ theorem interior_has_enveloped_HN_ssf
   have hε2 : ε < 1 / 4 := by linarith
   -- E ∈ P((a, b)) via interval monotonicity
   have hE_ab : σ.slicing.intervalProp C a b E :=
-    σ.slicing.intervalProp_mono C (by linarith) (by linarith) hInt
+    σ.slicing.intervalProp_mono C (by grind) (by grind) hInt
   -- Lift E to IntervalCat(a,b)
   let XI : σ.slicing.IntervalCat C a b := ⟨E, hE_ab⟩
   have hXI_ne : ¬IsZero XI := by
@@ -87,14 +87,14 @@ theorem interior_has_enveloped_HN_ssf
       wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < a - ε + 1 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   have hpert_hi : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b →
       b + ε - 1 < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
       wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith, by grind⟩
   -- Global window: L = a - ε, U = b + ε
   have hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       a - ε < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
@@ -122,14 +122,14 @@ theorem interior_has_enveloped_HN_ssf
           wPhaseOf_gt_of_strictQuotient_of_inner_strip
             (C := C) (σ := σ) (W := W) (hW := hW) hε hε2 hthin hsin
             (X := XI) hInt q hq hBne)
-      (by linarith) h_wide
+      (by grind) h_wide
       (fun hXne => σ.slicing.phiPlus_lt_of_intervalProp C hXne hInt)
   -- Phase lower bound is immediate: a + ε < G.φ j
   -- Part B: Tight upper bound on phases (Bridgeland p.23 argument)
   -- The first HN factor F₁ has phase ψ₁ < b - 3ε
   have hGn : 0 < G.n := by
     by_contra h; push_neg at h
-    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by omega))
+    exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by grind))
   set P := G.toPostnikovTower with hP_def
   -- F₁ = factor 0 is ssf-semistable with phase G.φ ⟨0, hGn⟩
   have hF₁_ss : ssf.Semistable C (P.factor ⟨0, hGn⟩) (G.φ ⟨0, hGn⟩) :=
@@ -156,11 +156,11 @@ theorem interior_has_enveloped_HN_ssf
       fun i ↦ (G.semistable i).1
     have hPn : P.n = G.n := rfl
     have hchain_int : ∀ k (hk : k ≤ P.n),
-        σ.slicing.intervalProp C a b (P.chain.obj' k (by omega)) :=
+        σ.slicing.intervalProp C a b (P.chain.obj' k (by grind)) :=
       fun k hk ↦ intervalProp_chain_of_postnikovTower σ.slicing (C := C) P hfactors_ab k hk
     have hab1 : b ≤ a + 1 := by linarith [Fact.out (p := b - a ≤ 1)]
     -- chain(1) is nonzero: chain(0) = 0, first triangle ⟹ chain(1) ≅ F₁ ≠ 0
-    have hchain1_ne : ¬IsZero (P.chain.obj' 1 (by omega)) := by
+    have hchain1_ne : ¬IsZero (P.chain.obj' 1 (by grind)) := by
       intro hZ
       let T0 := P.triangle ⟨0, hGn⟩
       have hobj₂_z : IsZero T0.obj₂ :=
@@ -171,10 +171,10 @@ theorem interior_has_enveloped_HN_ssf
       exact hF₁_ne ((Iso.isZero_iff (asIso T0.mor₂)).mp hobj₂_z)
     -- Backward induction: phiPlus(chain(k)) ≤ phiPlus(E) for 1 ≤ k ≤ P.n
     suffices hmain : ∀ d k (hle : k ≤ P.n), k + d = P.n → 0 < k →
-        (hne : ¬IsZero (P.chain.obj' k (by omega))) →
-        σ.slicing.phiPlus C (P.chain.obj' k (by omega)) hne ≤
+        (hne : ¬IsZero (P.chain.obj' k (by grind))) →
+        σ.slicing.phiPlus C (P.chain.obj' k (by grind)) hne ≤
           σ.slicing.phiPlus C E hE by
-      have h1_le := hmain (P.n - 1) 1 (by omega) (by omega) (by omega) hchain1_ne
+      have h1_le := hmain (P.n - 1) 1 (by grind) (by grind) (by grind) hchain1_ne
       -- Transport: phiPlus(F₁) = phiPlus(chain(1))
       obtain ⟨Fch, hnch, hnech⟩ := HNFiltration.exists_nonzero_first C σ.slicing hchain1_ne
       have hIsIso0 : IsIso (P.triangle ⟨0, hGn⟩).mor₂ :=
@@ -205,7 +205,7 @@ theorem interior_has_enveloped_HN_ssf
       have hTk_ne₁ : ¬IsZero Tk.obj₁ := fun hZ ↦ hne ((Iso.isZero_iff ek₁).mp hZ)
       -- chain(k+1) must be nonzero (if zero: factor(k) ≅ chain(k)[1] has σ-phases
       -- in (a+1, b+1), disjoint from (a, b), contradicting factor(k) ∈ P((a,b)))
-      by_cases hk1z : IsZero (P.chain.obj' (k + 1) (by omega))
+      by_cases hk1z : IsZero (P.chain.obj' (k + 1) (by grind))
       · exfalso
         have hTk_obj2_z : IsZero Tk.obj₂ := (Iso.isZero_iff ek₂).mpr hk1z
         haveI : IsIso Tk.mor₃ :=
@@ -215,7 +215,7 @@ theorem interior_has_enveloped_HN_ssf
             ((Triangle.isZero₁_iff _ (P.triangle_dist ⟨k, hkn⟩)).mpr
               ⟨hTk_obj2_z.eq_of_tgt _ _, hfz.eq_of_src _ _⟩)
         have hfact_shift : σ.slicing.intervalProp C (a + 1) (b + 1) (P.factor ⟨k, hkn⟩) := by
-          rcases hchain_int k (by omega) with hZ | ⟨F, hF⟩
+          rcases hchain_int k (by grind) with hZ | ⟨F, hF⟩
           · exact absurd hZ hne
           · exact Or.inr
               ⟨((F.ofIso C ek₁.symm).shiftHN C σ.slicing 1).ofIso C (asIso Tk.mor₃).symm,
@@ -228,14 +228,14 @@ theorem interior_has_enveloped_HN_ssf
         rw [IsZero.iff_id_eq_zero]
         exact hid
       · -- chain(k+1) nonzero: phiPlus_triangle_le + iso transport + IH
-        have hk1ne : ¬IsZero (P.chain.obj' (k + 1) (by omega)) := hk1z
+        have hk1ne : ¬IsZero (P.chain.obj' (k + 1) (by grind)) := hk1z
         have hTk_ne₂ : ¬IsZero Tk.obj₂ := fun hZ ↦ hk1ne ((Iso.isZero_iff ek₂).mp hZ)
         have hTk_obj1_int : σ.slicing.intervalProp C a b Tk.obj₁ :=
           (σ.slicing.intervalProp_closedUnderIso C _ _).of_iso ek₁.symm
-            (hchain_int k (by omega))
+            (hchain_int k (by grind))
         have hle_step := σ.slicing.phiPlus_triangle_le C hTk_ne₁ hTk_ne₂
           hab1 hTk_obj1_int (hfactors_ab ⟨k, hkn⟩) (P.triangle_dist ⟨k, hkn⟩)
-        have hk1_le := ih (k + 1) (by omega) (by omega) (by omega) hk1ne
+        have hk1_le := ih (k + 1) (by grind) (by grind) (by grind) hk1ne
         have h_eq₁ : σ.slicing.phiPlus C Tk.obj₁ hTk_ne₁ =
             σ.slicing.phiPlus C _ hne := by
           obtain ⟨F, hn, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hTk_ne₁
@@ -328,13 +328,13 @@ theorem sigmaSemistable_hasDeformedHN
   have hab : a < b := by linarith
   have hε₀8 : ε₀ < 1 / 8 := by linarith
   haveI : Fact (a < b) := ⟨hab⟩
-  haveI : Fact (b - a ≤ 1) := ⟨by linarith⟩
+  haveI : Fact (b - a ≤ 1) := ⟨by grind⟩
   have hthin : b - a + 2 * ε < 1 := by linarith
   -- ThinFiniteLengthInInterval via of_wide (center t = φ + ε)
   have hFL : ThinFiniteLengthInInterval (C := C) σ a b :=
     ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ hε₀8
-      (show (φ + ε) - 4 * ε₀ ≤ a by linarith)
-      (show b ≤ (φ + ε) + 4 * ε₀ by linarith) hWide
+      (show (φ + ε) - 4 * ε₀ ≤ a by grind)
+      (show b ≤ (φ + ε) + 4 * ε₀ by grind) hWide
   -- E ∈ P(φ) ⊂ P((a+2ε, b-4ε)) = P((φ-ε, φ+ε))
   have hInt : σ.slicing.intervalProp C (a + 2 * ε) (b - 4 * ε) E := by
     have ha2 : a + 2 * ε = φ - ε := by ring

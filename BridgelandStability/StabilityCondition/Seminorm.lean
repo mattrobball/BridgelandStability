@@ -149,7 +149,7 @@ theorem intervalProp_of_semistable_slicingDist (s₁ s₂ : Slicing C) {E : C} {
   have hM := phiMinus_sub_lt_of_slicingDist C s₁ s₂ hE hd
   rw [hpP] at hP; rw [hpM] at hM
   rw [abs_lt] at hP hM
-  exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩
+  exact ⟨⟨by linarith, by grind⟩, ⟨by linarith, by grind⟩⟩
 
 /-- The generalized metric is at most `ε` if both `φ⁺` and `φ⁻` differences are bounded
 by `ε` for all nonzero objects. This is the "converse" direction of the phase-bound lemmas
@@ -233,7 +233,7 @@ sector estimate `norm_sum_exp_ge_cos_mul_sum`. -/
 theorem sector_bound (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
     {E : C} (F : HNFiltration C σ.slicing.P E) (hn : 0 < F.n)
     {η : ℝ} (hη : 0 ≤ η) (hη1 : η < 1)
-    (hwidth : F.φ ⟨0, hn⟩ - F.φ ⟨F.n - 1, by omega⟩ ≤ η)
+    (hwidth : F.φ ⟨0, hn⟩ - F.φ ⟨F.n - 1, by grind⟩ ≤ η)
     {M : ℝ} (hM0 : 0 ≤ M)
     (hM : ∀ (A : C) (φ : ℝ), σ.slicing.P φ A → ¬IsZero A →
       ‖U (K₀.of C A)‖ ≤ M * ‖σ.Z (K₀.of C A)‖) :
@@ -267,7 +267,7 @@ theorem sector_bound (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
       rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]
   -- Phase containment
-  set α := Real.pi * F.φ ⟨F.n - 1, by omega⟩
+  set α := Real.pi * F.φ ⟨F.n - 1, by grind⟩
   set w := Real.pi * η
   have hwπ : w < Real.pi := by
     change Real.pi * η < Real.pi; nlinarith [Real.pi_pos]
@@ -275,11 +275,11 @@ theorem sector_bound (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
   have hθ : ∀ i : Fin F.n, Real.pi * F.φ i ∈ Set.Icc α (α + w) := by
     intro i; simp only [Set.mem_Icc, α, w]; constructor
     · exact mul_le_mul_of_nonneg_left
-        (F.hφ.antitone (Fin.mk_le_mk.mpr (by omega))) (le_of_lt Real.pi_pos)
+        (F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))) (le_of_lt Real.pi_pos)
     · calc Real.pi * F.φ i
           ≤ Real.pi * F.φ ⟨0, hn⟩ := mul_le_mul_of_nonneg_left
             (F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) (le_of_lt Real.pi_pos)
-        _ ≤ Real.pi * F.φ ⟨F.n - 1, by omega⟩ + Real.pi * η := by nlinarith
+        _ ≤ Real.pi * F.φ ⟨F.n - 1, by grind⟩ + Real.pi * η := by nlinarith
   -- Sector estimate: cos(πη/2) * ∑ ‖Z(fi)‖ ≤ ‖Z(E)‖
   have hcos_pos : 0 < Real.cos (w / 2) := by
     apply Real.cos_pos_of_mem_Ioo; constructor <;> [linarith; linarith]
@@ -343,7 +343,7 @@ theorem norm_Z_le_of_tau_semistable (σ τ : StabilityCondition C)
   -- Apply sector bound with η = 2ε to U = τ.Z - σ.Z
   have h2ε : 2 * ε < 1 := by linarith
   have hcos_eq : Real.pi * (2 * ε) / 2 = Real.pi * ε := by ring
-  have hsector := sector_bound' C σ (τ.Z - σ.Z) hE (by linarith) h2ε hwidth hM0 hM_bound
+  have hsector := sector_bound' C σ (τ.Z - σ.Z) hE (by grind) h2ε hwidth hM0 hM_bound
   rw [hcos_eq] at hsector
   -- ‖(τ.Z - σ.Z)([E])‖ ≤ M / cos(πε) * ‖Z([E])‖
   -- By reverse triangle inequality:
@@ -614,11 +614,11 @@ theorem finiteSeminormSubgroup_eq_of_basisNhd (σ τ : StabilityCondition C)
   have hMZ_bound : M_Z * (1 + c) < c ^ 2 := by
     calc M_Z * (1 + c)
         < Real.sin (Real.pi * ε) * (1 + c) :=
-          mul_lt_mul_of_pos_right hMZ_lt_sin (by linarith)
+          mul_lt_mul_of_pos_right hMZ_lt_sin (by grind)
       _ ≤ (Real.pi * ε) * 2 := by
           have hcos_le : c ≤ 1 := Real.cos_le_one _
           have : 1 + c ≤ 2 := by linarith
-          exact mul_le_mul hsin_le this (by linarith) (by nlinarith [Real.pi_pos])
+          exact mul_le_mul hsin_le this (by grind) (by nlinarith [Real.pi_pos])
       _ = 2 * (Real.pi * ε) := by ring
       _ < 1 - (Real.pi * ε) ^ 2 := by linarith
       _ ≤ c ^ 2 := by
@@ -640,7 +640,7 @@ theorem finiteSeminormSubgroup_eq_of_basisNhd (σ τ : StabilityCondition C)
       rw [norm_sub_rev]
     rw [this]
     exact lt_of_le_of_lt hZbound
-      ((ENNReal.ofReal_lt_ofReal_iff (by linarith)).mpr hbound_lt_cos)
+      ((ENNReal.ofReal_lt_ofReal_iff (by grind)).mpr hbound_lt_cos)
   -- Step 5: Apply stabSeminorm_lt_top_of_near in reverse
   have hrev : ∀ U, stabSeminorm C τ U < ⊤ → stabSeminorm C σ U < ⊤ := by
     intro U hU

@@ -62,11 +62,11 @@ theorem deformedPred_shift_one
       exact neg_ne_zero.mpr hSS.2.2.1
     · -- wPhaseOf = φ + 1
       change wPhaseOf (W (K₀.of C (X⟦(1 : ℤ)⟧))) ((a + 1 + (b + 1)) / 2) = φ + 1
-      rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
+      rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by grind]
       rw [K₀.of_shift_one, map_neg]
       have hphase : wPhaseOf (W (K₀.of C X)) ((a + b) / 2) = φ := hSS.2.2.2.1
       have hWne : W (K₀.of C X) ≠ 0 := hSS.2.2.1
-      exact (wPhaseOf_neg hWne _).trans (by linarith)
+      exact (wPhaseOf_neg hWne _).trans (by grind)
     · -- Semistability transport: shift by -1
       have hT_sh := Triangle.shift_distinguished _ hT (-1 : ℤ)
       have h10 : (1 : ℤ) + (-1 : ℤ) = 0 := by omega
@@ -99,13 +99,13 @@ theorem deformedPred_shift_one
         hSS.2.2.2.2 hT' hK1 hQ1 hKne1
       rw [K₀.of_shift_neg_one, map_neg] at hsem
       change wPhaseOf (W (K₀.of C K)) ((a + 1 + (b + 1)) / 2) ≤ φ + 1
-      rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
+      rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by grind]
       by_cases hWK : W (K₀.of C K) = 0
       · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
       · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
-        rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
+        rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by grind] at key
         have key2 := wPhaseOf_add_two hWK ((a + b) / 2 - 1)
-        rw [show (a + b) / 2 - 1 + 2 = (a + b) / 2 + 1 from by ring] at key2
+        rw [show (a + b) / 2 - 1 + 2 = (a + b) / 2 + 1 from by grind] at key2
         linarith
 
 /-- Backward shift for `deformedPred`: if `E⟦1⟧` is Q-semistable of phase `φ + 1`,
@@ -126,7 +126,7 @@ theorem deformedPred_of_shift_one
       rcases hSS.1 with hZ' | ⟨F, hF⟩
       · exact absurd hZ' hSS.2.1
       · exact Or.inr ⟨(F.shiftHN C σ.slicing (-1)).ofIso C
-          ((shiftFunctorCompIsoId C (1 : ℤ) (-1 : ℤ) (by omega)).app X),
+          ((shiftFunctorCompIsoId C (1 : ℤ) (-1 : ℤ) (by grind)).app X),
           fun i ↦ by
             change a - 1 < (F.shiftHN C σ.slicing (-1)).φ i ∧
               (F.shiftHN C σ.slicing (-1)).φ i < b - 1
@@ -141,13 +141,13 @@ theorem deformedPred_of_shift_one
       rw [hw, neg_zero]
     · -- wPhaseOf = φ
       change wPhaseOf (W (K₀.of C X)) ((a - 1 + (b - 1)) / 2) = φ
-      rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
+      rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by grind]
       have hphase : wPhaseOf (-W (K₀.of C X)) ((a + b) / 2) = φ + 1 := by
         have := hSS.2.2.2.1; rwa [K₀.of_shift_one, map_neg] at this
       have hWne : W (K₀.of C X) ≠ 0 := by
         intro hw; apply hSS.2.2.1; rw [K₀.of_shift_one, map_neg, neg_eq_zero]; exact hw
       have key := wPhaseOf_neg hWne ((a + b) / 2 - 1)
-      rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
+      rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by grind] at key
       linarith
     · -- Semistability: shift by +1
       have hT' := Triangle.shift_distinguished _ hT (1 : ℤ)
@@ -169,11 +169,11 @@ theorem deformedPred_of_shift_one
         hSS.2.2.2.2 hT' hK1 hQ1 hKne1
       rw [K₀.of_shift_one, map_neg] at hsem
       change wPhaseOf (W (K₀.of C K)) ((a - 1 + (b - 1)) / 2) ≤ φ
-      rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
+      rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by grind]
       by_cases hWK : W (K₀.of C K) = 0
       · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; grind
       · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
-        rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
+        rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by grind] at key
         linarith
 
 /-- `Q(>t)⟦1⟧ ⊆ Q(>t+1)`: the forward shift sends `Q(>t)`-objects to `Q(>t+1)`. -/
@@ -226,13 +226,13 @@ theorem StabilityCondition.deformedLePred_shift_neg_one
     -- Use backward shift: deformedPred ψ (Y⟦1⟧) → deformedPred (ψ-1) Y with Y = E⟦-1⟧.
     set Y := E⟦(-1 : ℤ)⟧ with hY_def
     have eYE : Y⟦(1 : ℤ)⟧ ≅ E :=
-      (shiftFunctorCompIsoId C (-1 : ℤ) (1 : ℤ) (by omega)).app E
+      (shiftFunctorCompIsoId C (-1 : ℤ) (1 : ℤ) (by grind)).app E
     letI := σ.deformedPred_closedUnderIso C W hW ε ψ
     have hPredY : σ.deformedPred C W hW ε ψ (Y⟦(1 : ℤ)⟧) :=
       (σ.deformedPred C W hW ε ψ).prop_of_iso eYE.symm hPred
     have hback := deformedPred_of_shift_one C σ W hW hε
       (show σ.deformedPred C W hW ε ((ψ - 1) + 1) (Y⟦(1 : ℤ)⟧) from
-        by rw [show (ψ - 1) + 1 = ψ from by ring]; exact hPredY)
+        by rw [show (ψ - 1) + 1 = ψ from by grind]; exact hPredY)
     exact .mem ⟨ψ - 1, by linarith, hback⟩
   | ext hT _ _ ihX ihY =>
     exact .ext (Triangle.shift_distinguished _ hT (-1 : ℤ)) ihX ihY
@@ -265,7 +265,7 @@ theorem deformedGtPred_of_triangle_obj₃
   have hrot := rot_of_distTriang _ hT
   -- X[1] ∈ Q(>t+1) ⊆ Q(>t)
   have hX1 : σ.deformedGtPred C W hW ε t (X⟦(1 : ℤ)⟧) :=
-    σ.deformedGtPred_anti C W hW (show t ≤ t + 1 by linarith) _
+    σ.deformedGtPred_anti C W hW (show t ≤ t + 1 by grind) _
       (σ.deformedGtPred_shift_one C W hW hε hX)
   exact .ext hrot hS hX1
 
@@ -284,7 +284,7 @@ theorem deformedLePred_of_triangle_obj₁
   have hinv := inv_rot_of_distTriang _ hT
   -- R₁[-1] ∈ Q(≤t-1) ⊆ Q(≤t)
   have hR₁' : σ.deformedLePred C W hW ε t (R₁⟦(-1 : ℤ)⟧) :=
-    σ.deformedLePred_mono C W hW (show t - 1 ≤ t by linarith) _
+    σ.deformedLePred_mono C W hW (show t - 1 ≤ t by grind) _
       (σ.deformedLePred_shift_neg_one C W hW hε hR₁)
   exact .ext hinv hR₁' hR₀
 
@@ -341,7 +341,7 @@ theorem deformedSlicing_hn_exists
   obtain ⟨F⟩ := σ.slicing.hn_exists E
   have hFn : 0 < F.n := by
     by_contra h; push_neg at h
-    exact hEz (F.toPostnikovTower.zero_isZero (show F.n = 0 by omega))
+    exact hEz (F.toPostnikovTower.zero_isZero (show F.n = 0 by grind))
   -- Each σ-factor has Q-HN via sigmaSemistable_hasDeformedHN
   have hfactor_hn : ∀ j : Fin F.n, ¬IsZero (F.toPostnikovTower.factor j) →
       ∃ G : HNFiltration C (σ.deformedPred C W hW ε)
@@ -398,7 +398,7 @@ theorem deformedSlicing_hn_exists
         (∀ j, t - ↑n * δ < G.φ j) ∧ (∀ j, G.φ j ≤ t) by
     -- Apply with E, choosing t and n
     set t := F.φ ⟨0, hFn⟩ + 4 * ε
-    set s := F.φ ⟨F.n - 1, by omega⟩ - 2 * ε - δ
+    set s := F.φ ⟨F.n - 1, by grind⟩ - 2 * ε - δ
     set N := Nat.ceil ((t - s) / δ) + 1
     have hE_le_t : σ.deformedLePred C W hW ε t E :=
       hE_le t (fun j ↦ by
@@ -407,7 +407,7 @@ theorem deformedSlicing_hn_exists
         simp only [t]; grind)
     have hE_gt_s : σ.deformedGtPred C W hW ε s E :=
       hE_gt s (fun j ↦ by
-        have : F.φ ⟨F.n - 1, by omega⟩ ≤ F.φ j :=
+        have : F.φ ⟨F.n - 1, by grind⟩ ≤ F.φ j :=
           F.hφ.antitone (Fin.mk_le_mk.mpr (by omega : j.val ≤ F.n - 1))
         simp only [s, δ]; grind)
     have hNδ : t - ↑N * δ ≤ s := by
@@ -475,7 +475,7 @@ theorem deformedSlicing_hn_exists
             rcases hPred with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
             · exact Or.inl hZ
             · exact gtProp_of_wSemistable_phase_gt C σ W hW hab' hε hε2 hthin' hsin hSS'
-                (by linarith)
+                (by grind)
           | ext hT' _ _ ih1 ih3 =>
             exact σ.slicing.gtProp_of_triangle C _ ih1 ih3 hT'
         exact h hX_gt
@@ -510,7 +510,7 @@ theorem deformedSlicing_hn_exists
       have hthin_int : b_int - a_int + 2 * ε < 1 := by
         simp only [a_int, b_int, t', δ]; nlinarith
       have hFL_int : ThinFiniteLengthInInterval (C := C) σ a_int b_int :=
-        ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ (by linarith)
+        ThinFiniteLengthInInterval.of_wide (C := C) σ hε₀ (by grind)
           (show (t + ε) - 4 * ε₀ ≤ a_int by simp only [a_int, t', δ]; grind)
           (show b_int ≤ (t + ε) + 4 * ε₀ by simp only [b_int, η]; grind) hWide
       have hX_interior : σ.slicing.intervalProp C (a_int + 2 * ε) (b_int - 4 * ε) X := by
@@ -570,12 +570,12 @@ theorem deformedSlicing_hn_exists
       -- Phase lower bound: GX_mid phases > t' (from GX_hi's phases via the bound)
       have hGXn_pos : 0 < GX_hi.n := by
         by_contra h; push_neg at h
-        have hXhiz := GX_hi.toPostnikovTower.zero_isZero (show GX_hi.n = 0 by omega)
+        have hXhiz := GX_hi.toPostnikovTower.zero_isZero (show GX_hi.n = 0 by grind)
         exact hXz ((Iso.isZero_iff (asIso f_hi)).mp hXhiz)
       have hGX_lo_bound : ∀ j : Fin GX.n, t' < GX.φ j := by
         intro j
         have hbd := hGXmid_bound hGXn_pos j
-        exact lt_of_lt_of_le (hGXhi_gt ⟨GX_hi.n - 1, by omega⟩) hbd
+        exact lt_of_lt_of_le (hGXhi_gt ⟨GX_hi.n - 1, by grind⟩) hbd
       have hGX_hi_bound : ∀ j : Fin GX.n, GX.φ j ≤ t := hGXmid_le
       -- Step 5: Combine GX and GY
       have hsep : ∀ i : Fin GY.n, ∀ j : Fin GX.n, GY.φ i < GX.φ j :=

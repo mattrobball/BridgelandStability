@@ -177,7 +177,7 @@ lemma eulerSum_of_rank_identity
   change ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) = 0
   simp_rw [show ∀ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) =
       -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) - ((n : ℤ).negOnePow : ℤ) * r n from
-    fun n ↦ by ring]
+    fun n ↦ by grind]
   -- = -Σ (-1)^n r(n-1) - Σ (-1)^n r(n) by finsum_neg + finsum_sub
   rw [show (fun n : ℤ ↦ -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) -
       ((n : ℤ).negOnePow : ℤ) * r n) =
@@ -261,7 +261,7 @@ lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
   change ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) = 0
   simp_rw [show ∀ n : ℤ, (n.negOnePow : ℤ) * (-r (n - 1) - r n) =
       -(((n : ℤ).negOnePow : ℤ) * r (n - 1)) - ((n : ℤ).negOnePow : ℤ) * r n from
-    fun n ↦ by ring]
+    fun n ↦ by grind]
   have hr_shift : (Function.support (fun n : ℤ ↦ r (n - 1))).Finite := by
     refine Set.Finite.subset (hr.image fun m : ℤ ↦ m + 1) ?_
     intro n hn
@@ -330,7 +330,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     letI : F.IsHomological := linearCoyonedaObjIsHomological (k := k) (C := C) E
     let δ_lin : (n : ℤ) → ((E ⟶ T.obj₃⟦n⟧) →ₗ[k] (E ⟶ T.obj₁⟦(n + 1)⟧)) := fun n ↦
       Linear.rightComp k E (T.mor₃⟦n⟧' ≫
-        (shiftFunctorAdd' C 1 n (n + 1) (by omega)).inv.app T.obj₁)
+        (shiftFunctorAdd' C 1 n (n + 1) (by grind)).inv.app T.obj₁)
     let r : ℤ → ℤ := fun n ↦ Module.finrank k (LinearMap.range (δ_lin n))
     have hδ_eq : ∀ n : ℤ, ((F.homologySequenceδ T n (n + 1) rfl).hom) = δ_lin n := by
       intro n
@@ -425,7 +425,7 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
     let G : Cᵒᵖ ⥤ AddCommGrpCat := preadditiveYoneda.obj F
     let δ_lin : (n : ℤ) → ((T.obj₁ ⟶ F⟦n⟧) →ₗ[k] (T.obj₃ ⟶ F⟦(n + 1)⟧)) := fun n ↦
       { toFun := fun x =>
-          T.mor₃ ≫ x⟦(1 : ℤ)⟧' ≫ (shiftFunctorAdd' C n 1 (n + 1) (by omega)).inv.app F
+          T.mor₃ ≫ x⟦(1 : ℤ)⟧' ≫ (shiftFunctorAdd' C n 1 (n + 1) (by grind)).inv.app F
         map_add' := by
           intro x y
           simp [Functor.map_add]

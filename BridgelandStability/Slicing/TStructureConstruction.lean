@@ -422,7 +422,7 @@ theorem Slicing.toTStructureGE_bounded (s : Slicing C) :
       Or.inr ⟨F, hn, ?_⟩⟩
     · linarith [Int.le_ceil (-(F.phiMinus C hn))]
     · have hceil : ((⌈1 - F.phiPlus C hn⌉ - 1 : ℤ) : ℝ) < 1 - F.phiPlus C hn := by
-        exact (Int.lt_ceil).1 (by omega)
+        exact (Int.lt_ceil).1 (by grind)
       linarith
 
 /-- **Heart identification.**
