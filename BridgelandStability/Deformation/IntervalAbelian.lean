@@ -180,7 +180,7 @@ theorem P_phi_of_im_zero_heart
       · exact h
     by_contra hne
     have hlt : F.φ i - φ < 0 := lt_of_le_of_ne
-      (by linarith [(hphases i).2]) (sub_ne_zero.mpr hne)
+      (by grind [(hphases i).2]) (sub_ne_zero.mpr hne)
     exact absurd hsin_zero (ne_of_lt (Real.sin_neg_of_neg_of_neg_pi_lt
       (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos, (hphases i).1])))
   -- Top and bottom nonzero factors have phase φ → n = 1
@@ -247,8 +247,8 @@ theorem P_phi_of_heart_triangle
         (σ.Z (K₀.of C K) * rot).im + (σ.Z (K₀.of C Q) * rot).im := by
       rw [hZsum, add_mul, Complex.add_im]
     linarith
-  have him_K_zero : (σ.Z (K₀.of C K) * rot).im = 0 := by linarith
-  have him_Q_zero : (σ.Z (K₀.of C Q) * rot).im = 0 := by linarith
+  have him_K_zero : (σ.Z (K₀.of C K) * rot).im = 0 := by grind
+  have him_Q_zero : (σ.Z (K₀.of C Q) * rot).im = 0 := by grind
   exact ⟨P_phi_of_im_zero_heart C σ hKne hK_le hK_gt him_K_zero,
     P_phi_of_im_zero_heart C σ hQne hQ_le hQ_gt him_Q_zero⟩
 
@@ -370,7 +370,7 @@ theorem P_phi_of_im_zero_above
       · exact h
     by_contra hne
     have hlt' : 0 < F.φ i - φ := lt_of_le_of_ne
-      (by linarith [(hphases i).1]) (fun h ↦ hne (by grind))
+      (by grind [(hphases i).1]) (fun h ↦ hne (by grind))
     exact absurd hsin_zero (ne_of_gt (Real.sin_pos_of_pos_of_lt_pi
       (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos, (hphases i).2])))
   have htop : F.φ ⟨0, hn⟩ = φ := factor_eq ⟨0, hn⟩ hfirst
@@ -448,7 +448,7 @@ theorem StabilityCondition.P_phi_hom_vanishing
       n < 0 → f = 0 := by
   intro X Y n f hn
   exact σ.slicing.hom_vanishing φ (φ + ↑n) X.obj (Y.obj⟦n⟧)
-    (by linarith [show (↑n : ℝ) < 0 from Int.cast_lt_zero.mpr hn])
+    (by grind [show (↑n : ℝ) < 0 from Int.cast_lt_zero.mpr hn])
     X.property
     ((σ.slicing.shift_int C φ Y.obj n).mp Y.property) f
 
@@ -548,7 +548,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
         dsimp only [HNFiltration.phiPlus]; grind⟩
   -- L has s-phases in (φ, φ+1]
   have hL_sgt : s.gtProp C φ ((t.truncLT 0).obj X₃) := by
@@ -559,7 +559,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiMinus] at hgt
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
         dsimp only [HNFiltration.phiMinus]; grind⟩
   have hL_sle : s.leProp C (φ + 1) ((t.truncLT 0).obj X₃) := by
     have h : ss.leProp C (1 + 1) ((t.truncLT 0).obj X₃) := by
@@ -570,7 +570,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
         dsimp only [HNFiltration.phiPlus]; grind⟩
   -- === Epi approach for Q, K₀ for L ===
   have hB_heart : t.heart B := (t.mem_heart_iff _).mpr ⟨hB_le, inferInstance⟩
@@ -643,7 +643,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
         dsimp only [HNFiltration.phiPlus]; grind⟩
   -- === K₀ + Im(Z·rot) ===
   -- P(φ) objects lie on the real axis after rotation by exp(-iπφ)
@@ -672,7 +672,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     have : (σ.Z (K₀.of C A) * rot).im + (σ.Z (K₀.of C X₃) * rot).im =
         (σ.Z (K₀.of C B) * rot).im := by
       rw [← Complex.add_im, ← add_mul, hZorig]
-    linarith [him_ray hA, him_ray hB]
+    grind [him_ray hA, him_ray hB]
   -- Q ∈ P(φ) via K₀ on heart triangle
   have hQ_Pφ : s.P φ ((t.truncGE 0).obj X₃) := by
     by_cases hQne : IsZero ((t.truncGE 0).obj X₃)
@@ -701,7 +701,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
             rw [← add_mul, ← map_add, ← hK₀_heart]
           have him := congr_arg Complex.im h
           simp only [Complex.add_im] at him
-          linarith [him_ray hB]
+          grind [him_ray hB]
         exact P_phi_of_im_zero_heart C σ hQne
           (s.phiPlus_le_of_leProp C hQne hQ_sle)
           (s.phiMinus_gt_of_gtProp C hQne hQ_sgt) (by grind)
@@ -711,7 +711,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
         (σ.Z (K₀.of C ((t.truncGE 0).obj X₃)) * rot).im =
         (σ.Z (K₀.of C X₃) * rot).im := by
       rw [← Complex.add_im, ← add_mul, ← hZtrunc]
-    linarith [him_ray hQ_Pφ, hZX₃_im]
+    grind [him_ray hQ_Pφ]
   -- L ∈ P(φ+1) via P_phi_of_im_zero_heart at phase φ+1
   have hL_Pφ1 : s.P (φ + 1) ((t.truncLT 0).obj X₃) := by
     by_cases hLne : IsZero ((t.truncLT 0).obj X₃)
@@ -719,7 +719,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact P_phi_of_im_zero_heart C σ hLne
         (s.phiPlus_le_of_leProp C hLne hL_sle)
         (show φ + 1 - 1 < s.phiMinus C _ hLne from by
-          linarith [s.phiMinus_gt_of_gtProp C hLne hL_sgt])
+          grind [s.phiMinus_gt_of_gtProp C hLne hL_sgt])
         (by rw [show -(↑(Real.pi * (φ + 1)) * Complex.I) =
               -(↑(Real.pi * φ) * Complex.I) + -(↑Real.pi * Complex.I) from by
                 push_cast; ring,

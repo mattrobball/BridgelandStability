@@ -95,7 +95,7 @@ theorem Slicing.phiPlus_eq_phiMinus_of_semistable (s : Slicing C) {E : C} {φ : 
     (hS : (s.P φ) E) (hE : ¬IsZero E) :
     s.phiPlus C E hE = φ ∧ s.phiMinus C E hE = φ := by
   let F := HNFiltration.single C E φ hS
-  have hn : (0 : ℕ) < F.n := by change 0 < 1; omega
+  have hn : (0 : ℕ) < F.n := by change 0 < 1; grind
   have hne : ¬IsZero (F.triangle ⟨0, hn⟩).obj₃ := by
     change ¬IsZero (Triangle.mk (0 : (0 : C) ⟶ E) (𝟙 E) 0).obj₃
     exact hE
@@ -118,7 +118,7 @@ theorem Slicing.semistable_of_phiPlus_eq_phiMinus (s : Slicing C) {E : C}
   -- StrictAnti + equal endpoints → n = 1
   have hn_eq : F.n = 1 := by
     by_contra h
-    have hn' : F.n - 1 < F.n := by omega
+    have hn' : F.n - 1 < F.n := by grind
     exact absurd (by rw [h0, hn1, ← heq] : F.φ ⟨0, hn⟩ = F.φ ⟨F.n - 1, hn'⟩)
       (ne_of_gt (F.hφ (Fin.mk_lt_mk.mpr (by grind))))
   -- T.obj₁ is zero, so T.mor₂ is an isomorphism
@@ -192,7 +192,7 @@ lemma Slicing.semistable_of_HN_all_eq (s : Slicing C) {E : C} {φ : ℝ}
     induction k with
     | zero => exact s.zero_mem' C φ _ F.base_isZero
     | succ k ih =>
-      have hkn : k < F.n := by omega
+      have hkn : k < F.n := by grind
       let T := F.triangle ⟨k, hkn⟩
       -- T.obj₁ ≅ chain(k), T.obj₃ = factor(k) ∈ P(φ)
       have hT1 : (s.P φ) T.obj₁ :=

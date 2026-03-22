@@ -109,7 +109,7 @@ theorem hperturb_of_stabSeminorm (σ : StabilityCondition C)
       · exact mul_pos Real.pi_pos hε₀
       · calc Real.pi * ε₀ ≤ Real.pi * (1 / 2) := by nlinarith [Real.pi_pos]
           _ = Real.pi / 2 := by ring
-          _ < Real.pi := by linarith [Real.pi_pos]
+          _ < Real.pi := by grind [Real.pi_pos]
     rw [show (Real.sin (Real.pi * ε₀) : ℝ) =
       (ENNReal.ofReal (Real.sin (Real.pi * ε₀))).toReal from
       (ENNReal.toReal_ofReal (le_of_lt hsin_pos)).symm]
@@ -132,7 +132,7 @@ theorem hperturb_of_stabSeminorm (σ : StabilityCondition C)
   -- Apply wPhaseOf_perturbation
   have h := wPhaseOf_perturbation C σ hP hFne W hφα hε₀
     (hε₀2.le.trans (by norm_num)) hbd_strict
-  exact ⟨by linarith [abs_lt.mp h], by linarith [abs_lt.mp h]⟩
+  exact ⟨by grind [abs_lt.mp h], by grind [abs_lt.mp h]⟩
 
 /-! ### Upper half-plane membership from positive argument -/
 
@@ -161,7 +161,7 @@ theorem wPhaseOf_gt_of_mem_upperHalfPlaneUnion {w : ℂ} {ψ : ℝ}
     ψ < wPhaseOf w ψ := by
   have harg := CategoryTheory.arg_pos_of_mem_upperHalfPlaneUnion h
   unfold wPhaseOf
-  linarith [div_pos harg Real.pi_pos]
+  grind [div_pos harg Real.pi_pos]
 
 /-- **UHP membership from wPhaseOf bound.** If `ψ < wPhaseOf(w, ψ)`, then
 `w · exp(-iπψ)` lies in the upper half-plane union. -/
@@ -173,7 +173,7 @@ theorem mem_upperHalfPlaneUnion_of_wPhaseOf_gt {w : ℂ} {ψ : ℝ}
   unfold wPhaseOf at h
   have hπ := Real.pi_pos
   have : 0 < Complex.arg (w * Complex.exp (-(↑(Real.pi * ψ) * Complex.I))) /
-    Real.pi := by linarith
+    Real.pi := by grind
   exact (div_pos_iff.mp this).elim (fun h ↦ h.1)
     (fun h ↦ absurd h.2 (not_lt.mpr hπ.le))
 
@@ -246,7 +246,7 @@ theorem wPhaseOf_gt_of_im_pos {w : ℂ} {α ψ : ℝ}
   -- wPhaseOf(w, α) ∈ (ψ - 1, ψ], so wPhaseOf - ψ ∈ (-1, 0]
   -- sin(π(wPhaseOf - ψ)) ≤ 0 on (-1, 0] (since π · (-1, 0] = (-π, 0])
   have hd : wPhaseOf w α - ψ ∈ Set.Ioc (-1) 0 :=
-    ⟨by linarith [hrange.1], by linarith⟩
+    ⟨by grind [hrange.1], by linarith⟩
   have hsin : Real.sin (Real.pi * (wPhaseOf w α - ψ)) ≤ 0 :=
     Real.sin_nonpos_of_nonpos_of_neg_pi_le
       (by nlinarith [Real.pi_pos, hd.2])
@@ -261,7 +261,7 @@ theorem wPhaseOf_gt_of_im_pos {w : ℂ} {α ψ : ℝ}
   rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
     Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
     zero_mul, add_zero] at him
-  linarith [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg w) hsin]
+  grind [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg w) hsin]
 
 /-! ### Dual im/wPhaseOf infrastructure (for lower bound arguments) -/
 
@@ -308,7 +308,7 @@ theorem wPhaseOf_lt_of_im_neg {w : ℂ} {α ψ : ℝ}
   -- wPhaseOf(w, α) ∈ [ψ, ψ + 1), so wPhaseOf - ψ ∈ [0, 1)
   -- sin(π(wPhaseOf - ψ)) ≥ 0 on [0, 1) (since π · [0, 1) = [0, π))
   have hd : wPhaseOf w α - ψ ∈ Set.Ico 0 1 :=
-    ⟨by linarith, by linarith [hrange.2]⟩
+    ⟨by linarith, by grind [hrange.2]⟩
   have hsin : 0 ≤ Real.sin (Real.pi * (wPhaseOf w α - ψ)) :=
     Real.sin_nonneg_of_nonneg_of_le_pi
       (by nlinarith [Real.pi_pos, hd.1])
@@ -323,7 +323,7 @@ theorem wPhaseOf_lt_of_im_neg {w : ℂ} {α ψ : ℝ}
   rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
     Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
     zero_mul, add_zero] at him
-  linarith [mul_nonneg (norm_nonneg w) hsin]
+  grind [mul_nonneg (norm_nonneg w) hsin]
 
 /-- **Imaginary part vanishes at exact phase.** If `wPhaseOf(w, α) = ψ`, then
 `Im(w · exp(-iπψ)) = 0` (and in fact `w · exp(-iπψ) = ‖w‖`). -/
@@ -489,7 +489,7 @@ theorem wPhaseOf_lt_of_add_le_lt {w w₁ w₂ : ℂ} {α ψ : ℝ}
         (by nlinarith [Real.pi_pos, hw₂_lt])
         (by nlinarith [Real.pi_pos, hw₂_range.1]))
   have him_w : (w * rot).im < 0 := by
-    rw [← hsum, add_mul, Complex.add_im]; linarith
+    rw [← hsum, add_mul, Complex.add_im]; grind
   exact wPhaseOf_lt_of_im_neg him_w hw_range
 
 /-- If `w = w₁ + w₂`, the total phase is at most `ψ`, and one summand has phase strictly
@@ -518,7 +518,7 @@ theorem wPhaseOf_lt_of_add_le_gt {w w₁ w₂ : ℂ} {α ψ : ℝ}
         (by nlinarith [Real.pi_pos, hw₁_gt])
         (by nlinarith [Real.pi_pos, hw₁_range.2]))
   have him_w₂ : (w₂ * rot).im < 0 := by
-    rw [← hsum, add_mul, Complex.add_im] at him_w; linarith
+    rw [← hsum, add_mul, Complex.add_im] at him_w; grind
   exact wPhaseOf_lt_of_im_neg him_w₂ hw₂_range
 
 /-! ### K₀ decomposition of imaginary parts -/
@@ -549,7 +549,7 @@ theorem im_W_pos_of_intervalProp
               σ.slicing.phiMinus_gt_of_intervalProp C hE hI
             _ = F.φ ⟨F.n - 1, by omega⟩ :=
               σ.slicing.phiMinus_eq C E hE F hn hlast
-            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)),
+            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
       by calc F.φ i
             ≤ F.φ ⟨0, hn⟩ :=
               F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
@@ -601,7 +601,7 @@ theorem im_W_neg_of_intervalProp
               σ.slicing.phiMinus_gt_of_intervalProp C hE hI
             _ = F.φ ⟨F.n - 1, by omega⟩ :=
               σ.slicing.phiMinus_eq C E hE F hn hlast
-            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by omega)),
+            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
       by calc F.φ i
             ≤ F.φ ⟨0, hn⟩ :=
               F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
@@ -620,7 +620,7 @@ theorem im_W_neg_of_intervalProp
   -- Negate: show Σ (-Im) > 0, then Σ Im < 0
   suffices h : 0 < ∑ i : Fin F.n,
       -(W (K₀.of C (P.factor i)) * rot).im by
-    linarith [Finset.sum_neg_distrib (G := ℝ) (s := Finset.univ)
+    grind [Finset.sum_neg_distrib (G := ℝ) (s := Finset.univ)
       (f := fun i ↦ (W (K₀.of C (P.factor i)) * rot).im)]
   apply lt_of_lt_of_le _ (Finset.single_le_sum
     (f := fun i ↦ -(W (K₀.of C (P.factor i)) * rot).im)
@@ -696,7 +696,7 @@ theorem wPhaseOf_gt_of_intervalProp
     Real.sin_nonpos_of_nonpos_of_neg_pi_le
       (by nlinarith [Real.pi_pos])
       (by nlinarith [Real.pi_pos, hψ_lo])
-  linarith [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg (W (K₀.of C E))) hsin]
+  grind [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg (W (K₀.of C E))) hsin]
 
 /-- **W-phase upper bound for interval objects.** If `E ∈ P((a, b))` is nonzero, and
 every nonzero σ-semistable object of phase `φ ∈ (a, b)` has W-phase in
@@ -747,7 +747,7 @@ theorem wPhaseOf_lt_of_intervalProp
     Real.sin_nonneg_of_nonneg_of_le_pi
       (by nlinarith [Real.pi_pos])
       (by nlinarith [Real.pi_pos, hψ_hi])
-  linarith [mul_nonneg (norm_nonneg (W (K₀.of C E))) hsin]
+  grind [mul_nonneg (norm_nonneg (W (K₀.of C E))) hsin]
 
 
 end CategoryTheory.Triangulated

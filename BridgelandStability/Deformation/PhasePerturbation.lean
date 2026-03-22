@@ -56,7 +56,7 @@ theorem wPhaseOf_perturbation_generic {m φ α ε : ℝ} {u : ℂ}
   have hz2 : (1 : ℂ) + u ≠ 0 := by
     intro h; have h1 : (1 : ℂ) = -u := eq_neg_of_add_eq_zero_left h
     have h2 : ‖(1 : ℂ)‖ = ‖u‖ := by rw [h1, norm_neg]
-    rw [norm_one] at h2; linarith
+    rw [norm_one] at h2; grind
   -- Step 1: |arg(1+u)| < πε
   have harg_u : |Complex.arg ((1 : ℂ) + u)| < Real.pi * ε :=
     abs_arg_one_add_lt hε hε2 hu

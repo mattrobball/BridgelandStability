@@ -55,7 +55,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     let _Q : Slicing C :=
@@ -64,8 +64,8 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing ≤ ENNReal.ofReal ε := by
   dsimp
-  have hε₀8 : ε₀ < 1 / 8 := by linarith
-  have hε₀2 : ε₀ < 1 / 4 := by linarith
+  have hε₀8 : ε₀ < 1 / 8 := by grind
+  have hε₀2 : ε₀ < 1 / 4 := by grind
   let hSector : SectorFiniteLength (C := C) σ ε₀ hε₀ hε₀2 :=
     SectorFiniteLength.of_wide (C := C) σ hε₀ hε₀2 hε₀8 hWide
   refine ⟨⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, W,
@@ -73,10 +73,10 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
   · -- Local finiteness: inherited from σ via Q((t-ε₀,t+ε₀)) ⊆ P((t-2ε₀,t+2ε₀))
     constructor
     refine ⟨ε₀, hε₀, by linarith, fun t E ↦ ?_⟩
-    letI : Fact (t - ε₀ < t + ε₀) := ⟨by linarith [hε₀]⟩
-    letI : Fact ((t + ε₀) - (t - ε₀) ≤ 1) := ⟨by linarith [hε₀10]⟩
-    letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by linarith [hε₀]⟩
-    letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by linarith [hε₀10]⟩
+    letI : Fact (t - ε₀ < t + ε₀) := ⟨by grind⟩
+    letI : Fact ((t + ε₀) - (t - ε₀) ≤ 1) := ⟨by grind⟩
+    letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by grind⟩
+    letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by grind⟩
     have hIncl :
         (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).intervalProp C
             (t - ε₀) (t + ε₀) ≤
@@ -176,7 +176,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
             exact F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
           exact deformedGtPred_subset_gtProp <|
             P_in_deformedGtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
-              (by linarith [hFi_ge, hδ]) (F.semistable i) hFi
+              (by grind) (F.semistable i) hFi
       have hlt : Q.ltProp C (σ.slicing.phiPlus C E hE + ε + δ) E := by
         apply ltProp_of_postnikovTower (C := C) Q F.toPostnikovTower
         intro i
@@ -187,7 +187,7 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
             exact F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
           exact deformedLtPred_subset_ltProp <|
             P_in_deformedLtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
-              (by linarith [hFi_le, hδ]) (F.semistable i) hFi
+              (by grind) (F.semistable i) hFi
       exact Q.intervalProp_of_intrinsic_phases C hE
         (Q.phiMinus_gt_of_gtProp C hE hgt)
         (Q.phiPlus_lt_of_ltProp C hE hlt)
@@ -233,7 +233,7 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     let _Q : Slicing C :=
@@ -246,7 +246,7 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
   have hx_lt : x < Real.sin (Real.pi * ε) := by
     dsimp [x]
     exact ENNReal.toReal_lt_of_lt_ofReal hsin
-  have hε_half : ε < 1 / 2 := by linarith
+  have hε_half : ε < 1 / 2 := by grind
   have hsin_pos : 0 < Real.sin (Real.pi * ε) := by
     apply Real.sin_pos_of_pos_of_lt_pi
     · nlinarith [Real.pi_pos, hε]

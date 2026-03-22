@@ -50,6 +50,14 @@ open scoped ZeroObject
 
 universe v u
 
+/-! ### Grind annotations for arithmetic automation -/
+
+-- Forward reasoning: monotonicity + order hypothesis → derived inequality
+attribute [grind →] StrictAnti.imp
+attribute [grind →] StrictMono.imp
+attribute [grind →] Antitone.imp
+attribute [grind →] Monotone.imp
+
 namespace CategoryTheory.Triangulated
 
 section Slicing

@@ -120,7 +120,7 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
         Complex.norm_exp_ofReal_mul_I, mul_one]
   -- Derive a < b from existence of phases
   have hab_pos : 0 < b - a := by
-    linarith [(hphases ⟨0, hn⟩).1, (hphases ⟨0, hn⟩).2]
+    grind [(hphases ⟨0, hn⟩).1, (hphases ⟨0, hn⟩).2]
   -- Sector estimate setup
   have hw : Real.pi * (b - a) < Real.pi := by
     nlinarith [Real.pi_pos]
@@ -182,7 +182,7 @@ theorem StabilityCondition.W_ne_zero_of_intervalProp (σ : StabilityCondition C)
     · exact absurd hZ hE
     · have hn : 0 < F.n := by
         by_contra h; exact hE (F.toPostnikovTower.zero_isZero (by grind))
-      linarith [(hF ⟨0, hn⟩).1, (hF ⟨0, hn⟩).2]
+      grind [(hF ⟨0, hn⟩).1, (hF ⟨0, hn⟩).2]
   have hcos_pos : 0 < Real.cos (Real.pi * (b - a) / 2) :=
     Real.cos_pos_of_mem_Ioo
       ⟨by nlinarith [Real.pi_pos], by nlinarith [Real.pi_pos]⟩
@@ -240,12 +240,12 @@ theorem wPhaseOf_mem_Ioc (w : ℂ) (α : ℝ) :
   refine ⟨?_, ?_⟩
   · -- α - 1 < α + arg(z)/π
     suffices -1 < Complex.arg z / Real.pi by
-      change α - 1 < α + Complex.arg z / Real.pi; linarith
+      change α - 1 < α + Complex.arg z / Real.pi; grind
     rw [lt_div_iff₀ hπ]
-    linarith [Complex.neg_pi_lt_arg z]
+    grind [Complex.neg_pi_lt_arg z]
   · -- α + arg(z)/π ≤ α + 1
     suffices Complex.arg z / Real.pi ≤ 1 by
-      change α + Complex.arg z / Real.pi ≤ α + 1; linarith
+      change α + Complex.arg z / Real.pi ≤ α + 1; grind
     rw [div_le_iff₀ hπ, one_mul]
     exact Complex.arg_le_pi z
 
@@ -324,7 +324,7 @@ theorem wPhaseOf_neg {w : ℂ} (hw : w ≠ 0) (α : ℝ) :
   -- φ + 1 ∈ ((α+1) - 1, (α+1) + 1] = (α, α + 2]
   have hmem : φ + 1 ∈ Set.Ioc ((α + 1) - 1) ((α + 1) + 1) := by
     have := wPhaseOf_mem_Ioc w α
-    constructor <;> linarith [this.1, this.2]
+    constructor <;> grind [this.1, this.2]
   -- wPhaseOf(-w, α+1) = wPhaseOf(‖w‖ · exp(iπ(φ+1)), α+1) = φ+1
   -- First establish: -w = ‖w‖ · exp(iπ(φ+1))
   suffices hneg : -w = ↑‖w‖ * Complex.exp (↑(Real.pi * (φ + 1)) * Complex.I) by

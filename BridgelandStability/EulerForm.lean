@@ -366,7 +366,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       haveI : Module.Finite k (E ⟶ T.obj₃⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₃⟦n⟧)
       have h_ker_f : Module.finrank k (LinearMap.ker f_n) = r (n - 1) := by
         change Module.finrank k (LinearMap.ker (((F.shift n).map T.mor₁).hom)) = r (n - 1)
-        have hn : n = (n - 1) + 1 := by omega
+        have hn : n = (n - 1) + 1 := by grind
         rw [hn]
         simpa using h_ker_f_aux (n - 1)
       have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =

@@ -69,7 +69,7 @@ theorem deformedPred_shift_one
       exact (wPhaseOf_neg hWne _).trans (by grind)
     · -- Semistability transport: shift by -1
       have hT_sh := Triangle.shift_distinguished _ hT (-1 : ℤ)
-      have h10 : (1 : ℤ) + (-1 : ℤ) = 0 := by omega
+      have h10 : (1 : ℤ) + (-1 : ℤ) = 0 := by grind
       let eX := (shiftFunctorCompIsoId C (1 : ℤ) (-1 : ℤ) h10).app X
       let shT := (Triangle.shiftFunctor C (-1)).obj (Triangle.mk f₁ f₂ f₃)
       set T' := Triangle.mk (shT.mor₁ ≫ eX.hom) (eX.inv ≫ shT.mor₂) shT.mor₃
@@ -332,8 +332,8 @@ theorem deformedSlicing_hn_exists
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (E : C) :
     Nonempty (HNFiltration C (σ.deformedPred C W hW ε) E) := by
-  have hε2 : ε < 1 / 4 := by linarith
-  have hε8 : ε < 1 / 8 := by linarith
+  have hε2 : ε < 1 / 4 := by grind
+  have hε8 : ε < 1 / 8 := by grind
   -- Zero case
   by_cases hEz : IsZero E
   · exact ⟨HNFiltration.zero C E hEz⟩
@@ -497,7 +497,7 @@ theorem deformedSlicing_hn_exists
       -- Step 2: Embed X in thin interval, apply interior_has_enveloped_HN
       -- X ∈ σ.intervalProp(t'-ε, t+ε+η) for small η. Use η = ε₀ - ε.
       set η := ε₀ - ε with hη_def
-      have hη : 0 < η := by linarith
+      have hη : 0 < η := by grind
       have hX_int : σ.slicing.intervalProp C (t' - ε) (t + ε + η) X :=
         σ.slicing.intervalProp_of_intrinsic_phases C hXz
           (σ.slicing.phiMinus_gt_of_gtProp C hXz hX_sigmaGt)
