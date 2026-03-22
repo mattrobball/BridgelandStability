@@ -266,7 +266,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_target
     (hY : σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) Y)
     (hXne : ¬IsZero X)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
-    (hψ_lo : φ - ε₀ < ψ) (_hψ_hi : ψ < φ + ε₀) (hψ_le : ψ ≤ φ)
+    (hψ_lo : φ - ε₀ < ψ) (hψ_le : ψ ≤ φ)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ Q} {g : Q ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
@@ -300,7 +300,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
     exact σ.slicing.intervalProp_of_semistable C hY_Pφ (by grind) (by grind)
   exact wPhaseOf_gt_of_upper_source_boundary_target
     (C := C) (σ := σ) (W := W) (hW := hW)
-    hQ hX_ge hY hXne hε₀ hε₀2 hε₀8 hψ_lo hψ_hi hψ_le hsin hT
+    hQ hX_ge hY hXne hε₀ hε₀2 hε₀8 hψ_lo hψ_le hsin hT
 
 theorem wPhaseOf_lt_of_leProp_source
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
