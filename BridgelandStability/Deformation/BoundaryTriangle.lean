@@ -266,7 +266,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_target
     (hY : σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) Y)
     (hXne : ¬IsZero X)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) (hε₀8 : ε₀ < 1 / 8)
-    (hψ_lo : φ - ε₀ < ψ) (hψ_hi : ψ < φ + ε₀) (hψ_le : ψ ≤ φ)
+    (hψ_lo : φ - ε₀ < ψ) (_hψ_hi : ψ < φ + ε₀) (hψ_le : ψ ≤ φ)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ Q} {g : Q ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
