@@ -40,7 +40,6 @@ for a fixed interval object `X`, it is enough to know a lower phase bound for al
 proper strict quotients of `X`; the recursive kernel step propagates that bound to
 smaller strict subobjects. The older `hn_exists_in_thin_interval` theorem is recovered
 by feeding in the global lower window bound. -/
-set_option maxHeartbeats 400000 in
 theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -130,9 +129,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       have hψY_hi : ψY < U := (hWindow Y.property hS_obj).2
       have hsingle_n : Gsingle.n = 1 := by
         simp [Gsingle, HNFiltration.single]
-      have hj_lt : j.val < 1 := by
-        grind
-      have hj0 : j.val = 0 := by grind
+      have hj_lt : j.val < 1 := hsingle_n ▸ j.is_lt
+      have hj0 : j.val = 0 := by omega
       have hj : j = ⟨0, by simp [Gsingle, HNFiltration.single]⟩ :=
         Fin.ext hj0
       subst j
@@ -252,13 +250,12 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hj] using hGj'
       · have hj_lt : j.val < GK.n + 1 := by
           simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor] using j.is_lt
-        have hjEq : j.val = GK.n := by
-          grind
+        have hjEq : j.val = GK.n := by omega
         have hG_last : GK.n < H.n := by
           simp [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor]
         have hjLast : j = ⟨GK.n, hG_last⟩ := Fin.ext hjEq
         subst j
-        have hjFalse : ¬GK.n < GK.n := by grind
+        have hjFalse : ¬GK.n < GK.n := lt_irrefl _
         simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hjFalse,
           ψB] using ⟨hψB_gt, hψB_hi⟩
   have hS0_ne : ¬IsZero (S0.1 : σ.slicing.IntervalCat C a b) := by
@@ -315,7 +312,6 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
   intro j
   simpa using hG0 j
 
-set_option maxHeartbeats 400000 in
 theorem SkewedStabilityFunction.hn_exists_in_thin_interval
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}
@@ -371,7 +367,6 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
 to Bridgeland's classes `G` and `H`: the lower phase bound is stated directly for
 nonzero strict quotients `X ↠ B`, and converted internally to the kernel/cokernel
 subobject language used by the recursion. -/
-set_option maxHeartbeats 400000 in
 theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowerBound
     (σ : StabilityCondition C) {a b : ℝ}
     {ssf : SkewedStabilityFunction C σ.slicing a b}

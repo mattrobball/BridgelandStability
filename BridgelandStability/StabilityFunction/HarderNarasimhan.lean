@@ -388,7 +388,6 @@ lemma phase_cokernel_pullback_eq
       Z.phase (cokernel (Subobject.ofLE A' B' h)) := by
   simp only [StabilityFunction.phase, Zobj_cokernel_pullback_eq Z M' h]
 
-set_option synthInstance.maxHeartbeats 40000 in
 /-- The cokernel of consecutive pulled-back subobjects is isomorphic to the original
 cokernel factor. -/
 def cokernelPullbackIso (Z : StabilityFunction A) {E : A} (M' : Subobject E)
