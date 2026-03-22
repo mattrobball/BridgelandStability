@@ -377,10 +377,10 @@ theorem SectorFiniteLength.of_wide
   intro t
   dsimp [SectorFiniteLength, WideSectorFiniteLength] at hWide ⊢
   intro E
-  letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by linarith [hε₀]⟩
-  letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by linarith [hε₀2]⟩
-  letI : Fact (t - 4 * ε₀ < t + 4 * ε₀) := ⟨by linarith [hε₀]⟩
-  letI : Fact ((t + 4 * ε₀) - (t - 4 * ε₀) ≤ 1) := ⟨by linarith [hε₀8]⟩
+  letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by grind⟩
+  letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by grind⟩
+  letI : Fact (t - 4 * ε₀ < t + 4 * ε₀) := ⟨by grind⟩
+  letI : Fact ((t + 4 * ε₀) - (t - 4 * ε₀) ≤ 1) := ⟨by grind⟩
   let hIncl :
       σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) ≤
         σ.slicing.intervalProp C (t - 4 * ε₀) (t + 4 * ε₀) := by

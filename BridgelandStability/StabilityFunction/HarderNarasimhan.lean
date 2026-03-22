@@ -609,7 +609,7 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
               (⟨0, hn_Q'.hn⟩ : Fin hn_Q'.n).succ : A)) :=
             (phase_cokernel_ofLE_congr Z hcsc rfl).trans
               (Z.phase_eq_of_iso (Subobject.cokernelBotIso _ bot_le))
-          linarith [phase_subobject_cokernel_lt Z hM'_ne hM'_strict
+          grind [phase_subobject_cokernel_lt Z hM'_ne hM'_strict
             hsucc_ne]
         calc hn_Q'.φ j
             ≤ hn_Q'.φ ⟨0, hn_Q'.hn⟩ :=

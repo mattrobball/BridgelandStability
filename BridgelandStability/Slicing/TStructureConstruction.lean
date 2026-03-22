@@ -407,7 +407,7 @@ theorem Slicing.toTStructure_bounded (s : Slicing C) :
     · have := Int.le_ceil (-(F.phiMinus C hn))
       push_cast
       grind
-    · linarith [Int.floor_le (1 - F.phiPlus C hn)]
+    · grind [Int.floor_le (1 - F.phiPlus C hn)]
 
 /-- **Bounded t-structure from the dual half-open convention.**
 The t-structure induced by `toTStructureGE` is bounded. -/
@@ -420,7 +420,7 @@ theorem Slicing.toTStructureGE_bounded (s : Slicing C) :
   · have hn := F.n_pos C hE
     refine ⟨⌈-(F.phiMinus C hn)⌉, ⌈1 - F.phiPlus C hn⌉ - 1, Or.inr ⟨F, hn, ?_⟩,
       Or.inr ⟨F, hn, ?_⟩⟩
-    · linarith [Int.le_ceil (-(F.phiMinus C hn))]
+    · grind [Int.le_ceil (-(F.phiMinus C hn))]
     · have hceil : ((⌈1 - F.phiPlus C hn⌉ - 1 : ℤ) : ℝ) < 1 - F.phiPlus C hn := by
         exact (Int.lt_ceil).1 (by grind)
       linarith

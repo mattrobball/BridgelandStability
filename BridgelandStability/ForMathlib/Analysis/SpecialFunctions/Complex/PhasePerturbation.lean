@@ -32,7 +32,7 @@ theorem im_sq_le_norm_sq_mul (z : ℂ) :
   rw [Complex.sq_norm (z - 1), Complex.sq_norm z]
   simp only [Complex.normSq_apply, Complex.sub_re, Complex.one_re,
     Complex.sub_im, Complex.one_im, sub_zero]
-  nlinarith [sq_nonneg (z.re * z.re + z.im * z.im - z.re)]
+  grind [sq_nonneg (z.re * z.re + z.im * z.im - z.re)]
 
 /-- For any nonzero `z : ℂ`, `|sin(arg z)| ≤ ‖z - 1‖`. -/
 theorem abs_sin_arg_le_norm_sub_one {z : ℂ} (hz : z ≠ 0) :
@@ -50,13 +50,13 @@ theorem sin_abs_eq_abs_sin {x : ℝ} (hx : |x| < Real.pi / 2) :
   · have hx' : x < Real.pi / 2 := by rwa [abs_of_nonneg h] at hx
     rw [abs_of_nonneg h, abs_of_nonneg
       (Real.sin_nonneg_of_nonneg_of_le_pi h
-        (by linarith [Real.pi_pos]))]
+        (by grind [Real.pi_pos]))]
   · have : -x < Real.pi / 2 := by rwa [abs_of_neg h] at hx
     have hsin : Real.sin x < 0 := by
       have : 0 < Real.sin (-x) :=
         Real.sin_pos_of_pos_of_lt_pi (neg_pos.mpr h)
-          (by linarith [Real.pi_pos])
-      linarith [Real.sin_neg x]
+          (by grind [Real.pi_pos])
+      grind [Real.sin_neg x]
     rw [abs_of_neg h, Real.sin_neg, abs_of_neg hsin]
 
 /-- **Phase bound for near-identity perturbation**. If
@@ -75,7 +75,7 @@ theorem abs_arg_one_add_lt {u : ℂ} {ε : ℝ}
     rw [norm_one] at h2; linarith
   have hre : 0 < ((1 : ℂ) + u).re := by
     simp only [Complex.add_re, Complex.one_re]
-    linarith [neg_le_of_abs_le (Complex.abs_re_le_norm u)]
+    grind [neg_le_of_abs_le (Complex.abs_re_le_norm u)]
   have harg_lt : |Complex.arg ((1 : ℂ) + u)| < Real.pi / 2 :=
     Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl hre)
   have hsin_le :
@@ -91,8 +91,7 @@ theorem abs_arg_one_add_lt {u : ℂ} {ε : ℝ}
       Real.sin (Real.pi * ε) ≤
         Real.sin (|Complex.arg ((1 : ℂ) + u)|) :=
     Real.monotoneOn_sin
-      ⟨by nlinarith [mul_pos hπ hε], hπε2⟩
-      ⟨by linarith [abs_nonneg (Complex.arg ((1 : ℂ) + u)),
-            hπ],
+      ⟨by grind [mul_pos hπ hε], hπε2⟩
+      ⟨by grind [abs_nonneg (Complex.arg ((1 : ℂ) + u))],
         harg_lt.le⟩ h
-  linarith [hsin_abs]
+  grind

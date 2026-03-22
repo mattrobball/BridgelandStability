@@ -49,7 +49,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     Slicing C where
@@ -90,7 +90,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
           · exact absurd hZ' hSS.2.1
           · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
               simp only [HNFiltration.shiftHN, Int.cast_one]
-              constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+              constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
         · -- W(K₀.of C (X⟦1⟧)) ≠ 0
           rw [K₀.of_shift_one, map_neg]
           exact neg_ne_zero.mpr hSS.2.2.1
@@ -123,13 +123,13 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
             · exact Or.inl ((shiftFunctor C (-1 : ℤ)).map_isZero hZ)
             · exact Or.inr ⟨F.shiftHN C σ.slicing (-1), fun i ↦ by
                 simp only [HNFiltration.shiftHN, Int.cast_neg, Int.cast_one]
-                constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+                constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
           have hQ1 : σ.slicing.intervalProp C a b (Q⟦(-1 : ℤ)⟧) := by
             rcases hQ with hZ | ⟨F, hF⟩
             · exact Or.inl ((shiftFunctor C (-1 : ℤ)).map_isZero hZ)
             · exact Or.inr ⟨F.shiftHN C σ.slicing (-1), fun i ↦ by
                 simp only [HNFiltration.shiftHN, Int.cast_neg, Int.cast_one]
-                constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+                constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
           have hKne1 : ¬IsZero (K⟦(-1 : ℤ)⟧) := fun h ↦
             hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (-1 : ℤ)) K h)
           -- Apply X's semistability
@@ -164,7 +164,7 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
                 change a - 1 < (F.shiftHN C σ.slicing (-1)).φ i ∧
                   (F.shiftHN C σ.slicing (-1)).φ i < b - 1
                 simp only [HNFiltration.shiftHN, Int.cast_neg, Int.cast_one]
-                constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+                constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
         · -- W(K₀.of C X) ≠ 0
           change W (K₀.of C X) ≠ 0
           intro h; exact hSS.2.2.1 (show W (K₀.of C (X⟦(1 : ℤ)⟧)) = 0 from by
@@ -193,13 +193,13 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
             · exact Or.inl ((shiftFunctor C (1 : ℤ)).map_isZero hZ)
             · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
                 simp only [HNFiltration.shiftHN, Int.cast_one]
-                constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+                constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
           have hQ1 : σ.slicing.intervalProp C a b (Q⟦(1 : ℤ)⟧) := by
             rcases hQ with hZ | ⟨F, hF⟩
             · exact Or.inl ((shiftFunctor C (1 : ℤ)).map_isZero hZ)
             · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
                 simp only [HNFiltration.shiftHN, Int.cast_one]
-                constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+                constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
           have hKne1 : ¬IsZero (K⟦(1 : ℤ)⟧) := fun h ↦
             hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (1 : ℤ)) K h)
           -- Apply X⟦1⟧'s semistability
@@ -228,7 +228,7 @@ theorem StabilityCondition.deformedSlicing_compat
     (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (ψ : ℝ) (E : C)
@@ -262,7 +262,7 @@ theorem sigma_semistable_intervalProp
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     {ε : ℝ} (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     {E : C} {φ : ℝ} (hP : σ.slicing.P φ E) (hE : ¬IsZero E)
@@ -272,14 +272,14 @@ theorem sigma_semistable_intervalProp
   -- Apply sigmaSemistable_hasDeformedHN to get Q-HN with phases in (φ-2ε, φ+4ε).
   -- Then enlarge by δ to get the desired Q-interval bound.
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
-  exact Or.inr ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
+  exact Or.inr ⟨G, fun j ↦ ⟨by grind [(hGφ j).1], by grind [(hGφ j).2]⟩⟩
 
 theorem deformed_intervalProp_subset_sigma_intervalProp
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     {ε : ℝ} (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (t : ℝ) :

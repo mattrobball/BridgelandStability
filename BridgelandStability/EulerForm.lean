@@ -197,7 +197,7 @@ lemma eulerSum_of_rank_identity
     exact hn.2
   rw [finsum_add_distrib hfs1 hfs2]
   simp only [finsum_neg_distrib]
-  linarith [finsum_alternating_shift_cancel (r := r)]
+  grind [finsum_alternating_shift_cancel (r := r)]
 
 -- A version of `eulerSum_of_rank_identity` for arbitrary finitely-supported integer-valued
 -- sequences. This is used for the covariant Euler form, where the varying object appears in the
@@ -284,7 +284,7 @@ lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
     ring]
   rw [finsum_add_distrib hfs1 hfs2]
   simp only [finsum_neg_distrib]
-  linarith [finsum_alternating_shift_cancel (r := r)]
+  grind [finsum_alternating_shift_cancel (r := r)]
 
 -- For a middle-exact sequence in AddCommGrpCat that is also k-linear,
 -- the range/ker equality lifts from abelian groups to k-modules.

@@ -77,11 +77,11 @@ theorem wPhaseOf_perturbation_generic {m φ α ε : ℝ} {u : ℂ}
   set z₁ := (↑m : ℂ) * Complex.exp (↑(Real.pi * (φ - α)) * Complex.I)
   have hz1 : z₁ ≠ 0 := mul_ne_zero
     (by exact_mod_cast hm.ne') (Complex.exp_ne_zero _)
-  have hφα : |φ - α| < 1 / 2 := abs_lt.mpr ⟨by linarith [hφ.1], by linarith [hφ.2]⟩
+  have hφα : |φ - α| < 1 / 2 := abs_lt.mpr ⟨by grind [hφ.1], by grind [hφ.2]⟩
   have harg1 : Complex.arg z₁ = Real.pi * (φ - α) := by
     rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]
-    exact ⟨by nlinarith [mul_pos hπ (show (0 : ℝ) < 1 + (φ - α) from by grind [hφ.1])],
-           by nlinarith [mul_pos hπ (show (0 : ℝ) < 1 - (φ - α) from by grind [hφ.2])]⟩
+    exact ⟨by grind [mul_pos hπ (show (0 : ℝ) < 1 + (φ - α) from by grind [hφ.1])],
+           by grind [mul_pos hπ (show (0 : ℝ) < 1 - (φ - α) from by grind [hφ.2])]⟩
   -- Step 4: arg(z₁) + arg(z₂) ∈ Ioc(-π, π), apply arg_mul
   set z₂ := (1 : ℂ) + u
   have hsum_mem : Complex.arg z₁ + Complex.arg z₂ ∈ Set.Ioc (-Real.pi) Real.pi := by
@@ -91,11 +91,11 @@ theorem wPhaseOf_perturbation_generic {m φ α ε : ℝ} {u : ℂ}
     constructor
     · -- -π < π(φ-α) + arg(z₂)
       have : -(Real.pi / 2) < Real.pi * (φ - α) := by
-        nlinarith [mul_pos hπ (show (0 : ℝ) < 1 / 2 + (φ - α) from by grind [hφ.1])]
+        grind [mul_pos hπ (show (0 : ℝ) < 1 / 2 + (φ - α) from by grind [hφ.1])]
       linarith
     · -- π(φ-α) + arg(z₂) ≤ π
       have : Real.pi * (φ - α) < Real.pi / 2 := by
-        nlinarith [mul_pos hπ (show (0 : ℝ) < 1 / 2 - (φ - α) from by grind [hφ.2])]
+        grind [mul_pos hπ (show (0 : ℝ) < 1 / 2 - (φ - α) from by grind [hφ.2])]
       linarith
   have harg_prod : Complex.arg (z₁ * z₂) = Complex.arg z₁ + Complex.arg z₂ :=
     Complex.arg_mul hz1 hz2 hsum_mem
@@ -106,7 +106,7 @@ theorem wPhaseOf_perturbation_generic {m φ α ε : ℝ} {u : ℂ}
   have hsimpl : α + (Real.pi * (φ - α) + Complex.arg z₂) / Real.pi - φ =
       Complex.arg z₂ / Real.pi := by field_simp; ring
   rw [hsimpl, abs_div, abs_of_pos hπ, div_lt_iff₀ hπ]
-  linarith [harg_u]
+  grind
 
 end PhasePerturbation
 

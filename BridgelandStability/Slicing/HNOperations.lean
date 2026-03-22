@@ -290,7 +290,7 @@ def HNFiltration.shiftHN (s : Slicing C) {E : C}
   hφ := by
     intro i j hij
     change F.φ j + ↑a < F.φ i + ↑a
-    linarith [F.hφ hij]
+    grind [F.hφ hij]
   semistable := fun j ↦ (s.shift_int C (F.φ j) ((F.triangle j).obj₃) a).mp (F.semistable j)
 
 /-- The phiMinus of a shifted HN filtration increases by `a`. -/

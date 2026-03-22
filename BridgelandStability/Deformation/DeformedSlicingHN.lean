@@ -56,7 +56,7 @@ theorem deformedPred_shift_one
       · exact absurd hZ' hSS.2.1
       · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
           simp only [HNFiltration.shiftHN, Int.cast_one]
-          constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+          constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
     · -- W(K₀.of C (X⟦1⟧)) ≠ 0
       rw [K₀.of_shift_one, map_neg]
       exact neg_ne_zero.mpr hSS.2.2.1
@@ -86,13 +86,13 @@ theorem deformedPred_shift_one
         · exact Or.inl ((shiftFunctor C (-1 : ℤ)).map_isZero hZ)
         · exact Or.inr ⟨F.shiftHN C σ.slicing (-1), fun i ↦ by
             simp only [HNFiltration.shiftHN, Int.cast_neg, Int.cast_one]
-            constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+            constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
       have hQ1 : σ.slicing.intervalProp C a b (Q⟦(-1 : ℤ)⟧) := by
         rcases hQ with hZ | ⟨F, hF⟩
         · exact Or.inl ((shiftFunctor C (-1 : ℤ)).map_isZero hZ)
         · exact Or.inr ⟨F.shiftHN C σ.slicing (-1), fun i ↦ by
             simp only [HNFiltration.shiftHN, Int.cast_neg, Int.cast_one]
-            constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+            constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
       have hKne1 : ¬IsZero (K⟦(-1 : ℤ)⟧) := fun h ↦
         hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (-1 : ℤ)) K h)
       have hsem : wPhaseOf (W (K₀.of C (K⟦(-1 : ℤ)⟧))) ((a + b) / 2) ≤ φ :=
@@ -131,7 +131,7 @@ theorem deformedPred_of_shift_one
             change a - 1 < (F.shiftHN C σ.slicing (-1)).φ i ∧
               (F.shiftHN C σ.slicing (-1)).φ i < b - 1
             simp only [HNFiltration.shiftHN, Int.cast_neg, Int.cast_one]
-            constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+            constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
     · -- W(K₀.of C X) ≠ 0
       intro hw
       apply hSS.2.2.1
@@ -156,13 +156,13 @@ theorem deformedPred_of_shift_one
         · exact Or.inl ((shiftFunctor C (1 : ℤ)).map_isZero hZ)
         · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
             simp only [HNFiltration.shiftHN, Int.cast_one]
-            constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+            constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
       have hQ1 : σ.slicing.intervalProp C a b (Q⟦(1 : ℤ)⟧) := by
         rcases hQ with hZ | ⟨F, hF⟩
         · exact Or.inl ((shiftFunctor C (1 : ℤ)).map_isZero hZ)
         · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
             simp only [HNFiltration.shiftHN, Int.cast_one]
-            constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
+            constructor <;> [grind [(hF i).1]; grind [(hF i).2]]⟩
       have hKne1 : ¬IsZero (K⟦(1 : ℤ)⟧) := fun h ↦
         hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (1 : ℤ)) K h)
       have hsem : wPhaseOf (W (K₀.of C (K⟦(1 : ℤ)⟧))) ((a + b) / 2) ≤ φ + 1 :=
@@ -327,7 +327,7 @@ theorem deformedSlicing_hn_exists
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     {ε : ℝ} (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (E : C) :
@@ -376,7 +376,7 @@ theorem deformedSlicing_hn_exists
         -- factor j ∈ Q(≤t): each Q-HN factor has phase < sⱼ+4ε ≤ t
         apply σ.deformedLePred_of_deformedLtPred C W hW
         exact ObjectProperty.ExtensionClosure.of_postnikovTower G.toPostnikovTower (fun i ↦
-          ⟨G.φ i, by linarith [(hG i).2, ht j], G.semistable i⟩))
+          ⟨G.φ i, by grind [(hG i).2, ht j], G.semistable i⟩))
   -- Step B: E ∈ Q(>s) for s ≤ min phase - ε
   have hE_gt : ∀ s : ℝ, (∀ j : Fin F.n, s + ε ≤ F.φ j) →
       σ.deformedGtPred C W hW ε s E := by
@@ -415,7 +415,7 @@ theorem deformedSlicing_hn_exists
       have h2 : ↑N = (↑(Nat.ceil ((t - s) / δ)) : ℝ) + 1 := by
         simp only [N, Nat.cast_add, Nat.cast_one]
       have h3 : (t - s) / δ * δ = t - s := div_mul_cancel₀ _ (ne_of_gt hδ)
-      nlinarith [mul_le_mul_of_nonneg_right h1 (le_of_lt hδ)]
+      grind [mul_le_mul_of_nonneg_right h1 (le_of_lt hδ)]
     obtain ⟨G, _, _⟩ := hmain N t E hE_le_t
       (σ.deformedGtPred_anti C W hW hNδ _ hE_gt_s)
     exact ⟨G⟩
@@ -460,7 +460,7 @@ theorem deformedSlicing_hn_exists
       refine ⟨GY.ofIso C (asIso gRY).symm, fun j ↦ ?_, fun j ↦ ?_⟩
       · show t - ↑(n + 1) * δ < GY.φ j
         have : t' - ↑n * δ = t - ↑(n + 1) * δ := by push_cast; simp [t']; ring
-        linarith [hGY_lo j]
+        grind [hGY_lo j]
       · show GY.φ j ≤ t
         exact le_trans (hGY_hi j) (by simp [t']; grind)
     · -- X nonzero: get Q-HN of X with phases in (t', t], combine with GY
@@ -489,7 +489,7 @@ theorem deformedSlicing_hn_exists
             rcases hPred with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
             · exact Or.inl hZ
             · exact σ.slicing.leProp_of_phiPlus_le C hSS'.2.1
-                (by linarith [(phase_confinement_from_stabSeminorm C σ W hW hab' hε hε2
+                (by grind [(phase_confinement_from_stabSeminorm C σ W hW hab' hε hε2
                   hthin' hsin hSS').2])
           | ext hT' _ _ ih1 ih3 =>
             exact σ.slicing.leProp_of_triangle C _ ih1 ih3 hT'
@@ -501,7 +501,7 @@ theorem deformedSlicing_hn_exists
       have hX_int : σ.slicing.intervalProp C (t' - ε) (t + ε + η) X :=
         σ.slicing.intervalProp_of_intrinsic_phases C hXz
           (σ.slicing.phiMinus_gt_of_gtProp C hXz hX_sigmaGt)
-          (by linarith [σ.slicing.phiPlus_le_of_leProp C hXz hX_sigmaLe])
+          (by grind [σ.slicing.phiPlus_le_of_leProp C hXz hX_sigmaLe])
       set a_int := t' - 3 * ε
       set b_int := t + 5 * ε + η
       have hab_int : a_int < b_int := by simp only [a_int, b_int, t']; nlinarith
@@ -587,10 +587,10 @@ theorem deformedSlicing_hn_exists
         Triangulated.append_hn_filtration_of_triangle_le (C := C) hPiso GX GY
         fXR gRY hYX hT
         (t - ↑(n + 1) * δ) t
-        (fun j ↦ by linarith [hGX_lo_bound j, hle_t'])
+        (fun j ↦ by grind [hGX_lo_bound j])
         (fun i ↦ by
           have : t' - ↑n * δ = t - ↑(n + 1) * δ := by push_cast; simp [t']; ring
-          linarith [hGY_lo i]) hsep
+          grind [hGY_lo i]) hsep
         hGX_hi_bound
         (fun i ↦ le_trans (hGY_hi i) (by simp [t']; grind))
       exact ⟨G, hG_lo, hG_hi⟩

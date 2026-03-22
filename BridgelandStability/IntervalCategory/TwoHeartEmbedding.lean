@@ -89,7 +89,7 @@ theorem Slicing.intervalProp_implies_leftHeart (s : Slicing C) {a b : ℝ}
     · by_cases hn : 0 < F.n
       · right
         refine ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - a,
-          fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hn, ?_⟩
+          fun i j h ↦ by grind [F.hφ h], fun j ↦ ?_⟩, hn, ?_⟩
         · change s.P (F.φ j - a + a) _
           rw [show F.φ j - a + a = F.φ j from by grind]
           exact F.semistable j

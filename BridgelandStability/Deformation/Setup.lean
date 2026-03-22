@@ -69,10 +69,10 @@ theorem StabilityCondition.exists_epsilon0 (σ : StabilityCondition C) :
     ring
   letI : Fact (a < b) := ⟨by
     dsimp [a, b]
-    linarith [hη]⟩
+    grind⟩
   letI : Fact (b - a ≤ 1) := ⟨by
     dsimp [a, b]
-    linarith [hη']⟩
+    grind⟩
   suffices
       ∀ {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)],
         a = t - η → b = t + η →
@@ -112,10 +112,10 @@ theorem StabilityCondition.exists_epsilon0_sector (σ : StabilityCondition C) :
     ring
   letI : Fact (a < b) := ⟨by
     dsimp [a, b]
-    linarith [hη]⟩
+    grind⟩
   letI : Fact (b - a ≤ 1) := ⟨by
     dsimp [a, b]
-    linarith [hη']⟩
+    grind⟩
   suffices
       ∀ {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)],
         a = t - η → b = t + η →
@@ -140,10 +140,10 @@ def SectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
     let b := t + 2 * ε₀
     letI : Fact (a < b) := ⟨by
       dsimp [a, b]
-      linarith [hε₀]⟩
+      grind⟩
     letI : Fact (b - a ≤ 1) := ⟨by
       dsimp [a, b]
-      linarith [hε₀2]⟩
+      grind⟩
     ∀ E : σ.slicing.IntervalCat C a b,
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
 
@@ -157,10 +157,10 @@ def WideSectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
     let b := t + 4 * ε₀
     letI : Fact (a < b) := ⟨by
       dsimp [a, b]
-      linarith [hε₀]⟩
+      grind⟩
     letI : Fact (b - a ≤ 1) := ⟨by
       dsimp [a, b]
-      linarith [hε₀8]⟩
+      grind⟩
     ∀ E : σ.slicing.IntervalCat C a b,
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
 
