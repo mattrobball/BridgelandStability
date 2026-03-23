@@ -107,11 +107,11 @@ that manifold.
 
 The numerical topological statement is formalized as
 `CategoryTheory.Triangulated.bridgelandCorollary_1_3` in
-`BridgelandStability/NumericalStability.lean`:
+`BridgelandStability/EulerForm.lean`:
 
 ```lean
 def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C]
-    [EulerFormDescends k C] : Prop :=
+    [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
   let χ := eulerForm k C
   NumericallyFinite C χ →
     ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
@@ -128,12 +128,15 @@ def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C]
           (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
 ```
 
-The consequent complex-manifold packaging now lives separately in
-`BridgelandStability/NumericalStabilityManifold.lean`, whose theorem
-`bridgelandCorollary_1_3_complexManifold` builds the charted-space and
-`IsManifold` structures for numerical connected components. The Euler-form
-descent used to define the numerical quotient is proved in
-`BridgelandStability/EulerForm.lean`.
+The numerical package is now split across three files. The generic quotient
+infrastructure lives in `BridgelandStability/NumericalStability.lean`: the
+object-level Euler form, the radical, `NumericalK₀`, `NumericallyFinite`, and
+`NumericalStabilityCondition`. The concrete descent of the Euler form to `K₀`
+and the Corollary 1.3 local-homeomorphism statement live in
+`BridgelandStability/EulerForm.lean`. The consequent complex-manifold packaging
+lives separately in `BridgelandStability/NumericalStabilityManifold.lean`,
+whose theorem `bridgelandCorollary_1_3_complexManifold` builds the
+`ChartedSpace` and `IsManifold` structures for numerical connected components.
 
 ## Techniques from the paper
 
@@ -219,10 +222,11 @@ umbrella import over the actual module tree. The main pieces are:
 - [`BridgelandStability/NumericalStability.lean`](BridgelandStability/NumericalStability.lean),
   [`BridgelandStability/EulerForm.lean`](BridgelandStability/EulerForm.lean),
   and [`BridgelandStability/NumericalStabilityManifold.lean`](BridgelandStability/NumericalStabilityManifold.lean):
-  the descent of the Euler form to `K₀`, numerical Grothendieck groups,
-  numerical stability conditions, Corollary 1.3 as a local-homeomorphism
-  statement, and the separate complex manifold assembly for numerical
-  connected components.
+  the generic numerical quotient infrastructure (`eulerFormObj`,
+  `NumericalK₀`, `NumericallyFinite`, `NumericalStabilityCondition`), the
+  concrete descent of the Euler form to `K₀` together with Corollary 1.3 as a
+  local-homeomorphism statement, and the separate complex manifold assembly
+  for numerical connected components.
 
 The code should be read as an active formalization project, not as a polished
 final library. Some files already expose reusable APIs; others still need the

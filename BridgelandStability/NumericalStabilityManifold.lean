@@ -554,7 +554,7 @@ theorem exists_chartedSpace_and_complexManifold_of_isLocalHomeomorph_to_complex_
 model and the generic manifold bridge are available, the complex-manifold conclusion should follow
 without a large bespoke proof. -/
 theorem bridgelandCorollary_1_3_complexManifold [Linear k C] [IsFiniteType k C]
-    [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)]
+    [(shiftFunctor C (1 : ℤ)).Linear k]
     (hnum : NumericallyFinite C (eulerForm k C))
     (cc : ConnectedComponents (NumericalStabilityCondition C (eulerForm k C))) :
     ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)

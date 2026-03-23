@@ -416,7 +416,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
 -- Same argument applied to the preadditiveYoneda functor.
 theorem eulerFormObj_covariant_triangleAdditive (F : C)
-    [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
+    [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (fun E ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
     simp only [eulerFormObj]
@@ -573,7 +573,7 @@ def eulerFormInner (E : C) : K₀ C →+ ℤ := by
 /-- The outer function `E ↦ eulerFormInner E` is triangle-additive, so the Euler
 form descends to a bilinear form on `K₀`. -/
 instance eulerFormInner_isTriangleAdditive
-    [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
+    [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (eulerFormInner k C) where
   additive T hT := by
     apply QuotientAddGroup.addMonoidHom_ext
@@ -588,7 +588,7 @@ instance eulerFormInner_isTriangleAdditive
 
 /-- The Euler form on `K₀`, obtained by applying the universal property of `K₀`
 twice to `eulerFormObj`. -/
-def eulerForm [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
+def eulerForm [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ K₀ C →+ ℤ :=
   K₀.lift C (eulerFormInner k C)
 
@@ -599,7 +599,7 @@ def eulerForm [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
 If `C` is numerically finite with respect to this Euler form, then every connected
 component of numerical stability conditions carries the expected local homeomorphism
 into a complex-linear subspace of the numerical charge space. -/
-def bridgelandCorollary_1_3 [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] : Prop :=
+def bridgelandCorollary_1_3 [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
   let χ := eulerForm k C
   NumericallyFinite C χ →
     ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
