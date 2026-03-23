@@ -1,6 +1,6 @@
 # Naming Audit for Bridgeland Stability
 
-**Date**: 2026-03-22  
+**Date**: 2026-03-22, updated 2026-03-23  
 **Basis**: corrected Mathlib-style reading after checking both the official naming guidance and
 nearby Mathlib wrapper implementations
 
@@ -17,13 +17,15 @@ The corrected picture is:
 - and one part of the naming problem is blocked on a design issue: the implementation of
   `NumericalStabilityCondition`.
 
+Since the first draft of this audit, `EulerFormDescends` has been removed from the repo. The
+current naming discussion should therefore focus on the live API, not on deleted abstractions.
+
 ## Good as-is on naming grounds
 
 These should not be renamed just because of casing:
 
 - `StabilityFunction.HasHNProperty`
 - `IsFiniteType`
-- `EulerFormDescends`
 - `NumericallyFinite`
 - `AbelianHNFiltration`
 
@@ -31,67 +33,63 @@ These may still be revisited for broader API reasons, but they are not immediate
 
 ## Highest-priority naming debt
 
-### 1. Theorem-number names that hide the content
+### 1. Recently resolved in the first rename pass
 
-- `bridgelandTheorem_1_2`
+The repo no longer uses the content-free name `bridgelandTheorem_1_2`. It has been renamed to the
+contentful proposition name:
+
+- `StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents`
+
+Likewise, the first batch of obvious theorem-style casing fixes is now done:
+
+- `StabilityCondition.false_of_all_hn_phases_below`
+- `StabilityCondition.false_of_all_hn_phases_above`
+- `StabilityCondition.false_of_gt_and_le_phases`
+
+### 2. Rename now: remaining theorem-proof names with capitalized proof stems
+
+There is still live theorem-style naming debt in this family. A clear remaining example is:
+
+- `StabilityCondition.False_of_HN_phases_le_with_lt`
+
+This should be normalized to a theorem-style lowercase name.
+
+### 3. Rename now: public names built from proof letters or placeholder stems
+
+These are poor public API names even if the proofs are mathematically correct:
+
+- `StabilityCondition.P_of_Q_of_P_semistable`
+- `P_phi_of_truncation_of_P_phi_cone`
+- `sigmaSemistable_hasDeformedHN`
+- `SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound`
+- `gtProp_of_geProp_of_lt`
+- `Slicing.tStructureAux`
+- `Slicing.tStructureAuxGE`
+
+The issue is not just style. These names still expose scratch proof letters (`P`, `Q`), temporary
+development labels (`Aux`), or argument-by-argument scaffolding rather than the mathematical
+conclusion.
+
+## Design-linked naming debt
+
+### 1. The Corollary 1.3 family is blocked on the numerical-wrapper design
+
+These are still content-free theorem-number names:
+
 - `bridgelandCorollary_1_3`
 - `bridgelandCorollary_1_3_complexManifold`
 
-These are the clearest naming failures.
-
-The problem is not mainly casing. The problem is that the names say nothing about the mathematics.
-
-For Theorem 1.2, the current best replacement is:
-
-- `StabilityCondition.CentralChargeIsLocalHomeomorphOnComponents`
-
-For Corollary 1.3, the best name depends on the implementation choice for numerical stability
-conditions:
+But the best replacement depends on the implementation choice for numerical stability conditions:
 
 - if the current wrapper stays, then the most honest namespace is
-  `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnComponents`;
+  `NumericalStabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents`;
 - if the implementation is refactored into a subtype-style stability-condition specialization, then
   a `StabilityCondition.Numerical...` family becomes more plausible.
 
 For the complex-manifold theorem, the final name should be chosen only after the Corollary 1.3
 namespace decision is settled.
 
-### 2. Public theorem names with capitalized proof stems
-
-These are genuine theorem-style naming problems:
-
-- `StabilityCondition.False_of_all_HN_phases_below`
-- `StabilityCondition.False_of_all_HN_phases_above`
-- `StabilityCondition.False_of_gt_and_le_phases`
-
-These should become theorem-style lowercase names:
-
-- `StabilityCondition.false_of_all_hn_phases_below`
-- `StabilityCondition.false_of_all_hn_phases_above`
-- `StabilityCondition.false_of_gt_and_le_phases`
-
-### 3. Public theorem names built from schematic letters
-
-These are poor public API names even if the proof is correct:
-
-- `StabilityCondition.P_of_Q_of_P_semistable`
-- `P_phi_of_truncation_of_P_phi_cone`
-
-These need semantic names that describe the mathematical conclusion.
-
-### 4. Theorem names that still look like proof scaffolding
-
-These should be theorem-style names, not development-stage proof labels:
-
-- `sigmaSemistable_hasDeformedHN`
-- `SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound`
-- `gtProp_of_geProp_of_lt`
-
-Even if some abbreviations remain, these need theorem-style normalization.
-
-## Design-linked naming debt
-
-The biggest design-linked naming issue is:
+### 2. The biggest design-linked naming issue is still `NumericalStabilityCondition`
 
 - `NumericalStabilityCondition`
 
@@ -171,10 +169,10 @@ best mathematical presentation of the underlying propositions.
 
 ## Recommended order of attack
 
-1. Replace theorem-number names with contentful names.
-2. Normalize obviously theorem-style declarations to theorem-style names.
+1. Normalize the remaining theorem-style declarations to theorem-style names.
+2. Rename the public proof-scaffolding names (`P_of_Q_of_P_semistable`, `tStructureAux`, etc.).
 3. Settle the implementation of `NumericalStabilityCondition`.
-4. Rename the semantic outliers built from placeholder letters.
+4. Rename the Corollary 1.3 family once the numerical-wrapper namespace is settled.
 5. Clean up the larger abbreviation families, especially `H0prime`.
 
 ## Bottom line
@@ -184,6 +182,6 @@ the same kind.
 
 The highest-value fixes are:
 
-- remove content-free theorem-number names,
-- make theorem proofs look like theorem proofs,
+- finish the remaining theorem-proof cleanup,
+- eliminate the public proof-scaffolding names,
 - and stop deferring the design question behind `NumericalStabilityCondition`.

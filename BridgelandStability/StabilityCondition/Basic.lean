@@ -39,8 +39,8 @@ the main theorem from "Stability conditions on triangulated categories" (2007):
 * `CategoryTheory.Triangulated.stabSeminorm`: the seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)`
 * `CategoryTheory.Triangulated.StabilityCondition.topologicalSpace`: the Bridgeland
   topology on `Stab(D)`, constructed from basis neighborhoods
-* `CategoryTheory.Triangulated.bridgelandTheorem_1_2`: **Theorem 1.2** as a `Prop`,
-  stated componentwise with a linear subspace `V(Σ)`
+* `CategoryTheory.Triangulated.StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents`:
+  **Theorem 1.2** as a `Prop`, stated componentwise with a linear subspace `V(Σ)`
 
 ## References
 

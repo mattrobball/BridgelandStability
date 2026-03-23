@@ -66,11 +66,11 @@ looks like a linear space of possible central charges.
 > its central charge `Z`.
 
 In the current formalization, this paper statement is packaged as the proposition
-`CategoryTheory.Triangulated.bridgelandTheorem_1_2` in
+`CategoryTheory.Triangulated.StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents` in
 `BridgelandStability/StabilityCondition/Topology.lean`:
 
 ```lean
-def bridgelandTheorem_1_2 : Prop :=
+def StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents : Prop :=
   ∀ (cc : ConnectedComponents (StabilityCondition C)),
     ∃ (V : Submodule ℂ (K₀ C →+ ℂ))
       (_ : NormedAddCommGroup V)
@@ -85,7 +85,7 @@ def bridgelandTheorem_1_2 : Prop :=
 
 The corresponding proof term is assembled in
 `BridgelandStability/StabilityCondition/LocalHomeomorphism.lean` as
-`bridgeland_theorem_1_2'`.
+`StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents'`.
 
 Corollary 1.3 is the numerically finite version. When the Euler form on `K(D)`
 has finite-rank numerical quotient

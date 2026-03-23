@@ -19,8 +19,8 @@ The biggest correction to an over-simple rule is this:
 - and when an `UpperCamelCase` concept appears *inside* the name of a proof, it should appear in
   `lowerCamelCase`.
 
-So `bridgelandTheorem_1_2` is bad, but not because it should be `snake_case`. It is bad because
-the name says nothing about the content.
+So a name like `bridgelandCorollary_1_3` is bad, but not because it should be `snake_case`. It is
+bad because the name says nothing about the content.
 
 ## What names should do
 
@@ -40,8 +40,8 @@ Bad public names are usually bad for one of two reasons:
 
 That is the real problem with names like:
 
-- `bridgelandTheorem_1_2`
 - `bridgelandCorollary_1_3`
+- `bridgelandCorollary_1_3_complexManifold`
 - `P_of_Q_of_P_semistable`
 
 The issue is not merely syntax. The issue is that the reader learns almost nothing from the name.

@@ -61,7 +61,7 @@ we reach a contradiction.
 The proof decomposes `Z(E) = Σ Z(Fᵢ)` via K₀ additivity, divides by `exp(iπφ)`,
 and shows the imaginary part is both zero (since `Z(E) = m · exp(iπφ)` is on a ray)
 and strictly negative (since each nonzero factor contributes a negative `sin` term). -/
-theorem StabilityCondition.False_of_all_HN_phases_below (σ τ : StabilityCondition C)
+theorem StabilityCondition.false_of_all_hn_phases_below (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z) {E : C} {φ : ℝ} (hE : ¬IsZero E)
     (hτ : (τ.slicing.P φ) E)
     (F : HNFiltration C σ.slicing.P E)
@@ -136,9 +136,9 @@ theorem StabilityCondition.False_of_all_HN_phases_below (σ τ : StabilityCondit
   linarith
 
 /-- **One-sided phase impossibility for Lemma 6.4** (above). Symmetric version of
-`False_of_all_HN_phases_below`: if all nonzero factors have phase strictly above `φ`
+`false_of_all_hn_phases_below`: if all nonzero factors have phase strictly above `φ`
 (and below `φ + 1`), we also reach a contradiction. -/
-theorem StabilityCondition.False_of_all_HN_phases_above (σ τ : StabilityCondition C)
+theorem StabilityCondition.false_of_all_hn_phases_above (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z) {E : C} {φ : ℝ} (hE : ¬IsZero E)
     (hτ : (τ.slicing.P φ) E)
     (F : HNFiltration C σ.slicing.P E)
@@ -229,7 +229,7 @@ theorem StabilityCondition.P_of_Q_of_P_semistable (σ τ : StabilityCondition C)
 
 Combined with `phiPlus_σ(E), phiMinus_σ(E) ∈ (φ-1, φ+1)` from
 `intervalProp_of_semistable_slicingDist`, this pins `φ` between the extreme `σ`-phases.
-The proof applies `False_of_all_HN_phases_below` / `False_of_all_HN_phases_above` to
+The proof applies `false_of_all_hn_phases_below` / `false_of_all_hn_phases_above` to
 the canonical HN filtration from `exists_both_nonzero`. -/
 theorem StabilityCondition.phiMinus_le_le_phiPlus (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z)
@@ -250,16 +250,16 @@ theorem StabilityCondition.phiMinus_le_le_phiPlus (σ τ : StabilityCondition C)
   have hFge : ∀ i : Fin F.n, F.φ i ≤ F.φ ⟨0, hn⟩ :=
     fun i ↦ F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
   constructor
-  · -- phiMinus ≤ φ: if not, all phases > φ, contradicting False_of_all_HN_phases_above
+  · -- phiMinus ≤ φ: if not, all phases > φ, contradicting false_of_all_hn_phases_above
     rw [hpM]
     by_contra h; push_neg at h
-    exact σ.False_of_all_HN_phases_above C τ hZ hE hτ F
+    exact σ.false_of_all_hn_phases_above C τ hZ hE hτ F
       (fun i _ ↦ lt_of_lt_of_le h (hFle i))
       (fun i _ ↦ lt_of_le_of_lt (hFge i) hP_lt)
-  · -- φ ≤ phiPlus: if not, all phases < φ, contradicting False_of_all_HN_phases_below
+  · -- φ ≤ phiPlus: if not, all phases < φ, contradicting false_of_all_hn_phases_below
     rw [hpP]
     by_contra h; push_neg at h
-    exact σ.False_of_all_HN_phases_below C τ hZ hE hτ F
+    exact σ.false_of_all_hn_phases_below C τ hZ hE hτ F
       (fun i _ ↦ lt_of_le_of_lt (hFge i) h)
       (fun i _ ↦ lt_of_lt_of_le hM_gt (hFle i))
 
@@ -269,7 +269,7 @@ then `False`.
 
 The proof decomposes `Z(X)` via both `σ`- and `τ`-HN filtrations. From the `σ`-decomposition,
 `Im(Z(X)/exp(iπφ)) > 0`. From the `τ`-decomposition, `Im(Z(X)/exp(iπφ)) ≤ 0`. -/
-theorem StabilityCondition.False_of_gt_and_le_phases (σ τ : StabilityCondition C)
+theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z) {X : C} {φ : ℝ} (hX : ¬IsZero X)
     (Fσ : HNFiltration C σ.slicing.P X)
     (hσgt : ∀ i : Fin Fσ.n, φ < Fσ.φ i)
@@ -380,7 +380,7 @@ theorem StabilityCondition.False_of_gt_and_le_phases (σ τ : StabilityCondition
 
 /-- **One-sided phase impossibility** (below with equality). If `σ` and `τ` have the same
 central charge, `E` is `τ`-semistable at `φ`, and all `σ`-HN phases are `≤ φ` with at
-least one strictly below, then `False`. This extends `False_of_all_HN_phases_below`
+least one strictly below, then `False`. This extends `false_of_all_hn_phases_below`
 to allow some phases equal to `φ`. -/
 theorem StabilityCondition.False_of_HN_phases_le_with_lt (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z) {E : C} {φ : ℝ} (hE : ¬IsZero E)
@@ -663,7 +663,7 @@ private theorem bridgeland_6_4_one_dir
     rw [abs_lt] at hM_bd; linarith
   -- Get canonical σ-HN and τ-HN of X with all phase bounds
   obtain ⟨FX, hnFX, hFXfirst, hFXlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hXne
-  exact σ.False_of_gt_and_le_phases C τ hZ hXne FX
+  exact σ.false_of_gt_and_le_phases C τ hZ hXne FX
     (fun i ↦ by calc φ < σ.slicing.phiMinus C X hXne := hXσM
       _ = FX.φ ⟨FX.n - 1, by grind⟩ :=
           σ.slicing.phiMinus_eq C X hXne FX hnFX hFXlast
@@ -701,7 +701,7 @@ The proof proceeds as follows. Given `E ∈ Q(φ)`, we show `E ∈ P(φ)`:
    through `Y⟦-1⟧`, but `Hom(U, Y⟦-1⟧) = 0` too, giving `U → X = 0`,
    contradicting `U ≠ 0`.
 3. Now `X` has σ-phases `> φ` and τ-phases `≤ φ`: the cross-slicing imaginary
-   part argument (`False_of_gt_and_le_phases`) gives `X = 0`.
+   part argument (`false_of_gt_and_le_phases`) gives `X = 0`.
 4. So `E ≅ Y` has all σ-phases `≤ φ`. The imaginary part argument then forces
    all phases `= φ`, making `E` σ-semistable at `φ`. -/
 theorem bridgeland_lemma_6_4 (σ τ : StabilityCondition C) (hZ : σ.Z = τ.Z)
@@ -725,7 +725,7 @@ and landing in `V(Σ)`, is a local homeomorphism.
 
 This implies each connected component of `Stab(D)` is a manifold locally
 modelled on the topological vector space `V(Σ)`. -/
-def bridgelandTheorem_1_2 : Prop :=
+def StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents : Prop :=
   ∀ (cc : ConnectedComponents (StabilityCondition C)),
     ∃ (V : Submodule ℂ (K₀ C →+ ℂ))
       (_ : NormedAddCommGroup V)

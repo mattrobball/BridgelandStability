@@ -25,7 +25,17 @@ All 11 instances have been fixed.
 
 ### Naming: CamelCase in declaration names
 
-Pervasive pattern — 300+ declarations use CamelCase components after the namespace dot where Mathlib expects `snake_case`. Major clusters:
+This section is a coarse scan and is superseded by
+`artifacts/mathlib-naming-audit.md`.
+
+The earlier “300+ CamelCase names are wrong” framing is too crude. Many
+`UpperCamelCase` names in this repo are named proposition-objects or bundled
+objects, not theorem proofs, and are acceptable on naming grounds. The real
+live naming debt is concentrated in theorem-number names, theorem proofs with
+capitalized stems, placeholder-letter public names, and a few public
+scaffolding names.
+
+The main clusters still worth case-by-case review are:
 - `HeartStabilityData.H0Functor`, `HeartStabilityData.ZOnHeartK0`, `HeartStabilityData.H0prime` (~100)
 - `SkewedStabilityFunction.Semistable` and related (~50)
 - `StabilityCondition.P_phi_abelian`, `SectorFiniteLength`, `WideSectorFiniteLength` (~50)

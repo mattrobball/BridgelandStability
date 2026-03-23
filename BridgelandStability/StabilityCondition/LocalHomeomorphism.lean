@@ -640,8 +640,8 @@ noncomputable def componentTopologicalLinearLocalModel
     change @IsLocalHomeomorph comp V inferInstance inferInstance Zmap
     exact (componentSeminormTopology_eq_normTopology C cc) ▸ hLocal
 
-theorem bridgeland_theorem_1_2' :
-    bridgelandTheorem_1_2 C := by
+theorem StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents' :
+    StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents C := by
   intro cc
   let M := componentTopologicalLinearLocalModel C cc
   exact ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace,

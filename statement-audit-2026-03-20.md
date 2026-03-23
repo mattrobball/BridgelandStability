@@ -103,7 +103,7 @@ StabilityCondition C
 For Theorem 1.2 additionally:
 
 ```
-bridgelandTheorem_1_2 C :=
+StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents C :=
   forall cc : ConnectedComponents (StabilityCondition C),
     exists (V : AddSubgroup (K0 C ->+ C))
            (tau_V : TopologicalSpace V)
@@ -479,10 +479,10 @@ FAITHFUL -- subspace topology from Stab(D).
 
 ## Part IV: Theorem Statements
 
-### bridgelandTheorem_1_2 (`StabilityCondition/Topology.lean:715`)
+### StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents (`StabilityCondition/Topology.lean:715`)
 
 ```lean
-def bridgelandTheorem_1_2 : Prop :=
+def StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents : Prop :=
   forall (cc : ConnectedComponents (StabilityCondition C)),
     exists (V : AddSubgroup (K0 C ->+ C))
       (tau_V : TopologicalSpace V)
@@ -638,7 +638,8 @@ Every definition in the dependency tree of `StabilityCondition` and
 
 The **only** material issues are in the theorem statements themselves:
 
-1. `bridgelandTheorem_1_2` and `bridgelandCorollary_1_3` use `AddSubgroup`
+1. `StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents` and
+   `bridgelandCorollary_1_3` use `AddSubgroup`
    where the paper says "linear subspace" (and the proof constructs a
    `Submodule C`).
 
