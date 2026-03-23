@@ -292,7 +292,7 @@ theorem Slicing.tStructureAuxGE (s : Slicing C)
               (F.semistable ⟨F.n - 1, by grind⟩))
             0 (fun _ ↦ hφlast) (by
               change 0 < 1
-              omega)
+              lia)
         have hZ : s.ltProp C 0 Z := s.ltProp_of_triangle C 0 hY' hLast oct.mem
         exact ⟨X, Z, hX, hZ, f' ≫ u₂₃, v₁₃, w₁₃, h₁₃⟩
 

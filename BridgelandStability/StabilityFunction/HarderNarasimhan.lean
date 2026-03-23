@@ -388,9 +388,6 @@ lemma phase_cokernel_pullback_eq
       Z.phase (cokernel (Subobject.ofLE A' B' h)) := by
   simp only [StabilityFunction.phase, Zobj_cokernel_pullback_eq Z M' h]
 
-set_option maxHeartbeats 1600000 in
--- The iso involves many compositions; the default heartbeat limit is insufficient.
-set_option synthInstance.maxHeartbeats 40000 in
 /-- The cokernel of consecutive pulled-back subobjects is isomorphic to the original
 cokernel factor. -/
 def cokernelPullbackIso (Z : StabilityFunction A) {E : A} (M' : Subobject E)
@@ -429,8 +426,7 @@ def cokernelPullbackIso (Z : StabilityFunction A) {E : A} (M' : Subobject E)
   -- φ is mono: kernel must be zero since Z-values match
   haveI : Mono φ := by
     suffices hk : kernel.ι φ = 0 from Preadditive.mono_of_kernel_zero hk
-    have hse_φ : (ShortComplex.mk (kernel.ι φ) φ
-        (by simp [kernel.condition])).ShortExact :=
+    have hse_φ : (ShortComplex.mk (kernel.ι φ) φ (kernel.condition φ)).ShortExact :=
       ShortComplex.ShortExact.mk' (ShortComplex.exact_kernel φ) inferInstance inferInstance
     have hZ_add := Z.additive _ hse_φ
     -- hZ_add : Z(cokernel₁) = Z(kernel φ) + Z(cokernel₂)
@@ -618,19 +614,19 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
       -- Helper: for j ≥ 1, newChain(castSucc ⟨j,_⟩) = pb'(chain ⟨j-1,_⟩)
       have hNC_cs : ∀ (j : ℕ) (hj : j < hn_Q'.n + 1), j ≠ 0 →
           newChain (Fin.castSucc ⟨j, hj⟩) =
-            pb' (hn_Q'.chain ⟨j - 1, by omega⟩) :=
+            pb' (hn_Q'.chain ⟨j - 1, by lia⟩) :=
         fun j _ hj0 ↦ if_neg hj0
       -- Helper: newChain(succ ⟨j,_⟩) = pb'(chain ⟨j,_⟩)
       have hNC_s : ∀ (j : ℕ) (hj : j < hn_Q'.n + 1),
           newChain (Fin.succ ⟨j, hj⟩) =
-            pb' (hn_Q'.chain ⟨j, by omega⟩) :=
+            pb' (hn_Q'.chain ⟨j, by lia⟩) :=
         fun j _ ↦ if_neg (Nat.succ_ne_zero j)
       -- Helper: chain ⟨j,_⟩ = chain(⟨j-1,_⟩.succ) for j ≥ 1
       have hChain_succ : ∀ (j : ℕ) (hj : j < hn_Q'.n + 1),
-          j ≠ 0 → hn_Q'.chain ⟨j, by omega⟩ =
-            hn_Q'.chain (⟨j - 1, by omega⟩ : Fin hn_Q'.n).succ :=
+          j ≠ 0 → hn_Q'.chain ⟨j, by lia⟩ =
+            hn_Q'.chain (⟨j - 1, by lia⟩ : Fin hn_Q'.n).succ :=
         fun j _ hj0 ↦ congrArg hn_Q'.chain
-          (Fin.ext (show j = (j - 1) + 1 by omega))
+          (Fin.ext (show j = (j - 1) + 1 by lia))
       -- Build the AbelianHNFiltration
       refine ⟨{
         n := hn_Q'.n + 1
@@ -640,23 +636,23 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
         chain_bot := hNewBot
         chain_top := hNewTop
         φ := fun ⟨j, hj⟩ ↦ if j = 0 then Z.phase (M' : A)
-          else hn_Q'.φ ⟨j - 1, by omega⟩
+          else hn_Q'.φ ⟨j - 1, by lia⟩
         φ_anti := by
           intro ⟨i, hi⟩ ⟨j, hj⟩ hij
           simp only [Fin.lt_def] at hij
           simp only
           by_cases hi0 : i = 0
           · subst hi0; simp only [ite_true]
-            have hj0 : j ≠ 0 := by omega
+            have hj0 : j ≠ 0 := by lia
             simp only [hj0, ite_false]
-            calc hn_Q'.φ ⟨j - 1, by omega⟩
+            calc hn_Q'.φ ⟨j - 1, by lia⟩
                 ≤ hn_Q'.φ ⟨0, hn_Q'.hn⟩ :=
                   hn_Q'.φ_anti.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
               _ < Z.phase (M' : A) :=
                   hQ'_phase_lt ⟨0, hn_Q'.hn⟩
-          · have hj0 : j ≠ 0 := by omega
+          · have hj0 : j ≠ 0 := by lia
             simp only [hi0, ite_false, hj0]
-            exact hn_Q'.φ_anti (Fin.mk_lt_mk.mpr (by omega))
+            exact hn_Q'.φ_anti (Fin.mk_lt_mk.mpr (by lia))
         factor_phase := ?_
         factor_semistable := ?_ }⟩
       · -- factor_phase
@@ -670,15 +666,15 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
             eqToIso (congrArg (Subobject.underlying.obj ·) hpb_bot)
         · -- j ≥ 1: bridge newChain → pb' → chain → factor_phase
           simp only [hj0, ite_false]
-          have h_le : hn_Q'.chain ⟨j - 1, by omega⟩ ≤
-              hn_Q'.chain ⟨j, by omega⟩ :=
-            le_of_lt (hn_Q'.chain_strictMono (Fin.mk_lt_mk.mpr (by omega)))
+          have h_le : hn_Q'.chain ⟨j - 1, by lia⟩ ≤
+              hn_Q'.chain ⟨j, by lia⟩ :=
+            le_of_lt (hn_Q'.chain_strictMono (Fin.mk_lt_mk.mpr (by lia)))
           exact (phase_cokernel_ofLE_congr Z
               (hNC_cs j hj hj0) (hNC_s j hj)).trans
             ((phase_cokernel_pullback_eq Z M' h_le).trans
             ((phase_cokernel_ofLE_congr Z rfl
               (hChain_succ j hj hj0)).trans
-            (hn_Q'.factor_phase ⟨j - 1, by omega⟩)))
+            (hn_Q'.factor_phase ⟨j - 1, by lia⟩)))
       · -- factor_semistable
         intro ⟨j, hj⟩
         by_cases hj0 : j = 0
@@ -689,15 +685,15 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
               eqToIso (congrArg (Subobject.underlying.obj ·)
                 hpb_bot)).symm) hM'_ss
         · -- j ≥ 1: bridge via congr lemmas
-          have h_lt : hn_Q'.chain ⟨j - 1, by omega⟩ <
-              hn_Q'.chain ⟨j, by omega⟩ :=
-            hn_Q'.chain_strictMono (Fin.mk_lt_mk.mpr (by omega))
+          have h_lt : hn_Q'.chain ⟨j - 1, by lia⟩ <
+              hn_Q'.chain ⟨j, by lia⟩ :=
+            hn_Q'.chain_strictMono (Fin.mk_lt_mk.mpr (by lia))
           exact isSemistable_cokernel_ofLE_congr Z
             (hNC_cs j hj hj0) (hNC_s j hj)
             (Z.isSemistable_of_iso (cokernelPullbackIso Z M' h_lt).symm
               (isSemistable_cokernel_ofLE_congr Z rfl
                 (hChain_succ j hj hj0)
-                (hn_Q'.factor_semistable ⟨j - 1, by omega⟩)))
+                (hn_Q'.factor_semistable ⟨j - 1, by lia⟩)))
 
 /-- The quotient of a quotient, expressed via a pulled-back kernel in the source, is
 canonically isomorphic to the quotient in the intermediate object. -/

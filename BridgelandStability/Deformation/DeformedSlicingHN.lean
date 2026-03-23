@@ -408,7 +408,7 @@ theorem deformedSlicing_hn_exists
     have hE_gt_s : σ.deformedGtPred C W hW ε s E :=
       hE_gt s (fun j ↦ by
         have : F.φ ⟨F.n - 1, by grind⟩ ≤ F.φ j :=
-          F.hφ.antitone (Fin.mk_le_mk.mpr (by omega : j.val ≤ F.n - 1))
+          F.hφ.antitone (Fin.mk_le_mk.mpr (by lia : j.val ≤ F.n - 1))
         simp only [s, δ]; grind)
     have hNδ : t - ↑N * δ ≤ s := by
       have h1 : (t - s) / δ ≤ ↑(Nat.ceil ((t - s) / δ)) := Nat.le_ceil _

@@ -781,7 +781,7 @@ theorem HeartStabilityData.heartK0ToK0_surjective
           · have ha : b + (Int.toNat (a - b) : ℤ) = a := by
               have hnonneg : 0 ≤ a - b := by grind
               rw [Int.toNat_of_nonneg hnonneg]
-              omega
+              lia
             have hLE' : h.t.IsLE E (b + (Int.toNat (a - b) : ℤ)) := by
               have hLE'' : h.t.IsLE E a := ⟨hLE⟩
               rw [Int.toNat_of_nonneg (show 0 ≤ a - b by grind)]

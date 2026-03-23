@@ -114,7 +114,7 @@ theorem phiPlus_lt_of_wSemistable
       have hphiMin_ge : φ ≤ σ.slicing.phiMinus C E hE := by
         have hge := σ.slicing.phiMinus_ge_phiMinus_of_hn C hE F₀ hn₀
         simp only [HNFiltration.phiMinus] at hge
-        linarith [hall_eq ⟨F₀.n - 1, by omega⟩]
+        linarith [hall_eq ⟨F₀.n - 1, by lia⟩]
       have hphiMin : σ.slicing.phiMinus C E hE = φ := le_antisymm hphiMin_le hphiMin_ge
       have heq_plus_minus : σ.slicing.phiPlus C E hE = σ.slicing.phiMinus C E hE := by
         rw [hphiMin]
@@ -178,7 +178,7 @@ theorem phiPlus_lt_of_wSemistable
         -- Actually, the HN filtration factors ARE in the intervalProp since the HN is derived
         -- from the intervalProp filtration. Each factor is σ-semistable with phase in (a,b).
         -- Use: σ.slicing.phiMinus_gt_of_intervalProp + monotonicity
-        have hanti : F₀.φ ⟨F₀.n - 1, by omega⟩ ≤ F₀.φ i :=
+        have hanti : F₀.φ ⟨F₀.n - 1, by lia⟩ ≤ F₀.φ i :=
           F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt i.isLt))
         have hphiMin_eq := σ.slicing.phiMinus_eq C E hE F₀ hn₀ hneL₀
         linarith [σ.slicing.phiMinus_gt_of_intervalProp C hE hI]
@@ -220,7 +220,7 @@ theorem phiPlus_lt_of_wSemistable
         · -- F₀.φ i ≤ m, but GXorig.φ j > t₀ > m, contradiction
           have hj_gt_t₀ : GXorig.φ j > t₀ := by
             show GX.φ j + t₀ > t₀
-            have hanti : GX.φ ⟨GX.n - 1, by omega⟩ ≤ GX.φ j :=
+            have hanti : GX.φ ⟨GX.n - 1, by lia⟩ ≤ GX.φ j :=
               GX.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt))
             simp only [HNFiltration.phiMinus] at *; grind
           linarith
@@ -325,7 +325,7 @@ theorem phiMinus_gt_of_wSemistable
       -- Y ∈ P(ψ-ε₀) via tStructureAux phase containment → perturbation → Im → contradiction.
       -- Part 1: gap-split isolates bottom factors at ψ-ε₀
       obtain ⟨F₀, hn₀, hne₀, hneL₀⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
-      have hF₀_bot : F₀.φ ⟨F₀.n - 1, by omega⟩ = ψ - ε₀ := by
+      have hF₀_bot : F₀.φ ⟨F₀.n - 1, by lia⟩ = ψ - ε₀ := by
         linarith [σ.slicing.phiMinus_eq C E hE F₀ hn₀ hneL₀]
       -- Not all HN phases = ψ-ε₀ (otherwise E σ-semistable → contradiction)
       have hexists_upper : ∃ j : Fin F₀.n, ψ - ε₀ < F₀.φ j := by
@@ -367,7 +367,7 @@ theorem phiMinus_gt_of_wSemistable
       have hF₀_phases : ∀ i : Fin F₀.n, a < F₀.φ i ∧ F₀.φ i < b := by
         intro i
         constructor
-        · have hanti : F₀.φ ⟨F₀.n - 1, by omega⟩ ≤ F₀.φ i :=
+        · have hanti : F₀.φ ⟨F₀.n - 1, by lia⟩ ≤ F₀.φ i :=
             F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt i.isLt))
           have hphiMin_eq := σ.slicing.phiMinus_eq C E hE F₀ hn₀ hneL₀
           linarith [σ.slicing.phiMinus_gt_of_intervalProp C hE hI]
@@ -544,9 +544,9 @@ theorem phiMinus_gt_of_wSemistable
       intro i
       refine ⟨?_, ?_, ?_⟩
       · calc a < σ.slicing.phiMinus C Y hYne := hYminus
-            _ = FY.φ ⟨FY.n - 1, by omega⟩ :=
+            _ = FY.φ ⟨FY.n - 1, by lia⟩ :=
               σ.slicing.phiMinus_eq C Y hYne FY hnY hlastY
-            _ ≤ FY.φ i := FY.hφ.antitone (Fin.mk_le_mk.mpr (by omega))
+            _ ≤ FY.φ i := FY.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
       · calc FY.φ i ≤ FY.φ ⟨0, hnY⟩ :=
               FY.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
             _ = σ.slicing.phiPlus C Y hYne :=
@@ -676,7 +676,6 @@ theorem hom_eq_zero_of_wSemistable_gap
   -- Apply interval hom-vanishing
   exact σ.slicing.intervalHom_eq_zero C hEI hFI hdisjoint f
 
-set_option maxHeartbeats 800000 in
 /-- A nonzero strict quotient of a `W`-semistable interval object has `W`-phase at least
 that of the middle term. This is the quotient-side semistability inequality needed for the
 thin-interval HN recursion. -/
@@ -792,7 +791,6 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
             linarith
           linarith⟩
 
-set_option maxHeartbeats 800000 in
 /-- A nonzero quotient term in a distinguished triangle of a `W`-semistable interval object
 has `W`-phase at least that of the middle term, provided both outer terms remain in the same
 thin interval. This is the triangle-form quotient inequality used when the quotient is

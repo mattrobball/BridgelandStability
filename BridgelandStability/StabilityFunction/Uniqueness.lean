@@ -36,52 +36,52 @@ private lemma hn_n_eq_one_of_semistable (Z : StabilityFunction A) {E : A}
     F.n = 1 := by
   by_contra hn1
   have hhn := F.hn
-  have hn_ge : 1 < F.n := by grind
+  have hn_ge : 1 < F.n := by lia
   -- chain(1) is nonzero (since chain is strict mono and chain(0) = ⊥ < chain(1))
-  have hchain1_ne_bot : F.chain ⟨1, by grind⟩ ≠ ⊥ := by
+  have hchain1_ne_bot : F.chain ⟨1, by lia⟩ ≠ ⊥ := by
     intro heq
-    have h01 : F.chain ⟨0, by grind⟩ < F.chain ⟨1, by grind⟩ :=
-      F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
+    have h01 : F.chain ⟨0, by lia⟩ < F.chain ⟨1, by lia⟩ :=
+      F.chain_strictMono (Fin.mk_lt_mk.mpr (by lia))
     rw [F.chain_bot, heq] at h01
     exact lt_irrefl _ h01
   -- chain(0) as Fin F.n .castSucc = ⊥
   have h0_eq : F.chain (⟨0, F.hn⟩ : Fin F.n).castSucc = ⊥ := by
-    change F.chain ⟨0, by grind⟩ = ⊥
+    change F.chain ⟨0, by lia⟩ = ⊥
     exact F.chain_bot
   -- chain(1) = (⟨0, F.hn⟩ : Fin F.n).succ
-  have h1_eq : (⟨0, F.hn⟩ : Fin F.n).succ = ⟨1, by grind⟩ := rfl
+  have h1_eq : (⟨0, F.hn⟩ : Fin F.n).succ = ⟨1, by lia⟩ := rfl
   -- phase(chain(1)) = φ(0)
-  have hchain1_phase : Z.phase (F.chain ⟨1, by grind⟩ : A) = F.φ ⟨0, F.hn⟩ := by
+  have hchain1_phase : Z.phase (F.chain ⟨1, by lia⟩ : A) = F.φ ⟨0, F.hn⟩ := by
     rw [← F.factor_phase ⟨0, F.hn⟩]
-    have hsucc_eq : F.chain (⟨0, F.hn⟩ : Fin F.n).succ = F.chain ⟨1, by grind⟩ := by
+    have hsucc_eq : F.chain (⟨0, F.hn⟩ : Fin F.n).succ = F.chain ⟨1, by lia⟩ := by
       rw [h1_eq]
     exact ((phase_cokernel_ofLE_congr Z h0_eq hsucc_eq).trans
       (Z.phase_eq_of_iso
-        (StabilityFunction.Subobject.cokernelBotIso (F.chain ⟨1, by grind⟩) bot_le))).symm
+        (StabilityFunction.Subobject.cokernelBotIso (F.chain ⟨1, by lia⟩) bot_le))).symm
   -- By semistability: φ(0) ≤ phase(E)
   have hφ0_le : F.φ ⟨0, F.hn⟩ ≤ Z.phase E := by
     rw [← hchain1_phase]
     exact hss.2 _ (StabilityFunction.subobject_not_isZero_of_ne_bot hchain1_ne_bot)
   -- chain(n-1) ≠ ⊤ since chain(n-1) < chain(n) = ⊤
-  have hchain_ne_top : F.chain ⟨F.n - 1, by grind⟩ ≠ ⊤ := by
+  have hchain_ne_top : F.chain ⟨F.n - 1, by lia⟩ ≠ ⊤ := by
     intro heq
-    have hlt : F.chain ⟨F.n - 1, by grind⟩ < F.chain ⟨F.n, by grind⟩ :=
-      F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
+    have hlt : F.chain ⟨F.n - 1, by lia⟩ < F.chain ⟨F.n, by lia⟩ :=
+      F.chain_strictMono (Fin.mk_lt_mk.mpr (by lia))
     rw [heq, F.chain_top] at hlt
     exact lt_irrefl _ hlt
   -- The last Fin n index
-  set last : Fin F.n := ⟨F.n - 1, by grind⟩
+  set last : Fin F.n := ⟨F.n - 1, by lia⟩
   -- chain(last.succ) = chain(n) = ⊤
   have hchain_top' : F.chain last.succ = ⊤ := by
-    have : last.succ = ⟨F.n, by grind⟩ := Fin.ext (show last.val + 1 = F.n by
+    have : last.succ = ⟨F.n, by lia⟩ := Fin.ext (show last.val + 1 = F.n by
       simp only [last]; grind)
     rw [this, F.chain_top]
   -- phase of cokernel of chain(n-1).arrow = φ(last)
   -- phase(E) ≤ φ(last): use phase_le_of_epi on the quotient map, then relate to factor_phase
   have hE_le_last : Z.phase E ≤ F.φ last := by
-    have hle := phase_le_of_epi Z (cokernel.π (F.chain ⟨F.n - 1, by grind⟩).arrow) hss
+    have hle := phase_le_of_epi Z (cokernel.π (F.chain ⟨F.n - 1, by lia⟩).arrow) hss
       (cokernel_nonzero_of_ne_top hchain_ne_top)
-    suffices Z.phase (cokernel (F.chain ⟨F.n - 1, by grind⟩).arrow) = F.φ last by grind
+    suffices Z.phase (cokernel (F.chain ⟨F.n - 1, by lia⟩).arrow) = F.φ last by linarith
     -- factor_phase last : phase(cokernel(ofLE chain(last.castSucc) chain(last.succ) _)) = φ last
     -- We need: phase(cokernel(chain(n-1).arrow)) = phase(cokernel(ofLE ...))
     -- Strategy: use phase_cokernel_ofLE_congr to normalize both sides
@@ -91,7 +91,7 @@ private lemma hn_n_eq_one_of_semistable (Z : StabilityFunction A) {E : A}
     --   (by cokernelCompIsIso)
     -- Step 3: cokernel(ofLE chain(n-1) ⊤ _) has same phase as cokernel(ofLE ... chain(last.succ) _)
     --         by phase_cokernel_ofLE_congr Z rfl hchain_top'.symm
-    set S := F.chain ⟨F.n - 1, by grind⟩
+    set S := F.chain ⟨F.n - 1, by lia⟩
     haveI : IsIso (⊤ : Subobject E).arrow := inferInstance
     calc Z.phase (cokernel S.arrow)
         = Z.phase (cokernel (Subobject.ofLE S ⊤ le_top)) :=
@@ -103,7 +103,7 @@ private lemma hn_n_eq_one_of_semistable (Z : StabilityFunction A) {E : A}
       _ = F.φ last := F.factor_phase last
   -- But φ(last) < φ(0) since last > 0 and φ is strictly anti
   have hφ_lt : F.φ last < F.φ ⟨0, F.hn⟩ :=
-    F.φ_anti (Fin.mk_lt_mk.mpr (by grind))
+    F.φ_anti (Fin.mk_lt_mk.mpr (by lia))
   grind
 
 /-- If `B.arrow ≫ cokernel.π M.arrow = 0`, then `B ≤ M` as subobjects of `E`. -/
@@ -162,34 +162,34 @@ private lemma semistable_le_chain_of_phase_gt {Z : StabilityFunction A} {E : A}
     (F : AbelianHNFiltration Z E) {B : Subobject E} (hB : Z.IsSemistable (B : A))
     {k : ℕ} (hk : k ≤ F.n)
     (hph : ∀ j : Fin F.n, k ≤ j.val → F.φ j < Z.phase (B : A)) :
-    B ≤ F.chain ⟨k, by grind⟩ := by
+    B ≤ F.chain ⟨k, by lia⟩ := by
   -- Descend from chain(n) = ⊤ to chain(k), one step at a time.
   -- Induct on d = F.n - k.
   suffices h : ∀ d m (hm : m < F.n + 1), F.n - m = d → k ≤ m →
       B ≤ F.chain ⟨m, hm⟩ from
-    h (F.n - k) k (by grind) rfl le_rfl
+    h (F.n - k) k (by lia) rfl le_rfl
   intro d
   induction d with
   | zero =>
     intro m hm hd hkm
-    have hmn : m = F.n := by grind
+    have hmn : m = F.n := by lia
     subst hmn; rw [F.chain_top]; exact le_top
   | succ d ih =>
     intro m hm hd hkm
     -- B ≤ chain(m+1) by IH
-    have hstep : B ≤ F.chain ⟨m + 1, by grind⟩ :=
-      ih (m + 1) (by grind) (by grind) (by grind)
+    have hstep : B ≤ F.chain ⟨m + 1, by lia⟩ :=
+      ih (m + 1) (by lia) (by lia) (by lia)
     -- Factor at index m: semistable with phase φ(m) < phase(B)
-    have hm_lt : m < F.n := by grind
+    have hm_lt : m < F.n := by lia
     set j : Fin F.n := ⟨m, hm_lt⟩
-    have hj_succ_eq : (j.succ : Fin (F.n + 1)) = ⟨m + 1, by grind⟩ :=
+    have hj_succ_eq : (j.succ : Fin (F.n + 1)) = ⟨m + 1, by lia⟩ :=
       Fin.ext (by simp [j])
     have hle_jsucc : B ≤ F.chain j.succ := hj_succ_eq ▸ hstep
     have hcomp : Subobject.ofLE B (F.chain j.succ) hle_jsucc ≫
         cokernel.π (Subobject.ofLE (F.chain j.castSucc) (F.chain j.succ)
           (le_of_lt (F.chain_strictMono j.castSucc_lt_succ))) = 0 :=
       hom_zero_of_semistable_phase_gt Z hB (F.factor_semistable j)
-        (F.factor_phase j ▸ hph j (by grind)) _
+        (F.factor_phase j ▸ hph j (by lia)) _
     exact le_of_ofLE_comp_cokernel_zero hle_jsucc
       (le_of_lt (F.chain_strictMono j.castSucc_lt_succ)) hcomp
 
@@ -198,7 +198,7 @@ must be zero. Specifically, if `phase(B) > φ(0)`, then `B = ⊥`. -/
 private lemma semistable_eq_bot_of_phase_gt_max {Z : StabilityFunction A} {E : A}
     (F : AbelianHNFiltration Z E) {B : Subobject E} (hB : Z.IsSemistable (B : A))
     (hph : F.φ ⟨0, F.hn⟩ < Z.phase (B : A)) : B = ⊥ := by
-  have hle : B ≤ F.chain ⟨0, by grind⟩ :=
+  have hle : B ≤ F.chain ⟨0, by lia⟩ :=
     semistable_le_chain_of_phase_gt F hB (Nat.zero_le _)
       (fun j _ ↦ lt_of_le_of_lt (F.φ_anti.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) hph)
   rw [F.chain_bot] at hle
@@ -217,11 +217,11 @@ private lemma imageSubobject_epi_eq_top {X Y : A} (f : X ⟶ Y) [Epi f] :
 /-- The phase of `chain(1)` in an HN filtration equals `φ(0)`. -/
 private lemma chain_one_phase {Z : StabilityFunction A} {E : A}
     (F : AbelianHNFiltration Z E) (hn2 : 2 ≤ F.n) :
-    Z.phase (F.chain ⟨1, by grind⟩ : A) = F.φ ⟨0, F.hn⟩ := by
+    Z.phase (F.chain ⟨1, by lia⟩ : A) = F.φ ⟨0, F.hn⟩ := by
   rw [← F.factor_phase ⟨0, F.hn⟩]
   exact ((phase_cokernel_ofLE_congr Z F.chain_bot rfl).trans
     (Z.phase_eq_of_iso
-      (StabilityFunction.Subobject.cokernelBotIso (F.chain ⟨1, by grind⟩) bot_le))).symm
+      (StabilityFunction.Subobject.cokernelBotIso (F.chain ⟨1, by lia⟩) bot_le))).symm
 
 /-- In an HN filtration with `n ≥ 2`, `chain(1)` equals the maximally destabilizing
 subobject (MDS). -/
@@ -230,26 +230,26 @@ private lemma chain_one_eq_MDS {Z : StabilityFunction A} {E : A}
     {M : Subobject E} (hM_ne : M ≠ ⊥) (hM_ss : Z.IsSemistable (M : A))
     (hM_max : ∀ B : Subobject E, B ≠ ⊥ → Z.phase (B : A) ≤ Z.phase (M : A))
     (hM_strict : ∀ B : Subobject E, M < B → Z.phase (B : A) < Z.phase (M : A)) :
-    F.chain ⟨1, by grind⟩ = M := by
-  have hchain1_ne : F.chain ⟨1, by grind⟩ ≠ ⊥ := by
+    F.chain ⟨1, by lia⟩ = M := by
+  have hchain1_ne : F.chain ⟨1, by lia⟩ ≠ ⊥ := by
     intro h
-    have := F.chain_strictMono (show (⟨0, by grind⟩ : Fin (F.n + 1)) <
-      ⟨1, by grind⟩ from Fin.mk_lt_mk.mpr (by grind))
+    have := F.chain_strictMono (show (⟨0, by lia⟩ : Fin (F.n + 1)) <
+      ⟨1, by lia⟩ from Fin.mk_lt_mk.mpr (by lia))
     rw [F.chain_bot, h] at this
     exact lt_irrefl _ this
   have hphM : ∀ j : Fin F.n, 1 ≤ j.val → F.φ j < Z.phase (M : A) := by
     intro j hj
     calc F.φ j
-        ≤ F.φ (⟨1, by grind⟩ : Fin F.n) :=
+        ≤ F.φ (⟨1, by lia⟩ : Fin F.n) :=
           F.φ_anti.antitone (Fin.mk_le_mk.mpr hj)
       _ < F.φ (⟨0, F.hn⟩ : Fin F.n) :=
-          F.φ_anti (Fin.mk_lt_mk.mpr (by grind))
-      _ = Z.phase (F.chain ⟨1, by grind⟩ : A) :=
+          F.φ_anti (Fin.mk_lt_mk.mpr (by lia))
+      _ = Z.phase (F.chain ⟨1, by lia⟩ : A) :=
           (chain_one_phase F hn2).symm
       _ ≤ Z.phase (M : A) := hM_max _ hchain1_ne
   -- M ≤ chain(1) via semistable descent
-  have hM_le : M ≤ F.chain ⟨1, by grind⟩ :=
-    semistable_le_chain_of_phase_gt F hM_ss (by grind) hphM
+  have hM_le : M ≤ F.chain ⟨1, by lia⟩ :=
+    semistable_le_chain_of_phase_gt F hM_ss (by lia) hphM
   -- chain(1) ≤ M: if M < chain(1), then phase(chain(1)) < phase(M), so φ(0) < phase(M),
   -- then semistable_eq_bot_of_phase_gt_max gives M = ⊥, contradiction
   rcases hM_le.eq_or_lt with h | hlt
@@ -365,38 +365,36 @@ private lemma n_ge_two_of_not_semistable {Z : StabilityFunction A} {E : A}
     (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le ≪≫
       asIso (⊤ : Subobject E).arrow) h1
 
-set_option maxHeartbeats 1600000 in
--- The proof involves many Fin-indexed compositions; the default heartbeat limit is insufficient.
 /-- The tail HN filtration of the quotient `E / chain(1)`, constructed by pushing
 the chain forward via `imageSubobject(_.arrow ≫ cokernel.π chain(1).arrow)`. -/
 private noncomputable def tailHNFiltration {Z : StabilityFunction A} {E : A}
     (F : AbelianHNFiltration Z E) (hn2 : 2 ≤ F.n) :
-    AbelianHNFiltration Z (cokernel (F.chain ⟨1, by grind⟩).arrow) where
+    AbelianHNFiltration Z (cokernel (F.chain ⟨1, by lia⟩).arrow) where
   n := F.n - 1
-  hn := by grind
+  hn := by lia
   chain := fun ⟨j, _⟩ ↦ imageSubobject
-    ((F.chain ⟨j + 1, by grind⟩).arrow ≫ cokernel.π (F.chain ⟨1, by grind⟩).arrow)
+    ((F.chain ⟨j + 1, by lia⟩).arrow ≫ cokernel.π (F.chain ⟨1, by lia⟩).arrow)
   chain_strictMono := by
     apply Fin.strictMono_iff_lt_succ.mpr
     intro ⟨j, hj⟩
-    change imageSubobject ((F.chain ⟨j + 1, by grind⟩).arrow ≫
-        cokernel.π (F.chain ⟨1, by grind⟩).arrow) <
-      imageSubobject ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-        cokernel.π (F.chain ⟨1, by grind⟩).arrow)
-    have hM1 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 1, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    have hM2 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 2, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    have hS₁S₂ : F.chain ⟨j + 1, by grind⟩ < F.chain ⟨j + 2, by grind⟩ :=
-      F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
-    have h_le : imageSubobject ((F.chain ⟨j + 1, by grind⟩).arrow ≫
-          cokernel.π (F.chain ⟨1, by grind⟩).arrow) ≤
-        imageSubobject ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-          cokernel.π (F.chain ⟨1, by grind⟩).arrow) := by
-      rw [show (F.chain ⟨j + 1, by grind⟩).arrow ≫
-            cokernel.π (F.chain ⟨1, by grind⟩).arrow =
-          Subobject.ofLE _ _ hS₁S₂.le ≫ ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-            cokernel.π (F.chain ⟨1, by grind⟩).arrow) from
+    change imageSubobject ((F.chain ⟨j + 1, by lia⟩).arrow ≫
+        cokernel.π (F.chain ⟨1, by lia⟩).arrow) <
+      imageSubobject ((F.chain ⟨j + 2, by lia⟩).arrow ≫
+        cokernel.π (F.chain ⟨1, by lia⟩).arrow)
+    have hM1 : F.chain ⟨1, by lia⟩ ≤ F.chain ⟨j + 1, by lia⟩ :=
+      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by lia))
+    have hM2 : F.chain ⟨1, by lia⟩ ≤ F.chain ⟨j + 2, by lia⟩ :=
+      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by lia))
+    have hS₁S₂ : F.chain ⟨j + 1, by lia⟩ < F.chain ⟨j + 2, by lia⟩ :=
+      F.chain_strictMono (Fin.mk_lt_mk.mpr (by lia))
+    have h_le : imageSubobject ((F.chain ⟨j + 1, by lia⟩).arrow ≫
+          cokernel.π (F.chain ⟨1, by lia⟩).arrow) ≤
+        imageSubobject ((F.chain ⟨j + 2, by lia⟩).arrow ≫
+          cokernel.π (F.chain ⟨1, by lia⟩).arrow) := by
+      rw [show (F.chain ⟨j + 1, by lia⟩).arrow ≫
+            cokernel.π (F.chain ⟨1, by lia⟩).arrow =
+          Subobject.ofLE _ _ hS₁S₂.le ≫ ((F.chain ⟨j + 2, by lia⟩).arrow ≫
+            cokernel.π (F.chain ⟨1, by lia⟩).arrow) from
         by rw [← Category.assoc, Subobject.ofLE_arrow]]
       exact imageSubobject_comp_le _ _
     exact lt_of_le_of_ne h_le (fun heq ↦ absurd
@@ -404,67 +402,61 @@ private noncomputable def tailHNFiltration {Z : StabilityFunction A} {E : A}
         (heq ▸ pullback_imageSubobject_eq Z hM2))
       (ne_of_lt hS₁S₂))
   chain_bot := by
-    change imageSubobject ((F.chain ⟨1, by grind⟩).arrow ≫
-      cokernel.π (F.chain ⟨1, by grind⟩).arrow) = ⊥
+    change imageSubobject ((F.chain ⟨1, by lia⟩).arrow ≫
+      cokernel.π (F.chain ⟨1, by lia⟩).arrow) = ⊥
     rw [cokernel.condition, imageSubobject_zero]
   chain_top := by
-    change imageSubobject ((F.chain ⟨F.n - 1 + 1, by grind⟩).arrow ≫
-      cokernel.π (F.chain ⟨1, by grind⟩).arrow) = ⊤
-    have htop : F.chain ⟨F.n - 1 + 1, by grind⟩ = ⊤ :=
-      (congrArg F.chain (Fin.ext (Nat.sub_add_cancel (by grind)))).trans
+    change imageSubobject ((F.chain ⟨F.n - 1 + 1, by lia⟩).arrow ≫
+      cokernel.π (F.chain ⟨1, by lia⟩).arrow) = ⊤
+    have htop : F.chain ⟨F.n - 1 + 1, by lia⟩ = ⊤ :=
+      (congrArg F.chain (Fin.ext (Nat.sub_add_cancel (by lia)))).trans
         F.chain_top
     rw [htop]
     haveI : IsIso (⊤ : Subobject E).arrow := inferInstance
     rw [imageSubobject_iso_comp]
     exact imageSubobject_epi_eq_top _
-  φ := fun ⟨j, _⟩ ↦ F.φ ⟨j + 1, by grind⟩
+  φ := fun ⟨j, _⟩ ↦ F.φ ⟨j + 1, by lia⟩
   φ_anti := by
     intro ⟨j₁, _⟩ ⟨j₂, _⟩ h
     simp only [Fin.lt_def] at h
-    exact F.φ_anti (Fin.mk_lt_mk.mpr (by grind))
+    exact F.φ_anti (Fin.mk_lt_mk.mpr (by lia))
   factor_phase := by
     intro ⟨j, _⟩
-    have hM1 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 1, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    have hM2 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 2, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    exact ((phase_cokernel_pullback_eq Z (F.chain ⟨1, by grind⟩) _).symm.trans
+    exact ((phase_cokernel_pullback_eq Z (F.chain ⟨1, by lia⟩) _).symm.trans
       ((phase_cokernel_ofLE_congr Z
-        (pullback_imageSubobject_eq Z hM1)
-        (pullback_imageSubobject_eq Z hM2)).trans
-      (F.factor_phase ⟨j + 1, by grind⟩)))
+        (pullback_imageSubobject_eq Z
+          (F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by lia))))
+        (pullback_imageSubobject_eq Z
+          (F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by lia))))).trans
+      (F.factor_phase ⟨j + 1, by lia⟩)))
   factor_semistable := by
     intro ⟨j, hj⟩
-    have hM1 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 1, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    have hM2 : F.chain ⟨1, by grind⟩ ≤ F.chain ⟨j + 2, by grind⟩ :=
-      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by grind))
-    have hlt : imageSubobject ((F.chain ⟨j + 1, by grind⟩).arrow ≫
-          cokernel.π (F.chain ⟨1, by grind⟩).arrow) <
-        imageSubobject ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-          cokernel.π (F.chain ⟨1, by grind⟩).arrow) := by
-      have hS₁S₂ : F.chain ⟨j + 1, by grind⟩ < F.chain ⟨j + 2, by grind⟩ :=
-        F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
-      have h_le : imageSubobject ((F.chain ⟨j + 1, by grind⟩).arrow ≫
-            cokernel.π (F.chain ⟨1, by grind⟩).arrow) ≤
-          imageSubobject ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-            cokernel.π (F.chain ⟨1, by grind⟩).arrow) := by
-        rw [show (F.chain ⟨j + 1, by grind⟩).arrow ≫
-              cokernel.π (F.chain ⟨1, by grind⟩).arrow =
-            Subobject.ofLE _ _ hS₁S₂.le ≫ ((F.chain ⟨j + 2, by grind⟩).arrow ≫
-              cokernel.π (F.chain ⟨1, by grind⟩).arrow) from
-          by rw [← Category.assoc, Subobject.ofLE_arrow]]
-        exact imageSubobject_comp_le _ _
-      exact lt_of_le_of_ne h_le (fun heq ↦ absurd
-        ((pullback_imageSubobject_eq Z hM1).symm.trans
-          (heq ▸ pullback_imageSubobject_eq Z hM2))
-        (ne_of_lt hS₁S₂))
+    have hM1 : F.chain ⟨1, by lia⟩ ≤ F.chain ⟨j + 1, by lia⟩ :=
+      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by lia))
+    have hM2 : F.chain ⟨1, by lia⟩ ≤ F.chain ⟨j + 2, by lia⟩ :=
+      F.chain_strictMono.monotone (Fin.mk_le_mk.mpr (by lia))
+    have hS₁S₂ : F.chain ⟨j + 1, by lia⟩ < F.chain ⟨j + 2, by lia⟩ :=
+      F.chain_strictMono (Fin.mk_lt_mk.mpr (by lia))
+    have h_le : imageSubobject ((F.chain ⟨j + 1, by lia⟩).arrow ≫
+          cokernel.π (F.chain ⟨1, by lia⟩).arrow) ≤
+        imageSubobject ((F.chain ⟨j + 2, by lia⟩).arrow ≫
+          cokernel.π (F.chain ⟨1, by lia⟩).arrow) := by
+      rw [show (F.chain ⟨j + 1, by lia⟩).arrow ≫
+            cokernel.π (F.chain ⟨1, by lia⟩).arrow =
+          Subobject.ofLE _ _ hS₁S₂.le ≫ ((F.chain ⟨j + 2, by lia⟩).arrow ≫
+            cokernel.π (F.chain ⟨1, by lia⟩).arrow) from
+        by rw [← Category.assoc, Subobject.ofLE_arrow]]
+      exact imageSubobject_comp_le _ _
     exact Z.isSemistable_of_iso
-      (cokernelPullbackIso Z (F.chain ⟨1, by grind⟩) hlt)
+      (cokernelPullbackIso Z (F.chain ⟨1, by lia⟩)
+        (lt_of_le_of_ne h_le (fun heq ↦ absurd
+          ((pullback_imageSubobject_eq Z hM1).symm.trans
+            (heq ▸ pullback_imageSubobject_eq Z hM2))
+          (ne_of_lt hS₁S₂))))
       (isSemistable_cokernel_ofLE_congr Z
         (pullback_imageSubobject_eq Z hM1)
         (pullback_imageSubobject_eq Z hM2)
-        (F.factor_semistable ⟨j + 1, by grind⟩))
+        (F.factor_semistable ⟨j + 1, by lia⟩))
 
 /-- Transporting an HN filtration along an equality preserves `.n`. -/
 private lemma transport_n {Z : StabilityFunction A} {Q₁ Q₂ : A}
@@ -515,19 +507,19 @@ theorem StabilityFunction.hn_unique (Z : StabilityFunction A) (E : A) (hE : ¬Is
       have hM_ne_top :=
         Z.maxPhase_ne_top_of_not_semistable hss M hM_ne hM_max
       -- chain(1) = M for both filtrations
-      have hc1 : G₁.chain ⟨1, by grind⟩ = M :=
+      have hc1 : G₁.chain ⟨1, by lia⟩ = M :=
         chain_one_eq_MDS G₁ hn1 hM_ne hM_ss hM_max hM_strict
-      have hc2 : G₂.chain ⟨1, by grind⟩ = M :=
+      have hc2 : G₂.chain ⟨1, by lia⟩ = M :=
         chain_one_eq_MDS G₂ hn2 hM_ne hM_ss hM_max hM_strict
       -- Quotient Q = E/M has strictly fewer subobjects
       have hcard_Q : Nat.card (Subobject (cokernel M.arrow)) <
           Nat.card (Subobject E) :=
         card_subobject_cokernel_lt hM_ne
       -- Transport tail filtrations to cokernel M.arrow
-      have hQ₁ : cokernel (G₁.chain ⟨1, by grind⟩).arrow =
+      have hQ₁ : cokernel (G₁.chain ⟨1, by lia⟩).arrow =
           cokernel M.arrow :=
         congrArg (fun S ↦ cokernel (Subobject.arrow S)) hc1
-      have hQ₂ : cokernel (G₂.chain ⟨1, by grind⟩).arrow =
+      have hQ₂ : cokernel (G₂.chain ⟨1, by lia⟩).arrow =
           cokernel M.arrow :=
         congrArg (fun S ↦ cokernel (Subobject.arrow S)) hc2
       -- Apply IH: tail filtrations on Q have the same length
@@ -535,7 +527,7 @@ theorem StabilityFunction.hn_unique (Z : StabilityFunction A) (E : A) (hE : ¬Is
           (hQ₂ ▸ tailHNFiltration G₂ hn2).n :=
         ih (cokernel M.arrow)
           (cokernel_nonzero_of_ne_top hM_ne_top)
-          (by grind) _ _
+          (by lia) _ _
       simp only [transport_n] at h_eq
       change G₁.n - 1 = G₂.n - 1 at h_eq
       grind
@@ -559,7 +551,7 @@ theorem StabilityFunction.hn_phiPlus_eq (Z : StabilityFunction A) (E : A)
     have h_bot : F.chain (⟨0, F.hn⟩ : Fin F.n).castSucc = ⊥ := by
       change F.chain ⟨0, by have := F.hn; grind⟩ = ⊥; exact F.chain_bot
     have h_top : F.chain (⟨0, F.hn⟩ : Fin F.n).succ = ⊤ := by
-      have : (⟨0, F.hn⟩ : Fin F.n).succ = ⟨F.n, by grind⟩ :=
+      have : (⟨0, F.hn⟩ : Fin F.n).succ = ⟨F.n, by lia⟩ :=
         Fin.ext (by simp; grind)
       rw [this]; exact F.chain_top
     exact (phase_cokernel_ofLE_congr Z h_bot h_top).trans
@@ -594,7 +586,7 @@ private lemma tailHNFiltration_phiMinus {Z : StabilityFunction A} {E : A}
     G.φ ⟨G.n - 1, by have := G.hn; grind⟩ :=
   -- After definitional reduction: LHS = G.φ ⟨(G.n-1)-1+1, _⟩
   congrArg G.φ (Fin.ext
-    (show ((G.n - 1) - 1 + 1 : ℕ) = G.n - 1 from by grind))
+    (show ((G.n - 1) - 1 + 1 : ℕ) = G.n - 1 from by lia))
 
 /-- The lowest phase `φ(n-1)` of an HN filtration is independent of the
 filtration choice. The proof parallels `hn_unique`: induction on
@@ -629,9 +621,9 @@ theorem StabilityFunction.hn_phiMinus_eq (Z : StabilityFunction A) (E : A)
       have h1 := hn_n_eq_one_of_semistable Z hss G₁
       have h2 := hn_n_eq_one_of_semistable Z hss G₂
       have hG₁_eq : (⟨G₁.n - 1, by have := G₁.hn; grind⟩ : Fin G₁.n) =
-          ⟨0, G₁.hn⟩ := Fin.ext (by grind)
+          ⟨0, G₁.hn⟩ := Fin.ext (by lia)
       have hG₂_eq : (⟨G₂.n - 1, by have := G₂.hn; grind⟩ : Fin G₂.n) =
-          ⟨0, G₂.hn⟩ := Fin.ext (by grind)
+          ⟨0, G₂.hn⟩ := Fin.ext (by lia)
       rw [hG₁_eq, hG₂_eq]
       exact Z.hn_phiPlus_eq E hE hFinSub G₁ G₂
     · -- Not semistable: use tail filtrations on MDS quotient
@@ -646,10 +638,10 @@ theorem StabilityFunction.hn_phiMinus_eq (Z : StabilityFunction A) (E : A)
       have hc2 := chain_one_eq_MDS G₂ hn2 hM_ne hM_ss hM_max hM_strict
       have hcard_Q : Nat.card (Subobject (cokernel M.arrow)) <
           Nat.card (Subobject E) := card_subobject_cokernel_lt hM_ne
-      have hQ₁ : cokernel (G₁.chain ⟨1, by grind⟩).arrow =
+      have hQ₁ : cokernel (G₁.chain ⟨1, by lia⟩).arrow =
           cokernel M.arrow :=
         congrArg (fun S ↦ cokernel (Subobject.arrow S)) hc1
-      have hQ₂ : cokernel (G₂.chain ⟨1, by grind⟩).arrow =
+      have hQ₂ : cokernel (G₂.chain ⟨1, by lia⟩).arrow =
           cokernel M.arrow :=
         congrArg (fun S ↦ cokernel (Subobject.arrow S)) hc2
       -- Tail filtrations on the quotient
@@ -659,7 +651,7 @@ theorem StabilityFunction.hn_phiMinus_eq (Z : StabilityFunction A) (E : A)
       have h_tail : T₁.φ ⟨T₁.n - 1, by have := T₁.hn; grind⟩ =
           T₂.φ ⟨T₂.n - 1, by have := T₂.hn; grind⟩ :=
         ih (cokernel M.arrow) (cokernel_nonzero_of_ne_top hM_ne_top)
-          (by grind) T₁ T₂
+          (by lia) T₁ T₂
       -- Connect tail's phiMinus to original's phiMinus
       have hrel₁ : T₁.φ ⟨T₁.n - 1, by have := T₁.hn; grind⟩ =
           G₁.φ ⟨G₁.n - 1, by have := G₁.hn; grind⟩ :=
@@ -725,7 +717,7 @@ theorem StabilityFunction.phiPlus_eq_phiMinus_of_semistable
   have hm := Z.phiMinus_eq E hE hFinSub F
   have heq : F.φ ⟨0, F.hn⟩ =
       F.φ ⟨F.n - 1, by have := F.hn; grind⟩ :=
-    congrArg F.φ (Fin.ext (by grind))
+    congrArg F.φ (Fin.ext (by lia))
   grind
 
 end CategoryTheory

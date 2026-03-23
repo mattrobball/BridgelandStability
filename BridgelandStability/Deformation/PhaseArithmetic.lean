@@ -547,7 +547,7 @@ theorem im_W_pos_of_intervalProp
     intro i
     exact ⟨by calc a < σ.slicing.phiMinus C E hE :=
               σ.slicing.phiMinus_gt_of_intervalProp C hE hI
-            _ = F.φ ⟨F.n - 1, by omega⟩ :=
+            _ = F.φ ⟨F.n - 1, by lia⟩ :=
               σ.slicing.phiMinus_eq C E hE F hn hlast
             _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
       by calc F.φ i
@@ -599,7 +599,7 @@ theorem im_W_neg_of_intervalProp
     intro i
     exact ⟨by calc a < σ.slicing.phiMinus C E hE :=
               σ.slicing.phiMinus_gt_of_intervalProp C hE hI
-            _ = F.φ ⟨F.n - 1, by omega⟩ :=
+            _ = F.φ ⟨F.n - 1, by lia⟩ :=
               σ.slicing.phiMinus_eq C E hE F hn hlast
             _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
       by calc F.φ i

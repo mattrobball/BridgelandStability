@@ -576,12 +576,11 @@ theorem isSemistable_cokernel_mapMono_iff (Z : StabilityFunction A) {X Y : A}
   · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso f h) hs
   · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso f h).symm hs
 
-set_option maxHeartbeats 2000000 in
 theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
     (i : X ⟶ Y) [Mono i] (F : AbelianHNFiltration Z X) (eB : cokernel i ≅ B)
     (hB : Z.IsSemistable B)
-    (hlast : Z.phase B < F.φ ⟨F.n - 1, by have := F.hn; grind⟩) :
-    ∃ G : AbelianHNFiltration Z Y, G.φ ⟨G.n - 1, by have := G.hn; grind⟩ = Z.phase B := by
+    (hlast : Z.phase B < F.φ ⟨F.n - 1, by have := F.hn; lia⟩) :
+    ∃ G : AbelianHNFiltration Z Y, G.φ ⟨G.n - 1, by have := G.hn; lia⟩ = Z.phase B := by
   let K : Subobject Y := Subobject.mk i
   let eK : cokernel K.arrow ≅ B := by
     let eKi : cokernel K.arrow ≅ cokernel i := by
@@ -601,31 +600,31 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
   have hK_lt_top : K < ⊤ := lt_of_le_of_ne le_top hK_ne_top
   let newChain : Fin (F.n + 2) → Subobject Y := fun j =>
     if h : (j : ℕ) ≤ F.n then
-      (Subobject.map i).obj (F.chain ⟨j, by grind⟩)
+      (Subobject.map i).obj (F.chain ⟨j, by lia⟩)
     else ⊤
-  have hNewBot : newChain ⟨0, by grind⟩ = ⊥ := by
-    change (Subobject.map i).obj (F.chain ⟨0, by grind⟩) = ⊥
+  have hNewBot : newChain ⟨0, by lia⟩ = ⊥ := by
+    change (Subobject.map i).obj (F.chain ⟨0, by lia⟩) = ⊥
     rw [F.chain_bot]
     exact Subobject.map_bot i
-  have hNewK : newChain ⟨F.n, by grind⟩ = K := by
+  have hNewK : newChain ⟨F.n, by lia⟩ = K := by
     simp [newChain, K, Subobject.map_top, F.chain_top]
-  have hNewTop : newChain ⟨F.n + 1, by grind⟩ = ⊤ := by
+  have hNewTop : newChain ⟨F.n + 1, by lia⟩ = ⊤ := by
     simp [newChain]
   have hNewMono : StrictMono newChain := by
     apply Fin.strictMono_iff_lt_succ.mpr
     intro ⟨j, hj⟩
-    change newChain ⟨j, by grind⟩ < newChain ⟨j + 1, by grind⟩
+    change newChain ⟨j, by lia⟩ < newChain ⟨j + 1, by lia⟩
     by_cases hjn : j = F.n
     · subst hjn
       rw [hNewK, hNewTop]
       exact hK_lt_top
-    · have hjle : j + 1 ≤ F.n := by grind
-      simp [newChain, show (j : ℕ) ≤ F.n by grind, hjle]
+    · have hjle : j + 1 ≤ F.n := by lia
+      simp [newChain, show (j : ℕ) ≤ F.n by lia, hjle]
       apply (Subobject.map i).monotone.strictMono_of_injective (Subobject.map_obj_injective i)
-      exact F.chain_strictMono (Fin.mk_lt_mk.mpr (by grind))
+      exact F.chain_strictMono (Fin.mk_lt_mk.mpr (by lia))
   let φ : Fin (F.n + 1) → ℝ := fun j =>
     if h : (j : ℕ) < F.n then F.φ ⟨j, h⟩ else Z.phase B
-  refine ⟨{
+  exact ⟨{
     n := F.n + 1
     hn := Nat.succ_pos _
     chain := newChain
@@ -641,23 +640,23 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
           exact lt_trans (Fin.mk_lt_mk.mp hab) hb
         simp [ha, hb]
         exact F.φ_anti (Fin.mk_lt_mk.mpr (Fin.mk_lt_mk.mp hab))
-      · have ha : (a : ℕ) < F.n := by grind
+      · have ha : (a : ℕ) < F.n := by lia
         have hlast_le :
-            F.φ ⟨F.n - 1, by have := F.hn; grind⟩ ≤ F.φ ⟨a, ha⟩ := by
-          exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by grind))
+            F.φ ⟨F.n - 1, by have := F.hn; lia⟩ ≤ F.φ ⟨a, ha⟩ := by
+          exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by lia))
         simp [ha, hb]
-        grind
+        linarith
     factor_phase := by
       intro j
       by_cases hj : (j : ℕ) < F.n
       · let j' : Fin F.n := ⟨j, hj⟩
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
-          have hj_le : (j : ℕ) ≤ F.n := by grind
+          have hj_le : (j : ℕ) ≤ F.n := by lia
           simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
-          have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
+          have hj1_le : (j : ℕ) + 1 ≤ F.n := by lia
           simp [newChain, j', hj1_le]
         have hphase :
             Z.phase (cokernel (Subobject.ofLE ((Subobject.map i).obj (F.chain j'.castSucc))
@@ -670,9 +669,9 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
         have hφj : φ j = F.φ j' := by
           simp [φ, hj, j']
         exact ((phase_cokernel_ofLE_congr Z hcast hsucc).trans hphase).trans hφj.symm
-      · have hj_eq : (j : ℕ) = F.n := by grind
-        have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
-        have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
+      · have hj_eq : (j : ℕ) = F.n := by lia
+        have hcast : j.castSucc = ⟨F.n, by lia⟩ := Fin.ext hj_eq
+        have hsucc : j.succ = ⟨F.n + 1, by lia⟩ := Fin.ext (by simp [hj_eq])
         have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
         have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
         have hφj : φ j = Z.phase B := by
@@ -691,11 +690,11 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
       · let j' : Fin F.n := ⟨j, hj⟩
         have hcast :
             newChain j.castSucc = (Subobject.map i).obj (F.chain j'.castSucc) := by
-          have hj_le : (j : ℕ) ≤ F.n := by grind
+          have hj_le : (j : ℕ) ≤ F.n := by lia
           simp [newChain, j', hj_le]
         have hsucc :
             newChain j.succ = (Subobject.map i).obj (F.chain j'.succ) := by
-          have hj1_le : (j : ℕ) + 1 ≤ F.n := by grind
+          have hj1_le : (j : ℕ) + 1 ≤ F.n := by lia
           simp [newChain, j', hj1_le]
         have hsemistable :
             Z.IsSemistable
@@ -706,17 +705,16 @@ theorem append_hn_filtration_of_mono (Z : StabilityFunction A) {X Y B : A}
           (isSemistable_cokernel_mapMono_iff Z i
             (le_of_lt (F.chain_strictMono j'.castSucc_lt_succ))).2 (F.factor_semistable j')
         exact isSemistable_cokernel_ofLE_congr Z hcast hsucc hsemistable
-      · have hj_eq : (j : ℕ) = F.n := by grind
-        have hcast : j.castSucc = ⟨F.n, by grind⟩ := Fin.ext hj_eq
-        have hsucc : j.succ = ⟨F.n + 1, by grind⟩ := Fin.ext (by simp [hj_eq])
+      · have hj_eq : (j : ℕ) = F.n := by lia
+        have hcast : j.castSucc = ⟨F.n, by lia⟩ := Fin.ext hj_eq
+        have hsucc : j.succ = ⟨F.n + 1, by lia⟩ := Fin.ext (by simp [hj_eq])
         have hcast_obj : newChain j.castSucc = K := hcast ▸ hNewK
         have hsucc_obj : newChain j.succ = ⊤ := hsucc ▸ hNewTop
         let eTop : B ≅ cokernel (Subobject.ofLE K ⊤ le_top) :=
           eK.symm ≪≫ (cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _)
         exact isSemistable_cokernel_ofLE_congr Z hcast_obj hsucc_obj <|
           Z.isSemistable_of_iso eTop hB
-  }, by
-    simp [φ]⟩
+  }, by simp [φ]⟩
 
 /-- **Proposition 2.4** in the finite-length form used by Bridgeland: if every object is
 Artinian and Noetherian, then the stability function has the HN property.

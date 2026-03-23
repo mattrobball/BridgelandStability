@@ -189,7 +189,7 @@ theorem interior_has_enveloped_HN_ssf
     intro d; induction d with
     | zero =>
       intro k hle hk _ hne
-      have hkG : k = P.n := by omega
+      have hkG : k = P.n := by lia
       subst hkG
       exact le_of_eq (by
         obtain ⟨F, hn, hneF⟩ := HNFiltration.exists_nonzero_first C σ.slicing hne
@@ -198,7 +198,7 @@ theorem interior_has_enveloped_HN_ssf
         simp [HNFiltration.ofIso])
     | succ d ih =>
       intro k hle hk hkpos hne
-      have hkn : k < P.n := by omega
+      have hkn : k < P.n := by lia
       let Tk := P.triangle ⟨k, hkn⟩
       let ek₁ := Classical.choice (P.triangle_obj₁ ⟨k, hkn⟩)
       let ek₂ := Classical.choice (P.triangle_obj₂ ⟨k, hkn⟩)

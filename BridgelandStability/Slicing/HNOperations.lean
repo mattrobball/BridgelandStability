@@ -244,7 +244,7 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
       · by_cases ha' : a < G.n
         · simp only [hb', ha', dite_true, dite_false]
           exact hψ_lt ⟨a, ha'⟩
-        · omega
+        · lia
     semistable := fun j ↦ by
       change (P (if h : j.val < G.n then G.φ ⟨j.val, h⟩ else ψ))
         ((if h : j.val < G.n then G.triangle ⟨j.val, h⟩ else T).obj₃)
