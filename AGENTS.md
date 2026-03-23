@@ -1,5 +1,18 @@
 # Agent Guidelines for BridgelandStability
 
+## Source of Truth
+
+- `AGENTS.md` is the canonical agent-guidance file for this repo.
+- `CLAUDE.md` must remain a thin pointer to `AGENTS.md`, not a second copy of the rules.
+- If guidance changes, update `AGENTS.md` and keep `CLAUDE.md` as `See AGENTS.md for project guidelines.`
+
+## Commit Provenance
+
+- Commit messages must describe what actually happened and why.
+- If local history contains a misleading docs/provenance commit, rewrite it locally instead of
+  stacking a misleading revert on top.
+- AI-assisted commits should record truthful provenance in the commit body or footer.
+
 ## Build & Lint Workflow
 
 Always run these three steps in order before committing:

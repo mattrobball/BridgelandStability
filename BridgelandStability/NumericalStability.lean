@@ -16,8 +16,9 @@ public import Mathlib.GroupTheory.Finiteness
 /-!
 # Numerical Stability Conditions
 
-We define numerical K-theory and state Bridgeland's Corollary 1.3 for numerically
-finite triangulated categories.
+We define the generic numerical quotient package attached to a bilinear form on `K₀`.
+The actual descent of the Euler form to `K₀` is proved downstream in
+`BridgelandStability.EulerForm`.
 
 ## Main definitions
 
@@ -25,16 +26,11 @@ finite triangulated categories.
   finite type (finite-dimensional Hom spaces, finitely many nonzero shifted Hom spaces)
 * `CategoryTheory.Triangulated.eulerFormObj`: the Euler form on objects
   `χ(E,F) = Σᵢ (-1)ⁱ dim_k Hom(E, F[i])`
-* `CategoryTheory.Triangulated.EulerFormDescends`: typeclass asserting that the Euler
-  form descends to K₀ (triangle-additive in both arguments)
-* `CategoryTheory.Triangulated.eulerForm`: the Euler form lifted to K₀, constructed
-  via the universal property under `[EulerFormDescends k C]`
 * `CategoryTheory.Triangulated.NumericalK₀`: the numerical Grothendieck group
   `N(D) = K₀(D) / ker(χ)`
 * `CategoryTheory.Triangulated.NumericallyFinite`: `N(D)` is finitely generated
 * `CategoryTheory.Triangulated.NumericalStabilityCondition`: a stability condition
   whose central charge factors through `N(D)`
-* `CategoryTheory.Triangulated.bridgelandCorollary_1_3`: **Corollary 1.3** as a `Prop`
 
 ## References
 
@@ -71,61 +67,12 @@ class IsFiniteType [Linear k C] : Prop where
   /-- For each pair of objects, only finitely many shifted Hom spaces are nontrivial. -/
   finite_support : ∀ (E F : C), Set.Finite {n : ℤ | Nontrivial (E ⟶ (shiftFunctor C n).obj F)}
 
-/-! ### Euler form -/
+/-! ### Object-level Euler form -/
 
 /-- The Euler form on objects (blueprint B1): `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])`.
 This is defined as a finitely-supported sum using `finsum`. -/
 def eulerFormObj [Linear k C] (E F : C) : ℤ :=
   ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ (shiftFunctor C n).obj F) : ℤ)
-
-/-- The Euler form descends to K₀ if it is triangle-additive in both arguments.
-This is a consequence of the long exact sequence on shifted Hom spaces and
-the rank-nullity theorem. We state it as a typeclass to be instantiated when
-the full proof is available. -/
-class EulerFormDescends [Linear k C] [IsFiniteType k C] : Prop where
-  /-- For fixed `F`, the function `E ↦ χ(E, F)` is triangle-additive. -/
-  covariant (F : C) : IsTriangleAdditive (fun E ↦ eulerFormObj k C E F)
-  /-- For fixed `E`, the function `F ↦ χ(E, F)` is triangle-additive. -/
-  contravariant (E : C) : IsTriangleAdditive (fun F ↦ eulerFormObj k C E F)
-
-/-! ### Euler form on K₀ -/
-
-section EulerForm
-
-variable [Linear k C] [IsFiniteType k C] [EulerFormDescends k C]
-
-/-- The inner lift: for fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism
-`K₀ C →+ ℤ` via the universal property. -/
-def eulerFormInner (E : C) : K₀ C →+ ℤ :=
-  letI := (EulerFormDescends.contravariant (k := k) (C := C) E)
-  K₀.lift C (fun F ↦ eulerFormObj k C E F)
-
-/-- The outer function `E ↦ eulerFormInner E` is triangle-additive: for a
-distinguished triangle `T`, the lifted functions agree additively. -/
-instance eulerFormInner_isTriangleAdditive :
-    IsTriangleAdditive (eulerFormInner k C) where
-  additive T hT := by
-    -- Goal: eulerFormInner k C T.obj₂ = eulerFormInner k C T.obj₁ + eulerFormInner k C T.obj₃
-    -- Both sides are AddMonoidHoms from K₀ C = FreeAbelianGroup C ⧸ K₀Subgroup C.
-    -- By addMonoidHom_ext, suffices to check compositions with mk' are equal.
-    -- Those are AddMonoidHoms from FreeAbelianGroup C, so use lift_ext.
-    apply QuotientAddGroup.addMonoidHom_ext
-    apply FreeAbelianGroup.lift_ext
-    intro F
-    -- Now the goal involves compositions with mk' and FreeAbelianGroup.of F
-    simp only [AddMonoidHom.comp_apply, QuotientAddGroup.mk'_apply]
-    change (eulerFormInner k C T.obj₂) (K₀.of C F) =
-      (eulerFormInner k C T.obj₁) (K₀.of C F) +
-      (eulerFormInner k C T.obj₃) (K₀.of C F)
-    simp only [eulerFormInner, K₀.lift_of]
-    exact (EulerFormDescends.covariant (k := k) F).additive T hT
-
-/-- The Euler form on K₀, a bilinear form `K₀ C →+ K₀ C →+ ℤ` constructed from
-`eulerFormObj` via the universal property of K₀ applied twice. -/
-def eulerForm : K₀ C →+ K₀ C →+ ℤ :=
-  K₀.lift C (eulerFormInner k C)
-
-end EulerForm
 
 /-! ### Numerical Grothendieck group -/
 
@@ -167,32 +114,5 @@ instance NumericalStabilityCondition.topologicalSpace (χ : K₀ C →+ K₀ C �
   TopologicalSpace.induced
     NumericalStabilityCondition.toStabilityCondition
     (StabilityCondition.topologicalSpace C)
-
-/-! ### Corollary 1.3 -/
-
-/-- **Bridgeland's Corollary 1.3**. Assume `C` is numerically finite with
-respect to the Euler form. Then for each connected component of `Stab_N(D)`
-(the space of numerical stability conditions), there exists a ℂ-linear
-subspace of `Hom_ℤ(N(D), ℂ)` carrying a normed space structure, and the
-factored central charge map is a local homeomorphism into it.
-
-Since `N(D)` is finitely generated, the target is finite-dimensional, making
-each connected component a finite-dimensional complex manifold. -/
-def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C]
-    [EulerFormDescends k C] : Prop :=
-  let χ := eulerForm k C
-  NumericallyFinite C χ →
-    ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
-      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
-        (_ : NormedAddCommGroup V)
-        (_ : NormedSpace ℂ V)
-        (hZ : ∀ σ : NumericalStabilityCondition C χ,
-          ConnectedComponents.mk σ = cc →
-            σ.factors.choose ∈ V),
-        @IsLocalHomeomorph
-          {σ : NumericalStabilityCondition C χ //
-            ConnectedComponents.mk σ = cc}
-          V inferInstance inferInstance
-          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
 
 end CategoryTheory.Triangulated

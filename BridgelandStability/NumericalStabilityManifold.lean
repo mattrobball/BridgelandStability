@@ -1,4 +1,4 @@
-/- 
+/-
 Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
@@ -7,7 +7,6 @@ module
 
 public import BridgelandStability.StabilityCondition.LocalHomeomorphism
 public import BridgelandStability.EulerForm
-public import BridgelandStability.NumericalStability
 public import Mathlib.Analysis.Normed.Module.Connected
 public import Mathlib.Geometry.Manifold.Complex
 public import Mathlib.Topology.Algebra.Module.FiniteDimension

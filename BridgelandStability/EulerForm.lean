@@ -13,10 +13,10 @@ public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
-# Euler form descends to K₀
+# Euler form on `K₀`
 
 We prove that the Euler form `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])` is
-triangle-additive in both arguments, providing an instance of `EulerFormDescends`.
+triangle-additive in both arguments, then lift it to a bilinear form on `K₀`.
 
 The proof uses the long exact Hom sequence from the homological Yoneda functor
 and the rank-nullity theorem for finite-dimensional vector spaces.
@@ -562,8 +562,57 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
 
 end EulerTriangleAdditivity
 
-instance [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] : EulerFormDescends k C where
-  covariant := fun F ↦ eulerFormObj_covariant_triangleAdditive k C F
-  contravariant := fun E ↦ eulerFormObj_contravariant_triangleAdditive k C E
+/-! ## Euler form on `K₀` -/
+
+/-- For fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism `K₀ C →+ ℤ`
+using the universal property of `K₀`. -/
+def eulerFormInner (E : C) : K₀ C →+ ℤ := by
+  letI := eulerFormObj_contravariant_triangleAdditive (k := k) (C := C) E
+  exact K₀.lift C (fun F ↦ eulerFormObj k C E F)
+
+/-- The outer function `E ↦ eulerFormInner E` is triangle-additive, so the Euler
+form descends to a bilinear form on `K₀`. -/
+instance eulerFormInner_isTriangleAdditive
+    [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
+    IsTriangleAdditive (eulerFormInner k C) where
+  additive T hT := by
+    apply QuotientAddGroup.addMonoidHom_ext
+    apply FreeAbelianGroup.lift_ext
+    intro F
+    change (eulerFormInner k C T.obj₂) (K₀.of C F) =
+      (eulerFormInner k C T.obj₁) (K₀.of C F) +
+      (eulerFormInner k C T.obj₃) (K₀.of C F)
+    simp only [eulerFormInner, K₀.lift_of]
+    letI := eulerFormObj_covariant_triangleAdditive (k := k) (C := C) F
+    exact IsTriangleAdditive.additive (f := fun E ↦ eulerFormObj k C E F) T hT
+
+/-- The Euler form on `K₀`, obtained by applying the universal property of `K₀`
+twice to `eulerFormObj`. -/
+def eulerForm [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] :
+    K₀ C →+ K₀ C →+ ℤ :=
+  K₀.lift C (eulerFormInner k C)
+
+/-! ## Corollary 1.3 packaging -/
+
+/-- **Bridgeland's Corollary 1.3** packaged using the concrete Euler form on `K₀`.
+
+If `C` is numerically finite with respect to this Euler form, then every connected
+component of numerical stability conditions carries the expected local homeomorphism
+into a complex-linear subspace of the numerical charge space. -/
+def bridgelandCorollary_1_3 [∀ (n : ℤ), Functor.Linear k (shiftFunctor C n)] : Prop :=
+  let χ := eulerForm k C
+  NumericallyFinite C χ →
+    ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
+      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
+        (_ : NormedAddCommGroup V)
+        (_ : NormedSpace ℂ V)
+        (hZ : ∀ σ : NumericalStabilityCondition C χ,
+          ConnectedComponents.mk σ = cc →
+            σ.factors.choose ∈ V),
+        @IsLocalHomeomorph
+          {σ : NumericalStabilityCondition C χ //
+            ConnectedComponents.mk σ = cc}
+          V inferInstance inferInstance
+          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
 
 end CategoryTheory.Triangulated
