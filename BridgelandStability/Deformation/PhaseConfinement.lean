@@ -676,7 +676,6 @@ theorem hom_eq_zero_of_wSemistable_gap
   -- Apply interval hom-vanishing
   exact σ.slicing.intervalHom_eq_zero C hEI hFI hdisjoint f
 
-set_option maxHeartbeats 800000 in
 /-- A nonzero strict quotient of a `W`-semistable interval object has `W`-phase at least
 that of the middle term. This is the quotient-side semistability inequality needed for the
 thin-interval HN recursion. -/
@@ -792,7 +791,6 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
             linarith
           linarith⟩
 
-set_option maxHeartbeats 800000 in
 /-- A nonzero quotient term in a distinguished triangle of a `W`-semistable interval object
 has `W`-phase at least that of the middle term, provided both outer terms remain in the same
 thin interval. This is the triangle-form quotient inequality used when the quotient is
