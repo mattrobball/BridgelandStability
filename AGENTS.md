@@ -1,10 +1,10 @@
 # Agent Guidelines for BridgelandStability
 
-## Source of Truth
+## Mathematical Fidelity
 
-- `AGENTS.md` is the canonical agent-guidance file for this repo.
-- `CLAUDE.md` must remain a thin pointer to `AGENTS.md`, not a second copy of the rules.
-- If guidance changes, update `AGENTS.md` and keep `CLAUDE.md` as `See AGENTS.md for project guidelines.`
+**The paper or book being formalized is the source of truth.** Never weaken a
+definition to make a proof easier. If the proof needs a stronger hypothesis than
+the paper, the proof strategy is wrong.
 
 ## Commit Provenance
 
@@ -63,3 +63,23 @@ Don't ship workarounds for slow proofs:
 
 If you can't eliminate a heartbeat bump, you haven't found the root cause yet.
 Profile first, fix the actual expensive tactic.
+
+## Lint Cleanup
+
+Treat linter failures as declaration/interface problems first. No `nolint
+docBlame` or proof rewrites just to satisfy `unusedArguments`. Hidden unused
+args often come from file-wide section variables or typeclass scope — fix the
+boundary, not the proof. Keep proof edits trivial during cleanup.
+
+## Naming & API Design
+
+Names describe mathematical content, not bibliographic provenance.
+`localHomeomorphismOfCentralCharge`, not `bridgelandTheorem_1_2`. Before
+renaming public APIs, check 5-10 nearest Mathlib implementations for precedent.
+See `artifacts/mathlib-naming-notes.md`.
+
+## Reporting & Documentation
+
+Include actual declarations and proposed text in audits — not just file paths
+and line numbers. For Bridgeland theorem statements, prefer paper-faithful
+quotation over paraphrase. Write audit notes to `artifacts/`.
