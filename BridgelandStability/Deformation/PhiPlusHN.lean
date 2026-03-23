@@ -192,8 +192,8 @@ theorem hn_exists_with_phiPlus_reduction
       have hsingle_n : Gsingle.n = 1 := by
         simp [Gsingle, HNFiltration.single]
       have hj_lt : j.val < 1 := by
-        omega
-      have hj0 : j.val = 0 := by omega
+        lia
+      have hj0 : j.val = 0 := by lia
       have hj : j = ⟨0, by simp [Gsingle, HNFiltration.single]⟩ :=
         Fin.ext hj0
       subst j
@@ -400,12 +400,12 @@ theorem hn_exists_with_phiPlus_reduction
         simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hj] using hGj'
       · have hj_lt : j.val < GK.n + 1 := by
           simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor] using j.is_lt
-        have hjEq : j.val = GK.n := by omega
+        have hjEq : j.val = GK.n := by lia
         have hG_last : GK.n < H.n := by
           simp [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor]
         have hjLast : j = ⟨GK.n, hG_last⟩ := Fin.ext hjEq
         subst j
-        have hjFalse : ¬GK.n < GK.n := by omega
+        have hjFalse : ¬GK.n < GK.n := by lia
         simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hjFalse,
           ψB] using ⟨hψB_gt, hψB_hi⟩
   -- BOOTSTRAP from S₀ = ⊤ to X (modified from Lemma77:251-303)

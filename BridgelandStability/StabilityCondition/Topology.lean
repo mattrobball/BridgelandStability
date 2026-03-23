@@ -315,7 +315,7 @@ theorem StabilityCondition.False_of_gt_and_le_phases (σ τ : StabilityCondition
         change IsZero (Fσ.toPostnikovTower.chain.left)
         exact hbase
       | succ k ih =>
-        have hklt : k < Fσ.n := by omega
+        have hklt : k < Fσ.n := by lia
         have ih' := ih (by grind)
         have h₁ := Fσ.toPostnikovTower.triangle_obj₁ ⟨k, hklt⟩
         have h₂ := Fσ.toPostnikovTower.triangle_obj₂ ⟨k, hklt⟩

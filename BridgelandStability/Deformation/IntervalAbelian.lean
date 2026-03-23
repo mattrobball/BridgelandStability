@@ -201,7 +201,7 @@ theorem P_phi_of_im_zero_heart
     (Triangle.isZero₁_iff_isIso₂ T (F.triangle_dist ⟨0, hn⟩)).mp hZ₁
   have hobj₂_eq : F.chain.obj' (0 + 1) (by grind) =
       F.chain.obj (Fin.last F.n) :=
-    congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+    congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; lia))
   let e₂ : T.obj₂ ≅ X :=
     (Classical.choice (F.triangle_obj₂ ⟨0, hn⟩)).trans
       ((eqToIso hobj₂_eq).trans (Classical.choice F.top_iso))
@@ -389,7 +389,7 @@ theorem P_phi_of_im_zero_above
     (Triangle.isZero₁_iff_isIso₂ T (F.triangle_dist ⟨0, hn⟩)).mp hZ₁
   have hobj₂_eq : F.chain.obj' (0 + 1) (by grind) =
       F.chain.obj (Fin.last F.n) :=
-    congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; omega))
+    congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; lia))
   let e₂ : T.obj₂ ≅ X :=
     (Classical.choice (F.triangle_obj₂ ⟨0, hn⟩)).trans
       ((eqToIso hobj₂_eq).trans (Classical.choice F.top_iso))

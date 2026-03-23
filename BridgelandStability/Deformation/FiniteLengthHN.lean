@@ -130,7 +130,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       have hsingle_n : Gsingle.n = 1 := by
         simp [Gsingle, HNFiltration.single]
       have hj_lt : j.val < 1 := hsingle_n ▸ j.is_lt
-      have hj0 : j.val = 0 := by omega
+      have hj0 : j.val = 0 := by lia
       have hj : j = ⟨0, by simp [Gsingle, HNFiltration.single]⟩ :=
         Fin.ext hj0
       subst j
@@ -250,7 +250,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hj] using hGj'
       · have hj_lt : j.val < GK.n + 1 := by
           simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor] using j.is_lt
-        have hjEq : j.val = GK.n := by omega
+        have hjEq : j.val = GK.n := by lia
         have hG_last : GK.n < H.n := by
           simp [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor]
         have hjLast : j = ⟨GK.n, hG_last⟩ := Fin.ext hjEq

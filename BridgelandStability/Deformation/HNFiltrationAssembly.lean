@@ -165,7 +165,7 @@ theorem append_hn_filtration_of_triangle
               exact Fin.mk_lt_mk.mpr (by grind))
           obtain ⟨GZ, hGZ⟩ := ih GY' (by
             change GY.n - 1 ≤ m
-            omega) oct.triangle.mor₁ oct.triangle.mor₂ oct.triangle.mor₃ oct.mem
+            lia) oct.triangle.mor₁ oct.triangle.mor₂ oct.triangle.mor₃ oct.mem
             (GY.φ jLast) hX_gt_last hY'_gt_last hsep'
           have hlast_gt_t : t < GY.φ jLast := hY_gt jLast
           refine ⟨GZ.appendFactor C (Triangle.mk f13 (g ≫ g23) h13) hT13

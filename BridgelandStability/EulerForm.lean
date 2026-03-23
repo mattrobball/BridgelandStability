@@ -53,7 +53,7 @@ lemma finrank_mid_of_exact {K M N : Type v} [AddCommGroup K] [Module k K]
       Module.finrank k (LinearMap.range g) := by
   have h := g.finrank_range_add_finrank_ker
   rw [← hfg] at h
-  omega
+  lia
 
 -- The contravariant Euler form `F ↦ χ(E,F)` is triangle-additive.
 -- For a distinguished triangle A → B → C → A[1], the long exact Hom sequence
@@ -380,13 +380,13 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       have h_f : (Module.finrank k (LinearMap.range f_n) : ℤ) =
           Module.finrank k (E ⟶ T.obj₁⟦n⟧) - r (n - 1) := by
         have := f_n.finrank_range_add_finrank_ker
-        omega
+        lia
       have h_g : (Module.finrank k (LinearMap.range g_n) : ℤ) =
           Module.finrank k (E ⟶ T.obj₃⟦n⟧) - r n := by
         have h1 := (δ_lin n).finrank_range_add_finrank_ker
         have h2 := h_ker_δ
         simp only [r] at h2 ⊢
-        omega
+        lia
       linarith
     have hr : (Function.support r).Finite := by
       refine Set.Finite.subset
@@ -514,13 +514,13 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
       have h_f : (Module.finrank k (LinearMap.range f_n) : ℤ) =
           Module.finrank k (T.obj₃ ⟶ F⟦n⟧) - r (n - 1) := by
         have := f_n.finrank_range_add_finrank_ker
-        omega
+        lia
       have h_g : (Module.finrank k (LinearMap.range g_n) : ℤ) =
           Module.finrank k (T.obj₁ ⟶ F⟦n⟧) - r n := by
         have h1 := (δ_lin n).finrank_range_add_finrank_ker
         have h2 := h_ker_δ
         simp only [r] at h2 ⊢
-        omega
+        lia
       linarith
     have hr : (Function.support r).Finite := by
       refine Set.Finite.subset
