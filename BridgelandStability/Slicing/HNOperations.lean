@@ -31,43 +31,11 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 /-!
 # HN Filtration Operations
 
-Prefix HN filtrations, appending factors via triangles, transporting via isomorphisms,
-shift, and closure of subcategory predicates under isomorphisms.
+Appending factors via triangles, chain-object subcategory predicates,
+and closure of subcategory predicates under isomorphisms.
+
+Core operations (`prefix`, `ofIso`, `shiftHN`) are in `Slicing.Defs`.
 -/
-
-/-! ### Prefix HN filtrations
-
-Extracting the first `k` factors from an HN filtration gives an HN filtration of the
-`k`-th chain object. This is used for the t-structure decomposition.
--/
-
-/-- Extract the first `k` factors from an HN filtration, giving a filtration
-of the `k`-th chain object with phases `φ₀ > ⋯ > φ_{k-1}`. -/
-def HNFiltration.prefix {P : ℝ → ObjectProperty C} {E : C}
-    (F : HNFiltration C P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) :
-    HNFiltration C P (F.chain.obj ⟨k, by grind⟩) :=
-  { n := k
-    chain := ComposableArrows.mkOfObjOfMapSucc
-      (fun i : Fin (k + 1) ↦ F.chain.obj ⟨i.val, by grind⟩)
-      (fun i : Fin k ↦ F.chain.map' i.val (i.val + 1) (by grind) (by grind))
-    triangle := fun j ↦ F.triangle ⟨j.val, by grind⟩
-    triangle_dist := fun j ↦ F.triangle_dist ⟨j.val, by grind⟩
-    triangle_obj₁ := fun j ↦ F.triangle_obj₁ ⟨j.val, by grind⟩
-    triangle_obj₂ := fun j ↦ F.triangle_obj₂ ⟨j.val, by grind⟩
-    base_isZero := F.base_isZero
-    top_iso := ⟨Iso.refl _⟩
-    zero_isZero := fun h ↦ absurd h (by grind)
-    φ := fun j ↦ F.φ ⟨j.val, by grind⟩
-    hφ := by
-      intro ⟨a, ha⟩ ⟨b, hb⟩ (hab : a < b)
-      exact F.hφ (show (⟨a, by grind⟩ : Fin F.n) < ⟨b, by grind⟩ from hab)
-    semistable := fun j ↦ F.semistable ⟨j.val, by grind⟩ }
-
-/-- The prefix filtration has all the original phases up to index `k`. -/
-@[simp]
-lemma HNFiltration.prefix_φ {P : ℝ → ObjectProperty C} {E : C}
-    (F : HNFiltration C P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k)
-    (j : Fin k) : (F.prefix C k hk hk0).φ j = F.φ ⟨j.val, by grind⟩ := rfl
 
 /-- The prefix of an HN filtration with phases > t gives a filtration with all phases > t. -/
 lemma HNFiltration.prefix_phiMinus_gt {P : ℝ → ObjectProperty C} {E : C}
@@ -251,59 +219,6 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
       split_ifs with h
       · exact G.semistable ⟨j.val, h⟩
       · exact hψ }
-
-/-! ### Transporting HN filtrations -/
-
-/-- Transport an HN filtration across an isomorphism `E ≅ E'`. -/
-def HNFiltration.ofIso {P : ℝ → ObjectProperty C} {E E' : C}
-    (F : HNFiltration C P E) (e : E ≅ E') : HNFiltration C P E' where
-  n := F.n
-  chain := F.chain
-  triangle := F.triangle
-  triangle_dist := F.triangle_dist
-  triangle_obj₁ := F.triangle_obj₁
-  triangle_obj₂ := F.triangle_obj₂
-  base_isZero := F.base_isZero
-  top_iso := ⟨(Classical.choice F.top_iso).trans e⟩
-  zero_isZero := fun h ↦ IsZero.of_iso (F.zero_isZero h) e.symm
-  φ := F.φ
-  hφ := F.hφ
-  semistable := F.semistable
-
-/-- Shift an HN filtration by `a : ℤ`. If `F` is an HN filtration of `E` with phases
-`φ₀ > φ₁ > ⋯`, then `F.shiftHN s a` is an HN filtration of `E⟦a⟧` with phases
-`φ₀ + a > φ₁ + a > ⋯`. -/
-def HNFiltration.shiftHN (s : Slicing C) {E : C}
-    (F : HNFiltration C s.P E) (a : ℤ) : HNFiltration C s.P (E⟦a⟧) where
-  n := F.n
-  chain := F.chain ⋙ shiftFunctor C a
-  triangle := fun i ↦ (Triangle.shiftFunctor C a).obj (F.triangle i)
-  triangle_dist := fun i ↦ Triangle.shift_distinguished _ (F.triangle_dist i) a
-  triangle_obj₁ := fun i ↦
-    ⟨(shiftFunctor C a).mapIso (Classical.choice (F.triangle_obj₁ i))⟩
-  triangle_obj₂ := fun i ↦
-    ⟨(shiftFunctor C a).mapIso (Classical.choice (F.triangle_obj₂ i))⟩
-  base_isZero := (shiftFunctor C a).map_isZero F.base_isZero
-  top_iso := ⟨(shiftFunctor C a).mapIso (Classical.choice F.top_iso)⟩
-  zero_isZero := fun h ↦ (shiftFunctor C a).map_isZero (F.zero_isZero h)
-  φ := fun j ↦ F.φ j + ↑a
-  hφ := by
-    intro i j hij
-    change F.φ j + ↑a < F.φ i + ↑a
-    grind [F.hφ hij]
-  semistable := fun j ↦ (s.shift_int C (F.φ j) ((F.triangle j).obj₃) a).mp (F.semistable j)
-
-/-- The phiMinus of a shifted HN filtration increases by `a`. -/
-@[simp]
-lemma HNFiltration.shiftHN_phiMinus (s : Slicing C) {E : C}
-    (F : HNFiltration C s.P E) (a : ℤ) (h : 0 < F.n) :
-    (F.shiftHN C s a).phiMinus C h = F.phiMinus C h + ↑a := rfl
-
-/-- The phiPlus of a shifted HN filtration increases by `a`. -/
-@[simp]
-lemma HNFiltration.shiftHN_phiPlus (s : Slicing C) {E : C}
-    (F : HNFiltration C s.P E) (a : ℤ) (h : 0 < F.n) :
-    (F.shiftHN C s a).phiPlus C h = F.phiPlus C h + ↑a := rfl
 
 /-! ### Closure under isomorphisms -/
 

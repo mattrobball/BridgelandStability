@@ -10,8 +10,9 @@ public import BridgelandStability.StabilityCondition.Basic
 /-!
 # Stability Seminorm
 
-The generalized metric `slicingDist`, the stability seminorm `stabSeminorm`,
+Metric properties of `slicingDist`, seminorm properties of `stabSeminorm`,
 the finite seminorm subgroup, and sector bound / comparison lemmas.
+The definitions of `slicingDist` and `stabSeminorm` are in `StabilityCondition.Defs`.
 -/
 
 @[expose] public section
@@ -32,17 +33,7 @@ namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-/-! ### Generalized metric and seminorm -/
-
-/-- The Bridgeland generalized metric on slicings (blueprint A8). For slicings `s₁` and `s₂`,
-this is the supremum over all nonzero objects `E` of
-`max(|φ₁⁺(E) - φ₂⁺(E)|, |φ₁⁻(E) - φ₂⁻(E)|)`,
-where `φᵢ±` are the intrinsic phase bounds (well-defined by HN filtration uniqueness).
-Values lie in `[0, ∞]`. -/
-def slicingDist (s₁ s₂ : Slicing C) : ℝ≥0∞ :=
-  ⨆ (E : C) (hE : ¬IsZero E),
-    ENNReal.ofReal (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
-                        |s₁.phiMinus C E hE - s₂.phiMinus C E hE|)
+/-! ### Generalized metric properties -/
 
 /-- The Bridgeland generalized metric is zero on the diagonal: `d(P, P) = 0`. -/
 theorem slicingDist_self (s : Slicing C) : slicingDist C s s = 0 := by
@@ -165,14 +156,6 @@ theorem slicingDist_le_of_phase_bounds (s₁ s₂ : Slicing C) {ε : ℝ}
   exact ENNReal.ofReal_le_ofReal (max_le (hP E hE) (hM E hE))
 
 end
-
-/-- The seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)` (blueprint A9). For a stability condition
-`σ = (Z, P)` and a group homomorphism `U : K₀(D) → ℂ`, this is
-`sup { |U(E)| / |Z(E)| : E is σ-semistable and nonzero }`.
-Values lie in `[0, ∞]`. -/
-def stabSeminorm (σ : StabilityCondition C) (U : K₀ C →+ ℂ) : ℝ≥0∞ :=
-  ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
-    ENNReal.ofReal (‖U (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖)
 
 /-- The seminorm is nonneg: `stabSeminorm σ U ≥ 0`. This is trivially true since
 `ℝ≥0∞` values are nonneg, but useful for API. -/

@@ -27,7 +27,7 @@ public import BridgelandStability.Deformation.TStructure
 public import BridgelandStability.Deformation.TargetEnvelope
 public import BridgelandStability.Deformation.Theorem
 public import BridgelandStability.Deformation.WPhase
-public import BridgelandStability.EulerForm
+public import BridgelandStability.EulerForm.Basic
 public import BridgelandStability.GrothendieckGroup
 public import BridgelandStability.HeartEquivalence.AmplitudeFormulas
 public import BridgelandStability.HeartEquivalence.Basic
