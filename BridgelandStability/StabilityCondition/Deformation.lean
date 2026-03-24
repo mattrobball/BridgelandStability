@@ -18,7 +18,7 @@ Following Bridgeland's proof:
 - **Lemma 6.2** (`stabSeminorm_dominated_of_connected`): seminorm equivalence on V(Σ).
 - **Prop 6.3**: Z continuous into the seminorm topology.
 - **Lemma 6.4** (`eq_of_same_Z_near`): Z locally injective.
-- **Theorem 7.1** (`bridgeland_7_1`): Z locally surjective.
+- **Theorem 7.1** (`exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin`): Z locally surjective.
 -/
 
 @[expose] public section
@@ -42,13 +42,13 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-/-- Theorem 7.1 packaged in Bridgeland-basis form. A small deformation of the central
-charge lifts directly to a point of `basisNhd C σ ε`.
+/-- A small deformation of the central charge lifts directly to a point of `basisNhd C σ ε`.
 
 This is the form used in the topology arguments for Theorem 1.2: it gives both the
 prescribed central charge and the exact `basisNhd` control, so no radius enlargement
-is needed after applying Theorem 7.1. -/
-theorem bridgeland_7_1_mem_basisNhd (σ : StabilityCondition C)
+is needed after applying the deformation theorem. -/
+theorem StabilityCondition.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin
+    (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
@@ -58,7 +58,8 @@ theorem bridgeland_7_1_mem_basisNhd (σ : StabilityCondition C)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     ∃ τ : StabilityCondition C, τ.Z = W ∧ τ ∈ basisNhd C σ ε := by
   obtain ⟨τ, hτZ, hτd⟩ :=
-    bridgeland_7_1 C σ W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
+    σ.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin C W hW ε₀ hε₀ hε₀10
+      hWide ε hε hεε₀ hsin
   refine ⟨τ, hτZ, ?_⟩
   constructor
   · simpa [hτZ] using hsin
@@ -626,7 +627,8 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
   have hγ_exists :
       ∀ t : unitInterval, ∃ ρ : StabilityCondition C, ρ.Z = W t ∧ ρ ∈ basisNhd C σ ε := by
     intro t
-    exact bridgeland_7_1_mem_basisNhd C σ (W t) (hW1 t) ε₀ hε₀ hε₀10 hWide ε hε hεε₀ (hWt t)
+    exact σ.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W t) (hW1 t)
+      ε₀ hε₀ hε₀10 hWide ε hε hεε₀ (hWt t)
   let γ : unitInterval → StabilityCondition C := fun t => Classical.choose (hγ_exists t)
   have hγZ : ∀ t : unitInterval, (γ t).Z = W t := by
     intro t
@@ -754,8 +756,8 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       have hWclose1 : stabSeminorm C ρ₀ (W s - ρ₀.Z) < ENNReal.ofReal 1 := by
         exact lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
       obtain ⟨ρ, hρZ, hρmem⟩ :=
-        bridgeland_7_1_mem_basisNhd C ρ₀ (W s) hWclose1 ε₁ hε₁ hε₁10 hWide₁ δ hδ
-          hδ_lt_ε₁ hWclose
+        ρ₀.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W s) hWclose1
+          ε₁ hε₁ hε₁10 hWide₁ δ hδ hδ_lt_ε₁ hWclose
       have hγs_eq_ρ : γ s = ρ := by
         apply StabilityCondition.eq_of_same_Z_near C (γ s) ρ
         · rw [hγZ s, hρZ]
@@ -890,8 +892,8 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
       stabSeminorm C ρ₀ (linearInterpolationZ C σ τ s - ρ₀.Z) < ENNReal.ofReal 1 := by
     exact lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
   obtain ⟨ρ, hρZ, hρmem⟩ :=
-    bridgeland_7_1_mem_basisNhd C ρ₀ (linearInterpolationZ C σ τ s) hWclose1 ε₁ hε₁ hε₁10
-      hWide₁ δ hδ hδ_lt_ε₁ hWclose
+    ρ₀.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C
+      (linearInterpolationZ C σ τ s) hWclose1 ε₁ hε₁ hε₁10 hWide₁ δ hδ hδ_lt_ε₁ hWclose
   refine ⟨ρ, hρZ, hsubU hρmem, ?_⟩
   exact basisNhd_subset_connectedComponent_small C ρ₀ hε₁ hε₁10 hWide₁ hδ hδ_lt_ε₁ hρmem
 

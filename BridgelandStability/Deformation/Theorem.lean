@@ -35,22 +35,11 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 /-! ### Deformation theorem (Theorem 7.1) -/
 
-/-- A quantitative helper for **Bridgeland's Theorem 7.1**. Given a
-stability condition `σ = (Z, P)` on a triangulated category `D` and a group
-homomorphism `W : K₀(D) → ℂ` with `‖W - Z‖_σ < sin(πε)` for some `0 < ε < ε₀`
-(where `ε₀` comes from the local finiteness of `σ`), there exists a locally-finite
-stability condition `τ = (W, Q)` with `d(P, Q) ≤ ε`.
+/-- The canonical deformed stability condition attached to a nearby central charge `W`.
 
-The proof constructs the deformed slicing `Q` via `deformedSlicing`, then verifies:
-1. **Hom-vanishing** (Lemma 7.6): `hom_eq_zero_of_deformedPred`
-2. **HN filtrations** (Lemma 7.7 + Nodes 7.8–7.9): well-founded recursion in thin
-   quasi-abelian categories, assembled via t-structures `Q(> t)`
-3. **Compatibility**: `deformedSlicing_compat`
-4. **Local finiteness**: inherited from `σ` via the interval inclusion
-   `Q((t-ε₀,t+ε₀)) ⊆ P((t-2ε₀,t+2ε₀))`
-5. **Distance bound**: `d(P, Q) ≤ ε` by phase confinement (Node 7.3)
--/
-theorem bridgeland_7_1_le (σ : StabilityCondition C)
+This packages the actual object constructed in the deformation proof, rather than
+hiding it behind an existential theorem statement. -/
+def StabilityCondition.deformed (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
@@ -58,49 +47,66 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
-    let _Q : Slicing C :=
-      @StabilityCondition.deformedSlicing C _ _ _ _ _ _ ‹IsTriangulated C›
-        σ W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
-    ∃ (τ : StabilityCondition C), τ.Z = W ∧
-      slicingDist C σ.slicing τ.slicing ≤ ENNReal.ofReal ε := by
-  dsimp
+    StabilityCondition C := by
   have hε₀8 : ε₀ < 1 / 8 := by grind
   have hε₀2 : ε₀ < 1 / 4 := by grind
   let hSector : SectorFiniteLength (C := C) σ ε₀ hε₀ hε₀2 :=
     SectorFiniteLength.of_wide (C := C) σ hε₀ hε₀2 hε₀8 hWide
-  refine ⟨⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, W,
-    σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, ?_⟩, rfl, ?_⟩
-  · -- Local finiteness: inherited from σ via Q((t-ε₀,t+ε₀)) ⊆ P((t-2ε₀,t+2ε₀))
-    constructor
-    refine ⟨ε₀, hε₀, by linarith, fun t E ↦ ?_⟩
-    letI : Fact (t - ε₀ < t + ε₀) := ⟨by grind⟩
-    letI : Fact ((t + ε₀) - (t - ε₀) ≤ 1) := ⟨by grind⟩
-    letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by grind⟩
-    letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by grind⟩
-    have hIncl :
-        (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).intervalProp C
-            (t - ε₀) (t + ε₀) ≤
-          σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) :=
-      deformed_intervalProp_subset_sigma_intervalProp C σ W hW hε₀ hε₀10 hWide hε hεε₀
-        hsin t
-    have hbig :
-        IsStrictArtinianObject ((ObjectProperty.ιOfLE hIncl).obj E) ∧
-          IsStrictNoetherianObject ((ObjectProperty.ιOfLE hIncl).obj E) := by
-      simpa [hSector] using hSector t ((ObjectProperty.ιOfLE hIncl).obj E)
-    haveI : IsStrictArtinianObject ((ObjectProperty.ιOfLE hIncl).obj E) := hbig.1
-    haveI : IsStrictNoetherianObject ((ObjectProperty.ιOfLE hIncl).obj E) := hbig.2
-    have hstrictE :
-        IsStrictArtinianObject E ∧ IsStrictNoetherianObject E :=
-      interval_strictFiniteLength_of_inclusion_strict (C := C)
-        (s₁ := σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin)
-        (s₂ := σ.slicing)
-        (a₁ := t - ε₀) (b₁ := t + ε₀) (a₂ := t - 2 * ε₀) (b₂ := t + 2 * ε₀)
-        hIncl (X := E)
-    haveI : IsStrictArtinianObject E := hstrictE.1
-    haveI : IsStrictNoetherianObject E := hstrictE.2
-    exact ⟨inferInstance, inferInstance⟩
-  · -- Distance bound: d(P, Q) ≤ ε by phase confinement
-    set Q := σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
+  refine ⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, W,
+    σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, ?_⟩
+  constructor
+  refine ⟨ε₀, hε₀, by linarith, fun t E ↦ ?_⟩
+  letI : Fact (t - ε₀ < t + ε₀) := ⟨by grind⟩
+  letI : Fact ((t + ε₀) - (t - ε₀) ≤ 1) := ⟨by grind⟩
+  letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by grind⟩
+  letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by grind⟩
+  have hIncl :
+      (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).intervalProp C
+          (t - ε₀) (t + ε₀) ≤
+        σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) :=
+    deformed_intervalProp_subset_sigma_intervalProp C σ W hW hε₀ hε₀10 hWide hε hεε₀
+      hsin t
+  have hbig :
+      IsStrictArtinianObject ((ObjectProperty.ιOfLE hIncl).obj E) ∧
+        IsStrictNoetherianObject ((ObjectProperty.ιOfLE hIncl).obj E) := by
+    simpa [hSector] using hSector t ((ObjectProperty.ιOfLE hIncl).obj E)
+  haveI : IsStrictArtinianObject ((ObjectProperty.ιOfLE hIncl).obj E) := hbig.1
+  haveI : IsStrictNoetherianObject ((ObjectProperty.ιOfLE hIncl).obj E) := hbig.2
+  have hstrictE :
+      IsStrictArtinianObject E ∧ IsStrictNoetherianObject E :=
+    interval_strictFiniteLength_of_inclusion_strict (C := C)
+      (s₁ := σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin)
+      (s₂ := σ.slicing)
+      (a₁ := t - ε₀) (b₁ := t + ε₀) (a₂ := t - 2 * ε₀) (b₂ := t + 2 * ε₀)
+      hIncl (X := E)
+  haveI : IsStrictArtinianObject E := hstrictE.1
+  haveI : IsStrictNoetherianObject E := hstrictE.2
+  exact ⟨inferInstance, inferInstance⟩
+
+@[simp] theorem StabilityCondition.deformed_Z (σ : StabilityCondition C)
+    (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    (ε₀ : ℝ) (hε₀ : 0 < ε₀)
+    (hε₀10 : ε₀ < 1 / 10)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
+    (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
+    (σ.deformed C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).Z = W := rfl
+
+/-- The canonical deformation attached to `W` has slicing distance at most `ε`
+from the original stability condition `σ`. -/
+theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
+    (W : K₀ C →+ ℂ)
+    (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    (ε₀ : ℝ) (hε₀ : 0 < ε₀)
+    (hε₀10 : ε₀ < 1 / 10)
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
+    (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
+    (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
+    slicingDist C σ.slicing
+      (σ.deformed C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).slicing ≤ ENNReal.ofReal ε := by
+  let Q := σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
+  have hdist : slicingDist C σ.slicing Q ≤ ENNReal.ofReal ε := by
     have deformedGtPred_subset_gtProp :
         ∀ {t : ℝ} {E : C},
           σ.deformedGtPred C W hW ε t E →
@@ -221,14 +227,16 @@ theorem bridgeland_7_1_le (σ : StabilityCondition C)
           (reverse E hE _ (by linarith : (0 : ℝ) < σ.slicing.phiMinus C E hE -
             Q.phiMinus C E hE - ε))
         linarith
+  simpa [StabilityCondition.deformed, Q] using hdist
 
 /-- **Bridgeland's Theorem 7.1** (deformation of stability conditions). Under the
 usual small-deformation hypothesis on `W`, there exists a locally-finite stability
 condition `τ = (W, Q)` with `d(P, Q) < ε`.
 
-This is obtained from `bridgeland_7_1_le` by shrinking `ε` slightly using the strict
+This is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict
 hypothesis `‖W - Z‖_σ < sin(πε)`. -/
-theorem bridgeland_7_1 (σ : StabilityCondition C)
+theorem StabilityCondition.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
+    (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
@@ -236,12 +244,8 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
-    let _Q : Slicing C :=
-      @StabilityCondition.deformedSlicing C _ _ _ _ _ _ ‹IsTriangulated C›
-        σ W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε := by
-  dsimp
   set x := (stabSeminorm C σ (W - σ.Z)).toReal
   have hx_lt : x < Real.sin (Real.pi * ε) := by
     dsimp [x]
@@ -296,8 +300,12 @@ theorem bridgeland_7_1 (σ : StabilityCondition C)
       rw [ENNReal.toReal_ofReal (le_of_lt hsin'_pos)]
       simpa [x, hsin'_eq] using hy_between.1
     exact (ENNReal.toReal_lt_toReal hx_ne_top ENNReal.ofReal_ne_top).1 hx_lt'
-  obtain ⟨τ, hτZ, hτdist⟩ :=
-    bridgeland_7_1_le C σ W hW ε₀ hε₀ hε₀10 hWide ε' hε'_pos hε'ε₀ hsin'
+  let τ := σ.deformed C W hW ε₀ hε₀ hε₀10 hWide ε' hε'_pos hε'ε₀ hsin'
+  have hτZ : τ.Z = W := by
+    simp [τ]
+  have hτdist : slicingDist C σ.slicing τ.slicing ≤ ENNReal.ofReal ε' := by
+    simpa [τ] using
+      σ.slicingDist_deformed_le C W hW ε₀ hε₀ hε₀10 hWide ε' hε'_pos hε'ε₀ hsin'
   refine ⟨τ, hτZ, lt_of_le_of_lt hτdist ?_⟩
   exact (ENNReal.ofReal_lt_ofReal_iff hε).2 hε'_lt
 

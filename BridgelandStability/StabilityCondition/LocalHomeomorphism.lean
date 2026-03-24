@@ -612,7 +612,7 @@ noncomputable def componentTopologicalLinearLocalModel
             exact lt_trans hWclose
               ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
           obtain ⟨ρ, hρZ, hρmem⟩ :=
-            bridgeland_7_1_mem_basisNhd C σ_x (F : V) hWclose1
+            σ_x.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (F : V) hWclose1
               ε₀_x hε₀_x hε₀_x10 hWide_x δ hδ hδ_lt_ε₀x hWclose
           have hρccx :
               ConnectedComponents.mk ρ = ConnectedComponents.mk σ_x :=
