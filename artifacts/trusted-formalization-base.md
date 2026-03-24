@@ -13,7 +13,42 @@ Found by `Expr.foldConsts` on the theorem's type, descending into bodies of
 non-theorem declarations and into inductive constructor types.
 
 Reference: Bridgeland, "Stability conditions on triangulated categories",
-Annals of Mathematics 166 (2007), 317--345.
+Annals of Mathematics 166 (2007), 317--345. All section/line references
+below are to the LaTeX source of the arXiv version (math/0212237v2).
+
+### Formalization notes
+
+The following points were verified by auditing against Bridgeland's LaTeX
+source:
+
+- **`intervalProp`** uses `∃ F : HNFiltration, ...` (exists an HN filtration
+  with phases in (a,b)) rather than the paper's characterization via intrinsic
+  phases a < φ⁻(E) ≤ φ⁺(E) < b (line 795). These are equivalent by
+  uniqueness of HN phases, which is proved outside the TFB.
+
+- **`basisNhd`** restricts ε < 1/8. The paper uses ε ∈ (0, 1/4) (line 1335).
+  Both generate the same topology since the neighborhoods nest downward.
+
+- **`slicingDist`** matches the metric on slicings from §6 (line 1276). This
+  is NOT Proposition 8.1 (line 1772), which defines a metric on stability
+  conditions with an additional log-mass term.
+
+- **`IsLocallyFinite`** uses per-object strict-Artinian ∧ strict-Noetherian.
+  Bridgeland defines "artinian" and "noetherian" for quasi-abelian categories
+  via DCC/ACC on strict subobjects of each fixed object (lines 1003--1009),
+  and "finite length" = artinian + noetherian (line 1008). The deformation
+  proof applies these per-object chain conditions through Proposition 2.4
+  (label `rud`, line 569) and Lemma 7.2 (label `floor`, line 1650). The
+  modern "support property" (Kontsevich--Soibelman, Bayer--Macrì--Toda) is a
+  stronger condition that implies locally finite; the formalization follows
+  Bridgeland's original paper.
+
+- **`QuasiAbelian`** does not appear in the 78 declarations. Bridgeland's
+  Definition 5.7 says "the quasi-abelian category P((t−η, t+η))," but the
+  quasi-abelian property of interval categories is a theorem proved in
+  `IntervalCategory/QuasiAbelian.lean`, not an assumption. The TFB includes
+  the resulting `intervalCat_hasKernels` and `intervalCat_hasCokernels`
+  instances (statements only).
 
 ---
 
