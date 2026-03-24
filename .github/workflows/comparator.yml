@@ -34,13 +34,13 @@ jobs:
           LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
           git clone --depth 1 --branch "$LEAN_VERSION" https://github.com/leanprover/lean4export
           cd lean4export && lake build
-          echo "$GITHUB_WORKSPACE/lean4export/.lake/build/bin" >> $GITHUB_PATH
+          cp .lake/build/bin/lean4export "$HOME/.elan/bin/"
 
       - name: Build comparator
         run: |
           git clone --depth 1 https://github.com/leanprover/comparator
           cd comparator && lake build
-          echo "$GITHUB_WORKSPACE/comparator/.lake/build/bin" >> $GITHUB_PATH
+          cp .lake/build/bin/comparator "$HOME/.elan/bin/"
 
       - name: Run comparator
         run: lake env comparator comparator.json
