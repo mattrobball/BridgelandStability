@@ -115,7 +115,7 @@ that manifold.
 
 The corresponding numerical local-homeomorphism statement is currently formalized as
 `CategoryTheory.Triangulated.NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
-in `BridgelandStability/EulerForm.lean`:
+in `BridgelandStability/EulerForm/Basic.lean`:
 
 ```lean
 abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
@@ -155,25 +155,74 @@ The generic manifold theorem is proved for a surjective class map
 theorem is the specialization to the canonical quotient map
 `K₀ C →+ NumericalK₀ k C`.
 
-The numerical package is now split across four layers.
+The numerical package is split across four layers.
 
-- `BridgelandStability/StabilityCondition/Basic.lean` defines
+- `BridgelandStability/StabilityCondition/Defs.lean` defines
   `PreStabilityCondition.WithClassMap` and `StabilityCondition.WithClassMap`,
-  with ordinary prestability/stability conditions recovered by specializing to
-  `v = id`.
-- `BridgelandStability/StabilityCondition/Topology.lean` defines the topology on
-  `Stab_v(D)` and the generic local-homeomorphism proposition-object
-  `StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`.
+  the Bridgeland topology, and connected-component types, with ordinary
+  prestability/stability conditions recovered by specializing to `v = id`.
+- `BridgelandStability/StabilityCondition/Topology.lean` proves Lemma 6.4 (local
+  injectivity) and supporting topology lemmas. The generic local-homeomorphism
+  proposition-object
+  `StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`
+  is defined in `StabilityCondition/Defs.lean`.
 - `BridgelandStability/NumericalStability.lean` keeps the comparison layer
   (`StabilityCondition.FactorsThrough` and the subtype
   `ClassMapStabilityCondition`) plus finite-type and object-level Euler-form
   infrastructure.
-- `BridgelandStability/EulerForm.lean` and
+- `BridgelandStability/EulerForm/Basic.lean` and
   `BridgelandStability/NumericalStabilityManifold.lean` specialize the generic
   class-map theory to the canonical numerical quotient, producing
   `NumericalK₀`, `NumericallyFinite`, `NumericalStabilityCondition`, and
   `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent` on
   connected components.
+
+## Comparator verification
+
+The theorem
+`NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`
+(Corollary 1.3) is set up for independent verification via
+[`leanprover/comparator`](https://github.com/leanprover/comparator). The
+challenge module `BridgelandSpec/Main.lean` states the theorem with `sorry`;
+the solution module `BridgelandStability/NumericalStabilityManifold.lean`
+provides the proof. The comparator config is `comparator.json`.
+
+The challenge file imports `EulerForm/Defs.lean`, which transitively pulls in
+**59 project declarations from 8 modules** — exactly the data-carrying
+constants that appear in the theorem's type (found by `Expr.foldConsts`,
+descending into bodies of non-theorem declarations only):
+
+```
+EulerForm/Defs.lean               (1)   NumericalComponent
+  └─ EulerForm/Basic.lean        (10)   eulerForm, eulerFormInner, eulerFormRad,
+  │                                      NumericalK₀, numericalQuotientMap,
+  │                                      NumericallyFinite, ...
+  │  └─ NumericalStability.lean    (2)   IsFiniteType, eulerFormObj
+  │     └─ StabilityCondition/
+  │        Topology.lean
+  │        └─ Seminorm.lean
+  │           └─ Basic.lean
+  │              └─ Defs.lean     (21)   PreStabilityCondition.WithClassMap,
+  │                 │                    StabilityCondition.WithClassMap,
+  │                 │                    slicingDist, stabSeminorm, basisNhd,
+  │                 │                    topologicalSpace, Component, ...
+  │                 ├─ Slicing/
+  │                 │  Defs.lean  (13)   HNFiltration, Slicing, phiPlus,
+  │                 │                    phiMinus, prefix, shiftHN, ofIso,
+  │                 │                    exists_nonzero_first/last, ...
+  │                 │  └─ PostnikovTower.lean
+  │                 │                  (3)   PostnikovTower, .n, .triangle
+  │                 ├─ GrothendieckGroup.lean
+  │                 │             (8)   K₀, K₀.of, K₀.lift,
+  │                 │                    IsTriangleAdditive, K₀Subgroup, ...
+  │                 └─ IntervalCategory/
+  │                    FiniteLength.lean
+  │                                (1)   Slicing.IsLocallyFinite
+```
+
+The three Defs files (`Slicing/Defs`, `StabilityCondition/Defs`, `EulerForm/Defs`)
+were created by extracting declarations from the original proof files, which now
+import their corresponding Defs module and contain only proofs and derived lemmas.
 
 ## Techniques from the paper
 
@@ -258,7 +307,7 @@ umbrella import over the actual module tree. The main pieces are:
   the bridge between slicings and hearts, and the interval-category exactness
   infrastructure used in the deformation argument.
 - [`BridgelandStability/NumericalStability.lean`](BridgelandStability/NumericalStability.lean),
-  [`BridgelandStability/EulerForm.lean`](BridgelandStability/EulerForm.lean),
+  [`BridgelandStability/EulerForm/Basic.lean`](BridgelandStability/EulerForm/Basic.lean),
   and [`BridgelandStability/NumericalStabilityManifold.lean`](BridgelandStability/NumericalStabilityManifold.lean):
   the comparison layer for factorization through a class map
   (`FactorsThrough`, `ClassMapStabilityCondition`, `eulerFormObj`), the
