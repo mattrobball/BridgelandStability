@@ -167,24 +167,28 @@ often uses `extends`:
 This is the right pattern when the new object is not just “old object + proof”, but a first-class
 bundled object with its own inherited structure and API.
 
-### Consequence for `NumericalStabilityCondition`
+### Consequence for the class-map API
 
-The current implementation
+This section is now superseded by the class-map-first refactor.
+
+The public generic object is no longer `ClassMapStabilityCondition`. The repo now uses:
 
 ```lean
-structure NumericalStabilityCondition ... where
-  toStabilityCondition : StabilityCondition C
-  factors : ...
+structure StabilityCondition.WithClassMap (v : K₀ C →+ Λ) ...
 ```
 
-is not the most Mathlib-like version of either pattern.
+as the primary generic object, while
 
-It would fit Mathlib better in one of these two forms:
+```lean
+abbrev ClassMapStabilityCondition (v : K₀ C →+ Λ) :=
+  {σ : StabilityCondition C // σ.FactorsThrough v}
+```
 
-1. as a subtype of `StabilityCondition C` with the factorization property;
-2. or, if a structure is genuinely preferred, as `extends StabilityCondition C`.
+is only the comparison subtype used for the surjective-factorization bridge.
 
-So the implementation itself influences which namespace and theorem names will feel idiomatic.
+That means the real naming question is now the public stem `WithClassMap`, not the internal
+comparison object `ClassMapStabilityCondition`. The canonical Euler specialization remains the
+plain literature name `NumericalStabilityCondition`.
 
 ## Practical naming guidance for this repo
 

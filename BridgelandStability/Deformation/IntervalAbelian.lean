@@ -83,7 +83,7 @@ theorem im_Z_nonpos_of_heart_phases
   by_cases hi : IsZero (P.factor i)
   · simp [K₀.of_isZero C hi]
   · -- Nonzero factor: Z(factor) = m · exp(iπ · F.φ i) with m > 0
-    obtain ⟨m, hm, hval⟩ := σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
+    obtain ⟨m, hm, hval⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
     rw [hval, mul_assoc, ← Complex.exp_add]
     have harg : ↑(Real.pi * F.φ i) * Complex.I + -(↑(Real.pi * φ) * Complex.I) =
         ↑(Real.pi * (F.φ i - φ)) * Complex.I := by push_cast; ring
@@ -136,7 +136,7 @@ theorem P_phi_of_im_zero_heart
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · simp [K₀.of_isZero C hi]
-    · obtain ⟨mi, hmi, hvali⟩ := σ.compat (F.φ i) _ (F.semistable i) hi
+    · obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
       rw [hvali, mul_assoc, ← Complex.exp_add]
       have hargi : ↑(Real.pi * F.φ i) * Complex.I +
           -(↑(Real.pi * φ) * Complex.I) =
@@ -166,7 +166,7 @@ theorem P_phi_of_im_zero_heart
       ¬IsZero (F.toPostnikovTower.factor i) → F.φ i = φ := by
     intro i hi
     have him := hterm_zero i (Finset.mem_univ _)
-    obtain ⟨mi, hmi, hvali⟩ := σ.compat (F.φ i) _ (F.semistable i) hi
+    obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
     rw [hvali, mul_assoc, ← Complex.exp_add] at him
     have hargi : ↑(Real.pi * F.φ i) * Complex.I +
         -(↑(Real.pi * φ) * Complex.I) =
@@ -232,7 +232,7 @@ theorem P_phi_of_heart_triangle
     simp only [Pretriangulated.Triangle.mk] at h
     rw [h, map_add]
   -- Im(Z(E) · exp(-iπφ)) = 0
-  obtain ⟨mE, hmE, hvE⟩ := σ.compat φ E hPφ hE
+  obtain ⟨mE, hmE, hvE⟩ := stabilityCondition_compat_apply (C := C) σ φ E hPφ hE
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
   have him_E : (σ.Z (K₀.of C E) * rot).im = 0 := by
     rw [hvE, mul_assoc, ← Complex.exp_add]
@@ -285,7 +285,7 @@ theorem im_Z_nonneg_of_phases_above
   intro i _
   by_cases hi : IsZero (P.factor i)
   · simp [K₀.of_isZero C hi]
-  · obtain ⟨m, hm, hval⟩ := σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
+  · obtain ⟨m, hm, hval⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
     rw [hval, mul_assoc, ← Complex.exp_add]
     have harg : ↑(Real.pi * F.φ i) * Complex.I + -(↑(Real.pi * φ) * Complex.I) =
         ↑(Real.pi * (F.φ i - φ)) * Complex.I := by push_cast; ring
@@ -329,7 +329,7 @@ theorem P_phi_of_im_zero_above
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · simp [K₀.of_isZero C hi]
-    · obtain ⟨mi, hmi, hvali⟩ := σ.compat (F.φ i) _ (F.semistable i) hi
+    · obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
       rw [hvali, mul_assoc, ← Complex.exp_add]
       have hargi : ↑(Real.pi * F.φ i) * Complex.I +
           -(↑(Real.pi * φ) * Complex.I) =
@@ -356,7 +356,7 @@ theorem P_phi_of_im_zero_above
       ¬IsZero (F.toPostnikovTower.factor i) → F.φ i = φ := by
     intro i hi
     have him := hterm_zero i (Finset.mem_univ _)
-    obtain ⟨mi, hmi, hvali⟩ := σ.compat (F.φ i) _ (F.semistable i) hi
+    obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
     rw [hvali, mul_assoc, ← Complex.exp_add] at him
     have hargi : ↑(Real.pi * F.φ i) * Complex.I +
         -(↑(Real.pi * φ) * Complex.I) =
@@ -652,7 +652,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     intro E hPφ
     by_cases hne : IsZero E
     · simp [K₀.of_isZero C hne]
-    · obtain ⟨m, _, hv⟩ := σ.compat φ E hPφ hne
+    · obtain ⟨m, _, hv⟩ := stabilityCondition_compat_apply (C := C) σ φ E hPφ hne
       rw [hv, mul_assoc, ← Complex.exp_add,
         show ↑(Real.pi * φ) * Complex.I + -(↑(Real.pi * φ) * Complex.I) = 0 from
           by ring,

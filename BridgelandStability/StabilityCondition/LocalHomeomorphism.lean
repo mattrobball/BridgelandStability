@@ -643,8 +643,11 @@ noncomputable def componentTopologicalLinearLocalModel
 theorem StabilityCondition.centralChargeIsLocalHomeomorphOnConnectedComponents :
     StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents C := by
   intro cc
-  let M := componentTopologicalLinearLocalModel C cc
-  exact ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace,
-    M.mem_charge, M.isLocalHomeomorph_chargeMap⟩
+  let cc' : ConnectedComponents (StabilityCondition C) := cc
+  let M := componentTopologicalLinearLocalModel C cc'
+  refine ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace, ?_, ?_⟩
+  · intro σ hσ
+    exact M.mem_charge σ (by simpa [cc'] using hσ)
+  · simpa [cc', StabilityCondition.WithClassMap.Component] using M.isLocalHomeomorph_chargeMap
 
 end CategoryTheory.Triangulated

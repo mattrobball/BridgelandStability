@@ -262,7 +262,7 @@ theorem sector_bound (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
     intro i
     by_cases hi : IsZero (P.factor i)
     · have h0 := K₀.of_isZero C hi; simp [h0]
-    · obtain ⟨m, hm, hmZ⟩ := σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
+    · obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
       rw [hmZ]; congr 1
       rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]
@@ -372,7 +372,7 @@ lemma stabSeminorm_bound_real (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
     (hfin : stabSeminorm C σ U ≠ ⊤)
     {A : C} {ψ : ℝ} (hP : σ.slicing.P ψ A) (hA : ¬IsZero A) :
     ‖U (K₀.of C A)‖ ≤ (stabSeminorm C σ U).toReal * ‖σ.Z (K₀.of C A)‖ := by
-  obtain ⟨m, hm, hmZ⟩ := σ.compat ψ A hP hA
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ ψ A hP hA
   have hZ_pos : (0 : ℝ) < ‖σ.Z (K₀.of C A)‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
@@ -421,7 +421,7 @@ theorem stabSeminorm_lt_top_of_same_Z (σ τ : StabilityCondition C)
   apply iSup_le; intro hP; apply iSup_le; intro hE
   apply ENNReal.ofReal_le_ofReal
   -- Goal: ‖U(E)‖ / ‖τ.Z(E)‖ ≤ M / cos(πε)
-  obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hP hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) τ φ E hP hE
   have hZ_pos : (0 : ℝ) < ‖τ.Z (K₀.of C E)‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
@@ -496,7 +496,7 @@ theorem stabSeminorm_le_of_near (σ τ : StabilityCondition C)
   apply iSup_le; intro E; apply iSup_le; intro φ
   apply iSup_le; intro hP; apply iSup_le; intro hE
   apply ENNReal.ofReal_le_ofReal
-  obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hP hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) τ φ E hP hE
   have hZτ_pos : (0 : ℝ) < ‖τ.Z (K₀.of C E)‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm

@@ -7,6 +7,14 @@ that feed into them. Every definition unfolded and compared to the primary sourc
 > Bridgeland, "Stability conditions on triangulated categories",
 > arXiv:math/0212237v3, Annals of Mathematics 2007.
 
+**Update (2026-03-24):** the repo now uses a class-map-first architecture.
+The primary generic object is `StabilityCondition.WithClassMap`, and the
+public generic local-homeomorphism statement is
+`StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`.
+Older references in this audit to `ClassMapStabilityCondition` as the primary
+object, or to `sigma.factors.choose` in Corollary 1.3 packaging, are
+superseded by the updates below.
+
 ---
 
 ## Part I: Paper Statements (verbatim)
@@ -127,13 +135,11 @@ StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents C :=
 For Corollary 1.3 additionally:
 
 ```
-NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-  [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :=
-  let chi := eulerForm k C
-  NumericallyFinite C chi ->
-    forall cc : ConnectedComponents (NumericalStabilityCondition C chi),
-      exists (V : AddSubgroup (NumericalK0 C chi ->+ C)) ...
-        IsLocalHomeomorph (fun sigma => sigma.factors.choose ...)
+StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+  (C := C) (Λ := Λ) (v := v) :=
+  forall cc : ConnectedComponents (StabilityCondition.WithClassMap C v),
+    exists (V : Submodule C (Λ ->+ C)) ...
+      IsLocalHomeomorph (fun sigma => sigma.1.Z)
 |
 +-- eulerForm k C : K0 C ->+ K0 C ->+ Z
 |   := K0.lift C (eulerFormInner k C)
@@ -142,16 +148,26 @@ NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
 |       +-- eulerFormObj k C E F : Z
 |           := finsum n, (-1)^n * finrank_k Hom(E, F[n])
 |
-+-- eulerFormRad C chi := chi.ker    (left radical)
-+-- NumericalK0 C chi := K0 C / eulerFormRad C chi
-+-- NumericallyFinite C chi := AddGroup.FG (NumericalK0 C chi)
-+-- NumericalStabilityCondition C chi :=
-|     { toStabilityCondition : StabilityCondition C,
-|       factors : exists Z' : NumericalK0 C chi ->+ C,
-|                   toStabilityCondition.Z = Z' . quotient_map }
-+-- EulerFormDescends k C :=
-      { covariant : forall F, IsTriangleAdditive (E |-> chi(E,F)),
-        contravariant : forall E, IsTriangleAdditive (F |-> chi(E,F)) }
++-- PreStabilityCondition.WithClassMap C v
+|   +-- slicing : Slicing C
+|   +-- Z : Λ ->+ C
+|   +-- compat : ...
++-- StabilityCondition.WithClassMap C v
+|   +-- extends PreStabilityCondition.WithClassMap C v
+|   +-- locallyFinite : ...
++-- StabilityCondition.FactorsThrough C v sigma :=
+|     exists Z' : Λ ->+ C, sigma.Z = Z'.comp v
++-- ClassMapStabilityCondition C v :=
+|     { sigma : StabilityCondition C // sigma.FactorsThrough v }
++-- eulerFormRad k C := (eulerForm k C).ker
++-- NumericalK0 k C := K0 C / eulerFormRad k C
++-- NumericallyFinite k C := AddGroup.FG (NumericalK0 k C)
++-- NumericalStabilityCondition k C :=
+|     StabilityCondition.WithClassMap C (numericalQuotientMap k C)
++-- NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
+|     := NumericallyFinite k C ->
+|        StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+|             (C := C) (Λ := NumericalK0 k C) (v := numericalQuotientMap k C)
 ```
 
 ---
@@ -410,13 +426,15 @@ Paper (Section 1.3): chi(E, F) = sum_i (-1)^i dim_k Hom_D(E, F[i]).
 
 FAITHFUL.
 
-### EulerFormDescends (`NumericalStability.lean:85`)
+### Euler form descent (proved in `EulerForm.lean`)
 
 ```lean
-class EulerFormDescends [Linear k C] [IsFiniteType k C] : Prop where
-  covariant (F : C) : IsTriangleAdditive (fun E => eulerFormObj k C E F)
-  contravariant (E : C) : IsTriangleAdditive (fun F => eulerFormObj k C E F)
+def eulerForm : K0 C ->+ K0 C ->+ Z :=
+  K0.lift C (eulerFormInner k C)
 ```
+
+The old `EulerFormDescends` typeclass has been removed. The descent is now proved directly and the
+canonical numerical quotient is built from the actual Euler form.
 
 Paper: proves this from the long exact Hom sequence.
 
@@ -436,51 +454,72 @@ Paper: bilinear form chi on K(D), lifted via universal property twice.
 
 FAITHFUL.
 
-### eulerFormRad, NumericalK0, NumericallyFinite (`NumericalStability.lean:136-150`)
+### eulerFormRad, NumericalK0, NumericallyFinite (`EulerForm.lean`)
 
 ```lean
-def eulerFormRad (chi : K0 C ->+ K0 C ->+ Z) : AddSubgroup (K0 C) := chi.ker
+def eulerFormRad : AddSubgroup (K0 C) := (eulerForm k C).ker
 
-def NumericalK0 (chi : ...) := K0 C / eulerFormRad C chi
+def NumericalK0 := K0 C / eulerFormRad k C
 
-class NumericallyFinite (chi : ...) : Prop where
-  fg : AddGroup.FG (NumericalK0 C chi)
+class NumericallyFinite : Prop where
+  fg : AddGroup.FG (NumericalK0 k C)
 ```
 
 | Definition | Lean | Paper | Verdict |
 |-----------|------|-------|---------|
-| `eulerFormRad` | `chi.ker` = left radical | K(D)^perp = {x : chi(x,y) = 0 for all y} | FAITHFUL |
-| `NumericalK0` | `K0 C / ker(chi)` | N(D) = K(D) / K(D)^perp | FAITHFUL |
+| `eulerFormRad` | `(eulerForm k C).ker` = left radical | K(D)^perp = {x : chi(x,y) = 0 for all y} | FAITHFUL |
+| `NumericalK0` | `K0 C / ker(eulerForm)` | N(D) = K(D) / K(D)^perp | FAITHFUL |
 | `NumericallyFinite` | `AddGroup.FG` (finitely generated) | "has finite rank" | See Flag 5 |
 
-### NumericalStabilityCondition (`NumericalStability.lean:156`)
+### `StabilityCondition.WithClassMap`, `ClassMapStabilityCondition`, and `NumericalStabilityCondition` (`Basic.lean`, `NumericalStability.lean`, `EulerForm.lean`)
 
 ```lean
-structure NumericalStabilityCondition (chi : ...) where
-  toStabilityCondition : StabilityCondition C
-  factors : exists Z' : NumericalK0 C chi ->+ C,
-    toStabilityCondition.Z = Z'.comp (QuotientAddGroup.mk' (eulerFormRad C chi))
+structure PreStabilityCondition.WithClassMap (v : K0 C ->+ Λ) where
+  slicing : Slicing C
+  Z : Λ ->+ C
+  compat : ...
+
+structure StabilityCondition.WithClassMap (v : K0 C ->+ Λ)
+    extends PreStabilityCondition.WithClassMap C v where
+  locallyFinite : slicing.IsLocallyFinite C
+
+def StabilityCondition.FactorsThrough (v : K0 C ->+ Λ) (sigma : StabilityCondition C) : Prop :=
+  exists Z' : Λ ->+ C, sigma.Z = Z'.comp v
+
+abbrev ClassMapStabilityCondition (v : K0 C ->+ Λ) :=
+  { sigma : StabilityCondition C // sigma.FactorsThrough v }
+
+abbrev NumericalStabilityCondition :=
+  StabilityCondition.WithClassMap C (numericalQuotientMap k C)
 ```
 
-Paper: Stab_N(D) = { (Z, P) in Stab(D) : Z factors through N(D) }.
+Paper: the generic literature extension fixes a class map `v : K(D) -> Λ` and
+works with central charges on `Λ`; the numerical case is the specialization to
+the canonical quotient `K(D) -> N(D)`.
 
-FAITHFUL. The factoring is via an existence statement; by the universal property
-of quotient groups, the factored map Z' is unique when it exists.
+FAITHFUL. The generic object now stores the `Λ`-valued charge directly, while
+the factorization subtype is retained only as a comparison object. The
+numerical case is the canonical `v = numericalQuotientMap` specialization.
 
-### NumericalStabilityCondition.topologicalSpace (`NumericalStability.lean:165`)
+### `StabilityCondition.WithClassMap.topologicalSpace` (`StabilityCondition/Topology.lean`)
 
 ```lean
-instance : TopologicalSpace (NumericalStabilityCondition C chi) :=
-  TopologicalSpace.induced toStabilityCondition (StabilityCondition.topologicalSpace C)
+abbrev StabilityCondition.WithClassMap.topologicalSpace {v : K0 C ->+ Λ} :
+    TopologicalSpace (StabilityCondition.WithClassMap C v) :=
+  TopologicalSpace.induced
+    (StabilityCondition.WithClassMap.toStabilityCondition (C := C) (v := v))
+    inferInstance
 ```
 
-FAITHFUL -- subspace topology from Stab(D).
+FAITHFUL -- `Stab_v(D)` carries the topology induced from the ordinary
+Bridgeland topology on `Stab(D)` by forgetting the class-map charge to the
+ambient `K0`-valued charge.
 
 ---
 
 ## Part IV: Theorem Statements
 
-### StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents (`StabilityCondition/Topology.lean:715`)
+### StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents (`StabilityCondition/Topology.lean`)
 
 ```lean
 def StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents : Prop :=
@@ -498,19 +537,11 @@ def StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents : Pro
 ### NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents (`EulerForm.lean`)
 
 ```lean
-def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
+abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
     [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
-  let chi := eulerForm k C
-  NumericallyFinite C chi ->
-    forall (cc : ConnectedComponents (NumericalStabilityCondition C chi)),
-      exists (V : Submodule C (NumericalK0 C chi ->+ C))
-        (_ : NormedAddCommGroup V)
-        (_ : NormedSpace C V)
-        (hZ : forall sigma, ConnectedComponents.mk sigma = cc -> sigma.factors.choose in V),
-        @IsLocalHomeomorph
-          { sigma // ConnectedComponents.mk sigma = cc }
-          V inferInstance inferInstance
-          (fun (sigma, h) => (sigma.factors.choose, hZ sigma h))
+  NumericallyFinite k C ->
+    StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+      (C := C) (Λ := NumericalK0 k C) (v := numericalQuotientMap k C)
 ```
 
 ---
@@ -534,63 +565,46 @@ structure ComponentTopologicalLinearLocalModel ... where
 **Verdict**: This objection has been fixed. The proposition-object now records the
 linear subspace structure directly.
 
-### FLAG 2 (MATERIAL): Topology on V is unconstrained
+### FLAG 2 (RESOLVED): The theorem statements now record the local linear topology data
 
 **Paper**: "with a **well-defined linear topology**"
 
-**Lean**: `(tau_V : TopologicalSpace V)` -- existentially quantified with no constraints.
-
-The topology tau_V could be the discrete topology, the indiscrete topology, or
-anything. The paper specifies a *linear* topology (compatible with the vector
-space structure, making scalar multiplication and addition continuous).
-
-The proof equips V with `NormedAddCommGroup` + `NormedSpace C` -- much stronger
-than an arbitrary topology. But the statement throws this away.
+**Lean**: the proposition-objects now require `NormedAddCommGroup V` and
+`NormedSpace C V`, which is stronger than the paper's bare "well-defined linear
+topology" and records the intended local model directly.
 
 **Verdict**: Together with the resolution of Flag 1, the current Theorem 1.2
 statement now records the intended local linear model.
 
-### FLAG 3 (RESOLVED): Corollary 1.3 now uses the same linear local-model package
+### FLAG 3 (RESOLVED): Corollary 1.3 is now a clean specialization of the generic theorem
 
 `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
-now uses `Submodule`, `NormedAddCommGroup`, and `NormedSpace`, matching the
-Theorem 1.2 packaging.
+is now just the specialization of
+`StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`
+to the canonical numerical quotient map.
 
-### FLAG 4 (FRAGILE): Corollary 1.3 uses `sigma.factors.choose`
+### FLAG 4 (RESOLVED): Corollary 1.3 no longer uses `sigma.factors.choose`
 
-The map in the local homeomorphism sends sigma to `sigma.factors.choose`,
-where `factors` is an existence statement and `.choose` extracts a witness
-via `Classical.choice`.
-
-**Is this sound?** Yes -- by the universal property of quotient groups, the
-factored map Z' is **unique** when it exists. So `choose` gives a definite,
-canonical answer.
-
-**But**: `choose` is opaque to definitional reduction, making downstream proofs
-harder. The statement should ideally use the canonical quotient lift directly
-rather than `choose`.
+The numerical proposition-object now uses the `WithClassMap` charge `sigma.Z`
+directly, so the old `Classical.choice`-driven presentation has disappeared
+from the public statement.
 
 ### FLAG 5 (MINOR): `NumericallyFinite` uses `AddGroup.FG` vs "finite rank"
 
 **Paper**: "If this group N(D) has **finite rank**..."
 
-**Lean**: `AddGroup.FG (NumericalK0 C chi)` = finitely generated.
+**Lean**: `AddGroup.FG (NumericalK0 k C)` = finitely generated.
 
 Finitely generated is **stronger** than finite rank for general abelian groups
 (e.g., Q has rank 1 but is not finitely generated). For quotients of finitely
 generated free abelian groups they coincide, so this is fine in practice but
 the abstraction is slightly off.
 
-### FLAG 6 (MINOR): `EulerFormDescends` is an assumed typeclass
+### FLAG 6 (RESOLVED): `EulerFormDescends` has been removed
 
 The paper proves Euler form descent from the long exact Hom sequence. The Lean
-formalization takes it as a typeclass assumption. This means Corollary 1.3 has
-an extra hypothesis `[EulerFormDescends k C]` compared to the paper, where
-this is a theorem.
-
-An instance is provided in `EulerForm.lean`, so this is an acceptable
-formalization choice. But the Corollary 1.3 *statement* carries it as an
-assumption rather than deriving it internally.
+formalization now does the same: `EulerForm.lean` proves the descent and the
+Corollary 1.3 packaging no longer carries a fake typeclass hypothesis.
 
 ### FLAG 7 (FAITHFUL): `IsLocallyFinite` requires eta < 1/2
 
@@ -626,23 +640,19 @@ Every definition in the dependency tree of `StabilityCondition` and
 - `IsLocallyFinite` -- faithful to Definition 5.7
 - `slicingDist`, `stabSeminorm`, `basisNhd`, topology -- all faithful
 - `eulerFormObj`, `eulerForm`, `eulerFormRad`, `NumericalK0`,
+  `StabilityCondition.WithClassMap`, `ClassMapStabilityCondition`,
   `NumericalStabilityCondition` -- all faithful
 
-### Theorem statements: TWO MATERIAL FLAGS
+### Theorem statements: no remaining material mismatch in the packaging
 
-The **only** material issues are in the theorem statements themselves:
+The earlier statement-level objections have been fixed:
 
-1. `StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents` and
-   `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
-   use `AddSubgroup`
-   where the paper says "linear subspace" (and the proof constructs a
-   `Submodule C`).
+1. The local models are recorded as complex `Submodule`s, not bare additive
+   subgroups.
+2. The local topology is recorded via `NormedAddCommGroup` and `NormedSpace`,
+   not an unconstrained existential topology.
+3. Corollary 1.3 is now a clean specialization of the generic class-map-first
+   theorem rather than a separate ad hoc wrapper.
 
-2. The topology on V is existentially quantified with no constraints, where
-   the paper says "well-defined linear topology" (and the proof constructs
-   a normed space).
-
-**Recommended fix**: Replace the theorem statements with versions using
-`Submodule C (K0 C ->+ C)` and requiring at minimum
-`TopologicalAddGroup V` + `ContinuousSMul C V` (or `NormedSpace C V`).
-The proof already establishes this via `ComponentTopologicalLinearLocalModel`.
+The remaining caveat in this audit is the minor abstraction mismatch in
+`NumericallyFinite` noted in Flag 5.

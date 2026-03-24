@@ -100,6 +100,13 @@ structure Slicing where
 
 attribute [instance] Slicing.closedUnderIso
 
+@[ext] theorem Slicing.ext {s t : Slicing C} (hP : s.P = t.P) : s = t := by
+  rcases s with ⟨Ps, hsIso, hsZero, hsShift, hsHom, hsHN⟩
+  rcases t with ⟨Pt, htIso, htZero, htShift, htHom, htHN⟩
+  change Ps = Pt at hP
+  cases hP
+  simp
+
 /-- Zero objects satisfy every phase predicate. -/
 lemma Slicing.zero_mem' (s : Slicing C) (φ : ℝ) (X : C) (hX : IsZero X) : (s.P φ) X :=
   ObjectProperty.prop_of_iso _ ((isZero_zero C).iso hX) (s.zero_mem φ)

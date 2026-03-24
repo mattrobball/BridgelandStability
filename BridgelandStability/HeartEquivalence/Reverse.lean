@@ -793,11 +793,11 @@ theorem phasePredicate_hom_zero
     exact (shiftFunctor C (-n₂ : ℤ)).map_injective (by simpa using hshift)
 
 /-- A local reverse-direction package: the induced phase family from heart stability
-data, together with the pre-slicing axioms proved in this file. This isolates the
+data, together with the phase axioms proved in this file. This isolates the
 part of Bridgeland Proposition 5.3 already formalized here, before the ambient
 central charge on `K₀ C` and the full HN existence for the induced slices are
 packaged. -/
-structure PreStabilityCondition where
+structure PhasePackage where
   /-- The heart-side input data of Proposition 5.3. -/
   heartData : HeartStabilityData C
   /-- The induced phase predicate on the ambient triangulated category. -/
@@ -812,9 +812,9 @@ structure PreStabilityCondition where
   hom_vanishing : ∀ (φ₁ φ₂ : ℝ) (A B : C),
     φ₂ < φ₁ → (P φ₁) A → (P φ₂) B → ∀ (f : A ⟶ B), f = 0
 
-/-- Forget the reverse-direction pre-slicing package back to the original heart data. -/
-def PreStabilityCondition.toHeartStabilityData
-    (σ : PreStabilityCondition C) : HeartStabilityData C :=
+/-- Forget the reverse-direction phase package back to the original heart data. -/
+def PhasePackage.toHeartStabilityData
+    (σ : PhasePackage C) : HeartStabilityData C :=
   σ.heartData
 
 /-- **Proposition 5.3b / reverse direction, packaged so far.**
@@ -823,8 +823,8 @@ isomorphism, shift, and Hom-vanishing axioms of a Bridgeland slicing. The two
 remaining reverse-direction steps, not yet packaged here, are:
 1. constructing the ambient central charge `K₀ C →+ ℂ`;
 2. proving HN existence for the induced phase family. -/
-def HeartStabilityData.toPreStabilityCondition
-    (h : HeartStabilityData C) : PreStabilityCondition C where
+def HeartStabilityData.toPhasePackage
+    (h : HeartStabilityData C) : PhasePackage C where
   heartData := h
   P := phasePredicate (C := C) h
   closedUnderIso := phasePredicate_closedUnderIso (C := C) h
@@ -835,9 +835,9 @@ def HeartStabilityData.toPreStabilityCondition
 
 /-- The corresponding reverse-direction package extracted from an honest stability
 condition. -/
-def StabilityCondition.toPreStabilityCondition
-    (σ : StabilityCondition C) : PreStabilityCondition C :=
-  (σ.toHeartStabilityData C).toPreStabilityCondition C
+def StabilityCondition.toPhasePackage
+    (σ : StabilityCondition C) : PhasePackage C :=
+  (σ.toHeartStabilityData C).toPhasePackage C
 
 /-- **Proposition 5.3c / left inverse, at the pre-stability level.**
 Starting from a stability condition `σ`, extracting heart data, and reconstructing
@@ -845,7 +845,7 @@ the in-file reverse-direction pre-stability package agrees with the direct
 definition of that package from `σ`. -/
 theorem StabilityCondition.roundtrip
     (σ : StabilityCondition C) :
-    (σ.toHeartStabilityData C).toPreStabilityCondition C = σ.toPreStabilityCondition C := by
+    (σ.toHeartStabilityData C).toPhasePackage C = σ.toPhasePackage C := by
   rfl
 
 /-- **Proposition 5.3c / right inverse, at the heart-data level.**
@@ -853,7 +853,7 @@ For the in-file reverse-direction package, forgetting back to heart data recover
 the original input exactly. -/
 theorem HeartStabilityData.roundtrip
     (h : HeartStabilityData C) :
-    (h.toPreStabilityCondition C).toHeartStabilityData C = h := by
+    (h.toPhasePackage C).toHeartStabilityData C = h := by
   rfl
 
 end Proposition53

@@ -14,11 +14,11 @@ public import Mathlib.Algebra.Ring.NegOnePow
 public import Mathlib.GroupTheory.Finiteness
 
 /-!
-# Numerical Stability Conditions
+# Class-Map Stability Conditions
 
-We define the generic numerical quotient package attached to a bilinear form on `K₀`.
-The actual descent of the Euler form to `K₀` is proved downstream in
-`BridgelandStability.EulerForm`.
+We define the generic package attached to a class map `v : K₀(C) → Λ`. The actual
+numerical quotient `K₀(C) / K₀(C)ᵖᵉʳᵖ` attached to the Euler form is proved
+downstream in `BridgelandStability.EulerForm`.
 
 ## Main definitions
 
@@ -26,11 +26,11 @@ The actual descent of the Euler form to `K₀` is proved downstream in
   finite type (finite-dimensional Hom spaces, finitely many nonzero shifted Hom spaces)
 * `CategoryTheory.Triangulated.eulerFormObj`: the Euler form on objects
   `χ(E,F) = Σᵢ (-1)ⁱ dim_k Hom(E, F[i])`
-* `CategoryTheory.Triangulated.NumericalK₀`: the numerical Grothendieck group
-  `N(D) = K₀(D) / ker(χ)`
-* `CategoryTheory.Triangulated.NumericallyFinite`: `N(D)` is finitely generated
-* `CategoryTheory.Triangulated.NumericalStabilityCondition`: a stability condition
-  whose central charge factors through `N(D)`
+* `CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap`: a prestability condition
+  with central charge `Z : Λ →+ ℂ`
+* `CategoryTheory.Triangulated.StabilityCondition.WithClassMap`: the locally-finite version
+* `CategoryTheory.Triangulated.StabilityCondition.FactorsThrough`: the derived comparison
+  predicate on ordinary stability conditions
 
 ## References
 
@@ -47,7 +47,7 @@ noncomputable section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 
-universe w v u
+universe w v u u'
 
 namespace CategoryTheory.Triangulated
 
@@ -55,6 +55,7 @@ variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ]
 
 /-! ### Finite type -/
 
@@ -74,45 +75,115 @@ This is defined as a finitely-supported sum using `finsum`. -/
 def eulerFormObj [Linear k C] (E F : C) : ℤ :=
   ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ (shiftFunctor C n).obj F) : ℤ)
 
-/-! ### Numerical Grothendieck group -/
+/-! ### Comparison tools for class-map stability conditions -/
 
-/-- The left radical of a bilinear form `χ` on `K₀ C`: the subgroup of elements
-`x ∈ K₀ C` such that `χ(x, y) = 0` for all `y` (i.e., the kernel of the curried
-map `χ : K₀ C →+ (K₀ C →+ ℤ)`). When `χ` is the Euler form lifted to K₀, this
-gives the numerical equivalence relation (blueprint B2). -/
-def eulerFormRad (χ : K₀ C →+ K₀ C →+ ℤ) : AddSubgroup (K₀ C) := χ.ker
+@[simp] theorem StabilityCondition.WithClassMap.toStabilityCondition_slicing
+    {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v) :
+    σ.toStabilityCondition.slicing = σ.slicing := rfl
 
-/-- The numerical Grothendieck group `N(D) = K₀(D) / ker(χ)` (blueprint B2). -/
-def NumericalK₀ (χ : K₀ C →+ K₀ C →+ ℤ) : Type _ := K₀ C ⧸ eulerFormRad C χ
+@[simp] theorem StabilityCondition.WithClassMap.toStabilityCondition_Z
+    {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v) :
+    σ.toStabilityCondition.Z = σ.Z.comp v := rfl
 
-/-- The `AddCommGroup` instance on `NumericalK₀ C χ`. -/
-instance NumericalK₀.instAddCommGroup (χ : K₀ C →+ K₀ C →+ ℤ) :
-    AddCommGroup (NumericalK₀ C χ) :=
-  inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad C χ))
+/-- The ambient central charge of `σ` factors through the chosen class map `v`. -/
+def StabilityCondition.FactorsThrough (v : K₀ C →+ Λ) (σ : StabilityCondition C) : Prop :=
+  ∃ Z' : Λ →+ ℂ, σ.Z = Z'.comp v
 
-/-- The category `C` is numerically finite (blueprint B3) if the numerical Grothendieck
-group `N(D) = K₀(D)/ker(χ)` is finitely generated as an abelian group. -/
-class NumericallyFinite (χ : K₀ C →+ K₀ C →+ ℤ) : Prop where
-  /-- The numerical Grothendieck group is finitely generated. -/
-  fg : AddGroup.FG (NumericalK₀ C χ)
+/-- The factorization subtype, kept as a comparison object for the topology and
+surjective-recovery theorems. -/
+abbrev ClassMapStabilityCondition (v : K₀ C →+ Λ) : Type _ :=
+  {σ : StabilityCondition C // σ.FactorsThrough (C := C) v}
 
-/-! ### Numerical stability conditions -/
+/-- A bundled class-map stability condition determines an ordinary stability
+condition whose charge factors through `v`. -/
+def StabilityCondition.WithClassMap.toClassMapStabilityCondition {v : K₀ C →+ Λ}
+    (σ : StabilityCondition.WithClassMap C v) : ClassMapStabilityCondition C v :=
+  ⟨σ.toStabilityCondition, ⟨σ.Z, rfl⟩⟩
 
-/-- A numerical stability condition is a stability condition whose central charge
-factors through the numerical Grothendieck group `N(D) = K₀(D)/ker(χ)` (blueprint B4). -/
-structure NumericalStabilityCondition (χ : K₀ C →+ K₀ C →+ ℤ) where
-  /-- The underlying stability condition. -/
-  toStabilityCondition : StabilityCondition C
-  /-- The central charge factors through `NumericalK₀`. -/
-  factors : ∃ Z' : NumericalK₀ C χ →+ ℂ,
-    toStabilityCondition.Z = Z'.comp (QuotientAddGroup.mk' (eulerFormRad C χ))
+namespace StabilityCondition.WithClassMap
 
-/-- The topology on numerical stability conditions, induced from the Bridgeland topology
-on `StabilityCondition C` via the inclusion map. -/
-instance NumericalStabilityCondition.topologicalSpace (χ : K₀ C →+ K₀ C →+ ℤ) :
-    TopologicalSpace (NumericalStabilityCondition C χ) :=
-  TopologicalSpace.induced
-    NumericalStabilityCondition.toStabilityCondition
-    (StabilityCondition.topologicalSpace C)
+@[continuity]
+theorem continuous_toClassMapStabilityCondition {v : K₀ C →+ Λ} :
+    Continuous (StabilityCondition.WithClassMap.toClassMapStabilityCondition (C := C) (v := v)) :=
+  Continuous.subtype_mk
+    (StabilityCondition.WithClassMap.continuous_toStabilityCondition (C := C) (v := v))
+    (fun _ => ⟨_, rfl⟩)
+
+end StabilityCondition.WithClassMap
+
+/-- The factorization property for a class-map stability condition. -/
+theorem ClassMapStabilityCondition.factors {v : K₀ C →+ Λ}
+    (σ : ClassMapStabilityCondition C v) :
+    ∃ Z' : Λ →+ ℂ, (σ : StabilityCondition C).Z = Z'.comp v :=
+  σ.2
+
+/-- The chosen factored central charge for a factorization-subtype point. -/
+noncomputable def ClassMapStabilityCondition.factorMap {v : K₀ C →+ Λ}
+    (σ : ClassMapStabilityCondition C v) : Λ →+ ℂ :=
+  Classical.choose σ.factors
+
+@[simp]
+theorem ClassMapStabilityCondition.factorMap_comp {v : K₀ C →+ Λ}
+    (σ : ClassMapStabilityCondition C v) :
+    (σ : StabilityCondition C).Z = σ.factorMap.comp v :=
+  Classical.choose_spec σ.factors
+
+omit [IsTriangulated C] in
+/-- Two class-lattice charges agreeing after precomposition with a surjective
+class map are equal. -/
+theorem classMapCharge_ext_of_surjective {v : K₀ C →+ Λ}
+    (hv : Function.Surjective v) {Z₁ Z₂ : Λ →+ ℂ}
+    (hcomp : Z₁.comp v = Z₂.comp v) : Z₁ = Z₂ := by
+  ext x
+  obtain ⟨y, rfl⟩ := hv x
+  exact congrArg (fun f : K₀ C →+ ℂ => f y) hcomp
+
+/-- Recover a bundled class-map stability condition from the factorization
+subtype once the class map is surjective. -/
+noncomputable def StabilityCondition.WithClassMap.ofClassMapStabilityCondition
+    {v : K₀ C →+ Λ} (σ : ClassMapStabilityCondition C v) :
+    StabilityCondition.WithClassMap C v where
+  slicing := σ.1.slicing
+  Z := σ.factorMap
+  compat := by
+    intro φ E hE hNZ
+    rcases stabilityCondition_compat_apply (C := C) σ.1 φ E hE hNZ with ⟨m, hm, hχ⟩
+    refine ⟨m, hm, ?_⟩
+    have hfac :=
+      congrArg (fun f : K₀ C →+ ℂ => f (K₀.of C E))
+        (ClassMapStabilityCondition.factorMap_comp (C := C) (v := v) σ)
+    exact hfac.symm.trans hχ
+  locallyFinite := σ.1.locallyFinite
+
+/-- Under surjectivity of `v`, the bundled and factorization-subtype
+presentations of `Stab_v(D)` are equivalent. -/
+noncomputable def StabilityCondition.WithClassMap.equivClassMapStabilityCondition
+    {v : K₀ C →+ Λ} (hv : Function.Surjective v) :
+    StabilityCondition.WithClassMap C v ≃ ClassMapStabilityCondition C v where
+  toFun := fun σ => σ.toClassMapStabilityCondition
+  invFun := StabilityCondition.WithClassMap.ofClassMapStabilityCondition (C := C)
+  left_inv σ := by
+    apply StabilityCondition.WithClassMap.ext
+    · rfl
+    · apply classMapCharge_ext_of_surjective (C := C) (v := v) hv
+      simpa [StabilityCondition.WithClassMap.toClassMapStabilityCondition,
+        StabilityCondition.WithClassMap.toStabilityCondition_Z] using
+        (ClassMapStabilityCondition.factorMap_comp
+          (C := C) (v := v) (σ := σ.toClassMapStabilityCondition)).symm
+  right_inv σ := by
+    apply Subtype.ext
+    apply StabilityCondition.WithClassMap.ext
+    · rfl
+    · change σ.factorMap.comp v = (σ : StabilityCondition C).Z
+      exact (ClassMapStabilityCondition.factorMap_comp (C := C) (v := v) σ).symm
+
+/-- Specializing a class-map stability condition to the identity class map
+recovers the usual ambient stability condition. -/
+def StabilityCondition.WithClassMap.idEquiv :
+    StabilityCondition.WithClassMap C (AddMonoidHom.id (K₀ C)) ≃ StabilityCondition C where
+  toFun := fun σ => σ
+  invFun := fun σ => σ
+  left_inv := fun _ => rfl
+  right_inv := fun _ => rfl
 
 end CategoryTheory.Triangulated

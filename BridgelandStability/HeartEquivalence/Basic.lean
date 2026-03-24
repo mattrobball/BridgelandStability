@@ -34,8 +34,8 @@ open scoped BigOperators
 This file captures the definitions and theorem statements from the Bridgeland
 stability conditions blueprint (§§3–5) that are not yet present in the branch.
 The currently formalized reverse direction is packaged through a local
-`PreStabilityCondition`, isolating the induced phase predicates and their
-pre-slicing axioms before the ambient central charge and full HN existence are
+`PhasePackage`, isolating the induced phase predicates and their
+phase axioms before the ambient central charge and full HN existence are
 packaged.
 
 ## Contents
@@ -56,8 +56,8 @@ packaged.
 * `HeartStabilityData`: a bounded t-structure with an HN stability function on
   its heart (one side of Proposition 5.3).
 * `StabilityCondition.toHeartStabilityData`: extract heart data (Prop 5.3a).
-* `HeartStabilityData.toPreStabilityCondition`: construct the induced reverse-
-  direction pre-stability package from heart data (5.3b, packaged so far).
+* `HeartStabilityData.toPhasePackage`: construct the induced reverse-direction
+  phase package from heart data (5.3b, packaged so far).
 * `StabilityCondition.roundtrip`, `HeartStabilityData.roundtrip`:
   inverse lemmas (Proposition 5.3c).
 
@@ -196,7 +196,7 @@ def StabilityCondition.stabilityFunctionOnPhase
       have hEobj : ¬IsZero E.obj := fun hZ ↦
         hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
           (C := C) (P := σ.slicing.P φ) (X := E) hZ)
-      obtain ⟨m, hm, hmZ⟩ := σ.compat φ E.obj E.property hEobj
+      obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E.obj E.property hEobj
       have harg_eq :
           Complex.arg ((m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I)) = Real.pi * φ := by
         rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]
@@ -220,7 +220,7 @@ theorem StabilityCondition.phase_eq_of_mem_P_phi
   have hEobj : ¬IsZero E.obj := fun hZ ↦
     hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
       (C := C) (P := σ.slicing.P φ) (X := E) hZ)
-  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E.obj E.property hEobj
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E.obj E.property hEobj
   have harg : Complex.arg ((m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I)) = Real.pi * φ := by
     rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]
     constructor

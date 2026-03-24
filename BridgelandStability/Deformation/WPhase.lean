@@ -49,7 +49,7 @@ theorem StabilityCondition.W_ne_zero_of_seminorm_lt_one (σ : StabilityCondition
       (ENNReal.toReal_ofReal (by linarith : (0 : ℝ) ≤ 1)).symm]
     exact (ENNReal.toReal_lt_toReal hfin ENNReal.ofReal_ne_top).mpr hW
   -- Z([E]) = m · exp(iπφ) with m > 0, so ‖Z([E])‖ = m > 0
-  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E hP hE
   have hZ_pos : (0 : ℝ) < ‖σ.Z (K₀.of C E)‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
@@ -114,7 +114,7 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
     by_cases hi : IsZero (P.factor i)
     · simp [K₀.of_isZero C hi]
     · obtain ⟨m, hm, hmZ⟩ :=
-        σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
+        stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
       rw [hmZ]; congr 1
       rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]
@@ -151,7 +151,7 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
   have hfactor_pos :
       0 < ‖σ.Z (K₀.of C (P.factor ⟨0, hn⟩))‖ := by
     obtain ⟨m, hm, hmZ⟩ :=
-      σ.compat _ _ (F.semistable ⟨0, hn⟩) hfirst
+      stabilityCondition_compat_apply (C := C) σ _ _ (F.semistable ⟨0, hn⟩) hfirst
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs,
       abs_of_pos hm, Complex.norm_exp_ofReal_mul_I, mul_one]
     exact hm

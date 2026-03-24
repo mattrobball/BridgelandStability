@@ -44,7 +44,7 @@ theorem wPhaseOf_Z_eq (σ : StabilityCondition C) {E : C} {φ : ℝ}
     (hP : σ.slicing.P φ E) (hE : ¬IsZero E) {α : ℝ}
     (hφ : φ ∈ Set.Ioc (α - 1) (α + 1)) :
     wPhaseOf (σ.Z (K₀.of C E)) α = φ := by
-  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E hP hE
   rw [hmZ]; exact wPhaseOf_of_exp hm hφ
 
 /-- **Phase perturbation for σ-semistable objects**. If `E` is σ-semistable of phase `φ`
@@ -60,7 +60,7 @@ theorem wPhaseOf_perturbation (σ : StabilityCondition C)
       Real.sin (Real.pi * ε) * ‖σ.Z (K₀.of C E)‖) :
     |wPhaseOf (W (K₀.of C E)) α - φ| < ε := by
   -- Z(E) = m · exp(iπφ) with m > 0
-  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E hP hE
   -- Set u = (W-Z)(E) / Z(E)
   set δ := (W - σ.Z) (K₀.of C E)
   have hWZ : δ = W (K₀.of C E) - σ.Z (K₀.of C E) := AddMonoidHom.sub_apply W σ.Z _
@@ -118,7 +118,7 @@ theorem hperturb_of_stabSeminorm (σ : StabilityCondition C)
   -- ‖(W-Z)(F)‖ ≤ M * ‖Z(F)‖
   have hbd := stabSeminorm_bound_real C σ (W - σ.Z) hfin hP hFne
   -- Z(F) ≠ 0 (from compatibility)
-  obtain ⟨m, hm, hmZ⟩ := σ.compat φ F hP hFne
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ F hP hFne
   have hZ_pos : (0 : ℝ) < ‖σ.Z (K₀.of C F)‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
       Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm

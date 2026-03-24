@@ -87,6 +87,13 @@ The corresponding proof term is assembled in
 `BridgelandStability/StabilityCondition/LocalHomeomorphism.lean` as
 `StabilityCondition.centralChargeIsLocalHomeomorphOnConnectedComponents`.
 
+Under the hood, the current architecture is class-map-first: the foundational
+generic proposition-object is
+`CategoryTheory.Triangulated.StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`,
+defined in `BridgelandStability/StabilityCondition/Topology.lean` for a class
+map `v : K₀(D) → Λ`. The ordinary theorem above is the explicit `v = id`
+wrapper, kept as the paper-facing statement for `Stab(D)`.
+
 Corollary 1.3 is the numerically finite version. When the Euler form on `K(D)`
 has finite-rank numerical quotient
 
@@ -110,33 +117,31 @@ The corresponding numerical local-homeomorphism statement is currently formalize
 in `BridgelandStability/EulerForm.lean`:
 
 ```lean
-def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
+abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
     [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
-  let χ := eulerForm k C
-  NumericallyFinite C χ →
-    ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
-      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
-        (_ : NormedAddCommGroup V)
-        (_ : NormedSpace ℂ V)
-        (hZ : ∀ σ : NumericalStabilityCondition C χ,
-          ConnectedComponents.mk σ = cc →
-            σ.factors.choose ∈ V),
-        @IsLocalHomeomorph
-          {σ : NumericalStabilityCondition C χ //
-            ConnectedComponents.mk σ = cc}
-          V inferInstance inferInstance
-          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
+  NumericallyFinite k C →
+    StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+      (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 ```
 
-The numerical package is now split across three files. The generic quotient
-infrastructure lives in `BridgelandStability/NumericalStability.lean`: the
-object-level Euler form, the radical, `NumericalK₀`, `NumericallyFinite`, and
-`NumericalStabilityCondition`. The concrete descent of the Euler form to `K₀`
-and the Euler-specialized Corollary 1.3 proposition-object live in
-`BridgelandStability/EulerForm.lean`. The consequent complex-manifold packaging
-lives separately in `BridgelandStability/NumericalStabilityManifold.lean`,
-whose theorem `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent` builds the
-`ChartedSpace` and `IsManifold` structures for numerical connected components.
+The numerical package is now split across four layers.
+
+- `BridgelandStability/StabilityCondition/Basic.lean` defines
+  `PreStabilityCondition.WithClassMap` and `StabilityCondition.WithClassMap`,
+  with ordinary prestability/stability conditions recovered by specializing to
+  `v = id`.
+- `BridgelandStability/StabilityCondition/Topology.lean` defines the topology on
+  `Stab_v(D)` and the generic local-homeomorphism proposition-object
+  `StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`.
+- `BridgelandStability/NumericalStability.lean` keeps the comparison layer
+  (`StabilityCondition.FactorsThrough` and the subtype
+  `ClassMapStabilityCondition`) plus finite-type and object-level Euler-form
+  infrastructure.
+- `BridgelandStability/EulerForm.lean` and
+  `BridgelandStability/NumericalStabilityManifold.lean` specialize the generic
+  class-map theory to the canonical numerical quotient, producing
+  `NumericalK₀`, `NumericallyFinite`, `NumericalStabilityCondition`, and
+  `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`.
 
 ## Techniques from the paper
 
@@ -207,9 +212,10 @@ umbrella import over the actual module tree. The main pieces are:
   [`BridgelandStability/StabilityCondition/Seminorm.lean`](BridgelandStability/StabilityCondition/Seminorm.lean),
   [`BridgelandStability/StabilityCondition/Topology.lean`](BridgelandStability/StabilityCondition/Topology.lean),
   and [`BridgelandStability/StabilityCondition/LocalHomeomorphism.lean`](BridgelandStability/StabilityCondition/LocalHomeomorphism.lean):
-  stability conditions, the Bridgeland topology, the seminorm machinery, and
-  the connected-component and deformation glue, and the componentwise local
-  linear model behind Theorem 1.2.
+  ordinary and class-map stability conditions, the Bridgeland topology, the
+  seminorm machinery, the connected-component and deformation glue, and the
+  componentwise local linear models behind the generic class-map theorem and
+  Theorem 1.2.
 - [`BridgelandStability/Deformation/*.lean`](BridgelandStability/Deformation),
   culminating in [`BridgelandStability/Deformation/Theorem.lean`](BridgelandStability/Deformation/Theorem.lean):
   the Section 7 deformation package, including deformed slicings, phase
@@ -222,11 +228,11 @@ umbrella import over the actual module tree. The main pieces are:
 - [`BridgelandStability/NumericalStability.lean`](BridgelandStability/NumericalStability.lean),
   [`BridgelandStability/EulerForm.lean`](BridgelandStability/EulerForm.lean),
   and [`BridgelandStability/NumericalStabilityManifold.lean`](BridgelandStability/NumericalStabilityManifold.lean):
-  the generic numerical quotient infrastructure (`eulerFormObj`,
-  `NumericalK₀`, `NumericallyFinite`, `NumericalStabilityCondition`), the
-  concrete descent of the Euler form to `K₀` together with Corollary 1.3 as a
-  local-homeomorphism statement, and the separate complex manifold assembly
-  for numerical connected components.
+  the comparison layer for factorization through a class map
+  (`FactorsThrough`, `ClassMapStabilityCondition`, `eulerFormObj`), the
+  canonical numerical quotient `NumericalK₀` and
+  `NumericalStabilityCondition` attached to the Euler form, and the generic and
+  numerical complex manifold assembly for connected components.
 
 The code should be read as an active formalization project, not as a polished
 final library. Some files already expose reusable APIs; others still need the

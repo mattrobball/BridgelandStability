@@ -25,13 +25,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Complex
 open scoped ZeroObject ENNReal Topology
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ]
 
 /-! ### Topology on Stab(D) -/
 
@@ -51,6 +52,50 @@ instance StabilityCondition.topologicalSpace :
     {U | ∃ (σ : StabilityCondition C) (ε : ℝ), 0 < ε ∧ ε < 1 / 8 ∧
       U = basisNhd C σ ε}
 
+namespace StabilityCondition.WithClassMap
+
+/-- The topology on `Stab_v(D)` is induced from the ordinary Bridgeland topology on `Stab(D)` by
+forgetting the class-map charge to its ambient central charge on `K₀(C)`. -/
+abbrev topologicalSpace {v : K₀ C →+ Λ} :
+    TopologicalSpace (StabilityCondition.WithClassMap C v) :=
+  TopologicalSpace.induced
+    (StabilityCondition.WithClassMap.toStabilityCondition (C := C) (v := v))
+    inferInstance
+
+instance (priority := 100) instTopologicalSpace {v : K₀ C →+ Λ} :
+    TopologicalSpace (StabilityCondition.WithClassMap C v) :=
+  StabilityCondition.WithClassMap.topologicalSpace (C := C) (v := v)
+
+@[continuity]
+theorem continuous_toStabilityCondition {v : K₀ C →+ Λ} :
+    Continuous (StabilityCondition.WithClassMap.toStabilityCondition (C := C) (v := v)) :=
+  continuous_induced_dom
+
+/-- The connected-component index set for `Stab_v(D)`. -/
+abbrev ComponentIndex (v : K₀ C →+ Λ) :=
+  _root_.ConnectedComponents (StabilityCondition.WithClassMap C v)
+
+/-- The type of `v`-relative stability conditions in a fixed connected component. -/
+abbrev Component (v : K₀ C →+ Λ) (cc : StabilityCondition.WithClassMap.ComponentIndex C v) :=
+  {σ : StabilityCondition.WithClassMap C v // _root_.ConnectedComponents.mk σ = cc}
+
+/-- The local-homeomorphism package for connected components of `Stab_v(D)`, stated directly in
+terms of the class-map charge `Z : Λ →+ ℂ`. Specializing to `v = id` recovers Bridgeland's
+Theorem 1.2 proposition-object; specializing to the numerical quotient recovers Corollary 1.3. -/
+def CentralChargeIsLocalHomeomorphOnConnectedComponents {v : K₀ C →+ Λ} : Prop :=
+  ∀ (cc : StabilityCondition.WithClassMap.ComponentIndex C v),
+    ∃ (V : Submodule ℂ (Λ →+ ℂ))
+      (_ : NormedAddCommGroup V)
+      (_ : NormedSpace ℂ V)
+      (hZ : ∀ σ : StabilityCondition.WithClassMap C v,
+        ConnectedComponents.mk σ = cc → σ.Z ∈ V),
+      @IsLocalHomeomorph
+        (StabilityCondition.WithClassMap.Component C v cc)
+        V inferInstance inferInstance
+        (fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, hZ σ hσ⟩)
+
+end StabilityCondition.WithClassMap
+
 /-! ### Lemma 6.4: Local injectivity -/
 
 /-- **One-sided phase impossibility for Lemma 6.4** (below). If `σ` and `τ` have the same
@@ -69,7 +114,7 @@ theorem StabilityCondition.false_of_all_hn_phases_below (σ τ : StabilityCondit
     (hgt : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       φ - 1 < F.φ i) : False := by
   -- Get the central charge ray from τ-semistability
-  obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) τ φ E hτ hE
   rw [← hZ] at hmZ
   -- K₀ additivity: Z(E) = Σ Z(factor i)
   have hK₀ : σ.Z (K₀.of C E) =
@@ -91,7 +136,7 @@ theorem StabilityCondition.false_of_all_hn_phases_below (σ τ : StabilityCondit
   have hw_neg : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       (w i).im < 0 := by
     intro i hi
-    obtain ⟨b, hb, hbZ⟩ := σ.compat (F.φ i) _ (F.semistable i) hi
+    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
     change (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im < 0
     rw [hbZ, mul_assoc, ← exp_add,
       show ↑(Real.pi * F.φ i) * I + -(↑(Real.pi * φ) * I) =
@@ -145,7 +190,7 @@ theorem StabilityCondition.false_of_all_hn_phases_above (σ τ : StabilityCondit
     (hgt : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) → φ < F.φ i)
     (hlt : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       F.φ i < φ + 1) : False := by
-  obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) τ φ E hτ hE
   rw [← hZ] at hmZ
   have hK₀ : σ.Z (K₀.of C E) =
       ∑ i : Fin F.n, σ.Z (K₀.of C (F.toPostnikovTower.factor i)) := by
@@ -164,7 +209,7 @@ theorem StabilityCondition.false_of_all_hn_phases_above (σ τ : StabilityCondit
   have hw_pos : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       0 < (w i).im := by
     intro i hi
-    obtain ⟨b, hb, hbZ⟩ := σ.compat (F.φ i) _ (F.semistable i) hi
+    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
     change 0 < (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im
     rw [hbZ, mul_assoc, ← exp_add,
       show ↑(Real.pi * F.φ i) * I + -(↑(Real.pi * φ) * I) =
@@ -286,7 +331,7 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
   have hσ_pos : ∀ i : Fin Fσ.n, ¬IsZero (Fσ.toPostnikovTower.factor i) →
       0 < (wσ i).im := by
     intro i hi
-    obtain ⟨b, hb, hbZ⟩ := σ.compat (Fσ.φ i) _ (Fσ.semistable i) hi
+    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (Fσ.φ i) _ (Fσ.semistable i) hi
     change 0 < (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im
     rw [hbZ, mul_assoc, ← exp_add,
       show ↑(Real.pi * Fσ.φ i) * I + -(↑(Real.pi * φ) * I) =
@@ -351,7 +396,7 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
     by_cases hi : IsZero (Fτ.toPostnikovTower.factor i)
     · change (τ.Z (K₀.of C _) * _).im ≤ 0
       rw [K₀.of_isZero C hi, map_zero, zero_mul]; exact le_rfl
-    · obtain ⟨b, hb, hbZ⟩ := τ.compat (Fτ.φ i) _ (Fτ.semistable i) hi
+    · obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) τ (Fτ.φ i) _ (Fτ.semistable i) hi
       change (τ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
       rw [hbZ, mul_assoc, ← exp_add,
         show ↑(Real.pi * Fτ.φ i) * I + -(↑(Real.pi * φ) * I) =
@@ -390,7 +435,7 @@ theorem StabilityCondition.false_of_hn_phases_le_with_lt (σ τ : StabilityCondi
     (hgt : ∀ i : Fin F.n, φ - 1 < F.φ i)
     (hstrict : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) ∧ F.φ i < φ) :
     False := by
-  obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) τ φ E hτ hE
   rw [← hZ] at hmZ
   have hK₀ : σ.Z (K₀.of C E) =
       ∑ i : Fin F.n, σ.Z (K₀.of C (F.toPostnikovTower.factor i)) := by
@@ -410,7 +455,7 @@ theorem StabilityCondition.false_of_hn_phases_le_with_lt (σ τ : StabilityCondi
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · change (σ.Z (K₀.of C _) * _).im ≤ 0
       rw [K₀.of_isZero C hi, map_zero, zero_mul]; exact le_rfl
-    · obtain ⟨b, hb, hbZ⟩ := σ.compat (F.φ i) _ (F.semistable i) hi
+    · obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
       change (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
       rw [hbZ, mul_assoc, ← exp_add,
         show ↑(Real.pi * F.φ i) * I + -(↑(Real.pi * φ) * I) =
@@ -424,7 +469,7 @@ theorem StabilityCondition.false_of_hn_phases_le_with_lt (σ τ : StabilityCondi
   -- At least one term has Im < 0
   obtain ⟨j₀, hj₀ne, hj₀lt⟩ := hstrict
   have hw_neg : (w j₀).im < 0 := by
-    obtain ⟨b, hb, hbZ⟩ := σ.compat (F.φ j₀) _ (F.semistable j₀) hj₀ne
+    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ j₀) _ (F.semistable j₀) hj₀ne
     change (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im < 0
     rw [hbZ, mul_assoc, ← exp_add,
       show ↑(Real.pi * F.φ j₀) * I + -(↑(Real.pi * φ) * I) =
@@ -724,8 +769,9 @@ topological space `Stab(D)` (with the Bridgeland topology), there exists a
 structure, such that the central charge map `σ ↦ Z(σ)`, restricted to `Σ`
 and landing in `V(Σ)`, is a local homeomorphism.
 
-This implies each connected component of `Stab(D)` is a manifold locally
-modelled on the topological vector space `V(Σ)`. -/
+This is the ordinary stability-space wrapper around the generic
+`StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`
+package. -/
 def StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents : Prop :=
   ∀ (cc : ConnectedComponents (StabilityCondition C)),
     ∃ (V : Submodule ℂ (K₀ C →+ ℂ))

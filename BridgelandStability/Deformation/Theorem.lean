@@ -52,8 +52,8 @@ def StabilityCondition.deformed (σ : StabilityCondition C)
   have hε₀2 : ε₀ < 1 / 4 := by grind
   let hSector : SectorFiniteLength (C := C) σ ε₀ hε₀ hε₀2 :=
     SectorFiniteLength.of_wide (C := C) σ hε₀ hε₀2 hε₀8 hWide
-  refine ⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, W,
-    σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, ?_⟩
+  refine ⟨⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, W,
+    σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin⟩, ?_⟩
   constructor
   refine ⟨ε₀, hε₀, by linarith, fun t E ↦ ?_⟩
   letI : Fact (t - ε₀ < t + ε₀) := ⟨by grind⟩

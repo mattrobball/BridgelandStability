@@ -592,25 +592,49 @@ def eulerForm [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ K₀ C →+ ℤ :=
   K₀.lift C (eulerFormInner k C)
 
+/-- The left radical of the Euler form on `K₀ C`. -/
+def eulerFormRad [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+    AddSubgroup (K₀ C) :=
+  (eulerForm k C).ker
+
+/-- The numerical Grothendieck group attached to the Euler form on `K₀`. -/
+def NumericalK₀ [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+    Type _ :=
+  K₀ C ⧸ eulerFormRad k C
+
+/-- The `AddCommGroup` instance on `NumericalK₀ k C`. -/
+instance NumericalK₀.instAddCommGroup [Linear k C] [IsFiniteType k C]
+    [(shiftFunctor C (1 : ℤ)).Linear k] :
+    AddCommGroup (NumericalK₀ k C) :=
+  inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad k C))
+
+/-- The quotient map `K₀(C) → N(C)`. -/
+abbrev numericalQuotientMap [Linear k C] [IsFiniteType k C]
+    [(shiftFunctor C (1 : ℤ)).Linear k] :
+    K₀ C →+ NumericalK₀ k C :=
+  QuotientAddGroup.mk' (eulerFormRad k C)
+
+/-- The category `C` is numerically finite if the numerical Grothendieck group attached to the
+Euler form is finitely generated as an abelian group. -/
+class NumericallyFinite [Linear k C] [IsFiniteType k C]
+    [(shiftFunctor C (1 : ℤ)).Linear k] : Prop where
+  /-- The Euler-form numerical Grothendieck group is finitely generated. -/
+  fg : AddGroup.FG (NumericalK₀ k C)
+
+/-- Numerical stability conditions are stability conditions whose central charge factors through
+the canonical numerical quotient map `K₀(C) → N(C)`. -/
+abbrev NumericalStabilityCondition [Linear k C] [IsFiniteType k C]
+    [(shiftFunctor C (1 : ℤ)).Linear k] : Type _ :=
+  StabilityCondition.WithClassMap C (numericalQuotientMap k C)
+
 /-! ## Corollary 1.3 packaging -/
 
-/-- The Euler-specialized local-homeomorphism package for connected components of numerical
-stability conditions. This is the proposition-object behind Bridgeland's Corollary 1.3. -/
-def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
+/-- The local-homeomorphism package for connected components of numerical stability conditions.
+This is the proposition-object behind Bridgeland's Corollary 1.3. -/
+abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
     [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
-  let χ := eulerForm k C
-  NumericallyFinite C χ →
-    ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
-      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
-        (_ : NormedAddCommGroup V)
-        (_ : NormedSpace ℂ V)
-        (hZ : ∀ σ : NumericalStabilityCondition C χ,
-          ConnectedComponents.mk σ = cc →
-            σ.factors.choose ∈ V),
-        @IsLocalHomeomorph
-          {σ : NumericalStabilityCondition C χ //
-            ConnectedComponents.mk σ = cc}
-          V inferInstance inferInstance
-          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
+  NumericallyFinite k C →
+    StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+      (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 
 end CategoryTheory.Triangulated

@@ -34,6 +34,7 @@ the main theorem from "Stability conditions on triangulated categories" (2007):
 
 ## Main definitions
 
+* `CategoryTheory.Triangulated.PreStabilityCondition`: a Bridgeland prestability condition
 * `CategoryTheory.Triangulated.StabilityCondition`: a locally-finite stability condition
 * `CategoryTheory.Triangulated.slicingDist`: the Bridgeland generalized metric on slicings
 * `CategoryTheory.Triangulated.stabSeminorm`: the seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)`
@@ -52,33 +53,114 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Complex
 open scoped ENNReal
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ]
 
-/-! ### Stability conditions -/
+/-! ### Prestability and stability conditions -/
 
-/-- A Bridgeland stability condition on a triangulated category `C`.
-This bundles a slicing with a central charge (an additive group homomorphism
-from `K₀ C` to `ℂ`), subject to a compatibility condition relating the phase
-of semistable objects to the argument of their central charge.
-The slicing is required to be locally finite. -/
-structure StabilityCondition where
+namespace PreStabilityCondition
+
+/-- A Bridgeland prestability condition with respect to a class map
+`v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient
+charge is recovered by precomposition with `v`. -/
+structure WithClassMap (v : K₀ C →+ Λ) where
   /-- The underlying slicing. -/
   slicing : Slicing C
-  /-- The central charge, an additive group homomorphism `K₀ C →+ ℂ`. -/
-  Z : K₀ C →+ ℂ
-  /-- Compatibility: for every nonzero semistable object `E` of phase `φ`, the central charge
-  `Z([E])` lies on the ray `ℝ₊ · exp(iπφ)` in `ℂ`. -/
+  /-- The central charge on the class lattice `Λ`. -/
+  Z : Λ →+ ℂ
+  /-- Compatibility: for every nonzero semistable object `E` of phase `φ`, the
+  class-map central charge `Z(v([E]))` lies on the ray `ℝ₊ · exp(iπφ)` in `ℂ`. -/
   compat : ∀ (φ : ℝ) (E : C), slicing.P φ E → ¬IsZero E →
     ∃ (m : ℝ), 0 < m ∧
-      Z (K₀.of C E) = ↑m * exp (↑(Real.pi * φ) * I)
+      Z (v (K₀.of C E)) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I)
+
+/-- Forget a class-map prestability condition to the identity class map on `K₀(C)`. -/
+def WithClassMap.toPreStabilityCondition {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) :
+    WithClassMap C (AddMonoidHom.id (K₀ C)) where
+  slicing := σ.slicing
+  Z := σ.Z.comp v
+  compat := by
+    intro φ E hE hNZ
+    simpa [AddMonoidHom.comp_apply] using σ.compat φ E hE hNZ
+
+omit [IsTriangulated C] in
+@[ext] theorem WithClassMap.ext {v : K₀ C →+ Λ}
+    {σ τ : WithClassMap C v}
+    (hs : σ.slicing = τ.slicing) (hZ : σ.Z = τ.Z) : σ = τ := by
+  rcases σ with ⟨sσ, Zσ, cσ⟩
+  rcases τ with ⟨sτ, Zτ, cτ⟩
+  simp at hs hZ
+  cases hs
+  cases hZ
+  have hcompat : cσ = cτ := Subsingleton.elim _ _
+  cases hcompat
+  rfl
+
+end PreStabilityCondition
+
+/-- A Bridgeland prestability condition on `C`, viewed as the specialization of
+the class-map theory to the identity map `K₀(C) → K₀(C)`. -/
+abbrev PreStabilityCondition :=
+  PreStabilityCondition.WithClassMap C (AddMonoidHom.id (K₀ C))
+
+namespace StabilityCondition
+
+/-- A Bridgeland stability condition with respect to a class map `v : K₀(C) → Λ`.
+This is the locally-finite refinement of `PreStabilityCondition.WithClassMap`. -/
+structure WithClassMap (v : K₀ C →+ Λ)
+    extends PreStabilityCondition.WithClassMap C v where
   /-- The slicing is locally finite. -/
   locallyFinite : slicing.IsLocallyFinite C
+
+/-- Forget a class-map stability condition to the identity class map on `K₀(C)`. -/
+def WithClassMap.toStabilityCondition {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) :
+    WithClassMap C (AddMonoidHom.id (K₀ C)) where
+  toWithClassMap := σ.toWithClassMap.toPreStabilityCondition
+  locallyFinite := σ.locallyFinite
+
+@[ext] theorem WithClassMap.ext {v : K₀ C →+ Λ}
+    {σ τ : WithClassMap C v}
+    (hs : σ.slicing = τ.slicing) (hZ : σ.Z = τ.Z) : σ = τ := by
+  have hparent : σ.toWithClassMap = τ.toWithClassMap :=
+    PreStabilityCondition.WithClassMap.ext (C := C) hs hZ
+  rcases σ with ⟨σpre, hlfσ⟩
+  rcases τ with ⟨τpre, hlfτ⟩
+  cases hparent
+  have hlf : hlfσ = hlfτ := Subsingleton.elim _ _
+  cases hlf
+  rfl
+
+end StabilityCondition
+
+/-- A Bridgeland stability condition on `C`, viewed as the specialization of the
+class-map theory to the identity map `K₀(C) → K₀(C)`. -/
+abbrev StabilityCondition :=
+  StabilityCondition.WithClassMap C (AddMonoidHom.id (K₀ C))
+
+omit [IsTriangulated C] in
+/-- The ordinary compatibility statement for a prestability condition, with the
+identity class map simplified away. -/
+theorem preStabilityCondition_compat_apply (σ : PreStabilityCondition C)
+    (φ : ℝ) (E : C) (hE : σ.slicing.P φ E) (hNZ : ¬IsZero E) :
+    ∃ (m : ℝ), 0 < m ∧
+      σ.Z (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
+  simpa using σ.compat φ E hE hNZ
+
+/-- The ordinary compatibility statement for a stability condition, with the
+identity class map simplified away. -/
+theorem stabilityCondition_compat_apply (σ : StabilityCondition C)
+    (φ : ℝ) (E : C) (hE : σ.slicing.P φ E) (hNZ : ¬IsZero E) :
+    ∃ (m : ℝ), 0 < m ∧
+      σ.Z (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
+  simpa using σ.compat φ E hE hNZ
 
 /-! ### Phase rigidity for same central charge -/
 
@@ -89,8 +171,8 @@ theorem StabilityCondition.phase_eq_of_same_Z (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z) {E : C} {φ ψ : ℝ}
     (hσ : σ.slicing.P φ E) (hτ : τ.slicing.P ψ E) (hE : ¬IsZero E)
     (habs : |φ - ψ| < 2) : φ = ψ := by
-  obtain ⟨m₁, hm₁, h₁⟩ := σ.compat φ E hσ hE
-  obtain ⟨m₂, hm₂, h₂⟩ := τ.compat ψ E hτ hE
+  obtain ⟨m₁, hm₁, h₁⟩ := stabilityCondition_compat_apply (C := C) σ φ E hσ hE
+  obtain ⟨m₂, hm₂, h₂⟩ := stabilityCondition_compat_apply (C := C) τ ψ E hτ hE
   rw [hZ] at h₁
   exact eq_of_pos_mul_exp_eq hm₁ hm₂ habs (h₁.symm.trans h₂)
 

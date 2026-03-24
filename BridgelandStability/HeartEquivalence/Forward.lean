@@ -139,7 +139,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_eq_of_mem_P_phi
   have hEobj : ¬IsZero E.obj := fun hZ ↦
     hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
       (C := C) (P := t.heart) (X := E) hZ)
-  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E.obj hP hEobj
+  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E.obj hP hEobj
   have harg : Complex.arg ((m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I)) = Real.pi * φ := by
     rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]
     constructor
@@ -202,7 +202,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
     intro i hi
     have hi_ne : ¬IsZero (P.factor i) := by
       simpa [s, P] using hi
-    obtain ⟨m, hm, hmZ⟩ := σ.compat (F.φ i) (P.factor i) (F.semistable i) hi_ne
+    obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi_ne
     rw [show f i = (m : ℂ) * Complex.exp (↑(Real.pi * F.φ i) * Complex.I) by
       simpa [f] using hmZ]
     rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]

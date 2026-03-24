@@ -1,6 +1,6 @@
 # Naming Audit for Bridgeland Stability
 
-**Date**: 2026-03-22, updated 2026-03-23  
+**Date**: 2026-03-22, updated 2026-03-24  
 **Basis**: corrected Mathlib-style reading after checking both the official naming guidance and
 nearby Mathlib wrapper implementations
 
@@ -14,8 +14,8 @@ The corrected picture is:
 - some names are bad because they are content-free, not because of casing;
 - some names are fine because they are proposition-like named objects rather than theorem proofs;
 - some theorem names really do need theorem-style lowercase names;
-- and one part of the naming problem is blocked on a design issue: the implementation of
-  `NumericalStabilityCondition`.
+- and the old design-linked naming mess around numerical stability conditions has now been
+  resolved by the class-map-first refactor.
 
 Since the first draft of this audit, `EulerFormDescends` has been removed from the repo. The
 current naming discussion should therefore focus on the live API, not on deleted abstractions.
@@ -60,49 +60,28 @@ argument-by-argument scaffolding rather than the mathematical conclusion.
 
 ## Design-linked naming debt
 
-### 1. The Corollary 1.3 family is blocked on the numerical-wrapper design
+### 1. Recently resolved by the class-map-first refactor
 
-The content-free theorem-number names have now been replaced by:
+The public generic object is now the namespace family
+`StabilityCondition.WithClassMap`, and the canonical Euler-specialized notion has reclaimed the
+plain literature names:
 
 - `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
 - `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`
 
-But the best replacement depends on the implementation choice for numerical stability conditions:
+This is the right split:
 
-- if the current wrapper stays, then the most honest namespace is
-  `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`;
-- if the implementation is refactored into a subtype-style stability-condition specialization, then
-  a `StabilityCondition.Numerical...` family becomes more plausible.
+- `StabilityCondition.WithClassMap` names the reusable `v : K₀(C) → Λ` abstraction;
+- `ClassMapStabilityCondition` is only the comparison subtype used for the
+  surjective-factorization bridge;
+- `NumericalStabilityCondition` names the canonical Euler specialization.
 
-For the complex-manifold theorem, the final name should be chosen to match the settled namespace of
-the underlying proposition-object.
+### 2. The remaining design-linked question is only second-order
 
-### 2. The biggest design-linked naming issue is still `NumericalStabilityCondition`
-
-- `NumericalStabilityCondition`
-
-The current implementation is:
-
-- a separate structure,
-- with a `toStabilityCondition` field,
-- and one extra proof field recording factorization through numerical `K₀`.
-
-Compared with nearby Mathlib patterns, that is not the cleanest implementation.
-
-The nearest Mathlib implementations suggest:
-
-1. proof-only wrappers are usually subtypes;
-2. richer bundled wrappers usually use `extends`.
-
-So the current implementation lands in a non-idiomatic middle ground.
-
-That matters for naming because the theorem-family namespace depends on whether numerical stability
-conditions are meant to be:
-
-- their own bundled wrapper object,
-- or a subtype-style specialization of stability conditions.
-
-This should be resolved before finalizing the Corollary 1.3 theorem names.
+The only remaining design-linked naming question is whether the stem
+`WithClassMap` is the best long-term public spelling, or whether a more literature-facing stem
+like `WithRespectTo` would eventually read better. That is a second-order naming question, not an
+API-boundary problem.
 
 ## Secondary naming debt
 
@@ -158,8 +137,9 @@ best mathematical presentation of the underlying propositions.
 ## Recommended order of attack
 
 1. Rename the remaining public proof-scaffolding names (`P_of_Q_of_P_semistable`, etc.).
-2. Settle the implementation of `NumericalStabilityCondition`.
-3. Clean up the larger abbreviation families, especially `H0prime`.
+2. Clean up the larger abbreviation families, especially `H0prime`.
+3. Revisit the remaining second-order generic stem questions only after the public theorem names
+   are cleaned up.
 
 ## Bottom line
 
@@ -170,4 +150,4 @@ The highest-value fixes are:
 
 - finish the remaining theorem-proof cleanup,
 - eliminate the public proof-scaffolding names,
-- and stop deferring the design question behind `NumericalStabilityCondition`.
+- and then clean up the larger abbreviation families.

@@ -560,8 +560,9 @@ theorem StabilityCondition.eq_of_same_Z_near (σ τ : StabilityCondition C)
     σ = τ := by
   have hP : σ.slicing.P = τ.slicing.P := by
     funext φ; ext E; exact bridgeland_lemma_6_4 C σ τ hZ hd φ E
-  cases σ; cases τ; simp only [StabilityCondition.mk.injEq]
-  exact ⟨by cases ‹Slicing C›; cases ‹Slicing C›; simpa [Slicing.mk.injEq] using hP, hZ⟩
+  apply StabilityCondition.WithClassMap.ext
+  · exact Slicing.ext (C := C) hP
+  · exact hZ
 
 /-- Two stability conditions lying in the same Bridgeland basis neighborhood of `σ`
 and with the same central charge are equal. -/
