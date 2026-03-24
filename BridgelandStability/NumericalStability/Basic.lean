@@ -5,36 +5,15 @@ Authors: Formalization
 -/
 module
 
+public import BridgelandStability.NumericalStability.Defs
 public import BridgelandStability.StabilityCondition.Topology
-public import Mathlib.CategoryTheory.Linear.Basic
-public import Mathlib.LinearAlgebra.Dimension.Finrank
-public import Mathlib.RingTheory.Finiteness.Defs
-public import Mathlib.Algebra.BigOperators.Finprod
-public import Mathlib.Algebra.Ring.NegOnePow
-public import Mathlib.GroupTheory.Finiteness
 
 /-!
-# Class-Map Stability Conditions
+# Class-Map Stability Conditions — Comparison Tools
 
-We define the generic package attached to a class map `v : K₀(C) → Λ`. The actual
-numerical quotient `K₀(C) / K₀(C)ᵖᵉʳᵖ` attached to the Euler form is proved
-downstream in `BridgelandStability.EulerForm`.
-
-## Main definitions
-
-* `CategoryTheory.Triangulated.IsFiniteType`: a `k`-linear triangulated category of
-  finite type (finite-dimensional Hom spaces, finitely many nonzero shifted Hom spaces)
-* `CategoryTheory.Triangulated.eulerFormObj`: the Euler form on objects
-  `χ(E,F) = Σᵢ (-1)ⁱ dim_k Hom(E, F[i])`
-* `CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap`: a prestability condition
-  with central charge `Z : Λ →+ ℂ`
-* `CategoryTheory.Triangulated.StabilityCondition.WithClassMap`: the locally-finite version
-* `CategoryTheory.Triangulated.StabilityCondition.FactorsThrough`: the derived comparison
-  predicate on ordinary stability conditions
-
-## References
-
-* Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007
+Simp lemmas, factorization predicates, continuity, and the equivalence between
+bundled and factorization-subtype presentations of `Stab_v(D)`. The finite-type
+class and object-level Euler form are in `NumericalStability.Defs`.
 -/
 
 @[expose] public section
@@ -56,24 +35,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 variable {Λ : Type u'} [AddCommGroup Λ]
-
-/-! ### Finite type -/
-
-/-- A `k`-linear pretriangulated category is of finite type if all Hom spaces are
-finite-dimensional over `k` and for each pair of objects, only finitely many shifted
-Hom spaces are nonzero (blueprint B0). -/
-class IsFiniteType [Linear k C] : Prop where
-  /-- Each Hom space `Hom(E, F)` is finite-dimensional over `k`. -/
-  finite_dim : ∀ (E F : C), Module.Finite k (E ⟶ F)
-  /-- For each pair of objects, only finitely many shifted Hom spaces are nontrivial. -/
-  finite_support : ∀ (E F : C), Set.Finite {n : ℤ | Nontrivial (E ⟶ (shiftFunctor C n).obj F)}
-
-/-! ### Object-level Euler form -/
-
-/-- The Euler form on objects (blueprint B1): `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])`.
-This is defined as a finitely-supported sum using `finsum`. -/
-def eulerFormObj [Linear k C] (E F : C) : ℤ :=
-  ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ (shiftFunctor C n).obj F) : ℤ)
 
 /-! ### Comparison tools for class-map stability conditions -/
 

@@ -6,7 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.Slicing.TStructureConstruction
-public import BridgelandStability.GrothendieckGroup
+public import BridgelandStability.GrothendieckGroup.Defs
 public import BridgelandStability.ForMathlib.CategoryTheory.QuasiAbelian.Basic
 public import BridgelandStability.TStructure.HeartAbelian
 public import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks

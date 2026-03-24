@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.StabilityCondition.Basic
+public import BridgelandStability.StabilityCondition.Defs
 
 /-!
 # Stability Seminorm

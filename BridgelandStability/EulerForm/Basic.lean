@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.NumericalStability
+public import BridgelandStability.NumericalStability.Defs
 public import Mathlib.CategoryTheory.Triangulated.Yoneda
 public import Mathlib.CategoryTheory.Linear.Yoneda
 public import Mathlib.CategoryTheory.Shift.Linear

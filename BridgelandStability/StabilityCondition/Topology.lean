@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityCondition.Seminorm
+public import BridgelandStability.StabilityCondition.Basic
 
 /-!
 # Topology on Stab(D)

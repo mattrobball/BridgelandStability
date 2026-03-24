@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.PostnikovTower
+public import BridgelandStability.PostnikovTower.Defs
 public import Mathlib.CategoryTheory.Triangulated.Triangulated
 public import Mathlib.CategoryTheory.Triangulated.TStructure.Basic
 public import Mathlib.CategoryTheory.Triangulated.TStructure.Heart

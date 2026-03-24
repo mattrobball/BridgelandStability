@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityCondition.LocalHomeomorphism
+public import BridgelandStability.NumericalStability.Basic
 public import BridgelandStability.EulerForm.Defs
 public import Mathlib.Analysis.Normed.Module.Connected
 public import Mathlib.Geometry.Manifold.Complex

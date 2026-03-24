@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.PostnikovTower
+public import BridgelandStability.PostnikovTower.Defs
 public import Mathlib.GroupTheory.FreeAbelianGroup
 public import Mathlib.GroupTheory.QuotientGroup.Defs
 public import Mathlib.Algebra.BigOperators.Fin

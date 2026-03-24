@@ -28,7 +28,7 @@ public import BridgelandStability.Deformation.TargetEnvelope
 public import BridgelandStability.Deformation.Theorem
 public import BridgelandStability.Deformation.WPhase
 public import BridgelandStability.EulerForm.Basic
-public import BridgelandStability.GrothendieckGroup
+public import BridgelandStability.GrothendieckGroup.Defs
 public import BridgelandStability.HeartEquivalence.AmplitudeFormulas
 public import BridgelandStability.HeartEquivalence.Basic
 public import BridgelandStability.HeartEquivalence.EulerLift
@@ -42,9 +42,9 @@ public import BridgelandStability.IntervalCategory.FiniteLength
 public import BridgelandStability.IntervalCategory.QuasiAbelian
 public import BridgelandStability.IntervalCategory.Strictness
 public import BridgelandStability.IntervalCategory.TwoHeartEmbedding
-public import BridgelandStability.NumericalStability
+public import BridgelandStability.NumericalStability.Basic
 public import BridgelandStability.NumericalStabilityManifold
-public import BridgelandStability.PostnikovTower
+public import BridgelandStability.PostnikovTower.Defs
 public import BridgelandStability.Slicing.Basic
 public import BridgelandStability.Slicing.ExtensionClosure
 public import BridgelandStability.Slicing.HNOperations
