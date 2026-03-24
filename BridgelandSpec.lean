@@ -1,3 +1,1 @@
-module
-
-public import BridgelandSpec.Main
+import BridgelandSpec.Main
