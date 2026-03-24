@@ -107,11 +107,12 @@ that manifold.
 
 The corresponding numerical local-homeomorphism statement is currently formalized as
 `CategoryTheory.Triangulated.NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
-in `BridgelandStability/NumericalStability.lean`:
+in `BridgelandStability/EulerForm.lean`:
 
 ```lean
 def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-    (χ : K₀ C →+ K₀ C →+ ℤ) : Prop :=
+    [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
+  let χ := eulerForm k C
   NumericallyFinite C χ →
     ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
       ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
@@ -130,8 +131,8 @@ def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedCompone
 The numerical package is now split across three files. The generic quotient
 infrastructure lives in `BridgelandStability/NumericalStability.lean`: the
 object-level Euler form, the radical, `NumericalK₀`, `NumericallyFinite`, and
-`NumericalStabilityCondition`, including the Corollary 1.3 proposition-object.
-The concrete descent of the Euler form to `K₀` lives in
+`NumericalStabilityCondition`. The concrete descent of the Euler form to `K₀`
+and the Euler-specialized Corollary 1.3 proposition-object live in
 `BridgelandStability/EulerForm.lean`. The consequent complex-manifold packaging
 lives separately in `BridgelandStability/NumericalStabilityManifold.lean`,
 whose theorem `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent` builds the

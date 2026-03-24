@@ -115,23 +115,4 @@ instance NumericalStabilityCondition.topologicalSpace (χ : K₀ C →+ K₀ C �
     NumericalStabilityCondition.toStabilityCondition
     (StabilityCondition.topologicalSpace C)
 
-/-- The numerical local-homeomorphism package for connected components of numerical stability
-conditions. This is the proposition-object behind Bridgeland's Corollary 1.3 once the relevant
-bilinear form `χ` on `K₀` has been fixed. -/
-def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-    (χ : K₀ C →+ K₀ C →+ ℤ) : Prop :=
-  NumericallyFinite C χ →
-    ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
-      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
-        (_ : NormedAddCommGroup V)
-        (_ : NormedSpace ℂ V)
-        (hZ : ∀ σ : NumericalStabilityCondition C χ,
-          ConnectedComponents.mk σ = cc →
-            σ.factors.choose ∈ V),
-        @IsLocalHomeomorph
-          {σ : NumericalStabilityCondition C χ //
-            ConnectedComponents.mk σ = cc}
-          V inferInstance inferInstance
-          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
-
 end CategoryTheory.Triangulated

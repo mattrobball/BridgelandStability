@@ -19,7 +19,7 @@ public import Mathlib.Topology.LocalAtTarget
 
 This file isolates the manifold-level packaging behind Bridgeland's Corollary 1.3.
 
-The current proposition-object
+The current Euler-specialized proposition-object
 `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
 only exports a local homeomorphism into a complex-linear subspace. For the actual
 complex-manifold corollary, we want to separate the work into the following stages:

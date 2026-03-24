@@ -128,8 +128,9 @@ For Corollary 1.3 additionally:
 
 ```
 NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-  (eulerForm k C) :=
-  NumericallyFinite C (eulerForm k C) ->
+  [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :=
+  let chi := eulerForm k C
+  NumericallyFinite C chi ->
     forall cc : ConnectedComponents (NumericalStabilityCondition C chi),
       exists (V : AddSubgroup (NumericalK0 C chi ->+ C)) ...
         IsLocalHomeomorph (fun sigma => sigma.factors.choose ...)
@@ -494,11 +495,12 @@ def StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents : Pro
         (fun (sigma, h) => (sigma.Z, hZ sigma h))
 ```
 
-### NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents (`NumericalStability.lean:184`)
+### NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents (`EulerForm.lean`)
 
 ```lean
 def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-    (chi : K₀ C →+ K₀ C →+ ℤ) : Prop :=
+    [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
+  let chi := eulerForm k C
   NumericallyFinite C chi ->
     forall (cc : ConnectedComponents (NumericalStabilityCondition C chi)),
       exists (V : Submodule C (NumericalK0 C chi ->+ C))
