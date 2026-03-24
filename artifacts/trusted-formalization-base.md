@@ -1,20 +1,23 @@
 # Trusted Formalization Base
 
-The 59 project declarations reachable from Corollary 1.3, paired with the
+The 78 project declarations reachable from Corollary 1.3, paired with the
 corresponding natural language definitions from the paper. These are the
 declarations a reader must trust to accept the formal statement — analogous to
 a trusted code base.
 
 For defs: the full definition term is shown. For theorems: only the type
 signature. Auto-generated `._proof_N` declarations and structure field
-projections (`.Z`, `.P`, `.n`, etc.) are grouped with their parent structure.
+projections are grouped with their parent structure.
+
+Found by `Expr.foldConsts` on the theorem's type, descending into bodies of
+non-theorem declarations and into inductive constructor types.
 
 Reference: Bridgeland, "Stability conditions on triangulated categories",
 Annals of Mathematics 166 (2007), 317--345.
 
 ---
 
-## PostnikovTower/Defs.lean (3 declarations)
+## PostnikovTower/Defs.lean (6 declarations)
 
 No direct paper counterpart. A Postnikov tower is a finite chain of
 distinguished triangles 0 = A₀ → A₁ → ⋯ → Aₙ ≅ E filtering an object E.
@@ -35,9 +38,15 @@ structure PostnikovTower (E : C) where
   -- Aₙ ≅ E
   top_iso : Nonempty (chain.right ≅ E)
   zero_isZero : n = 0 → IsZero E
+
+-- The i-th factor Fᵢ = (triangle i).obj₃
+variable {C} in
+def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
+  (P.triangle i).obj₃
 ```
 
-**Declarations:** `PostnikovTower`, `PostnikovTower.n`, `PostnikovTower.triangle`
+**Declarations:** `PostnikovTower`, `PostnikovTower._proof_1`, `PostnikovTower._proof_3`,
+`PostnikovTower.n`, `PostnikovTower.triangle`, `PostnikovTower.factor`
 
 ---
 
@@ -83,7 +92,53 @@ def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] 
 
 ---
 
-## Slicing/Defs.lean (13 declarations)
+## ForMathlib/CategoryTheory/QuasiAbelian/Basic.lean (12 declarations)
+
+No direct paper counterpart. Strict monomorphisms, strict subobjects, and the
+strict-Artinian/Noetherian conditions used by `IsLocallyFinite`. In an abelian
+category, strict = ordinary; in a quasi-abelian category, strict subobjects
+(via strict monos) may be a proper subset of all subobjects.
+
+```lean
+-- A morphism is strict if its coimage-image comparison is an isomorphism
+def IsStrict {X Y : C} (f : X ⟶ Y) : Prop :=
+  IsIso (Abelian.coimageImageComparison f)
+
+-- A strict monomorphism: mono + strict
+structure IsStrictMono {X Y : C} (f : X ⟶ Y) : Prop where
+  mono : Mono f
+  strict : IsStrict f
+
+-- A subobject is strict if its arrow is a strict monomorphism
+def Subobject.IsStrict {X : C} (P : Subobject X) : Prop :=
+  IsStrictMono P.arrow
+
+-- Strict subobjects of X
+abbrev StrictSubobject (X : C) :=
+  { P : Subobject X // P.IsStrict }
+
+-- Paper, Definition 5.7: "finite length" in the quasi-abelian sense
+-- Strict-Artinian: DCC on strict subobjects
+def isStrictArtinianObject : ObjectProperty C :=
+  fun X ↦ WellFoundedLT (StrictSubobject X)
+
+abbrev IsStrictArtinianObject : Prop := isStrictArtinianObject.Is X
+
+-- Strict-Noetherian: ACC on strict subobjects
+def isStrictNoetherianObject : ObjectProperty C :=
+  fun X ↦ WellFoundedGT (StrictSubobject X)
+
+abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
+```
+
+**Declarations:** `IsStrict`, `IsStrictMono`, `Subobject.IsStrict`,
+`Subobject.IsStrict._proof_1`--`._proof_4`, `StrictSubobject`,
+`isStrictArtinianObject`, `IsStrictArtinianObject`,
+`isStrictNoetherianObject`, `IsStrictNoetherianObject`
+
+---
+
+## Slicing/Defs.lean (14 declarations)
 
 **Paper, Definition 3.3.** A slicing P of D consists of full additive
 subcategories P(φ) ⊂ D for each φ ∈ ℝ, satisfying:
@@ -94,6 +149,9 @@ subcategories P(φ) ⊂ D for each φ ∈ ℝ, satisfying:
 
 **Paper, after Lemma 3.2.** φ⁺(E) and φ⁻(E) denote the highest and lowest
 phases in the HN filtration of a nonzero object E.
+
+**Paper, Definition 4.1.** P((a, b)) is the full subcategory of objects whose
+HN factors all have phases in (a, b).
 
 ```lean
 -- Paper, Definition 3.3 (iii): HN filtration with factors Aᵢ ∈ P(φᵢ), φ₁ > ⋯ > φₙ
@@ -113,6 +171,10 @@ structure Slicing where
     φ₂ < φ₁ → (P φ₁) A → (P φ₂) B → ∀ (f : A ⟶ B), f = 0
   -- Paper (iii): every object has an HN filtration
   hn_exists : ∀ (E : C), Nonempty (HNFiltration C P E)
+
+-- Paper, Definition 4.1: P((a,b)) = {E : all HN phases of E lie in (a,b)}
+def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
+  fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
 
 -- Paper: φ⁺(E) = highest phase in the HN filtration of E
 noncomputable def Slicing.phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) : ℝ :=
@@ -139,10 +201,44 @@ lemma HNFiltration.exists_nonzero_last (s : Slicing C) {E : C} (hE : ¬IsZero E)
 ```
 
 **Declarations:** `HNFiltration`, `HNFiltration.toPostnikovTower`, `HNFiltration.φ`,
-`Slicing`, `Slicing.P`, `Slicing.phiPlus`, `Slicing.phiPlus._proof_1`,
+`Slicing`, `Slicing.P`, `Slicing.intervalProp`,
+`Slicing.phiPlus`, `Slicing.phiPlus._proof_1`,
 `Slicing.phiMinus`, `Slicing.phiMinus._proof_1`, `Slicing.phiMinus._proof_2`,
 `HNFiltration.exists_nonzero_first`, `HNFiltration.exists_nonzero_last`,
 `HNFiltration.exists_nonzero_last._proof_1`
+
+---
+
+## IntervalCategory/Basic.lean (1 declaration)
+
+**Paper, Definition 4.1.** The interval subcategory P((a, b)).
+
+```lean
+-- Paper: P((a,b)) as a full subcategory of D
+abbrev Slicing.IntervalCat (s : Slicing C) (a b : ℝ) :=
+  (s.intervalProp C a b).FullSubcategory
+```
+
+**Declarations:** `Slicing.IntervalCat`
+
+---
+
+## IntervalCategory/QuasiAbelian.lean (2 declarations)
+
+**Paper (implicit in Definition 5.7).** The interval category P((a, b)) has
+kernels and cokernels (it is quasi-abelian when b − a ≤ 1).
+
+```lean
+-- Statements only (proofs not part of the trusted base):
+
+noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
+    HasKernels (s.IntervalCat C a b)
+
+noncomputable instance Slicing.intervalCat_hasCokernels (s : Slicing C) :
+    HasCokernels (s.IntervalCat C a b)
+```
+
+**Declarations:** `Slicing.intervalCat_hasKernels`, `Slicing.intervalCat_hasCokernels`
 
 ---
 
@@ -175,7 +271,7 @@ structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
 **Paper, Definition 5.1.** A stability condition on D consists of
 Z : K(D) → ℂ (the central charge) and subcategories P(φ) satisfying:
 (a) 0 ≠ E ∈ P(φ) ⇒ Z(E) = m(E) exp(iπφ) for some m(E) ∈ ℝ₊,
-(b)–(d) as in Definition 3.3.
+(b)--(d) as in Definition 3.3.
 
 **Paper, Definition 5.7.** Locally finite = slicing is locally finite.
 

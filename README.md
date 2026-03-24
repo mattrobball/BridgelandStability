@@ -187,34 +187,12 @@ challenge module `BridgelandSpec/Main.lean` states the theorem with `sorry`;
 the solution module `BridgelandStability/NumericalStabilityManifold.lean`
 provides the proof. The comparator config is `comparator.json`.
 
-The theorem's type references **59 project declarations from 8 modules**,
-identified by `Expr.foldConsts` (descending into bodies of non-theorem
-declarations only). These are the modules that contribute declarations to the
-challenge statement:
-
-```
-EulerForm/Defs.lean                (1)   NumericalComponent
-EulerForm/Basic.lean              (10)   eulerForm, eulerFormInner, eulerFormRad,
-                                          NumericalK₀, numericalQuotientMap,
-                                          NumericallyFinite, ...
-NumericalStability/Defs.lean       (2)   IsFiniteType, eulerFormObj
-StabilityCondition/Defs.lean      (21)   PreStabilityCondition.WithClassMap,
-                                          StabilityCondition.WithClassMap,
-                                          slicingDist, stabSeminorm, basisNhd,
-                                          topologicalSpace, Component, ...
-Slicing/Defs.lean                 (13)   HNFiltration, Slicing, phiPlus,
-                                          phiMinus, prefix, shiftHN, ofIso,
-                                          exists_nonzero_first/last, ...
-PostnikovTower/Defs.lean           (3)   PostnikovTower, .n, .triangle
-GrothendieckGroup/Defs.lean        (8)   K₀, K₀.of, K₀.lift,
-                                          IsTriangleAdditive, K₀Subgroup, ...
-IntervalCategory/FiniteLength.lean (1)   Slicing.IsLocallyFinite
-```
-
-These 59 declarations are the **trusted formalization base**: the definitions
-a reader must accept to trust the formal statement, analogous to a trusted code
-base. Each declaration is paired with the corresponding natural language
-definition from the paper in
+The theorem's type references **78 project declarations from 11 modules**,
+found by `Expr.foldConsts` (descending into def bodies and inductive
+constructor types). These are the **trusted formalization base**: the
+definitions a reader must accept to trust the formal statement, analogous to a
+trusted code base. Each declaration is paired with the corresponding natural
+language definition from the paper in
 [`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
 
 ## Techniques from the paper
