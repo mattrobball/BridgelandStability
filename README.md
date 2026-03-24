@@ -187,42 +187,36 @@ challenge module `BridgelandSpec/Main.lean` states the theorem with `sorry`;
 the solution module `BridgelandStability/NumericalStabilityManifold.lean`
 provides the proof. The comparator config is `comparator.json`.
 
-The challenge file imports `EulerForm/Defs.lean`, which transitively pulls in
-**59 project declarations from 8 modules** — exactly the data-carrying
-constants that appear in the theorem's type (found by `Expr.foldConsts`,
-descending into bodies of non-theorem declarations only):
+The theorem's type references **59 project declarations from 8 modules**,
+identified by `Expr.foldConsts` (descending into bodies of non-theorem
+declarations only). These are the modules that contribute declarations to the
+challenge statement:
 
 ```
-EulerForm/Defs.lean               (1)   NumericalComponent
-  └─ EulerForm/Basic.lean        (10)   eulerForm, eulerFormInner, eulerFormRad,
-  │                                      NumericalK₀, numericalQuotientMap,
-  │                                      NumericallyFinite, ...
-  │  └─ NumericalStability.lean    (2)   IsFiniteType, eulerFormObj
-  │     └─ StabilityCondition/
-  │        Topology.lean
-  │        └─ Seminorm.lean
-  │           └─ Basic.lean
-  │              └─ Defs.lean     (21)   PreStabilityCondition.WithClassMap,
-  │                 │                    StabilityCondition.WithClassMap,
-  │                 │                    slicingDist, stabSeminorm, basisNhd,
-  │                 │                    topologicalSpace, Component, ...
-  │                 ├─ Slicing/
-  │                 │  Defs.lean  (13)   HNFiltration, Slicing, phiPlus,
-  │                 │                    phiMinus, prefix, shiftHN, ofIso,
-  │                 │                    exists_nonzero_first/last, ...
-  │                 │  └─ PostnikovTower.lean
-  │                 │                  (3)   PostnikovTower, .n, .triangle
-  │                 ├─ GrothendieckGroup.lean
-  │                 │             (8)   K₀, K₀.of, K₀.lift,
-  │                 │                    IsTriangleAdditive, K₀Subgroup, ...
-  │                 └─ IntervalCategory/
-  │                    FiniteLength.lean
-  │                                (1)   Slicing.IsLocallyFinite
+EulerForm/Defs.lean                (1)   NumericalComponent
+EulerForm/Basic.lean              (10)   eulerForm, eulerFormInner, eulerFormRad,
+                                          NumericalK₀, numericalQuotientMap,
+                                          NumericallyFinite, ...
+NumericalStability.lean            (2)   IsFiniteType, eulerFormObj
+StabilityCondition/Defs.lean      (21)   PreStabilityCondition.WithClassMap,
+                                          StabilityCondition.WithClassMap,
+                                          slicingDist, stabSeminorm, basisNhd,
+                                          topologicalSpace, Component, ...
+Slicing/Defs.lean                 (13)   HNFiltration, Slicing, phiPlus,
+                                          phiMinus, prefix, shiftHN, ofIso,
+                                          exists_nonzero_first/last, ...
+PostnikovTower.lean                (3)   PostnikovTower, .n, .triangle
+GrothendieckGroup.lean             (8)   K₀, K₀.of, K₀.lift,
+                                          IsTriangleAdditive, K₀Subgroup, ...
+IntervalCategory/FiniteLength.lean (1)   Slicing.IsLocallyFinite
 ```
 
 The three Defs files (`Slicing/Defs`, `StabilityCondition/Defs`, `EulerForm/Defs`)
 were created by extracting declarations from the original proof files, which now
 import their corresponding Defs module and contain only proofs and derived lemmas.
+The challenge file also transitively imports the proof modules
+(`StabilityCondition/Topology`, `Seminorm`, `Basic`) through `NumericalStability`,
+but those contribute zero of the 59 declarations.
 
 ## Techniques from the paper
 
