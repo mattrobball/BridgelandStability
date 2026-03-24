@@ -31,12 +31,13 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 /-- The public theorem package for Bridgeland's Theorem 1.2. -/
 @[blueprint "thm:bridgeland-1-2"
-  (statement := /-- **Bridgeland's Theorem 1.2.** For each connected component
-  `Σ ⊂ Stab(D)` there is a linear subspace `V(Σ) ⊂ Hom_ℤ(K_0(D), ℂ)` and a local
-  homeomorphism `Z : Σ → V(Σ)` sending a stability condition to its central
-  charge. -/)
-  (proof := /-- This is the assembled formal proof of the ordinary `v = id`
-  case in the library. -/)]
+  (statement := /-- {\bf Bridgeland's Theorem 1.2.} For each connected component
+  $\Sigma \subset \operatorname{Stab}(D)$ there is a linear subspace
+  $V(\Sigma) \subset \operatorname{Hom}_{\mathbb{Z}}(K_0(D), \mathbb{C})$ and a
+  local homeomorphism $Z : \Sigma \to V(\Sigma)$ sending a stability condition
+  to its central charge. -/)
+  (proof := /-- This is the assembled formal proof of the ordinary class-map
+  specialization with $v = \mathrm{id}$. -/)]
 theorem ordinary_central_charge_is_local_homeomorph_on_connected_components :
     StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents C := by
   simpa using
@@ -44,12 +45,12 @@ theorem ordinary_central_charge_is_local_homeomorph_on_connected_components :
 
 /-- The generic class-map manifold theorem used for the numerical specialization. -/
 @[blueprint "thm:class-map-manifold"
-  (statement := /-- For a surjective class map `v : K_0(D) → \Lambda` to a finitely
-  generated abelian group, each connected component of the corresponding space of
-  stability conditions carries the structure of a finite-dimensional complex
-  manifold. -/)
-  (proof := /-- This is the public class-map-first manifold theorem exposed by the
-  library. -/)]
+  (statement := /-- For a surjective class map
+  $v : K_0(D) \to \Lambda$ to a finitely generated abelian group, each
+  connected component of the corresponding space of stability conditions
+  carries the structure of a finite-dimensional complex manifold. -/)
+  (proof := /-- This is the public class-map-first manifold theorem exposed by
+  the library. -/)]
 theorem class_map_component_exists_complex_manifold
     {Λ : Type u'} [AddCommGroup Λ] [AddGroup.FG Λ]
     (v₀ : K₀ C →+ Λ) (hv₀ : Function.Surjective v₀)
@@ -65,9 +66,10 @@ theorem class_map_component_exists_complex_manifold
 
 /-- The complex-manifold conclusion of Bridgeland's Corollary 1.3. -/
 @[blueprint "thm:bridgeland-1-3"
-  (statement := /-- **Bridgeland's Corollary 1.3.** Suppose `D` is numerically
-  finite. Then each connected component `Σ ⊂ Stab_N(D)` is a finite-dimensional
-  complex manifold. -/)
+  (statement := /-- {\bf Bridgeland's Corollary 1.3.} Suppose $D$ is
+  numerically finite. Then each connected component
+  $\Sigma \subset \operatorname{Stab}_N(D)$ is a finite-dimensional complex
+  manifold. -/)
   (proof := /-- This is the canonical numerical specialization of the generic
   class-map manifold theorem. -/)
   (proofUses := [class_map_component_exists_complex_manifold])]
@@ -89,11 +91,12 @@ theorem numerical_component_exists_complex_manifold
 
 /-- The deformation theorem that drives the local-homeomorphism argument. -/
 @[blueprint "thm:bridgeland-7-1"
-  (statement := /-- **Bridgeland's Theorem 7.1.** If `‖W - Z‖_σ < \sin(\pi ε)`,
-  then there exists a locally finite stability condition `τ = (W, Q)` with
-  `d(P, Q) < ε`. -/)
+  (statement := /-- {\bf Bridgeland's Theorem 7.1.} If
+  $\lVert W - Z \rVert_\sigma < \sin(\pi \varepsilon)$, then there exists a
+  locally finite stability condition $\tau = (W,Q)$ with
+  $d(P,Q) < \varepsilon$. -/)
   (proof := /-- The library proves this by constructing the canonical deformed
-  slicing and shrinking `ε` slightly to fit the strict sine bound. -/)]
+  slicing and shrinking $\varepsilon$ slightly to fit the strict sine bound. -/)]
 theorem deformation_exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
     (σ : StabilityCondition C)
     (W : K₀ C →+ ℂ)
