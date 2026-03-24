@@ -1,0 +1,68 @@
+name: Comparator
+
+on:
+  push:
+    branches: [comparator-setup]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  comparator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Get Lean version
+        id: lean
+        run: |
+          LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
+          echo "version=$LEAN_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          cache: false
+
+      - name: Build landrun
+        run: |
+          git clone --depth 1 https://github.com/Zouuup/landrun /tmp/landrun
+          cd /tmp/landrun && go build -o landrun ./cmd/landrun
+          sudo cp landrun /usr/local/bin/
+
+      - name: Build lean4export
+        run: |
+          git clone --depth 1 https://github.com/leanprover/lean4export /tmp/lean4export
+          cp lean-toolchain /tmp/lean4export/lean-toolchain
+          cd /tmp/lean4export && lake update && lake build
+          sudo cp .lake/build/bin/lean4export /usr/local/bin/
+
+      - name: Build comparator
+        run: |
+          git clone --depth 1 https://github.com/leanprover/comparator /tmp/comparator
+          cp lean-toolchain /tmp/comparator/lean-toolchain
+          cd /tmp/comparator && lake update && lake build
+          COMPARATOR_BIN=$(find /tmp/comparator/.lake/build/bin -name 'comparator' -type f | head -1)
+          sudo cp "$COMPARATOR_BIN" /usr/local/bin/comparator
+
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+
+      - name: Build project
+        run: lake build BridgelandStability
+
+      - name: Clean solution oleans
+        run: |
+          # Comparator needs to compile solution files itself in the sandbox.
+          rm -f .lake/build/lib/BridgelandStability/NumericalStabilityManifold.olean
+          rm -f .lake/build/lib/BridgelandStability/NumericalStabilityManifold.ilean
+
+      - name: Run comparator
+        run: lake env comparator comparator.json

@@ -5,32 +5,14 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.PostnikovTower
-public import Mathlib.CategoryTheory.Triangulated.Triangulated
-public import Mathlib.CategoryTheory.Triangulated.TStructure.Basic
-public import Mathlib.CategoryTheory.Triangulated.TStructure.Heart
-public import Mathlib.CategoryTheory.ObjectProperty.ContainsZero
-public import Mathlib.CategoryTheory.Subobject.Lattice
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Data.Real.Archimedean
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
+public import BridgelandStability.Slicing.Defs
 
 /-!
-# Bridgeland Slicings on Triangulated Categories
+# Bridgeland Slicings — Subcategory Predicates and Hom-Vanishing
 
-We define slicings, Harder-Narasimhan filtrations, and local finiteness conditions
-following Bridgeland's "Stability conditions on triangulated categories" (2007).
-
-## Main definitions
-
-* `CategoryTheory.Triangulated.HNFiltration`: Harder-Narasimhan filtration data, built
-  as a `PostnikovTower` equipped with phases on the factors
-* `CategoryTheory.Triangulated.Slicing`: a slicing of a triangulated category, using
-  `ObjectProperty C` for each phase slice
-* `CategoryTheory.Triangulated.Slicing.intervalProp`: the interval subcategory predicate
-* `CategoryTheory.Triangulated.Slicing.IsLocallyFinite`: the local finiteness condition
-  (defined in `IntervalCategory.lean`, once the thin interval exact structure is available)
+Subcategory predicates (`leProp`, `gtProp`, etc.), their monotonicity properties,
+and hom-vanishing lemmas for HN-filtered objects. The core structures (`HNFiltration`,
+`Slicing`) and intrinsic phase functions (`phiPlus`, `phiMinus`) are in `Slicing.Defs`.
 
 ## References
 
@@ -50,160 +32,12 @@ open scoped ZeroObject
 
 universe v u
 
-/-! ### Grind annotations for arithmetic automation -/
-
--- Forward reasoning: monotonicity + order hypothesis → derived inequality
-attribute [grind →] StrictAnti.imp
-attribute [grind →] StrictMono.imp
-attribute [grind →] Antitone.imp
-attribute [grind →] Monotone.imp
-
 namespace CategoryTheory.Triangulated
 
 section Slicing
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-
-/-- A Harder-Narasimhan (HN) filtration of an object `E` with respect to a phase
-predicate `P`. This extends a `PostnikovTower` with phase data: each factor is
-semistable with a given phase, and the phases are strictly decreasing. -/
-structure HNFiltration (P : ℝ → ObjectProperty C) (E : C) extends PostnikovTower C E where
-  /-- The phases of the semistable factors, in strictly decreasing order. -/
-  φ : Fin n → ℝ
-  /-- The phases are strictly decreasing (higher phase factors appear first). -/
-  hφ : StrictAnti φ
-  /-- Each factor is semistable of the given phase. -/
-  semistable : ∀ j, (P (φ j)) (toPostnikovTower.factor j)
-
-/-- A slicing of a pretriangulated category `C`, as defined in
-Bridgeland (2007), Definition 5.1. A slicing assigns to each real number `φ`
-a full subcategory of semistable objects `P(φ)` (as an `ObjectProperty`),
-subject to shift, Hom-vanishing, and Harder-Narasimhan existence axioms.
-
-Each `P(φ)` is an `ObjectProperty C`, enabling use of the `ObjectProperty` API
-(e.g. `FullSubcategory`, shift stability, closure properties). -/
-structure Slicing where
-  /-- For each phase `φ ∈ ℝ`, the property of semistable objects of phase `φ`. -/
-  P : ℝ → ObjectProperty C
-  /-- Each phase slice is closed under isomorphisms. -/
-  closedUnderIso : ∀ (φ : ℝ), (P φ).IsClosedUnderIsomorphisms
-  /-- The zero object satisfies every phase predicate. -/
-  zero_mem : ∀ (φ : ℝ), (P φ) (0 : C)
-  /-- Shifting by `[1]` increases the phase by 1, and conversely. -/
-  shift_iff : ∀ (φ : ℝ) (X : C), (P φ) X ↔ (P (φ + 1)) (X⟦(1 : ℤ)⟧)
-  /-- Morphisms from higher-phase to lower-phase nonzero semistable objects vanish. -/
-  hom_vanishing : ∀ (φ₁ φ₂ : ℝ) (A B : C),
-    φ₂ < φ₁ → (P φ₁) A → (P φ₂) B → ∀ (f : A ⟶ B), f = 0
-  /-- Every object has a Harder-Narasimhan filtration. -/
-  hn_exists : ∀ (E : C), Nonempty (HNFiltration C P E)
-
-attribute [instance] Slicing.closedUnderIso
-
-@[ext] theorem Slicing.ext {s t : Slicing C} (hP : s.P = t.P) : s = t := by
-  rcases s with ⟨Ps, hsIso, hsZero, hsShift, hsHom, hsHN⟩
-  rcases t with ⟨Pt, htIso, htZero, htShift, htHom, htHN⟩
-  change Ps = Pt at hP
-  cases hP
-  simp
-
-/-- Zero objects satisfy every phase predicate. -/
-lemma Slicing.zero_mem' (s : Slicing C) (φ : ℝ) (X : C) (hX : IsZero X) : (s.P φ) X :=
-  ObjectProperty.prop_of_iso _ ((isZero_zero C).iso hX) (s.zero_mem φ)
-
-/-- Shifting by `[1]` increases the phase by 1. -/
-lemma Slicing.shift (s : Slicing C) (φ : ℝ) (X : C) (h : (s.P φ) X) :
-    (s.P (φ + 1)) (X⟦(1 : ℤ)⟧) :=
-  (s.shift_iff φ X).mp h
-
-/-- The inverse of the shift axiom. -/
-lemma Slicing.shift_inv (s : Slicing C) (φ : ℝ) (X : C)
-    (h : (s.P (φ + 1)) (X⟦(1 : ℤ)⟧)) : (s.P φ) X :=
-  (s.shift_iff φ X).mpr h
-
-/-- Each phase slice of a slicing contains the zero object. -/
-instance (s : Slicing C) (φ : ℝ) : (s.P φ).ContainsZero where
-  exists_zero := ⟨0, isZero_zero C, s.zero_mem φ⟩
-
-/-- Forward shift by a natural number: if `(P φ) X` then `(P (φ + n)) (X⟦n⟧)`. -/
-lemma Slicing.shift_nat (s : Slicing C) (φ : ℝ) (X : C) (n : ℕ) :
-    (s.P φ) X → (s.P (φ + (n : ℝ))) (X⟦(n : ℤ)⟧) := by
-  induction n with
-  | zero =>
-    intro h
-    simp only [Nat.cast_zero, add_zero]
-    exact (s.P φ).prop_of_iso ((shiftFunctorZero C ℤ).app X).symm h
-  | succ n ih =>
-    intro h
-    have h1 := (s.shift_iff (φ + ↑n) ((shiftFunctor C (↑n : ℤ)).obj X)).mp (ih h)
-    have hc : φ + ↑n + 1 = φ + (↑(n + 1) : ℝ) := by push_cast; grind
-    rw [hc] at h1
-    exact (s.P _).prop_of_iso
-      ((shiftFunctorAdd' C (↑n : ℤ) 1 ((↑n : ℤ) + 1) (by grind)).app X).symm h1
-
-/-- Backward shift by a natural number: if `(P (φ + n)) (X⟦n⟧)` then `(P φ) X`. -/
-lemma Slicing.unshift_nat (s : Slicing C) (φ : ℝ) (X : C) (n : ℕ) :
-    (s.P (φ + (n : ℝ))) (X⟦(n : ℤ)⟧) → (s.P φ) X := by
-  induction n with
-  | zero =>
-    intro h
-    simp only [Nat.cast_zero, add_zero] at h
-    exact (s.P φ).prop_of_iso ((shiftFunctorZero C ℤ).app X) h
-  | succ n ih =>
-    intro h
-    apply ih
-    have hc : (↑(n + 1) : ℝ) = ↑n + 1 := by push_cast; grind
-    rw [hc] at h
-    have h1 := (s.P _).prop_of_iso
-      ((shiftFunctorAdd' C (↑n : ℤ) 1 ((↑n : ℤ) + 1) (by grind)).app X) h
-    rw [← add_assoc] at h1
-    exact (s.shift_iff (φ + ↑n) ((shiftFunctor C (↑n : ℤ)).obj X)).mpr h1
-
-/-- Generalized shift: shifting by `n : ℤ` adds `n` to the phase. -/
-lemma Slicing.shift_int (s : Slicing C) (φ : ℝ) (X : C) (n : ℤ) :
-    (s.P φ) X ↔ (s.P (φ + ↑n)) (X⟦n⟧) := by
-  cases n with
-  | ofNat m => exact ⟨s.shift_nat C φ X m, s.unshift_nat C φ X m⟩
-  | negSucc m =>
-    -- shiftFunctorAdd' gives X⟦0⟧ ≅ X⟦negSucc m⟧⟦↑(m+1)⟧
-    have addIso :=
-      (shiftFunctorAdd' C (Int.negSucc m) ((m + 1 : ℕ) : ℤ) 0 (by grind)).app X
-    -- shiftFunctorZero gives X⟦0⟧ ≅ X
-    have zeroIso := (shiftFunctorZero C ℤ).app X
-    constructor
-    · intro h
-      -- Transfer: X → X⟦0⟧ → X⟦negSucc m⟧⟦↑(m+1)⟧, then unshift by (m+1)
-      have h0 := (s.P φ).prop_of_iso zeroIso.symm h
-      have h1 := (s.P _).prop_of_iso addIso h0
-      have phase_eq : φ = φ + ↑(Int.negSucc m) + ((m + 1 : ℕ) : ℝ) := by
-        simp [Int.negSucc_eq]; grind
-      rw [phase_eq] at h1
-      exact s.unshift_nat C _ _ (m + 1) h1
-    · intro h
-      -- Shift by (m+1), then transfer: X⟦negSucc m⟧⟦↑(m+1)⟧ → X⟦0⟧ → X
-      have h1 := s.shift_nat C _ _ (m + 1) h
-      have phase_eq : φ + ↑(Int.negSucc m) + ((m + 1 : ℕ) : ℝ) = φ := by
-        simp [Int.negSucc_eq]; grind
-      rw [phase_eq] at h1
-      have h2 := (s.P φ).prop_of_iso addIso.symm h1
-      exact (s.P φ).prop_of_iso zeroIso h2
-
-/-! ### Phase bounds and interval subcategories -/
-
-/-- The highest phase `φ⁺` of a nonzero object, extracted from a given HN filtration. -/
-def HNFiltration.phiPlus {P : ℝ → ObjectProperty C} {E : C}
-    (F : HNFiltration C P E) (h : 0 < F.n) : ℝ :=
-  F.φ ⟨0, h⟩
-
-/-- The lowest phase `φ⁻` of a nonzero object, extracted from a given HN filtration. -/
-def HNFiltration.phiMinus {P : ℝ → ObjectProperty C} {E : C}
-    (F : HNFiltration C P E) (h : 0 < F.n) : ℝ :=
-  F.φ ⟨F.n - 1, by grind⟩
-
-/-- The interval subcategory predicate `P((a,b))`: an object `E` belongs to the
-interval subcategory if it is zero or all phases in its HN filtration lie in `(a,b)`. -/
-def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
-  fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
 
 /-! ### Phase bound properties -/
 

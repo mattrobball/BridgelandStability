@@ -1,0 +1,9 @@
+{
+  "challenge_module": "BridgelandSpec.Main",
+  "solution_module": "BridgelandStability.NumericalStabilityManifold",
+  "theorem_names": [
+    "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent"
+  ],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": false
+}

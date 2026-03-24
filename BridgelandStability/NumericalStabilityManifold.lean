@@ -6,7 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityCondition.LocalHomeomorphism
-public import BridgelandStability.EulerForm
+public import BridgelandStability.EulerForm.Defs
 public import Mathlib.Analysis.Normed.Module.Connected
 public import Mathlib.Geometry.Manifold.Complex
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
@@ -763,12 +763,6 @@ theorem StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponen
         (E := E) (M := StabilityCondition.WithClassMap.Component C v cc) f hf with
     ⟨_instChartedSpace, hmanifold⟩
   exact ⟨E, inferInstance, inferInstance, inferInstance, inferInstance, hmanifold⟩
-
-/-- A connected component of numerical stability conditions. -/
-abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k]
-    (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
-  StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
 
 /-- The complex-manifold conclusion of Bridgeland's Corollary 1.3, obtained by specializing the
 generic class-map theorem to the canonical numerical quotient `K₀(C) → N(C)`. -/

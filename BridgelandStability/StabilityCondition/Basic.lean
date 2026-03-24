@@ -5,15 +5,7 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.GrothendieckGroup
-public import BridgelandStability.IntervalCategory.FiniteLength
-public import BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.SectorBound
-public import Mathlib.Topology.IsLocalHomeomorph
-public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Topology.Connected.Clopen
-public import Mathlib.Data.ENNReal.Basic
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-public import Mathlib.Analysis.Real.Pi.Bounds
+public import BridgelandStability.StabilityCondition.Defs
 
 @[expose] public section
 
@@ -22,26 +14,11 @@ set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
 
 /-!
-# Bridgeland Stability Conditions
+# Bridgeland Stability Conditions — Ext Theorems and Phase Rigidity
 
-We define Bridgeland stability conditions on a pretriangulated category and state
-the main theorem from "Stability conditions on triangulated categories" (2007):
-
-* **Theorem 1.2**: For each connected component `Σ` of the space `Stab(D)` of
-  locally-finite stability conditions, there exists a linear subspace
-  `V(Σ) ⊆ Hom_ℤ(K₀(D), ℂ)` with a linear topology, and a local homeomorphism
-  `𝒵 : Σ → V(Σ)` sending `(Z, P)` to `Z`.
-
-## Main definitions
-
-* `CategoryTheory.Triangulated.PreStabilityCondition`: a Bridgeland prestability condition
-* `CategoryTheory.Triangulated.StabilityCondition`: a locally-finite stability condition
-* `CategoryTheory.Triangulated.slicingDist`: the Bridgeland generalized metric on slicings
-* `CategoryTheory.Triangulated.stabSeminorm`: the seminorm `‖U‖_σ` on `Hom_ℤ(K₀(D), ℂ)`
-* `CategoryTheory.Triangulated.StabilityCondition.topologicalSpace`: the Bridgeland
-  topology on `Stab(D)`, constructed from basis neighborhoods
-* `CategoryTheory.Triangulated.StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`:
-  **Theorem 1.2** as a `Prop`, stated componentwise with a linear subspace `V(Σ)`
+Extensionality theorems for stability conditions, phase rigidity (Lemma 6.4 sublemma),
+and the exponential decomposition impossibility lemmas. The core structures, topology,
+and seminorm are in `StabilityCondition.Defs`.
 
 ## References
 
@@ -62,33 +39,9 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [IsTriangulated C]
 variable {Λ : Type u'} [AddCommGroup Λ]
 
-/-! ### Prestability and stability conditions -/
+/-! ### Ext theorems -/
 
 namespace PreStabilityCondition
-
-/-- A Bridgeland prestability condition with respect to a class map
-`v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient
-charge is recovered by precomposition with `v`. -/
-structure WithClassMap (v : K₀ C →+ Λ) where
-  /-- The underlying slicing. -/
-  slicing : Slicing C
-  /-- The central charge on the class lattice `Λ`. -/
-  Z : Λ →+ ℂ
-  /-- Compatibility: for every nonzero semistable object `E` of phase `φ`, the
-  class-map central charge `Z(v([E]))` lies on the ray `ℝ₊ · exp(iπφ)` in `ℂ`. -/
-  compat : ∀ (φ : ℝ) (E : C), slicing.P φ E → ¬IsZero E →
-    ∃ (m : ℝ), 0 < m ∧
-      Z (v (K₀.of C E)) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I)
-
-/-- Forget a class-map prestability condition to the identity class map on `K₀(C)`. -/
-def WithClassMap.toPreStabilityCondition {v : K₀ C →+ Λ}
-    (σ : WithClassMap C v) :
-    WithClassMap C (AddMonoidHom.id (K₀ C)) where
-  slicing := σ.slicing
-  Z := σ.Z.comp v
-  compat := by
-    intro φ E hE hNZ
-    simpa [AddMonoidHom.comp_apply] using σ.compat φ E hE hNZ
 
 omit [IsTriangulated C] in
 @[ext] theorem WithClassMap.ext {v : K₀ C →+ Λ}
@@ -105,26 +58,7 @@ omit [IsTriangulated C] in
 
 end PreStabilityCondition
 
-/-- A Bridgeland prestability condition on `C`, viewed as the specialization of
-the class-map theory to the identity map `K₀(C) → K₀(C)`. -/
-abbrev PreStabilityCondition :=
-  PreStabilityCondition.WithClassMap C (AddMonoidHom.id (K₀ C))
-
 namespace StabilityCondition
-
-/-- A Bridgeland stability condition with respect to a class map `v : K₀(C) → Λ`.
-This is the locally-finite refinement of `PreStabilityCondition.WithClassMap`. -/
-structure WithClassMap (v : K₀ C →+ Λ)
-    extends PreStabilityCondition.WithClassMap C v where
-  /-- The slicing is locally finite. -/
-  locallyFinite : slicing.IsLocallyFinite C
-
-/-- Forget a class-map stability condition to the identity class map on `K₀(C)`. -/
-def WithClassMap.toStabilityCondition {v : K₀ C →+ Λ}
-    (σ : WithClassMap C v) :
-    WithClassMap C (AddMonoidHom.id (K₀ C)) where
-  toWithClassMap := σ.toWithClassMap.toPreStabilityCondition
-  locallyFinite := σ.locallyFinite
 
 @[ext] theorem WithClassMap.ext {v : K₀ C →+ Λ}
     {σ τ : WithClassMap C v}
@@ -140,23 +74,10 @@ def WithClassMap.toStabilityCondition {v : K₀ C →+ Λ}
 
 end StabilityCondition
 
-/-- A Bridgeland stability condition on `C`, viewed as the specialization of the
-class-map theory to the identity map `K₀(C) → K₀(C)`. -/
-abbrev StabilityCondition :=
-  StabilityCondition.WithClassMap C (AddMonoidHom.id (K₀ C))
-
 omit [IsTriangulated C] in
 /-- The ordinary compatibility statement for a prestability condition, with the
 identity class map simplified away. -/
 theorem preStabilityCondition_compat_apply (σ : PreStabilityCondition C)
-    (φ : ℝ) (E : C) (hE : σ.slicing.P φ E) (hNZ : ¬IsZero E) :
-    ∃ (m : ℝ), 0 < m ∧
-      σ.Z (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
-  simpa using σ.compat φ E hE hNZ
-
-/-- The ordinary compatibility statement for a stability condition, with the
-identity class map simplified away. -/
-theorem stabilityCondition_compat_apply (σ : StabilityCondition C)
     (φ : ℝ) (E : C) (hE : σ.slicing.P φ E) (hNZ : ¬IsZero E) :
     ∃ (m : ℝ), 0 < m ∧
       σ.Z (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
