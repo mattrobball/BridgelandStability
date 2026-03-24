@@ -34,7 +34,7 @@ jobs:
       - name: Build landrun
         run: |
           git clone --depth 1 https://github.com/Zouuup/landrun /tmp/landrun
-          cd /tmp/landrun && go build -o landrun .
+          cd /tmp/landrun && go build -o landrun ./cmd/landrun
           sudo cp landrun /usr/local/bin/
 
       - name: Build lean4export
