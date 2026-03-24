@@ -775,14 +775,13 @@ generic class-map theorem to the canonical numerical quotient `K₀(C) → N(C)`
 theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
     [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k]
-    (hnum : NumericallyFinite k C)
+    [NumericallyFinite k C]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :
     ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
       (_ : FiniteDimensional ℂ E)
       (_ : ChartedSpace E (NumericalComponent (k := k) C cc)),
       IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
         (NumericalComponent (k := k) C cc) := by
-  letI : AddGroup.FG (NumericalK₀ k C) := hnum.fg
   let hsurj : Function.Surjective (numericalQuotientMap k C) :=
     QuotientAddGroup.mk'_surjective (eulerFormRad k C)
   simpa [NumericalComponent] using

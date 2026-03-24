@@ -621,6 +621,11 @@ class NumericallyFinite [Linear k C] [IsFiniteType k C]
   /-- The Euler-form numerical Grothendieck group is finitely generated. -/
   fg : AddGroup.FG (NumericalK₀ k C)
 
+/-- Instance synthesis for the finite generation of the numerical Grothendieck group. -/
+instance [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k]
+    [NumericallyFinite k C] : AddGroup.FG (NumericalK₀ k C) :=
+  NumericallyFinite.fg
+
 /-- Numerical stability conditions are stability conditions whose central charge factors through
 the canonical numerical quotient map `K₀(C) → N(C)`. -/
 abbrev NumericalStabilityCondition [Linear k C] [IsFiniteType k C]
@@ -633,8 +638,7 @@ abbrev NumericalStabilityCondition [Linear k C] [IsFiniteType k C]
 This is the proposition-object behind Bridgeland's Corollary 1.3. -/
 abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
     [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
-  NumericallyFinite k C →
-    StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
-      (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
+  StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+    (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 
 end CategoryTheory.Triangulated

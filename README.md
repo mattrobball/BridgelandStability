@@ -8,8 +8,8 @@ in Lean 4 using Mathlib.
 
 The mathematical target is the deformation-theoretic core of the paper:
 the topology on `Stab(D)`, the local-homeomorphism theorem for the central
-charge, and the consequent complex manifold structure on the space of
-numerically finite stability conditions. The engineering target is stricter:
+charge, and the consequent complex manifold structure on connected components
+of the space of numerically finite stability conditions. The engineering target is stricter:
 this should eventually become Mathlib-quality code, not just code that happens
 to compile once.
 
@@ -94,8 +94,9 @@ defined in `BridgelandStability/StabilityCondition/Topology.lean` for a class
 map `v : K₀(D) → Λ`. The ordinary theorem above is the explicit `v = id`
 wrapper, kept as the paper-facing statement for `Stab(D)`.
 
-Corollary 1.3 is the numerically finite version. When the Euler form on `K(D)`
-has finite-rank numerical quotient
+Corollary 1.3 is the numerically finite version. In the current Lean code,
+the hypothesis `NumericallyFinite k C` means that the numerical Grothendieck
+group is finitely generated. Under that hypothesis, for the canonical numerical quotient
 
 `N(D) = K(D) / K(D)^perp`,
 
@@ -119,9 +120,8 @@ in `BridgelandStability/EulerForm.lean`:
 ```lean
 abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
     [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
-  NumericallyFinite k C →
-    StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
-      (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
+  StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+    (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 ```
 
 The corresponding generic and numerical complex-manifold theorems live in
@@ -141,7 +141,7 @@ theorem StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponen
 theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
     [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k]
-    (hnum : NumericallyFinite k C)
+    [NumericallyFinite k C]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :
     ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
       (_ : FiniteDimensional ℂ E)
@@ -149,6 +149,11 @@ theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
       IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
         (NumericalComponent (k := k) C cc)
 ```
+
+The generic manifold theorem is proved for a surjective class map
+`v : K₀ C →+ Λ` with finitely generated class lattice `Λ`. The numerical
+theorem is the specialization to the canonical quotient map
+`K₀ C →+ NumericalK₀ k C`.
 
 The numerical package is now split across four layers.
 
@@ -167,7 +172,8 @@ The numerical package is now split across four layers.
   `BridgelandStability/NumericalStabilityManifold.lean` specialize the generic
   class-map theory to the canonical numerical quotient, producing
   `NumericalK₀`, `NumericallyFinite`, `NumericalStabilityCondition`, and
-  `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`.
+  `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent` on
+  connected components.
 
 ## Techniques from the paper
 
