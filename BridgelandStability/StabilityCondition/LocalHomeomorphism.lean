@@ -640,8 +640,8 @@ noncomputable def componentTopologicalLinearLocalModel
     change @IsLocalHomeomorph comp V inferInstance inferInstance Zmap
     exact (componentSeminormTopology_eq_normTopology C cc) ▸ hLocal
 
-theorem StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents' :
-    StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents C := by
+theorem StabilityCondition.centralChargeIsLocalHomeomorphOnConnectedComponents :
+    StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents C := by
   intro cc
   let M := componentTopologicalLinearLocalModel C cc
   exact ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace,

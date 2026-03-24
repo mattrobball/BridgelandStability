@@ -726,7 +726,7 @@ and landing in `V(Σ)`, is a local homeomorphism.
 
 This implies each connected component of `Stab(D)` is a manifold locally
 modelled on the topological vector space `V(Σ)`. -/
-def StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents : Prop :=
+def StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents : Prop :=
   ∀ (cc : ConnectedComponents (StabilityCondition C)),
     ∃ (V : Submodule ℂ (K₀ C →+ ℂ))
       (_ : NormedAddCommGroup V)

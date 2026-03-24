@@ -19,9 +19,10 @@ public import Mathlib.Topology.LocalAtTarget
 
 This file isolates the manifold-level packaging behind Bridgeland's Corollary 1.3.
 
-The current statement of `bridgelandCorollary_1_3` only exports a local homeomorphism into an
-additive subgroup with a bare topology. For the actual complex-manifold corollary, we want to
-separate the work into the following stages:
+The current proposition-object
+`NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
+only exports a local homeomorphism into a complex-linear subspace. For the actual
+complex-manifold corollary, we want to separate the work into the following stages:
 
 1. Produce a topological complex-linear local model for each connected component of numerical
    stability conditions.
@@ -550,10 +551,11 @@ theorem exists_chartedSpace_and_complexManifold_of_isLocalHomeomorph_to_complex_
     ⟨_instChartedSpace, _instHasGroupoid⟩
   exact ⟨_instChartedSpace, isManifold_of_hasGroupoid_idRestr (E := E) (M := M)⟩
 
-/-- A mechanical-assembly version of Bridgeland's Corollary 1.3: once the topological linear local
-model and the generic manifold bridge are available, the complex-manifold conclusion should follow
-without a large bespoke proof. -/
-theorem bridgelandCorollary_1_3_complexManifold [Linear k C] [IsFiniteType k C]
+/-- A mechanical-assembly version of the complex-manifold conclusion of Bridgeland's
+Corollary 1.3. Once the topological linear local model and the generic manifold bridge are
+available, the remaining argument should be formal assembly rather than a bespoke proof. -/
+theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
+    [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k]
     (hnum : NumericallyFinite C (eulerForm k C))
     (cc : ConnectedComponents (NumericalStabilityCondition C (eulerForm k C))) :

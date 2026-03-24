@@ -103,7 +103,7 @@ StabilityCondition C
 For Theorem 1.2 additionally:
 
 ```
-StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents C :=
+StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents C :=
   forall cc : ConnectedComponents (StabilityCondition C),
     exists (V : AddSubgroup (K0 C ->+ C))
            (tau_V : TopologicalSpace V)
@@ -127,9 +127,9 @@ StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents C :=
 For Corollary 1.3 additionally:
 
 ```
-bridgelandCorollary_1_3 k C :=
-  let chi := eulerForm k C
-  NumericallyFinite C chi ->
+NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
+  (eulerForm k C) :=
+  NumericallyFinite C (eulerForm k C) ->
     forall cc : ConnectedComponents (NumericalStabilityCondition C chi),
       exists (V : AddSubgroup (NumericalK0 C chi ->+ C)) ...
         IsLocalHomeomorph (fun sigma => sigma.factors.choose ...)
@@ -479,33 +479,35 @@ FAITHFUL -- subspace topology from Stab(D).
 
 ## Part IV: Theorem Statements
 
-### StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents (`StabilityCondition/Topology.lean:715`)
+### StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents (`StabilityCondition/Topology.lean:715`)
 
 ```lean
-def StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents : Prop :=
+def StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents : Prop :=
   forall (cc : ConnectedComponents (StabilityCondition C)),
-    exists (V : AddSubgroup (K0 C ->+ C))
-      (tau_V : TopologicalSpace V)
+    exists (V : Submodule C (K0 C ->+ C))
+      (_ : NormedAddCommGroup V)
+      (_ : NormedSpace C V)
       (hZ : forall sigma, ConnectedComponents.mk sigma = cc -> sigma.Z in V),
       @IsLocalHomeomorph
         { sigma // ConnectedComponents.mk sigma = cc }
-        V inferInstance tau_V
+        V inferInstance inferInstance
         (fun (sigma, h) => (sigma.Z, hZ sigma h))
 ```
 
-### bridgelandCorollary_1_3 (`NumericalStability.lean:184`)
+### NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents (`NumericalStability.lean:184`)
 
 ```lean
-def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C] [EulerFormDescends k C] : Prop :=
-  let chi := eulerForm k C
+def NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
+    (chi : K₀ C →+ K₀ C →+ ℤ) : Prop :=
   NumericallyFinite C chi ->
     forall (cc : ConnectedComponents (NumericalStabilityCondition C chi)),
-      exists (V : AddSubgroup (NumericalK0 C chi ->+ C))
-        (tau_V : TopologicalSpace V)
+      exists (V : Submodule C (NumericalK0 C chi ->+ C))
+        (_ : NormedAddCommGroup V)
+        (_ : NormedSpace C V)
         (hZ : forall sigma, ConnectedComponents.mk sigma = cc -> sigma.factors.choose in V),
         @IsLocalHomeomorph
           { sigma // ConnectedComponents.mk sigma = cc }
-          V inferInstance tau_V
+          V inferInstance inferInstance
           (fun (sigma, h) => (sigma.factors.choose, hZ sigma h))
 ```
 
@@ -513,14 +515,12 @@ def bridgelandCorollary_1_3 [Linear k C] [IsFiniteType k C] [EulerFormDescends k
 
 ## Part V: Flags
 
-### FLAG 1 (MATERIAL): V is `AddSubgroup` not linear subspace
+### FLAG 1 (RESOLVED): V is now a complex linear subspace
 
 **Paper**: "there is a **linear subspace** V(Sigma) in Hom_Z(K(D), C)"
 
-**Lean**: `V : AddSubgroup (K0 C ->+ C)`
-
-An `AddSubgroup` of a C-vector space is strictly weaker than a linear subspace.
-For example, Z in C is an additive subgroup but not a C-linear subspace.
+**Lean**: `V : Submodule C (K0 C ->+ C)` together with
+`NormedAddCommGroup V` and `NormedSpace C V`
 
 The proof (`LocalHomeomorphism.lean:279`) actually constructs:
 ```lean
@@ -529,15 +529,8 @@ structure ComponentTopologicalLinearLocalModel ... where
   instNormedAddCommGroup : NormedAddCommGroup V
   instNormedSpace : NormedSpace C V
 ```
-and then forgets the linear structure at `LocalHomeomorphism.lean:647`:
-```lean
-exact (M.V.toAddSubgroup, tau_V, ...)
-```
-
-**Verdict**: The statement is strictly weaker than both the paper and the proof.
-The paper's "linear subspace" is mathematically meaningful -- it is what makes
-Stab(D) a manifold modelled on a topological **vector space**, not just some
-arbitrary topological space.
+**Verdict**: This objection has been fixed. The proposition-object now records the
+linear subspace structure directly.
 
 ### FLAG 2 (MATERIAL): Topology on V is unconstrained
 
@@ -552,15 +545,14 @@ space structure, making scalar multiplication and addition continuous).
 The proof equips V with `NormedAddCommGroup` + `NormedSpace C` -- much stronger
 than an arbitrary topology. But the statement throws this away.
 
-**Verdict**: Together with Flag 1, the formalized Theorem 1.2 does not formally
-capture the conclusion that connected components are manifolds modelled on
-topological vector spaces. It only says they are locally homeomorphic to *some*
-topological space.
+**Verdict**: Together with the resolution of Flag 1, the current Theorem 1.2
+statement now records the intended local linear model.
 
-### FLAG 3 (MATERIAL): Corollary 1.3 has both Flag 1 and Flag 2
+### FLAG 3 (RESOLVED): Corollary 1.3 now uses the same linear local-model package
 
-`NumericalStability.lean:184-195` uses `AddSubgroup` and unconstrained
-`TopologicalSpace`, losing the same structure.
+`NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
+now uses `Submodule`, `NormedAddCommGroup`, and `NormedSpace`, matching the
+Theorem 1.2 packaging.
 
 ### FLAG 4 (FRAGILE): Corollary 1.3 uses `sigma.factors.choose`
 
@@ -638,8 +630,9 @@ Every definition in the dependency tree of `StabilityCondition` and
 
 The **only** material issues are in the theorem statements themselves:
 
-1. `StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents` and
-   `bridgelandCorollary_1_3` use `AddSubgroup`
+1. `StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents` and
+   `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
+   use `AddSubgroup`
    where the paper says "linear subspace" (and the proof constructs a
    `Submodule C`).
 

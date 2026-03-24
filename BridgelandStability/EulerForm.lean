@@ -592,27 +592,4 @@ def eulerForm [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ K₀ C →+ ℤ :=
   K₀.lift C (eulerFormInner k C)
 
-/-! ## Corollary 1.3 packaging -/
-
-/-- **Bridgeland's Corollary 1.3** packaged using the concrete Euler form on `K₀`.
-
-If `C` is numerically finite with respect to this Euler form, then every connected
-component of numerical stability conditions carries the expected local homeomorphism
-into a complex-linear subspace of the numerical charge space. -/
-def bridgelandCorollary_1_3 [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
-  let χ := eulerForm k C
-  NumericallyFinite C χ →
-    ∀ (cc : ConnectedComponents (NumericalStabilityCondition C χ)),
-      ∃ (V : Submodule ℂ (NumericalK₀ C χ →+ ℂ))
-        (_ : NormedAddCommGroup V)
-        (_ : NormedSpace ℂ V)
-        (hZ : ∀ σ : NumericalStabilityCondition C χ,
-          ConnectedComponents.mk σ = cc →
-            σ.factors.choose ∈ V),
-        @IsLocalHomeomorph
-          {σ : NumericalStabilityCondition C χ //
-            ConnectedComponents.mk σ = cc}
-          V inferInstance inferInstance
-          (fun ⟨σ, hσ⟩ ↦ ⟨σ.factors.choose, hZ σ hσ⟩)
-
 end CategoryTheory.Triangulated

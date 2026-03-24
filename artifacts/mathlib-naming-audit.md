@@ -36,9 +36,9 @@ These may still be revisited for broader API reasons, but they are not immediate
 ### 1. Recently resolved in the first rename pass
 
 The repo no longer uses the content-free name `bridgelandTheorem_1_2`. It has been renamed to the
-contentful proposition name:
+contentful proposition-object name:
 
-- `StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents`
+- `StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
 
 Likewise, the first batch of obvious theorem-style casing fixes is now done:
 
@@ -62,20 +62,20 @@ argument-by-argument scaffolding rather than the mathematical conclusion.
 
 ### 1. The Corollary 1.3 family is blocked on the numerical-wrapper design
 
-These are still content-free theorem-number names:
+The content-free theorem-number names have now been replaced by:
 
-- `bridgelandCorollary_1_3`
-- `bridgelandCorollary_1_3_complexManifold`
+- `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
+- `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`
 
 But the best replacement depends on the implementation choice for numerical stability conditions:
 
 - if the current wrapper stays, then the most honest namespace is
-  `NumericalStabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents`;
+  `NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`;
 - if the implementation is refactored into a subtype-style stability-condition specialization, then
   a `StabilityCondition.Numerical...` family becomes more plausible.
 
-For the complex-manifold theorem, the final name should be chosen only after the Corollary 1.3
-namespace decision is settled.
+For the complex-manifold theorem, the final name should be chosen to match the settled namespace of
+the underlying proposition-object.
 
 ### 2. The biggest design-linked naming issue is still `NumericalStabilityCondition`
 
@@ -159,8 +159,7 @@ best mathematical presentation of the underlying propositions.
 
 1. Rename the remaining public proof-scaffolding names (`P_of_Q_of_P_semistable`, etc.).
 2. Settle the implementation of `NumericalStabilityCondition`.
-3. Rename the Corollary 1.3 family once the numerical-wrapper namespace is settled.
-4. Clean up the larger abbreviation families, especially `H0prime`.
+3. Clean up the larger abbreviation families, especially `H0prime`.
 
 ## Bottom line
 
