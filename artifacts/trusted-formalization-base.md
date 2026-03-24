@@ -1,6 +1,10 @@
-# Comparator Declaration Audit
+# Trusted Formalization Base
 
-Paper-to-Lean pairing for the 59 project declarations reachable from Corollary 1.3.
+The 59 project declarations reachable from Corollary 1.3, paired with the
+corresponding natural language definitions from the paper. These are the
+declarations a reader must trust to accept the formal statement — analogous to
+a trusted code base.
+
 Auto-generated `._proof_N` declarations are grouped with their parent.
 
 Reference: Bridgeland, "Stability conditions on triangulated categories", Annals of

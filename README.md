@@ -197,7 +197,7 @@ EulerForm/Defs.lean                (1)   NumericalComponent
 EulerForm/Basic.lean              (10)   eulerForm, eulerFormInner, eulerFormRad,
                                           NumericalK₀, numericalQuotientMap,
                                           NumericallyFinite, ...
-NumericalStability.lean            (2)   IsFiniteType, eulerFormObj
+NumericalStability/Defs.lean       (2)   IsFiniteType, eulerFormObj
 StabilityCondition/Defs.lean      (21)   PreStabilityCondition.WithClassMap,
                                           StabilityCondition.WithClassMap,
                                           slicingDist, stabSeminorm, basisNhd,
@@ -205,21 +205,17 @@ StabilityCondition/Defs.lean      (21)   PreStabilityCondition.WithClassMap,
 Slicing/Defs.lean                 (13)   HNFiltration, Slicing, phiPlus,
                                           phiMinus, prefix, shiftHN, ofIso,
                                           exists_nonzero_first/last, ...
-PostnikovTower.lean                (3)   PostnikovTower, .n, .triangle
-GrothendieckGroup.lean             (8)   K₀, K₀.of, K₀.lift,
+PostnikovTower/Defs.lean           (3)   PostnikovTower, .n, .triangle
+GrothendieckGroup/Defs.lean        (8)   K₀, K₀.of, K₀.lift,
                                           IsTriangleAdditive, K₀Subgroup, ...
 IntervalCategory/FiniteLength.lean (1)   Slicing.IsLocallyFinite
 ```
 
-The three Defs files (`Slicing/Defs`, `StabilityCondition/Defs`, `EulerForm/Defs`)
-were created by extracting declarations from the original proof files, which now
-import their corresponding Defs module and contain only proofs and derived lemmas.
-The topology definitions themselves (`topologicalSpace`, `basisNhd`,
-`slicingDist`, `stabSeminorm`, `Component`, `ComponentIndex`) live in
-`StabilityCondition/Defs.lean`. The proof modules (`StabilityCondition/Topology`,
-`Seminorm`, `Basic`) contain lemmas *about* that topology — local injectivity,
-metric properties, ext theorems — and are transitively imported through
-`NumericalStability` but do not contribute to the 59 type-level declarations.
+These 59 declarations are the **trusted formalization base**: the definitions
+a reader must accept to trust the formal statement, analogous to a trusted code
+base. Each declaration is paired with the corresponding natural language
+definition from the paper in
+[`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
 
 ## Techniques from the paper
 
