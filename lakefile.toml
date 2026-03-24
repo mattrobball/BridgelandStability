@@ -32,3 +32,8 @@ srcDir = "."
 [[lean_lib]]
 name = "BridgelandBlueprint"
 srcDir = "."
+
+[[lean_exe]]
+name = "checkdecls"
+root = "Checkdecls"
+supportInterpreter = true

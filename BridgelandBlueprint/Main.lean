@@ -1,11 +1,11 @@
 module
 
-import Architect
-import BridgelandStability.Deformation.Theorem
-import BridgelandStability.EulerForm.Basic
-import BridgelandStability.NumericalStabilityManifold
-import BridgelandStability.StabilityCondition.LocalHomeomorphism
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Architect
+public import BridgelandStability.Deformation.Theorem
+public import BridgelandStability.EulerForm.Basic
+public import BridgelandStability.NumericalStabilityManifold
+public import BridgelandStability.StabilityCondition.LocalHomeomorphism
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Blueprint-facing statements for BridgelandStability
@@ -16,6 +16,7 @@ without annotating the entire implementation tree.
 -/
 
 noncomputable section
+public section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped Manifold
@@ -113,3 +114,4 @@ theorem deformation_exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
       (C := C) σ W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin)
 
 end CategoryTheory.Triangulated.BridgelandBlueprint
+end
