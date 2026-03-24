@@ -11,10 +11,9 @@ import Mathlib.Topology.Algebra.Module.FiniteDimension
 # Comparator Challenge: Bridgeland Corollary 1.3
 
 This module states the theorem to be verified by `leanprover/comparator`.
-Every connected component of the space of numerical stability conditions on a
-`k`-linear triangulated category of finite type carries the structure of a
-finite-dimensional complex manifold.
 -/
+
+set_option autoImplicit false
 
 noncomputable section
 
@@ -22,9 +21,9 @@ open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 
 open scoped Manifold
 
-universe w v u
-
 namespace CategoryTheory.Triangulated
+
+universe w v u
 
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
