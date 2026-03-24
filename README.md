@@ -13,6 +13,25 @@ of the space of numerically finite stability conditions. The engineering target 
 this should eventually become Mathlib-quality code, not just code that happens
 to compile once.
 
+## Blueprint and Project Site
+
+The repo now has a curated LeanArchitect/leanblueprint surface in
+`BridgelandBlueprint/Main.lean`. It exposes four paper-facing theorem packages:
+
+- Bridgeland's Theorem 1.2 for ordinary stability conditions;
+- the generic class-map complex-manifold theorem;
+- Bridgeland's Corollary 1.3 for numerical stability conditions;
+- the deformation theorem (Theorem 7.1).
+
+Locally, the extraction target is:
+
+```bash
+lake build BridgelandBlueprint:blueprint
+```
+
+The website scaffold lives under `blueprint/` and `home_page/`, and the GitHub
+Actions workflow for publishing it is `.github/workflows/blueprint.yml`.
+
 ## What Bridgeland stability conditions are
 
 Classical moduli theory studies stability for objects in abelian categories:
