@@ -214,9 +214,12 @@ IntervalCategory/FiniteLength.lean (1)   Slicing.IsLocallyFinite
 The three Defs files (`Slicing/Defs`, `StabilityCondition/Defs`, `EulerForm/Defs`)
 were created by extracting declarations from the original proof files, which now
 import their corresponding Defs module and contain only proofs and derived lemmas.
-The challenge file also transitively imports the proof modules
-(`StabilityCondition/Topology`, `Seminorm`, `Basic`) through `NumericalStability`,
-but those contribute zero of the 59 declarations.
+The topology definitions themselves (`topologicalSpace`, `basisNhd`,
+`slicingDist`, `stabSeminorm`, `Component`, `ComponentIndex`) live in
+`StabilityCondition/Defs.lean`. The proof modules (`StabilityCondition/Topology`,
+`Seminorm`, `Basic`) contain lemmas *about* that topology — local injectivity,
+metric properties, ext theorems — and are transitively imported through
+`NumericalStability` but do not contribute to the 59 type-level declarations.
 
 ## Techniques from the paper
 
