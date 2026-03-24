@@ -75,7 +75,7 @@ theorem exists_upper_boundary_triangle
           _ < b₁ := hY_plus⟩⟩
 
 omit [IsTriangulated C] in
-theorem gtProp_of_geProp_of_lt
+theorem Slicing.gtProp_of_geProp
     (s : Slicing C) {a b : ℝ} (hab : a < b) {E : C}
     (hE : s.geProp C b E) :
     s.gtProp C a E := by
@@ -219,7 +219,7 @@ theorem intervalProp_of_upper_boundary_triangle
     exact ((s.leProp_mono (C := C) (t₁ := b₁) (t₂ := a + 1) hb₁) Y)
       (s.leProp_of_intervalProp C hY)
   have hX_gt : s.gtProp C a X :=
-    gtProp_of_geProp_of_lt (C := C) (s := s) hab₁ hX_ge
+    s.gtProp_of_geProp (C := C) hab₁ hX_ge
   exact s.first_intervalProp_of_triangle C hab₂ hQ hY_le hX_gt hT
 
 end

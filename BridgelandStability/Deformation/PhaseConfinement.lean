@@ -185,10 +185,11 @@ theorem phiPlus_lt_of_wSemistable
       · exact lt_of_le_of_lt
           (hF₀_top ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val)))
           hφ_lt_b
-    -- Split E at cutoff t₀ using tStructureAux directly (keeping phase containment)
+    -- Split E at cutoff t₀ using exists_triangle_gtProp_leProp directly
+    -- (keeping phase containment)
     let Fs := F₀.phaseShift (C := C) t₀
     obtain ⟨K, Y, hKgt₀, hYle₀, fK, gY, δ, hT, hKdata⟩ :=
-      Slicing.tStructureAux C (σ.slicing.phaseShift C t₀) E Fs
+      Slicing.exists_triangle_gtProp_leProp C (σ.slicing.phaseShift C t₀) E Fs
     have hKgt : σ.slicing.gtProp C t₀ K :=
       (σ.slicing.phaseShift_gtProp_zero C t₀ K).mp hKgt₀
     have hYle : σ.slicing.leProp C t₀ Y :=
@@ -322,7 +323,8 @@ theorem phiMinus_gt_of_wSemistable
       have ⟨_, hhi⟩ := hperturb E (ψ - ε₀) hsem hE hψε_gt_a hψε_lt_b
       linarith
     · -- Dual of upper bound: gap-split isolates bottom factors at ψ-ε₀.
-      -- Y ∈ P(ψ-ε₀) via tStructureAux phase containment → perturbation → Im → contradiction.
+      -- Y ∈ P(ψ-ε₀) via exists_triangle_gtProp_leProp phase containment
+      -- → perturbation → Im → contradiction.
       -- Part 1: gap-split isolates bottom factors at ψ-ε₀
       obtain ⟨F₀, hn₀, hne₀, hneL₀⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
       have hF₀_bot : F₀.φ ⟨F₀.n - 1, by lia⟩ = ψ - ε₀ := by
@@ -375,10 +377,10 @@ theorem phiMinus_gt_of_wSemistable
             (F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val)))
             (by linarith [σ.slicing.phiPlus_eq C E hE F₀ hn₀ hne₀,
               σ.slicing.phiPlus_lt_of_intervalProp C hE hI])
-      -- Split E at cutoff t_lo via tStructureAux
+      -- Split E at cutoff t_lo via exists_triangle_gtProp_leProp
       let Fs := F₀.phaseShift (C := C) t_lo
       obtain ⟨K, Y, hKgt₀, hYle₀, fK, gY, δ, hT, hXdata, hYdata⟩ :=
-        Slicing.tStructureAux C (σ.slicing.phaseShift C t_lo) E Fs
+        Slicing.exists_triangle_gtProp_leProp C (σ.slicing.phaseShift C t_lo) E Fs
       have hKgt : σ.slicing.gtProp C t_lo K :=
         (σ.slicing.phaseShift_gtProp_zero C t_lo K).mp hKgt₀
       have hYle : σ.slicing.leProp C t_lo Y :=

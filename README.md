@@ -49,7 +49,7 @@ The paper is therefore motivated by physics, but mathematically it is mostly
 about the main structural results around slicings, hearts, deformation
 estimates, and the topology of the space of stability conditions itself.
 
-## The main theorem and Corollary 1.3
+## The Local-Homeomorphism Statements
 
 The headline result of the 2007 paper is Theorem 1.2. For each connected
 component `Sigma` of the space `Stab(D)` of locally finite stability
@@ -65,7 +65,8 @@ looks like a linear space of possible central charges.
 > homeomorphism `Z : Σ → V(Σ)` which maps a stability condition `(Z, P)` to
 > its central charge `Z`.
 
-In the current formalization, this paper statement is packaged as the proposition
+In the current formalization, this paper statement is packaged under a
+contentful theorem name as the proposition
 `CategoryTheory.Triangulated.StabilityCondition.centralCharge_isLocalHomeomorph_onConnectedComponents` in
 `BridgelandStability/StabilityCondition/Topology.lean`:
 
@@ -105,7 +106,7 @@ that manifold.
 > homeomorphism `Z : Σ → V(Σ)` which maps a stability condition to its central
 > charge `Z`. In particular `Σ` is a finite-dimensional complex manifold.
 
-The numerical topological statement is formalized as
+The corresponding numerical local-homeomorphism statement is currently formalized as
 `CategoryTheory.Triangulated.bridgelandCorollary_1_3` in
 `BridgelandStability/EulerForm.lean`:
 

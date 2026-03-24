@@ -382,7 +382,7 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
 central charge, `E` is `τ`-semistable at `φ`, and all `σ`-HN phases are `≤ φ` with at
 least one strictly below, then `False`. This extends `false_of_all_hn_phases_below`
 to allow some phases equal to `φ`. -/
-theorem StabilityCondition.False_of_HN_phases_le_with_lt (σ τ : StabilityCondition C)
+theorem StabilityCondition.false_of_hn_phases_le_with_lt (σ τ : StabilityCondition C)
     (hZ : σ.Z = τ.Z) {E : C} {φ : ℝ} (hE : ¬IsZero E)
     (hτ : (τ.slicing.P φ) E)
     (F : HNFiltration C σ.slicing.P E)
@@ -507,10 +507,11 @@ private theorem bridgeland_6_4_one_dir
   by_cases hall_eq : ∀ i : Fin F.n, F.φ i = φ
   · exact σ.slicing.semistable_of_HN_all_eq C F hall_eq
   push_neg at hall_eq
-  -- Step 2: Split E at cutoff φ using tStructureAux on the phase-shifted slicing
+  -- Step 2: Split E at cutoff φ using exists_triangle_gtProp_leProp on the
+  -- phase-shifted slicing
   let Fs := F.phaseShift (C := C) φ
   obtain ⟨X, Y, hXgt0, hYle0, f, g, h, hT, hXdata⟩ :=
-    Slicing.tStructureAux C (σ.slicing.phaseShift C φ) E Fs
+    Slicing.exists_triangle_gtProp_leProp C (σ.slicing.phaseShift C φ) E Fs
   have hXgt : σ.slicing.gtProp C φ X :=
     (σ.slicing.phaseShift_gtProp_zero C φ X).mp hXgt0
   have hYle : σ.slicing.leProp C φ Y :=
@@ -587,7 +588,7 @@ private theorem bridgeland_6_4_one_dir
         rw [← hFYn]; exact hFY_le ⟨FY.n - 1, by grind⟩
       linarith [hm_eq]
     exfalso
-    exact σ.False_of_HN_phases_le_with_lt C τ hZ hYZ hτY FY'
+    exact σ.false_of_hn_phases_le_with_lt C τ hZ hYZ hτY FY'
       (fun i ↦ by calc FY'.φ i ≤ FY'.φ ⟨0, hnY'⟩ :=
           FY'.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
         _ = σ.slicing.phiPlus C Y hYZ :=

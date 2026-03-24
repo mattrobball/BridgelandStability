@@ -35,7 +35,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-theorem Slicing.tStructureAux (s : Slicing C)
+theorem Slicing.exists_triangle_gtProp_leProp (s : Slicing C)
     (A : C) (F : HNFiltration C s.P A) :
     ∃ (X Y : C) (_ : s.gtProp C 0 X) (_ : s.leProp C 0 Y)
       (f : X ⟶ A) (g : A ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
@@ -219,7 +219,7 @@ theorem Slicing.tStructureAux (s : Slicing C)
 
 /-- Auxiliary: given an HN filtration, produce the dual half-open t-structure
 decomposition triangle for the convention `geProp 0` / `ltProp 0`. -/
-theorem Slicing.tStructureAuxGE (s : Slicing C)
+theorem Slicing.exists_triangle_geProp_ltProp (s : Slicing C)
     (A : C) (F : HNFiltration C s.P A) :
     ∃ (X Y : C) (_ : s.geProp C 0 X) (_ : s.ltProp C 0 Y)
       (f : X ⟶ A) (g : A ⟶ Y) (h : Y ⟶ X⟦(1 : ℤ)⟧),
@@ -337,7 +337,7 @@ def Slicing.toTStructure (s : Slicing C) : TStructure C where
     exact s.leProp_mono C (by grind : (0 : ℝ) ≤ 1)
   exists_triangle_zero_one A := by
     obtain ⟨F⟩ := s.hn_exists A
-    obtain ⟨X, Y, hX, hY, f, g, h, hT, _⟩ := Slicing.tStructureAux C s A F
+    obtain ⟨X, Y, hX, hY, f, g, h, hT, _⟩ := Slicing.exists_triangle_gtProp_leProp C s A F
     refine ⟨X, Y, ?_, ?_, f, g, h, hT⟩
     · simp only [Int.cast_zero, neg_zero]; exact hX
     · simp only [Int.cast_one, sub_self]; exact hY
@@ -384,7 +384,7 @@ def Slicing.toTStructureGE (s : Slicing C) : TStructure C where
     exact s.ltProp_mono C (by grind : (0 : ℝ) ≤ 1)
   exists_triangle_zero_one A := by
     obtain ⟨F⟩ := s.hn_exists A
-    obtain ⟨X, Y, hX, hY, f, g, h, hT⟩ := Slicing.tStructureAuxGE C s A F
+    obtain ⟨X, Y, hX, hY, f, g, h, hT⟩ := Slicing.exists_triangle_geProp_ltProp C s A F
     refine ⟨X, Y, ?_, ?_, f, g, h, hT⟩
     · simp only [Int.cast_zero, neg_zero]; exact hX
     · simp only [Int.cast_one, sub_self]; exact hY
@@ -461,14 +461,14 @@ theorem Slicing.exists_split_at_cutoff (s : Slicing C)
       (∀ (hXne : ¬IsZero X), s.phiPlus C X hXne < b) := by
   -- Phase-shift by t, so the cutoff becomes 0
   let Fs := F.phaseShift (C := C) t
-  -- Apply tStructureAux to the shifted filtration (no phase positivity needed)
+  -- Apply exists_triangle_gtProp_leProp to the shifted filtration (no phase positivity needed)
   obtain ⟨X, Y, hX, hY, f, g, h, hT, hXdata⟩ :=
-    Slicing.tStructureAux C (s.phaseShift C t) E Fs
+    Slicing.exists_triangle_gtProp_leProp C (s.phaseShift C t) E Fs
   -- Convert gtProp/leProp from shifted to original
   have hXgt : s.gtProp C t X := (s.phaseShift_gtProp_zero C t X).mp hX
   have hYle : s.leProp C t Y := (s.phaseShift_leProp_zero C t Y).mp hY
   refine ⟨X, Y, f, g, h, hT, hXgt, hYle, fun hXne ↦ ?_⟩
-  -- Extract X's phase bound from tStructureAux data
+  -- Extract X's phase bound from exists_triangle_gtProp_leProp data
   rcases hXdata with hXZ | ⟨GX, hGX, _, hbd, _⟩
   · exact absurd hXZ hXne
   · have hFsn : 0 < Fs.n := hn

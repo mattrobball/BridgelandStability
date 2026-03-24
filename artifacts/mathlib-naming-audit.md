@@ -46,15 +46,7 @@ Likewise, the first batch of obvious theorem-style casing fixes is now done:
 - `StabilityCondition.false_of_all_hn_phases_above`
 - `StabilityCondition.false_of_gt_and_le_phases`
 
-### 2. Rename now: remaining theorem-proof names with capitalized proof stems
-
-There is still live theorem-style naming debt in this family. A clear remaining example is:
-
-- `StabilityCondition.False_of_HN_phases_le_with_lt`
-
-This should be normalized to a theorem-style lowercase name.
-
-### 3. Rename now: public names built from proof letters or placeholder stems
+### 2. Rename now: public names built from proof letters or placeholder stems
 
 These are poor public API names even if the proofs are mathematically correct:
 
@@ -62,13 +54,9 @@ These are poor public API names even if the proofs are mathematically correct:
 - `P_phi_of_truncation_of_P_phi_cone`
 - `sigmaSemistable_hasDeformedHN`
 - `SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound`
-- `gtProp_of_geProp_of_lt`
-- `Slicing.tStructureAux`
-- `Slicing.tStructureAuxGE`
 
-The issue is not just style. These names still expose scratch proof letters (`P`, `Q`), temporary
-development labels (`Aux`), or argument-by-argument scaffolding rather than the mathematical
-conclusion.
+The issue is not just style. These names still expose scratch proof letters (`P`, `Q`) or
+argument-by-argument scaffolding rather than the mathematical conclusion.
 
 ## Design-linked naming debt
 
@@ -169,11 +157,10 @@ best mathematical presentation of the underlying propositions.
 
 ## Recommended order of attack
 
-1. Normalize the remaining theorem-style declarations to theorem-style names.
-2. Rename the public proof-scaffolding names (`P_of_Q_of_P_semistable`, `tStructureAux`, etc.).
-3. Settle the implementation of `NumericalStabilityCondition`.
-4. Rename the Corollary 1.3 family once the numerical-wrapper namespace is settled.
-5. Clean up the larger abbreviation families, especially `H0prime`.
+1. Rename the remaining public proof-scaffolding names (`P_of_Q_of_P_semistable`, etc.).
+2. Settle the implementation of `NumericalStabilityCondition`.
+3. Rename the Corollary 1.3 family once the numerical-wrapper namespace is settled.
+4. Clean up the larger abbreviation families, especially `H0prime`.
 
 ## Bottom line
 
