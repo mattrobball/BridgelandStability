@@ -124,6 +124,32 @@ abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComp
       (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 ```
 
+The corresponding generic and numerical complex-manifold theorems live in
+`BridgelandStability/NumericalStabilityManifold.lean`:
+
+```lean
+theorem StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent
+    {Λ : Type u'} [AddCommGroup Λ] [AddGroup.FG Λ]
+    {v : K₀ C →+ Λ} (hv : Function.Surjective v)
+    (cc : StabilityCondition.WithClassMap.ComponentIndex C v) :
+    ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
+      (_ : FiniteDimensional ℂ E)
+      (_ : ChartedSpace E (StabilityCondition.WithClassMap.Component C v cc)),
+      IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
+        (StabilityCondition.WithClassMap.Component C v cc)
+
+theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
+    [Linear k C] [IsFiniteType k C]
+    [(shiftFunctor C (1 : ℤ)).Linear k]
+    (hnum : NumericallyFinite k C)
+    (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :
+    ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
+      (_ : FiniteDimensional ℂ E)
+      (_ : ChartedSpace E (NumericalComponent (k := k) C cc)),
+      IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
+        (NumericalComponent (k := k) C cc)
+```
+
 The numerical package is now split across four layers.
 
 - `BridgelandStability/StabilityCondition/Basic.lean` defines
