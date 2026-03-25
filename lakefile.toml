@@ -24,6 +24,7 @@ rev = "master"
 [[lean_lib]]
 name = "BridgelandStability"
 srcDir = "."
+leanOptions = {weak.blueprint.extractAll = true}
 
 [[lean_lib]]
 name = "BridgelandSpec"
