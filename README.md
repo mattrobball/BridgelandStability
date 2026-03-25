@@ -203,12 +203,15 @@ geometry becomes more approachable.
 
 ## Project charter
 
-This is an experiment in AI-assisted formalization. Humans write no Lean code
-beyond Mathlib; the goal is to study how far a human-led effort can push
-AI-assisted formalization on top of Mathlib. Getting Lean to accept a proof
-script is not success — the end state has to be Mathlib quality: correct
-abstractions, reusable lemmas, sane names, controlled imports, and proofs that
-could plausibly survive code review and upstreaming.
+This is an experiment in AI-assisted formalization.
+
+**Rule 1: Humans write no Lean code beyond Mathlib.** The goal is to study how
+far a human-led effort can push AI-assisted formalization on top of Mathlib.
+
+**Rule 2: Getting Lean to accept a proof script is not success.** The end state
+has to be Mathlib quality: correct abstractions, reusable lemmas, sane names,
+controlled imports, and proofs that could plausibly survive code review and
+upstreaming.
 
 ## What is formalized
 
