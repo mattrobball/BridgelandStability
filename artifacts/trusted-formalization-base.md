@@ -1,12 +1,13 @@
 # Trusted Formalization Base
 
-The 78 project declarations reachable from Corollary 1.3, paired with the
+The 63 project declarations reachable from Corollary 1.3, paired with the
 corresponding natural language definitions from the paper. These are the
 declarations a reader must trust to accept the formal statement — analogous to
 a trusted code base.
 
 For defs: the full definition term is shown. For theorems: only the type
-signature. Auto-generated `._proof_N` declarations and structure field
+signature. Auto-generated `._proof_N` declarations (compiler-generated
+auxiliary proofs with fragile numbering) are omitted; structure field
 projections are grouped with their parent structure.
 
 Found by `Expr.foldConsts` on the theorem's type, descending into bodies of
@@ -52,7 +53,7 @@ source:
 
 ---
 
-## PostnikovTower/Defs.lean (6 declarations)
+## PostnikovTower/Defs.lean (4 declarations)
 
 No direct paper counterpart. A Postnikov tower is a finite chain of
 distinguished triangles 0 = A₀ → A₁ → ⋯ → Aₙ ≅ E filtering an object E.
@@ -80,12 +81,12 @@ def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
   (P.triangle i).obj₃
 ```
 
-**Declarations:** `PostnikovTower`, `PostnikovTower._proof_1`, `PostnikovTower._proof_3`,
-`PostnikovTower.n`, `PostnikovTower.triangle`, `PostnikovTower.factor`
+**Declarations:** `PostnikovTower`, `PostnikovTower.n`, `PostnikovTower.triangle`,
+`PostnikovTower.factor`
 
 ---
 
-## GrothendieckGroup/Defs.lean (8 declarations)
+## GrothendieckGroup/Defs.lean (6 declarations)
 
 **Paper (implicit).** K(D) is the free abelian group on objects of D modulo
 [B] = [A] + [C] for each distinguished triangle A → B → C → A[1].
@@ -123,11 +124,11 @@ def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] 
 ```
 
 **Declarations:** `K₀Subgroup`, `K₀`, `K₀.instAddCommGroup`, `K₀.of`,
-`IsTriangleAdditive`, `K₀.lift`, `K₀.lift._proof_1`, `K₀.lift._proof_2`
+`IsTriangleAdditive`, `K₀.lift`
 
 ---
 
-## ForMathlib/CategoryTheory/QuasiAbelian/Basic.lean (12 declarations)
+## ForMathlib/CategoryTheory/QuasiAbelian/Basic.lean (8 declarations)
 
 No direct paper counterpart. Strict monomorphisms, strict subobjects, and the
 strict-Artinian/Noetherian conditions used by `IsLocallyFinite`. In an abelian
@@ -167,13 +168,12 @@ abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
 ```
 
 **Declarations:** `IsStrict`, `IsStrictMono`, `Subobject.IsStrict`,
-`Subobject.IsStrict._proof_1`--`._proof_4`, `StrictSubobject`,
-`isStrictArtinianObject`, `IsStrictArtinianObject`,
+`StrictSubobject`, `isStrictArtinianObject`, `IsStrictArtinianObject`,
 `isStrictNoetherianObject`, `IsStrictNoetherianObject`
 
 ---
 
-## Slicing/Defs.lean (14 declarations)
+## Slicing/Defs.lean (10 declarations)
 
 **Paper, Definition 3.3.** A slicing P of D consists of full additive
 subcategories P(φ) ⊂ D for each φ ∈ ℝ, satisfying:
@@ -237,10 +237,8 @@ lemma HNFiltration.exists_nonzero_last (s : Slicing C) {E : C} (hE : ¬IsZero E)
 
 **Declarations:** `HNFiltration`, `HNFiltration.toPostnikovTower`, `HNFiltration.φ`,
 `Slicing`, `Slicing.P`, `Slicing.intervalProp`,
-`Slicing.phiPlus`, `Slicing.phiPlus._proof_1`,
-`Slicing.phiMinus`, `Slicing.phiMinus._proof_1`, `Slicing.phiMinus._proof_2`,
-`HNFiltration.exists_nonzero_first`, `HNFiltration.exists_nonzero_last`,
-`HNFiltration.exists_nonzero_last._proof_1`
+`Slicing.phiPlus`, `Slicing.phiMinus`,
+`HNFiltration.exists_nonzero_first`, `HNFiltration.exists_nonzero_last`
 
 ---
 
@@ -301,7 +299,7 @@ structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
 
 ---
 
-## StabilityCondition/Defs.lean (21 declarations)
+## StabilityCondition/Defs.lean (19 declarations)
 
 **Paper, Definition 5.1.** A stability condition on D consists of
 Z : K(D) → ℂ (the central charge) and subcategories P(φ) satisfying:
@@ -406,12 +404,12 @@ abbrev StabilityCondition.WithClassMap.Component (v : K₀ C →+ Λ)
 ```
 
 **Declarations:** `PreStabilityCondition.WithClassMap`, `.Z`, `.mk`, `.slicing`,
-`.toPreStabilityCondition`, `.toPreStabilityCondition._proof_1`,
+`.toPreStabilityCondition`,
 `StabilityCondition.WithClassMap`, `.locallyFinite`, `.mk`,
 `.toStabilityCondition`, `.toWithClassMap`,
 `StabilityCondition`,
 `slicingDist`, `stabSeminorm`, `basisNhd`,
-`StabilityCondition.topologicalSpace`, `.topologicalSpace._proof_1`,
+`StabilityCondition.topologicalSpace`,
 `StabilityCondition.WithClassMap.topologicalSpace`, `.instTopologicalSpace`,
 `.ComponentIndex`, `.Component`
 
@@ -441,7 +439,7 @@ def eulerFormObj [Linear k C] (E F : C) : ℤ :=
 
 ---
 
-## EulerForm/Basic.lean (10 declarations)
+## EulerForm/Basic.lean (9 declarations)
 
 **Paper, §1.** The Euler form χ descends to a bilinear form χ : K(D) × K(D) → ℤ.
 N(D) = K(D) / K(D)⊥ where K(D)⊥ = {x ∈ K(D) : χ(x, y) = 0 for all y}.
@@ -499,7 +497,7 @@ class NumericallyFinite [Linear k C] [IsFiniteType k C]
 **Declarations:** `eulerFormInner`, `eulerFormInner_isTriangleAdditive`,
 `eulerFormObj_contravariant_triangleAdditive`, `eulerForm`, `eulerFormRad`,
 `NumericalK₀`, `NumericalK₀.instAddCommGroup`, `numericalQuotientMap`,
-`numericalQuotientMap._proof_1`, `NumericallyFinite`
+`NumericallyFinite`
 
 ---
 

@@ -9,28 +9,7 @@ in Lean 4 using Mathlib.
 The mathematical target is the deformation-theoretic core of the paper:
 the topology on `Stab(D)`, the local-homeomorphism theorem for the central
 charge, and the consequent complex manifold structure on connected components
-of the space of numerically finite stability conditions. The engineering target is stricter:
-this should eventually become Mathlib-quality code, not just code that happens
-to compile once.
-
-## Blueprint and Project Site
-
-The repo now has a curated LeanArchitect/leanblueprint surface in
-`BridgelandBlueprint/Main.lean`. It exposes four paper-facing theorem packages:
-
-- Bridgeland's Theorem 1.2 for ordinary stability conditions;
-- the generic class-map complex-manifold theorem;
-- Bridgeland's Corollary 1.3 for numerical stability conditions;
-- the deformation theorem (Theorem 7.1).
-
-Locally, the extraction target is:
-
-```bash
-lake build BridgelandBlueprint:blueprint
-```
-
-The website scaffold lives under `blueprint/` and `home_page/`, and the GitHub
-Actions workflow for publishing it is `.github/workflows/blueprint.yml`.
+of the space of numerically finite stability conditions.
 
 ## What Bridgeland stability conditions are
 
@@ -174,46 +153,6 @@ The generic manifold theorem is proved for a surjective class map
 theorem is the specialization to the canonical quotient map
 `K₀ C →+ NumericalK₀ k C`.
 
-The numerical package is split across four layers.
-
-- `BridgelandStability/StabilityCondition/Defs.lean` defines
-  `PreStabilityCondition.WithClassMap` and `StabilityCondition.WithClassMap`,
-  the Bridgeland topology, and connected-component types, with ordinary
-  prestability/stability conditions recovered by specializing to `v = id`.
-- `BridgelandStability/StabilityCondition/Topology.lean` proves Lemma 6.4 (local
-  injectivity) and supporting topology lemmas. The generic local-homeomorphism
-  proposition-object
-  `StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`
-  is defined in `StabilityCondition/Defs.lean`.
-- `BridgelandStability/NumericalStability.lean` keeps the comparison layer
-  (`StabilityCondition.FactorsThrough` and the subtype
-  `ClassMapStabilityCondition`) plus finite-type and object-level Euler-form
-  infrastructure.
-- `BridgelandStability/EulerForm/Basic.lean` and
-  `BridgelandStability/NumericalStabilityManifold.lean` specialize the generic
-  class-map theory to the canonical numerical quotient, producing
-  `NumericalK₀`, `NumericallyFinite`, `NumericalStabilityCondition`, and
-  `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent` on
-  connected components.
-
-## Comparator verification
-
-The theorem
-`NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`
-(Corollary 1.3) is set up for independent verification via
-[`leanprover/comparator`](https://github.com/leanprover/comparator). The
-challenge module `BridgelandSpec/Main.lean` states the theorem with `sorry`;
-the solution module `BridgelandStability/NumericalStabilityManifold.lean`
-provides the proof. The comparator config is `comparator.json`.
-
-The theorem's type references **78 project declarations from 11 modules**,
-found by `Expr.foldConsts` (descending into def bodies and inductive
-constructor types). These are the **trusted formalization base**: the
-definitions a reader must accept to trust the formal statement, analogous to a
-trusted code base. Each declaration is paired with the corresponding natural
-language definition from the paper in
-[`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
-
 ## Techniques from the paper
 
 Bridgeland's construction is powerful because it combines several ideas that
@@ -262,71 +201,41 @@ This repository is aimed at the foundation under those applications: if the
 basic manifold and deformation story is formalized well, a lot of later
 geometry becomes more approachable.
 
-## What is formalized in this repository
-
-The current codebase formalizes a large part of the paper-level infrastructure.
-The root file [`BridgelandStability.lean`](BridgelandStability.lean) is now an
-umbrella import over the actual module tree. The main pieces are:
-
-- [`BridgelandStability/StabilityFunction/Basic.lean`](BridgelandStability/StabilityFunction/Basic.lean),
-  [`BridgelandStability/StabilityFunction/HarderNarasimhan.lean`](BridgelandStability/StabilityFunction/HarderNarasimhan.lean),
-  [`BridgelandStability/StabilityFunction/MDQ.lean`](BridgelandStability/StabilityFunction/MDQ.lean),
-  and [`BridgelandStability/StabilityFunction/Uniqueness.lean`](BridgelandStability/StabilityFunction/Uniqueness.lean):
-  stability functions, phases, semistability, HN filtrations, maximal
-  destabilizing quotients, and uniqueness.
-- [`BridgelandStability/Slicing/*.lean`](BridgelandStability/Slicing):
-  slicings, phase arithmetic, extension-closure properties, HN operations, and
-  the passage between slicings and t-structures.
-- [`BridgelandStability/StabilityCondition/Basic.lean`](BridgelandStability/StabilityCondition/Basic.lean),
-  [`BridgelandStability/StabilityCondition/ConnectedComponent.lean`](BridgelandStability/StabilityCondition/ConnectedComponent.lean),
-  [`BridgelandStability/StabilityCondition/Deformation.lean`](BridgelandStability/StabilityCondition/Deformation.lean),
-  [`BridgelandStability/StabilityCondition/Seminorm.lean`](BridgelandStability/StabilityCondition/Seminorm.lean),
-  [`BridgelandStability/StabilityCondition/Topology.lean`](BridgelandStability/StabilityCondition/Topology.lean),
-  and [`BridgelandStability/StabilityCondition/LocalHomeomorphism.lean`](BridgelandStability/StabilityCondition/LocalHomeomorphism.lean):
-  ordinary and class-map stability conditions, the Bridgeland topology, the
-  seminorm machinery, the connected-component and deformation glue, and the
-  componentwise local linear models behind the generic class-map theorem and
-  Theorem 1.2.
-- [`BridgelandStability/Deformation/*.lean`](BridgelandStability/Deformation),
-  culminating in [`BridgelandStability/Deformation/Theorem.lean`](BridgelandStability/Deformation/Theorem.lean):
-  the Section 7 deformation package, including deformed slicings, phase
-  control, HN existence, hom-vanishing, maximal destabilizing quotients, and
-  the proof of the deformation theorem.
-- [`BridgelandStability/HeartEquivalence/*.lean`](BridgelandStability/HeartEquivalence)
-  and [`BridgelandStability/IntervalCategory/*.lean`](BridgelandStability/IntervalCategory):
-  the bridge between slicings and hearts, and the interval-category exactness
-  infrastructure used in the deformation argument.
-- [`BridgelandStability/NumericalStability.lean`](BridgelandStability/NumericalStability.lean),
-  [`BridgelandStability/EulerForm/Basic.lean`](BridgelandStability/EulerForm/Basic.lean),
-  and [`BridgelandStability/NumericalStabilityManifold.lean`](BridgelandStability/NumericalStabilityManifold.lean):
-  the comparison layer for factorization through a class map
-  (`FactorsThrough`, `ClassMapStabilityCondition`, `eulerFormObj`), the
-  canonical numerical quotient `NumericalK₀` and
-  `NumericalStabilityCondition` attached to the Euler form, and the generic and
-  numerical complex manifold assembly for connected components.
-
-The code should be read as an active formalization project, not as a polished
-final library. Some files already expose reusable APIs; others still need the
-cleanup, consolidation, and renaming that Mathlib would require.
-
 ## Project charter
 
-This is an experiment in AI-assisted formalization.
+This is an experiment in AI-assisted formalization. Humans write no Lean code
+beyond Mathlib; the goal is to study how far a human-led effort can push
+AI-assisted formalization on top of Mathlib. Getting Lean to accept a proof
+script is not success — the end state has to be Mathlib quality: correct
+abstractions, reusable lemmas, sane names, controlled imports, and proofs that
+could plausibly survive code review and upstreaming.
 
-**Rule 1: Humans write no Lean code beyond Mathlib.** The current toolchain is
-`claude-code` with Opus 4.6 and `codex` with GPT-5.4 plus FRO Lean skills. The
-goal is not to replace human mathematical judgment, but to study how far a
-human-led effort can push AI-assisted formalization on top of Mathlib.
+## What is formalized
 
-**Rule 2: Getting Lean to accept a proof script is not success.** The end state has
-to be Mathlib quality: correct abstractions, reusable lemmas, sane names,
-controlled imports, documentation, and proofs that could plausibly survive code
-review and upstreaming. If we do not reach that bar, the project has failed.
+The current codebase formalizes Sections 5-7 of the paper, culminating in
+Theorem 1.2 (local homeomorphism) and Corollary 1.3 (complex manifold structure
+on numerical stability conditions). The main layers are:
 
-That standard is intentional. A one-off formalization would be easy to
-overvalue. The real question is whether AI can help produce library-quality
-mathematics in a modern proof assistant on top of Mathlib, with as little
-special pleading as possible.
+- Stability functions, phases, semistability, HN filtrations, and uniqueness.
+- Slicings, phase arithmetic, extension-closure, and the passage between
+  slicings and t-structures.
+- Ordinary and class-map stability conditions, the Bridgeland topology, the
+  seminorm machinery, and the deformation theorem (Section 7).
+- The heart-equivalence and interval-category exactness infrastructure used in
+  the deformation argument.
+- The numerical quotient `NumericalK₀`, the specialization to Euler-form
+  stability conditions, and the complex manifold assembly for connected
+  components.
+
+The root import is [`BridgelandStability.lean`](BridgelandStability.lean).
+This is an active formalization project; some files expose reusable APIs, others
+still need the cleanup and renaming that Mathlib would require.
+
+Corollary 1.3 is set up for independent verification via
+[`leanprover/comparator`](https://github.com/leanprover/comparator). The
+**63 project declarations** that the formal statement depends on are documented
+with their paper-level counterparts in
+[`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
 
 ## Selected References
 
