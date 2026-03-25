@@ -76,12 +76,12 @@ theorem phiPlus_bound_of_destabilizing_subobject
     (C := C) (s := σ.slicing) (a := a) (b := b) A.arrow hA_strict
   obtain ⟨δ, hT⟩ := Slicing.IntervalCat.exists_distTriang_of_strictShortExact
     (C := C) (s := σ.slicing) (a := a) (b := b) hSES
-  have hab1 : b ≤ a + 1 := by grind
+  have hab1 : b ≤ a + 1 := by linarith
   have hphiPlus_le := σ.slicing.phiPlus_triangle_le C hA_ne hYne
     hab1 AI.property (cokernel A.arrow).property hT
   have hconf := phase_confinement_from_stabSeminorm C σ W hW hab hε hε2 hthin hsin hA_ss
   have hmin_le_max := σ.slicing.phiMinus_le_phiPlus C AI.obj hA_ne
-  grind
+  linarith
 
 /-! ### Hom vanishing for enveloped ssf-semistable objects -/
 

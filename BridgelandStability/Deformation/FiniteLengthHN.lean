@@ -434,21 +434,21 @@ lemma intervalProp_chain_of_postnikovTower (s : Slicing C) {E : C} {a b : ℝ}
     (P : PostnikovTower C E)
     (hfactors : ∀ i, s.intervalProp C a b (P.factor i))
     (k : ℕ) (hk : k ≤ P.n) :
-    s.intervalProp C a b (P.chain.obj' k (by grind)) := by
+    s.intervalProp C a b (P.chain.obj' k (by lia)) := by
   induction k with
   | zero =>
-    rw [show P.chain.obj' 0 (by grind) = P.chain.left from rfl]
+    rw [show P.chain.obj' 0 (by lia) = P.chain.left from rfl]
     exact Or.inl P.base_isZero
   | succ k ih =>
-    set T := P.triangle ⟨k, by grind⟩
-    have hT := P.triangle_dist ⟨k, by grind⟩
-    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by grind⟩)
-    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by grind⟩)
+    set T := P.triangle ⟨k, by lia⟩
+    have hT := P.triangle_dist ⟨k, by lia⟩
+    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by lia⟩)
+    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by lia⟩)
     have h₁ : s.intervalProp C a b T.obj₁ := by
-      rcases ih (by grind) with hZ | ⟨F, hF⟩
+      rcases ih (by lia) with hZ | ⟨F, hF⟩
       · exact Or.inl ((Iso.isZero_iff e₁.symm).mp hZ)
       · exact Or.inr ⟨F.ofIso C e₁.symm, hF⟩
-    have h₃ : s.intervalProp C a b T.obj₃ := hfactors ⟨k, by grind⟩
+    have h₃ : s.intervalProp C a b T.obj₃ := hfactors ⟨k, by lia⟩
     have h₂ : s.intervalProp C a b T.obj₂ :=
       s.intervalProp_of_triangle C h₁ h₃ hT
     rcases h₂ with hZ | ⟨F, hF⟩
@@ -465,9 +465,9 @@ lemma intervalProp_of_postnikovTower (s : Slicing C) {E : C} {a b : ℝ}
     (hfactors : ∀ i, s.intervalProp C a b (P.factor i)) :
     s.intervalProp C a b E := by
   suffices h : ∀ k (hk : k ≤ P.n),
-      s.intervalProp C a b (P.chain.obj' k (by grind)) by
+      s.intervalProp C a b (P.chain.obj' k (by lia)) by
     have hchain := h P.n le_rfl
-    rw [show P.chain.obj' P.n (by grind) = P.chain.right from rfl] at hchain
+    rw [show P.chain.obj' P.n (by lia) = P.chain.right from rfl] at hchain
     rcases hchain with hZ | ⟨F, hF⟩
     · exact Or.inl ((Iso.isZero_iff (Classical.choice P.top_iso)).mp hZ)
     · exact Or.inr ⟨F.ofIso C (Classical.choice P.top_iso), hF⟩
@@ -475,22 +475,22 @@ lemma intervalProp_of_postnikovTower (s : Slicing C) {E : C} {a b : ℝ}
   induction k with
   | zero =>
     intro _
-    rw [show P.chain.obj' 0 (by grind) = P.chain.left from rfl]
+    rw [show P.chain.obj' 0 (by lia) = P.chain.left from rfl]
     exact Or.inl P.base_isZero
   | succ k ih =>
     intro hk
-    have hchain_k := ih (by grind)
-    set T := P.triangle ⟨k, by grind⟩
-    have hT := P.triangle_dist ⟨k, by grind⟩
-    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by grind⟩)
-    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by grind⟩)
+    have hchain_k := ih (by lia)
+    set T := P.triangle ⟨k, by lia⟩
+    have hT := P.triangle_dist ⟨k, by lia⟩
+    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by lia⟩)
+    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by lia⟩)
     -- intervalProp for T.obj₁ (≅ chain(k))
     have h₁ : s.intervalProp C a b T.obj₁ := by
       rcases hchain_k with hZ | ⟨F, hF⟩
       · exact Or.inl ((Iso.isZero_iff e₁.symm).mp hZ)
       · exact Or.inr ⟨F.ofIso C e₁.symm, hF⟩
     -- intervalProp for T.obj₃ = factor(k)
-    have h₃ : s.intervalProp C a b T.obj₃ := hfactors ⟨k, by grind⟩
+    have h₃ : s.intervalProp C a b T.obj₃ := hfactors ⟨k, by lia⟩
     -- Apply intervalProp_of_triangle
     have h₂ : s.intervalProp C a b T.obj₂ :=
       s.intervalProp_of_triangle C h₁ h₃ hT
@@ -505,25 +505,25 @@ lemma gtProp_of_postnikovTower (s : Slicing C) {E : C} {t : ℝ}
     (hfactors : ∀ i, s.gtProp C t (P.factor i)) :
     s.gtProp C t E := by
   suffices h : ∀ k (hk : k ≤ P.n),
-      s.gtProp C t (P.chain.obj' k (by grind)) by
+      s.gtProp C t (P.chain.obj' k (by lia)) by
     have hchain := h P.n le_rfl
-    rw [show P.chain.obj' P.n (by grind) = P.chain.right from rfl] at hchain
+    rw [show P.chain.obj' P.n (by lia) = P.chain.right from rfl] at hchain
     exact (s.gtProp C t).prop_of_iso (Classical.choice P.top_iso) hchain
   intro k
   induction k with
   | zero =>
       intro _
-      rw [show P.chain.obj' 0 (by grind) = P.chain.left from rfl]
+      rw [show P.chain.obj' 0 (by lia) = P.chain.left from rfl]
       exact Or.inl P.base_isZero
   | succ k ih =>
       intro hk
-      have hchain_k := ih (by grind)
-      set T := P.triangle ⟨k, by grind⟩
-      have hT := P.triangle_dist ⟨k, by grind⟩
-      have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by grind⟩)
-      have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by grind⟩)
+      have hchain_k := ih (by lia)
+      set T := P.triangle ⟨k, by lia⟩
+      have hT := P.triangle_dist ⟨k, by lia⟩
+      have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by lia⟩)
+      have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by lia⟩)
       have h₁ : s.gtProp C t T.obj₁ := (s.gtProp C t).prop_of_iso e₁.symm hchain_k
-      have h₃ : s.gtProp C t T.obj₃ := hfactors ⟨k, by grind⟩
+      have h₃ : s.gtProp C t T.obj₃ := hfactors ⟨k, by lia⟩
       have h₂ : s.gtProp C t T.obj₂ := s.gtProp_of_triangle C t h₁ h₃ hT
       exact (s.gtProp C t).prop_of_iso e₂ h₂
 
@@ -533,25 +533,25 @@ lemma ltProp_of_postnikovTower (s : Slicing C) {E : C} {t : ℝ}
     (hfactors : ∀ i, s.ltProp C t (P.factor i)) :
     s.ltProp C t E := by
   suffices h : ∀ k (hk : k ≤ P.n),
-      s.ltProp C t (P.chain.obj' k (by grind)) by
+      s.ltProp C t (P.chain.obj' k (by lia)) by
     have hchain := h P.n le_rfl
-    rw [show P.chain.obj' P.n (by grind) = P.chain.right from rfl] at hchain
+    rw [show P.chain.obj' P.n (by lia) = P.chain.right from rfl] at hchain
     exact (s.ltProp C t).prop_of_iso (Classical.choice P.top_iso) hchain
   intro k
   induction k with
   | zero =>
       intro _
-      rw [show P.chain.obj' 0 (by grind) = P.chain.left from rfl]
+      rw [show P.chain.obj' 0 (by lia) = P.chain.left from rfl]
       exact Or.inl P.base_isZero
   | succ k ih =>
       intro hk
-      have hchain_k := ih (by grind)
-      set T := P.triangle ⟨k, by grind⟩
-      have hT := P.triangle_dist ⟨k, by grind⟩
-      have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by grind⟩)
-      have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by grind⟩)
+      have hchain_k := ih (by lia)
+      set T := P.triangle ⟨k, by lia⟩
+      have hT := P.triangle_dist ⟨k, by lia⟩
+      have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by lia⟩)
+      have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by lia⟩)
       have h₁ : s.ltProp C t T.obj₁ := (s.ltProp C t).prop_of_iso e₁.symm hchain_k
-      have h₃ : s.ltProp C t T.obj₃ := hfactors ⟨k, by grind⟩
+      have h₃ : s.ltProp C t T.obj₃ := hfactors ⟨k, by lia⟩
       have h₂ : s.ltProp C t T.obj₂ := s.ltProp_of_triangle C t h₁ h₃ hT
       exact (s.ltProp C t).prop_of_iso e₂ h₂
 

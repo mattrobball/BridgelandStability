@@ -46,15 +46,15 @@ lemma HNFiltration.phiMinus_le_phiPlus {P : ℝ → ObjectProperty C} {E : C}
     (F : HNFiltration C P E) (h : 0 < F.n) :
     F.phiMinus C h ≤ F.phiPlus C h := by
   simp only [HNFiltration.phiMinus, HNFiltration.phiPlus]
-  exact F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+  exact F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
 
 /-- All phases lie between phiMinus and phiPlus. -/
 lemma HNFiltration.phase_mem_range {P : ℝ → ObjectProperty C} {E : C}
     (F : HNFiltration C P E) (h : 0 < F.n) (i : Fin F.n) :
     F.phiMinus C h ≤ F.φ i ∧ F.φ i ≤ F.phiPlus C h := by
   constructor
-  · exact F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
-  · exact F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+  · exact F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
+  · exact F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
 
 /-! ### Subcategory predicates from slicings -/
 
@@ -159,7 +159,7 @@ lemma Slicing.ltProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
   · exact Or.inl hZ
   · by_cases hn : 0 < F.n
     · exact Or.inr ⟨F, hn, (hF ⟨0, hn⟩).2⟩
-    · exact Or.inl (F.toPostnikovTower.zero_isZero (by grind))
+    · exact Or.inl (F.toPostnikovTower.zero_isZero (by lia))
 
 
 /-! ### Hom-vanishing for HN-filtered objects
@@ -182,7 +182,7 @@ lemma chain_hom_eq_zero_of_gt (s : Slicing C) {A E : C} {ψ : ℝ}
     exact (F.base_isZero : IsZero F.chain.left).eq_of_tgt f 0
   | succ k ih =>
     intro hk f
-    have hkn : k < F.n := by grind
+    have hkn : k < F.n := by lia
     let T := F.triangle ⟨k, hkn⟩
     let e₁ := Classical.choice (F.triangle_obj₁ ⟨k, hkn⟩)
     let e₂ := Classical.choice (F.triangle_obj₂ ⟨k, hkn⟩)
@@ -191,7 +191,7 @@ lemma chain_hom_eq_zero_of_gt (s : Slicing C) {A E : C} {ψ : ℝ}
         (hlt ⟨k, hkn⟩) hA (F.semistable ⟨k, hkn⟩) _
     obtain ⟨g, hg⟩ := Triangle.coyoneda_exact₂ T
       (F.triangle_dist ⟨k, hkn⟩) (f ≫ e₂.inv) hcomp
-    have hg0 : g ≫ e₁.hom = 0 := ih (by grind) (g ≫ e₁.hom)
+    have hg0 : g ≫ e₁.hom = 0 := ih (by lia) (g ≫ e₁.hom)
     have hg_eq : g = 0 := by
       have : g = (g ≫ e₁.hom) ≫ e₁.inv := by
         rw [Category.assoc, e₁.hom_inv_id, Category.comp_id]
@@ -208,7 +208,7 @@ lemma Slicing.hom_eq_zero_of_gt_phases (s : Slicing C) {A E : C} {ψ : ℝ}
     (f : A ⟶ E) : f = 0 := by
   let eE := Classical.choice F.top_iso
   have h1 : f ≫ eE.inv = 0 :=
-    chain_hom_eq_zero_of_gt C s hA F hlt F.n (by grind) _
+    chain_hom_eq_zero_of_gt C s hA F hlt F.n (by lia) _
   have : f = (f ≫ eE.inv) ≫ eE.hom := by
     rw [Category.assoc, eE.inv_hom_id, Category.comp_id]
   rw [this, h1, zero_comp]
@@ -227,14 +227,14 @@ lemma chain_hom_eq_zero_gap (s : Slicing C) {X Y : C}
     exact (Fx.base_isZero : IsZero Fx.chain.left).eq_of_src f 0
   | succ k ih =>
     intro hk f
-    have hkn : k < Fx.n := by grind
+    have hkn : k < Fx.n := by lia
     let T := Fx.triangle ⟨k, hkn⟩
     let e₁ := Classical.choice (Fx.triangle_obj₁ ⟨k, hkn⟩)
     let e₂ := Classical.choice (Fx.triangle_obj₂ ⟨k, hkn⟩)
     -- T.mor₁ ≫ (e₂.hom ≫ f) : T.obj₁ → Y is zero via e₁ and IH
     have hmor1 : T.mor₁ ≫ (e₂.hom ≫ f) = 0 := by
       have h1 : e₁.inv ≫ (T.mor₁ ≫ (e₂.hom ≫ f)) = 0 := by
-        simp only [← Category.assoc]; exact ih (by grind) _
+        simp only [← Category.assoc]; exact ih (by lia) _
       have h2 : e₁.hom ≫ (e₁.inv ≫ (T.mor₁ ≫ (e₂.hom ≫ f))) =
           T.mor₁ ≫ (e₂.hom ≫ f) := by
         rw [← Category.assoc, e₁.hom_inv_id, Category.id_comp]
@@ -257,7 +257,7 @@ lemma Slicing.hom_eq_zero_of_phase_gap (s : Slicing C) {X Y : C}
     (hgap : ∀ i j, Fy.φ j < Fx.φ i) (f : X ⟶ Y) : f = 0 := by
   let eX := Classical.choice Fx.top_iso
   have h1 : eX.hom ≫ f = 0 :=
-    chain_hom_eq_zero_gap C s Fx Fy hgap Fx.n (by grind) _
+    chain_hom_eq_zero_gap C s Fx Fy hgap Fx.n (by lia) _
   have : f = eX.inv ≫ (eX.hom ≫ f) := by
     rw [← Category.assoc, eX.inv_hom_id, Category.id_comp]
   rw [this, h1, comp_zero]
@@ -275,14 +275,14 @@ lemma chain_hom_eq_zero_of_lt (s : Slicing C) {B E : C} {ψ : ℝ}
     exact (F.base_isZero : IsZero F.chain.left).eq_of_src f 0
   | succ k ih =>
     intro hk f
-    have hkn : k < F.n := by grind
+    have hkn : k < F.n := by lia
     let T := F.triangle ⟨k, hkn⟩
     let e₁ := Classical.choice (F.triangle_obj₁ ⟨k, hkn⟩)
     let e₂ := Classical.choice (F.triangle_obj₂ ⟨k, hkn⟩)
     -- T.mor₁ ≫ (e₂.hom ≫ f) : T.obj₁ → B via e₁ and IH
     have hmor1 : T.mor₁ ≫ (e₂.hom ≫ f) = 0 := by
       have h1 : e₁.inv ≫ (T.mor₁ ≫ (e₂.hom ≫ f)) = 0 := by
-        simp only [← Category.assoc]; exact ih (by grind) _
+        simp only [← Category.assoc]; exact ih (by lia) _
       have h2 : e₁.hom ≫ (e₁.inv ≫ (T.mor₁ ≫ (e₂.hom ≫ f))) =
           T.mor₁ ≫ (e₂.hom ≫ f) := by
         rw [← Category.assoc, e₁.hom_inv_id, Category.id_comp]
@@ -304,7 +304,7 @@ lemma Slicing.hom_eq_zero_of_lt_phases (s : Slicing C) {B E : C} {ψ : ℝ}
     (f : E ⟶ B) : f = 0 := by
   let eE := Classical.choice F.top_iso
   have h1 : eE.hom ≫ f = 0 :=
-    chain_hom_eq_zero_of_lt C s hB F hgt F.n (by grind) _
+    chain_hom_eq_zero_of_lt C s hB F hgt F.n (by lia) _
   have : f = eE.inv ≫ (eE.hom ≫ f) := by
     rw [← Category.assoc, eE.inv_hom_id, Category.id_comp]
   rw [this, h1, comp_zero]

@@ -51,10 +51,10 @@ abbrev componentStabilityCondition (cc : ConnectedComponents (StabilityCondition
 def componentSeminormSubgroup (cc : ConnectedComponents (StabilityCondition C)) :
     Submodule ℂ (K₀ C →+ ℂ) where
   carrier := finiteSeminormSubgroup C (componentRep C cc)
-  zero_mem' := by
-    exact (finiteSeminormSubgroup C (componentRep C cc)).zero_mem
-  add_mem' hU hV := by
-    exact (finiteSeminormSubgroup C (componentRep C cc)).add_mem hU hV
+  zero_mem' :=
+    (finiteSeminormSubgroup C (componentRep C cc)).zero_mem
+  add_mem' hU hV :=
+    (finiteSeminormSubgroup C (componentRep C cc)).add_mem hU hV
   smul_mem' t U hU := by
     change stabSeminorm C (componentRep C cc) (t • U) < ⊤
     rw [stabSeminorm_smul_complex]
@@ -322,7 +322,7 @@ noncomputable def componentTopologicalLinearLocalModel
       obtain ⟨ε₀, hε₀, hε₀8, hWide⟩ := σ.exists_epsilon0 C
       let ε := ε₀ / 2
       have hε_pos : 0 < ε := by positivity
-      have hε_lt : ε < 1 / 8 := by dsimp [ε]; grind
+      have hε_lt : ε < 1 / 8 := by dsimp [ε]; linarith
       let U : Set comp := {τ | τ.val ∈ basisNhd C σ ε}
       refine ⟨U, ?_, ?_⟩
       · refine IsOpen.mem_nhds ?_ ?_
@@ -371,8 +371,8 @@ noncomputable def componentTopologicalLinearLocalModel
           set gap := r - d
           have hgap : 0 < gap := sub_pos.mpr hd_lt
           set δ := min (1/16 : ℝ) (gap / ((K.toReal + 1) * (2 * Real.pi)))
-          have hδ_pos : 0 < δ := lt_min (by grind) (div_pos hgap (by positivity))
-          have hδ_lt : δ < 1/8 := lt_of_le_of_lt (min_le_left _ _) (by grind)
+          have hδ_pos : 0 < δ := lt_min (by linarith) (div_pos hgap (by positivity))
+          have hδ_lt : δ < 1/8 := lt_of_le_of_lt (min_le_left _ _) (by linarith)
           have hπδ : 0 < Real.pi * δ := by positivity
           have hsin_nn : 0 ≤ Real.sin (Real.pi * δ) :=
             (Real.sin_pos_of_pos_of_lt_pi hπδ (by nlinarith [Real.pi_pos])).le
@@ -470,7 +470,7 @@ noncomputable def componentTopologicalLinearLocalModel
                   (ENNReal.ofReal_add (le_of_lt hε_pos) (le_of_lt hε_pos)).symm
               _ < ENNReal.ofReal 1 := by
                   rw [ENNReal.ofReal_lt_ofReal_iff one_pos]
-                  dsimp [ε]; grind
+                  dsimp [ε]; linarith
           exact Subtype.ext (Subtype.ext
             (StabilityCondition.eq_of_same_Z_near C τ₁ τ₂ hZval hd))
         -- Open map (Theorem 7.1 + Lemma 6.2). With seminorm topology: no far-fiber issues.
@@ -518,10 +518,10 @@ noncomputable def componentTopologicalLinearLocalModel
           have hδ_lt_ε₀x : δ < ε₀_x := by
             dsimp [δ]
             linarith [min_le_left (ε₀_x / 2) (min δT δU)]
-          have hδ8 : δ < 1 / 8 := by
-            exact lt_of_le_of_lt hδ_le_δT hδT8
-          have hsinδ_pos : 0 < Real.sin (Real.pi * δ) := by
-            exact Real.sin_pos_of_pos_of_lt_pi
+          have hδ8 : δ < 1 / 8 :=
+            lt_of_le_of_lt hδ_le_δT hδT8
+          have hsinδ_pos : 0 < Real.sin (Real.pi * δ) :=
+            Real.sin_pos_of_pos_of_lt_pi
               (by positivity)
               (by nlinarith [Real.pi_pos, hδ8])
           let r0 : ℝ := min 1 (Real.sin (Real.pi * δ) / (2 * (K_rev.toReal + 1)))
@@ -606,8 +606,8 @@ noncomputable def componentTopologicalLinearLocalModel
             have hπδ_lt : Real.pi * δ < 1 := by
               nlinarith [Real.pi_lt_d4, hδ8]
             exact lt_trans (Real.sin_lt (by positivity)) hπδ_lt
-          have hWclose1 : stabSeminorm C σ_x ((F : V) - σ_x.Z) < ENNReal.ofReal 1 := by
-            exact lt_trans hWclose
+          have hWclose1 : stabSeminorm C σ_x ((F : V) - σ_x.Z) < ENNReal.ofReal 1 :=
+            lt_trans hWclose
               ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
           obtain ⟨ρ, hρZ, hρmem⟩ :=
             σ_x.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (F : V) hWclose1
@@ -617,13 +617,13 @@ noncomputable def componentTopologicalLinearLocalModel
             basisNhd_subset_connectedComponent_small C σ_x hε₀_x hε₀_x10 hWide_x hδ hδ_lt_ε₀x hρmem
           have hρcc : ConnectedComponents.mk ρ = cc := hρccx.trans hσ_x_cc
           let yComp : comp := ⟨ρ, hρcc⟩
-          have hρmemT : ρ ∈ basisNhd C σ_x δT := by
-            exact basisNhd_mono C σ_x hδ hδ_le_δT hδT8 hρmem
+          have hρmemT : ρ ∈ basisNhd C σ_x δT :=
+            basisNhd_mono C σ_x hδ hδ_le_δT hδT8 hρmem
           have hρTamb : ρ ∈ Tamb := hsubT hρmemT
           have hyTcomp : yComp ∈ Tcomp := by
             rwa [← hTcomp_eq]
-          have hρmemU : ρ ∈ basisNhd C σ ε := by
-            exact hsubU <| basisNhd_mono C σ_x hδ hδ_le_δU hδU8 hρmem
+          have hρmemU : ρ ∈ basisNhd C σ ε :=
+            hsubU <| basisNhd_mono C σ_x hδ hδ_le_δU hδU8 hρmem
           have hyU : yComp ∈ U := hρmemU
           let yU : U := ⟨yComp, hyU⟩
           have hyT : yU ∈ T := by

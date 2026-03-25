@@ -77,10 +77,9 @@ theorem StabilityCondition.false_of_all_hn_phases_below (σ τ : StabilityCondit
     have h1 : σ.Z (K₀.of C E) * exp (-(↑(Real.pi * φ) * I)) =
         ∑ i : Fin F.n, w i := by
       rw [hK₀, Finset.sum_mul]
-    rw [hmZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * φ) * I + -(↑(Real.pi * φ) * I) = 0 from by grind,
+    rwa [hmZ, mul_assoc, ← exp_add,
+      show ↑(Real.pi * φ) * I + -(↑(Real.pi * φ) * I) = 0 from by ring,
       exp_zero, mul_one] at h1
-    exact h1
   -- For nonzero factor i: w i has strictly negative imaginary part
   have hw_neg : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       (w i).im < 0 := by
@@ -149,10 +148,9 @@ theorem StabilityCondition.false_of_all_hn_phases_above (σ τ : StabilityCondit
     have h1 : σ.Z (K₀.of C E) * exp (-(↑(Real.pi * φ) * I)) =
         ∑ i : Fin F.n, w i := by
       rw [hK₀, Finset.sum_mul]
-    rw [hmZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * φ) * I + -(↑(Real.pi * φ) * I) = 0 from by grind,
+    rwa [hmZ, mul_assoc, ← exp_add,
+      show ↑(Real.pi * φ) * I + -(↑(Real.pi * φ) * I) = 0 from by ring,
       exp_zero, mul_one] at h1
-    exact h1
   -- For nonzero factor i: w i has strictly positive imaginary part
   have hw_pos : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       0 < (w i).im := by
@@ -235,10 +233,10 @@ theorem StabilityCondition.phiMinus_le_le_phiPlus (σ τ : StabilityCondition C)
   have hbds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hτ hd
   -- Extract bounds on F's extreme phases from hbds + the phiPlus/phiMinus equations
   have hP_lt : F.φ ⟨0, hn⟩ < φ + 1 := by linarith [(Set.mem_Ioo.mp hbds.1).2]
-  have hM_gt : φ - 1 < F.φ ⟨F.n - 1, by grind⟩ := by linarith [(Set.mem_Ioo.mp hbds.2).1]
+  have hM_gt : φ - 1 < F.φ ⟨F.n - 1, by lia⟩ := by linarith [(Set.mem_Ioo.mp hbds.2).1]
   -- All phases of F lie in [F.φ(n-1), F.φ(0)] by antitonicity
-  have hFle : ∀ i : Fin F.n, F.φ ⟨F.n - 1, by grind⟩ ≤ F.φ i :=
-    fun i ↦ F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+  have hFle : ∀ i : Fin F.n, F.φ ⟨F.n - 1, by lia⟩ ≤ F.φ i :=
+    fun i ↦ F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
   have hFge : ∀ i : Fin F.n, F.φ i ≤ F.φ ⟨0, hn⟩ :=
     fun i ↦ F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
   constructor
@@ -300,7 +298,7 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
     have hbase : IsZero (Fσ.toPostnikovTower.chain.left) :=
       Fσ.toPostnikovTower.base_isZero
     have hall_chain : ∀ (k : ℕ) (hk : k ≤ Fσ.n),
-        IsZero (Fσ.toPostnikovTower.chain.obj' k (by grind)) := by
+        IsZero (Fσ.toPostnikovTower.chain.obj' k (by lia)) := by
       intro k hk
       induction k with
       | zero =>
@@ -308,7 +306,7 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
         exact hbase
       | succ k ih =>
         have hklt : k < Fσ.n := by lia
-        have ih' := ih (by grind)
+        have ih' := ih (by lia)
         have h₁ := Fσ.toPostnikovTower.triangle_obj₁ ⟨k, hklt⟩
         have h₂ := Fσ.toPostnikovTower.triangle_obj₂ ⟨k, hklt⟩
         have hdist := Fσ.toPostnikovTower.triangle_dist ⟨k, hklt⟩
@@ -390,10 +388,9 @@ theorem StabilityCondition.false_of_hn_phases_le_with_lt (σ τ : StabilityCondi
   have hsum : (m : ℂ) = ∑ i : Fin F.n, w i := by
     have h1 : σ.Z (K₀.of C E) * exp (-(↑(Real.pi * φ) * I)) =
         ∑ i : Fin F.n, w i := by rw [hK₀, Finset.sum_mul]
-    rw [hmZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * φ) * I + -(↑(Real.pi * φ) * I) = 0 from by grind,
+    rwa [hmZ, mul_assoc, ← exp_add,
+      show ↑(Real.pi * φ) * I + -(↑(Real.pi * φ) * I) = 0 from by ring,
       exp_zero, mul_one] at h1
-    exact h1
   -- Each term has Im ≤ 0
   have hw_le : ∀ i : Fin F.n, (w i).im ≤ 0 := by
     intro i
@@ -486,10 +483,10 @@ private theorem bridgeland_6_4_one_dir
   have hbds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hτ hd
   obtain ⟨F, hn, hF0, hFn⟩ := σ.slicing.exists_HN_intrinsic_width C hE
   have hPlt : F.φ ⟨0, hn⟩ < φ + 1 := by linarith [(Set.mem_Ioo.mp hbds.1).2]
-  have hMgt : φ - 1 < F.φ ⟨F.n - 1, by grind⟩ := by linarith [(Set.mem_Ioo.mp hbds.2).1]
+  have hMgt : φ - 1 < F.φ ⟨F.n - 1, by lia⟩ := by linarith [(Set.mem_Ioo.mp hbds.2).1]
   have hF_interval : ∀ i : Fin F.n, φ - 1 < F.φ i ∧ F.φ i < φ + 1 := by
-    intro i; exact ⟨by calc φ - 1 < F.φ ⟨F.n - 1, by grind⟩ := hMgt
-      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
+    intro i; exact ⟨by calc φ - 1 < F.φ ⟨F.n - 1, by lia⟩ := hMgt
+      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
       by calc F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
         _ < φ + 1 := hPlt⟩
   -- If all phases = φ, done
@@ -558,8 +555,8 @@ private theorem bridgeland_6_4_one_dir
       exact (Set.mem_Ioo.mp hbdsY.2).1
     have hFY_gt : ∀ i : Fin FY.n, φ - 1 < FY.φ i := by
       intro i; calc φ - 1 < σ.slicing.phiMinus C Y hYZ := hYσM
-        _ = FY.φ ⟨FY.n - 1, by grind⟩ := hFYn.symm
-        _ ≤ FY.φ i := FY.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+        _ = FY.φ ⟨FY.n - 1, by lia⟩ := hFYn.symm
+        _ ≤ FY.φ i := FY.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
     -- If all phases = φ, done. If some < φ, contradiction
     by_cases hall_eq_Y : ∀ i : Fin FY.n, FY.φ i = φ
     · exact σ.slicing.semistable_of_HN_all_eq C FY hall_eq_Y
@@ -572,9 +569,9 @@ private theorem bridgeland_6_4_one_dir
     obtain ⟨FY', hnY', hfirst', hlast'⟩ := HNFiltration.exists_both_nonzero C σ.slicing hYZ
     have hm_eq := σ.slicing.phiMinus_eq C Y hYZ FY' hnY' hlast'
     -- FY' has the same phiMinus as FY
-    have hFY'_last_lt : FY'.φ ⟨FY'.n - 1, by grind⟩ ≤ φ := by
+    have hFY'_last_lt : FY'.φ ⟨FY'.n - 1, by lia⟩ ≤ φ := by
       have : σ.slicing.phiMinus C Y hYZ ≤ φ := by
-        rw [← hFYn]; exact hFY_le ⟨FY.n - 1, by grind⟩
+        rw [← hFYn]; exact hFY_le ⟨FY.n - 1, by lia⟩
       linarith [hm_eq]
     exfalso
     exact σ.false_of_hn_phases_le_with_lt C τ hZ hYZ hτY FY'
@@ -584,13 +581,13 @@ private theorem bridgeland_6_4_one_dir
           (σ.slicing.phiPlus_eq C Y hYZ FY' hnY' hfirst').symm
         _ ≤ φ := phiPlus_le_of_leProp C σ.slicing hYZ hYle)
       (fun i ↦ by calc φ - 1 < σ.slicing.phiMinus C Y hYZ := hYσM
-        _ = FY'.φ ⟨FY'.n - 1, by grind⟩ := hm_eq
-        _ ≤ FY'.φ i := FY'.hφ.antitone (Fin.mk_le_mk.mpr (by grind)))
-      ⟨⟨FY'.n - 1, by grind⟩, hlast', by
-        calc FY'.φ ⟨FY'.n - 1, by grind⟩
+        _ = FY'.φ ⟨FY'.n - 1, by lia⟩ := hm_eq
+        _ ≤ FY'.φ i := FY'.hφ.antitone (Fin.mk_le_mk.mpr (by lia)))
+      ⟨⟨FY'.n - 1, by lia⟩, hlast', by
+        calc FY'.φ ⟨FY'.n - 1, by lia⟩
             = σ.slicing.phiMinus C Y hYZ := hm_eq.symm
-          _ = FY.φ ⟨FY.n - 1, by grind⟩ := hFYn.symm
-          _ ≤ FY.φ j := FY.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+          _ = FY.φ ⟨FY.n - 1, by lia⟩ := hFYn.symm
+          _ ≤ FY.φ j := FY.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
           _ < φ := hj_lt⟩
   -- Proof that X is zero: cross-slicing argument
   by_contra hXne
@@ -626,7 +623,7 @@ private theorem bridgeland_6_4_one_dir
         have hU_σ_bds :=
           intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing
             hGXfirst (GX.semistable ⟨0, hnGX⟩) hd
-        have hU_σ_M : ψ - 1 < FU.φ ⟨FU.n - 1, by grind⟩ := by
+        have hU_σ_M : ψ - 1 < FU.φ ⟨FU.n - 1, by lia⟩ := by
           rw [← σ.slicing.phiMinus_eq C U hGXfirst FU hnFU hFUlast]
           exact (Set.mem_Ioo.mp hU_σ_bds.2).1
         -- σ-phases of Y⟦-1⟧: max ≤ φ - 1
@@ -643,8 +640,8 @@ private theorem bridgeland_6_4_one_dir
                 FYs.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
             _ ≤ φ - 1 := hYs_P
             _ < ψ - 1 := by linarith
-            _ < FU.φ ⟨FU.n - 1, by grind⟩ := hU_σ_M
-            _ ≤ FU.φ i := FU.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+            _ < FU.φ ⟨FU.n - 1, by lia⟩ := hU_σ_M
+            _ ≤ FU.φ i := FU.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
         exact σ.slicing.hom_eq_zero_of_phase_gap C FU FYs hgap β
     exact hGXfirst (GX.isZero_factor_zero_of_hom_eq_zero C τ.slicing hnGX hU_maps_zero)
   -- τ.phiMinus(X) > φ - 1 by metric bound
@@ -655,9 +652,9 @@ private theorem bridgeland_6_4_one_dir
   obtain ⟨FX, hnFX, hFXfirst, hFXlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hXne
   exact σ.false_of_gt_and_le_phases C τ hZ hXne FX
     (fun i ↦ by calc φ < σ.slicing.phiMinus C X hXne := hXσM
-      _ = FX.φ ⟨FX.n - 1, by grind⟩ :=
+      _ = FX.φ ⟨FX.n - 1, by lia⟩ :=
           σ.slicing.phiMinus_eq C X hXne FX hnFX hFXlast
-      _ ≤ FX.φ i := FX.hφ.antitone (Fin.mk_le_mk.mpr (by grind)))
+      _ ≤ FX.φ i := FX.hφ.antitone (Fin.mk_le_mk.mpr (by lia)))
     (fun i ↦ by calc FX.φ i ≤ FX.φ ⟨0, hnFX⟩ :=
           FX.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
       _ = σ.slicing.phiPlus C X hXne :=
@@ -670,9 +667,9 @@ private theorem bridgeland_6_4_one_dir
           (τ.slicing.phiPlus_eq C X hXne GX hnGX hGXfirst).symm
       _ ≤ φ := hτP_le)
     (fun i ↦ by calc φ - 1 < τ.slicing.phiMinus C X hXne := hτM_gt
-      _ = GX.φ ⟨GX.n - 1, by grind⟩ :=
+      _ = GX.φ ⟨GX.n - 1, by lia⟩ :=
           τ.slicing.phiMinus_eq C X hXne GX hnGX hGXlast
-      _ ≤ GX.φ i := GX.hφ.antitone (Fin.mk_le_mk.mpr (by grind)))
+      _ ≤ GX.φ i := GX.hφ.antitone (Fin.mk_le_mk.mpr (by lia)))
 
 section
 

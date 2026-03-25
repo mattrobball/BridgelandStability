@@ -466,9 +466,9 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
         wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < U :=
     hWindow (cokernel B.arrow).property hcokB_obj_ne
   have hUpper : U < ψY + 1 := by
-    grind
+    linarith
   have hLower : ψY - 1 < L := by
-    grind
+    linarith
   have hB_range :
       wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
@@ -488,7 +488,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
   have hcokB_phase_lt :
       wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < ψY :=
     wPhaseOf_seesaw_dual haddY.symm rfl hB_phase_gt hB_Wne hB_range hcokB_range
-  grind
+  linarith
 
 theorem semistable_of_lower_inclusion
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -504,19 +504,19 @@ theorem semistable_of_lower_inclusion
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
     (σ.skewedStabilityFunction_of_near C W hW ha₂).Semistable C E ψ := by
   have hEI₂ : σ.slicing.intervalProp C a₂ b E :=
-    σ.slicing.intervalProp_mono C ha (show b ≤ b by grind) hSS.1
+    σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hSS.1
   have henv_lo₂ : a₂ + ε₀ ≤ ψ := by
-    grind
+    linarith
   have hthin₂' : b - a₂ < 1 := by
-    grind
+    linarith
   refine semistable_of_target_envelope_triangleTest
     (C := C) (σ := σ) (W := W) (hW := hW) ha₁ hSS ha₂ hEI₂ hε₀ henv_lo₂ henv_hi
     hthin₂ ?_
   intro K Q f₁ f₂ f₃ hT hKI hQI hKne
   letI : Fact (a₂ < b) := ⟨ha₂⟩
-  letI : Fact (b - a₂ ≤ 1) := ⟨by grind⟩
+  letI : Fact (b - a₂ ≤ 1) := ⟨by linarith⟩
   letI : Fact (a₁ < b) := ⟨ha₁⟩
-  letI : Fact (b - a₁ ≤ 1) := ⟨by grind⟩
+  letI : Fact (b - a₁ ≤ 1) := ⟨by linarith⟩
   let KI₂ : σ.slicing.IntervalCat C a₂ b := ⟨K, hKI⟩
   let EI₂ : σ.slicing.IntervalCat C a₂ b := ⟨E, hEI₂⟩
   let QI₂ : σ.slicing.IntervalCat C a₂ b := ⟨Q, hQI⟩
@@ -534,7 +534,7 @@ theorem semistable_of_lower_inclusion
   obtain ⟨X, Y, fX, gY, δY, hTK, hX₁, hY_le⟩ :=
     exists_lower_boundary_triangle (C := C) (s := σ.slicing) ha₁ hKI
   have hX₂ : σ.slicing.intervalProp C a₂ b X :=
-    σ.slicing.intervalProp_mono C ha (show b ≤ b by grind) hX₁
+    σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hX₁
   have hY₂ : σ.slicing.intervalProp C a₂ b Y :=
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
       ha₁ ha hKI hX₁ hY_le hTK
@@ -558,10 +558,10 @@ theorem semistable_of_lower_inclusion
       σ.slicing.intervalProp_of_triangle C hX₁ (Or.inl hYZ) hTK
     have hK_ge₁ : σ.slicing.geProp C (b - 1) K :=
       (σ.slicing.intervalProp_implies_rightWindow
-        (C := C) (a := a₁) (b := b) (by grind) hK₁).1
+        (C := C) (a := a₁) (b := b) (by linarith) hK₁).1
     have hQ_lt : σ.slicing.ltProp C b Q :=
       (σ.slicing.intervalProp_implies_rightWindow
-        (C := C) (a := a₂) (b := b) (by grind) hQI).2
+        (C := C) (a := a₂) (b := b) (by linarith) hQI).2
     have hQ₁ : σ.slicing.intervalProp C a₁ b Q :=
       σ.slicing.third_intervalProp_of_triangle C ha₁ hSS.1 hK_ge₁ hQ_lt hT
     have hK_phase₁ :
@@ -675,17 +675,17 @@ theorem semistable_of_interval_inclusion
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
     (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
   have hthin_mid : b₂ - a₁ + 2 * ε₀ < 1 := by
-    grind
+    linarith
   have hab_mid : a₁ < b₂ := by
-    grind
+    linarith
   have hmid :
       (σ.skewedStabilityFunction_of_near C W hW hab_mid).Semistable C E ψ :=
     semistable_of_upper_inclusion
       (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hab_mid hb hSS
       hε₀ hε₀2 henv_lo henv_hi hthin_mid hsin
   exact semistable_of_lower_inclusion
-    (C := C) (σ := σ) (W := W) (hW := hW) (ha₁ := by grind) hab₂ ha hmid
-    hε₀ hε₀2 (by grind) (by grind) hthin₂ hsin
+    (C := C) (σ := σ) (W := W) (hW := hW) (ha₁ := by linarith) hab₂ ha hmid
+    hε₀ hε₀2 (by linarith) (by linarith) hthin₂ hsin
 
 theorem semistable_of_target_subinterval
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -707,15 +707,15 @@ theorem semistable_of_target_subinterval
     hthin₂ ?_
   intro K Q f₁ f₂ f₃ hT hKI hQI hKne
   have ha₂b₁ : a₂ < b₁ := by
-    grind
+    linarith
   have hthin_mid : b₁ - a₂ + 2 * ε₀ < 1 := by
-    grind
+    linarith
   have hKI₁ : σ.slicing.intervalProp C a₁ b₁ K :=
     σ.slicing.intervalProp_mono C ha hb hKI
   have hQI₁ : σ.slicing.intervalProp C a₁ b₁ Q :=
     σ.slicing.intervalProp_mono C ha hb hQI
   have hKI_mid : σ.slicing.intervalProp C a₂ b₁ K :=
-    σ.slicing.intervalProp_mono C (show a₂ ≤ a₂ by grind) hb hKI
+    σ.slicing.intervalProp_mono C (show a₂ ≤ a₂ by linarith) hb hKI
   have hK_phase₁ :
       wPhaseOf (W (K₀.of C K)) ((a₁ + b₁) / 2) ≤ ψ :=
     hSS.2.2.2.2 hT hKI₁ hQI₁ hKne
@@ -767,20 +767,20 @@ theorem semistable_of_target_envelope
     exact min_le_right _ _
   have hab : a < b := by
     have hlow₁ : a₁ ≤ ψ - ε₀ := by
-      grind
+      linarith
     have hlow₂ : a₂ ≤ ψ - ε₀ := by
-      grind
+      linarith
     have hlow : a ≤ ψ - ε₀ := by
       dsimp [a]
       exact max_le_iff.mpr ⟨hlow₁, hlow₂⟩
     have hhigh₁ : ψ + ε₀ ≤ b₁ := by
-      grind
+      linarith
     have hhigh₂ : ψ + ε₀ ≤ b₂ := by
-      grind
+      linarith
     have hhigh : ψ + ε₀ ≤ b := by
       dsimp [b]
       exact le_min_iff.mpr ⟨hhigh₁, hhigh₂⟩
-    grind
+    linarith
   have hI : σ.slicing.intervalProp C a b E := by
     by_cases hEZ : IsZero E
     · exact Or.inl hEZ
@@ -796,18 +796,18 @@ theorem semistable_of_target_envelope
   have henv_lo : a + ε₀ ≤ ψ := by
     have hlow : a ≤ ψ - ε₀ := by
       dsimp [a]
-      exact max_le_iff.mpr ⟨by grind, by grind⟩
-    grind
+      exact max_le_iff.mpr ⟨by linarith, by linarith⟩
+    linarith
   have henv_hi : ψ ≤ b - ε₀ := by
     have hhigh : ψ + ε₀ ≤ b := by
       dsimp [b]
-      exact le_min_iff.mpr ⟨by grind, by grind⟩
-    grind
+      exact le_min_iff.mpr ⟨by linarith, by linarith⟩
+    linarith
   have hthin : b - a + 2 * ε₀ < 1 := by
     have hthin₁' : b - a + 2 * ε₀ ≤ b₁ - a₁ + 2 * ε₀ := by
-      grind
+      linarith
     have hthin₂' : b - a + 2 * ε₀ ≤ b₂ - a₂ + 2 * ε₀ := by
-      grind
+      linarith
     exact lt_of_le_of_lt hthin₁' hthin₁
   have hmid :
       (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ :=
@@ -880,13 +880,13 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
     have hK_range :
         wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α ∈ Set.Ioc (ψ - 1) ψ := by
       constructor
-      · grind
+      · linarith
       · exact hK_le
     have hY_range :
         wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α ∈ Set.Ioo (ψ - 1) (ψ + 1) := by
       constructor
-      · grind
-      · grind
+      · linarith
+      · linarith
     have hY_Wne : ssf.W (K₀.of C Y.obj) ≠ 0 := hW_interval Y.property hY
     have hadd :
         ssf.W (K₀.of C X.obj) =
@@ -954,11 +954,11 @@ theorem SkewedStabilityFunction.phase_cokernel_lt_of_phase_gt_strictSubobject
   have hA_range :
       wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
-    constructor <;> dsimp [ψY] <;> grind [hA_window.1, hA_window.2, hY_window.1, hY_window.2]
+    constructor <;> dsimp [ψY] <;> linarith [hA_window.1, hA_window.2, hY_window.1, hY_window.2]
   have hcokA_range :
       wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
-    constructor <;> dsimp [ψY] <;> grind [hcokA_window.1, hcokA_window.2, hY_window.1, hY_window.2]
+    constructor <;> dsimp [ψY] <;> linarith [hcokA_window.1, hcokA_window.2, hY_window.1, hY_window.2]
   have haddY :
       ssf.W (K₀.of C Y.obj) =
         ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj) +

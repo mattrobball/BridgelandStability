@@ -72,7 +72,7 @@ def StabilityCondition.skewedStabilityFunction_of_near (σ : StabilityCondition 
     SkewedStabilityFunction C σ.slicing a b where
   W := W
   α := (a + b) / 2
-  hα_mem := ⟨by linarith, by grind⟩
+  hα_mem := ⟨by linarith, by linarith⟩
   nonzero := fun E φ _ _ hP hE ↦
     σ.W_ne_zero_of_seminorm_lt_one C W hW hP hE
 
@@ -93,9 +93,9 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
     constructor
     · calc a < σ.slicing.phiMinus C E hE :=
             σ.slicing.phiMinus_gt_of_intervalProp C hE hI
-        _ = F.φ ⟨F.n - 1, by grind⟩ :=
+        _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C E hE F hn hlast
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
     · calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
         _ = σ.slicing.phiPlus C E hE :=
@@ -120,7 +120,7 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
         Complex.norm_exp_ofReal_mul_I, mul_one]
   -- Derive a < b from existence of phases
   have hab_pos : 0 < b - a := by
-    grind [(hphases ⟨0, hn⟩).1, (hphases ⟨0, hn⟩).2]
+    linarith [(hphases ⟨0, hn⟩).1, (hphases ⟨0, hn⟩).2]
   -- Sector estimate setup
   have hw : Real.pi * (b - a) < Real.pi := by
     nlinarith [Real.pi_pos]
@@ -181,8 +181,8 @@ theorem StabilityCondition.W_ne_zero_of_intervalProp (σ : StabilityCondition C)
     rcases hI with hZ | ⟨F, hF⟩
     · exact absurd hZ hE
     · have hn : 0 < F.n := by
-        by_contra h; exact hE (F.toPostnikovTower.zero_isZero (by grind))
-      grind [(hF ⟨0, hn⟩).1, (hF ⟨0, hn⟩).2]
+        by_contra h; exact hE (F.toPostnikovTower.zero_isZero (by lia))
+      linarith [(hF ⟨0, hn⟩).1, (hF ⟨0, hn⟩).2]
   have hcos_pos : 0 < Real.cos (Real.pi * (b - a) / 2) :=
     Real.cos_pos_of_mem_Ioo
       ⟨by nlinarith [Real.pi_pos], by nlinarith [Real.pi_pos]⟩
@@ -240,12 +240,12 @@ theorem wPhaseOf_mem_Ioc (w : ℂ) (α : ℝ) :
   refine ⟨?_, ?_⟩
   · -- α - 1 < α + arg(z)/π
     suffices -1 < Complex.arg z / Real.pi by
-      change α - 1 < α + Complex.arg z / Real.pi; grind
+      change α - 1 < α + Complex.arg z / Real.pi; linarith
     rw [lt_div_iff₀ hπ]
-    grind [Complex.neg_pi_lt_arg z]
+    linarith [Complex.neg_pi_lt_arg z]
   · -- α + arg(z)/π ≤ α + 1
     suffices Complex.arg z / Real.pi ≤ 1 by
-      change α + Complex.arg z / Real.pi ≤ α + 1; grind
+      change α + Complex.arg z / Real.pi ≤ α + 1; linarith
     rw [div_le_iff₀ hπ, one_mul]
     exact Complex.arg_le_pi z
 
@@ -324,7 +324,7 @@ theorem wPhaseOf_neg {w : ℂ} (hw : w ≠ 0) (α : ℝ) :
   -- φ + 1 ∈ ((α+1) - 1, (α+1) + 1] = (α, α + 2]
   have hmem : φ + 1 ∈ Set.Ioc ((α + 1) - 1) ((α + 1) + 1) := by
     have := wPhaseOf_mem_Ioc w α
-    constructor <;> grind [this.1, this.2]
+    constructor <;> linarith [this.1, this.2]
   -- wPhaseOf(-w, α+1) = wPhaseOf(‖w‖ · exp(iπ(φ+1)), α+1) = φ+1
   -- First establish: -w = ‖w‖ · exp(iπ(φ+1))
   suffices hneg : -w = ↑‖w‖ * Complex.exp (↑(Real.pi * (φ + 1)) * Complex.I) by
@@ -351,7 +351,7 @@ theorem wPhaseOf_add_two {w : ℂ} (hw : w ≠ 0) (α : ℝ) :
     wPhaseOf w (α + 2) = wPhaseOf w α + 2 := by
   have h1 := wPhaseOf_neg hw α
   have h2 := wPhaseOf_neg (neg_ne_zero.mpr hw) (α + 1)
-  rw [neg_neg, show (α + 1 : ℝ) + 1 = α + 2 from by grind] at h2
+  rw [neg_neg, show (α + 1 : ℝ) + 1 = α + 2 from by ring] at h2
   linarith
 
 /-! ### W-semistability in interval categories -/

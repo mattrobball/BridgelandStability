@@ -167,7 +167,7 @@ theorem HeartStabilityData.heartEulerClassObj_of_amp_negOne_zero
     h.heartEulerClassObj (C := C) X =
       -HeartK0.of (C := C) h ⟨K, hK⟩ + HeartK0.of (C := C) h ⟨Q, hQ⟩ := by
   rw [h.heartEulerClassObj_eq_heartCohClassSum (C := C) (X := X) (b := -1) (a := 0)
-    (by grind) inferInstance inferInstance]
+    (by lia) inferInstance inferInstance]
   exact h.heartCohClassSum_of_amp_negOne_zero (C := C)
     (X := X) (K := K) (Q := Q) hK hQ hT
 
@@ -182,7 +182,7 @@ theorem HeartStabilityData.eulerZObj_of_amp_negOne_zero
         HeartStabilityData.heartZObj (C := C) h ⟨Q, hQ⟩ := by
   rw [HeartStabilityData.eulerZObj,
     h.heartEulerClassObj_eq_heartCohClassSum (C := C) (X := X) (b := -1) (a := 0)
-      (by grind) inferInstance inferInstance]
+      (by lia) inferInstance inferInstance]
   exact h.ZOnHeartK0_heartCohClassSum_of_amp_negOne_zero (C := C)
     (X := X) (K := K) (Q := Q) hK hQ hT
 
@@ -244,10 +244,10 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
   have hm : b + (m : ℤ) = a := by
     dsimp [m]
     rw [Int.toNat_of_nonneg (sub_nonneg.mpr hab)]
-    grind
+    lia
   have hm_shift : Int.toNat ((a + 1) - (b + 1)) = m := by
     dsimp [m]
-    grind
+    lia
   have hstep (n : ℤ) :
       h.heartCohClass (C := C) n T.obj₂ -
           h.heartCohClass (C := C) n T.obj₃ -
@@ -276,7 +276,7 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
     have hzero :
         IsZero (((h.H0Functor (C := C)).shift b).obj T.obj₁) :=
       h.isZero_H0Functor_shift_obj_of_lt_bound (C := C) (X := T.obj₁)
-        (m := b) (n := b + 1) (by grind) h₁GE
+        (m := b) (n := b + 1) (by lia) h₁GE
     have hmor_zero : (((h.H0Functor (C := C)).shift b).map T.mor₁) = 0 :=
       zero_of_source_iso_zero _ hzero.isoZero
     have hclass :
@@ -288,7 +288,7 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
     have hzero :
         IsZero (((h.H0Functor (C := C)).shift (a + 1)).obj T.obj₂) :=
       h.isZero_H0Functor_shift_obj_of_gt_bound (C := C) (X := T.obj₂)
-        (m := a + 1) (n := a) (by grind) h₂LE
+        (m := a + 1) (n := a) (by lia) h₂LE
     have hmor_zero : (((h.H0Functor (C := C)).shift (a + 1)).map T.mor₁) = 0 :=
       zero_of_target_iso_zero _ hzero.isoZero
     have hclass :
@@ -297,9 +297,9 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
       HeartK0.of_image_eq_zero (C := C) h hmor_zero
     simp [imgTerm, hclass]
   have hm1 : b + ((m + 1 : ℕ) : ℤ) = a + 1 := by
-    grind
+    lia
   have hm1' : b + ((m : ℤ) + 1) = a + 1 := by
-    grind
+    lia
   have hsum_zero :
       h.heartCohClassSum (C := C) b m T.obj₂ -
           h.heartCohClassSum (C := C) b m T.obj₃ -
@@ -337,7 +337,7 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
           · symm
             simpa [hm_shift] using
               h.heartEulerClassObj_eq_heartCohClassSum (C := C)
-                (X := T.obj₁) (b := b + 1) (a := a + 1) (by grind) h₁LE h₁GE
+                (X := T.obj₁) (b := b + 1) (a := a + 1) (by lia) h₁LE h₁GE
           · symm
             exact h.heartEulerClassObj_eq_heartCohClassSum (C := C)
               (X := T.obj₃) (b := b) (a := a) hab h₃LE h₃GE
@@ -374,11 +374,11 @@ instance HeartStabilityData.heartEulerClassObj_isTriangleAdditive
         le_trans (h.lowerBound_le_upperBound (C := C) (E := T.obj₂)) ha₂
     have h₁LE : h.t.IsLE T.obj₁ (a + 1) := by
       letI : h.t.IsLE T.obj₁ (h.upperBound (C := C) T.obj₁) := h.isLE_upperBound (C := C) T.obj₁
-      have : h.upperBound (C := C) T.obj₁ ≤ a + 1 := by grind
+      have : h.upperBound (C := C) T.obj₁ ≤ a + 1 := by lia
       exact h.t.isLE_of_le T.obj₁ (h.upperBound (C := C) T.obj₁) (a + 1) this
     have h₁GE : h.t.IsGE T.obj₁ (b + 1) := by
       letI : h.t.IsGE T.obj₁ (h.lowerBound (C := C) T.obj₁) := h.isGE_lowerBound (C := C) T.obj₁
-      have : b + 1 ≤ h.lowerBound (C := C) T.obj₁ := by grind
+      have : b + 1 ≤ h.lowerBound (C := C) T.obj₁ := by lia
       exact h.t.isGE_of_ge T.obj₁ (b + 1) (h.lowerBound (C := C) T.obj₁) this
     have h₂LE : h.t.IsLE T.obj₂ a := by
       letI : h.t.IsLE T.obj₂ (h.upperBound (C := C) T.obj₂) := h.isLE_upperBound (C := C) T.obj₂

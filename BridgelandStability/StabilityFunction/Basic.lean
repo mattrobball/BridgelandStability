@@ -324,7 +324,7 @@ theorem exists_semistable_subobject_ge_phase_of_artinian {E : A}
                 _ = Z.phase (B : A) := by
                     simpa [D'] using
                       congrArg (fun X : Subobject E => Z.phase (X : A)) hEq
-            grind
+            linarith
           rcases ih D' hD'_lt hD'_ne with ⟨C, hCB, hC_ne, hC_ss, hBC⟩
           refine ⟨C, hCB.trans hD'_le, hC_ne, hC_ss, ?_⟩
           have hBD : Z.phase (B : A) < Z.phase (D' : A) := by
@@ -353,8 +353,6 @@ lemma exists_maxPhase_subobject (E : A) (hE : ¬IsZero E)
     [hFin : Finite (Subobject E)] :
     ∃ M : Subobject E, M ≠ ⊥ ∧
       ∀ B : Subobject E, B ≠ ⊥ → Z.phase (B : A) ≤ Z.phase (M : A) := by
-  have hne : ∃ B : Subobject E, B ≠ ⊥ :=
-    ⟨⊤, subobject_top_ne_bot_of_not_isZero hE⟩
   haveI : Nonempty {B : Subobject E // B ≠ ⊥} :=
     ⟨⟨⊤, subobject_top_ne_bot_of_not_isZero hE⟩⟩
   haveI : Finite {B : Subobject E // B ≠ ⊥} := Finite.of_injective

@@ -99,11 +99,11 @@ private theorem IsMDQ.isSemistable_of_quotient_phase_eq
     have hphase_eq : Z.phase (A' : A) = Z.phase Q := by
       rw [hA'_eq]
       exact Z.phase_eq_of_iso (asIso (⊤ : Subobject Q).arrow)
-    grind
+    linarith
   letI : IsArtinianObject (cokernel A'.arrow) := isArtinianObject_of_epi (cokernel.π A'.arrow)
   letI : IsNoetherianObject (cokernel A'.arrow) := isNoetherianObject_of_epi (cokernel.π A'.arrow)
   have hQ'_nz : ¬IsZero (cokernel A'.arrow) := cokernel_nonzero_of_ne_top hA'_top
-  have hcomp : Epi (p ≫ cokernel.π A'.arrow) := by infer_instance
+  haveI : Epi (p ≫ cokernel.π A'.arrow) := by infer_instance
   have hmin :
       Z.phase B ≤ Z.phase (cokernel A'.arrow) :=
     IsMDQ.phase_le_of_quotient Z hq (p ≫ cokernel.π A'.arrow) hQ'_nz
@@ -201,7 +201,7 @@ private theorem IsMDQ.comp_of_destabilizing_semistable_subobject
       have hA'_cok_le :
           Z.phase (cokernel A'.arrow) ≤ Z.phase E :=
         phase_cokernel_le_of_destabilizing_semistable_subobject Z hA'_ss hA'_phase hA'_top
-      grind
+      linarith
     by_cases hle : Z.phase B ≤ Z.phase B'
     · refine ⟨hle, ?_⟩
       intro hEq
@@ -262,7 +262,7 @@ theorem exists_mdq_of_artinian_noetherian
           have hphase_eq : Z.phase (A' : A) = Z.phase QS := by
             rw [hA'_eq]
             exact Z.phase_eq_of_iso (asIso (⊤ : Subobject QS).arrow)
-          grind
+          linarith
         let T : Subobject E := (Subobject.pullback (cokernel.π S.arrow)).obj A'
         have hST_le : S ≤ T := le_pullback_cokernel S A'
         have hST_lt : S < T := by
@@ -723,7 +723,7 @@ the proof body as a focused TODO. -/
 theorem exists_hn_with_last_phase_of_semistable (Z : StabilityFunction A) {E : A}
     (hss : Z.IsSemistable E) :
     ∃ F : AbelianHNFiltration Z E,
-      F.φ ⟨F.n - 1, by have := F.hn; grind⟩ = Z.phase E := by
+      F.φ ⟨F.n - 1, by have := F.hn; lia⟩ = Z.phase E := by
   refine ⟨{
     n := 1
     hn := Nat.one_pos
@@ -731,8 +731,8 @@ theorem exists_hn_with_last_phase_of_semistable (Z : StabilityFunction A) {E : A
     chain_strictMono := by
       intro ⟨i, hi⟩ ⟨j, hj⟩ h
       simp only [Fin.lt_def] at h
-      have hi0 : i = 0 := by grind
-      have hj1 : j = 1 := by grind
+      have hi0 : i = 0 := by lia
+      have hj1 : j = 1 := by lia
       subst hi0; subst hj1
       simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, ↓reduceIte,
         Fin.mk_one, one_ne_zero, gt_iff_lt]
@@ -741,17 +741,17 @@ theorem exists_hn_with_last_phase_of_semistable (Z : StabilityFunction A) {E : A
     chain_bot := by simp
     chain_top := by simp
     φ := fun _ ↦ Z.phase E
-    φ_anti := fun a b h ↦ by exfalso; exact absurd h (by grind)
+    φ_anti := fun a b h ↦ by exfalso; exact absurd h (by lia)
     factor_phase := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by grind
+      have hj0 : j = 0 := by lia
       subst hj0
       change Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ _)) = Z.phase E
       rw [Z.phase_eq_of_iso (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le)]
       exact Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow)
     factor_semistable := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by grind
+      have hj0 : j = 0 := by lia
       subst hj0
       change Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ _))
       exact Z.isSemistable_of_iso
@@ -802,7 +802,7 @@ private theorem exists_hn_with_mdq_of_artinian_noetherian_subobject
     ∀ (S : Subobject E), ¬IsZero (S : A) →
       ∃ (B : A) (q : (S : A) ⟶ B) (_hq : IsMDQ Z q)
         (F : AbelianHNFiltration Z (S : A)),
-        F.φ ⟨F.n - 1, by have := F.hn; grind⟩ = Z.phase B := by
+        F.φ ⟨F.n - 1, by have := F.hn; lia⟩ = Z.phase B := by
   intro S
   induction S using WellFoundedLT.induction with
   | ind S ih =>
@@ -836,7 +836,7 @@ private theorem exists_hn_with_mdq_of_artinian_noetherian_subobject
         obtain ⟨B', qT, hqT, FT, hFT⟩ := ih T hT_lt hT_nz
         have hqK : IsMDQ Z ((Subobject.mapSubIso S K).symm.hom ≫ qT) :=
           IsMDQ.precomposeIso Z hqT (Subobject.mapSubIso S K).symm
-        have hlast : Z.phase B < FT.φ ⟨FT.n - 1, by have := FT.hn; grind⟩ := by
+        have hlast : Z.phase B < FT.φ ⟨FT.n - 1, by have := FT.hn; lia⟩ := by
           rw [hFT]
           exact IsMDQ.lt_phase_of_kernel_mdq Z hq hqK
         have eB : cokernel (Subobject.ofLE T S hT_le) ≅ B := by

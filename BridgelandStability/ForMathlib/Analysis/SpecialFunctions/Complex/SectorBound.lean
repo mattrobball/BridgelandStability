@@ -98,7 +98,7 @@ theorem re_mul_exp_neg_ge_cos_mul_norm {z : ℂ} {α w : ℝ}
   have hd_hi : Complex.arg z - (α + w / 2) < w / 2 := by linarith
   have hcos : Real.cos (w / 2) ≤ Real.cos (Complex.arg z - (α + w / 2)) := by
     rw [← Real.cos_abs (Complex.arg z - (α + w / 2))]
-    apply Real.cos_le_cos_of_nonneg_of_le_pi (abs_nonneg _) (by grind)
+    apply Real.cos_le_cos_of_nonneg_of_le_pi (abs_nonneg _) (by linarith)
     exact le_of_lt (abs_lt.mpr ⟨by linarith, hd_hi⟩)
   calc Real.cos (w / 2) * ‖z‖ ≤ Real.cos (Complex.arg z - (α + w / 2)) * ‖z‖ :=
         mul_le_mul_of_nonneg_right hcos (norm_nonneg _)
@@ -157,7 +157,7 @@ theorem norm_sum_exp_ge_cos_mul_sum {ι : Type*} {s : Finset ι}
         ≤ Real.cos (θ i - β) * m i := by
           apply mul_le_mul_of_nonneg_right _ (hm i hi)
           rw [← Real.cos_abs (θ i - β)]
-          exact Real.cos_le_cos_of_nonneg_of_le_pi (abs_nonneg _) (by grind) hd
+          exact Real.cos_le_cos_of_nonneg_of_le_pi (abs_nonneg _) (by linarith) hd
       _ = m i * Real.cos (θ i - β) := mul_comm _ _
   -- Step 2: sum, then bound re by norm
   calc Real.cos (w / 2) * ∑ i ∈ s, m i

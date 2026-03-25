@@ -142,9 +142,9 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
         wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < U :=
     hWindow (cokernel B.arrow).property hcokB_obj_ne
   have hUpper : U < ψY + 1 := by
-    grind
+    linarith
   have hLower : ψY - 1 < L := by
-    grind
+    linarith
   have hB_range :
       wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
@@ -173,7 +173,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
   have hpb_phase_ge :
       ψY ≤ wPhaseOf (ssf.W (K₀.of C (cokernel pbB.arrow).obj)) ssf.α :=
     hM_min pbB hpb_ne_top hpb_strict
-  grind
+  linarith
 
 namespace SkewedStabilityFunction
 
@@ -245,9 +245,9 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
         wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < U :=
     hWindow (cokernel B.arrow).property hcokB_obj_ne
   have hUpper : U < ψY + 1 := by
-    grind
+    linarith
   have hLower : ψY - 1 < L := by
-    grind
+    linarith
   have hB_range :
       wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
@@ -276,7 +276,7 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
   have hpb_phase_ge :
       ψY ≤ wPhaseOf (ssf.W (K₀.of C (cokernel pbB.arrow).obj)) ssf.α :=
     hM_min pbB hpb_ne_top hpb_strict
-  grind
+  linarith
 
 end SkewedStabilityFunction
 
@@ -373,9 +373,9 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
         wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α < U :=
     hWindow (cokernel A.arrow).property hcokA_obj_ne
   have hUpper : U < ψLift + 1 := by
-    grind
+    linarith
   have hLower : ψLift - 1 < L := by
-    grind
+    linarith
   have hM_range : ψM ∈ Set.Ioo (ψLift - 1) (ψLift + 1) := by
     constructor <;> linarith
   have hA_range :
@@ -394,7 +394,7 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
   have hA_phase_gt_lift :
       ψLift < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α :=
     wPhaseOf_seesaw_strict hsum.symm rfl hLift_phase_gt hM_Wne hM_range hA_range
-  grind
+  linarith
 
 theorem thinFiniteLength_cokernel
     (σ : StabilityCondition C) {a b : ℝ}
@@ -483,7 +483,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
       have : 0 < Nat.card (Subobject Y) := by
         rw [Nat.card_eq_fintype_card]
         exact Fintype.card_pos
-      grind
+      lia
   | succ k ih =>
       intro Y hY hcard t hquot
       let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
@@ -520,7 +520,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
         have hψY_hi : ψY < U := (hWindow Y.property hY_obj_ne).2
         have hj_lt : j.val < 1 := j.is_lt
         have hj0 : j.val = 0 := by
-          grind
+          lia
         have hj : j = ⟨0, by simp [HNFiltration.single]⟩ :=
           Fin.ext hj0
         subst j
@@ -618,12 +618,12 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
           · have hj_lt : j.val < G.n + 1 := by
               simpa [H, HNFiltration.appendStrictFactor, HNFiltration.appendFactor] using j.is_lt
             have hjEq : j.val = G.n := by
-              grind
+              lia
             have hG_last : G.n < H.n := by
               simp [H, HNFiltration.appendStrictFactor, HNFiltration.appendFactor]
             have hjLast : j = ⟨G.n, hG_last⟩ := Fin.ext hjEq
             subst j
-            have hjFalse : ¬G.n < G.n := by grind
+            have hjFalse : ¬G.n < G.n := by lia
             simpa [H, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hjFalse,
               ψQ] using ⟨hψQ_gt, hψQ_hi⟩
 

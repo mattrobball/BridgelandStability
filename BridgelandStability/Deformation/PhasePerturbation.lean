@@ -72,8 +72,8 @@ theorem wPhaseOf_perturbation_generic {m φ α ε : ℝ} {u : ℂ}
   have hz1 : z₁ ≠ 0 := mul_ne_zero (by exact_mod_cast hm.ne') (Complex.exp_ne_zero _)
   have harg1 : Complex.arg z₁ = Real.pi * (φ - α) := by
     rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]
-    exact ⟨by grind [mul_pos hπ (show (0 : ℝ) < 1 + (φ - α) from by grind [hφ.1])],
-           by grind [mul_pos hπ (show (0 : ℝ) < 1 - (φ - α) from by grind [hφ.2])]⟩
+    exact ⟨by linarith [mul_pos hπ (show (0 : ℝ) < 1 + (φ - α) from by linarith [hφ.1])],
+           by linarith [mul_pos hπ (show (0 : ℝ) < 1 - (φ - α) from by linarith [hφ.2])]⟩
   have hsum_mem : Complex.arg z₁ + Complex.arg z₂ ∈ Set.Ioc (-Real.pi) Real.pi := by
     rw [harg1]; obtain ⟨h1, h2⟩ := abs_lt.mp harg_u
     exact ⟨by nlinarith [hφ.1], by nlinarith [hφ.2]⟩
@@ -82,7 +82,7 @@ theorem wPhaseOf_perturbation_generic {m φ α ε : ℝ} {u : ℂ}
     show α + (Real.pi * (φ - α) + Complex.arg z₂) / Real.pi - φ =
       Complex.arg z₂ / Real.pi from by field_simp; ring,
     abs_div, abs_of_pos hπ, div_lt_iff₀ hπ]
-  grind
+  linarith
 
 end PhasePerturbation
 

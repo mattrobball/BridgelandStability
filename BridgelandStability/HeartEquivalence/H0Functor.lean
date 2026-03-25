@@ -56,8 +56,8 @@ noncomputable def HeartStabilityData.heartCohFunctor
     (fun E ↦ by
       rw [h.t.mem_heart_iff]
       constructor
-      · simpa using (h.t.isLE_shift ((h.t.truncGELE n n).obj E) n n 0 (by grind))
-      · simpa using (h.t.isGE_shift ((h.t.truncGELE n n).obj E) n n 0 (by grind)))
+      · simpa using (h.t.isLE_shift ((h.t.truncGELE n n).obj E) n n 0 (by lia))
+      · simpa using (h.t.isGE_shift ((h.t.truncGELE n n).obj E) n n 0 (by lia)))
 
 instance HeartStabilityData.heartCohFunctor_additive
     (h : HeartStabilityData C) (n : ℤ) :

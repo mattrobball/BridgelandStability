@@ -27,8 +27,6 @@ set_option backward.privateInPublic true
 set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
 
-set_option linter.style.longFile 0
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Topology
@@ -118,7 +116,7 @@ theorem StabilityCondition.exists_epsilon0_tenth (σ : StabilityCondition C) :
   obtain ⟨ε₁, hε₁, hε₁8, hWide₁⟩ := σ.exists_epsilon0 C
   refine ⟨ε₁ / 2, by positivity, by linarith, ?_⟩
   exact wideSectorFiniteLength_mono C σ hε₁ hε₁8 hWide₁
-    (by positivity) (by grind) (by grind)
+    (by positivity) (by linarith) (by linarith)
 
 /-- The affine interpolation between the central charges of `σ` and `τ`. -/
 def linearInterpolationZ (σ τ : StabilityCondition C) (t : ℝ) : K₀ C →+ ℂ :=
@@ -204,11 +202,11 @@ theorem stabSeminorm_add_le (σ : StabilityCondition C) (U V : K₀ C →+ ℂ) 
         rw [AddMonoidHom.add_apply, ← add_div]
         exact div_le_div_of_nonneg_right (norm_add_le _ _) (norm_nonneg _)
     _ = ENNReal.ofReal (‖U (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) +
-        ENNReal.ofReal (‖V (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) := by
-        exact ENNReal.ofReal_add (div_nonneg (norm_nonneg _) (norm_nonneg _))
+        ENNReal.ofReal (‖V (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) :=
+        ENNReal.ofReal_add (div_nonneg (norm_nonneg _) (norm_nonneg _))
           (div_nonneg (norm_nonneg _) (norm_nonneg _))
-    _ ≤ stabSeminorm C σ U + stabSeminorm C σ V := by
-        exact add_le_add
+    _ ≤ stabSeminorm C σ U + stabSeminorm C σ V :=
+        add_le_add
           (le_iSup_of_le E (le_iSup_of_le φ (le_iSup_of_le hP (le_iSup_of_le hE le_rfl))))
           (le_iSup_of_le E (le_iSup_of_le φ (le_iSup_of_le hP (le_iSup_of_le hE le_rfl))))
 
@@ -256,8 +254,8 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
   have hZbound : stabSeminorm C τ (τ.Z - σ.Z) ≤
       ENNReal.ofReal (M_Z / (c - M_Z)) :=
     stabSeminorm_le_of_near C σ τ hε hε2 hd hZdiff (τ.Z - σ.Z) hZdiff_ne
-  have hsin_pos : 0 < Real.sin (Real.pi * ε) := by
-    exact Real.sin_pos_of_pos_of_lt_pi
+  have hsin_pos : 0 < Real.sin (Real.pi * ε) :=
+    Real.sin_pos_of_pos_of_lt_pi
       (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
   have hsin_le : Real.sin (Real.pi * ε) ≤ Real.pi * ε :=
     Real.sin_le (by nlinarith [Real.pi_pos])
@@ -274,11 +272,11 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
   have hMZ_bound : M_Z * (1 + c) < c ^ 2 := by
     calc M_Z * (1 + c)
         < Real.sin (Real.pi * ε) * (1 + c) :=
-          mul_lt_mul_of_pos_right hMZ_lt_sin (by grind)
+          mul_lt_mul_of_pos_right hMZ_lt_sin (by linarith)
       _ ≤ (Real.pi * ε) * 2 := by
           have hcos_le : c ≤ 1 := Real.cos_le_one _
           have : 1 + c ≤ 2 := by linarith
-          exact mul_le_mul hsin_le this (by grind) (by nlinarith [Real.pi_pos])
+          exact mul_le_mul hsin_le this (by linarith) (by nlinarith [Real.pi_pos])
       _ = 2 * (Real.pi * ε) := by ring
       _ < 1 - (Real.pi * ε) ^ 2 := by linarith
       _ ≤ c ^ 2 := by
@@ -306,7 +304,7 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
       rw [norm_sub_rev]
     rw [this]
     exact lt_of_le_of_lt hZbound
-      ((ENNReal.ofReal_lt_ofReal_iff (by grind)).mpr hbound_lt_cos)
+      ((ENNReal.ofReal_lt_ofReal_iff (by linarith)).mpr hbound_lt_cos)
   have hZτ_ne : stabSeminorm C τ (σ.Z - τ.Z) ≠ ⊤ :=
     ne_top_of_lt (lt_trans hZτ_bound ENNReal.ofReal_lt_top)
   set N_Z := (stabSeminorm C τ (σ.Z - τ.Z)).toReal with hNZ_def
@@ -320,8 +318,8 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
   refine ⟨ENNReal.ofReal (1 / (c - N_Z)), ENNReal.ofReal_ne_top, ?_⟩
   intro U
   by_cases hU : stabSeminorm C τ U = ⊤
-  · have hK0 : ENNReal.ofReal ((c - N_Z)⁻¹) ≠ 0 := by
-      exact ne_of_gt (by positivity)
+  · have hK0 : ENNReal.ofReal ((c - N_Z)⁻¹) ≠ 0 :=
+      ne_of_gt (by positivity)
     have hK0' : ENNReal.ofReal (1 / (c - N_Z)) ≠ 0 := by
       simpa [one_div] using hK0
     rw [hU, ENNReal.mul_top hK0']
@@ -373,8 +371,8 @@ theorem stabSeminorm_center_dominates_of_basisNhd (σ τ : StabilityCondition C)
   refine ⟨ENNReal.ofReal (1 / (c - M_Z)), ENNReal.ofReal_ne_top, ?_⟩
   intro U
   by_cases hU : stabSeminorm C σ U = ⊤
-  · have hK0 : ENNReal.ofReal ((c - M_Z)⁻¹) ≠ 0 := by
-      exact ne_of_gt (by positivity)
+  · have hK0 : ENNReal.ofReal ((c - M_Z)⁻¹) ≠ 0 :=
+      ne_of_gt (by positivity)
     have hK0' : ENNReal.ofReal (1 / (c - M_Z)) ≠ 0 := by
       simpa [one_div] using hK0
     rw [hU, ENNReal.mul_top hK0']
@@ -456,13 +454,13 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ
     min (1 / 16) (min (gapZ / ((K.toReal + 1) * (2 * Real.pi))) (gapd / 2))
   have hδ_pos : 0 < δ := by
     dsimp [δ]
-    refine lt_min (by grind) ?_
+    refine lt_min (by linarith) ?_
     refine lt_min ?_ ?_
     · exact div_pos hgapZ (by positivity)
     · linarith
   have hδ_lt : δ < 1 / 8 := by
     dsimp [δ]
-    exact lt_of_le_of_lt (min_le_left _ _) (by grind)
+    exact lt_of_le_of_lt (min_le_left _ _) (by linarith)
   have hπδ : 0 < Real.pi * δ := by positivity
   have hsinδ_nn : 0 ≤ Real.sin (Real.pi * δ) :=
     (Real.sin_pos_of_pos_of_lt_pi hπδ (by nlinarith [Real.pi_pos])).le
@@ -531,8 +529,8 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ
         dsimp [δ]
         exact le_trans (min_le_right _ _) (min_le_right _ _)
       linarith
-    have hτ'd_gap : slicingDist C τ.slicing τ'.slicing < ENNReal.ofReal gapd := by
-      exact lt_of_lt_of_le hτ'd <| ENNReal.ofReal_le_ofReal (le_of_lt hδ_lt_gapd)
+    have hτ'd_gap : slicingDist C τ.slicing τ'.slicing < ENNReal.ofReal gapd :=
+      lt_of_lt_of_le hτ'd <| ENNReal.ofReal_le_ofReal (le_of_lt hδ_lt_gapd)
     calc slicingDist C σ.slicing τ'.slicing
         ≤ slicingDist C σ.slicing τ.slicing + slicingDist C τ.slicing τ'.slicing :=
           slicingDist_triangle C σ.slicing τ.slicing τ'.slicing
@@ -572,8 +570,8 @@ theorem StabilityCondition.eq_of_same_Z_of_mem_basisNhd (σ : StabilityCondition
       slicingDist C τ₁.slicing τ₂.slicing
           ≤ slicingDist C τ₁.slicing σ.slicing + slicingDist C σ.slicing τ₂.slicing :=
             slicingDist_triangle C τ₁.slicing σ.slicing τ₂.slicing
-      _ < ENNReal.ofReal ε + ENNReal.ofReal ε := by
-          exact ENNReal.add_lt_add
+      _ < ENNReal.ofReal ε + ENNReal.ofReal ε :=
+          ENNReal.add_lt_add
             (by simpa [slicingDist_symm] using hτ₁.2)
             hτ₂.2
       _ = ENNReal.ofReal (ε + ε) := by
@@ -606,8 +604,8 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
     calc stabSeminorm C σ (W t - σ.Z)
       = ENNReal.ofReal |(t : ℝ)| * stabSeminorm C σ (τ.Z - σ.Z) := by
           simp [W, linearInterpolationZ_sub, stabSeminorm_smul]
-    _ ≤ ENNReal.ofReal 1 * stabSeminorm C σ (τ.Z - σ.Z) := by
-          exact mul_le_mul' hcoef le_rfl
+    _ ≤ ENNReal.ofReal 1 * stabSeminorm C σ (τ.Z - σ.Z) :=
+          mul_le_mul' hcoef le_rfl
     _ = stabSeminorm C σ (τ.Z - σ.Z) := by simp
     _ < ENNReal.ofReal (Real.sin (Real.pi * ε)) := hτZ
   have hsinε_lt_one : Real.sin (Real.pi * ε) < 1 := by
@@ -637,7 +635,7 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       have h0' : slicingDist C (γ 0).slicing σ.slicing < ENNReal.ofReal ε := by
         simpa [slicingDist_symm] using h0
       exact lt_trans h0' <|
-        (ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 (by grind)
+        (ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 (by linarith)
   have hγ1 : γ 1 = τ := by
     apply StabilityCondition.eq_of_same_Z_near C (γ 1) τ
     · simpa [γ, W] using (hγZ 1).trans (linearInterpolationZ_one C σ τ)
@@ -704,14 +702,14 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       exact div_pos hsinδ_pos hden
     let V : Set unitInterval := {s | |(s : ℝ) - t| < η}
     have hV_open : IsOpen V := by
-      have hcont : Continuous fun s : unitInterval => |(s : ℝ) - t| := by
-        exact continuous_abs.comp (continuous_subtype_val.sub continuous_const)
+      have hcont : Continuous fun s : unitInterval => |(s : ℝ) - t| :=
+        continuous_abs.comp (continuous_subtype_val.sub continuous_const)
       simpa [V] using isOpen_lt hcont continuous_const
     refine mem_nhds_iff.mpr ⟨V, ?_, hV_open, ?_⟩
     · intro s hs
       have hsη : |(s : ℝ) - t| < η := hs
-      have hsη' : |(s : ℝ) - t| < Real.sin (Real.pi * δ) / (2 * (L + 1)) := by
-        exact lt_of_lt_of_le hsη <| by
+      have hsη' : |(s : ℝ) - t| < Real.sin (Real.pi * δ) / (2 * (L + 1)) :=
+        lt_of_lt_of_le hsη <| by
           dsimp [η]
           exact min_le_right _ _
       have hWclose :
@@ -747,8 +745,8 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
         have hπδ_lt : Real.pi * δ < 1 := by
           nlinarith [Real.pi_lt_d4, hδ8]
         exact lt_trans (Real.sin_lt (by positivity)) hπδ_lt
-      have hWclose1 : stabSeminorm C ρ₀ (W s - ρ₀.Z) < ENNReal.ofReal 1 := by
-        exact lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
+      have hWclose1 : stabSeminorm C ρ₀ (W s - ρ₀.Z) < ENNReal.ofReal 1 :=
+        lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
       obtain ⟨ρ, hρZ, hρmem⟩ :=
         ρ₀.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W s) hWclose1
           ε₁ hε₁ hε₁10 hWide₁ δ hδ hδ_lt_ε₁ hWclose
@@ -772,8 +770,8 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
             calc slicingDist C (γ s).slicing ρ.slicing
                 ≤ slicingDist C (γ s).slicing ρ₀.slicing + slicingDist C ρ₀.slicing ρ.slicing :=
                   slicingDist_triangle C (γ s).slicing ρ₀.slicing ρ.slicing
-              _ < ENNReal.ofReal (ε + ε) + ENNReal.ofReal δ := by
-                  exact ENNReal.add_lt_add hdist₁ hρmem.2
+              _ < ENNReal.ofReal (ε + ε) + ENNReal.ofReal δ :=
+                  ENNReal.add_lt_add hdist₁ hρmem.2
               _ = ENNReal.ofReal ((ε + ε) + δ) := by
                   rw [← ENNReal.ofReal_add (by positivity) (le_of_lt hδ)]
           exact lt_trans hdist₂ <|
@@ -844,8 +842,8 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
     exact div_pos hsinδ_pos hden
   refine ⟨η, hη, ?_⟩
   intro s hsη
-  have hsη' : |s - t| < Real.sin (Real.pi * δ) / (2 * (L + 1)) := by
-    exact lt_of_lt_of_le hsη <| by
+  have hsη' : |s - t| < Real.sin (Real.pi * δ) / (2 * (L + 1)) :=
+    lt_of_lt_of_le hsη <| by
       dsimp [η]
       exact min_le_right _ _
   have hsinδ_lt_one : Real.sin (Real.pi * δ) < 1 := by
@@ -883,8 +881,8 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
         _ < ENNReal.ofReal (Real.sin (Real.pi * δ)) :=
             (ENNReal.ofReal_lt_ofReal_iff hsinδ_pos).2 hmul
   have hWclose1 :
-      stabSeminorm C ρ₀ (linearInterpolationZ C σ τ s - ρ₀.Z) < ENNReal.ofReal 1 := by
-    exact lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
+      stabSeminorm C ρ₀ (linearInterpolationZ C σ τ s - ρ₀.Z) < ENNReal.ofReal 1 :=
+    lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
   obtain ⟨ρ, hρZ, hρmem⟩ :=
     ρ₀.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C
       (linearInterpolationZ C σ τ s) hWclose1 ε₁ hε₁ hε₁10 hWide₁ δ hδ hδ_lt_ε₁ hWclose

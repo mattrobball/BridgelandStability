@@ -337,7 +337,7 @@ private lemma phase_subobject_cokernel_lt
   by_contra hge
   push_neg at hge
   rw [min_eq_left hge] at hmin
-  grind
+  linarith
 
 /-- Z-additivity for the pullback SES: `Z(pb'(B)) = Z(M') + Z(B)`. -/
 lemma Zobj_pullback_eq_add
@@ -489,7 +489,7 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
     haveI : Nonempty (Subobject E) := ⟨⊥⟩
     have : 0 < Nat.card (Subobject E) := by
       rw [Nat.card_eq_fintype_card]; exact Fintype.card_pos
-    grind
+    lia
   | succ k ih =>
     intro E hE hcard
     haveI := hFinSub E
@@ -502,8 +502,8 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
         chain_strictMono := by
           intro ⟨i, hi⟩ ⟨j, hj⟩ h
           simp only [Fin.lt_def] at h
-          have hi0 : i = 0 := by grind
-          have hj1 : j = 1 := by grind
+          have hi0 : i = 0 := by lia
+          have hj1 : j = 1 := by lia
           subst hi0; subst hj1
           simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, ↓reduceIte,
             Fin.mk_one, one_ne_zero, gt_iff_lt]
@@ -512,17 +512,17 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
         chain_bot := by simp
         chain_top := by simp
         φ := fun _ ↦ Z.phase E
-        φ_anti := fun a b h ↦ by exfalso; exact absurd h (by grind)
+        φ_anti := fun a b h ↦ by exfalso; exact absurd h (by lia)
         factor_phase := by
           intro ⟨j, hj⟩
-          have hj0 : j = 0 := by grind
+          have hj0 : j = 0 := by lia
           subst hj0
           change Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ _)) = Z.phase E
           rw [Z.phase_eq_of_iso (Subobject.cokernelBotIso ⊤ bot_le)]
           exact Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow)
         factor_semistable := by
           intro ⟨j, hj⟩
-          have hj0 : j = 0 := by grind
+          have hj0 : j = 0 := by lia
           subst hj0
           change Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ _))
           exact Z.isSemistable_of_iso
@@ -540,7 +540,7 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
       have hcard_Q' : Nat.card (Subobject Q') < Nat.card (Subobject E) :=
         card_subobject_cokernel_lt hM'_ne
       haveI := hFinSub Q'
-      obtain ⟨hn_Q'⟩ := ih Q' hQ'_nz (by grind)
+      obtain ⟨hn_Q'⟩ := ih Q' hQ'_nz (by lia)
       have hQ'n_pos := hn_Q'.hn
       -- Build the concatenated HN filtration
       set p' := cokernel.π M'.arrow
@@ -556,33 +556,33 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
       -- Define the new chain: ⊥ at index 0, then pb'(Q'_j) for j = 0..m
       let newChain : Fin (hn_Q'.n + 2) → Subobject E :=
         fun i ↦ if (i : ℕ) = 0 then ⊥
-          else pb' (hn_Q'.chain ⟨(i : ℕ) - 1, by grind⟩)
-      have hNewBot : newChain ⟨0, by grind⟩ = ⊥ := by simp [newChain]
-      have hNewTop : newChain ⟨hn_Q'.n + 1, by grind⟩ = ⊤ := by
-        simp only [newChain, show hn_Q'.n + 1 ≠ 0 from by grind, ite_false]
+          else pb' (hn_Q'.chain ⟨(i : ℕ) - 1, by lia⟩)
+      have hNewBot : newChain ⟨0, by lia⟩ = ⊥ := by simp [newChain]
+      have hNewTop : newChain ⟨hn_Q'.n + 1, by lia⟩ = ⊤ := by
+        simp only [newChain, show hn_Q'.n + 1 ≠ 0 from by lia, ite_false]
         convert hpb_top using 2
       have hNewMono : StrictMono newChain := by
         apply Fin.strictMono_iff_lt_succ.mpr
         intro ⟨i, hi⟩
-        change newChain ⟨i, by grind⟩ < newChain ⟨i + 1, by grind⟩
+        change newChain ⟨i, by lia⟩ < newChain ⟨i + 1, by lia⟩
         by_cases hi0 : i = 0
         · subst hi0
-          simp only [newChain, ite_true, show (0 + 1 : ℕ) ≠ 0 from by grind,
+          simp only [newChain, ite_true, show (0 + 1 : ℕ) ≠ 0 from by lia,
             ite_false]
           rw [hpb_bot]
           exact lt_of_le_of_ne bot_le (Ne.symm (subobject_ne_bot_of_not_isZero
             (subobject_not_isZero_of_ne_bot hM'_ne)))
-        · simp only [newChain, hi0, ite_false, show i + 1 ≠ 0 from by grind]
+        · simp only [newChain, hi0, ite_false, show i + 1 ≠ 0 from by lia]
           apply hpb_mono
-          exact hn_Q'.chain_strictMono (by simp [Fin.lt_def]; grind)
+          exact hn_Q'.chain_strictMono (by simp [Fin.lt_def]; lia)
       -- Key fact: all hn_Q' phases are < phase(M')
       have hQ'_phase_lt : ∀ j : Fin hn_Q'.n,
           hn_Q'.φ j < Z.phase (M' : A) := by
         intro j
-        have h_ne : hn_Q'.chain ⟨1, by grind⟩ ≠ ⊥ := by
+        have h_ne : hn_Q'.chain ⟨1, by lia⟩ ≠ ⊥ := by
           intro h
-          have := hn_Q'.chain_strictMono (Fin.mk_lt_mk.mpr (by grind) :
-            (⟨0, by grind⟩ : Fin _) < ⟨1, by grind⟩)
+          have := hn_Q'.chain_strictMono (Fin.mk_lt_mk.mpr (by lia) :
+            (⟨0, by lia⟩ : Fin _) < ⟨1, by lia⟩)
           rw [hn_Q'.chain_bot, h] at this; exact lt_irrefl _ this
         have hsucc_ne :
             hn_Q'.chain (⟨0, hn_Q'.hn⟩ : Fin hn_Q'.n).succ ≠ ⊥ := by
@@ -603,7 +603,7 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
               (⟨0, hn_Q'.hn⟩ : Fin hn_Q'.n).succ : A)) :=
             (phase_cokernel_ofLE_congr Z hcsc rfl).trans
               (Z.phase_eq_of_iso (Subobject.cokernelBotIso _ bot_le))
-          grind [phase_subobject_cokernel_lt Z hM'_ne hM'_strict
+          linarith [phase_subobject_cokernel_lt Z hM'_ne hM'_strict
             hsucc_ne]
         calc hn_Q'.φ j
             ≤ hn_Q'.φ ⟨0, hn_Q'.hn⟩ :=
@@ -761,13 +761,6 @@ lemma phase_cokernel_lt_of_destabilizing_semistable_subobject
               rw [hEq, min_eq_left le_rfl]
         _ ≤ arg (Z.Zobj (A' : A) + Z.Zobj (cokernel A'.arrow)) :=
           min_arg_le_arg_add hA_mem hQ_mem
-    have hsum_le : arg (Z.Zobj E) ≤ arg (Z.Zobj (A' : A)) := by
-      rw [hadd]
-      calc
-        arg (Z.Zobj (A' : A) + Z.Zobj (cokernel A'.arrow))
-            ≤ max (arg (Z.Zobj (A' : A))) (arg (Z.Zobj (cokernel A'.arrow))) :=
-          arg_add_le_max hA_mem hQ_mem
-        _ = arg (Z.Zobj (A' : A)) := by rw [hEq, max_eq_left le_rfl]
     exact not_le_of_gt hA_arg hsum_ge
   by_contra hge
   push_neg at hge
@@ -823,7 +816,7 @@ theorem exists_semistable_quotient_le_phase_of_artinian_noetherian
           have hphase_eq : Z.phase (A' : A) = Z.phase QS := by
             rw [hA'_eq]
             exact Z.phase_eq_of_iso (asIso (⊤ : Subobject QS).arrow)
-          grind
+          linarith
         let T : Subobject E := (Subobject.pullback (cokernel.π S.arrow)).obj A'
         have hST_le : S ≤ T := le_pullback_cokernel S A'
         have hST_lt : S < T := by
@@ -887,10 +880,10 @@ lemma phase_le_of_epi (Z : StabilityFunction A)
     have pi_pos := Real.pi_pos
     have hargK : arg (Z.Zobj (kernel p)) ≤ arg (Z.Zobj E) := by
       unfold StabilityFunction.phase at hK_sub
-      exact le_of_mul_le_mul_left (by grind) (div_pos one_pos pi_pos)
+      exact le_of_mul_le_mul_left (by linarith) (div_pos one_pos pi_pos)
     have hargQ : arg (Z.Zobj Q) < arg (Z.Zobj E) := by
       unfold StabilityFunction.phase at hlt
-      exact lt_of_mul_lt_mul_left (by grind) (div_pos one_pos pi_pos).le
+      exact lt_of_mul_lt_mul_left (by linarith) (div_pos one_pos pi_pos).le
     rw [hadd] at hargK hargQ
     -- hargK : arg(Z(K)) ≤ arg(Z(K)+Z(Q))
     -- hargQ : arg(Z(Q)) < arg(Z(K)+Z(Q))
@@ -906,7 +899,7 @@ lemma phase_le_of_epi (Z : StabilityFunction A)
     have hne : arg (Z.Zobj (kernel p)) ≠ arg (Z.Zobj Q) := ne_of_gt hK_gt_Q
     have hstrict := arg_add_lt_max hK_mem hQ_mem hne
     rw [max_eq_left hK_gt_Q.le] at hstrict
-    grind
+    linarith
 
 /-- Hom-vanishing between semistable objects of different phases: if `E` is semistable
 with `phase(E) > phase(F)` and `F` is semistable, then every morphism `E → F` is zero. -/
@@ -928,6 +921,6 @@ lemma hom_zero_of_semistable_phase_gt (Z : StabilityFunction A)
           apply hF.2
           intro hZ
           exact hI (hZ.of_iso (imageSubobjectIso f).symm)
-  grind
+  linarith
 
 end CategoryTheory

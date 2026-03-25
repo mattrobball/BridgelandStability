@@ -88,9 +88,9 @@ def StabilityCondition.stabilityFunctionOnHeart
         constructor
         · calc
             0 < σ.slicing.phiMinus C E.obj hEobj := hphiMinus
-            _ = F.φ ⟨F.n - 1, by grind⟩ := by
+            _ = F.φ ⟨F.n - 1, by lia⟩ := by
               rw [σ.slicing.phiMinus_eq C E.obj hEobj F hn hlast]
-            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+            _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
         · calc
             F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
             _ = σ.slicing.phiPlus C E.obj hEobj := by
@@ -180,9 +180,9 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
     constructor
     · calc
         0 < σ.slicing.phiMinus C E.obj hEobj := hphiMinus
-        _ = F.φ ⟨F.n - 1, by grind⟩ := by
+        _ = F.φ ⟨F.n - 1, by lia⟩ := by
           rw [σ.slicing.phiMinus_eq C E.obj hEobj F hn hlast]
-        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+        _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
     · calc
         F.φ i ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
         _ = σ.slicing.phiPlus C E.obj hEobj := by
@@ -399,8 +399,8 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
     chain_strictMono := by
       intro ⟨i, hi⟩ ⟨j, hj⟩ h
       simp only [Fin.lt_def] at h
-      have hi0 : i = 0 := by grind
-      have hj1 : j = 1 := by grind
+      have hi0 : i = 0 := by lia
+      have hj1 : j = 1 := by lia
       subst hi0; subst hj1
       simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, ↓reduceIte,
         Fin.mk_one, one_ne_zero, gt_iff_lt]
@@ -409,10 +409,10 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
     chain_bot := by simp
     chain_top := by simp
     φ := fun _ ↦ Z.phase E
-    φ_anti := fun a b h ↦ by exfalso; exact absurd h (by grind)
+    φ_anti := fun a b h ↦ by exfalso; exact absurd h (by lia)
     factor_phase := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by grind
+      have hj0 : j = 0 := by lia
       subst hj0
       change Z.phase (cokernel (Subobject.ofLE (⊥ : Subobject E) (⊤ : Subobject E) bot_le)) =
         Z.phase E
@@ -423,7 +423,7 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
       exact h₁.trans (Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow))
     factor_semistable := by
       intro ⟨j, hj⟩
-      have hj0 : j = 0 := by grind
+      have hj0 : j = 0 := by lia
       subst hj0
       change Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ _))
       exact Z.isSemistable_of_iso

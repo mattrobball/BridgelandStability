@@ -53,8 +53,8 @@ lemma Slicing.gtProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
   rcases hE with hZ | ⟨F, hF⟩
   · exact Or.inl hZ
   · by_cases hn : 0 < F.n
-    · exact Or.inr ⟨F, hn, (hF ⟨F.n - 1, by grind⟩).1⟩
-    · exact Or.inl (F.toPostnikovTower.zero_isZero (by grind))
+    · exact Or.inr ⟨F, hn, (hF ⟨F.n - 1, by lia⟩).1⟩
+    · exact Or.inl (F.toPostnikovTower.zero_isZero (by lia))
 
 /-- **Interval to leProp.** If all HN phases lie in `(a, b)`, then phiPlus ≤ `b`. -/
 lemma Slicing.leProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
@@ -63,7 +63,7 @@ lemma Slicing.leProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
   · exact Or.inl hZ
   · by_cases hn : 0 < F.n
     · exact Or.inr ⟨F, hn, le_of_lt (hF ⟨0, hn⟩).2⟩
-    · exact Or.inl (F.toPostnikovTower.zero_isZero (by grind))
+    · exact Or.inl (F.toPostnikovTower.zero_isZero (by lia))
 
 section HeartContainment
 
@@ -89,13 +89,13 @@ theorem Slicing.intervalProp_implies_leftHeart (s : Slicing C) {a b : ℝ}
     · by_cases hn : 0 < F.n
       · right
         refine ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i - a,
-          fun i j h ↦ by grind [F.hφ h], fun j ↦ ?_⟩, hn, ?_⟩
+          fun i j h ↦ by linarith [F.hφ h], fun j ↦ ?_⟩, hn, ?_⟩
         · change s.P (F.φ j - a + a) _
-          rw [show F.φ j - a + a = F.φ j from by grind]
+          rw [show F.φ j - a + a = F.φ j from by ring]
           exact F.semistable j
         · dsimp [HNFiltration.phiPlus]
           grind
-      · exact Or.inl (F.toPostnikovTower.zero_isZero (by grind))
+      · exact Or.inl (F.toPostnikovTower.zero_isZero (by lia))
 
 /-- **Right heart containment (Lemma 4.3b).** If `b - a ≤ 1` and `E ∈ P((a, b))`,
 then `E` lies in the heart of the dual half-open t-structure induced by the slicing
@@ -112,9 +112,9 @@ theorem Slicing.intervalProp_implies_rightHeart (s : Slicing C) {a b : ℝ}
   · rw [s.phaseShift_geProp_zero]
     have hgt : s.gtProp C a E := s.gtProp_of_intervalProp C hE
     have hge : s.geProp C a E := (s.geProp_of_gtProp (C := C) (t := a)) E hgt
-    exact (s.geProp_anti (C := C) (t₁ := b - 1) (t₂ := a) (by grind)) E hge
+    exact (s.geProp_anti (C := C) (t₁ := b - 1) (t₂ := a) (by linarith)) E hge
   · rw [s.phaseShift_ltProp]
-    simpa [show 1 + (b - 1) = b by grind] using s.ltProp_of_intervalProp C hE
+    simpa [show 1 + (b - 1) = b by linarith] using s.ltProp_of_intervalProp C hE
 
 /-- The fully faithful embedding of `P((a,b))` into the left heart `P((a,a+1])`. -/
 abbrev Slicing.IntervalCat.toLeftHeart (s : Slicing C) (a b : ℝ) (hab : b - a ≤ 1) :
@@ -169,7 +169,7 @@ theorem Slicing.intervalProp_implies_rightWindow (s : Slicing C) {a b : ℝ}
   constructor
   · have hgt : s.gtProp C a E := s.gtProp_of_intervalProp C hE
     have hge : s.geProp C a E := (s.geProp_of_gtProp (C := C) (t := a)) E hgt
-    exact (s.geProp_anti (C := C) (t₁ := b - 1) (t₂ := a) (by grind)) E hge
+    exact (s.geProp_anti (C := C) (t₁ := b - 1) (t₂ := a) (by linarith)) E hge
   · exact s.ltProp_of_intervalProp C hE
 
 /-! ### Phase bounds for triangles with semistable middle term
@@ -288,8 +288,8 @@ theorem Slicing.phiPlus_lt_of_triangle_with_leProp (s : Slicing C)
           have h1 : GQ.φ j ≤ GQ.φ ⟨0, hnQ⟩ := by
             apply GQ.hφ.antitone; grind
           have h2 : GQ.φ ⟨0, hnQ⟩ ≤ c := hGQ_le
-          have h3 : ((-1 : ℤ) : ℝ) = -1 := by grind
-          grind
+          have h3 : ((-1 : ℤ) : ℝ) = -1 := by norm_num
+          linarith
         exact s.hom_eq_zero_of_gt_phases C (FK.semistable ⟨0, hnK⟩) GQs hQs_gap β
   -- Top factor is zero — contradiction
   exact hneK (FK.isZero_factor_zero_of_hom_eq_zero C s hnK hK_factor_zero)
@@ -316,7 +316,7 @@ theorem Slicing.phiMinus_gt_of_triangle_with_gtProp (s : Slicing C)
   -- hle : FQ.φ ⟨FQ.n - 1, _⟩ ≤ a (bottom factor has phase ≤ a)
   -- Show all maps from Q to FQ's bottom factor are zero
   have hQ_factor_zero :
-      ∀ β : Q ⟶ (FQ.triangle ⟨FQ.n - 1, by grind⟩).obj₃, β = 0 := by
+      ∀ β : Q ⟶ (FQ.triangle ⟨FQ.n - 1, by lia⟩).obj₃, β = 0 := by
     intro β
     -- Step 1: f₂ ≫ β = 0 (E → bottom_factor is zero by hom-vanishing)
     have hfβ : f₂ ≫ β = 0 := by
@@ -324,14 +324,14 @@ theorem Slicing.phiMinus_gt_of_triangle_with_gtProp (s : Slicing C)
       · exact hEZ.eq_of_src (f₂ ≫ β) 0
       · obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hEZ
         have hE_gap : ∀ j : Fin FE.n,
-            FQ.φ ⟨FQ.n - 1, by grind⟩ < FE.φ j := fun j ↦ by
-          have h1 : a < FE.φ ⟨FE.n - 1, by grind⟩ := by
+            FQ.φ ⟨FQ.n - 1, by lia⟩ < FE.φ j := fun j ↦ by
+          have h1 : a < FE.φ ⟨FE.n - 1, by lia⟩ := by
             have := hE_gt hEZ; rwa [s.phiMinus_eq C E hEZ FE hnE hneE] at this
-          have h2 : FE.φ ⟨FE.n - 1, by grind⟩ ≤ FE.φ j := by
+          have h2 : FE.φ ⟨FE.n - 1, by lia⟩ ≤ FE.φ j := by
             apply FE.hφ.antitone; grind
-          grind
+          linarith
         exact s.hom_eq_zero_of_lt_phases C
-          (FQ.semistable ⟨FQ.n - 1, by grind⟩) FE hE_gap _
+          (FQ.semistable ⟨FQ.n - 1, by lia⟩) FE hE_gap _
     -- Step 2: By yoneda_exact₃, β factors through K⟦1⟧
     obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ (Triangle.mk f₁ f₂ f₃) hT β hfβ
     -- Step 3: γ = 0 (K⟦1⟧ → bottom_factor is zero by hom-vanishing)
@@ -344,18 +344,18 @@ theorem Slicing.phiMinus_gt_of_triangle_with_gtProp (s : Slicing C)
         let GKs := GK.shiftHN C s (1 : ℤ)
         -- GKs.φ(j) = GK.φ(j) + 1 > c + 1 > a ≥ FQ.φ(n-1)
         have hKs_gap : ∀ j : Fin GKs.n,
-            FQ.φ ⟨FQ.n - 1, by grind⟩ < GKs.φ j := by
+            FQ.φ ⟨FQ.n - 1, by lia⟩ < GKs.φ j := by
           intro j
-          change FQ.φ ⟨FQ.n - 1, by grind⟩ < GK.φ j + ((1 : ℤ) : ℝ)
-          have h1 : GK.φ ⟨GK.n - 1, by grind⟩ ≤ GK.φ j := by
+          change FQ.φ ⟨FQ.n - 1, by lia⟩ < GK.φ j + ((1 : ℤ) : ℝ)
+          have h1 : GK.φ ⟨GK.n - 1, by lia⟩ ≤ GK.φ j := by
             apply GK.hφ.antitone
             change j.val ≤ GK.n - 1
-            have := j.isLt; have : GKs.n = GK.n := rfl; grind
-          have h2 : c < GK.φ ⟨GK.n - 1, by grind⟩ := hGK_gt
-          have h3 : ((1 : ℤ) : ℝ) = 1 := by grind
-          grind
+            have := j.isLt; have : GKs.n = GK.n := rfl; lia
+          have h2 : c < GK.φ ⟨GK.n - 1, by lia⟩ := hGK_gt
+          have h3 : ((1 : ℤ) : ℝ) = 1 := by norm_num
+          linarith
         exact s.hom_eq_zero_of_lt_phases C
-          (FQ.semistable ⟨FQ.n - 1, by grind⟩) GKs hKs_gap γ
+          (FQ.semistable ⟨FQ.n - 1, by lia⟩) GKs hKs_gap γ
   -- Bottom factor is zero — contradiction
   exact hneQ (FQ.isZero_factor_last_of_hom_eq_zero C s hnQ hQ_factor_zero)
 
@@ -402,7 +402,7 @@ theorem Slicing.first_intervalProp_of_triangle (s : Slicing C)
     have hK_lt : s.phiPlus C K hK < b :=
       s.phiPlus_lt_of_triangle_with_leProp C hK
         (fun hE' ↦ s.phiPlus_lt_of_intervalProp C hE' hE)
-        hQ_le (by grind) hT
+        hQ_le (by linarith) hT
     -- phiMinus(K) > a: from gtProp via phiMinus_gt_of_gtProp
     have hK_minus : a < s.phiMinus C K hK :=
       s.phiMinus_gt_of_gtProp C hK hK_gt
@@ -412,8 +412,8 @@ theorem Slicing.first_intervalProp_of_triangle (s : Slicing C)
     exact ⟨FK, fun i ↦ by
       constructor
       · calc a < s.phiMinus C K hK := hK_minus
-          _ = FK.φ ⟨FK.n - 1, by grind⟩ := s.phiMinus_eq C K hK FK hnK hlastK
-          _ ≤ FK.φ i := FK.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+          _ = FK.φ ⟨FK.n - 1, by lia⟩ := s.phiMinus_eq C K hK FK hnK hlastK
+          _ ≤ FK.φ i := FK.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
       · calc FK.φ i ≤ FK.φ ⟨0, hnK⟩ :=
               FK.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
           _ = s.phiPlus C K hK := (s.phiPlus_eq C K hK FK hnK hfirstK).symm
@@ -448,8 +448,8 @@ theorem Slicing.intervalProp_extension_closed (s : Slicing C)
     exact ⟨F, fun i ↦ by
       constructor
       · calc a < s.phiMinus C E hE := hMinus
-          _ = F.φ ⟨F.n - 1, by grind⟩ := s.phiMinus_eq C E hE F hn hlast
-          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+          _ = F.φ ⟨F.n - 1, by lia⟩ := s.phiMinus_eq C E hE F hn hlast
+          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
       · calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
               F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
           _ = s.phiPlus C E hE := (s.phiPlus_eq C E hE F hn hfirst).symm
@@ -490,7 +490,7 @@ theorem Slicing.phiMinus_gt_of_triangle_with_geProp (s : Slicing C)
   push_neg at hle
   -- hle : FQ.φ ⟨FQ.n - 1, _⟩ ≤ a (bottom factor has phase ≤ a)
   have hQ_factor_zero :
-      ∀ β : Q ⟶ (FQ.triangle ⟨FQ.n - 1, by grind⟩).obj₃, β = 0 := by
+      ∀ β : Q ⟶ (FQ.triangle ⟨FQ.n - 1, by lia⟩).obj₃, β = 0 := by
     intro β
     -- Step 1: f₂ ≫ β = 0 (E → bottom_factor is zero by hom-vanishing)
     have hfβ : f₂ ≫ β = 0 := by
@@ -498,14 +498,14 @@ theorem Slicing.phiMinus_gt_of_triangle_with_geProp (s : Slicing C)
       · exact hEZ.eq_of_src (f₂ ≫ β) 0
       · obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hEZ
         have hE_gap : ∀ j : Fin FE.n,
-            FQ.φ ⟨FQ.n - 1, by grind⟩ < FE.φ j := fun j ↦ by
-          have h1 : a < FE.φ ⟨FE.n - 1, by grind⟩ := by
+            FQ.φ ⟨FQ.n - 1, by lia⟩ < FE.φ j := fun j ↦ by
+          have h1 : a < FE.φ ⟨FE.n - 1, by lia⟩ := by
             have := hE_gt hEZ; rwa [s.phiMinus_eq C E hEZ FE hnE hneE] at this
-          have h2 : FE.φ ⟨FE.n - 1, by grind⟩ ≤ FE.φ j :=
-            FE.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
-          grind
+          have h2 : FE.φ ⟨FE.n - 1, by lia⟩ ≤ FE.φ j :=
+            FE.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
+          linarith
         exact s.hom_eq_zero_of_lt_phases C
-          (FQ.semistable ⟨FQ.n - 1, by grind⟩) FE hE_gap _
+          (FQ.semistable ⟨FQ.n - 1, by lia⟩) FE hE_gap _
     -- Step 2: By yoneda_exact₃, β factors through K⟦1⟧
     obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ (Triangle.mk f₁ f₂ f₃) hT β hfβ
     -- Step 3: γ = 0 (K⟦1⟧ → bottom_factor is zero by hom-vanishing)
@@ -518,18 +518,18 @@ theorem Slicing.phiMinus_gt_of_triangle_with_geProp (s : Slicing C)
         let GKs := GK.shiftHN C s (1 : ℤ)
         -- GKs.φ(j) = GK.φ(j) + 1 ≥ c + 1 > a ≥ FQ.φ(n-1)
         have hKs_gap : ∀ j : Fin GKs.n,
-            FQ.φ ⟨FQ.n - 1, by grind⟩ < GKs.φ j := by
+            FQ.φ ⟨FQ.n - 1, by lia⟩ < GKs.φ j := by
           intro j
-          change FQ.φ ⟨FQ.n - 1, by grind⟩ < GK.φ j + ((1 : ℤ) : ℝ)
-          have h1 : GK.φ ⟨GK.n - 1, by grind⟩ ≤ GK.φ j := by
+          change FQ.φ ⟨FQ.n - 1, by lia⟩ < GK.φ j + ((1 : ℤ) : ℝ)
+          have h1 : GK.φ ⟨GK.n - 1, by lia⟩ ≤ GK.φ j := by
             apply GK.hφ.antitone
             change j.val ≤ GK.n - 1
-            have := j.isLt; have : GKs.n = GK.n := rfl; grind
-          have h2 : c ≤ GK.φ ⟨GK.n - 1, by grind⟩ := hGK_ge
-          have h3 : ((1 : ℤ) : ℝ) = 1 := by grind
-          grind
+            have := j.isLt; have : GKs.n = GK.n := rfl; lia
+          have h2 : c ≤ GK.φ ⟨GK.n - 1, by lia⟩ := hGK_ge
+          have h3 : ((1 : ℤ) : ℝ) = 1 := by norm_num
+          linarith
         exact s.hom_eq_zero_of_lt_phases C
-          (FQ.semistable ⟨FQ.n - 1, by grind⟩) GKs hKs_gap γ
+          (FQ.semistable ⟨FQ.n - 1, by lia⟩) GKs hKs_gap γ
   -- Bottom factor is zero — contradiction
   exact hneQ (FQ.isZero_factor_last_of_hom_eq_zero C s hnQ hQ_factor_zero)
 
@@ -559,7 +559,7 @@ theorem Slicing.third_intervalProp_of_triangle (s : Slicing C)
     have hQ_minus : a < s.phiMinus C Q hQ :=
       s.phiMinus_gt_of_triangle_with_geProp C hQ
         (fun hE' ↦ s.phiMinus_gt_of_intervalProp C hE' hE)
-        hK_ge (by grind) hT
+        hK_ge (by linarith) hT
     exact s.intervalProp_of_intrinsic_phases C hQ hQ_minus hQ_plus
 
 section HeartClosure
@@ -635,7 +635,7 @@ theorem Slicing.intervalProp_of_epi_rightHeart (s : Slicing C)
     ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) Y.obj).mp
       Y.property).2
   have hYLt : s.ltProp C b Y.obj := by
-    simpa [show 1 + (b - 1) = b by grind] using
+    simpa [show 1 + (b - 1) = b by linarith] using
       (s.phaseShift_ltProp C (b - 1) 1 Y.obj).mp hYLtShift
   have hT' : Pretriangulated.Triangle.mk i.hom f.hom δ ∈ distTriang C := by
     simpa using hT

@@ -91,7 +91,7 @@ lemma mem_upperHalfPlaneUnion_of_add {z₁ z₂ : ℂ}
         rcases h₂ with h | ⟨_, h_re⟩
         · exact absurd him₂ (ne_of_gt h)
         · exact h_re
-      exact ⟨by linarith, by grind⟩
+      exact ⟨by linarith, by linarith⟩
 
 /-! ### Arg convexity for sums in the upper half plane
 
@@ -124,7 +124,7 @@ lemma cross_nonneg_of_arg_le {z₁ z₂ : ℂ}
   have hnn : 0 < ‖z₁‖ * ‖z₂‖ := mul_pos (norm_pos_iff.mpr hz₁) (norm_pos_iff.mpr hz₂)
   rw [cross_eq_norm_mul_sin, mul_nonneg_iff_right_nonneg_of_pos hnn]
   exact sin_nonneg_of_nonneg_of_le_pi (sub_nonneg.mpr h)
-    (by grind [arg_le_pi z₂, arg_nonneg_iff.mpr him₁])
+    (by linarith [arg_le_pi z₂, arg_nonneg_iff.mpr him₁])
 
 /-- If the cross product is nonneg and both args are positive (in the open upper half plane
 or negative real axis), then `arg z₁ ≤ arg z₂`. -/
@@ -137,7 +137,7 @@ lemma arg_le_of_cross_nonneg {z₁ z₂ : ℂ}
   by_contra h
   push_neg at h
   have hlt : arg z₂ - arg z₁ < 0 := sub_neg.mpr h
-  have hge : -π < arg z₂ - arg z₁ := by grind [arg_le_pi z₁]
+  have hge : -π < arg z₂ - arg z₁ := by linarith [arg_le_pi z₁]
   exact absurd hcross (not_le.mpr (sin_neg_of_neg_of_neg_pi_lt hlt hge))
 
 /-- Strict version: if `arg z₁ < arg z₂` (with both in the closed upper half plane), then
@@ -149,7 +149,7 @@ lemma cross_pos_of_arg_lt {z₁ z₂ : ℂ}
   have hnn : 0 < ‖z₁‖ * ‖z₂‖ := mul_pos (norm_pos_iff.mpr hz₁) (norm_pos_iff.mpr hz₂)
   rw [cross_eq_norm_mul_sin]
   exact mul_pos hnn (Real.sin_pos_of_pos_of_lt_pi (sub_pos.mpr h)
-    (by grind [arg_le_pi z₂]))
+    (by linarith [arg_le_pi z₂]))
 
 /-- Strict version: if the cross product is positive and both args are positive (in the UHP),
 then `arg z₁ < arg z₂`. -/
@@ -166,7 +166,7 @@ lemma arg_lt_of_cross_pos {z₁ z₂ : ℂ}
   push_neg at h
   rcases h.eq_or_lt with heq | hlt
   · rw [heq, sub_self, Real.sin_zero] at hsin; exact lt_irrefl _ hsin
-  · linarith [sin_neg_of_neg_of_neg_pi_lt (sub_neg.mpr hlt) (by grind [arg_le_pi z₁])]
+  · linarith [sin_neg_of_neg_of_neg_pi_lt (sub_neg.mpr hlt) (by linarith [arg_le_pi z₁])]
 
 /-- **Strict see-saw**: if `z₁, z₂ ∈ UHP \ {0}` with `arg z₁ ≠ arg z₂`, then
 `arg(z₁ + z₂) < max(arg z₁, arg z₂)` (strict inequality). -/

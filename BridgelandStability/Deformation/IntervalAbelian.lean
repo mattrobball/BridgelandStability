@@ -61,9 +61,9 @@ theorem im_Z_nonpos_of_heart_phases
   have hphases : ∀ i : Fin F.n, φ - 1 < F.φ i ∧ F.φ i ≤ φ := by
     intro i
     exact ⟨by calc φ - 1 < σ.slicing.phiMinus C E hE := hgt
-          _ = F.φ ⟨F.n - 1, by grind⟩ :=
+          _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C E hE F hn hlast
-          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
+          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
       by calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
           _ = σ.slicing.phiPlus C E hE :=
@@ -117,9 +117,9 @@ theorem P_phi_of_im_zero_heart
   have hphases : ∀ i : Fin F.n, φ - 1 < F.φ i ∧ F.φ i ≤ φ := by
     intro i
     exact ⟨by calc φ - 1 < σ.slicing.phiMinus C X hXne := hX_gt
-          _ = F.φ ⟨F.n - 1, by grind⟩ :=
+          _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C X hXne F hn hlast
-          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
+          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
       by calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
           _ = σ.slicing.phiPlus C X hXne :=
@@ -180,16 +180,16 @@ theorem P_phi_of_im_zero_heart
       · exact h
     by_contra hne
     have hlt : F.φ i - φ < 0 := lt_of_le_of_ne
-      (by grind [(hphases i).2]) (sub_ne_zero.mpr hne)
+      (by linarith [(hphases i).2]) (sub_ne_zero.mpr hne)
     exact absurd hsin_zero (ne_of_lt (Real.sin_neg_of_neg_of_neg_pi_lt
       (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos, (hphases i).1])))
   -- Top and bottom nonzero factors have phase φ → n = 1
   have htop : F.φ ⟨0, hn⟩ = φ := factor_eq ⟨0, hn⟩ hfirst
-  have hbot : F.φ ⟨F.n - 1, by grind⟩ = φ := factor_eq ⟨F.n - 1, by grind⟩ hlast
+  have hbot : F.φ ⟨F.n - 1, by lia⟩ = φ := factor_eq ⟨F.n - 1, by lia⟩ hlast
   have hn1 : F.n = 1 := by
     by_contra h
-    have := F.hφ (show (⟨0, hn⟩ : Fin F.n) < ⟨F.n - 1, by grind⟩ from
-      Fin.mk_lt_mk.mpr (by grind))
+    have := F.hφ (show (⟨0, hn⟩ : Fin F.n) < ⟨F.n - 1, by lia⟩ from
+      Fin.mk_lt_mk.mpr (by lia))
     linarith
   -- X ≅ factor 0 ∈ P(φ)
   have hfact : σ.slicing.P φ (F.toPostnikovTower.factor ⟨0, hn⟩) := by
@@ -199,7 +199,7 @@ theorem P_phi_of_im_zero_heart
     IsZero.of_iso F.base_isZero (Classical.choice (F.triangle_obj₁ ⟨0, hn⟩))
   have : IsIso T.mor₂ :=
     (Triangle.isZero₁_iff_isIso₂ T (F.triangle_dist ⟨0, hn⟩)).mp hZ₁
-  have hobj₂_eq : F.chain.obj' (0 + 1) (by grind) =
+  have hobj₂_eq : F.chain.obj' (0 + 1) (by lia) =
       F.chain.obj (Fin.last F.n) :=
     congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; lia))
   let e₂ : T.obj₂ ≅ X :=
@@ -247,8 +247,8 @@ theorem P_phi_of_heart_triangle
         (σ.Z (K₀.of C K) * rot).im + (σ.Z (K₀.of C Q) * rot).im := by
       rw [hZsum, add_mul, Complex.add_im]
     linarith
-  have him_K_zero : (σ.Z (K₀.of C K) * rot).im = 0 := by grind
-  have him_Q_zero : (σ.Z (K₀.of C Q) * rot).im = 0 := by grind
+  have him_K_zero : (σ.Z (K₀.of C K) * rot).im = 0 := by linarith
+  have him_Q_zero : (σ.Z (K₀.of C Q) * rot).im = 0 := by linarith
   exact ⟨P_phi_of_im_zero_heart C σ hKne hK_le hK_gt him_K_zero,
     P_phi_of_im_zero_heart C σ hQne hQ_le hQ_gt him_Q_zero⟩
 
@@ -266,9 +266,9 @@ theorem im_Z_nonneg_of_phases_above
   have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := by
     intro i
     exact ⟨by calc φ ≤ σ.slicing.phiMinus C E hE := hge
-          _ = F.φ ⟨F.n - 1, by grind⟩ :=
+          _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C E hE F hn hlast
-          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
+          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
       by calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
           _ = σ.slicing.phiPlus C E hE :=
@@ -313,9 +313,9 @@ theorem P_phi_of_im_zero_above
   have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := by
     intro i
     exact ⟨by calc φ ≤ σ.slicing.phiMinus C X hXne := hX_ge
-          _ = F.φ ⟨F.n - 1, by grind⟩ :=
+          _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C X hXne F hn hlast
-          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
+          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
       by calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
             F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
           _ = σ.slicing.phiPlus C X hXne :=
@@ -370,15 +370,15 @@ theorem P_phi_of_im_zero_above
       · exact h
     by_contra hne
     have hlt' : 0 < F.φ i - φ := lt_of_le_of_ne
-      (by grind [(hphases i).1]) (fun h ↦ hne (by grind))
+      (by linarith [(hphases i).1]) (fun h ↦ hne (by linarith))
     exact absurd hsin_zero (ne_of_gt (Real.sin_pos_of_pos_of_lt_pi
       (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos, (hphases i).2])))
   have htop : F.φ ⟨0, hn⟩ = φ := factor_eq ⟨0, hn⟩ hfirst
-  have hbot : F.φ ⟨F.n - 1, by grind⟩ = φ := factor_eq ⟨F.n - 1, by grind⟩ hlast
+  have hbot : F.φ ⟨F.n - 1, by lia⟩ = φ := factor_eq ⟨F.n - 1, by lia⟩ hlast
   have hn1 : F.n = 1 := by
     by_contra h
-    have := F.hφ (show (⟨0, hn⟩ : Fin F.n) < ⟨F.n - 1, by grind⟩ from
-      Fin.mk_lt_mk.mpr (by grind))
+    have := F.hφ (show (⟨0, hn⟩ : Fin F.n) < ⟨F.n - 1, by lia⟩ from
+      Fin.mk_lt_mk.mpr (by lia))
     linarith
   have hfact : σ.slicing.P φ (F.toPostnikovTower.factor ⟨0, hn⟩) := by
     rw [← htop]; exact F.semistable ⟨0, hn⟩
@@ -387,7 +387,7 @@ theorem P_phi_of_im_zero_above
     IsZero.of_iso F.base_isZero (Classical.choice (F.triangle_obj₁ ⟨0, hn⟩))
   have : IsIso T.mor₂ :=
     (Triangle.isZero₁_iff_isIso₂ T (F.triangle_dist ⟨0, hn⟩)).mp hZ₁
-  have hobj₂_eq : F.chain.obj' (0 + 1) (by grind) =
+  have hobj₂_eq : F.chain.obj' (0 + 1) (by lia) =
       F.chain.obj (Fin.last F.n) :=
     congrArg F.chain.obj (Fin.ext (by simp [Fin.last]; lia))
   let e₂ : T.obj₂ ≅ X :=
@@ -448,7 +448,7 @@ theorem StabilityCondition.P_phi_hom_vanishing
       n < 0 → f = 0 := by
   intro X Y n f hn
   exact σ.slicing.hom_vanishing φ (φ + ↑n) X.obj (Y.obj⟦n⟧)
-    (by grind [show (↑n : ℝ) < 0 from Int.cast_lt_zero.mpr hn])
+    (by linarith [show (↑n : ℝ) < 0 from Int.cast_lt_zero.mpr hn])
     X.property
     ((σ.slicing.shift_int C φ Y.obj n).mp Y.property) f
 
@@ -478,18 +478,18 @@ theorem P_phi_of_truncation_of_P_phi_cone
   set t := ss.toTStructure
   -- P(φ) objects have phase 1 in the shifted slicing
   have hP1A : ss.P 1 A := by
-    change s.P (1 + (φ - 1)) A; rw [show (1 : ℝ) + (φ - 1) = φ from by grind]; exact hA
+    change s.P (1 + (φ - 1)) A; rw [show (1 : ℝ) + (φ - 1) = φ from by ring]; exact hA
   have hP1B : ss.P 1 B := by
-    change s.P (1 + (φ - 1)) B; rw [show (1 : ℝ) + (φ - 1) = φ from by grind]; exact hB
+    change s.P (1 + (φ - 1)) B; rw [show (1 : ℝ) + (φ - 1) = φ from by ring]; exact hB
   have cast_le : (-↑(0 : ℤ) : ℝ) = 0 := by simp
   have cast_ge : (1 - ↑(0 : ℤ) : ℝ) = 1 := by simp
   -- A, B are in the heart of t
   haveI hA_le : t.IsLE A 0 := ⟨by
     change ss.gtProp C (-↑(0 : ℤ)) A; rw [cast_le]
-    exact ss.gtProp_of_semistable C 1 0 A hP1A (by grind)⟩
+    exact ss.gtProp_of_semistable C 1 0 A hP1A (by linarith)⟩
   haveI hB_le : t.IsLE B 0 := ⟨by
     change ss.gtProp C (-↑(0 : ℤ)) B; rw [cast_le]
-    exact ss.gtProp_of_semistable C 1 0 B hP1B (by grind)⟩
+    exact ss.gtProp_of_semistable C 1 0 B hP1B (by linarith)⟩
   haveI : t.IsGE A 0 := ⟨by
     change ss.leProp C (1 - ↑(0 : ℤ)) A; rw [cast_ge]
     exact ss.leProp_of_semistable C 1 1 A hP1A le_rfl⟩
@@ -548,8 +548,8 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiPlus]; grind⟩
+        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        dsimp only [HNFiltration.phiPlus]; linarith⟩
   -- L has s-phases in (φ, φ+1]
   have hL_sgt : s.gtProp C φ ((t.truncLT 0).obj X₃) := by
     have h : ss.gtProp C 1 ((t.truncLT 0).obj X₃) := by
@@ -559,8 +559,8 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiMinus] at hgt
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiMinus]; grind⟩
+        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        dsimp only [HNFiltration.phiMinus]; linarith⟩
   have hL_sle : s.leProp C (φ + 1) ((t.truncLT 0).obj X₃) := by
     have h : ss.leProp C (1 + 1) ((t.truncLT 0).obj X₃) := by
       have h := (inferInstance : t.IsGE ((t.truncLT 0).obj X₃) (-1)).ge
@@ -570,8 +570,8 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiPlus]; grind⟩
+        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        dsimp only [HNFiltration.phiPlus]; linarith⟩
   -- === Epi approach for Q, K₀ for L ===
   have hB_heart : t.heart B := (t.mem_heart_iff _).mpr ⟨hB_le, inferInstance⟩
   have hQ_heart : t.heart ((t.truncGE 0).obj X₃) :=
@@ -594,8 +594,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
       ((t.mem_heart_iff R.obj).mp R.property).2
     have hk_C : g_C ≫ k.hom = 0 := by
       have := congr_arg InducedCategory.Hom.hom hk
-      simp only [ObjectProperty.FullSubcategory.comp_hom] at this
-      exact this
+      simpa only [ObjectProperty.FullSubcategory.comp_hom] using this
     have hmk : ((t.triangleLTGE 0).obj X₃).mor₂ ≫ k.hom = 0 := by
       have : f₂ ≫ (((t.triangleLTGE 0).obj X₃).mor₂ ≫ k.hom) = 0 := by
         rwa [← Category.assoc]
@@ -603,14 +602,13 @@ theorem P_phi_of_truncation_of_P_phi_cone
         (Triangle.mk f₁ f₂ f₃) hT _ this
       dsimp only [Triangle.mk] at a ha
       haveI : t.IsLE (A⟦(1 : ℤ)⟧) (-1) := t.isLE_shift A 0 1 (-1)
-      rw [show a = 0 from t.zero a (-1) 0 (by grind), comp_zero] at ha
-      exact ha
+      rwa [show a = 0 from t.zero a (-1) 0 (by lia), comp_zero] at ha
     obtain ⟨b, hb⟩ := Triangle.yoneda_exact₃
       ((t.triangleLTGE 0).obj X₃) htrunc k.hom hmk
     dsimp only [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk] at b hb
     haveI : t.IsLE (((t.truncLT 0).obj X₃)⟦(1 : ℤ)⟧) (-2) :=
       t.isLE_shift ((t.truncLT 0).obj X₃) (-1) 1 (-2)
-    rw [show b = 0 from t.zero b (-2) 0 (by grind), comp_zero] at hb
+    rw [show b = 0 from t.zero b (-2) 0 (by lia), comp_zero] at hb
     exact ObjectProperty.hom_ext (P := t.heart) hb
   -- Get heart triangle I → B → Q → I⟦1⟧
   obtain ⟨I_H, i_H, δ_heart, hT_heart⟩ :=
@@ -643,8 +641,8 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact Or.inl hZ
     · simp only [HNFiltration.phiPlus] at hle
       exact Or.inr ⟨⟨F.toPostnikovTower, fun i ↦ F.φ i + (φ - 1),
-        fun i j hij ↦ by grind [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
-        dsimp only [HNFiltration.phiPlus]; grind⟩
+        fun i j hij ↦ by linarith [F.hφ hij], fun j ↦ F.semistable j⟩, hF, by
+        dsimp only [HNFiltration.phiPlus]; linarith⟩
   -- === K₀ + Im(Z·rot) ===
   -- P(φ) objects lie on the real axis after rotation by exp(-iπφ)
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
@@ -672,7 +670,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     have : (σ.Z (K₀.of C A) * rot).im + (σ.Z (K₀.of C X₃) * rot).im =
         (σ.Z (K₀.of C B) * rot).im := by
       rw [← Complex.add_im, ← add_mul, hZorig]
-    grind [him_ray hA, him_ray hB]
+    linarith [him_ray hA, him_ray hB]
   -- Q ∈ P(φ) via K₀ on heart triangle
   have hQ_Pφ : s.P φ ((t.truncGE 0).obj X₃) := by
     by_cases hQne : IsZero ((t.truncGE 0).obj X₃)
@@ -701,17 +699,17 @@ theorem P_phi_of_truncation_of_P_phi_cone
             rw [← add_mul, ← map_add, ← hK₀_heart]
           have him := congr_arg Complex.im h
           simp only [Complex.add_im] at him
-          grind [him_ray hB]
+          linarith [him_ray hB]
         exact P_phi_of_im_zero_heart C σ hQne
           (s.phiPlus_le_of_leProp C hQne hQ_sle)
-          (s.phiMinus_gt_of_gtProp C hQne hQ_sgt) (by grind)
+          (s.phiMinus_gt_of_gtProp C hQne hQ_sgt) (by linarith)
   -- Im(Z(L)·rot) = 0 from truncation K₀ + hZX₃_im + him_ray hQ_Pφ
   have hL_im0 : (σ.Z (K₀.of C ((t.truncLT 0).obj X₃)) * rot).im = 0 := by
     have : (σ.Z (K₀.of C ((t.truncLT 0).obj X₃)) * rot).im +
         (σ.Z (K₀.of C ((t.truncGE 0).obj X₃)) * rot).im =
         (σ.Z (K₀.of C X₃) * rot).im := by
       rw [← Complex.add_im, ← add_mul, ← hZtrunc]
-    grind [him_ray hQ_Pφ]
+    linarith [him_ray hQ_Pφ]
   -- L ∈ P(φ+1) via P_phi_of_im_zero_heart at phase φ+1
   have hL_Pφ1 : s.P (φ + 1) ((t.truncLT 0).obj X₃) := by
     by_cases hLne : IsZero ((t.truncLT 0).obj X₃)
@@ -719,7 +717,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
     · exact P_phi_of_im_zero_heart C σ hLne
         (s.phiPlus_le_of_leProp C hLne hL_sle)
         (show φ + 1 - 1 < s.phiMinus C _ hLne from by
-          grind [s.phiMinus_gt_of_gtProp C hLne hL_sgt])
+          linarith [s.phiMinus_gt_of_gtProp C hLne hL_sgt])
         (by rw [show -(↑(Real.pi * (φ + 1)) * Complex.I) =
               -(↑(Real.pi * φ) * Complex.I) + -(↑Real.pi * Complex.I) from by
                 push_cast; ring,
@@ -754,17 +752,17 @@ theorem StabilityCondition.P_phi_admissible
   -- P(φ) objects have phase 1 in the shifted slicing
   have hP1 : ∀ X : (s.P φ).FullSubcategory, ss.P 1 X.obj := by
     intro X; change s.P (1 + (φ - 1)) X.obj
-    rw [show (1 : ℝ) + (φ - 1) = φ from by grind]; exact X.property
+    rw [show (1 : ℝ) + (φ - 1) = φ from by ring]; exact X.property
   -- Cast cleanup helpers
   have cast_le : (-↑(0 : ℤ) : ℝ) = 0 := by simp
   have cast_ge : (1 - ↑(0 : ℤ) : ℝ) = 1 := by simp
   -- Step 1: P(φ) objects are IsLE 0 and IsGE 0 for t
   haveI hX₁_le : t.IsLE X₁.obj 0 := by
     refine ⟨?_⟩; change ss.gtProp C (-↑(0 : ℤ)) X₁.obj
-    rw [cast_le]; exact ss.gtProp_of_semistable C 1 0 X₁.obj (hP1 X₁) (by grind)
+    rw [cast_le]; exact ss.gtProp_of_semistable C 1 0 X₁.obj (hP1 X₁) (by linarith)
   haveI hX₂_le : t.IsLE X₂.obj 0 := by
     refine ⟨?_⟩; change ss.gtProp C (-↑(0 : ℤ)) X₂.obj
-    rw [cast_le]; exact ss.gtProp_of_semistable C 1 0 X₂.obj (hP1 X₂) (by grind)
+    rw [cast_le]; exact ss.gtProp_of_semistable C 1 0 X₂.obj (hP1 X₂) (by linarith)
   haveI hX₁_ge : t.IsGE X₁.obj 0 := by
     refine ⟨?_⟩; change ss.leProp C (1 - ↑(0 : ℤ)) X₁.obj
     rw [cast_ge]; exact ss.leProp_of_semistable C 1 1 X₁.obj (hP1 X₁) le_rfl

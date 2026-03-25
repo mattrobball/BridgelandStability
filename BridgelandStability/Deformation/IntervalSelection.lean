@@ -377,15 +377,15 @@ theorem SectorFiniteLength.of_wide
   intro t
   dsimp [SectorFiniteLength, WideSectorFiniteLength] at hWide ⊢
   intro E
-  letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by grind⟩
-  letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by grind⟩
-  letI : Fact (t - 4 * ε₀ < t + 4 * ε₀) := ⟨by grind⟩
-  letI : Fact ((t + 4 * ε₀) - (t - 4 * ε₀) ≤ 1) := ⟨by grind⟩
+  letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by linarith⟩
+  letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by linarith⟩
+  letI : Fact (t - 4 * ε₀ < t + 4 * ε₀) := ⟨by linarith⟩
+  letI : Fact ((t + 4 * ε₀) - (t - 4 * ε₀) ≤ 1) := ⟨by linarith⟩
   let hIncl :
       σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) ≤
         σ.slicing.intervalProp C (t - 4 * ε₀) (t + 4 * ε₀) := by
     intro F hF
-    exact σ.slicing.intervalProp_mono C (by grind) (by grind) hF
+    exact σ.slicing.intervalProp_mono C (by linarith) (by linarith) hF
   exact interval_thinFiniteLength_of_inclusion_strict
     (C := C) (s₁ := σ.slicing) (s₂ := σ.slicing)
     (a₁ := t - 2 * ε₀) (b₁ := t + 2 * ε₀)

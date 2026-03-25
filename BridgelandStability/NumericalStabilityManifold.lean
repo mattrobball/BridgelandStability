@@ -207,8 +207,8 @@ theorem ClassMapStabilityCondition.charge_mem_classMapFactorSubmodule
 theorem ClassMapStabilityCondition.ext_toStabilityCondition
     {v : K₀ C →+ Λ} {σ τ : ClassMapStabilityCondition C v}
     (h : (σ : StabilityCondition C) = τ) :
-    σ = τ := by
-  exact Subtype.ext h
+    σ = τ :=
+  Subtype.ext h
 
 /-- The inclusion of class-map stability conditions into ordinary stability conditions is
 continuous for the induced topology. -/
@@ -479,10 +479,6 @@ theorem classMapComponent_set_eq_connectedComponentIn_classMapAmbientLocus
   ext σ
   constructor
   · intro hσ
-    have hx0F : x0 ∈ F := by
-      change ConnectedComponents.mk (x0 : StabilityCondition C) = ambientcc
-      simpa [ambientcc, x0, mk_classMapComponentRep (C := C) v cc] using
-        (ClassMapStabilityCondition.ambientComponentMap_apply (C := C) v x0).symm
     have hσconn : σ ∈ connectedComponent x0 := by
       apply (ConnectedComponents.coe_eq_coe').1
       rw [hσ, mk_classMapComponentRep (C := C) v cc]
@@ -496,8 +492,8 @@ theorem classMapComponent_set_eq_connectedComponentIn_classMapAmbientLocus
     exact (isPreconnected_connectedComponent.subset_connectedComponentIn
       mem_connectedComponent hsub) hσconn
   · intro hσ
-    have hσconn : σ ∈ connectedComponent x0 := by
-      exact isPreconnected_connectedComponentIn.subset_connectedComponent
+    have hσconn : σ ∈ connectedComponent x0 :=
+      isPreconnected_connectedComponentIn.subset_connectedComponent
         (mem_connectedComponentIn <| by
           change ConnectedComponents.mk (x0 : StabilityCondition C) = ambientcc
           simpa [ambientcc, x0, mk_classMapComponentRep (C := C) v cc] using
@@ -544,7 +540,7 @@ theorem ambientClassMapFactorSubmodule_finiteDimensional
       (ComponentTopologicalLinearLocalModel.ambientClassMapFactorSubmodule (C := C) v M) := by
   letI : FiniteDimensional ℂ (ClassMapChargeSpace Λ) :=
     classMapChargeSpace_finiteDimensional Λ
-  have hFactor :
+  haveI :
       FiniteDimensional ℂ (classMapFactorSubmodule C v) :=
     LinearMap.finiteDimensional_range (precomposeClassMap C v)
   let toFactor :
@@ -591,8 +587,8 @@ theorem exists_chartedSpace_and_hasGroupoid_idRestr_of_isLocalHomeomorph_to_comp
   rcases he with ⟨x, rfl⟩
   rcases he' with ⟨y, rfl⟩
   let g : OpenPartialHomeomorph E E := (chartAt x).symm ≫ₕ chartAt y
-  have hchart_eq : (chartAt y : M → E) = chartAt x := by
-    exact (chartAt_eq y).symm.trans (chartAt_eq x)
+  have hchart_eq : (chartAt y : M → E) = chartAt x :=
+    (chartAt_eq y).symm.trans (chartAt_eq x)
   have hg :
       g ≈ OpenPartialHomeomorph.ofSet g.source g.open_source := by
     constructor
@@ -651,8 +647,8 @@ theorem ClassMapStabilityCondition.existsLocalHomeomorphToComplexModelOnConnecte
   let V := ComponentTopologicalLinearLocalModel.ambientClassMapFactorSubmodule (C := C) v M
   let E := ↥V
   letI : Module ℂ E := V.module
-  letI : NormedSpace ℂ E := by
-    exact @Submodule.normedSpace ℂ ℂ (inferInstance : SMul ℂ ℂ) inferInstance inferInstance M.V
+  letI : NormedSpace ℂ E :=
+    @Submodule.normedSpace ℂ ℂ (inferInstance : SMul ℂ ℂ) inferInstance inferInstance M.V
       inferInstance M.instNormedSpace M.instNormedSpace.toModule hTower V
   letI : FiniteDimensional ℂ E := ambientClassMapFactorSubmodule_finiteDimensional
     (C := C) (v := v) (M := M)
@@ -682,8 +678,8 @@ theorem ClassMapStabilityCondition.existsLocalHomeomorphToComplexModelOnConnecte
     have hWsourceconn : _root_.IsConnected Wsource := by
       rw [e.toHomeomorphSourceTarget.isConnected_preimage]
       exact hBsubconn
-    have hBsubopen : IsOpen Bsub := by
-      exact Metric.isOpen_ball.preimage continuous_subtype_val
+    have hBsubopen : IsOpen Bsub :=
+      Metric.isOpen_ball.preimage continuous_subtype_val
     have hWsourceopen : IsOpen Wsource := hBsubopen.preimage e.toHomeomorphSourceTarget.continuous
     let W : Set (ClassMapAmbientLocus C v ambientcc) := Subtype.val '' Wsource
     have hWopen : IsOpen W :=

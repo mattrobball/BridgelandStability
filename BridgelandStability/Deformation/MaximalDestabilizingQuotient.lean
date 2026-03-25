@@ -52,10 +52,10 @@ theorem ThinFiniteLengthInInterval.of_wide
   let b' : ℝ := t + 4 * ε₀
   letI : Fact (a' < b') := ⟨by
     dsimp [a', b']
-    grind⟩
+    linarith⟩
   letI : Fact (b' - a' ≤ 1) := ⟨by
     dsimp [a', b']
-    grind⟩
+    linarith⟩
   let hIncl : σ.slicing.intervalProp C a b ≤ σ.slicing.intervalProp C a' b' := by
     intro F hF
     exact σ.slicing.intervalProp_mono C ha hb hF
@@ -790,7 +790,7 @@ theorem wPhaseOf_gt_of_strictQuotient_of_inner_strip
     (C := C) (σ := σ) (W := W) (hW := hW) (a := a) (b := b) (ψ := a + ε₀) (ε₀ := ε₀)
     (E := B.obj)
     (hI := B.property) (hEne := hBne) (hGe := hBge') hε₀ hε₀2
-    (by grind) (by grind) hthin hsin
+    (by linarith) (by linarith) hthin hsin
 
 theorem IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
     (σ : StabilityCondition C) {a b : ℝ}
@@ -918,10 +918,10 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
     hWindow (cokernel A.arrow).property hcokA_obj_ne
   have hUpper : U <
       wPhaseOf (ssf.W (K₀.of C (cokernel liftA.arrow).obj)) ssf.α + 1 := by
-    grind [hLift_window.1]
+    linarith [hLift_window.1]
   have hLower :
       wPhaseOf (ssf.W (K₀.of C (cokernel liftA.arrow).obj)) ssf.α - 1 < L := by
-    grind [hLift_window.2]
+    linarith [hLift_window.2]
   have hB_range :
       wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ∈
         Set.Ioo

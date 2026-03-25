@@ -44,22 +44,22 @@ def StabilityCondition.deformed (σ : StabilityCondition C)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     StabilityCondition C := by
-  have hε₀8 : ε₀ < 1 / 8 := by grind
-  have hε₀2 : ε₀ < 1 / 4 := by grind
+  have hε₀8 : ε₀ < 1 / 8 := by linarith
+  have hε₀2 : ε₀ < 1 / 4 := by linarith
   let hSector : SectorFiniteLength (C := C) σ ε₀ hε₀ hε₀2 :=
     SectorFiniteLength.of_wide (C := C) σ hε₀ hε₀2 hε₀8 hWide
   refine ⟨⟨σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin, W,
     σ.deformedSlicing_compat C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin⟩, ?_⟩
   constructor
   refine ⟨ε₀, hε₀, by linarith, fun t E ↦ ?_⟩
-  letI : Fact (t - ε₀ < t + ε₀) := ⟨by grind⟩
-  letI : Fact ((t + ε₀) - (t - ε₀) ≤ 1) := ⟨by grind⟩
-  letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by grind⟩
-  letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by grind⟩
+  letI : Fact (t - ε₀ < t + ε₀) := ⟨by linarith⟩
+  letI : Fact ((t + ε₀) - (t - ε₀) ≤ 1) := ⟨by linarith⟩
+  letI : Fact (t - 2 * ε₀ < t + 2 * ε₀) := ⟨by linarith⟩
+  letI : Fact ((t + 2 * ε₀) - (t - 2 * ε₀) ≤ 1) := ⟨by linarith⟩
   have hIncl :
       (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).intervalProp C
           (t - ε₀) (t + ε₀) ≤
@@ -88,7 +88,7 @@ def StabilityCondition.deformed (σ : StabilityCondition C)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     (σ.deformed C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).Z = W := rfl
@@ -100,7 +100,7 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     slicingDist C σ.slicing
@@ -137,7 +137,7 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
           have hQ' : Q.P ψ E' := by
             simpa [Q, StabilityCondition.deformedSlicing] using hQ
           exact Or.inr ⟨HNFiltration.single C E' ψ hQ',
-            show 0 < 1 from by grind, hψ⟩
+            show 0 < 1 from by linarith, hψ⟩
       | ext hT _ _ ihX ihY =>
           exact Q.ltProp_of_triangle C t ihX ihY hT
     -- Forward: Q-HN factors → phase confinement → σ-intervalProp
@@ -155,15 +155,15 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
         rcases hsem with hZ_i | ⟨a_i, b_i, hab_i, hthin_i, _, _, hSS_i⟩
         · exact absurd hZ_i hGi
         · have ⟨hlo, hhi⟩ := phase_confinement_from_stabSeminorm C σ W hW hab_i
-            hε (by grind) hthin_i hsin hSS_i
+            hε (by linarith) hthin_i hsin hSS_i
           have hGi_le : G.φ i ≤ Q.phiPlus C E hE := by
             rw [Q.phiPlus_eq C E hE G hnG hfirstG]
             exact G.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
           have hGi_ge : Q.phiMinus C E hE ≤ G.φ i := by
             rw [Q.phiMinus_eq C E hE G hnG hlastG]
-            exact G.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+            exact G.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
           exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
-            (by grind) (by grind)
+            (by linarith) (by linarith)
     -- Reverse: σ-HN factors → reverse phase confinement → Q-intervalProp
     have reverse : ∀ (E : C) (hE : ¬IsZero E) (δ : ℝ), 0 < δ →
         Q.intervalProp C
@@ -179,10 +179,10 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
         · exact Or.inl hFi
         · have hFi_ge : σ.slicing.phiMinus C E hE ≤ F.φ i := by
             rw [σ.slicing.phiMinus_eq C E hE F hnF hlastF]
-            exact F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+            exact F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
           exact deformedGtPred_subset_gtProp <|
             P_in_deformedGtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
-              (by grind) (F.semistable i) hFi
+              (by linarith) (F.semistable i) hFi
       have hlt : Q.ltProp C (σ.slicing.phiPlus C E hE + ε + δ) E := by
         apply ltProp_of_postnikovTower (C := C) Q F.toPostnikovTower
         intro i
@@ -193,7 +193,7 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
             exact F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
           exact deformedLtPred_subset_ltProp <|
             P_in_deformedLtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
-              (by grind) (F.semistable i) hFi
+              (by linarith) (F.semistable i) hFi
       exact Q.intervalProp_of_intrinsic_phases C hE
         (Q.phiMinus_gt_of_gtProp C hE hgt)
         (Q.phiPlus_lt_of_ltProp C hE hlt)
@@ -241,7 +241,7 @@ theorem StabilityCondition.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
-    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by grind))
+    (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
     ∃ (τ : StabilityCondition C), τ.Z = W ∧
@@ -250,7 +250,7 @@ theorem StabilityCondition.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
   have hx_lt : x < Real.sin (Real.pi * ε) := by
     dsimp [x]
     exact ENNReal.toReal_lt_of_lt_ofReal hsin
-  have hε_half : ε < 1 / 2 := by grind
+  have hε_half : ε < 1 / 2 := by linarith
   have hsin_pos : 0 < Real.sin (Real.pi * ε) := by
     apply Real.sin_pos_of_pos_of_lt_pi
     · nlinarith [Real.pi_pos, hε]

@@ -58,7 +58,7 @@ noncomputable def HeartStabilityData.heartCohIso_of_truncLT
   have hIsoLE :
       IsIso ((h.t.truncLE n).map ((h.t.truncLTι a).app E)) := by
     simpa [TStructure.truncLE] using
-      (h.t.isIso_truncLT_map_truncLTι_app (n + 1) a (by grind) E)
+      (h.t.isIso_truncLT_map_truncLTι_app (n + 1) a (by lia) E)
   haveI : IsIso ((h.t.truncGE n).map ((h.t.truncLE n).map ((h.t.truncLTι a).app E))) :=
     Functor.map_isIso (h.t.truncGE n) ((h.t.truncLE n).map ((h.t.truncLTι a).app E))
   have hIso :
@@ -253,11 +253,11 @@ theorem HeartStabilityData.heartCohClass_eq_zero_of_lt_bound
     (h : HeartStabilityData C)
     {X : C} {m n : ℤ} (hmn : m < n) (hGE : h.t.IsGE X n) :
     h.heartCohClass (C := C) m X = 0 := by
-  have hGE' : h.t.IsGE X (m + 1) := h.t.isGE_of_ge X (m + 1) n (by grind)
+  have hGE' : h.t.IsGE X (m + 1) := h.t.isGE_of_ge X (m + 1) n (by lia)
   have hzeroObj : IsZero ((h.t.truncGELE m m).obj X) := by
     dsimp [TStructure.truncGELE]
     exact Functor.map_isZero (h.t.truncGE m)
-      (h.t.isZero_truncLE_obj_of_isGE m (m + 1) (by grind) X)
+      (h.t.isZero_truncLE_obj_of_isGE m (m + 1) (by lia) X)
   have hzeroHeart : IsZero (h.heartCoh (C := C) m X) := by
     refine ObjectProperty.FullSubcategory.isZero_of_obj_isZero (C := C) ?_
     simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
@@ -276,13 +276,13 @@ theorem HeartStabilityData.heartCohClass_eq_zero_of_gt_bound
     (h : HeartStabilityData C)
     {X : C} {m n : ℤ} (hmn : n < m) (hLE : h.t.IsLE X n) :
     h.heartCohClass (C := C) m X = 0 := by
-  have hLE' : h.t.IsLE X (m - 1) := h.t.isLE_of_le X n (m - 1) (by grind)
-  have hLEm : h.t.IsLE X m := h.t.isLE_of_le X n m (by grind)
+  have hLE' : h.t.IsLE X (m - 1) := h.t.isLE_of_le X n (m - 1) (by lia)
+  have hLEm : h.t.IsLE X m := h.t.isLE_of_le X n m (by lia)
   let eLE : (h.t.truncLE m).obj X ≅ X :=
     @asIso _ _ _ _ ((h.t.truncLEι m).app X) ((h.t.isLE_iff_isIso_truncLEι_app m X).mp hLEm)
   have hzeroObj : IsZero ((h.t.truncGELE m m).obj X) := by
     dsimp [TStructure.truncGELE]
-    exact (h.t.isZero_truncGE_obj_of_isLE (m - 1) m (by grind) X).of_iso
+    exact (h.t.isZero_truncGE_obj_of_isLE (m - 1) m (by lia) X).of_iso
       ((h.t.truncGE m).mapIso eLE)
   have hzeroHeart : IsZero (h.heartCoh (C := C) m X) := by
     refine ObjectProperty.FullSubcategory.isZero_of_obj_isZero (C := C) ?_
@@ -307,7 +307,7 @@ theorem HeartStabilityData.heartCohClassSum_eq_zero_of_lt_bound
   intro j hj
   have hjn : (j : ℤ) ≤ n := by
     exact_mod_cast Nat.le_of_lt_succ (Finset.mem_range.mp hj)
-  have hjc : b + (j : ℤ) < c := by grind
+  have hjc : b + (j : ℤ) < c := by lia
   exact h.heartCohClass_eq_zero_of_lt_bound (C := C) (X := X) (m := b + (j : ℤ))
     (n := c) hjc hGE
 
@@ -320,7 +320,7 @@ theorem HeartStabilityData.heartCohClassSum_eq_zero_of_gt_bound
   intro j hj
   have hjc : c < b + (j : ℤ) := by
     have hj0 : 0 ≤ (j : ℤ) := by exact_mod_cast Nat.zero_le j
-    grind
+    lia
   exact h.heartCohClass_eq_zero_of_gt_bound (C := C) (X := X) (m := b + (j : ℤ))
     (n := c) hjc hLE
 
@@ -354,11 +354,11 @@ theorem HeartStabilityData.heartCohClassSum_eq_zero_of_isZero
     h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X =
       h.heartCohClassSum (C := C) (b + 1) (Int.toNat (a - (b + 1))) X := by
   have hnat : Int.toNat (a - b) = Int.toNat (a - (b + 1)) + 1 := by
-    grind
+    lia
   rw [hnat, HeartStabilityData.heartCohClassSum, Finset.sum_range_succ']
   have hzero : h.heartCohClass (C := C) b X = 0 :=
     h.heartCohClass_eq_zero_of_lt_bound (C := C) (X := X) (m := b) (n := b + 1)
-      (by grind) hGE
+      (by lia) hGE
   simp [HeartStabilityData.heartCohClassSum, hzero, add_left_comm, add_comm]
 
 theorem HeartStabilityData.heartCohClassSum_pred_upper
@@ -367,15 +367,15 @@ theorem HeartStabilityData.heartCohClassSum_pred_upper
     h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X =
       h.heartCohClassSum (C := C) b (Int.toNat ((a - 1) - b)) X := by
   have hnat : Int.toNat (a - b) = Int.toNat ((a - 1) - b) + 1 := by
-    grind
+    lia
   have hdeg : b + (1 + max (a - 1 - b) 0) = a := by
-    have hnonneg : 0 ≤ a - 1 - b := by grind
+    have hnonneg : 0 ≤ a - 1 - b := by lia
     rw [max_eq_left hnonneg]
-    grind
+    lia
   rw [hnat, HeartStabilityData.heartCohClassSum, Finset.sum_range_succ]
   have hzero : h.heartCohClass (C := C) a X = 0 :=
     h.heartCohClass_eq_zero_of_gt_bound (C := C) (X := X) (m := a) (n := a - 1)
-      (by grind) hLE
+      (by lia) hLE
   have hzero' :
       h.heartCohClass (C := C) (b + (max (a - 1 - b) 0 + 1)) X = 0 := by
     simpa [hdeg, add_assoc, add_left_comm, add_comm] using hzero
@@ -386,12 +386,12 @@ theorem HeartStabilityData.heartCohClassSum_shrink_lower
     {X : C} {c b a : ℤ} (hcb : c ≤ b) (hba : b ≤ a) (hGE : h.t.IsGE X b) :
     h.heartCohClassSum (C := C) c (Int.toNat (a - c)) X =
       h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X := by
-  have hnonneg : 0 ≤ b - c := by grind
+  have hnonneg : 0 ≤ b - c := by lia
   let m : ℕ := Int.toNat (b - c)
   have hm : c + (m : ℤ) = b := by
     dsimp [m]
     rw [Int.toNat_of_nonneg hnonneg]
-    grind
+    lia
   have haux :
       ∀ {d : ℤ} (n : ℕ), d + (n : ℤ) = b →
         h.heartCohClassSum (C := C) d (Int.toNat (a - d)) X =
@@ -400,19 +400,19 @@ theorem HeartStabilityData.heartCohClassSum_shrink_lower
     induction n generalizing d with
     | zero =>
         intro hd
-        have hEq : d = b := by grind
+        have hEq : d = b := by lia
         subst hEq
         simp
     | succ n ihn =>
         intro hd
-        have hlt : d < a := by grind
-        have hGE' : h.t.IsGE X (d + 1) := h.t.isGE_of_ge X (d + 1) b (by grind)
+        have hlt : d < a := by lia
+        have hGE' : h.t.IsGE X (d + 1) := h.t.isGE_of_ge X (d + 1) b (by lia)
         calc
           h.heartCohClassSum (C := C) d (Int.toNat (a - d)) X
               = h.heartCohClassSum (C := C) (d + 1) (Int.toNat (a - (d + 1))) X :=
                 h.heartCohClassSum_succ_lower (C := C) (X := X) (b := d) (a := a) hlt hGE'
           _ = h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X :=
-                ihn (by grind)
+                ihn (by lia)
   exact haux m hm
 
 theorem HeartStabilityData.heartCohClassSum_shrink_upper
@@ -420,12 +420,12 @@ theorem HeartStabilityData.heartCohClassSum_shrink_upper
     {X : C} {b a c : ℤ} (hba : b ≤ a) (hac : a ≤ c) (hLE : h.t.IsLE X a) :
     h.heartCohClassSum (C := C) b (Int.toNat (c - b)) X =
       h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X := by
-  have hnonneg : 0 ≤ c - a := by grind
+  have hnonneg : 0 ≤ c - a := by lia
   let m : ℕ := Int.toNat (c - a)
   have hm : a + (m : ℤ) = c := by
     dsimp [m]
     rw [Int.toNat_of_nonneg hnonneg]
-    grind
+    lia
   have haux :
       ∀ {d : ℤ} (n : ℕ), a + (n : ℤ) = d →
         h.heartCohClassSum (C := C) b (Int.toNat (d - b)) X =
@@ -434,19 +434,19 @@ theorem HeartStabilityData.heartCohClassSum_shrink_upper
     induction n generalizing d with
     | zero =>
         intro hd
-        have hEq : d = a := by grind
+        have hEq : d = a := by lia
         subst hEq
         simp
     | succ n ihn =>
         intro hd
-        have hlt : b < d := by grind
-        have hLE' : h.t.IsLE X (d - 1) := h.t.isLE_of_le X a (d - 1) (by grind)
+        have hlt : b < d := by lia
+        have hLE' : h.t.IsLE X (d - 1) := h.t.isLE_of_le X a (d - 1) (by lia)
         calc
           h.heartCohClassSum (C := C) b (Int.toNat (d - b)) X
               = h.heartCohClassSum (C := C) b (Int.toNat ((d - 1) - b)) X :=
                 h.heartCohClassSum_pred_upper (C := C) (X := X) (b := b) (a := d) hlt hLE'
           _ = h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X :=
-                ihn (by grind)
+                ihn (by lia)
   exact haux m hm
 
 theorem HeartStabilityData.heartCohClassSum_eq_of_bounds
@@ -490,7 +490,7 @@ theorem HeartStabilityData.heartCohClassSum_of_truncLT
     {E : C} {b a : ℤ} (hba : b < a) :
     h.heartCohClassSum (C := C) b (Int.toNat ((a - 1) - b)) ((h.t.truncLT a).obj E) =
       h.heartCohClassSum (C := C) b (Int.toNat ((a - 1) - b)) E := by
-  have hnonneg : 0 ≤ (a - 1) - b := by grind
+  have hnonneg : 0 ≤ (a - 1) - b := by lia
   rw [HeartStabilityData.heartCohClassSum, HeartStabilityData.heartCohClassSum]
   refine Finset.sum_congr rfl ?_
   intro j hj
@@ -501,7 +501,7 @@ theorem HeartStabilityData.heartCohClassSum_of_truncLT
   have hjle : (j : ℤ) ≤ (a - 1) - b := by
     rw [Int.toNat_of_nonneg hnonneg] at hjle'
     exact hjle'
-  have hjlt : b + (j : ℤ) < a := by grind
+  have hjlt : b + (j : ℤ) < a := by lia
   simpa using h.heartCohClass_of_truncLT (C := C) E (b + (j : ℤ)) a hjlt
 
 theorem HeartStabilityData.heartEulerClassObj_eq_heartCohClassSum
@@ -519,7 +519,7 @@ theorem HeartStabilityData.heartEulerClassObj_eq_heartCohClassSum
       h.heartCohClassSum_eq_of_bounds (C := C) (X := X)
         (b₁ := b₀) (a₁ := a₀) (b₂ := b) (a₂ := a) h₀ hab hLE₀ hGE₀ hLE hGE
     simpa [HeartStabilityData.heartEulerClassObj, a₀, b₀, h₀] using hEq
-  · have hzero : IsZero X := h.t.isZero X a₀ b₀ (by grind)
+  · have hzero : IsZero X := h.t.isZero X a₀ b₀ (by lia)
     rw [HeartStabilityData.heartEulerClassObj, dif_neg h₀]
     symm
     exact h.heartCohClassSum_eq_zero_of_isZero (C := C) hzero b (Int.toNat (a - b))
@@ -548,14 +548,14 @@ theorem HeartStabilityData.heartEulerClassObj_eq_truncLT_add_heartCohClass
     h.heartEulerClassObj (C := C) E =
       h.heartEulerClassObj (C := C) ((h.t.truncLT a).obj E) +
         h.heartCohClass (C := C) a E := by
-  have hnonneg : 0 ≤ (a - 1) - b := by grind
-  have hnat : Int.toNat (a - b) = Int.toNat ((a - 1) - b) + 1 := by grind
-  have hdeg' : b + (a - 1 - b + 1) = a := by grind
+  have hnonneg : 0 ≤ (a - 1) - b := by lia
+  have hnat : Int.toNat (a - b) = Int.toNat ((a - 1) - b) + 1 := by lia
+  have hdeg' : b + (a - 1 - b + 1) = a := by lia
   calc
     h.heartEulerClassObj (C := C) E
         = h.heartCohClassSum (C := C) b (Int.toNat (a - b)) E :=
             h.heartEulerClassObj_eq_heartCohClassSum (C := C) (X := E)
-              (show b ≤ a by grind) hLE hGE
+              (show b ≤ a by lia) hLE hGE
     _ = h.heartCohClassSum (C := C) b (Int.toNat ((a - 1) - b)) E +
           h.heartCohClass (C := C) a E := by
             rw [hnat, HeartStabilityData.heartCohClassSum,
@@ -568,7 +568,7 @@ theorem HeartStabilityData.heartEulerClassObj_eq_truncLT_add_heartCohClass
           h.heartCohClass (C := C) a E := by
             congr 1
             exact (h.heartEulerClassObj_eq_heartCohClassSum (C := C)
-              (X := (h.t.truncLT a).obj E) (b := b) (a := a - 1) (by grind)
+              (X := (h.t.truncLT a).obj E) (b := b) (a := a - 1) (by lia)
               inferInstance inferInstance).symm
 
 theorem HeartStabilityData.eulerZObj_eq_truncLT_add_heartCohClass
@@ -590,12 +590,12 @@ theorem HeartStabilityData.heartCohClassSum_eq_single_of_pure
   have hk_eq : b + (k : ℤ) = n := by
     dsimp [k]
     rw [Int.toNat_of_nonneg (sub_nonneg.mpr hb)]
-    grind
+    lia
   have hk_mem : k ∈ Finset.range (m + 1) := by
     apply Finset.mem_range.mpr
     have hkm : (n - b).toNat ≤ m := by
       have hkm' : n - b ≤ (m : ℤ) := by
-        grind
+        lia
       rw [Int.toNat_le]
       exact hkm'
     exact Nat.lt_succ_of_le hkm
@@ -608,7 +608,7 @@ theorem HeartStabilityData.heartCohClassSum_eq_single_of_pure
         h.heartCohClass_eq_zero_of_lt_pure (C := C) (X := X) (m := b + (j : ℤ))
           (n := n) hjn hGE
     · have hnj : n < b + (j : ℤ) := by
-        grind
+        lia
       simpa [hnj] using
         h.heartCohClass_eq_zero_of_gt_pure (C := C) (X := X) (m := b + (j : ℤ))
           (n := n) hnj hLE
@@ -622,7 +622,7 @@ theorem HeartStabilityData.heartCohClassSum_eq_top_of_pure
   refine h.heartCohClassSum_eq_single_of_pure (C := C) (X := X) (n := a) (b := b)
     (m := Int.toNat (a - b)) hLE hGE hab ?_
   rw [Int.toNat_of_nonneg (sub_nonneg.mpr hab)]
-  grind
+  lia
 
 theorem HeartStabilityData.ZOnHeartK0_heartCohClassSum_eq_top_of_pure
     (h : HeartStabilityData C)
@@ -755,9 +755,9 @@ theorem HeartStabilityData.heartEulerClassObj_of_heart_shift
   letI : h.t.IsLE E.obj 0 := hE'.1
   letI : h.t.IsGE E.obj 0 := hE'.2
   have hLE : h.t.IsLE (E.obj⟦(-n : ℤ)⟧) n := by
-    simpa using (h.t.isLE_shift E.obj 0 (-n : ℤ) n (by grind))
+    simpa using (h.t.isLE_shift E.obj 0 (-n : ℤ) n (by lia))
   have hGE : h.t.IsGE (E.obj⟦(-n : ℤ)⟧) n := by
-    simpa using (h.t.isGE_shift E.obj 0 (-n : ℤ) n (by grind))
+    simpa using (h.t.isGE_shift E.obj 0 (-n : ℤ) n (by lia))
   rw [h.heartEulerClassObj_of_pure (C := C) (X := E.obj⟦(-n : ℤ)⟧) hLE hGE]
   exact h.heartCohClass_of_heart_shift (C := C) E n
 

@@ -40,48 +40,48 @@ Core operations (`prefix`, `ofIso`, `shiftHN`) are in `Slicing.Defs`.
 /-- The prefix of an HN filtration with phases > t gives a filtration with all phases > t. -/
 lemma HNFiltration.prefix_phiMinus_gt {P : ℝ → ObjectProperty C} {E : C}
     (F : HNFiltration C P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) (t : ℝ)
-    (ht : ∀ j : Fin k, t < F.φ ⟨j.val, by grind⟩) :
+    (ht : ∀ j : Fin k, t < F.φ ⟨j.val, by lia⟩) :
     t < (F.prefix C k hk hk0).phiMinus C hk0 := by
   simp only [HNFiltration.phiMinus, HNFiltration.prefix_φ]
-  exact ht ⟨k - 1, by grind⟩
+  exact ht ⟨k - 1, by lia⟩
 
 /-- The chain object at the split point satisfies `gtProp t` if all phases before
 the split are > t. -/
 lemma HNFiltration.chain_obj_gtProp (s : Slicing C) {E : C}
     (F : HNFiltration C s.P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) (t : ℝ)
-    (ht : ∀ j : Fin k, t < F.φ ⟨j.val, by grind⟩) :
-    s.gtProp C t (F.chain.obj ⟨k, by grind⟩) :=
+    (ht : ∀ j : Fin k, t < F.φ ⟨j.val, by lia⟩) :
+    s.gtProp C t (F.chain.obj ⟨k, by lia⟩) :=
   Or.inr ⟨F.prefix C k hk hk0, hk0, F.prefix_phiMinus_gt C k hk hk0 t ht⟩
 
 /-- The chain object at the split point satisfies `leProp t` if all phases before
 the split are ≤ t. -/
 lemma HNFiltration.chain_obj_leProp (s : Slicing C) {E : C}
     (F : HNFiltration C s.P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) (t : ℝ)
-    (ht : ∀ j : Fin k, F.φ ⟨j.val, by grind⟩ ≤ t) :
-    s.leProp C t (F.chain.obj ⟨k, by grind⟩) := by
+    (ht : ∀ j : Fin k, F.φ ⟨j.val, by lia⟩ ≤ t) :
+    s.leProp C t (F.chain.obj ⟨k, by lia⟩) := by
   refine Or.inr ⟨F.prefix C k hk hk0, hk0, ?_⟩
   simp only [HNFiltration.phiPlus, HNFiltration.prefix_φ]
-  exact ht ⟨0, by grind⟩
+  exact ht ⟨0, by lia⟩
 
 /-- The chain object at the split point satisfies `ltProp t` if all phases before
 the split are < t. -/
 lemma HNFiltration.chain_obj_ltProp (s : Slicing C) {E : C}
     (F : HNFiltration C s.P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) (t : ℝ)
-    (ht : ∀ j : Fin k, F.φ ⟨j.val, by grind⟩ < t) :
-    s.ltProp C t (F.chain.obj ⟨k, by grind⟩) := by
+    (ht : ∀ j : Fin k, F.φ ⟨j.val, by lia⟩ < t) :
+    s.ltProp C t (F.chain.obj ⟨k, by lia⟩) := by
   refine Or.inr ⟨F.prefix C k hk hk0, hk0, ?_⟩
   simp only [HNFiltration.phiPlus, HNFiltration.prefix_φ]
-  exact ht ⟨0, by grind⟩
+  exact ht ⟨0, by lia⟩
 
 /-- The chain object at the split point satisfies `geProp t` if all phases before
 the split are ≥ t. -/
 lemma HNFiltration.chain_obj_geProp (s : Slicing C) {E : C}
     (F : HNFiltration C s.P E) (k : ℕ) (hk : k ≤ F.n) (hk0 : 0 < k) (t : ℝ)
-    (ht : ∀ j : Fin k, t ≤ F.φ ⟨j.val, by grind⟩) :
-    s.geProp C t (F.chain.obj ⟨k, by grind⟩) := by
+    (ht : ∀ j : Fin k, t ≤ F.φ ⟨j.val, by lia⟩) :
+    s.geProp C t (F.chain.obj ⟨k, by lia⟩) := by
   refine Or.inr ⟨F.prefix C k hk hk0, hk0, ?_⟩
   simp only [HNFiltration.phiMinus, HNFiltration.prefix_φ]
-  exact ht ⟨k - 1, by grind⟩
+  exact ht ⟨k - 1, by lia⟩
 
 /-- An HN-filtered object satisfies `gtProp t` if all its phases are > t. -/
 lemma Slicing.gtProp_of_hn (s : Slicing C) {E : C}
@@ -90,7 +90,7 @@ lemma Slicing.gtProp_of_hn (s : Slicing C) {E : C}
     s.gtProp C t E := by
   refine Or.inr ⟨F, hn, ?_⟩
   simp only [HNFiltration.phiMinus]
-  exact ht ⟨F.n - 1, by grind⟩
+  exact ht ⟨F.n - 1, by lia⟩
 
 /-- An HN-filtered object satisfies `leProp t` if all its phases are ≤ t. -/
 lemma Slicing.leProp_of_hn (s : Slicing C) {E : C}
@@ -108,7 +108,7 @@ lemma Slicing.geProp_of_hn (s : Slicing C) {E : C}
     s.geProp C t E := by
   refine Or.inr ⟨F, hn, ?_⟩
   simp only [HNFiltration.phiMinus]
-  exact ht ⟨F.n - 1, by grind⟩
+  exact ht ⟨F.n - 1, by lia⟩
 
 /-- An HN-filtered object satisfies `ltProp t` if all its phases are < t. -/
 lemma Slicing.ltProp_of_hn (s : Slicing C) {E : C}
@@ -138,17 +138,17 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
     (hψ_lt : ∀ j : Fin G.n, ψ < G.φ j) :
     HNFiltration C P Z := by
   let objFn : Fin (G.n + 2) → C :=
-    fun i ↦ if h : i.val ≤ G.n then G.chain.obj ⟨i.val, by grind⟩ else Z
+    fun i ↦ if h : i.val ≤ G.n then G.chain.obj ⟨i.val, by lia⟩ else Z
   let lastMor : G.chain.obj (Fin.last G.n) ⟶ Z :=
     (Classical.choice G.top_iso).hom ≫ eT₁.inv ≫ T.mor₁ ≫ eT₂.hom
   have mapSuccFn : ∀ (i : Fin (G.n + 1)), objFn (Fin.castSucc i) ⟶ objFn (Fin.succ i) := by
     intro ⟨i, hi⟩
     simp only [objFn, Fin.castSucc_mk, Fin.succ_mk]
     by_cases h1 : i + 1 ≤ G.n
-    · simp only [show i ≤ G.n from by grind, h1, dite_true]
-      exact G.chain.map' i (i + 1) (by grind) (by grind)
-    · simp only [show i ≤ G.n from by grind, h1, dite_true, dite_false]
-      exact eqToHom (by congr 1; ext; grind) ≫ lastMor
+    · simp only [show i ≤ G.n from by lia, h1, dite_true]
+      exact G.chain.map' i (i + 1) (by lia) (by lia)
+    · simp only [show i ≤ G.n from by lia, h1, dite_true, dite_false]
+      exact eqToHom (by congr 1; ext; simp [Fin.val_last]; lia) ≫ lastMor
   exact
   { n := G.n + 1
     chain := ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn
@@ -161,43 +161,43 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
       · exact hT
     triangle_obj₁ := fun j ↦ by
       have newChainObj : ∀ k (hk : k ≤ G.n),
-          (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj ⟨k, by grind⟩ =
-          G.chain.obj ⟨k, by grind⟩ := fun k hk ↦ by
+          (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj ⟨k, by lia⟩ =
+          G.chain.obj ⟨k, by lia⟩ := fun k hk ↦ by
         simp [ComposableArrows.mkOfObjOfMapSucc_obj, objFn, hk]
       split_ifs with h
       · refine ⟨(Classical.choice (G.triangle_obj₁ ⟨j.val, h⟩)).trans (eqToIso ?_)⟩
         simp only [ComposableArrows.obj']
-        exact (newChainObj j.val (by grind)).symm
-      · have hj : j.val = G.n := by grind
+        exact (newChainObj j.val (by lia)).symm
+      · have hj : j.val = G.n := by lia
         refine ⟨eT₁.trans ((Classical.choice G.top_iso).symm.trans (eqToIso ?_))⟩
         change G.chain.obj (Fin.last G.n) =
           (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj' j.val _
         simp only [ComposableArrows.obj', ComposableArrows.mkOfObjOfMapSucc_obj, objFn,
-          show j.val ≤ G.n from by grind, dite_true]
-        congr 1; ext; grind
+          show j.val ≤ G.n from by lia, dite_true]
+        congr 1; ext; simp [Fin.val_last]; lia
     triangle_obj₂ := fun j ↦ by
       have newChainObj : ∀ k (hk : k ≤ G.n),
-          (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj ⟨k, by grind⟩ =
-          G.chain.obj ⟨k, by grind⟩ := fun k hk ↦ by
+          (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj ⟨k, by lia⟩ =
+          G.chain.obj ⟨k, by lia⟩ := fun k hk ↦ by
         simp [ComposableArrows.mkOfObjOfMapSucc_obj, objFn, hk]
       split_ifs with h
       · refine ⟨(Classical.choice (G.triangle_obj₂ ⟨j.val, h⟩)).trans (eqToIso ?_)⟩
         simp only [ComposableArrows.obj']
-        exact (newChainObj (j.val + 1) (by grind)).symm
+        exact (newChainObj (j.val + 1) (by lia)).symm
       · refine ⟨eT₂.trans (eqToIso ?_)⟩
         simp only [ComposableArrows.obj', ComposableArrows.mkOfObjOfMapSucc_obj, objFn,
-          show ¬(j.val + 1 ≤ G.n) from by grind, dite_false]
+          show ¬(j.val + 1 ≤ G.n) from by lia, dite_false]
     base_isZero := by
       change IsZero ((ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj ⟨0, _⟩)
       simp only [ComposableArrows.mkOfObjOfMapSucc_obj, objFn,
-        show (0 : ℕ) ≤ G.n from by grind, dite_true]
+        show (0 : ℕ) ≤ G.n from by lia, dite_true]
       exact G.base_isZero
     top_iso := ⟨by
       change (ComposableArrows.mkOfObjOfMapSucc objFn mapSuccFn).obj ⟨G.n + 1, _⟩ ≅ Z
       simp only [ComposableArrows.mkOfObjOfMapSucc_obj, objFn,
-        show ¬(G.n + 1 ≤ G.n) from by grind, dite_false]
+        show ¬(G.n + 1 ≤ G.n) from by lia, dite_false]
       exact Iso.refl _⟩
-    zero_isZero := fun h ↦ absurd h (by grind)
+    zero_isZero := fun h ↦ absurd h (by lia)
     φ := fun j ↦
       if h : j.val < G.n then G.φ ⟨j.val, h⟩
       else ψ
@@ -208,7 +208,7 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
       · by_cases ha' : a < G.n
         · simp only [hb', ha', dite_true]
           exact G.hφ (show (⟨a, ha'⟩ : Fin G.n) < ⟨b, hb'⟩ from hab)
-        · exact absurd (lt_trans hab hb') (by grind)
+        · exact absurd (lt_trans hab hb') (by lia)
       · by_cases ha' : a < G.n
         · simp only [hb', ha', dite_true, dite_false]
           exact hψ_lt ⟨a, ha'⟩

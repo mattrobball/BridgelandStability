@@ -89,12 +89,12 @@ lemma chain_hom_eq_zero_of_factor_zero (s : Slicing C) {E : C}
   -- and go down to k = 0.
   suffices ∀ (m : ℕ) (hm : m ≤ F.n) (k : ℕ) (hk : k < F.n + 1) (_ : F.n - m ≤ k)
       (f : (F.triangle ⟨0, hn⟩).obj₃ ⟶ F.chain.obj ⟨k, hk⟩), f = 0 by
-    intro k hk f; exact this F.n le_rfl k hk (by grind) f
+    intro k hk f; exact this F.n le_rfl k hk (by lia) f
   intro m
   induction m with
   | zero =>
     intro _ k hk hkn f
-    have hkn' : k = F.n := by grind
+    have hkn' : k = F.n := by lia
     subst hkn'
     let eN := Classical.choice F.top_iso
     have h1 : f ≫ eN.hom = 0 := hzero _
@@ -106,7 +106,7 @@ lemma chain_hom_eq_zero_of_factor_zero (s : Slicing C) {E : C}
     intro hm k hk hkn f
     by_cases hkn' : k = F.n - (m + 1)
     · -- At the target level: use the invRotate exact sequence
-      have hkF : k < F.n := by grind
+      have hkF : k < F.n := by lia
       let Tk := F.triangle ⟨k, hkF⟩
       let e₁ := Classical.choice (F.triangle_obj₁ ⟨k, hkF⟩)
       let e₂ := Classical.choice (F.triangle_obj₂ ⟨k, hkF⟩)
@@ -117,11 +117,10 @@ lemma chain_hom_eq_zero_of_factor_zero (s : Slicing C) {E : C}
         -- is zero by the IH.
         have h2 : (f ≫ e₁.inv ≫ Tk.mor₁) ≫ e₂.hom = 0 := by
           rw [Category.assoc, Category.assoc]
-          exact ih (by grind) (k + 1) (by grind) (by grind) _
+          exact ih (by lia) (k + 1) (by lia) (by lia) _
         -- Since e₂.hom is an isomorphism, f ≫ e₁.inv ≫ Tk.mor₁ = 0
         rw [Category.assoc]
-        simp only [Preadditive.IsIso.comp_right_eq_zero] at h2
-        exact h2
+        simpa only [Preadditive.IsIso.comp_right_eq_zero] using h2
       -- Step 2: By coyoneda_exact₂ on the invRotate of T_k, f ≫ e₁.inv factors through
       -- T_k.obj₃[-1] = factor(k)[-1].
       obtain ⟨g, hg⟩ := Triangle.coyoneda_exact₂ Tk.invRotate
@@ -149,7 +148,7 @@ lemma chain_hom_eq_zero_of_factor_zero (s : Slicing C) {E : C}
               rw [Category.assoc, e₁.inv_hom_id, Category.comp_id]
         _ = 0 := by rw [hfe, zero_comp]
     · -- Not at the target level: k > F.n - (m + 1), use IH directly
-      exact ih (by grind) k hk (by grind) f
+      exact ih (by lia) k hk (by lia) f
 
 /-- If `Hom(factor(0), E) = 0` for an HN filtration, then `factor(0)` is zero.
 This follows from `chain_hom_eq_zero_of_factor_zero`: all maps from `factor(0)` to
@@ -167,7 +166,7 @@ lemma HNFiltration.isZero_factor_zero_of_hom_eq_zero (s : Slicing C) {E : C}
   -- The map inv(mor₂) ≫ e₂.hom : factor(0) → chain(1) is an iso
   -- Any map from factor(0) to chain(1) is zero by chain_hom_eq_zero_of_factor_zero
   have h1 : inv (F.triangle ⟨0, hn⟩).mor₂ ≫ e₂.hom = 0 :=
-    chain_hom_eq_zero_of_factor_zero C s F hn hzero 1 (by grind) _
+    chain_hom_eq_zero_of_factor_zero C s F hn hzero 1 (by lia) _
   have h2 : inv (F.triangle ⟨0, hn⟩).mor₂ = 0 := by
     calc inv (F.triangle ⟨0, hn⟩).mor₂
         = (inv (F.triangle ⟨0, hn⟩).mor₂ ≫ e₂.hom) ≫ e₂.inv := by
@@ -213,16 +212,16 @@ then the last factor is zero. This is the dual of `isZero_factor_zero_of_hom_eq_
 using `yoneda_exact₃` and hom-vanishing on the shifted prefix filtration. -/
 lemma HNFiltration.isZero_factor_last_of_hom_eq_zero (s : Slicing C) {E : C}
     (G : HNFiltration C s.P E) (hn : 0 < G.n)
-    (hzero : ∀ f : E ⟶ (G.triangle ⟨G.n - 1, by grind⟩).obj₃, f = 0) :
-    IsZero (G.triangle ⟨G.n - 1, by grind⟩).obj₃ := by
+    (hzero : ∀ f : E ⟶ (G.triangle ⟨G.n - 1, by lia⟩).obj₃, f = 0) :
+    IsZero (G.triangle ⟨G.n - 1, by lia⟩).obj₃ := by
   rw [IsZero.iff_id_eq_zero]
-  let T := G.triangle ⟨G.n - 1, by grind⟩
+  let T := G.triangle ⟨G.n - 1, by lia⟩
   -- T.obj₂ ≅ chain.obj'(G.n) ≅ E, so T.mor₂ : T.obj₂ → T.obj₃ is zero
-  let e₂ := Classical.choice (G.triangle_obj₂ ⟨G.n - 1, by grind⟩)
+  let e₂ := Classical.choice (G.triangle_obj₂ ⟨G.n - 1, by lia⟩)
   let eE := Classical.choice G.top_iso
-  have hobj₂_eq : G.chain.obj' (G.n - 1 + 1) (by grind) = G.chain.right := by
+  have hobj₂_eq : G.chain.obj' (G.n - 1 + 1) (by lia) = G.chain.right := by
     simp only [ComposableArrows.obj']
-    congr 1; ext; grind
+    congr 1; ext; lia
   let eR : T.obj₂ ≅ E := e₂.trans (eqToIso hobj₂_eq |>.trans eE)
   have hmor₂ : T.mor₂ = 0 := by
     have h1 : eR.inv ≫ T.mor₂ = 0 := hzero _
@@ -232,59 +231,59 @@ lemma HNFiltration.isZero_factor_last_of_hom_eq_zero (s : Slicing C) {E : C}
       _ = 0 := by rw [h1, comp_zero]
   -- By yoneda_exact₃: since T.mor₂ ≫ id = 0, id = T.mor₃ ≫ γ for some γ
   have hmor₂_id : T.mor₂ ≫ 𝟙 T.obj₃ = 0 := by rw [Category.comp_id, hmor₂]
-  obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ T (G.triangle_dist ⟨G.n - 1, by grind⟩)
+  obtain ⟨γ, hγ⟩ := Triangle.yoneda_exact₃ T (G.triangle_dist ⟨G.n - 1, by lia⟩)
     (𝟙 T.obj₃) hmor₂_id
   -- γ : T.obj₁⟦1⟧ → T.obj₃. Show γ = 0 by hom-vanishing on shifted prefix.
   suffices hγ0 : γ = 0 by rw [hγ, hγ0, comp_zero]
-  let e₁ := Classical.choice (G.triangle_obj₁ ⟨G.n - 1, by grind⟩)
+  let e₁ := Classical.choice (G.triangle_obj₁ ⟨G.n - 1, by lia⟩)
   by_cases hn1 : G.n = 1
   · -- If G.n = 1, T.obj₁ ≅ chain(0) = chain.left = 0, so T.obj₁⟦1⟧ is zero
-    have he : G.chain.obj' (G.n - 1) (by grind) = G.chain.left := by
-      simp only [ComposableArrows.obj']; congr 1; ext; grind
+    have he : G.chain.obj' (G.n - 1) (by lia) = G.chain.left := by
+      simp only [ComposableArrows.obj']; congr 1; ext; lia
     have hZ : IsZero T.obj₁ :=
       G.base_isZero.of_iso (e₁.trans (eqToIso he))
     exact ((shiftFunctor C (1 : ℤ)).map_isZero hZ).eq_of_src _ _
   · -- G.n ≥ 2: use the shifted prefix filtration on T.obj₁⟦1⟧
     let e₁_shift := (shiftFunctor C (1 : ℤ)).mapIso e₁
-    let pfx := G.prefix C (G.n - 1) (by grind) (by grind)
+    let pfx := G.prefix C (G.n - 1) (by lia) (by lia)
     let pfx_shift := pfx.shiftHN C s (1 : ℤ)
     let pfx_on_T := pfx_shift.ofIso C e₁_shift.symm
     have hpn : pfx_on_T.n = G.n - 1 := rfl
     have hphases : ∀ j : Fin pfx_on_T.n,
-        G.φ ⟨G.n - 1, by grind⟩ < pfx_on_T.φ j := by
+        G.φ ⟨G.n - 1, by lia⟩ < pfx_on_T.φ j := by
       intro ⟨j, hj⟩
-      change G.φ ⟨G.n - 1, by grind⟩ < G.φ ⟨j, by grind⟩ + (1 : ℤ)
-      have h1 : G.φ ⟨j, by grind⟩ ≥ G.φ ⟨G.n - 1, by grind⟩ :=
-        G.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
-      have h2 : ((1 : ℤ) : ℝ) = 1 := by grind
-      grind
+      change G.φ ⟨G.n - 1, by lia⟩ < G.φ ⟨j, by lia⟩ + (1 : ℤ)
+      have h1 : G.φ ⟨j, by lia⟩ ≥ G.φ ⟨G.n - 1, by lia⟩ :=
+        G.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
+      have h2 : ((1 : ℤ) : ℝ) = 1 := by norm_num
+      linarith
     exact s.hom_eq_zero_of_lt_phases C
-      (G.semistable ⟨G.n - 1, by grind⟩) pfx_on_T hphases γ
+      (G.semistable ⟨G.n - 1, by lia⟩) pfx_on_T hphases γ
 
 /-- The lowest phase of an HN filtration with nonzero last factor is bounded below
 by the lowest phase of any other HN filtration. Dual of `phiPlus_le_of_nonzero_factor`. -/
 theorem HNFiltration.phiMinus_ge_of_nonzero_last_factor (s : Slicing C) {E : C}
     (F₁ F₂ : HNFiltration C s.P E) (hn₁ : 0 < F₁.n) (hn₂ : 0 < F₂.n)
-    (hne₂ : ¬IsZero (F₂.triangle ⟨F₂.n - 1, by grind⟩).obj₃) :
+    (hne₂ : ¬IsZero (F₂.triangle ⟨F₂.n - 1, by lia⟩).obj₃) :
     F₁.phiMinus C hn₁ ≤ F₂.phiMinus C hn₂ := by
   by_contra hlt
   push_neg at hlt
   -- F₁.φ(n₁-1) > F₂.φ(n₂-1), so all F₁ phases > F₂.φ(n₂-1)
-  have hgap : ∀ j : Fin F₁.n, F₂.φ ⟨F₂.n - 1, by grind⟩ < F₁.φ j := fun j ↦
+  have hgap : ∀ j : Fin F₁.n, F₂.φ ⟨F₂.n - 1, by lia⟩ < F₁.φ j := fun j ↦
     lt_of_lt_of_le (by change F₂.phiMinus C hn₂ < F₁.phiMinus C hn₁; exact hlt)
-      (F₁.hφ.antitone (Fin.mk_le_mk.mpr (by grind)))
+      (F₁.hφ.antitone (Fin.mk_le_mk.mpr (by lia)))
   -- By hom_eq_zero_of_lt_phases, Hom(E, factor₂(n₂-1)) = 0
-  have hzero : ∀ f : E ⟶ (F₂.triangle ⟨F₂.n - 1, by grind⟩).obj₃, f = 0 :=
+  have hzero : ∀ f : E ⟶ (F₂.triangle ⟨F₂.n - 1, by lia⟩).obj₃, f = 0 :=
     fun f ↦ s.hom_eq_zero_of_lt_phases C
-      (F₂.semistable ⟨F₂.n - 1, by grind⟩) F₁ hgap f
+      (F₂.semistable ⟨F₂.n - 1, by lia⟩) F₁ hgap f
   exact hne₂ (F₂.isZero_factor_last_of_hom_eq_zero C s hn₂ hzero)
 
 /-- For any two HN filtrations of a nonzero object where both have nonzero last factors,
 the lowest phases agree. Dual of `phiPlus_eq_of_nonzero_factors`. -/
 theorem HNFiltration.phiMinus_eq_of_nonzero_last_factors (s : Slicing C) {E : C}
     (F₁ F₂ : HNFiltration C s.P E) (hn₁ : 0 < F₁.n) (hn₂ : 0 < F₂.n)
-    (hne₁ : ¬IsZero (F₁.triangle ⟨F₁.n - 1, by grind⟩).obj₃)
-    (hne₂ : ¬IsZero (F₂.triangle ⟨F₂.n - 1, by grind⟩).obj₃) :
+    (hne₁ : ¬IsZero (F₁.triangle ⟨F₁.n - 1, by lia⟩).obj₃)
+    (hne₂ : ¬IsZero (F₂.triangle ⟨F₂.n - 1, by lia⟩).obj₃) :
     F₁.phiMinus C hn₁ = F₂.phiMinus C hn₂ :=
   le_antisymm (F₁.phiMinus_ge_of_nonzero_last_factor C s F₂ hn₁ hn₂ hne₂)
     (F₂.phiMinus_ge_of_nonzero_last_factor C s F₁ hn₂ hn₁ hne₁)
@@ -296,25 +295,25 @@ last factors (which preserves the nonzero first factor). -/
 lemma HNFiltration.exists_both_nonzero (s : Slicing C) {E : C} (hE : ¬IsZero E) :
     ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n),
       ¬IsZero (F.triangle ⟨0, hn⟩).obj₃ ∧
-      ¬IsZero (F.triangle ⟨F.n - 1, by grind⟩).obj₃ := by
+      ¬IsZero (F.triangle ⟨F.n - 1, by lia⟩).obj₃ := by
   obtain ⟨F, hnF, hfirst⟩ := HNFiltration.exists_nonzero_first C s hE
   suffices hmain : ∀ (m : ℕ) (G : HNFiltration C s.P E),
       G.n ≤ m → (hG : 0 < G.n) → ¬IsZero (G.triangle ⟨0, hG⟩).obj₃ →
       ∃ (H : HNFiltration C s.P E) (hH : 0 < H.n),
         ¬IsZero (H.triangle ⟨0, hH⟩).obj₃ ∧
-        ¬IsZero (H.triangle ⟨H.n - 1, by grind⟩).obj₃ from
+        ¬IsZero (H.triangle ⟨H.n - 1, by lia⟩).obj₃ from
     hmain F.n F le_rfl hnF hfirst
   intro m; induction m with
-  | zero => intro G hGn hG _; grind
+  | zero => intro G hGn hG _; lia
   | succ m ih =>
     intro G hGn hG hGfirst
-    by_cases hlast : IsZero (G.triangle ⟨G.n - 1, by grind⟩).obj₃
+    by_cases hlast : IsZero (G.triangle ⟨G.n - 1, by lia⟩).obj₃
     · have hn1 : 1 < G.n := by
         by_contra h; push_neg at h
-        have : (⟨0, hG⟩ : Fin G.n) = ⟨G.n - 1, by grind⟩ := Fin.ext (by grind)
+        have : (⟨0, hG⟩ : Fin G.n) = ⟨G.n - 1, by lia⟩ := Fin.ext (by lia)
         rw [this] at hGfirst; exact hGfirst hlast
-      exact ih (G.dropLast C hn1 hlast) (by change G.n - 1 ≤ m; grind)
-        (by change 0 < G.n - 1; grind) hGfirst
+      exact ih (G.dropLast C hn1 hlast) (by change G.n - 1 ≤ m; lia)
+        (by change 0 < G.n - 1; lia) hGfirst
     · exact ⟨G, hG, hGfirst, hlast⟩
 
 /-! ### Intrinsic phase bounds
@@ -343,8 +342,8 @@ theorem Slicing.phiPlus_eq (s : Slicing C) (E : C) (hE : ¬IsZero E)
 with nonzero last factor. -/
 theorem Slicing.phiMinus_eq (s : Slicing C) (E : C) (hE : ¬IsZero E)
     (G : HNFiltration C s.P E) (hn : 0 < G.n)
-    (hne : ¬IsZero (G.triangle ⟨G.n - 1, by grind⟩).obj₃) :
-    s.phiMinus C E hE = G.φ ⟨G.n - 1, by grind⟩ := by
+    (hne : ¬IsZero (G.triangle ⟨G.n - 1, by lia⟩).obj₃) :
+    s.phiMinus C E hE = G.φ ⟨G.n - 1, by lia⟩ := by
   unfold Slicing.phiMinus
   let F := (HNFiltration.exists_nonzero_last C s hE).choose
   let hnF := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
@@ -369,7 +368,7 @@ theorem Slicing.phiMinus_le_phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) :
       _ = s.phiPlus C E hE := by unfold Slicing.phiPlus; rfl
       _ < s.phiMinus C E hE := hlt
       _ = Fm.φ ⟨Fm.n - 1, _⟩ := by unfold Slicing.phiMinus; rfl
-      _ ≤ Fm.φ i := Fm.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+      _ ≤ Fm.φ i := Fm.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
   -- By hom_eq_zero_of_phase_gap: 𝟙 E = 0, so E is zero
   have hid : (𝟙 E : E ⟶ E) = 0 :=
     s.hom_eq_zero_of_phase_gap C Fm Fp hgap (𝟙 E)
@@ -381,7 +380,7 @@ last factors, so `phiPlus_eq` and `phiMinus_eq` apply. -/
 lemma Slicing.exists_HN_intrinsic_width (s : Slicing C) {E : C} (hE : ¬IsZero E) :
     ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n),
       F.φ ⟨0, hn⟩ = s.phiPlus C E hE ∧
-      F.φ ⟨F.n - 1, by grind⟩ = s.phiMinus C E hE := by
+      F.φ ⟨F.n - 1, by lia⟩ = s.phiMinus C E hE := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
   exact ⟨F, hn, (s.phiPlus_eq C E hE F hn hfirst).symm,
     (s.phiMinus_eq C E hE F hn hlast).symm⟩
@@ -454,7 +453,7 @@ lemma Slicing.phiMinus_gt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero
   · obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_last C s hE
     rw [s.phiMinus_eq C E hE F hnF hneF]
     have hGn : 0 < G.n := G.n_pos C hE
-    exact lt_of_lt_of_le (hG ⟨G.n - 1, by grind⟩).1
+    exact lt_of_lt_of_le (hG ⟨G.n - 1, by lia⟩).1
       (G.phiMinus_ge_of_nonzero_last_factor C s F hGn hnF hneF)
 
 /-! ### Conversion between gtProp/leProp and intervalProp -/
@@ -532,8 +531,8 @@ lemma Slicing.intervalProp_of_intrinsic_phases (s : Slicing C) {E : C} (hE : ¬I
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
   exact Or.inr ⟨F, fun i ↦ ⟨by
     calc a < s.phiMinus C E hE := hminus
-      _ = F.φ ⟨F.n - 1, by grind⟩ := s.phiMinus_eq C E hE F hn hlast
-      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind)),
+      _ = F.φ ⟨F.n - 1, by lia⟩ := s.phiMinus_eq C E hE F hn hlast
+      _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
     by calc F.φ i
         ≤ F.φ ⟨0, hn⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le i.val))
       _ = s.phiPlus C E hE := (s.phiPlus_eq C E hE F hn hfirst).symm
@@ -565,8 +564,8 @@ lemma Slicing.phiMinus_le_phase_of_nonzero_hom (s : Slicing C) {X B : C} {ψ : �
   obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_last C s hX
   have hgt : ∀ j : Fin F.n, ψ < F.φ j := fun j ↦
     calc ψ < s.phiMinus C X hX := h
-      _ = F.φ ⟨F.n - 1, by grind⟩ := s.phiMinus_eq C X hX F hnF hneF
-      _ ≤ F.φ j := F.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
+      _ = F.φ ⟨F.n - 1, by lia⟩ := s.phiMinus_eq C X hX F hnF hneF
+      _ ≤ F.φ j := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
   exact hf (s.hom_eq_zero_of_lt_phases C hB F hgt f)
 
 

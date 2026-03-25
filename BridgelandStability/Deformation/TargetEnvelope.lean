@@ -194,7 +194,7 @@ theorem wPhaseOf_eq_of_intervalProp_upper_inclusion
           wPhaseOf (W (K₀.of C F)) ((a + b₁) / 2) < a - ε₀ + 1 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by grind⟩
+    exact ⟨by linarith, by linarith⟩
   have hpert_hi :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b₁ →
@@ -202,15 +202,15 @@ theorem wPhaseOf_eq_of_intervalProp_upper_inclusion
           wPhaseOf (W (K₀.of C F)) ((a + b₁) / 2) < b₁ + ε₀ := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by grind⟩
+    exact ⟨by linarith, by linarith⟩
   have hlo :
       a - ε₀ < wPhaseOf (W (K₀.of C E)) ((a + b₁) / 2) :=
     wPhaseOf_gt_of_intervalProp C σ hEne W
-      (by grind) hI hW_ne hpert_lo
+      (by linarith) hI hW_ne hpert_lo
   have hhi :
       wPhaseOf (W (K₀.of C E)) ((a + b₁) / 2) < b₁ + ε₀ :=
     wPhaseOf_lt_of_intervalProp C σ hEne W
-      (by grind) hI hW_ne hpert_hi
+      (by linarith) hI hW_ne hpert_hi
   have hbranch :
       wPhaseOf (W (K₀.of C E)) ((a + b₁) / 2) ∈
         Set.Ioc (((a + b₂) / 2) - 1) (((a + b₂) / 2) + 1) := by
@@ -251,7 +251,7 @@ theorem wPhaseOf_eq_of_intervalProp_lower_inclusion
           wPhaseOf (W (K₀.of C F)) ((a₁ + b) / 2) < a₁ - ε₀ + 1 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by grind⟩
+    exact ⟨by linarith, by linarith⟩
   have hpert_hi :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a₁ < φ → φ < b →
@@ -259,15 +259,15 @@ theorem wPhaseOf_eq_of_intervalProp_lower_inclusion
           wPhaseOf (W (K₀.of C F)) ((a₁ + b) / 2) < b + ε₀ := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by grind⟩
+    exact ⟨by linarith, by linarith⟩
   have hlo :
       a₁ - ε₀ < wPhaseOf (W (K₀.of C E)) ((a₁ + b) / 2) :=
     wPhaseOf_gt_of_intervalProp C σ hEne W
-      (by grind) hI hW_ne hpert_lo
+      (by linarith) hI hW_ne hpert_lo
   have hhi :
       wPhaseOf (W (K₀.of C E)) ((a₁ + b) / 2) < b + ε₀ :=
     wPhaseOf_lt_of_intervalProp C σ hEne W
-      (by grind) hI hW_ne hpert_hi
+      (by linarith) hI hW_ne hpert_hi
   have hbranch :
       wPhaseOf (W (K₀.of C E)) ((a₁ + b) / 2) ∈
         Set.Ioc (((a₂ + b) / 2) - 1) (((a₂ + b) / 2) + 1) := by
@@ -296,7 +296,7 @@ theorem wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
     · exact absurd hEZ hEne
     · have hn : 0 < F.n := by
         by_contra hn
-        exact hEne (F.toPostnikovTower.zero_isZero (by grind))
+        exact hEne (F.toPostnikovTower.zero_isZero (by lia))
       linarith [(hF ⟨0, hn⟩).1, (hF ⟨0, hn⟩).2]
   have hthin' : b - a < 1 := by
     linarith
@@ -313,7 +313,7 @@ theorem wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
           wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < a - ε₀ + 1 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by grind⟩
+    exact ⟨by linarith, by linarith⟩
   have hpert_hi :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
@@ -321,15 +321,15 @@ theorem wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
           wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε₀ := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
-    exact ⟨by linarith, by grind⟩
+    exact ⟨by linarith, by linarith⟩
   have hlo :
       a - ε₀ < wPhaseOf (W (K₀.of C E)) ((a + b) / 2) :=
     wPhaseOf_gt_of_intervalProp C σ hEne W
-      (by grind) hI hW_ne hpert_lo
+      (by linarith) hI hW_ne hpert_lo
   have hhi :
       wPhaseOf (W (K₀.of C E)) ((a + b) / 2) < b + ε₀ :=
     wPhaseOf_lt_of_intervalProp C σ hEne W
-      (by grind) hI hW_ne hpert_hi
+      (by linarith) hI hW_ne hpert_hi
   constructor <;> linarith
 
 

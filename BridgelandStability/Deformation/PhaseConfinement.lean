@@ -141,8 +141,8 @@ theorem phiPlus_lt_of_wSemistable
       · right; push_neg at hj
         exact le_antisymm (hF₀_top ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) hj
     set t₀ := (m + φ) / 2
-    have ht₀_lt : t₀ < φ := by simp only [t₀]; grind
-    have ht₀_gt : m < t₀ := by simp only [t₀]; grind
+    have ht₀_lt : t₀ < φ := by simp only [t₀]; linarith
+    have ht₀_gt : m < t₀ := by simp only [t₀]; linarith
     -- HN filtration F₀ has all phases in (a,b) (from hF transported via phiPlus/phiMinus)
     have hF₀_phases : ∀ i : Fin F₀.n, a < F₀.φ i ∧ F₀.φ i < b := by
       intro i
@@ -223,7 +223,7 @@ theorem phiPlus_lt_of_wSemistable
             show GX.φ j + t₀ > t₀
             have hanti : GX.φ ⟨GX.n - 1, by lia⟩ ≤ GX.φ j :=
               GX.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt))
-            simp only [HNFiltration.phiMinus] at *; grind
+            simp only [HNFiltration.phiMinus] at *; linarith
           linarith
         · exact heq_phase
       -- K ∈ P(φ): phiPlus ≤ φ and phiMinus ≥ φ from GXorig having all phases = φ
@@ -361,8 +361,8 @@ theorem phiMinus_gt_of_wSemistable
         · left; push_neg at hj; exact le_antisymm hj
             (hF₀_bot ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt)))
       set t_lo := ((ψ - ε₀) + m_lo) / 2
-      have ht_lo_gt : ψ - ε₀ < t_lo := by simp only [t_lo]; grind
-      have ht_lo_lt : t_lo < m_lo := by simp only [t_lo]; grind
+      have ht_lo_gt : ψ - ε₀ < t_lo := by simp only [t_lo]; linarith
+      have ht_lo_lt : t_lo < m_lo := by simp only [t_lo]; linarith
       -- F₀ phases are in (a, b)
       have hF₀_phases : ∀ i : Fin F₀.n, a < F₀.φ i ∧ F₀.φ i < b := by
         intro i

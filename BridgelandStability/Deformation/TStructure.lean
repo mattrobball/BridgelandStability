@@ -57,7 +57,7 @@ lemma chain_hom_eq_zero_of_gt_deformed
       exact (F.base_isZero : IsZero F.chain.left).eq_of_tgt f 0
   | succ k ih =>
       intro hk f
-      have hkn : k < F.n := by grind
+      have hkn : k < F.n := by lia
       let T := F.triangle ⟨k, hkn⟩
       let e₁ := Classical.choice (F.triangle_obj₁ ⟨k, hkn⟩)
       let e₂ := Classical.choice (F.triangle_obj₂ ⟨k, hkn⟩)
@@ -66,7 +66,7 @@ lemma chain_hom_eq_zero_of_gt_deformed
           hA (F.semistable ⟨k, hkn⟩) (hlt ⟨k, hkn⟩) _
       obtain ⟨g, hg⟩ := Triangle.coyoneda_exact₂ T
         (F.triangle_dist ⟨k, hkn⟩) (f ≫ e₂.inv) hcomp
-      have hg0 : g ≫ e₁.hom = 0 := ih (by grind) (g ≫ e₁.hom)
+      have hg0 : g ≫ e₁.hom = 0 := ih (by lia) (g ≫ e₁.hom)
       have hg_eq : g = 0 := by
         have : g = (g ≫ e₁.hom) ≫ e₁.inv := by
           rw [Category.assoc, e₁.hom_inv_id, Category.comp_id]
@@ -90,7 +90,7 @@ lemma hom_eq_zero_of_gt_phases_deformed
   let eE := Classical.choice F.top_iso
   have h1 : f ≫ eE.inv = 0 :=
     chain_hom_eq_zero_of_gt_deformed (C := C) (σ := σ) (W := W) (hW := hW)
-      hε₀ hε₀2 hε₀8 hsin hA F hlt F.n (by grind) _
+      hε₀ hε₀2 hε₀8 hsin hA F hlt F.n (by lia) _
   have : f = (f ≫ eE.inv) ≫ eE.hom := by
     rw [Category.assoc, eE.inv_hom_id, Category.comp_id]
   rw [this, h1, zero_comp]
@@ -116,14 +116,14 @@ lemma chain_hom_eq_zero_gap_deformed
       exact (Fx.base_isZero : IsZero Fx.chain.left).eq_of_src f 0
   | succ k ih =>
       intro hk f
-      have hkn : k < Fx.n := by grind
+      have hkn : k < Fx.n := by lia
       let T := Fx.triangle ⟨k, hkn⟩
       let e₁ := Classical.choice (Fx.triangle_obj₁ ⟨k, hkn⟩)
       let e₂ := Classical.choice (Fx.triangle_obj₂ ⟨k, hkn⟩)
       have hmor1 : T.mor₁ ≫ (e₂.hom ≫ f) = 0 := by
         have h1 : e₁.inv ≫ (T.mor₁ ≫ (e₂.hom ≫ f)) = 0 := by
           simp only [← Category.assoc]
-          exact ih (by grind) _
+          exact ih (by lia) _
         have h2 :
             e₁.hom ≫ (e₁.inv ≫ (T.mor₁ ≫ (e₂.hom ≫ f))) =
               T.mor₁ ≫ (e₂.hom ≫ f) := by
@@ -153,7 +153,7 @@ lemma hom_eq_zero_of_phase_gap_deformed
   let eX := Classical.choice Fx.top_iso
   have h1 : eX.hom ≫ f = 0 :=
     chain_hom_eq_zero_gap_deformed (C := C) (σ := σ) (W := W) (hW := hW)
-      hε₀ hε₀2 hε₀8 hsin Fx Fy hgap Fx.n (by grind) _
+      hε₀ hε₀2 hε₀8 hsin Fx Fy hgap Fx.n (by lia) _
   have : f = eX.inv ≫ (eX.hom ≫ f) := by
     rw [← Category.assoc, eX.inv_hom_id, Category.id_comp]
   rw [this, h1, comp_zero]
@@ -228,7 +228,7 @@ theorem exists_deformedHN_of_enveloped_interval
       (fun {F} hF hFne ↦ hW_interval hF hFne)
       (L := a + ε₀) (U := b - ε₀)
       (fun {F} hF hFne ↦ hWindow hF hFne)
-      (by grind)
+      (by linarith)
       (fun {E F} hE hF hlt _hguard f ↦
         by
           ext
@@ -363,7 +363,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLe
     (f : E ⟶ F) : f = 0 :=
   ObjectProperty.ExtensionClosure.hom_eq_zero
     (fun E F ⟨ψ₁, hψ₁, hE'⟩ ⟨ψ₂, hψ₂, hF'⟩ f ↦
-      σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by grind) f)
+      σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by linarith) f)
     hE hF f
 
 /-- Orthogonality of `Q(> t)` and `Q(< t)`. This is the strict version of Node 7.8b used
@@ -380,7 +380,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedGt_deformedLt
     (f : E ⟶ F) : f = 0 :=
   ObjectProperty.ExtensionClosure.hom_eq_zero
     (fun E F ⟨ψ₁, hψ₁, hE'⟩ ⟨ψ₂, hψ₂, hF'⟩ f ↦
-      σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by grind) f)
+      σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hE' hF' (by linarith) f)
     hE hF f
 /-- A `Q`-HN filtration split at cutoff `t` gives the paper's truncation triangle whose two
 pieces lie in `Q(> t)` and `Q(≤ t)`. -/
@@ -419,7 +419,7 @@ theorem exists_deformedGt_deformedLt_triangle_of_hn
   obtain ⟨X, Y, f, g, h, hT, hX, hY⟩ :=
     exists_deformedGt_deformedLe_triangle_of_hn C σ W hW G t
   exact ⟨X, Y, f, g, h, hT, hX,
-    ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, by grind, hP⟩) _ hY⟩
+    ObjectProperty.ExtensionClosure.mono (fun E ⟨ψ, hψ, hP⟩ ↦ ⟨ψ, by linarith, hP⟩) _ hY⟩
 
 /-- Faithful Node 7.8c wrapper: once an object in a thin interval admits a `Q`-HN filtration
 whose factors stay inside the same enveloping window, splitting that HN filtration at a cutoff

@@ -287,7 +287,7 @@ theorem exists_strictMDQ_with_quotient_bound
                     (C := C) (s := σ.slicing) (a := a) (b := b) hZ))))
           · have hFn : 0 < F_QS.n := by
               by_contra h; push_neg at h
-              exact hQS_obj_ne (F_QS.toPostnikovTower.zero_isZero (show F_QS.n = 0 by grind))
+              exact hQS_obj_ne (F_QS.toPostnikovTower.zero_isZero (show F_QS.n = 0 by lia))
             -- Split at cutoff t_cut = ψQS + ε
             let t_cut : ℝ := ψQS + ε
             obtain ⟨X_hi, QS_lo, f_hi, g_lo, δ_split, hT_split, hX_hi_gt, hQS_lo_le,
@@ -570,7 +570,7 @@ theorem exists_strictMDQ_with_quotient_bound
               have hB'_lt : σ.slicing.ltProp C t_cut B'.obj := by
                 subst hssf
                 exact ltProp_of_wSemistable_phase_lt C σ W hW_stab hab hε hε2
-                  hthin hsin hB'_ss (by grind)
+                  hthin hsin hB'_ss (by linarith)
               exact ((σ.slicing.intervalProp C a b).ι).map_injective <| by
                 simp only [Functor.map_comp, Functor.map_zero]
                 exact σ.slicing.zero_of_geProp_ltProp_general C t_cut hAhi_ge hB'_lt _

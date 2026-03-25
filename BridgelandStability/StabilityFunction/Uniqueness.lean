@@ -74,7 +74,7 @@ private lemma hn_n_eq_one_of_semistable (Z : StabilityFunction A) {E : A}
   -- chain(last.succ) = chain(n) = ⊤
   have hchain_top' : F.chain last.succ = ⊤ := by
     have : last.succ = ⟨F.n, by lia⟩ := Fin.ext (show last.val + 1 = F.n by
-      simp only [last]; grind)
+      simp only [last]; lia)
     rw [this, F.chain_top]
   -- phase of cokernel of chain(n-1).arrow = φ(last)
   -- phase(E) ≤ φ(last): use phase_le_of_epi on the quotient map, then relate to factor_phase
@@ -104,7 +104,7 @@ private lemma hn_n_eq_one_of_semistable (Z : StabilityFunction A) {E : A}
   -- But φ(last) < φ(0) since last > 0 and φ is strictly anti
   have hφ_lt : F.φ last < F.φ ⟨0, F.hn⟩ :=
     F.φ_anti (Fin.mk_lt_mk.mpr (by lia))
-  grind
+  linarith
 
 /-- If `B.arrow ≫ cokernel.π M.arrow = 0`, then `B ≤ M` as subobjects of `E`. -/
 private lemma le_of_comp_cokernel_zero {E : A} {B M : Subobject E}
@@ -349,14 +349,14 @@ private lemma n_ge_two_of_not_semistable {Z : StabilityFunction A} {E : A}
     (hns : ¬Z.IsSemistable E) (F : AbelianHNFiltration Z E) : 2 ≤ F.n := by
   by_contra hlt
   simp only [not_le] at hlt
-  have hn1 : F.n = 1 := by have := F.hn; grind
+  have hn1 : F.n = 1 := by have := F.hn; lia
   suffices Z.IsSemistable E from hns this
   have hss := F.factor_semistable ⟨0, F.hn⟩
   have h_bot : F.chain (⟨0, F.hn⟩ : Fin F.n).castSucc = ⊥ :=
     (congrArg F.chain (Fin.ext rfl)).trans F.chain_bot
   have h_top : F.chain (⟨0, F.hn⟩ : Fin F.n).succ = ⊤ := by
     have : (⟨0, F.hn⟩ : Fin F.n).succ = ⟨F.n, lt_add_one F.n⟩ :=
-      Fin.ext (by simp; grind)
+      Fin.ext (by simp; lia)
     rw [this, F.chain_top]
   -- Transfer semistability: factor ≅ cokernel(ofLE ⊥ ⊤) ≅ (⊤ : A) ≅ E
   have h1 : Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ bot_le)) :=
@@ -490,7 +490,7 @@ theorem StabilityFunction.hn_unique (Z : StabilityFunction A) (E : A) (hE : ¬Is
       rw [Nat.card_eq_fintype_card]
       haveI : Nonempty (Subobject E) := ⟨⊥⟩
       exact Fintype.card_pos
-    grind
+    lia
   | succ k ih =>
     intro E hE hcard G₁ G₂
     haveI := hFinSub E
@@ -530,7 +530,7 @@ theorem StabilityFunction.hn_unique (Z : StabilityFunction A) (E : A) (hE : ¬Is
           (by lia) _ _
       simp only [transport_n] at h_eq
       change G₁.n - 1 = G₂.n - 1 at h_eq
-      grind
+      lia
 
 /-- The highest phase `φ(0)` of an HN filtration equals the phase of `chain(1)`,
 which equals the MDS phase. This is independent of the filtration choice. -/
@@ -549,10 +549,10 @@ theorem StabilityFunction.hn_phiPlus_eq (Z : StabilityFunction A) (E : A)
     intro F hF
     rw [← F.factor_phase ⟨0, F.hn⟩]
     have h_bot : F.chain (⟨0, F.hn⟩ : Fin F.n).castSucc = ⊥ := by
-      change F.chain ⟨0, by have := F.hn; grind⟩ = ⊥; exact F.chain_bot
+      change F.chain ⟨0, by have := F.hn; lia⟩ = ⊥; exact F.chain_bot
     have h_top : F.chain (⟨0, F.hn⟩ : Fin F.n).succ = ⊤ := by
       have : (⟨0, F.hn⟩ : Fin F.n).succ = ⟨F.n, by lia⟩ :=
-        Fin.ext (by simp; grind)
+        Fin.ext (by simp; lia)
       rw [this]; exact F.chain_top
     exact (phase_cokernel_ofLE_congr Z h_bot h_top).trans
       (Z.phase_eq_of_iso (Subobject.cokernelBotIso ⊤ bot_le ≪≫
@@ -571,8 +571,8 @@ theorem StabilityFunction.hn_phiPlus_eq (Z : StabilityFunction A) (E : A)
 phase `φ(n-1)`. -/
 private lemma transport_phiMinus {Z : StabilityFunction A} {Q₁ Q₂ : A}
     (h : Q₁ = Q₂) (F : AbelianHNFiltration Z Q₁) :
-    (h ▸ F).φ ⟨(h ▸ F).n - 1, by have := (h ▸ F).hn; grind⟩ =
-      F.φ ⟨F.n - 1, by have := F.hn; grind⟩ := by
+    (h ▸ F).φ ⟨(h ▸ F).n - 1, by have := (h ▸ F).hn; lia⟩ =
+      F.φ ⟨F.n - 1, by have := F.hn; lia⟩ := by
   subst h; rfl
 
 /-- The tail filtration's lowest phase equals the original's lowest phase.
@@ -582,8 +582,8 @@ private lemma tailHNFiltration_phiMinus {Z : StabilityFunction A} {E : A}
     (G : AbelianHNFiltration Z E) (hn2 : 2 ≤ G.n) :
     (tailHNFiltration G hn2).φ
       ⟨(tailHNFiltration G hn2).n - 1,
-        by have := (tailHNFiltration G hn2).hn; grind⟩ =
-    G.φ ⟨G.n - 1, by have := G.hn; grind⟩ :=
+        by have := (tailHNFiltration G hn2).hn; lia⟩ =
+    G.φ ⟨G.n - 1, by have := G.hn; lia⟩ :=
   -- After definitional reduction: LHS = G.φ ⟨(G.n-1)-1+1, _⟩
   congrArg G.φ (Fin.ext
     (show ((G.n - 1) - 1 + 1 : ℕ) = G.n - 1 from by lia))
@@ -594,13 +594,13 @@ filtration choice. The proof parallels `hn_unique`: induction on
 theorem StabilityFunction.hn_phiMinus_eq (Z : StabilityFunction A) (E : A)
     (hE : ¬IsZero E) (hFinSub : ∀ (E : A), Finite (Subobject E))
     (F₁ F₂ : AbelianHNFiltration Z E) :
-    F₁.φ ⟨F₁.n - 1, by have := F₁.hn; grind⟩ =
-      F₂.φ ⟨F₂.n - 1, by have := F₂.hn; grind⟩ := by
+    F₁.φ ⟨F₁.n - 1, by have := F₁.hn; lia⟩ =
+      F₂.φ ⟨F₂.n - 1, by have := F₂.hn; lia⟩ := by
   suffices ∀ (k : ℕ) (E : A), ¬IsZero E →
       Nat.card (Subobject E) ≤ k →
       ∀ G₁ G₂ : AbelianHNFiltration Z E,
-        G₁.φ ⟨G₁.n - 1, by have := G₁.hn; grind⟩ =
-          G₂.φ ⟨G₂.n - 1, by have := G₂.hn; grind⟩ by
+        G₁.φ ⟨G₁.n - 1, by have := G₁.hn; lia⟩ =
+          G₂.φ ⟨G₂.n - 1, by have := G₂.hn; lia⟩ by
     exact this _ E hE le_rfl F₁ F₂
   intro k
   induction k with
@@ -612,7 +612,7 @@ theorem StabilityFunction.hn_phiMinus_eq (Z : StabilityFunction A) (E : A)
       rw [Nat.card_eq_fintype_card]
       haveI : Nonempty (Subobject E) := ⟨⊥⟩
       exact Fintype.card_pos
-    grind
+    lia
   | succ k ih =>
     intro E hE hcard G₁ G₂
     haveI := hFinSub E
@@ -620,9 +620,9 @@ theorem StabilityFunction.hn_phiMinus_eq (Z : StabilityFunction A) (E : A)
     · -- Semistable: n = 1, phiMinus = phiPlus
       have h1 := hn_n_eq_one_of_semistable Z hss G₁
       have h2 := hn_n_eq_one_of_semistable Z hss G₂
-      have hG₁_eq : (⟨G₁.n - 1, by have := G₁.hn; grind⟩ : Fin G₁.n) =
+      have hG₁_eq : (⟨G₁.n - 1, by have := G₁.hn; lia⟩ : Fin G₁.n) =
           ⟨0, G₁.hn⟩ := Fin.ext (by lia)
-      have hG₂_eq : (⟨G₂.n - 1, by have := G₂.hn; grind⟩ : Fin G₂.n) =
+      have hG₂_eq : (⟨G₂.n - 1, by have := G₂.hn; lia⟩ : Fin G₂.n) =
           ⟨0, G₂.hn⟩ := Fin.ext (by lia)
       rw [hG₁_eq, hG₂_eq]
       exact Z.hn_phiPlus_eq E hE hFinSub G₁ G₂
@@ -648,20 +648,20 @@ theorem StabilityFunction.hn_phiMinus_eq (Z : StabilityFunction A) (E : A)
       let T₁ := hQ₁ ▸ tailHNFiltration G₁ hn1
       let T₂ := hQ₂ ▸ tailHNFiltration G₂ hn2
       -- IH: tail filtrations have the same lowest phase
-      have h_tail : T₁.φ ⟨T₁.n - 1, by have := T₁.hn; grind⟩ =
-          T₂.φ ⟨T₂.n - 1, by have := T₂.hn; grind⟩ :=
+      have h_tail : T₁.φ ⟨T₁.n - 1, by have := T₁.hn; lia⟩ =
+          T₂.φ ⟨T₂.n - 1, by have := T₂.hn; lia⟩ :=
         ih (cokernel M.arrow) (cokernel_nonzero_of_ne_top hM_ne_top)
           (by lia) T₁ T₂
       -- Connect tail's phiMinus to original's phiMinus
-      have hrel₁ : T₁.φ ⟨T₁.n - 1, by have := T₁.hn; grind⟩ =
-          G₁.φ ⟨G₁.n - 1, by have := G₁.hn; grind⟩ :=
+      have hrel₁ : T₁.φ ⟨T₁.n - 1, by have := T₁.hn; lia⟩ =
+          G₁.φ ⟨G₁.n - 1, by have := G₁.hn; lia⟩ :=
         (transport_phiMinus hQ₁ (tailHNFiltration G₁ hn1)).trans
           (tailHNFiltration_phiMinus G₁ hn1)
-      have hrel₂ : T₂.φ ⟨T₂.n - 1, by have := T₂.hn; grind⟩ =
-          G₂.φ ⟨G₂.n - 1, by have := G₂.hn; grind⟩ :=
+      have hrel₂ : T₂.φ ⟨T₂.n - 1, by have := T₂.hn; lia⟩ =
+          G₂.φ ⟨G₂.n - 1, by have := G₂.hn; lia⟩ :=
         (transport_phiMinus hQ₂ (tailHNFiltration G₂ hn2)).trans
           (tailHNFiltration_phiMinus G₂ hn2)
-      grind
+      linarith
 
 /-! ### Intrinsic phase bounds -/
 
@@ -686,14 +686,14 @@ the last HN factor. It is well-defined by `hn_phiMinus_eq`. -/
 noncomputable def StabilityFunction.phiMinus (Z : StabilityFunction A) (E : A)
     (hE : ¬IsZero E) (hFinSub : ∀ (E : A), Finite (Subobject E)) : ℝ :=
   let F := Classical.choice (Z.hasHN_of_finiteLength hFinSub E hE)
-  F.φ ⟨F.n - 1, by have := F.hn; grind⟩
+  F.φ ⟨F.n - 1, by have := F.hn; lia⟩
 
 /-- `phiMinus` equals `F.φ ⟨F.n - 1, _⟩` for any HN filtration `F`. -/
 theorem StabilityFunction.phiMinus_eq (Z : StabilityFunction A) (E : A)
     (hE : ¬IsZero E) (hFinSub : ∀ (E : A), Finite (Subobject E))
     (F : AbelianHNFiltration Z E) :
     Z.phiMinus E hE hFinSub =
-      F.φ ⟨F.n - 1, by have := F.hn; grind⟩ :=
+      F.φ ⟨F.n - 1, by have := F.hn; lia⟩ :=
   Z.hn_phiMinus_eq E hE hFinSub _ F
 
 /-- `phiMinus ≤ phiPlus` for nonzero objects. -/
@@ -703,7 +703,7 @@ theorem StabilityFunction.phiMinus_le_phiPlus
     Z.phiMinus E hE hFinSub ≤ Z.phiPlus E hE hFinSub := by
   let F := Classical.choice (Z.hasHN_of_finiteLength hFinSub E hE)
   rw [Z.phiPlus_eq E hE hFinSub F, Z.phiMinus_eq E hE hFinSub F]
-  exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by have := F.hn; grind))
+  exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by have := F.hn; lia))
 
 /-- For semistable objects, `phiPlus = phiMinus = Z.phase E`. -/
 theorem StabilityFunction.phiPlus_eq_phiMinus_of_semistable
@@ -716,8 +716,8 @@ theorem StabilityFunction.phiPlus_eq_phiMinus_of_semistable
   have hp := Z.phiPlus_eq E hE hFinSub F
   have hm := Z.phiMinus_eq E hE hFinSub F
   have heq : F.φ ⟨0, F.hn⟩ =
-      F.φ ⟨F.n - 1, by have := F.hn; grind⟩ :=
+      F.φ ⟨F.n - 1, by have := F.hn; lia⟩ :=
     congrArg F.φ (Fin.ext (by lia))
-  grind
+  linarith
 
 end CategoryTheory

@@ -150,12 +150,12 @@ theorem isStrictMono_of_isLimitKernelFork
     simpa [Abelian.image, KernelFork.ofι] using
       (kernelIsKernel (cokernel.π f))
   let u : X ⟶ Abelian.image f := hker.lift (KernelFork.ofι f (cokernel.condition f))
-  have hu : u ≫ Abelian.image.ι f = f := by
-    exact hker.fac (KernelFork.ofι f (cokernel.condition f)) Limits.WalkingParallelPair.zero
+  have hu : u ≫ Abelian.image.ι f = f :=
+    hker.fac (KernelFork.ofι f (cokernel.condition f)) Limits.WalkingParallelPair.zero
   let v : Abelian.image f ⟶ X :=
     hf.lift (KernelFork.ofι (Abelian.image.ι f) (kernel.condition (cokernel.π f)))
-  have hv : v ≫ f = Abelian.image.ι f := by
-    exact hf.fac
+  have hv : v ≫ f = Abelian.image.ι f :=
+    hf.fac
       (KernelFork.ofι (Abelian.image.ι f) (kernel.condition (cokernel.π f)))
       Limits.WalkingParallelPair.zero
   let e : X ≅ Abelian.image f :=
@@ -202,8 +202,8 @@ theorem IsStrictEpi.isIso (hf : IsStrictEpi f) [Mono f] : IsIso f := by
   have hk : kernel.ι f = 0 := (isZero_kernel_of_mono f).eq_of_src _ _
   let s : Y ⟶ X :=
     hf.isColimitCokernelCofork.desc (CokernelCofork.ofπ (𝟙 X) (by simp [hk]))
-  have hs : f ≫ s = 𝟙 X := by
-    exact hf.isColimitCokernelCofork.fac
+  have hs : f ≫ s = 𝟙 X :=
+    hf.isColimitCokernelCofork.fac
       (CokernelCofork.ofπ (𝟙 X) (by simp [hk]))
       Limits.WalkingParallelPair.one
   letI : IsSplitMono f := IsSplitMono.mk' ⟨s, hs⟩
@@ -215,8 +215,8 @@ theorem IsStrictMono.isIso (hf : IsStrictMono f) [Epi f] : IsIso f := by
   have hk : cokernel.π f = 0 := (isZero_cokernel_of_epi f).eq_of_tgt _ _
   let s : Y ⟶ X :=
     hf.isLimitKernelFork.lift (KernelFork.ofι (𝟙 Y) (by simp [hk]))
-  have hs : s ≫ f = 𝟙 Y := by
-    exact hf.isLimitKernelFork.fac
+  have hs : s ≫ f = 𝟙 Y :=
+    hf.isLimitKernelFork.fac
       (KernelFork.ofι (𝟙 Y) (by simp [hk]))
       Limits.WalkingParallelPair.zero
   letI : IsSplitEpi f := IsSplitEpi.mk' ⟨s, hs⟩
@@ -584,8 +584,8 @@ because a faithful functor does not automatically preserve monomorphisms (the mo
 test in `C` involves objects not in the image of `F`). -/
 theorem Finite.subobject_of_faithful_preservesMono (F : A ⥤ C) [F.Full] [F.Faithful]
     [F.PreservesMonomorphisms]
-    {E : A} (h : Finite (Subobject (F.obj E))) : Finite (Subobject E) := by
-  exact Finite.of_injective
+    {E : A} (h : Finite (Subobject (F.obj E))) : Finite (Subobject E) :=
+  Finite.of_injective
     (subobjectImageOfFaithfulPreservesMono (A := A) (C := C) F)
     (subobjectImageOfFaithfulPreservesMono_injective (A := A) (C := C) F)
 
@@ -689,8 +689,7 @@ monomorphisms to strict monomorphisms. -/
 theorem isStrictArtinianObject_of_faithful_map_strictMono (F : A ⥤ C) [F.Full] [F.Faithful]
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} [IsArtinianObject (F.obj E)] :
-    IsStrictArtinianObject E := by
-  exact
+    IsStrictArtinianObject E :=
     (show isStrictArtinianObject.Is E from
       ObjectProperty.is_of_prop _
         (show WellFoundedLT (StrictSubobject E) from by
@@ -715,8 +714,7 @@ monomorphisms to strict monomorphisms. -/
 theorem isStrictNoetherianObject_of_faithful_map_strictMono (F : A ⥤ C) [F.Full] [F.Faithful]
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} [IsNoetherianObject (F.obj E)] :
-    IsStrictNoetherianObject E := by
-  exact
+    IsStrictNoetherianObject E :=
     (show isStrictNoetherianObject.Is E from
       ObjectProperty.is_of_prop _
         (show WellFoundedGT (StrictSubobject E) from by
