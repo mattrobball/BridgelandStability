@@ -3,9 +3,10 @@ Copyright (c) 2026 Mathlib Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization
 -/
+module
 
-import BridgelandStability.EulerForm.Defs
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import BridgelandStability.EulerForm.Defs
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Comparator Challenge: Bridgeland Corollary 1.3
