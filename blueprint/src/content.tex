@@ -2,9 +2,119 @@
 
 \chapter{Main Results}
 
-This blueprint exposes a curated layer of paper-facing declarations from the
-formalization. The implementation is substantially broader than what is shown
-here; the intent is to surface the main theorem packages and how they depend on
-one another.
-
 \inputleanmodule{BridgelandBlueprint.Main}
+
+\chapter{Foundations}
+
+\section{Postnikov Towers and Grothendieck Groups}
+\inputleanmodule{BridgelandStability.PostnikovTower.Defs}
+\inputleanmodule{BridgelandStability.GrothendieckGroup.Defs}
+\inputleanmodule{BridgelandStability.ExtensionClosure}
+
+\section{Stability Functions}
+\inputleanmodule{BridgelandStability.StabilityFunction.Basic}
+\inputleanmodule{BridgelandStability.StabilityFunction.HarderNarasimhan}
+\inputleanmodule{BridgelandStability.StabilityFunction.MDQ}
+\inputleanmodule{BridgelandStability.StabilityFunction.Uniqueness}
+
+\section{Slicings}
+\inputleanmodule{BridgelandStability.Slicing.Defs}
+\inputleanmodule{BridgelandStability.Slicing.Basic}
+\inputleanmodule{BridgelandStability.Slicing.Phase}
+\inputleanmodule{BridgelandStability.Slicing.HNOperations}
+\inputleanmodule{BridgelandStability.Slicing.ExtensionClosure}
+\inputleanmodule{BridgelandStability.Slicing.TStructure}
+\inputleanmodule{BridgelandStability.Slicing.TStructureConstruction}
+
+\chapter{Interval Categories and Quasi-Abelian Structure}
+
+\inputleanmodule{BridgelandStability.IntervalCategory.Basic}
+\inputleanmodule{BridgelandStability.IntervalCategory.QuasiAbelian}
+\inputleanmodule{BridgelandStability.IntervalCategory.Strictness}
+\inputleanmodule{BridgelandStability.IntervalCategory.FiniteLength}
+\inputleanmodule{BridgelandStability.IntervalCategory.TwoHeartEmbedding}
+
+\chapter{Heart Equivalence}
+
+\inputleanmodule{BridgelandStability.HeartEquivalence.Basic}
+\inputleanmodule{BridgelandStability.HeartEquivalence.Forward}
+\inputleanmodule{BridgelandStability.HeartEquivalence.Reverse}
+\inputleanmodule{BridgelandStability.HeartEquivalence.H0Functor}
+\inputleanmodule{BridgelandStability.HeartEquivalence.H0Homological}
+\inputleanmodule{BridgelandStability.HeartEquivalence.PureAdditivity}
+\inputleanmodule{BridgelandStability.HeartEquivalence.AmplitudeFormulas}
+\inputleanmodule{BridgelandStability.HeartEquivalence.EulerLift}
+
+\chapter{Stability Conditions and Topology}
+
+\inputleanmodule{BridgelandStability.StabilityCondition.Defs}
+\inputleanmodule{BridgelandStability.StabilityCondition.Basic}
+\inputleanmodule{BridgelandStability.StabilityCondition.Seminorm}
+\inputleanmodule{BridgelandStability.StabilityCondition.Topology}
+\inputleanmodule{BridgelandStability.StabilityCondition.ConnectedComponent}
+\inputleanmodule{BridgelandStability.StabilityCondition.LocalHomeomorphism}
+
+\chapter{Deformation Theory (Section 7)}
+
+\section{Setup}
+\inputleanmodule{BridgelandStability.Deformation.Setup}
+\inputleanmodule{BridgelandStability.Deformation.WPhase}
+\inputleanmodule{BridgelandStability.Deformation.PhaseArithmetic}
+
+\section{Deformed Slicings}
+\inputleanmodule{BridgelandStability.Deformation.DeformedSlicing}
+\inputleanmodule{BridgelandStability.Deformation.DeformedSlicingHN}
+\inputleanmodule{BridgelandStability.Deformation.DeformedGtLe}
+\inputleanmodule{BridgelandStability.Deformation.TStructure}
+
+\section{Phase and Interval Machinery}
+\inputleanmodule{BridgelandStability.Deformation.PhaseConfinement}
+\inputleanmodule{BridgelandStability.Deformation.PhasePerturbation}
+\inputleanmodule{BridgelandStability.Deformation.IntervalAbelian}
+\inputleanmodule{BridgelandStability.Deformation.IntervalSelection}
+
+\section{Strict Short Exact Sequences}
+\inputleanmodule{BridgelandStability.Deformation.StrictShortExactSequence}
+\inputleanmodule{BridgelandStability.Deformation.FirstStrictSES}
+\inputleanmodule{BridgelandStability.Deformation.BoundaryTriangle}
+\inputleanmodule{BridgelandStability.Deformation.TargetEnvelope}
+\inputleanmodule{BridgelandStability.Deformation.Pullback}
+
+\section{Harder--Narasimhan and Maximal Destabilizing Quotients}
+\inputleanmodule{BridgelandStability.Deformation.HomVanishing}
+\inputleanmodule{BridgelandStability.Deformation.FiniteLengthHN}
+\inputleanmodule{BridgelandStability.Deformation.MaximalDestabilizingQuotient}
+\inputleanmodule{BridgelandStability.Deformation.MaximalDestabilizingQuotientKernel}
+\inputleanmodule{BridgelandStability.Deformation.PhiPlusHN}
+\inputleanmodule{BridgelandStability.Deformation.PhiPlusMDQ}
+\inputleanmodule{BridgelandStability.Deformation.PhiPlusReduction}
+
+\section{HN Assembly and the Deformation Theorem}
+\inputleanmodule{BridgelandStability.Deformation.HNExistence}
+\inputleanmodule{BridgelandStability.Deformation.HNFiltrationAssembly}
+\inputleanmodule{BridgelandStability.Deformation.Theorem}
+\inputleanmodule{BridgelandStability.StabilityCondition.Deformation}
+
+\chapter{Numerical Stability and Complex Manifold Structure}
+
+\section{Euler Form and Numerical Grothendieck Group}
+\inputleanmodule{BridgelandStability.EulerForm.Defs}
+\inputleanmodule{BridgelandStability.EulerForm.Basic}
+\inputleanmodule{BridgelandStability.NumericalStability.Defs}
+\inputleanmodule{BridgelandStability.NumericalStability.Basic}
+
+\section{Complex Manifold Assembly}
+\inputleanmodule{BridgelandStability.NumericalStabilityManifold}
+
+\chapter{ForMathlib Contributions}
+
+\inputleanmodule{BridgelandStability.ForMathlib.CategoryTheory.QuasiAbelian.Basic}
+\inputleanmodule{BridgelandStability.ForMathlib.CategoryTheory.Shift.Linear}
+\inputleanmodule{BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.ArgConvexity}
+\inputleanmodule{BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.PhasePerturbation}
+\inputleanmodule{BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.SectorBound}
+
+\chapter{T-Structure Infrastructure}
+
+\inputleanmodule{BridgelandStability.TStructure.HeartAbelian}
+\inputleanmodule{BridgelandStability.TStructure.AbelianSubcategoryImageFactorisation}
