@@ -233,7 +233,7 @@ still need the cleanup and renaming that Mathlib would require.
 
 Corollary 1.3 is set up for independent verification via
 [`leanprover/comparator`](https://github.com/leanprover/comparator). The
-**63 project declarations** that the formal statement depends on are documented
+**61 project declarations** that the formal statement depends on are documented
 with their paper-level counterparts in
 [`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
 

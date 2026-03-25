@@ -38,3 +38,8 @@ srcDir = "."
 name = "checkdecls"
 root = "Checkdecls"
 supportInterpreter = true
+
+[[lean_exe]]
+name = "extractDeps"
+root = "ExtractDeps"
+supportInterpreter = true

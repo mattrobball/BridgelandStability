@@ -1,16 +1,16 @@
 # Trusted Formalization Base
 
-The 63 project declarations reachable from Corollary 1.3, paired with the
+The 61 project declarations reachable from Corollary 1.3, paired with the
 corresponding natural language definitions from the paper. These are the
 declarations a reader must trust to accept the formal statement — analogous to
 a trusted code base.
 
 For defs: the full definition term is shown. For theorems: only the type
-signature. Auto-generated `._proof_N` declarations (compiler-generated
-auxiliary proofs with fragile numbering) are omitted; structure field
-projections are grouped with their parent structure.
+signature. Auto-generated declarations (`._proof_N`, constructors, recursors,
+`noConfusion`, etc.) are omitted; structure field projections are kept.
 
-Found by `Expr.foldConsts` on the theorem's type, descending into bodies of
+Extracted by `lake exe extractDeps` (see `ExtractDeps.lean`), which
+recursively traverses the theorem's type, descending into bodies of
 non-theorem declarations and into inductive constructor types.
 
 Reference: Bridgeland, "Stability conditions on triangulated categories",
@@ -299,7 +299,7 @@ structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
 
 ---
 
-## StabilityCondition/Defs.lean (19 declarations)
+## StabilityCondition/Defs.lean (17 declarations)
 
 **Paper, Definition 5.1.** A stability condition on D consists of
 Z : K(D) → ℂ (the central charge) and subcategories P(φ) satisfying:
@@ -403,9 +403,9 @@ abbrev StabilityCondition.WithClassMap.Component (v : K₀ C →+ Λ)
   {σ : StabilityCondition.WithClassMap C v // _root_.ConnectedComponents.mk σ = cc}
 ```
 
-**Declarations:** `PreStabilityCondition.WithClassMap`, `.Z`, `.mk`, `.slicing`,
+**Declarations:** `PreStabilityCondition.WithClassMap`, `.Z`, `.slicing`,
 `.toPreStabilityCondition`,
-`StabilityCondition.WithClassMap`, `.locallyFinite`, `.mk`,
+`StabilityCondition.WithClassMap`, `.locallyFinite`,
 `.toStabilityCondition`, `.toWithClassMap`,
 `StabilityCondition`,
 `slicingDist`, `stabSeminorm`, `basisNhd`,
