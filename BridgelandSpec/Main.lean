@@ -29,10 +29,10 @@ universe w v u
 
 namespace CategoryTheory.Triangulated
 
-variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable (k : Type w) [Field k]
 
 /-- **Corollary 1.3** (Bridgeland 2007). Each connected component of the space of
 numerical stability conditions is a finite-dimensional complex manifold. -/
