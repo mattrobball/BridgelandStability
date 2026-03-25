@@ -131,8 +131,7 @@ theorem StabilityCondition.P_phi_shortExact_triangle
   obtain ⟨β_hom, hβ_hom⟩ := hexact (W := K) (ObjectProperty.homMk (ι.map i)) h_ig'
   let β : K ⟶ A := β_hom
   have hβf : β ≫ f = i := by
-    ext
-    exact congrArg InducedCategory.Hom.hom hβ_hom
+    ext; exact congr_arg (·.hom) hβ_hom
   have hKer :=
     Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
       (σ.P_phi_hom_vanishing C φ) i g δ hT
@@ -535,8 +534,7 @@ theorem TStructure.heartFullSubcategory_shortExact_triangle
   obtain ⟨β_hom, hβ_hom⟩ := hexact (W := K) (ObjectProperty.homMk (ι.map i)) h_ig'
   let β : K ⟶ A := β_hom
   have hβf : β ≫ f = i := by
-    ext
-    exact congrArg InducedCategory.Hom.hom hβ_hom
+    ext; exact congr_arg (·.hom) hβ_hom
   have hKer :=
     Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
       (heart_hι t) i g δ hT

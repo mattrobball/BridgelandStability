@@ -8,6 +8,7 @@ module
 public import BridgelandStability.Slicing.TStructureConstruction
 public import BridgelandStability.GrothendieckGroup.Defs
 public import BridgelandStability.ForMathlib.CategoryTheory.QuasiAbelian.Basic
+public import BridgelandStability.ForMathlib.CategoryTheory.ObjectProperty.FullSubcategoryLimits
 public import BridgelandStability.TStructure.HeartAbelian
 public import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
 public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels

@@ -544,7 +544,7 @@ theorem phasePredicate_hom_zero_of_mem_Ioc
       _ = h.Z.phase EH := hEphase.symm
   have hzero : (ObjectProperty.homMk f : EH ⟶ FH) = 0 :=
     heart_hom_zero_of_semistable_phase_gt (C := C) h hEss hFss hphase (ObjectProperty.homMk f)
-  exact congrArg InducedCategory.Hom.hom hzero
+  exact congr_arg (·.hom) hzero
 
 theorem shiftedHeartSemistable_closedUnderIso
     (h : HeartStabilityData C) (ψ : ℝ) (n : ℤ) :
@@ -763,8 +763,7 @@ theorem phasePredicate_hom_zero
       heart_hom_zero_of_semistable_phase_gt (C := C) h hEss' hFss' (by
         rw [hFphase', hEphase']
         exact hψ) (ObjectProperty.homMk g)
-    have hmap : g = 0 :=
-      congrArg InducedCategory.Hom.hom hg_zero
+    have hmap : g = 0 := congr_arg (·.hom) hg_zero
     exact (shiftFunctor C (-n₁ : ℤ)).map_injective (by simpa [g] using hmap)
   · let EH : h.t.heart.FullSubcategory := ⟨E⟦(-n₁ : ℤ)⟧, by simpa [n₁] using hEheart⟩
     let FH : h.t.heart.FullSubcategory := ⟨F⟦(-n₂ : ℤ)⟧, by simpa [n₂] using hFheart⟩

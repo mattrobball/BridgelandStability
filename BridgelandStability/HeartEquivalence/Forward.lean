@@ -304,7 +304,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_isSemistable_of_mem_P_phi
         ext
         exact h0
       have hαH0 : αH = 0 := (cancel_mono B.arrow).mp (by simpa using h0H)
-      exact hα (by simpa [αH] using congrArg InducedCategory.Hom.hom hαH0)
+      exact hα (by simpa [αH] using congr_arg (·.hom) hαH0)
     exact hcomp_ne <| σ.slicing.hom_vanishing (F.φ ⟨0, hn⟩) φ _ _ hphase_gt
       (F.semistable ⟨0, hn⟩) hP (α ≫ B.arrow.hom)
   calc

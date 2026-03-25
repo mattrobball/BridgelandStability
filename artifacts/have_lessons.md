@@ -197,3 +197,4 @@ a metavariable. Keep a named `have` for the equation, then `rw` with it:
 have hiI_zero : i_I = 0 := zero_of_source_iso_zero _ hIZH.isoZero
 exact hfH (by rw [← hpH, hiI_zero]; simp)
 ```
+
