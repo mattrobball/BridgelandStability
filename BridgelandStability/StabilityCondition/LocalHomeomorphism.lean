@@ -125,9 +125,8 @@ noncomputable instance componentNormedSpace
         rw [show (((a • U : componentSeminormSubgroup C cc) : K₀ C →+ ℂ)) =
             a • (U : K₀ C →+ ℂ) by rfl]
         rw [stabSeminorm_smul_complex, ENNReal.toReal_mul, ENNReal.toReal_ofReal (norm_nonneg _)]
-      norm_triangle := by
-        intro U V
-        exact (componentAddGroupNorm C cc).add_le' U V
+      norm_triangle := fun U V =>
+        (componentAddGroupNorm C cc).add_le' U V
       norm_eq_zero_iff := by
         intro U
         constructor

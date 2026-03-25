@@ -383,9 +383,8 @@ theorem SectorFiniteLength.of_wide
   letI : Fact ((t + 4 * ε₀) - (t - 4 * ε₀) ≤ 1) := ⟨by linarith⟩
   let hIncl :
       σ.slicing.intervalProp C (t - 2 * ε₀) (t + 2 * ε₀) ≤
-        σ.slicing.intervalProp C (t - 4 * ε₀) (t + 4 * ε₀) := by
-    intro F hF
-    exact σ.slicing.intervalProp_mono C (by linarith) (by linarith) hF
+        σ.slicing.intervalProp C (t - 4 * ε₀) (t + 4 * ε₀) :=
+    fun F hF => σ.slicing.intervalProp_mono C (by linarith) (by linarith) hF
   exact interval_thinFiniteLength_of_inclusion_strict
     (C := C) (s₁ := σ.slicing) (s₂ := σ.slicing)
     (a₁ := t - 2 * ε₀) (b₁ := t + 2 * ε₀)
@@ -559,9 +558,8 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
         wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α := by
   let phaseObj : σ.slicing.IntervalCat C a b → ℝ := fun Y ↦
     wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
-  have hX_obj : ¬IsZero X.obj := by
-    intro hZ
-    exact hX (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hX_obj : ¬IsZero X.obj := fun hZ =>
+    hX (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   have hW_X : ssf.W (K₀.of C X.obj) ≠ 0 := hW_interval X.property hX_obj
   have htri :
@@ -571,9 +569,8 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
           σ.slicing.intervalProp C a b Q →
           ¬IsZero K →
           wPhaseOf (ssf.W (K₀.of C K)) ssf.α ≤
-            wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := by
-    intro hsem
-    exact hns ⟨X.property, hX_obj, hW_X, rfl,
+            wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := fun hsem =>
+    hns ⟨X.property, hX_obj, hW_X, rfl,
       fun {K Q} {f₁} {f₂} {f₃} hT hK hQ hKne ↦ hsem hT hK hQ hKne⟩
   push_neg at htri
   obtain ⟨K, Q, f₁, f₂, f₃, hT, hK, hQ, hKne, hgt⟩ := htri
@@ -711,9 +708,8 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
     wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α
   let phaseObj : σ.slicing.IntervalCat C a b → ℝ := fun Y ↦
     wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
-  have hX_obj : ¬IsZero X.obj := by
-    intro hZ
-    exact hX (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hX_obj : ¬IsZero X.obj := fun hZ =>
+    hX (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   have hW_X : ssf.W (K₀.of C X.obj) ≠ 0 := hW_interval X.property hX_obj
   have htri :
@@ -723,9 +719,8 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
           σ.slicing.intervalProp C a b Q →
           ¬IsZero K →
           wPhaseOf (ssf.W (K₀.of C K)) ssf.α ≤
-            wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := by
-    intro hsem
-    exact hns ⟨X.property, hX_obj, hW_X, rfl,
+            wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := fun hsem =>
+    hns ⟨X.property, hX_obj, hW_X, rfl,
       fun {K Q} {f₁} {f₂} {f₃} hT hK hQ hKne ↦ hsem hT hK hQ hKne⟩
   push_neg at htri
   obtain ⟨K, Q, f₁, f₂, f₃, hT, hK, hQ, hKne, hgt⟩ := htri
@@ -871,9 +866,7 @@ theorem SkewedStabilityFunction.exists_maxPhase_maximal_strictSubobject_of_finit
   obtain ⟨M₀, hM₀T, hM₀max⟩ := Set.exists_max_image T phase hT_fin' hT_ne
   let S : Set (Subobject X) := {B | B ∈ T ∧ phase B = phase M₀}
   have hS_ne : S.Nonempty := ⟨M₀, hM₀T, rfl⟩
-  have hS_fin : S.Finite := hT_fin'.subset (by
-    intro B hB
-    exact hB.1)
+  have hS_fin : S.Finite := hT_fin'.subset (fun B hB => hB.1)
   obtain ⟨M, ⟨hMT, hM_phase⟩, hM_max⟩ := hS_fin.exists_maximal hS_ne
   refine ⟨M, hMT.1, hMT.2, ?_, ?_⟩
   · intro B hB hBstrict
@@ -928,9 +921,8 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
     wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
   have hMint_ne : ¬IsZero (M : σ.slicing.IntervalCat C a b) :=
     intervalSubobject_not_isZero_of_ne_bot (C := C) (s := σ.slicing) (a := a) (b := b) hM_ne
-  have hMobj_ne : ¬IsZero (M : σ.slicing.IntervalCat C a b).obj := by
-    intro hZ
-    exact hMint_ne <|
+  have hMobj_ne : ¬IsZero (M : σ.slicing.IntervalCat C a b).obj := fun hZ =>
+    hMint_ne <|
       Slicing.IntervalCat.isZero_of_obj_isZero
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ
   refine ⟨(M : σ.slicing.IntervalCat C a b).property, hMobj_ne,
@@ -954,9 +946,8 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
       (C := C) (s := σ.slicing) (a := a) (b := b) iKM M.arrow hK_strict hM_strict
   haveI : Mono (iKM ≫ M.arrow) := hComp_strict.mono
   let B : Subobject X := Subobject.mk (iKM ≫ M.arrow)
-  have hKI_ne : ¬IsZero KI := by
-    intro hZ
-    exact hKne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
+  have hKI_ne : ¬IsZero KI := fun hZ =>
+    hKne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
   have hB_ne : B ≠ ⊥ := by
     intro hB
     have hzero : iKM ≫ M.arrow = 0 :=

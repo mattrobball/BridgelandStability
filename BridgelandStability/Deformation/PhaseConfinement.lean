@@ -32,6 +32,42 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
+/-! ### Perturbation bound shifting -/
+
+/-- Shift per-factor perturbation bounds `φ - ε₀ < w < φ + ε₀` to the lower endpoint:
+`a - ε₀ < w < a - ε₀ + 1`. Used by all phase confinement arguments. -/
+theorem perturb_gt_of_perturb
+    (σ : StabilityCondition C) {a b : ℝ}
+    {ssf : SkewedStabilityFunction C σ.slicing a b} {ε₀ : ℝ}
+    (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
+        a < φ → φ < b →
+        φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
+        wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀)
+    (hthin : b - a + 2 * ε₀ < 1)
+    (F : C) (φ : ℝ) (hP : (σ.slicing.P φ) F) (hFne : ¬IsZero F)
+    (haφ : a < φ) (hφb : φ < b) :
+    a - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
+    wPhaseOf (ssf.W (K₀.of C F)) ssf.α < a - ε₀ + 1 := by
+  obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
+  exact ⟨by linarith, by linarith⟩
+
+/-- Shift per-factor perturbation bounds to the upper endpoint:
+`b + ε₀ - 1 < w < b + ε₀`. -/
+theorem perturb_lt_of_perturb
+    (σ : StabilityCondition C) {a b : ℝ}
+    {ssf : SkewedStabilityFunction C σ.slicing a b} {ε₀ : ℝ}
+    (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
+        a < φ → φ < b →
+        φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
+        wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀)
+    (hthin : b - a + 2 * ε₀ < 1)
+    (F : C) (φ : ℝ) (hP : (σ.slicing.P φ) F) (hFne : ¬IsZero F)
+    (haφ : a < φ) (hφb : φ < b) :
+    b + ε₀ - 1 < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
+    wPhaseOf (ssf.W (K₀.of C F)) ssf.α < b + ε₀ := by
+  obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
+  exact ⟨by linarith, by linarith⟩
+
 /-! ### Node 7.3: Phase confinement of W-semistable objects -/
 
 /-- **Bridgeland's Lemma 7.3 (upper bound).** If `E` is W-semistable of W-phase `ψ` in
@@ -56,20 +92,8 @@ theorem phiPlus_lt_of_wSemistable
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b → ssf.W (K₀.of C F) ≠ 0 :=
     fun F φ hP hFne haφ hφb ↦ ssf.nonzero F φ haφ hφb hP hFne
-  have hperturb_gt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      a - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < a - ε₀ + 1 := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
-  have hperturb_lt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      b + ε₀ - 1 < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < b + ε₀ := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+  have hperturb_gt := perturb_gt_of_perturb C σ hperturb hthin
+  have hperturb_lt := perturb_lt_of_perturb C σ hperturb hthin
   -- ψ bounds from wPhaseOf_gt/lt_of_intervalProp applied to E
   have hψ_lo : a - ε₀ < ψ := by
     rw [← hψ]; exact wPhaseOf_gt_of_intervalProp C σ hE ssf.W
@@ -285,20 +309,8 @@ theorem phiMinus_gt_of_wSemistable
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b → ssf.W (K₀.of C F) ≠ 0 :=
     fun F φ hP hFne haφ hφb ↦ ssf.nonzero F φ haφ hφb hP hFne
-  have hperturb_gt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      a - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < a - ε₀ + 1 := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
-  have hperturb_lt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      b + ε₀ - 1 < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < b + ε₀ := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+  have hperturb_gt := perturb_gt_of_perturb C σ hperturb hthin
+  have hperturb_lt := perturb_lt_of_perturb C σ hperturb hthin
   -- ψ bounds from wPhaseOf_gt/lt_of_intervalProp applied to E
   have hψ_lo : a - ε₀ < ψ := by
     rw [← hψ]; exact wPhaseOf_gt_of_intervalProp C σ hE ssf.W
@@ -718,20 +730,8 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b → ssf.W (K₀.of C F) ≠ 0 :=
     fun F φ hP hFne haφ hφb ↦ ssf.nonzero F φ haφ hφb hP hFne
-  have hperturb_gt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      a - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < a - ε₀ + 1 := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
-  have hperturb_lt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      b + ε₀ - 1 < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < b + ε₀ := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+  have hperturb_gt := perturb_gt_of_perturb C σ hperturb hthin
+  have hperturb_lt := perturb_lt_of_perturb C σ hperturb hthin
   have hψ_lo : a - ε₀ < ψ := by
     rw [← hX.2.2.2.1]
     exact wPhaseOf_gt_of_intervalProp C σ hX.2.1 ssf.W
@@ -814,20 +814,8 @@ theorem SkewedStabilityFunction.phase_le_of_triangle_quotient
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b → ssf.W (K₀.of C F) ≠ 0 :=
     fun F φ hP hFne haφ hφb ↦ ssf.nonzero F φ haφ hφb hP hFne
-  have hperturb_gt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      a - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < a - ε₀ + 1 := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
-  have hperturb_lt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b →
-      b + ε₀ - 1 < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-      wPhaseOf (ssf.W (K₀.of C F)) ssf.α < b + ε₀ := by
-    intro F φ hP hFne haφ hφb
-    obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
-    exact ⟨by linarith, by linarith⟩
+  have hperturb_gt := perturb_gt_of_perturb C σ hperturb hthin
+  have hperturb_lt := perturb_lt_of_perturb C σ hperturb hthin
   have hψ_lo : a - ε₀ < ψ := by
     rw [← hX.2.2.2.1]
     exact wPhaseOf_gt_of_intervalProp C σ hX.2.1 ssf.W

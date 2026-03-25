@@ -545,13 +545,13 @@ theorem finiteSeminormSubgroup_eq_of_basisNhd (σ τ : StabilityCondition C)
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
-  have hcos_pos' : 0 < Real.cos (Real.pi * ε) := by
+  have hcos_pos : 0 < Real.cos (Real.pi * ε) := by
     apply Real.cos_pos_of_mem_Ioo; constructor
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
   have hZdiff : stabSeminorm C σ (τ.Z - σ.Z) <
       ENNReal.ofReal (Real.cos (Real.pi * ε)) :=
-    lt_trans hZnorm ((ENNReal.ofReal_lt_ofReal_iff hcos_pos').mpr hsin_lt_cos)
+    lt_trans hZnorm ((ENNReal.ofReal_lt_ofReal_iff hcos_pos).mpr hsin_lt_cos)
   -- Forward: V(σ) ⊆ V(τ)
   have hfwd : ∀ U, stabSeminorm C σ U < ⊤ → stabSeminorm C τ U < ⊤ :=
     fun U hU ↦ stabSeminorm_lt_top_of_near C σ τ hε hε2 hd hZdiff U hU
@@ -567,7 +567,6 @@ theorem finiteSeminormSubgroup_eq_of_basisNhd (σ τ : StabilityCondition C)
       ENNReal.ofReal_le_ofReal hle
     rw [ENNReal.ofReal_toReal hZdiff_ne] at h1
     exact absurd hZnorm (not_lt.mpr h1)
-  have hcos_pos := hcos_pos'
   have hMZ_lt_cos : M_Z < Real.cos (Real.pi * ε) := lt_trans hMZ_lt_sin hsin_lt_cos
   set c := Real.cos (Real.pi * ε)
   have hcMZ : 0 < c - M_Z := by linarith

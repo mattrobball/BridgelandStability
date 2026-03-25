@@ -259,9 +259,8 @@ theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
     chain_bot := by simp
     chain_top := by simp
     φ := fun _ => φ
-    φ_anti := by
-      intro i j hij
-      exact False.elim (by lia)
+    φ_anti := fun i j hij =>
+      False.elim (by lia)
     factor_phase := by
       intro ⟨j, hj⟩
       have hj0 : j = 0 := by lia

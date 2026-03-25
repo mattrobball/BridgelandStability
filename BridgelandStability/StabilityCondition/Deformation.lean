@@ -88,9 +88,8 @@ theorem wideSectorFiniteLength_mono (σ : StabilityCondition C)
     dsimp [a₀, b₀]
     linarith [hε₀8]⟩
   intro E
-  have hIncl : σ.slicing.intervalProp C a₁ b₁ ≤ σ.slicing.intervalProp C a₀ b₀ := by
-    intro X hX
-    exact σ.slicing.intervalProp_mono C
+  have hIncl : σ.slicing.intervalProp C a₁ b₁ ≤ σ.slicing.intervalProp C a₀ b₀ :=
+    fun X hX => σ.slicing.intervalProp_mono C
       (by
         dsimp [a₀, a₁]
         linarith)
@@ -228,14 +227,14 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
-  have hcos_pos' : 0 < Real.cos (Real.pi * ε) := by
+  have hcos_pos : 0 < Real.cos (Real.pi * ε) := by
     apply Real.cos_pos_of_mem_Ioo
     constructor
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
   have hZdiff : stabSeminorm C σ (τ.Z - σ.Z) <
       ENNReal.ofReal (Real.cos (Real.pi * ε)) :=
-    lt_trans hZnorm ((ENNReal.ofReal_lt_ofReal_iff hcos_pos').mpr hsin_lt_cos)
+    lt_trans hZnorm ((ENNReal.ofReal_lt_ofReal_iff hcos_pos).mpr hsin_lt_cos)
   have hZdiff_ne : stabSeminorm C σ (τ.Z - σ.Z) ≠ ⊤ :=
     ne_top_of_lt (lt_trans hZdiff ENNReal.ofReal_lt_top)
   set M_Z := (stabSeminorm C σ (τ.Z - σ.Z)).toReal with hMZ_def
@@ -247,7 +246,6 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
       ENNReal.ofReal_le_ofReal hle
     rw [ENNReal.ofReal_toReal hZdiff_ne] at h1
     exact absurd hZnorm (not_lt.mpr h1)
-  have hcos_pos := hcos_pos'
   have hMZ_lt_cos : M_Z < Real.cos (Real.pi * ε) := lt_trans hMZ_lt_sin hsin_lt_cos
   set c := Real.cos (Real.pi * ε) with hc_def
   have hcMZ : 0 < c - M_Z := by linarith
@@ -348,14 +346,14 @@ theorem stabSeminorm_center_dominates_of_basisNhd (σ τ : StabilityCondition C)
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
-  have hcos_pos' : 0 < Real.cos (Real.pi * ε) := by
+  have hcos_pos : 0 < Real.cos (Real.pi * ε) := by
     apply Real.cos_pos_of_mem_Ioo
     constructor
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
   have hZdiff : stabSeminorm C σ (τ.Z - σ.Z) <
       ENNReal.ofReal (Real.cos (Real.pi * ε)) :=
-    lt_trans hZnorm ((ENNReal.ofReal_lt_ofReal_iff hcos_pos').mpr hsin_lt_cos)
+    lt_trans hZnorm ((ENNReal.ofReal_lt_ofReal_iff hcos_pos).mpr hsin_lt_cos)
   have hZdiff_ne : stabSeminorm C σ (τ.Z - σ.Z) ≠ ⊤ :=
     ne_top_of_lt (lt_trans hZdiff ENNReal.ofReal_lt_top)
   set M_Z := (stabSeminorm C σ (τ.Z - σ.Z)).toReal with hMZ_def
@@ -613,21 +611,17 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       nlinarith [Real.pi_lt_d4, hε8]
     exact lt_trans (Real.sin_lt (by positivity)) hπε_lt
   have hW1 :
-      ∀ t : unitInterval, stabSeminorm C σ (W t - σ.Z) < ENNReal.ofReal 1 := by
-    intro t
-    exact lt_trans (hWt t) ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinε_lt_one)
+      ∀ t : unitInterval, stabSeminorm C σ (W t - σ.Z) < ENNReal.ofReal 1 := fun t =>
+    lt_trans (hWt t) ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinε_lt_one)
   have hγ_exists :
-      ∀ t : unitInterval, ∃ ρ : StabilityCondition C, ρ.Z = W t ∧ ρ ∈ basisNhd C σ ε := by
-    intro t
-    exact σ.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W t) (hW1 t)
+      ∀ t : unitInterval, ∃ ρ : StabilityCondition C, ρ.Z = W t ∧ ρ ∈ basisNhd C σ ε := fun t =>
+    σ.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W t) (hW1 t)
       ε₀ hε₀ hε₀10 hWide ε hε hεε₀ (hWt t)
   let γ : unitInterval → StabilityCondition C := fun t => Classical.choose (hγ_exists t)
-  have hγZ : ∀ t : unitInterval, (γ t).Z = W t := by
-    intro t
-    exact (Classical.choose_spec (hγ_exists t)).1
-  have hγmem : ∀ t : unitInterval, γ t ∈ basisNhd C σ ε := by
-    intro t
-    exact (Classical.choose_spec (hγ_exists t)).2
+  have hγZ : ∀ t : unitInterval, (γ t).Z = W t := fun t =>
+    (Classical.choose_spec (hγ_exists t)).1
+  have hγmem : ∀ t : unitInterval, γ t ∈ basisNhd C σ ε := fun t =>
+    (Classical.choose_spec (hγ_exists t)).2
   have hγ0 : γ 0 = σ := by
     apply StabilityCondition.eq_of_same_Z_near C (γ 0) σ
     · simpa [γ, W] using hγZ 0
@@ -676,9 +670,8 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       linarith [min_le_right (δ₁ / 2) (ε₁ / 2)]
     have hδ8 : δ < 1 / 8 := by
       linarith [hδ_lt_δ₁, hδ₁8]
-    have hsubU : basisNhd C ρ₀ δ ⊆ basisNhd C ξ δ₀ := by
-      intro ρ hρ
-      exact hsub₁ <| basisNhd_mono C ρ₀ hδ (le_of_lt hδ_lt_δ₁) hδ₁8 hρ
+    have hsubU : basisNhd C ρ₀ δ ⊆ basisNhd C ξ δ₀ := fun ρ hρ =>
+      hsub₁ <| basisNhd_mono C ρ₀ hδ (le_of_lt hδ_lt_δ₁) hδ₁8 hρ
     have hρ₀mem : ρ₀ ∈ basisNhd C σ ε := hγmem t
     obtain ⟨K, hK, hdom⟩ :=
       stabSeminorm_center_dominates_of_basisNhd C σ ρ₀ hε hε8 hρ₀mem
@@ -817,9 +810,8 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
     linarith [min_le_right (δ₁ / 2) (ε₁ / 2)]
   have hδ8 : δ < 1 / 8 := by
     linarith [hδ_lt_δ₁, hδ₁8]
-  have hsubU : basisNhd C ρ₀ δ ⊆ basisNhd C σ ε := by
-    intro ρ hρ
-    exact hsub₁ <| basisNhd_mono C ρ₀ hδ (le_of_lt hδ_lt_δ₁) hδ₁8 hρ
+  have hsubU : basisNhd C ρ₀ δ ⊆ basisNhd C σ ε := fun ρ hρ =>
+    hsub₁ <| basisNhd_mono C ρ₀ hδ (le_of_lt hδ_lt_δ₁) hδ₁8 hρ
   obtain ⟨K, hK, hdom⟩ :=
     stabSeminorm_center_dominates_of_basisNhd C σ ρ₀ hε hε8 hρ₀mem
   have hUfin : stabSeminorm C ρ₀ (τ.Z - σ.Z) ≠ ⊤ := by

@@ -99,9 +99,8 @@ theorem append_hn_filtration_of_triangle
       · have hYpos : 0 < GY.n := Nat.pos_of_ne_zero hYn
         by_cases hYone : GY.n = 1
         · let j0 : Fin GY.n := ⟨0, by lia⟩
-          have hsep0 : ∀ j : Fin GX.n, GY.φ j0 < GX.φ j := by
-            intro j
-            exact hsep j0 j
+          have hsep0 : ∀ j : Fin GX.n, GY.φ j0 < GX.φ j := fun j =>
+            hsep j0 j
           have hYss : P (GY.φ j0) Y :=
             semistable_of_hn_length_one (C := C) hPiso GY hYone
           refine ⟨GX.appendFactor C (Triangle.mk f g h) hT (Iso.refl _) (Iso.refl _)
@@ -152,9 +151,8 @@ theorem append_hn_filtration_of_triangle
             have hi : i.val < GY.n - 1 := by
               simpa [hEqn] using i.is_lt
             exact hsep ⟨i.val, by lia⟩ j
-          have hX_gt_last : ∀ j : Fin GX.n, GY.φ jLast < GX.φ j := by
-            intro j
-            exact hsep jLast j
+          have hX_gt_last : ∀ j : Fin GX.n, GY.φ jLast < GX.φ j := fun j =>
+            hsep jLast j
           have hY'_gt_last : ∀ i : Fin GY'.n, GY.φ jLast < GY'.φ i := by
             intro i
             have hEqn : GY'.n = GY.n - 1 := rfl

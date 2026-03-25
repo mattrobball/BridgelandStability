@@ -98,18 +98,16 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       wellFounded_lt).induction S ?_
     intro S ih hS t hquot
     let Y : σ.slicing.IntervalCat C a b := S.1
-    have hS_obj : ¬IsZero Y.obj := by
-      intro hZ
-      exact hS (Slicing.IntervalCat.isZero_of_obj_isZero
+    have hS_obj : ¬IsZero Y.obj := fun hZ =>
+      hS (Slicing.IntervalCat.isZero_of_obj_isZero
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
     let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
     by_cases hss : ssf.Semistable C Y.obj ψY
     · let Gsingle : HNFiltration C Psem Y.obj := HNFiltration.single C Y.obj ψY hss
       refine ⟨Gsingle, ?_⟩
       intro j
-      have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := by
-        intro hEq
-        exact (intervalSubobject_top_ne_bot_of_not_isZero
+      have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := fun hEq =>
+        (intervalSubobject_top_ne_bot_of_not_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := Y) hS) hEq.symm
       have hbot_strict : IsStrictMono ((⊥ : Subobject Y).arrow) :=
         intervalSubobject_bot_arrow_strictMono
@@ -351,9 +349,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
       ∀ A : Subobject X, A ≠ ⊤ → IsStrictMono A.arrow →
         L < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α := by
     intro A hA_top hA_strict
-    have hcokA_ne : ¬IsZero (cokernel A.arrow).obj := by
-      intro hZ
-      exact (interval_cokernel_nonzero_of_ne_top
+    have hcokA_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
+      (interval_cokernel_nonzero_of_ne_top
         (C := C) (s := σ.slicing) (a := a) (b := b) hA_top hA_strict)
         (Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
@@ -410,9 +407,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
       ∀ A : Subobject X, A ≠ ⊤ → IsStrictMono A.arrow →
         t < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α := by
     intro A hA_top hA_strict
-    have hcokA_ne : ¬IsZero (cokernel A.arrow).obj := by
-      intro hZ
-      exact (interval_cokernel_nonzero_of_ne_top
+    have hcokA_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
+      (interval_cokernel_nonzero_of_ne_top
         (C := C) (s := σ.slicing) (a := a) (b := b) hA_top hA_strict)
         (Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ)

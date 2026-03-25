@@ -406,9 +406,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         linarith
       have hW_ne_left :
           ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
-            a < θ → θ < ψ₁ + ε₀ → W (K₀.of C G) ≠ 0 := by
-        intro G θ hG hGne _ _
-        exact σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
+            a < θ → θ < ψ₁ + ε₀ → W (K₀.of C G) ≠ 0 := fun G θ hG hGne _ _ =>
+        σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
       have hpert_left := hperturb_of_stabSeminorm C σ W hW hleftThin' hε₀ hε₀2 hsin
       have hpert_left_lo :
           ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
@@ -471,9 +470,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
           (C := C) (s := σ.slicing) (a := a) (b := ψ₁ + ε₀) pL
       have hW_interval_left :
           ∀ {G : C}, σ.slicing.intervalProp C a (ψ₁ + ε₀) G → ¬IsZero G →
-            W (K₀.of C G) ≠ 0 := by
-        intro G hG hGne
-        exact σ.W_ne_zero_of_intervalProp C W hleftThin'
+            W (K₀.of C G) ≠ 0 := fun hG hGne =>
+        σ.W_ne_zero_of_intervalProp C W hleftThin'
           (stabSeminorm_lt_cos_of_hsin_hthin
             (C := C) (σ := σ) (W := W) hab_left hε₀ hleftThin hsin) hGne hG
       have hI_phase_ge_left :
@@ -487,9 +485,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have hK_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) K.obj :=
         σ.slicing.first_intervalProp_of_triangle C habE_left hE_left hI_le hK_gt hT_pH'
       have hQ_phiMinus_right :
-          ∀ (hQne : ¬IsZero Q.obj), ψ₂ - ε₀ < σ.slicing.phiMinus C Q.obj hQne := by
-        intro hQne
-        exact σ.slicing.phiMinus_gt_of_triangle_with_gtProp C hQne
+          ∀ (hQne : ¬IsZero Q.obj), ψ₂ - ε₀ < σ.slicing.phiMinus C Q.obj hQne := fun hQne =>
+        σ.slicing.phiMinus_gt_of_triangle_with_gtProp C hQne
           (fun hF' ↦ σ.slicing.phiMinus_gt_of_intervalProp C hF' hF_right)
           hI_gt (by
             dsimp [a]

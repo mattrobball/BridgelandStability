@@ -542,9 +542,8 @@ theorem im_W_pos_of_intervalProp
   -- Get HN filtration with nonzero first and last factors
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
   -- All phases in (a, b) — use uniqueness to relate to intrinsic phases
-  have hphases : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b := by
-    intro i
-    exact ⟨by calc a < σ.slicing.phiMinus C E hE :=
+  have hphases : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b := fun i =>
+    ⟨by calc a < σ.slicing.phiMinus C E hE :=
               σ.slicing.phiMinus_gt_of_intervalProp C hE hI
             _ = F.φ ⟨F.n - 1, by lia⟩ :=
               σ.slicing.phiMinus_eq C E hE F hn hlast
@@ -594,9 +593,8 @@ theorem im_W_neg_of_intervalProp
     (W (K₀.of C E) *
       Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im < 0 := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
-  have hphases : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b := by
-    intro i
-    exact ⟨by calc a < σ.slicing.phiMinus C E hE :=
+  have hphases : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b := fun i =>
+    ⟨by calc a < σ.slicing.phiMinus C E hE :=
               σ.slicing.phiMinus_gt_of_intervalProp C hE hI
             _ = F.φ ⟨F.n - 1, by lia⟩ :=
               σ.slicing.phiMinus_eq C E hE F hn hlast

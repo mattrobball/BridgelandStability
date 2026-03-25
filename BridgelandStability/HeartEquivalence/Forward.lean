@@ -100,9 +100,8 @@ def StabilityCondition.stabilityFunctionOnHeart
         intro i hi
         letI : Abelian (σ.slicing.P (F.φ i)).FullSubcategory := σ.P_phi_abelian C (F.φ i)
         let Xi : (σ.slicing.P (F.φ i)).FullSubcategory := ⟨P.factor i, F.semistable i⟩
-        have hXi : ¬IsZero Xi := by
-          intro hZ
-          exact (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
+        have hXi : ¬IsZero Xi := fun hZ =>
+          (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
             ((σ.slicing.P (F.φ i)).ι.map_isZero hZ)
         exact (σ.stabilityFunctionOnPhase C (hphase_mem i hi)).upper Xi hXi
       let f : Fin F.n → ℂ := fun i => σ.Z (K₀.of C (P.factor i))
@@ -193,9 +192,8 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
     intro i hi
     letI : Abelian (σ.slicing.P (F.φ i)).FullSubcategory := σ.P_phi_abelian C (F.φ i)
     let Xi : (σ.slicing.P (F.φ i)).FullSubcategory := ⟨P.factor i, F.semistable i⟩
-    have hXi : ¬IsZero Xi := by
-      intro hZ
-      exact (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
+    have hXi : ¬IsZero Xi := fun hZ =>
+      (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
         ((σ.slicing.P (F.φ i)).ι.map_isZero hZ)
     simpa [f] using (σ.stabilityFunctionOnPhase C (hphase_mem i hi)).upper Xi hXi
   have harg_factor : ∀ i ∈ s, Complex.arg (f i) = Real.pi * F.φ i := by

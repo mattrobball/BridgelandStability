@@ -159,9 +159,8 @@ theorem hn_exists_with_phiPlus_reduction
       wellFounded_lt).induction S ?_
     intro S ih hS t ht_lo hquot hphiPlus_Y
     let Y : σ.slicing.IntervalCat C a b := S.1
-    have hS_obj : ¬IsZero Y.obj := by
-      intro hZ
-      exact hS (Slicing.IntervalCat.isZero_of_obj_isZero
+    have hS_obj : ¬IsZero Y.obj := fun hZ =>
+      hS (Slicing.IntervalCat.isZero_of_obj_isZero
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
     let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
     by_cases hss : ssf.Semistable C Y.obj ψY
@@ -169,9 +168,8 @@ theorem hn_exists_with_phiPlus_reduction
       let Gsingle : HNFiltration C Psem Y.obj := HNFiltration.single C Y.obj ψY hss
       refine ⟨Gsingle, ?_⟩
       intro j
-      have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := by
-        intro hEq
-        exact (intervalSubobject_top_ne_bot_of_not_isZero
+      have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := fun hEq =>
+        (intervalSubobject_top_ne_bot_of_not_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := Y) hS) hEq.symm
       have hbot_strict : IsStrictMono ((⊥ : Subobject Y).arrow) :=
         intervalSubobject_bot_arrow_strictMono
@@ -208,9 +206,8 @@ theorem hn_exists_with_phiPlus_reduction
           Y.property (hphiPlus_Y hS_obj)
       -- Derive ψ(Y) > t from quotient bound applied to ⊥
       have hψ_Y_lo : t < ψY := by
-        have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := by
-          intro hEq
-          exact (intervalSubobject_top_ne_bot_of_not_isZero
+        have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := fun hEq =>
+          (intervalSubobject_top_ne_bot_of_not_isZero
             (C := C) (s := σ.slicing) (a := a) (b := b) (X := Y) hS) hEq.symm
         have hbot_strict : IsStrictMono ((⊥ : Subobject Y).arrow) :=
           intervalSubobject_bot_arrow_strictMono
@@ -457,9 +454,8 @@ theorem hn_exists_with_phiPlus_reduction
       simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC')
     rw [hphase_A]
     -- Convert: apply hquot to cokernel.π A'.arrow (a strict epi from X)
-    have hA'_nonzero : ¬IsZero (cokernel A'.arrow).obj := by
-      intro hZ
-      exact (interval_cokernel_nonzero_of_ne_top
+    have hA'_nonzero : ¬IsZero (cokernel A'.arrow).obj := fun hZ =>
+      (interval_cokernel_nonzero_of_ne_top
         (C := C) (s := σ.slicing) (a := a) (b := b) hA'_top hA'_strict)
         (Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ)

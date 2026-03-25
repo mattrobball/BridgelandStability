@@ -515,7 +515,7 @@ private theorem bridgeland_6_4_one_dir
           top_iso := GX'.top_iso, zero_isZero := GX'.zero_isZero
           φ := fun i ↦ GX'.φ i + φ
           hφ := by intro i j hij; linarith [GX'.hφ hij]
-          semistable := by intro i; exact GX'.semistable i }
+          semistable := fun i => GX'.semistable i }
       calc σ.slicing.phiPlus C X hXne
           ≤ GXorig.φ ⟨0, hGX'⟩ :=
             σ.slicing.phiPlus_le_phiPlus_of_hn C hXne GXorig hGX'

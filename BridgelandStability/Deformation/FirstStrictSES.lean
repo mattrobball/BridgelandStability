@@ -112,9 +112,8 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
       wPhaseOf (ssf.W (K₀.of C (M : σ.slicing.IntervalCat C a b).obj)) ssf.α := by
   let phaseObj : σ.slicing.IntervalCat C a b → ℝ := fun Y ↦
     wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
-  have hX_obj : ¬IsZero X.obj := by
-    intro hZ
-    exact hX (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hX_obj : ¬IsZero X.obj := fun hZ =>
+    hX (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   by_contra hle
   push_neg at hle
@@ -136,9 +135,8 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
       (C := C) (s := σ.slicing) (a := a) (b := b) hT').1
   letI : Mono iKX := hK_strict.mono
   let B : Subobject X := Subobject.mk iKX
-  have hKI_ne : ¬IsZero KI := by
-    intro hZ
-    exact hKne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
+  have hKI_ne : ¬IsZero KI := fun hZ =>
+    hKne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
   have hB_ne : B ≠ ⊥ := by
     intro hB
     have hzero : iKX = 0 :=
@@ -252,9 +250,8 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
         have hle : D.1 ≤ B := hD_lt_B.le
         simpa [hD] using hle
       exact hB_ne_top (top_le_iff.mp htop_le)
-    have hD_ne_bot : D.1 ≠ ⊥ := by
-      intro hD
-      exact hssD.2.1
+    have hD_ne_bot : D.1 ≠ ⊥ := fun hD =>
+      hssD.2.1
         (((σ.slicing.intervalProp C a b).ι).map_isZero
           ((intervalSubobject_isZero_iff_eq_bot
             (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) D.1).mpr hD))

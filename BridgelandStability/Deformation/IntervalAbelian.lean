@@ -58,9 +58,8 @@ theorem im_Z_nonpos_of_heart_phases
   -- Get HN filtration with nonzero first and last factors
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
   -- Phase bounds for all factors: φ - 1 < F.φ i ≤ φ
-  have hphases : ∀ i : Fin F.n, φ - 1 < F.φ i ∧ F.φ i ≤ φ := by
-    intro i
-    exact ⟨by calc φ - 1 < σ.slicing.phiMinus C E hE := hgt
+  have hphases : ∀ i : Fin F.n, φ - 1 < F.φ i ∧ F.φ i ≤ φ := fun i =>
+    ⟨by calc φ - 1 < σ.slicing.phiMinus C E hE := hgt
           _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C E hE F hn hlast
           _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
@@ -114,9 +113,8 @@ theorem P_phi_of_im_zero_heart
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hXne
   -- All factor phases lie in (φ-1, φ]
-  have hphases : ∀ i : Fin F.n, φ - 1 < F.φ i ∧ F.φ i ≤ φ := by
-    intro i
-    exact ⟨by calc φ - 1 < σ.slicing.phiMinus C X hXne := hX_gt
+  have hphases : ∀ i : Fin F.n, φ - 1 < F.φ i ∧ F.φ i ≤ φ := fun i =>
+    ⟨by calc φ - 1 < σ.slicing.phiMinus C X hXne := hX_gt
           _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C X hXne F hn hlast
           _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
@@ -263,9 +261,8 @@ theorem im_Z_nonneg_of_phases_above
     0 ≤ (σ.Z (K₀.of C E) *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
-  have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := by
-    intro i
-    exact ⟨by calc φ ≤ σ.slicing.phiMinus C E hE := hge
+  have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := fun i =>
+    ⟨by calc φ ≤ σ.slicing.phiMinus C E hE := hge
           _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C E hE F hn hlast
           _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
@@ -310,9 +307,8 @@ theorem P_phi_of_im_zero_above
     σ.slicing.P φ X := by
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hXne
-  have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := by
-    intro i
-    exact ⟨by calc φ ≤ σ.slicing.phiMinus C X hXne := hX_ge
+  have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := fun i =>
+    ⟨by calc φ ≤ σ.slicing.phiMinus C X hXne := hX_ge
           _ = F.φ ⟨F.n - 1, by lia⟩ :=
             σ.slicing.phiMinus_eq C X hXne F hn hlast
           _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)),
@@ -445,9 +441,8 @@ theorem StabilityCondition.P_phi_hom_vanishing
     (σ : StabilityCondition C) (φ : ℝ) :
     ∀ ⦃X Y : (σ.slicing.P φ).FullSubcategory⦄ ⦃n : ℤ⦄
       (f : (σ.slicing.P φ).ι.obj X ⟶ ((σ.slicing.P φ).ι.obj Y)⟦n⟧),
-      n < 0 → f = 0 := by
-  intro X Y n f hn
-  exact σ.slicing.hom_vanishing φ (φ + ↑n) X.obj (Y.obj⟦n⟧)
+      n < 0 → f = 0 := fun X Y n f hn =>
+  σ.slicing.hom_vanishing φ (φ + ↑n) X.obj (Y.obj⟦n⟧)
     (by linarith [show (↑n : ℝ) < 0 from Int.cast_lt_zero.mpr hn])
     X.property
     ((σ.slicing.shift_int C φ Y.obj n).mp Y.property) f

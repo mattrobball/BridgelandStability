@@ -56,9 +56,8 @@ theorem ThinFiniteLengthInInterval.of_wide
   letI : Fact (b' - a' ≤ 1) := ⟨by
     dsimp [a', b']
     linarith⟩
-  let hIncl : σ.slicing.intervalProp C a b ≤ σ.slicing.intervalProp C a' b' := by
-    intro F hF
-    exact σ.slicing.intervalProp_mono C ha hb hF
+  let hIncl : σ.slicing.intervalProp C a b ≤ σ.slicing.intervalProp C a' b' :=
+    fun F hF => σ.slicing.intervalProp_mono C ha hb hF
   intro X
   exact interval_thinFiniteLength_of_inclusion_strict
     (C := C) (s₁ := σ.slicing) (s₂ := σ.slicing)
@@ -71,9 +70,8 @@ theorem ThinFiniteLengthInInterval.of_ambient
     (h : σ.slicing.intervalProp C a₁ b₁ ≤ σ.slicing.intervalProp C a₂ b₂)
     (hFinite : ∀ Y : σ.slicing.IntervalCat C a₂ b₂,
       IsArtinianObject Y ∧ IsNoetherianObject Y) :
-    ThinFiniteLengthInInterval (C := C) σ a₁ b₁ := by
-  intro X
-  exact interval_thinFiniteLength_of_inclusion
+    ThinFiniteLengthInInterval (C := C) σ a₁ b₁ := fun X =>
+  interval_thinFiniteLength_of_inclusion
     (C := C) (s₁ := σ.slicing) (s₂ := σ.slicing)
     (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h hFinite X
 
@@ -361,9 +359,8 @@ theorem IsStrictMDQ.phase_le_of_strictQuotient
     Slicing.IntervalCat.comp_strictEpi
       (C := C) (s := σ.slicing) (a := a) (b := b) p (cokernel.π M.arrow) hp
       (isStrictEpi_cokernel M.arrow)
-  have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := by
-    intro hZ
-    exact (interval_cokernel_nonzero_of_ne_top
+  have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := fun hZ =>
+    (interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hM_ne_top hM_strict)
       (Slicing.IntervalCat.isZero_of_obj_isZero
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
@@ -405,9 +402,8 @@ theorem IsStrictMDQ.isSemistable_of_strictQuotient_phase_eq
     Slicing.IntervalCat.comp_strictEpi
       (C := C) (s := σ.slicing) (a := a) (b := b) p (cokernel.π A.arrow) hp
       (isStrictEpi_cokernel A.arrow)
-  have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := by
-    intro hZ
-    exact (interval_cokernel_nonzero_of_ne_top
+  have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
+    (interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hA_ne_top hA_strict)
       (Slicing.IntervalCat.isZero_of_obj_isZero
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
@@ -519,9 +515,8 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
       IsStrictMDQ.phase_le_of_strictQuotient
         (C := C) (σ := σ) (a := a) (b := b) hFiniteLength hW_interval hWindow hWidth
         hq (𝟙 (cokernel A.arrow)) (isStrictEpi_of_isIso (f := 𝟙 _)) hcokA_obj_ne
-    have hA_ne_bot : A ≠ ⊥ := by
-      intro hA_bot
-      exact hA_ss.2.1 (((σ.slicing.intervalProp C a b).ι).map_isZero
+    have hA_ne_bot : A ≠ ⊥ := fun hA_bot =>
+      hA_ss.2.1 (((σ.slicing.intervalProp C a b).ι).map_isZero
         ((intervalSubobject_isZero_iff_eq_bot
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) A).mpr hA_bot))
     have hCok_lt_A :
@@ -854,9 +849,8 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
   have hcokLift_ne : ¬IsZero (cokernel liftA.arrow) :=
     interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hLift_ne_top hLift_strict
-  have hcokLift_obj_ne : ¬IsZero (cokernel liftA.arrow).obj := by
-    intro hZ
-    exact hcokLift_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokLift_obj_ne : ¬IsZero (cokernel liftA.arrow).obj := fun hZ =>
+    hcokLift_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   have hLift_phase_ge :
       wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
@@ -894,16 +888,14 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
       (C := C) (s := σ.slicing) (a := a) (b := b)
       (interval_kernelSubobject_ne_top_of_strictEpi_nonzero
         (C := C) (s := σ.slicing) (a := a) (b := b) hq.strictEpi hq.nonzero) hM_strict
-  have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := by
-    intro hZ
-    exact hcokM_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := fun hZ =>
+    hcokM_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   have hcokA_ne : ¬IsZero (cokernel A.arrow) :=
     interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hA_top hA_strict
-  have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := by
-    intro hZ
-    exact hcokA_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
+    hcokA_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   have hB_window :
       L < wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ∧
@@ -958,9 +950,8 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
       ssf.W (K₀.of C B.obj) = ssf.W (K₀.of C (cokernel M.arrow).obj) := by
     apply add_left_cancel (a := ssf.W (K₀.of C (M : σ.slicing.IntervalCat C a b).obj))
     exact hsumX.symm.trans hsumC
-  have hM_Wne : ssf.W (K₀.of C (cokernel M.arrow).obj) ≠ 0 := by
-    intro hzero
-    exact hB_Wne (hWB_eq.trans hzero)
+  have hM_Wne : ssf.W (K₀.of C (cokernel M.arrow).obj) ≠ 0 := fun hzero =>
+    hB_Wne (hWB_eq.trans hzero)
   let ψM : ℝ := wPhaseOf (ssf.W (K₀.of C (cokernel M.arrow).obj)) ssf.α
   have hM_range :
       wPhaseOf (ssf.W (K₀.of C (cokernel M.arrow).obj)) ssf.α ∈

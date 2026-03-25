@@ -436,8 +436,8 @@ def cokernelPullbackIso (Z : StabilityFunction A) {E : A} (M' : Subobject E)
     -- So Z(kernel φ) = 0
     have hZ_ker : Z.Zobj (kernel φ) = 0 := add_eq_right.mp hZ_add.symm
     by_contra hne
-    have hker_nz : ¬IsZero (kernel φ) := by
-      intro hZ; exact hne (zero_of_source_iso_zero _ hZ.isoZero)
+    have hker_nz : ¬IsZero (kernel φ) := fun hZ =>
+      hne (zero_of_source_iso_zero _ hZ.isoZero)
     exact absurd hZ_ker (ne_of_mem_of_not_mem (Z.upper _ hker_nz)
       (show (0 : ℂ) ∉ upperHalfPlaneUnion from fun hc ↦ by
         rcases hc with hc | ⟨_, hc⟩ <;> simp at hc))
@@ -791,9 +791,8 @@ theorem exists_semistable_quotient_le_phase_of_artinian_noetherian
     let e0 : cokernel (⊥ : Subobject E).arrow ≅ E := by
       simpa [Subobject.bot_arrow] using
         (cokernelZeroIsoTarget (X := ((⊥ : Subobject E) : A)) (Y := E))
-    have hbot : ¬IsZero (cokernel (⊥ : Subobject E).arrow) := by
-      intro hZ
-      exact hE (hZ.of_iso e0.symm)
+    have hbot : ¬IsZero (cokernel (⊥ : Subobject E).arrow) := fun hZ =>
+      hE (hZ.of_iso e0.symm)
     obtain ⟨Q, p, hp, hQ_nz, hQ_ss, hQ_phase⟩ := this ⊥ hbot
     refine ⟨Q, e0.inv ≫ p, ?_, hQ_nz, hQ_ss, ?_⟩
     · haveI : Epi p := hp
@@ -835,9 +834,8 @@ theorem exists_semistable_quotient_le_phase_of_artinian_noetherian
           · exact h
         let eT : cokernel T.arrow ≅ cokernel A'.arrow :=
           cokernelPullbackTopIso Z S hA'_top
-        have hQT_nz : ¬IsZero (cokernel T.arrow) := by
-          intro hZ
-          exact (cokernel_nonzero_of_ne_top hA'_top) (hZ.of_iso eT.symm)
+        have hQT_nz : ¬IsZero (cokernel T.arrow) := fun hZ =>
+          (cokernel_nonzero_of_ne_top hA'_top) (hZ.of_iso eT.symm)
         obtain ⟨R, r, hr_epi, hR_nz, hR_ss, hR_phase⟩ := ih T hST_lt hQT_nz
         haveI : Epi r := hr_epi
         have hA'_cok_phase :

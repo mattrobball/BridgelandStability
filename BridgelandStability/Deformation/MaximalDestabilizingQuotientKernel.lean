@@ -92,9 +92,8 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
   have hY_ne : ¬IsZero Y :=
     interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hM_ne_top hM_strict
-  have hY_obj_ne : ¬IsZero Y.obj := by
-    intro hZ
-    exact hY_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hY_obj_ne : ¬IsZero Y.obj := fun hZ =>
+    hY_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
   have hY_window : L < ψY ∧ ψY < U := by
@@ -123,13 +122,11 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
   have hcokB_ne : ¬IsZero (cokernel B.arrow) :=
     interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hB_ne_top hB_strict
-  have hcokB_obj_ne : ¬IsZero (cokernel B.arrow).obj := by
-    intro hZ
-    exact hcokB_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokB_obj_ne : ¬IsZero (cokernel B.arrow).obj := fun hZ =>
+    hcokB_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-  have hB_obj_ne : ¬IsZero (B : σ.slicing.IntervalCat C a b).obj := by
-    intro hZ
-    exact intervalSubobject_not_isZero_of_ne_bot
+  have hB_obj_ne : ¬IsZero (B : σ.slicing.IntervalCat C a b).obj := fun hZ =>
+    intervalSubobject_not_isZero_of_ne_bot
       (C := C) (s := σ.slicing) (a := a) (b := b) (X := Y) hB_ne <|
         Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ
@@ -205,9 +202,8 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
   have hY_ne : ¬IsZero Y :=
     interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hM_ne_top hM_strict
-  have hY_obj_ne : ¬IsZero Y.obj := by
-    intro hZ
-    exact hY_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hY_obj_ne : ¬IsZero Y.obj := fun hZ =>
+    hY_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
   have hY_window : L < ψY ∧ ψY < U := by
@@ -226,13 +222,11 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
   have hcokB_ne : ¬IsZero (cokernel B.arrow) :=
     interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hB_ne_top hB_strict
-  have hcokB_obj_ne : ¬IsZero (cokernel B.arrow).obj := by
-    intro hZ
-    exact hcokB_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokB_obj_ne : ¬IsZero (cokernel B.arrow).obj := fun hZ =>
+    hcokB_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-  have hB_obj_ne : ¬IsZero (B : σ.slicing.IntervalCat C a b).obj := by
-    intro hZ
-    exact intervalSubobject_not_isZero_of_ne_bot
+  have hB_obj_ne : ¬IsZero (B : σ.slicing.IntervalCat C a b).obj := fun hZ =>
+    intervalSubobject_not_isZero_of_ne_bot
       (C := C) (s := σ.slicing) (a := a) (b := b) (X := Y) hB_ne <|
         Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ
@@ -352,17 +346,14 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
   have hcokLift_ne : ¬IsZero (cokernel liftA.arrow) :=
     interval_cokernel_nonzero_of_ne_top
       (C := C) (s := σ.slicing) (a := a) (b := b) hLift_ne_top hLift_strict
-  have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := by
-    intro hZ
-    exact hcokM_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := fun hZ =>
+    hcokM_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-  have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := by
-    intro hZ
-    exact hcokA_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
+    hcokA_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-  have hcokLift_obj_ne : ¬IsZero (cokernel liftA.arrow).obj := by
-    intro hZ
-    exact hcokLift_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+  have hcokLift_obj_ne : ¬IsZero (cokernel liftA.arrow).obj := fun hZ =>
+    hcokLift_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   have hLift_window : L < ψLift ∧ ψLift < U := by
     simpa [ψLift] using hWindow (cokernel liftA.arrow).property hcokLift_obj_ne
@@ -468,9 +459,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
       have hcokA_ne : ¬IsZero (cokernel A.arrow) :=
         interval_cokernel_nonzero_of_ne_top
           (C := C) (s := σ.slicing) (a := a) (b := b) hA_top hA_strict
-      have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := by
-        intro hZ
-        exact hcokA_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+      have hcokA_obj_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
+        hcokA_ne (Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
       exact (hWindow (cokernel A.arrow).property hcokA_obj_ne).1
     exact h _ X hX le_rfl L hL
@@ -487,16 +477,14 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
   | succ k ih =>
       intro Y hY hcard t hquot
       let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
-      have hY_obj_ne : ¬IsZero Y.obj := by
-        intro hZ
-        exact hY (Slicing.IntervalCat.isZero_of_obj_isZero
+      have hY_obj_ne : ¬IsZero Y.obj := fun hZ =>
+        hY (Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
       by_cases hss : ssf.Semistable C Y.obj ψY
       · refine ⟨HNFiltration.single C Y.obj ψY hss, ?_⟩
         intro j
-        have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := by
-          intro h
-          exact (intervalSubobject_top_ne_bot_of_not_isZero
+        have hbot_ne_top : (⊥ : Subobject Y) ≠ ⊤ := fun h =>
+          (intervalSubobject_top_ne_bot_of_not_isZero
             (C := C) (s := σ.slicing) (a := a) (b := b) (X := Y) hY) h.symm
         have hbot_strict : IsStrictMono ((⊥ : Subobject Y).arrow) :=
           intervalSubobject_bot_arrow_strictMono
@@ -583,9 +571,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
           have hcokM_ne : ¬IsZero (cokernel M.arrow) :=
             interval_cokernel_nonzero_of_ne_top
               (C := C) (s := σ.slicing) (a := a) (b := b) hM_top hM_strict
-          have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := by
-            intro hZ
-            exact hcokM_ne (Slicing.IntervalCat.isZero_of_obj_isZero
+          have hcokM_obj_ne : ¬IsZero (cokernel M.arrow).obj := fun hZ =>
+            hcokM_ne (Slicing.IntervalCat.isZero_of_obj_isZero
               (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
           have hψQ_hi : ψQ < U := by
             simpa [ψQ] using (hWindow (cokernel M.arrow).property hcokM_obj_ne).2

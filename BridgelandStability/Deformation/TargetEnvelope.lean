@@ -184,9 +184,8 @@ theorem wPhaseOf_eq_of_intervalProp_upper_inclusion
   let hpert := hperturb_of_stabSeminorm C σ W hW hthin₁' hε₀ hε₀2 hsin
   have hW_ne :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a < φ → φ < b₁ → W (K₀.of C F) ≠ 0 := by
-    intro F φ hP hFne _ _
-    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
+        a < φ → φ < b₁ → W (K₀.of C F) ≠ 0 := fun F φ hP hFne _ _ =>
+    σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   have hpert_lo :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b₁ →
@@ -241,9 +240,8 @@ theorem wPhaseOf_eq_of_intervalProp_lower_inclusion
   let hpert := hperturb_of_stabSeminorm C σ W hW hthin₁' hε₀ hε₀2 hsin
   have hW_ne :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a₁ < φ → φ < b → W (K₀.of C F) ≠ 0 := by
-    intro F φ hP hFne _ _
-    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
+        a₁ < φ → φ < b → W (K₀.of C F) ≠ 0 := fun F φ hP hFne _ _ =>
+    σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   have hpert_lo :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a₁ < φ → φ < b →
@@ -303,9 +301,8 @@ theorem wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
   let hpert := hperturb_of_stabSeminorm C σ W hW hthin' hε₀ hε₀2 hsin
   have hW_ne :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a < φ → φ < b → W (K₀.of C F) ≠ 0 := by
-    intro F φ hP hFne _ _
-    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
+        a < φ → φ < b → W (K₀.of C F) ≠ 0 := fun F φ hP hFne _ _ =>
+    σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   have hpert_lo :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →

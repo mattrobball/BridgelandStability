@@ -57,9 +57,8 @@ lemma arg_pos_of_mem_upperHalfPlaneUnion {z : ℂ} (hz : z ∈ upperHalfPlaneUni
     0 < arg z := by
   rcases hz with him | ⟨him, hre⟩
   · have h1 : 0 ≤ arg z := arg_nonneg_iff.mpr him.le
-    have h2 : arg z ≠ 0 := by
-      intro h0
-      exact him.ne' (arg_eq_zero_iff.mp h0).2
+    have h2 : arg z ≠ 0 := fun h0 =>
+      him.ne' (arg_eq_zero_iff.mp h0).2
     exact lt_of_le_of_ne h1 (Ne.symm h2)
   · rw [show z = ↑z.re from Complex.ext rfl (by simp [him]), arg_ofReal_of_neg hre]
     exact Real.pi_pos

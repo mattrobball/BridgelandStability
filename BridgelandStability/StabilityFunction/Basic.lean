@@ -196,9 +196,8 @@ lemma isSemistable_of_iso {X Y : A} (e : X ≅ Y) (h : Z.IsSemistable X) :
     Z.IsSemistable Y := by
   refine ⟨fun hY ↦ h.1 (hY.of_iso e), fun B hB ↦ ?_⟩
   -- B : Subobject Y. Transport to a subobject of X via e.
-  have hBX : ¬IsZero ((Subobject.mk (B.arrow ≫ e.inv)) : A) := by
-    intro hZ
-    exact hB (hZ.of_iso (Subobject.underlyingIso (B.arrow ≫ e.inv)).symm)
+  have hBX : ¬IsZero ((Subobject.mk (B.arrow ≫ e.inv)) : A) := fun hZ =>
+    hB (hZ.of_iso (Subobject.underlyingIso (B.arrow ≫ e.inv)).symm)
   have hle := h.2 (Subobject.mk (B.arrow ≫ e.inv)) hBX
   rw [Z.phase_eq_of_iso (Subobject.underlyingIso (B.arrow ≫ e.inv))] at hle
   rwa [Z.phase_eq_of_iso e] at hle

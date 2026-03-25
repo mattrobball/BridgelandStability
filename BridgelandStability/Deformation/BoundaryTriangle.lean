@@ -167,9 +167,8 @@ theorem wPhaseOf_gt_of_geProp_target
               linarith [(hphases i).2, hbψ]
             linarith [hhi_pert', hupper])
   have hW_ne_ab : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
-      a < θ → θ < b → W (K₀.of C G) ≠ 0 := by
-    intro G θ hG hGne _ _
-    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
+      a < θ → θ < b → W (K₀.of C G) ≠ 0 := fun G θ hG hGne _ _ =>
+    σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
   have hpert_gt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
       a - ε₀ < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
@@ -387,9 +386,8 @@ theorem wPhaseOf_lt_of_leProp_source
             linarith [hlo_pert', hlower, (hphases i).1])
           (by linarith [hhi_pert', (hphases i).2])
   have hW_ne_ab : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
-      a < θ → θ < b → W (K₀.of C G) ≠ 0 := by
-    intro G θ hG hGne _ _
-    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
+      a < θ → θ < b → W (K₀.of C G) ≠ 0 := fun G θ hG hGne _ _ =>
+    σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
   have hpert_gt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
       a - ε₀ < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
@@ -691,9 +689,8 @@ theorem intervalProp_of_wSemistable_upper_target
       have hqY_strict : IsStrictEpi qY := ⟨hS.shortExact.epi_g, hS.strict_g⟩
       let hpert₂ := hperturb_of_stabSeminorm C σ W hW hthin₂' hε₀ hε₀2 hsin
       have hW_interval :
-          ∀ {F : C}, σ.slicing.intervalProp C a b₂ F → ¬IsZero F → W (K₀.of C F) ≠ 0 := by
-        intro F hF hFne
-        exact σ.W_ne_zero_of_intervalProp C W hthin₂'
+          ∀ {F : C}, σ.slicing.intervalProp C a b₂ F → ¬IsZero F → W (K₀.of C F) ≠ 0 :=
+        fun hF hFne => σ.W_ne_zero_of_intervalProp C W hthin₂'
           (stabSeminorm_lt_cos_of_hsin_hthin
             (C := C) (σ := σ) (W := W) hab₂ hε₀ hthin₂ hsin) hFne hF
       have hY_phase_ge :
@@ -775,9 +772,8 @@ theorem intervalProp_of_wSemistable_lower_target
       linarith
     let hpert₁ := hperturb_of_stabSeminorm C σ W hW hthin₁' hε₀ hε₀2 hsin
     have hW_interval :
-        ∀ {F : C}, σ.slicing.intervalProp C a₁ b F → ¬IsZero F → W (K₀.of C F) ≠ 0 := by
-      intro F hF hFne
-      exact σ.W_ne_zero_of_intervalProp C W hthin₁'
+        ∀ {F : C}, σ.slicing.intervalProp C a₁ b F → ¬IsZero F → W (K₀.of C F) ≠ 0 :=
+      fun hF hFne => σ.W_ne_zero_of_intervalProp C W hthin₁'
         (stabSeminorm_lt_cos_of_hsin_hthin
           (C := C) (σ := σ) (W := W) ha₁ hε₀ hthin₁ hsin) hFne hF
     have hY_phase_ge :

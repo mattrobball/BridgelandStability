@@ -73,14 +73,12 @@ theorem interior_has_enveloped_HN_ssf
     stabSeminorm_lt_cos_of_hsin_hthin (C := C) (σ := σ) (W := W) hab hε hthin hsin
   -- W ≠ 0 for nonzero interval objects
   have hW_ne : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (K₀.of C F) ≠ 0 := by
-    intro F hF hFne
-    exact σ.W_ne_zero_of_intervalProp C W hthin' hsmall hFne hF
+      ssf.W (K₀.of C F) ≠ 0 := fun hF hFne =>
+    σ.W_ne_zero_of_intervalProp C W hthin' hsmall hFne hF
   -- Perturbation bounds for global window (stated in terms of W and (a+b)/2 directly)
   have hW_ne_sem : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b → W (K₀.of C F) ≠ 0 := by
-    intro F φ hP hFne _ _
-    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
+      a < φ → φ < b → W (K₀.of C F) ≠ 0 := fun F φ hP hFne _ _ =>
+    σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   have hpert_lo : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b →
       a - ε < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
@@ -98,9 +96,8 @@ theorem interior_has_enveloped_HN_ssf
   -- Global window: L = a - ε, U = b + ε
   have hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       a - ε < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
-        wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε := by
-    intro F hF hFne
-    exact ⟨wPhaseOf_gt_of_intervalProp C σ hFne W
+        wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε := fun hF hFne =>
+    ⟨wPhaseOf_gt_of_intervalProp C σ hFne W
         (by linarith [hab]) hF hW_ne_sem hpert_lo,
       wPhaseOf_lt_of_intervalProp C σ hFne W
         (by linarith [hab]) hF hW_ne_sem hpert_hi⟩

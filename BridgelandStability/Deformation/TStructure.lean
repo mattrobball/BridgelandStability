@@ -445,9 +445,8 @@ theorem exists_deformedGt_deformedLe_triangle_of_enveloped_interval
       σ.deformedGtPred C W hW ε₀ t X ∧
       σ.deformedLePred C W hW ε₀ t Y := by
   let EI : σ.slicing.IntervalCat C a b := ⟨E, hE⟩
-  have hEIne : ¬IsZero EI := by
-    intro hZ
-    exact hEne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
+  have hEIne : ¬IsZero EI := fun hZ =>
+    hEne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
   obtain ⟨G, _hGφ⟩ :=
     exists_deformedHN_of_enveloped_interval
       (C := C) (σ := σ) (W := W) (hW := hW) hab

@@ -476,9 +476,8 @@ theorem semistable_of_upper_inclusion
   let hpert₂ := hperturb_of_stabSeminorm C σ W hW hthin₂' hε₀ hε₀2 hsin
   have hW_ne₂ :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a < φ → φ < b₂ → W (K₀.of C F) ≠ 0 := by
-    intro F φ hP hFne _ _
-    exact σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
+        a < φ → φ < b₂ → W (K₀.of C F) ≠ 0 := fun F φ hP hFne _ _ =>
+    σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   have hpert₂_lo :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b₂ →
@@ -498,14 +497,12 @@ theorem semistable_of_upper_inclusion
   have hWindow₂ :
       ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G →
         a - ε₀ < wPhaseOf (W (K₀.of C G)) ((a + b₂) / 2) ∧
-          wPhaseOf (W (K₀.of C G)) ((a + b₂) / 2) < b₂ + ε₀ := by
-    intro G hG hGne
-    exact ⟨wPhaseOf_gt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_lo,
+          wPhaseOf (W (K₀.of C G)) ((a + b₂) / 2) < b₂ + ε₀ := fun {G} hG hGne =>
+    ⟨wPhaseOf_gt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_lo,
       wPhaseOf_lt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_hi⟩
   have hW_ne_big :
-      ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G → W (K₀.of C G) ≠ 0 := by
-    intro G hG hGne
-    exact σ.W_ne_zero_of_intervalProp C W hthin₂' hsmall₂ hGne hG
+      ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G → W (K₀.of C G) ≠ 0 := fun {_} hG hGne =>
+    σ.W_ne_zero_of_intervalProp C W hthin₂' hsmall₂ hGne hG
   refine semistable_of_target_envelope_triangleTest
     (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hSS hab₂ hEI₂ hε₀ henv_lo henv_hi₂
     hthin₂ ?_

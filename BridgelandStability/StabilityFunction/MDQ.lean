@@ -240,9 +240,8 @@ theorem exists_mdq_of_artinian_noetherian
     let e0 : cokernel (⊥ : Subobject E).arrow ≅ E := by
       simpa [Subobject.bot_arrow] using
         (cokernelZeroIsoTarget (X := ((⊥ : Subobject E) : A)) (Y := E))
-    have hbot : ¬IsZero (cokernel (⊥ : Subobject E).arrow) := by
-      intro hZ
-      exact hE (hZ.of_iso e0.symm)
+    have hbot : ¬IsZero (cokernel (⊥ : Subobject E).arrow) := fun hZ =>
+      hE (hZ.of_iso e0.symm)
     obtain ⟨B, q, hq⟩ := this ⊥ hbot
     refine ⟨B, e0.inv ≫ q, ?_⟩
     exact IsMDQ.precomposeIso Z hq e0.symm
@@ -281,9 +280,8 @@ theorem exists_mdq_of_artinian_noetherian
           · exact h
         let eT : cokernel T.arrow ≅ cokernel A'.arrow :=
           cokernelPullbackTopIso Z S hA'_top
-        have hQT_nz : ¬IsZero (cokernel T.arrow) := by
-          intro hZ
-          exact (cokernel_nonzero_of_ne_top hA'_top) (hZ.of_iso eT.symm)
+        have hQT_nz : ¬IsZero (cokernel T.arrow) := fun hZ =>
+          (cokernel_nonzero_of_ne_top hA'_top) (hZ.of_iso eT.symm)
         obtain ⟨B, qT, hqT⟩ := ih T hST_lt hQT_nz
         let qA : cokernel A'.arrow ⟶ B := eT.inv ≫ qT
         have hqA : IsMDQ Z qA := IsMDQ.precomposeIso Z hqT eT.symm
@@ -393,9 +391,8 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
       (Abelian.monoLift_comp T.arrow K.arrow hzero)
     exact hT_ne_K (le_antisymm hT_le_K hKT)
   have hK_ne_top : K ≠ ⊤ := kernelSubobject_ne_top_of_epi_nonzero q hq.nonzero
-  have hT_ne_top : T ≠ ⊤ := by
-    intro hT_top
-    exact hK_ne_top (le_antisymm le_top (hT_top.symm ▸ hT_le_K))
+  have hT_ne_top : T ≠ ⊤ := fun hT_top =>
+    hK_ne_top (le_antisymm le_top (hT_top.symm ▸ hT_le_K))
   letI : IsArtinianObject Q := isArtinianObject_of_epi p
   letI : IsNoetherianObject Q := isNoetherianObject_of_epi p
   have hQ_nz : ¬IsZero Q := cokernel_nonzero_of_ne_top hT_ne_top
@@ -787,13 +784,11 @@ noncomputable def AbelianHNFiltration.ofIso {Z : StabilityFunction A} {E E' : A}
       _ = ⊤ := Subobject.mk_eq_top_of_isIso e.hom
   φ := F.φ
   φ_anti := F.φ_anti
-  factor_phase := by
-    intro j
-    exact (phase_cokernel_mapMono_eq Z e.hom
+  factor_phase := fun j =>
+    (phase_cokernel_mapMono_eq Z e.hom
       (le_of_lt (F.chain_strictMono j.castSucc_lt_succ))).trans (F.factor_phase j)
-  factor_semistable := by
-    intro j
-    exact (isSemistable_cokernel_mapMono_iff Z e.hom
+  factor_semistable := fun j =>
+    (isSemistable_cokernel_mapMono_iff Z e.hom
       (le_of_lt (F.chain_strictMono j.castSucc_lt_succ))).2 (F.factor_semistable j)
 
 private theorem exists_hn_with_mdq_of_artinian_noetherian_subobject
@@ -830,9 +825,8 @@ private theorem exists_hn_with_mdq_of_artinian_noetherian_subobject
           apply (Subobject.map_obj_injective S.arrow)
           simpa [T, Subobject.map_top] using hTS
         have hT_lt : T < S := lt_of_le_of_ne hT_le hT_ne
-        have hT_nz : ¬IsZero (T : A) := by
-          intro hT_z
-          exact hK_nz (hT_z.of_iso (Subobject.mapSubIso S K).symm)
+        have hT_nz : ¬IsZero (T : A) := fun hT_z =>
+          hK_nz (hT_z.of_iso (Subobject.mapSubIso S K).symm)
         obtain ⟨B', qT, hqT, FT, hFT⟩ := ih T hT_lt hT_nz
         have hqK : IsMDQ Z ((Subobject.mapSubIso S K).symm.hom ≫ qT) :=
           IsMDQ.precomposeIso Z hqT (Subobject.mapSubIso S K).symm
@@ -853,9 +847,8 @@ theorem StabilityFunction.hasHN_of_artinian_noetherian (Z : StabilityFunction A)
   letI : IsArtinianObject E := hArt E
   letI : IsNoetherianObject E := hNoeth E
   let S : Subobject E := Subobject.mk (𝟙 E)
-  have hS_nz : ¬IsZero (S : A) := by
-    intro hS_z
-    exact hE (hS_z.of_iso (Subobject.underlyingIso (𝟙 E)).symm)
+  have hS_nz : ¬IsZero (S : A) := fun hS_z =>
+    hE (hS_z.of_iso (Subobject.underlyingIso (𝟙 E)).symm)
   obtain ⟨B, q, hq, F, hF⟩ :=
     exists_hn_with_mdq_of_artinian_noetherian_subobject Z (E := E) S hS_nz
   exact ⟨F.ofIso (Subobject.underlyingIso (𝟙 E))⟩
