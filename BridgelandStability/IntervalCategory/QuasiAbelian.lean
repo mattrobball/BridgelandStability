@@ -67,17 +67,17 @@ theorem Slicing.intervalCat_hasKernel (s : Slicing C)
     Abelian.monoIsKernelOfCokernel _ (colimit.isColimit _)
   let eK : K ≅ kernel fH := IsLimit.conePointUniqueUpToIso hKπ hKerπ
   have hKGtShift :
-      (s.phaseShift C a).gtProp C 0 K.obj := by
-    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C a).gtProp C 0 K.obj :=
+    ((Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
+      K.property).1
   have hKGt : s.gtProp C a K.obj := (s.phaseShift_gtProp_zero C a K.obj).mp hKGtShift
   have hQLeShift :
-      (s.phaseShift C a).leProp C 1 (cokernel (kernel.ι fH)).obj := by
-    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
+      (s.phaseShift C a).leProp C 1 (cokernel (kernel.ι fH)).obj :=
+    ((Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
       (cokernel (kernel.ι fH)).obj).mp
-      (cokernel (kernel.ι fH)).property |>.2
-  have hQLe : s.leProp C (a + 1) (cokernel (kernel.ι fH)).obj :=
-    by simpa [add_comm] using
+      (cokernel (kernel.ι fH)).property).2
+  have hQLe : s.leProp C (a + 1) (cokernel (kernel.ι fH)).obj := by
+    simpa [add_comm] using
       (s.phaseShift_leProp C a 1 (cokernel (kernel.ι fH)).obj).mp hQLeShift
   have hT' : Triangle.mk i.hom π.hom δ ∈ distTriang C := by
     simpa using hT
@@ -85,8 +85,8 @@ theorem Slicing.intervalCat_hasKernel (s : Slicing C)
     s.first_intervalProp_of_triangle C hab' X.property hQLe hKGt hT'
   let eK0 : K.obj ≅ (kernel fH).obj :=
     ⟨eK.hom.hom, eK.inv.hom,
-      by exact congrArg InducedCategory.Hom.hom eK.hom_inv_id,
-      by exact congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
+      congrArg InducedCategory.Hom.hom eK.hom_inv_id,
+      congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
   have hKer_mem : s.intervalProp C a b (kernel fH).obj :=
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel fH).obj, hKer_mem⟩
@@ -153,16 +153,16 @@ theorem Slicing.intervalCat_hasCokernel (s : Slicing C)
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
       (TStructure.heart_hι t) (TStructure.heart_admissible t) (cokernel.π fH)
   have hKGeShift :
-      (s.phaseShift C (b - 1)).geProp C 0 K.obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C (b - 1)).geProp C 0 K.obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
+      K.property).1
   have hKGe : s.geProp C (b - 1) K.obj :=
     (s.phaseShift_geProp_zero C (b - 1) K.obj).mp hKGeShift
   have hQLtShift :
-      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel fH).obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
+      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel fH).obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
       (cokernel fH).obj).mp
-      (cokernel fH).property |>.2
+      (cokernel fH).property).2
   have hQLt : s.ltProp C b (cokernel fH).obj := by
     simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel fH).obj).mp hQLtShift
@@ -249,16 +249,16 @@ noncomputable def Slicing.IntervalCat.toRightHeartCokernelIso (s : Slicing C)
   let δ := Classical.choose h₂
   let hT : Triangle.mk i.hom (cokernel.π fH).hom δ ∈ distTriang C := Classical.choose_spec h₂
   have hKGeShift :
-      (s.phaseShift C (b - 1)).geProp C 0 K.obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C (b - 1)).geProp C 0 K.obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
+      K.property).1
   have hKGe : s.geProp C (b - 1) K.obj :=
     (s.phaseShift_geProp_zero C (b - 1) K.obj).mp hKGeShift
   have hQLtShift :
-      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel fH).obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
+      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel fH).obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
       (cokernel fH).obj).mp
-      (cokernel fH).property |>.2
+      (cokernel fH).property).2
   have hQLt : s.ltProp C b (cokernel fH).obj := by
     simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel fH).obj).mp hQLtShift
@@ -347,16 +347,16 @@ theorem Slicing.IntervalCat.toRightHeartCokernelIso_π_comp_hom (s : Slicing C)
   let δ := Classical.choose h₂
   let hT : Triangle.mk i.hom (cokernel.π fH).hom δ ∈ distTriang C := Classical.choose_spec h₂
   have hKGeShift :
-      (s.phaseShift C (b - 1)).geProp C 0 K.obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C (b - 1)).geProp C 0 K.obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
+      K.property).1
   have hKGe : s.geProp C (b - 1) K.obj :=
     (s.phaseShift_geProp_zero C (b - 1) K.obj).mp hKGeShift
   have hQLtShift :
-      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel fH).obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
+      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel fH).obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
       (cokernel fH).obj).mp
-      (cokernel fH).property |>.2
+      (cokernel fH).property).2
   have hQLt : s.ltProp C b (cokernel fH).obj := by
     simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel fH).obj).mp hQLtShift
@@ -453,16 +453,16 @@ theorem Slicing.IntervalCat.epi_toRightHeart_of_strictEpi (s : Slicing C)
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
       (TStructure.heart_hι t) (TStructure.heart_admissible t) (cokernel.π kH)
   have hKGeShift :
-      (s.phaseShift C (b - 1)).geProp C 0 K.obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C (b - 1)).geProp C 0 K.obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
+      K.property).1
   have hKGe : s.geProp C (b - 1) K.obj :=
     (s.phaseShift_geProp_zero C (b - 1) K.obj).mp hKGeShift
   have hQLtShift :
-      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel kH).obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
+      (s.phaseShift C (b - 1)).ltProp C 1 (cokernel kH).obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1))
       (cokernel kH).obj).mp
-      (cokernel kH).property |>.2
+      (cokernel kH).property).2
   have hQLt : s.ltProp C b (cokernel kH).obj := by
     simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 (cokernel kH).obj).mp hQLtShift
@@ -564,15 +564,15 @@ theorem Slicing.IntervalCat.mono_toLeftHeart_of_strictMono (s : Slicing C)
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
       (TStructure.heart_hι t) (TStructure.heart_admissible t) π
   have hKGtShift :
-      (s.phaseShift C a).gtProp C 0 K.obj := by
-    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C a).gtProp C 0 K.obj :=
+    ((Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
+      K.property).1
   have hKGt : s.gtProp C a K.obj := (s.phaseShift_gtProp_zero C a K.obj).mp hKGtShift
   have hQLeShift :
-      (s.phaseShift C a).leProp C 1 (cokernel (kernel.ι qH)).obj := by
-    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
+      (s.phaseShift C a).leProp C 1 (cokernel (kernel.ι qH)).obj :=
+    ((Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
       (cokernel (kernel.ι qH)).obj).mp
-      (cokernel (kernel.ι qH)).property |>.2
+      (cokernel (kernel.ι qH)).property).2
   have hQLe : s.leProp C (a + 1) (cokernel (kernel.ι qH)).obj := by
     simpa [add_comm] using
       (s.phaseShift_leProp C a 1 (cokernel (kernel.ι qH)).obj).mp hQLeShift
@@ -587,8 +587,8 @@ theorem Slicing.IntervalCat.mono_toLeftHeart_of_strictMono (s : Slicing C)
       (TStructure.heart_hι t) i π δ hT) hKerπ
   let eK0 : K.obj ≅ (kernel qH).obj :=
     ⟨eK.hom.hom, eK.inv.hom,
-      by exact congrArg InducedCategory.Hom.hom eK.hom_inv_id,
-      by exact congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
+      congrArg InducedCategory.Hom.hom eK.hom_inv_id,
+      congrArg InducedCategory.Hom.hom eK.inv_hom_id⟩
   have hKer_mem : s.intervalProp C a b (kernel qH).obj :=
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel qH).obj, hKer_mem⟩

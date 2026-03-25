@@ -246,8 +246,8 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
       Complex.arg (Finset.sum s f) ≤ Real.pi * σ.slicing.phiPlus C E.obj hEobj :=
     harg_le.trans hsup_le
   have hmul : (1 / Real.pi) * Complex.arg (Finset.sum s f) ≤
-      (1 / Real.pi) * (Real.pi * σ.slicing.phiPlus C E.obj hEobj) := by
-    exact mul_le_mul_of_nonneg_left harg_le' (by positivity)
+      (1 / Real.pi) * (Real.pi * σ.slicing.phiPlus C E.obj hEobj) :=
+    mul_le_mul_of_nonneg_left harg_le' (by positivity)
   simpa [Real.pi_ne_zero] using hmul
 
 theorem StabilityCondition.stabilityFunctionOnHeart_isSemistable_of_mem_P_phi
@@ -274,8 +274,8 @@ theorem StabilityCondition.stabilityFunctionOnHeart_isSemistable_of_mem_P_phi
     push_neg at hgt
     have hBheart := (σ.slicing.toTStructure_heart_iff C B'.obj).mp B'.property
     obtain ⟨F, hn, hfirst⟩ := HNFiltration.exists_nonzero_first C σ.slicing hBobj
-    have htop : σ.slicing.phiPlus C B'.obj hBobj = F.φ ⟨0, hn⟩ := by
-      exact σ.slicing.phiPlus_eq C B'.obj hBobj F hn hfirst
+    have htop : σ.slicing.phiPlus C B'.obj hBobj = F.φ ⟨0, hn⟩ :=
+      σ.slicing.phiPlus_eq C B'.obj hBobj F hn hfirst
     have hphase_gt : φ < F.φ ⟨0, hn⟩ := by
       rw [← htop]
       exact hgt
@@ -418,8 +418,8 @@ theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
         Z.phase E
       have h₁ :
           Z.phase (cokernel (Subobject.ofLE (⊥ : Subobject E) (⊤ : Subobject E) bot_le)) =
-            Z.phase (⊤ : Subobject E) := by
-        exact Z.phase_eq_of_iso (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le)
+            Z.phase (⊤ : Subobject E) :=
+        Z.phase_eq_of_iso (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le)
       exact h₁.trans (Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow))
     factor_semistable := by
       intro ⟨j, hj⟩
@@ -492,14 +492,14 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
       intro a b hab
       dsimp [φ]
       by_cases hb : (b : ℕ) < F.n
-      · have ha : (a : ℕ) < F.n := by
-          exact lt_trans (Fin.mk_lt_mk.mp hab) hb
+      · have ha : (a : ℕ) < F.n :=
+          lt_trans (Fin.mk_lt_mk.mp hab) hb
         simp [ha, hb]
         exact F.φ_anti (Fin.mk_lt_mk.mpr (Fin.mk_lt_mk.mp hab))
       · have ha : (a : ℕ) < F.n := by lia
         have hlast_le :
-            F.φ ⟨F.n - 1, by have := F.hn; lia⟩ ≤ F.φ ⟨a, ha⟩ := by
-          exact F.φ_anti.antitone (Fin.mk_le_mk.mpr (by lia))
+            F.φ ⟨F.n - 1, by have := F.hn; lia⟩ ≤ F.φ ⟨a, ha⟩ :=
+          F.φ_anti.antitone (Fin.mk_le_mk.mpr (by lia))
         simp [ha, hb]
         linarith
     factor_phase := by
@@ -534,11 +534,11 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
           simp [φ, hj]
         have htarget :
             Z.phase (cokernel (Subobject.ofLE K ⊤ le_top)) =
-              Z.phase (cokernel K.arrow) := by
-          exact Z.phase_eq_of_iso
+              Z.phase (cokernel K.arrow) :=
+          Z.phase_eq_of_iso
             ((cokernelIsoOfEq (Subobject.ofLE_arrow _).symm ≪≫ cokernelCompIsIso _ _).symm)
-        have htarget' : Z.phase (cokernel (Subobject.ofLE K ⊤ le_top)) = Z.phase B := by
-          exact htarget.trans (Z.phase_eq_of_iso eK)
+        have htarget' : Z.phase (cokernel (Subobject.ofLE K ⊤ le_top)) = Z.phase B :=
+          htarget.trans (Z.phase_eq_of_iso eK)
         exact ((phase_cokernel_ofLE_congr_local Z hcast_obj hsucc_obj).trans htarget').trans
           hφj.symm
     factor_semistable := by

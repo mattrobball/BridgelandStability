@@ -131,14 +131,14 @@ theorem HeartStabilityData.heartCohClassSum_of_amp_negOne_zero
       -HeartK0.of (C := C) h ⟨K, hK⟩ + HeartK0.of (C := C) h ⟨Q, hQ⟩ := by
   have hneg :
       HeartK0.of (C := C) h (h.heartCoh (C := C) (-1) X) =
-        HeartK0.of (C := C) h ⟨K, hK⟩ := by
-    exact HeartK0.of_iso (C := C) h
+        HeartK0.of (C := C) h ⟨K, hK⟩ :=
+    HeartK0.of_iso (C := C) h
       (h.heartCoh_negOne_iso_of_amp_negOne_zero (C := C)
         (X := X) (K := K) (Q := Q) hK hQ hT)
   have hzero :
       HeartK0.of (C := C) h (h.heartCoh (C := C) 0 X) =
-        HeartK0.of (C := C) h ⟨Q, hQ⟩ := by
-    exact HeartK0.of_iso (C := C) h
+        HeartK0.of (C := C) h ⟨Q, hQ⟩ :=
+    HeartK0.of_iso (C := C) h
       (h.heartCoh_zero_iso_of_amp_negOne_zero (C := C)
         (X := X) (K := K) (Q := Q) hK hQ hT)
   rw [HeartStabilityData.heartCohClassSum, Finset.sum_range_succ, Finset.sum_range_succ,
@@ -277,8 +277,8 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
         IsZero (((h.H0Functor (C := C)).shift b).obj T.obj₁) :=
       h.isZero_H0Functor_shift_obj_of_lt_bound (C := C) (X := T.obj₁)
         (m := b) (n := b + 1) (by grind) h₁GE
-    have hmor_zero : (((h.H0Functor (C := C)).shift b).map T.mor₁) = 0 := by
-      exact zero_of_source_iso_zero _ hzero.isoZero
+    have hmor_zero : (((h.H0Functor (C := C)).shift b).map T.mor₁) = 0 :=
+      zero_of_source_iso_zero _ hzero.isoZero
     have hclass :
         HeartK0.of (C := C) h
             (Limits.image (((h.H0Functor (C := C)).shift b).map T.mor₁)) = 0 :=
@@ -289,8 +289,8 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
         IsZero (((h.H0Functor (C := C)).shift (a + 1)).obj T.obj₂) :=
       h.isZero_H0Functor_shift_obj_of_gt_bound (C := C) (X := T.obj₂)
         (m := a + 1) (n := a) (by grind) h₂LE
-    have hmor_zero : (((h.H0Functor (C := C)).shift (a + 1)).map T.mor₁) = 0 := by
-      exact zero_of_target_iso_zero _ hzero.isoZero
+    have hmor_zero : (((h.H0Functor (C := C)).shift (a + 1)).map T.mor₁) = 0 :=
+      zero_of_target_iso_zero _ hzero.isoZero
     have hclass :
         HeartK0.of (C := C) h
             (Limits.image (((h.H0Functor (C := C)).shift (a + 1)).map T.mor₁)) = 0 :=
@@ -369,8 +369,8 @@ instance HeartStabilityData.heartEulerClassObj_isTriangleAdditive
     have ha₁ : h.upperBound (C := C) T.obj₁ - 1 ≤ a := by
       dsimp [a]
       exact le_trans (le_max_right _ _) (le_max_right _ _)
-    have hab : b ≤ a := by
-      exact le_trans hb₂ <|
+    have hab : b ≤ a :=
+      le_trans hb₂ <|
         le_trans (h.lowerBound_le_upperBound (C := C) (E := T.obj₂)) ha₂
     have h₁LE : h.t.IsLE T.obj₁ (a + 1) := by
       letI : h.t.IsLE T.obj₁ (h.upperBound (C := C) T.obj₁) := h.isLE_upperBound (C := C) T.obj₁

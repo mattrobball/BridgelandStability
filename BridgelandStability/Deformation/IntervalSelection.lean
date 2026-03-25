@@ -80,8 +80,8 @@ lemma intervalSubobject_arrow_strictMono_of_strictMono
   have hcomp : IsStrictMono (e.hom ≫ f) :=
     Slicing.IntervalCat.comp_strictMono
       (C := C) (s := s) (a := a) (b := b) e.hom f he hf
-  have harr : e.hom ≫ f = (Subobject.mk f).arrow := by
-    exact Subobject.underlyingIso_hom_comp_eq_mk f
+  have harr : e.hom ≫ f = (Subobject.mk f).arrow :=
+    Subobject.underlyingIso_hom_comp_eq_mk f
   rw [← harr]
   exact hcomp
 
@@ -177,8 +177,8 @@ theorem interval_strictFiniteLength_of_inclusion
     {X : s₁.IntervalCat C a₁ b₁}
     [IsArtinianObject ((ObjectProperty.ιOfLE h).obj X)]
     [IsNoetherianObject ((ObjectProperty.ιOfLE h).obj X)] :
-    IsStrictArtinianObject X ∧ IsStrictNoetherianObject X := by
-  exact ⟨interval_strictArtinianObject_of_inclusion (C := C) (s₁ := s₁) (s₂ := s₂)
+    IsStrictArtinianObject X ∧ IsStrictNoetherianObject X :=
+  ⟨interval_strictArtinianObject_of_inclusion (C := C) (s₁ := s₁) (s₂ := s₂)
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h,
     interval_strictNoetherianObject_of_inclusion (C := C) (s₁ := s₁) (s₂ := s₂)
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h⟩
@@ -344,8 +344,8 @@ theorem interval_strictFiniteLength_of_inclusion_strict
     {X : s₁.IntervalCat C a₁ b₁}
     [IsStrictArtinianObject ((ObjectProperty.ιOfLE h).obj X)]
     [IsStrictNoetherianObject ((ObjectProperty.ιOfLE h).obj X)] :
-    IsStrictArtinianObject X ∧ IsStrictNoetherianObject X := by
-  exact ⟨interval_strictArtinianObject_of_inclusion_strict (C := C) (s₁ := s₁) (s₂ := s₂)
+    IsStrictArtinianObject X ∧ IsStrictNoetherianObject X :=
+  ⟨interval_strictArtinianObject_of_inclusion_strict (C := C) (s₁ := s₁) (s₂ := s₂)
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h,
     interval_strictNoetherianObject_of_inclusion_strict (C := C) (s₁ := s₁) (s₂ := s₂)
       (a₁ := a₁) (b₁ := b₁) (a₂ := a₂) (b₂ := b₂) h⟩
@@ -410,8 +410,8 @@ lemma interval_card_subobject_lt_of_ne_top
     (hM : M ≠ ⊤) [Finite (Subobject X)] :
     Nat.card (Subobject (M : s.IntervalCat C a b)) < Nat.card (Subobject X) := by
   let φ := (Subobject.map M.arrow).obj
-  haveI : Finite (Subobject (M : s.IntervalCat C a b)) := by
-    exact Finite.of_injective φ (Subobject.map_obj_injective M.arrow)
+  haveI : Finite (Subobject (M : s.IntervalCat C a b)) :=
+    Finite.of_injective φ (Subobject.map_obj_injective M.arrow)
   haveI := Fintype.ofFinite (Subobject X)
   haveI := Fintype.ofFinite (Subobject (M : s.IntervalCat C a b))
   rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
@@ -775,11 +775,7 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
         wPhaseOf (ssf.W (K₀.of C K)) ssf.α =
           wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := by
       simpa [phaseObj, KI] using hEqPhase
-    have : wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α <
-        wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := by
-      have hgt' := hgt
-      simp [hEqPhase'] at hgt'
-    exact lt_irrefl _ this
+    simp [hEqPhase'] at hgt
   let T : Set (Subobject X) := {B | B ≠ ⊤ ∧ IsStrictMono B.arrow}
   have hT_ne : T.Nonempty := ⟨B, hB_ne_top, hB_strict⟩
   have hT_fin : T.Finite := Set.toFinite _
@@ -909,8 +905,8 @@ theorem SkewedStabilityFunction.exists_maxPhase_maximal_strictSubobject
           wPhaseOf (ssf.W (K₀.of C (M : σ.slicing.IntervalCat C a b).obj)) ssf.α) ∧
       (∀ B : Subobject X, IsStrictMono B.arrow → M < B →
         wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α <
-          wPhaseOf (ssf.W (K₀.of C (M : σ.slicing.IntervalCat C a b).obj)) ssf.α) := by
-  exact ssf.exists_maxPhase_maximal_strictSubobject_of_finite
+          wPhaseOf (ssf.W (K₀.of C (M : σ.slicing.IntervalCat C a b).obj)) ssf.α) :=
+  ssf.exists_maxPhase_maximal_strictSubobject_of_finite
     (C := C) (σ := σ) (a := a) (b := b) (X := X) hX (Set.toFinite _)
 
 /-- A nonzero strict subobject that is maximal for W-phase among all nonzero strict subobjects
@@ -963,8 +959,8 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
     exact hKne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
   have hB_ne : B ≠ ⊥ := by
     intro hB
-    have hzero : iKM ≫ M.arrow = 0 := by
-      exact (Subobject.mk_eq_bot_iff_zero).mp
+    have hzero : iKM ≫ M.arrow = 0 :=
+      (Subobject.mk_eq_bot_iff_zero).mp
         (show Subobject.mk (iKM ≫ M.arrow) = ⊥ by simpa [B] using hB)
     have hId : 𝟙 KI = 0 := by
       apply (cancel_mono (iKM ≫ M.arrow)).1
@@ -977,8 +973,8 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
     have htmp : IsStrictMono (e.hom ≫ (iKM ≫ M.arrow)) :=
       Slicing.IntervalCat.comp_strictMono
         (C := C) (s := σ.slicing) (a := a) (b := b) e.hom (iKM ≫ M.arrow) he_strict hComp_strict
-    have hArrow : e.hom ≫ (iKM ≫ M.arrow) = B.arrow := by
-      exact Subobject.underlyingIso_hom_comp_eq_mk (iKM ≫ M.arrow)
+    have hArrow : e.hom ≫ (iKM ≫ M.arrow) = B.arrow :=
+      Subobject.underlyingIso_hom_comp_eq_mk (iKM ≫ M.arrow)
     rw [← hArrow]
     exact htmp
   have hPhaseB : phaseObj KI ≤ phaseObj (M : σ.slicing.IntervalCat C a b) := by

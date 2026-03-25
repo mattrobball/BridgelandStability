@@ -276,14 +276,14 @@ theorem StabilityCondition.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
   have hpiε_mem : Real.pi * ε ∈ Set.Icc (-(Real.pi / 2)) (Real.pi / 2) := by
     constructor <;> nlinarith [Real.pi_pos, hε_half]
   have hε'_lt : ε' < ε := by
-    have harcsin_lt : Real.arcsin y < Real.pi * ε := by
-      exact (Real.arcsin_lt_iff_lt_sin hy_mem hpiε_mem).2 hy_between.2
+    have harcsin_lt : Real.arcsin y < Real.pi * ε :=
+      (Real.arcsin_lt_iff_lt_sin hy_mem hpiε_mem).2 hy_between.2
     have hdiv : Real.arcsin y / Real.pi < ε := by
       refine (div_lt_iff₀ Real.pi_pos).2 ?_
       nlinarith
     simpa [ε'] using hdiv
-  have hε'ε₀ : ε' < ε₀ := by
-    exact lt_trans hε'_lt hεε₀
+  have hε'ε₀ : ε' < ε₀ :=
+    lt_trans hε'_lt hεε₀
   have hsin'_eq : Real.sin (Real.pi * ε') = y := by
     have hpiε' : Real.pi * ε' = Real.arcsin y := by
       dsimp [ε']

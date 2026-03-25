@@ -468,25 +468,18 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ
     (Real.sin_pos_of_pos_of_lt_pi hπδ (by nlinarith [Real.pi_pos])).le
   have hKsin : K.toReal * Real.sin (Real.pi * δ) < gapZ := by
     have hKnn := ENNReal.toReal_nonneg (a := K)
-    have h1 : Real.sin (Real.pi * δ) ≤ Real.pi * δ := (Real.sin_lt hπδ).le
     have h4 : 0 < (K.toReal + 1) * (2 * Real.pi) := by positivity
     have h5 : δ * ((K.toReal + 1) * (2 * Real.pi)) ≤ gapZ := by
-      have hmin : δ ≤ gapZ / ((K.toReal + 1) * (2 * Real.pi)) := by
-        dsimp [δ]
-        exact le_trans (min_le_right _ _) (min_le_left _ _)
       calc δ * ((K.toReal + 1) * (2 * Real.pi))
-          ≤ gapZ / ((K.toReal + 1) * (2 * Real.pi)) * ((K.toReal + 1) * (2 * Real.pi)) :=
-            mul_le_mul_of_nonneg_right hmin (le_of_lt h4)
+          ≤ gapZ / ((K.toReal + 1) * (2 * Real.pi)) * ((K.toReal + 1) * (2 * Real.pi)) := by
+            gcongr; dsimp [δ]; exact (min_le_right _ _).trans (min_le_left _ _)
         _ = gapZ := div_mul_cancel₀ gapZ (ne_of_gt h4)
-    have step1 : K.toReal * Real.sin (Real.pi * δ) ≤ K.toReal * (Real.pi * δ) :=
-      mul_le_mul_of_nonneg_left h1 hKnn
-    have step2 : K.toReal * (Real.pi * δ) ≤ (K.toReal + 1) * (Real.pi * δ) := by
-      gcongr
-      linarith
-    have step3 : (K.toReal + 1) * (Real.pi * δ) =
-        δ * ((K.toReal + 1) * (2 * Real.pi)) / 2 := by
-      ring
-    linarith [half_lt_self hgapZ]
+    calc K.toReal * Real.sin (Real.pi * δ)
+        ≤ K.toReal * (Real.pi * δ) :=
+          mul_le_mul_of_nonneg_left (Real.sin_lt hπδ).le hKnn
+      _ ≤ (K.toReal + 1) * (Real.pi * δ) := by gcongr; linarith
+      _ = δ * ((K.toReal + 1) * (2 * Real.pi)) / 2 := by ring
+      _ < gapZ := by linarith [half_lt_self hgapZ]
   refine ⟨δ, hδ_pos, hδ_lt, ?_⟩
   intro τ' hτ'
   rcases hτ' with ⟨hτ'Z, hτ'd⟩

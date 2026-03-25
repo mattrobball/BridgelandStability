@@ -124,12 +124,12 @@ noncomputable instance Slicing.intervalCat_hasFiniteCoproducts (s : Slicing C) :
   hasFiniteCoproducts_of_has_binary_and_initial
 
 noncomputable instance Slicing.intervalCat_hasPullbacks (s : Slicing C) :
-    HasPullbacks (s.IntervalCat C a b) := by
-  exact Limits.hasPullbacks_of_hasBinaryProducts_of_hasEqualizers _
+    HasPullbacks (s.IntervalCat C a b) :=
+  Limits.hasPullbacks_of_hasBinaryProducts_of_hasEqualizers _
 
 noncomputable instance Slicing.intervalCat_hasPushouts (s : Slicing C) :
-    HasPushouts (s.IntervalCat C a b) := by
-  exact Limits.hasPushouts_of_hasBinaryCoproducts_of_hasCoequalizers _
+    HasPushouts (s.IntervalCat C a b) :=
+  Limits.hasPushouts_of_hasBinaryCoproducts_of_hasCoequalizers _
 
 noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesFiniteLimits (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
@@ -338,8 +338,8 @@ theorem Slicing.IntervalCat.strictMono_strictEpi_of_distTriang (s : Slicing C)
       (TStructure.heart_hι tL) ((S.map FL).f) ((S.map FL).g) δ hTL
   letI : (S.map FL).HasHomology :=
     ShortComplex.HasHomology.mk' (ShortComplex.HomologyData.ofAbelian (S := S.map FL))
-  have hExactL : (S.map FL).Exact := by
-    exact ShortComplex.exact_of_f_is_kernel (S := S.map FL) hKerL
+  have hExactL : (S.map FL).Exact :=
+    ShortComplex.exact_of_f_is_kernel (S := S.map FL) hKerL
   have hL : (S.map FL).ShortExact :=
     ShortComplex.ShortExact.mk' hExactL (Fork.IsLimit.mono hKerL) (Cofork.IsColimit.epi hCokL)
   let tR := (s.phaseShift C (b - 1)).toTStructureGE
@@ -360,8 +360,8 @@ theorem Slicing.IntervalCat.strictMono_strictEpi_of_distTriang (s : Slicing C)
       (TStructure.heart_hι tR) ((S.map FR).f) ((S.map FR).g) δ hTR
   letI : (S.map FR).HasHomology :=
     ShortComplex.HasHomology.mk' (ShortComplex.HomologyData.ofAbelian (S := S.map FR))
-  have hExactR : (S.map FR).Exact := by
-    exact ShortComplex.exact_of_f_is_kernel (S := S.map FR) hKerR
+  have hExactR : (S.map FR).Exact :=
+    ShortComplex.exact_of_f_is_kernel (S := S.map FR) hKerR
   have hR : (S.map FR).ShortExact :=
     ShortComplex.ShortExact.mk' hExactR (Fork.IsLimit.mono hKerR) (Cofork.IsColimit.epi hCokR)
   exact Slicing.IntervalCat.strictMono_strictEpi_of_shortExact_toLeftRightHearts

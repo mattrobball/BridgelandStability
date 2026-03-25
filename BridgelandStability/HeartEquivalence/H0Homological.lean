@@ -235,8 +235,8 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_iff_octahedr
           (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact) := by
   obtain ⟨Z, v, w, m₁, m₃, h13, h23, hm₁, hmw, hm₃⟩ :=
     h.t.exists_truncLT_octahedral_split (C := C) hT 0
-  have hvIso : IsIso ((h.t.truncGE 0).map v) := by
-    exact h.t.isIso₂_truncGE_map_of_isLE _ h13 (-1) 0 rfl
+  have hvIso : IsIso ((h.t.truncGE 0).map v) :=
+    h.t.isIso₂_truncGE_map_of_isLE _ h13 (-1) 0 rfl
       (h.t.isLE_truncLT_obj T.obj₁ 0 (-1) (by grind))
   refine ⟨Z, v, w, m₁, m₃, h13, h23, hm₁, hmw, hm₃, ?_⟩
   rw [h.H0primeFunctor_preadditiveCoyoneda_exact_iff_truncGE (C := C) T hT E]
@@ -432,8 +432,8 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_tru
     simpa using hfβ.symm
   have hcomp₁ :
       h.toH0primeHom (C := C) E a ≫ (h.H0primeFunctor (C := C)).map m₁ =
-        h.toH0primeHom (C := C) E (a ≫ m₁) := by
-    exact h.toH0primeHom_comp_H0primeFunctor_map (C := C) E a m₁
+        h.toH0primeHom (C := C) E (a ≫ m₁) :=
+    h.toH0primeHom_comp_H0primeFunctor_map (C := C) E a m₁
   have hcomp₂ :
       h.toH0primeHom (C := C) E (a ≫ m₁) = h.toH0primeHom (C := C) E f' := by
     simpa using congrArg (h.toH0primeHom (C := C) E) ha.symm
@@ -492,8 +492,8 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_split_one
           (h.H0primeFunctor (C := C)).map m₃ = 0 := by
     simpa [Functor.map_comp, Category.assoc] using hβ'
   obtain ⟨a, ha⟩ := hex23 (β ≫ (h.H0primeFunctor (C := C)).map v) hβvm₃
-  have ha_zero : a = 0 := by
-    exact IsZero.eq_of_tgt (h.isZero_H0prime_of_isGE_one (C := C)
+  have ha_zero : a = 0 :=
+    IsZero.eq_of_tgt (h.isZero_H0prime_of_isGE_one (C := C)
       (X := (h.t.truncGE 1).obj A)) a 0
   have ha_m₁_zero : a ≫ (h.H0primeFunctor (C := C)).map m₁ = 0 := by
     cases ha_zero
@@ -754,8 +754,8 @@ theorem HeartStabilityData.H0Functor_isHomological_of_eval_of_heart_case
       ((shortComplexOfDistTriangle
         (Triangle.mk m₁ m₃
           (T.mor₃ ≫ ((shiftFunctor C (1 : ℤ)).map ((h.t.truncGEπ 0).app T.obj₁)))) h23).map
-        (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact := by
-    exact h.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_zero_of_heart_case
+        (h.H0primeFunctor (C := C) ⋙ preadditiveCoyoneda.obj (Opposite.op E))).Exact :=
+    h.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_zero_of_heart_case
       (C := C) (A := (h.t.truncGE 0).obj T.obj₁) (X₂ := Z) (X₃ := T.obj₃)
       (f := m₁) (g := m₃)
       (δ := T.mor₃ ≫ ((shiftFunctor C (1 : ℤ)).map ((h.t.truncGEπ 0).app T.obj₁)))

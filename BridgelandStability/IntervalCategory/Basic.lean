@@ -215,8 +215,8 @@ instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
                 apply FY.hφ.antitone
                 simp only [Fin.le_def]
                 grind
-              have h2 : FY.φ ⟨0, hnY⟩ = s.phiPlus C Y hY0 := by
-                exact (s.phiPlus_eq C Y hY0 FY hnY hneY).symm
+              have h2 : FY.φ ⟨0, hnY⟩ = s.phiPlus C Y hY0 :=
+                (s.phiPlus_eq C Y hY0 FY hnY hneY).symm
               have h3 : s.phiPlus C Y hY0 < b := s.phiPlus_lt_of_intervalProp C hY0 hY
               grind
             exact s.hom_eq_zero_of_gt_phases C (FX.semistable ⟨0, hnX⟩) FY hgap α
@@ -242,8 +242,8 @@ instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
                 apply GY.hφ.antitone
                 simp only [Fin.le_def]
                 grind
-              have h2 : s.phiMinus C Y hY0 = GY.φ ⟨GY.n - 1, by grind⟩ := by
-                exact s.phiMinus_eq C Y hY0 GY hnY hneY
+              have h2 : s.phiMinus C Y hY0 = GY.φ ⟨GY.n - 1, by grind⟩ :=
+                s.phiMinus_eq C Y hY0 GY hnY hneY
               have h3 : a < s.phiMinus C Y hY0 := s.phiMinus_gt_of_intervalProp C hY0 hY
               grind
             exact s.hom_eq_zero_of_lt_phases C (GX.semistable ⟨GX.n - 1, by grind⟩) GY hgap β

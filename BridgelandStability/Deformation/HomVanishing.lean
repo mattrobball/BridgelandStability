@@ -113,10 +113,9 @@ theorem gtProp_leProp_of_phaseShiftHeart
     (hE : ¬IsZero E)
     (hu : s.phiPlus C E hE ≤ u) :
     s.gtProp C a E ∧ s.leProp C u E := by
-  have hHeart' := hHeart
-  rw [(s.phaseShift C a).toTStructure_heart_iff] at hHeart'
+  rw [(s.phaseShift C a).toTStructure_heart_iff] at hHeart
   constructor
-  · exact (s.phaseShift_gtProp_zero C a E).mp hHeart'.1
+  · exact (s.phaseShift_gtProp_zero C a E).mp hHeart.1
   · exact s.leProp_of_phiPlus_le C hE hu
 
 theorem geProp_leProp_of_phaseShiftHeart
@@ -125,13 +124,12 @@ theorem geProp_leProp_of_phaseShiftHeart
     (hE : ¬IsZero E)
     (hl : l ≤ s.phiMinus C E hE) :
     s.geProp C l E ∧ s.leProp C (a + 1) E := by
-  have hHeart' := hHeart
-  rw [(s.phaseShift C a).toTStructure_heart_iff] at hHeart'
+  rw [(s.phaseShift C a).toTStructure_heart_iff] at hHeart
   constructor
   · exact s.geProp_of_phiMinus_ge C hE hl
   · have hle : s.leProp C (1 + a) E := by
       simpa [add_comm] using
-        (s.phaseShift_leProp C a 1 E).mp hHeart'.2
+        (s.phaseShift_leProp C a 1 E).mp hHeart.2
     simpa [add_comm] using hle
 
 theorem midpoint_left_target_thin
@@ -266,8 +264,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         simpa [a] using midpoint_left_target_thin (ψ₁ := ψ₁) (ψ₂ := ψ₂) hsmallGap hε₀8
       have hrightThin : (a + 1) - (ψ₂ - ε₀) + 2 * ε₀ < 1 := by
         simpa [a] using midpoint_right_target_thin (ψ₁ := ψ₁) (ψ₂ := ψ₂) hsmallGap hε₀8
-      have himageThin : (ψ₂ + ε₀) - (ψ₁ - ε₀) + 2 * ε₀ < 1 := by
-        exact midpoint_image_window_thin (ψ₁ := ψ₁) (ψ₂ := ψ₂) hgap hsmallGap hε₀8
+      have himageThin : (ψ₂ + ε₀) - (ψ₁ - ε₀) + 2 * ε₀ < 1 :=
+        midpoint_image_window_thin (ψ₁ := ψ₁) (ψ₂ := ψ₂) hgap hsmallGap hε₀8
       set ss := σ.slicing.phaseShift C a
       let t := ss.toTStructure
       have hE_heart : t.heart E := by
@@ -279,43 +277,43 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
           mem_phaseShiftHeart_of_midpoint_right (C := C) (s := σ.slicing) hSS₂.2.1
             (le_of_lt hF_lo) (le_of_lt hF_hi) hgap hsmallGap hε₀2
       have hE_window :
-          σ.slicing.gtProp C a E ∧ σ.slicing.leProp C (ψ₁ + ε₀) E := by
-        exact gtProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
+          σ.slicing.gtProp C a E ∧ σ.slicing.leProp C (ψ₁ + ε₀) E :=
+        gtProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
           (a := a) hE_heart hSS₁.2.1 (le_of_lt hE_hi)
       have hF_window :
-          σ.slicing.geProp C (ψ₂ - ε₀) F ∧ σ.slicing.leProp C (a + 1) F := by
-        exact geProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
+          σ.slicing.geProp C (ψ₂ - ε₀) F ∧ σ.slicing.leProp C (a + 1) F :=
+        geProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
           (a := a) hF_heart hSS₂.2.1 (le_of_lt hF_lo)
       have habE_left_src : a₁ < ψ₁ + ε₀ := by
         linarith [henv₁_lo]
-      have hE_upper : σ.slicing.intervalProp C a₁ (ψ₁ + ε₀) E := by
-        exact intervalProp_of_wSemistable_upper_target
+      have hE_upper : σ.slicing.intervalProp C a₁ (ψ₁ + ε₀) E :=
+        intervalProp_of_wSemistable_upper_target
           (C := C) (σ := σ) (W := W) (hW := hW) habE_left_src hab₁
           (by linarith [henv₁_hi]) hSS₁ hε₀ hε₀2 henv₁_lo (by linarith) hthin₁ hsin
       have habE_left : a < ψ₁ + ε₀ := by
         linarith
-      have hE_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) E := by
-        exact σ.slicing.intervalProp_of_intrinsic_phases C hSS₁.2.1
+      have hE_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) E :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hSS₁.2.1
           (σ.slicing.phiMinus_gt_of_gtProp C hSS₁.2.1 hE_window.1)
           (σ.slicing.phiPlus_lt_of_intervalProp C hSS₁.2.1 hE_upper)
       have henvE_left_lo : a + ε₀ ≤ ψ₁ := by
         dsimp [a]
         linarith
       have hSS₁_left :
-          (σ.skewedStabilityFunction_of_near C W hW habE_left).Semistable C E ψ₁ := by
-        exact semistable_of_target_envelope
+          (σ.skewedStabilityFunction_of_near C W hW habE_left).Semistable C E ψ₁ :=
+        semistable_of_target_envelope
           (C := C) (σ := σ) (W := W) (hW := hW) hab₁ habE_left hSS₁ hE_left
           hε₀ hε₀2 henv₁_lo henv₁_hi henvE_left_lo (by linarith) hthin₁ hleftThin hsin
       have habF_right_tgt : ψ₂ - ε₀ < b₂ := by
         linarith [henv₂_hi]
-      have hF_lower : σ.slicing.intervalProp C (ψ₂ - ε₀) b₂ F := by
-        exact intervalProp_of_wSemistable_lower_target
+      have hF_lower : σ.slicing.intervalProp C (ψ₂ - ε₀) b₂ F :=
+        intervalProp_of_wSemistable_lower_target
           (C := C) (σ := σ) (W := W) (hW := hW) hab₂ habF_right_tgt
           (by linarith [henv₂_lo]) hSS₂ hε₀ hε₀2 (by linarith) henv₂_hi hthin₂ hsin
       have habF_right : ψ₂ - ε₀ < a + 1 := by
         linarith
-      have hF_right : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1) F := by
-        exact σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.2.1
+      have hF_right : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1) F :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.2.1
           (σ.slicing.phiMinus_gt_of_intervalProp C hSS₂.2.1 hF_lower)
           (lt_trans hF_hi (by
             dsimp [a]
@@ -324,8 +322,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         dsimp [a]
         linarith [hsmallGap]
       have hSS₂_right :
-          (σ.skewedStabilityFunction_of_near C W hW habF_right).Semistable C F ψ₂ := by
-        exact semistable_of_target_envelope
+          (σ.skewedStabilityFunction_of_near C W hW habF_right).Semistable C F ψ₂ :=
+        semistable_of_target_envelope
           (C := C) (σ := σ) (W := W) (hW := hW) hab₂ habF_right hSS₂ hF_right
           hε₀ hε₀2 henv₂_lo henv₂_hi (by linarith) henvF_right_hi hthin₂ hrightThin hsin
       letI := t.hasHeartFullSubcategory
@@ -334,9 +332,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       let FH : t.heart.FullSubcategory := ⟨F, hF_heart⟩
       let fH : EH ⟶ FH := ObjectProperty.homMk f
       let ι := t.ιHeart (H := t.heart.FullSubcategory)
-      have hι_simp : ∀ (X : t.heart.FullSubcategory), ι.obj X = X.obj := by
-        intro X
-        rfl
+      have hι_simp : ∀ (X : t.heart.FullSubcategory), ι.obj X = X.obj :=
+        fun _ => rfl
       obtain ⟨X₃, f₂, f₃, hT_hom⟩ := distinguished_cocone_triangle (ι.map fH)
       have hadm : AbelianSubcategory.admissibleMorphism
           (t.ιHeart (H := t.heart.FullSubcategory)) fH := by
@@ -366,20 +363,15 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have hK_heart : t.heart K.obj := K.property
       have hQ_heart : t.heart Q.obj := Q.property
       have hI_heart : t.heart I_H.obj := I_H.property
-      have hK_heart' := hK_heart
-      have hQ_heart' := hQ_heart
-      have hI_heart' := hI_heart
-      rw [(σ.slicing.phaseShift C a).toTStructure_heart_iff] at hK_heart' hQ_heart' hI_heart'
-      have hK_gt : σ.slicing.gtProp C a K.obj := by
-        exact (σ.slicing.phaseShift_gtProp_zero C a K.obj).mp hK_heart'.1
+      rw [(σ.slicing.phaseShift C a).toTStructure_heart_iff] at hK_heart hQ_heart hI_heart
+      have hK_gt : σ.slicing.gtProp C a K.obj :=
+        (σ.slicing.phaseShift_gtProp_zero C a K.obj).mp hK_heart.1
       have hQ_le : σ.slicing.leProp C (a + 1) Q.obj := by
-        simpa [add_comm] using
-          (σ.slicing.phaseShift_leProp C a 1 Q.obj).mp hQ_heart'.2
-      have hI_gt : σ.slicing.gtProp C a I_H.obj := by
-        exact (σ.slicing.phaseShift_gtProp_zero C a I_H.obj).mp hI_heart'.1
+        simpa [add_comm] using (σ.slicing.phaseShift_leProp C a 1 Q.obj).mp hQ_heart.2
+      have hI_gt : σ.slicing.gtProp C a I_H.obj :=
+        (σ.slicing.phaseShift_gtProp_zero C a I_H.obj).mp hI_heart.1
       have hI_le : σ.slicing.leProp C (a + 1) I_H.obj := by
-        simpa [add_comm] using
-          (σ.slicing.phaseShift_leProp C a 1 I_H.obj).mp hI_heart'.2
+        simpa [add_comm] using (σ.slicing.phaseShift_leProp C a 1 I_H.obj).mp hI_heart.2
       have hT_I' : Triangle.mk i_I.hom (f₂ ≫ β) δ_I ∈ distTriang C := by
         simpa using hT_I
       have hT_pH' :
@@ -388,25 +380,22 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         simpa [ι] using hT_pH
       have hIne : ¬IsZero I_H.obj := by
         intro hIZ
-        have hIZH : IsZero I_H := by
-          exact IsZero.of_full_of_faithful_of_isZero ι I_H (by simpa [hι_simp] using hIZ)
+        have hIZH : IsZero I_H :=
+          IsZero.of_full_of_faithful_of_isZero ι I_H (by simpa [hι_simp] using hIZ)
         have hiI_zero : i_I = 0 := zero_of_source_iso_zero _ hIZH.isoZero
-        have hfH_zero : fH = 0 := by
-          rw [← hpH, hiI_zero]
-          simp
-        exact hfH hfH_zero
-      have hI_phiPlus_left : σ.slicing.phiPlus C I_H.obj hIne < ψ₁ + ε₀ := by
-        exact σ.slicing.phiPlus_lt_of_triangle_with_leProp C hIne
+        exact hfH (by rw [← hpH, hiI_zero]; simp)
+      have hI_phiPlus_left : σ.slicing.phiPlus C I_H.obj hIne < ψ₁ + ε₀ :=
+        σ.slicing.phiPlus_lt_of_triangle_with_leProp C hIne
           (fun hF' ↦ lt_trans hF_hi (by linarith [hgap])) hQ_le (by linarith) hT_I'
-      have hI_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) I_H.obj := by
-        exact σ.slicing.intervalProp_of_intrinsic_phases C hIne
+      have hI_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) I_H.obj :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hIne
           (σ.slicing.phiMinus_gt_of_gtProp C hIne hI_gt)
           hI_phiPlus_left
-      have hI_phiMinus_right : ψ₂ - ε₀ < σ.slicing.phiMinus C I_H.obj hIne := by
-        exact σ.slicing.phiMinus_gt_of_triangle_with_gtProp C hIne
+      have hI_phiMinus_right : ψ₂ - ε₀ < σ.slicing.phiMinus C I_H.obj hIne :=
+        σ.slicing.phiMinus_gt_of_triangle_with_gtProp C hIne
           (fun hE' ↦ lt_trans (by linarith [hgap]) hE_lo) hK_gt (by linarith) hT_pH'
-      have hI_right : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1) I_H.obj := by
-        exact σ.slicing.intervalProp_of_intrinsic_phases C hIne
+      have hI_right : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1) I_H.obj :=
+        σ.slicing.intervalProp_of_intrinsic_phases C hIne
           hI_phiMinus_right
           (lt_of_lt_of_le hI_phiPlus_left (by linarith [hsmallGap, hε₀2]))
       let αL : ℝ := (a + (ψ₁ + ε₀)) / 2
@@ -452,8 +441,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
           hI_left hW_ne_left hpert_left_hi
       have hI_phase_left_hi : wPhaseOf (W (K₀.of C I_H.obj)) αL < ψ₁ + 2 * ε₀ := by
         linarith
-      have hWneI : W (K₀.of C I_H.obj) ≠ 0 := by
-        exact σ.W_ne_zero_of_intervalProp C W hleftThin'
+      have hWneI : W (K₀.of C I_H.obj) ≠ 0 :=
+        σ.W_ne_zero_of_intervalProp C W hleftThin'
           (stabSeminorm_lt_cos_of_hsin_hthin
             (C := C) (σ := σ) (W := W) hab_left hε₀ hleftThin hsin) hIne hI_left
       have hI_phase_eq_left_right :
@@ -495,8 +484,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
             (C := C) (σ := σ) (a := a) (b := ψ₁ + ε₀) (ssf := ssfL)
             (X := EL) (Y := IL) hSS₁_left hε₀ hleftThin hW_interval_left hpert_left pL
             hpL_strict hIne)
-      have hK_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) K.obj := by
-        exact σ.slicing.first_intervalProp_of_triangle C habE_left hE_left hI_le hK_gt hT_pH'
+      have hK_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) K.obj :=
+        σ.slicing.first_intervalProp_of_triangle C habE_left hE_left hI_le hK_gt hT_pH'
       have hQ_phiMinus_right :
           ∀ (hQne : ¬IsZero Q.obj), ψ₂ - ε₀ < σ.slicing.phiMinus C Q.obj hQne := by
         intro hQne
@@ -515,18 +504,18 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have hthin_big : (a + 1 + δ) - (ψ₂ - ε₀) + 2 * ε₀ < 1 := by
         rw [hδ_def]
         linarith
-      have hF_big : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1 + δ) F := by
-        exact σ.slicing.intervalProp_mono C (show ψ₂ - ε₀ ≤ ψ₂ - ε₀ by linarith)
+      have hF_big : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1 + δ) F :=
+        σ.slicing.intervalProp_mono C (show ψ₂ - ε₀ ≤ ψ₂ - ε₀ by linarith)
           (show a + 1 ≤ a + 1 + δ by linarith) hF_right
       have hSS₂_big :
-          (σ.skewedStabilityFunction_of_near C W hW habF_big).Semistable C F ψ₂ := by
-        exact semistable_of_upper_inclusion
+          (σ.skewedStabilityFunction_of_near C W hW habF_big).Semistable C F ψ₂ :=
+        semistable_of_upper_inclusion
           (C := C) (σ := σ) (W := W) (hW := hW)
           (hab₁ := habF_right) (hab₂ := habF_big)
           (hb := by linarith) hSS₂_right hε₀ hε₀2
           (by linarith) henvF_right_hi hthin_big hsin
-      have hI_big : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1 + δ) I_H.obj := by
-        exact σ.slicing.intervalProp_mono C (show ψ₂ - ε₀ ≤ ψ₂ - ε₀ by linarith)
+      have hI_big : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1 + δ) I_H.obj :=
+        σ.slicing.intervalProp_mono C (show ψ₂ - ε₀ ≤ ψ₂ - ε₀ by linarith)
           (show a + 1 ≤ a + 1 + δ by linarith) hI_right
       have hQ_big : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1 + δ) Q.obj := by
         by_cases hQZ : IsZero Q.obj

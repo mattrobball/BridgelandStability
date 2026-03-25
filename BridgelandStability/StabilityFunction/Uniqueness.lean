@@ -110,10 +110,10 @@ private lemma hn_n_eq_one_of_semistable (Z : StabilityFunction A) {E : A}
 private lemma le_of_comp_cokernel_zero {E : A} {B M : Subobject E}
     (h : B.arrow ≫ cokernel.π M.arrow = 0) : B ≤ M := by
   have hker : kernelSubobject (cokernel.π M.arrow) = M := by
-    have := (ShortComplex.mk M.arrow (cokernel.π M.arrow)
-      (cokernel.condition M.arrow)).exact_iff_image_eq_kernel.mp
-      (ShortComplex.exact_cokernel M.arrow)
-    rw [imageSubobject_mono, Subobject.mk_arrow] at this; exact this.symm
+    simpa [imageSubobject_mono, Subobject.mk_arrow] using
+      ((ShortComplex.mk M.arrow (cokernel.π M.arrow)
+        (cokernel.condition M.arrow)).exact_iff_image_eq_kernel.mp
+        (ShortComplex.exact_cokernel M.arrow)).symm
   rw [← hker]
   exact Subobject.le_of_comm
     (factorThruKernelSubobject _ B.arrow h)

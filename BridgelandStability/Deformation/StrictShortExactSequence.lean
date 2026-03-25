@@ -295,12 +295,12 @@ lemma SkewedStabilityFunction.Wobj_cokernel_pullback_eq
       ssf.W (K₀.of C (B : s.IntervalCat C a b).obj) +
           ssf.W (K₀.of C (cokernel B.arrow).obj) =
         ssf.W (K₀.of C (B : s.IntervalCat C a b).obj) +
-          ssf.W (K₀.of C (cokernel pbB.arrow).obj) := by
-    exact add_left_cancel hsum₃
+          ssf.W (K₀.of C (cokernel pbB.arrow).obj) :=
+    add_left_cancel hsum₃
   have hsum₅ :
       ssf.W (K₀.of C (cokernel B.arrow).obj) =
-        ssf.W (K₀.of C (cokernel pbB.arrow).obj) := by
-    exact add_left_cancel hsum₄
+        ssf.W (K₀.of C (cokernel pbB.arrow).obj) :=
+    add_left_cancel hsum₄
   exact hsum₅.symm
 
 lemma SkewedStabilityFunction.Wobj_liftSub_cokernel_eq_add
@@ -374,8 +374,8 @@ lemma SkewedStabilityFunction.Wobj_liftSub_cokernel_eq_add
   have hsum' :
       ssf.W (K₀.of C (cokernel A.arrow).obj) +
           ssf.W (K₀.of C (cokernel M.arrow).obj) =
-        ssf.W (K₀.of C (cokernel liftA.arrow).obj) := by
-    exact add_left_cancel hsumA
+        ssf.W (K₀.of C (cokernel liftA.arrow).obj) :=
+    add_left_cancel hsumA
   simpa [liftA, add_comm, add_left_comm, add_assoc] using hsum'.symm
 
 /-- The strict quotient attached to a minimal-phase strict kernel is semistable, provided
@@ -459,12 +459,12 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ
   have hB_window :
       L < wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α < U := by
-    exact hWindow (B : σ.slicing.IntervalCat C a b).property hB_obj_ne
+        wPhaseOf (ssf.W (K₀.of C (B : σ.slicing.IntervalCat C a b).obj)) ssf.α < U :=
+    hWindow (B : σ.slicing.IntervalCat C a b).property hB_obj_ne
   have hcokB_window :
       L < wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < U := by
-    exact hWindow (cokernel B.arrow).property hcokB_obj_ne
+        wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < U :=
+    hWindow (cokernel B.arrow).property hcokB_obj_ne
   have hUpper : U < ψY + 1 := by
     grind
   have hLower : ψY - 1 < L := by
@@ -486,8 +486,8 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
       (interval_K0_of_strictMono
         (C := C) (s := σ.slicing) (a := a) (b := b) B.arrow hB_strict)
   have hcokB_phase_lt :
-      wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < ψY := by
-    exact wPhaseOf_seesaw_dual haddY.symm rfl hB_phase_gt hB_Wne hB_range hcokB_range
+      wPhaseOf (ssf.W (K₀.of C (cokernel B.arrow).obj)) ssf.α < ψY :=
+    wPhaseOf_seesaw_dual haddY.symm rfl hB_phase_gt hB_Wne hB_range hcokB_range
   grind
 
 theorem semistable_of_lower_inclusion
@@ -649,10 +649,10 @@ theorem semistable_of_lower_inclusion
           (C := C) (σ := σ) (W := W) (hW := hW) hKI hKne hε₀ hε₀2 henv_lo₂ henv_hi
           hthin₂ hsin
       have hX_range' :
-          wPhaseOf (W (K₀.of C X)) ((a₂ + b) / 2) ∈ Set.Ioc (ψ - 1) ψ := by
-        exact ⟨hX_range.1, hX_phase_le⟩
-      have hYW_ne : W (K₀.of C Y) ≠ 0 := by
-        exact σ.W_ne_zero_of_intervalProp C W hthin₂'
+          wPhaseOf (W (K₀.of C X)) ((a₂ + b) / 2) ∈ Set.Ioc (ψ - 1) ψ :=
+        ⟨hX_range.1, hX_phase_le⟩
+      have hYW_ne : W (K₀.of C Y) ≠ 0 :=
+        σ.W_ne_zero_of_intervalProp C W hthin₂'
           (stabSeminorm_lt_cos_of_hsin_hthin
             (C := C) (σ := σ) (W := W) ha₂ hε₀ hthin₂ hsin) hYZ hY₂
       have hK_phase_lt :
@@ -867,16 +867,16 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
         wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α = ψ := hX.2.2.2.1
     have hX_window :
         L < wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α ∧
-          wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α < U := by
-      exact hWindow X.property hX.2.1
+          wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α < U :=
+      hWindow X.property hX.2.1
     have hK_window :
         L < wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α ∧
-          wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α < U := by
-      exact hWindow (kernel p).property hK
+          wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α < U :=
+      hWindow (kernel p).property hK
     have hY_window :
         L < wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α ∧
-          wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α < U := by
-      exact hWindow Y.property hY
+          wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α < U :=
+      hWindow Y.property hY
     have hK_range :
         wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α ∈ Set.Ioc (ψ - 1) ψ := by
       constructor
@@ -943,12 +943,12 @@ theorem SkewedStabilityFunction.phase_cokernel_lt_of_phase_gt_strictSubobject
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   have hA_window :
       L < wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U := by
-    exact hWindow (A : σ.slicing.IntervalCat C a b).property hA_obj_ne
+        wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U :=
+    hWindow (A : σ.slicing.IntervalCat C a b).property hA_obj_ne
   have hcokA_window :
       L < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α < U := by
-    exact hWindow (cokernel A.arrow).property hcokA_obj_ne
+        wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α < U :=
+    hWindow (cokernel A.arrow).property hcokA_obj_ne
   have hA_Wne : ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj) ≠ 0 :=
     hW_interval (A : σ.slicing.IntervalCat C a b).property hA_obj_ne
   have hA_range :

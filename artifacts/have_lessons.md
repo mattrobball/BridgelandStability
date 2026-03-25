@@ -93,3 +93,107 @@ have hz1 : z₁ ≠ 0 := mul_ne_zero
 The threshold: if a `have` proof is a single tactic or term application,
 it's fine. If it's 3+ lines of tactic proof, consider whether the
 conclusion is really needed as a named intermediate.
+
+## 8. Destructure `And` chains directly in `obtain`, use `-` for unused conjuncts
+
+When an existential returns a conjunction `A ∧ B ∧ C ∧ D`, don't pull
+conjuncts out with `And.left`/`And.right`:
+```lean
+-- Before
+obtain ⟨X, Y, GX, GY, f, g, h, hT, hprops⟩ := split_hn_filtration ...
+have hGX_gt := And.left hprops
+have hGY_le := And.left (And.right hprops)
+have hGY_bound := And.left (And.right (And.right hprops))
+have hGX_contain := And.right (And.right (And.right hprops))
+
+-- After
+obtain ⟨X, Y, GX, GY, f, g, h, hT, hGX_gt, hGY_le, hGY_bound, hGX_contain⟩ :=
+  split_hn_filtration ...
+```
+
+Use `-` for unused conjuncts:
+```lean
+obtain ⟨X, Y, GX, GY, f, g, h, hT, hGX, hGY, -⟩ := ...
+```
+
+## 9. `simpa using` replaces `have := ...; simp at this; exact this`
+
+The pattern `have := expr; simp [...] at this; exact this` is exactly
+what `simpa` is for:
+```lean
+-- Before
+have hphiPlus_le : phiPlus ≤ φ := by
+  have := phiPlus_le_phiPlus_of_hn C hKne GXorig hGXn
+  simp only [HNFiltration.phiPlus, hGXorig_phases_eq] at this; exact this
+
+-- After
+have hphiPlus_le : phiPlus ≤ φ := by
+  simpa only [HNFiltration.phiPlus, hGXorig_phases_eq] using
+    phiPlus_le_phiPlus_of_hn C hKne GXorig hGXn
+```
+
+## 10. Inline one-shot equality `have`s into `rwa`
+
+When a `have` proving an equality is used only once in a subsequent `rw`/`rwa`,
+inline the proof term directly:
+```lean
+-- Before
+have hpe : phiPlus = φ :=
+  le_antisymm hphiPlus_le (le_trans hphiMinus_ge (heq ▸ le_refl _))
+have hsem := semistable_of_phiPlus_eq_phiMinus C hKne heq
+rwa [hpe] at hsem
+
+-- After
+have hsem := semistable_of_phiPlus_eq_phiMinus C hKne heq
+rwa [le_antisymm hphiPlus_le (heq ▸ hphiMinus_ge)] at hsem
+```
+
+Note: `heq ▸ hphiMinus_ge` is a shorter form of
+`le_trans hphiMinus_ge (heq ▸ le_refl _)` — the `▸` rewrites the
+expected type so the proof term matches directly.
+
+## 11. Don't duplicate hypotheses just to `rw` — rewrite in place
+
+If a `have` is copied only so `rw` can mutate the copy while preserving
+the original, check whether the original is used again. If not, rewrite
+directly:
+```lean
+-- Before
+have hK_heart : t.heart K.obj := K.property
+have hK_heart' := hK_heart
+rw [toTStructure_heart_iff] at hK_heart'
+... hK_heart'.1 ...
+
+-- After (hK_heart never used after rewrite)
+have hK_heart : t.heart K.obj := K.property
+rw [toTStructure_heart_iff] at hK_heart
+... hK_heart.1 ...
+```
+
+## 12. Replace step1/step2/step3 `have` chains with `calc`
+
+Sequential inequality chains where each step feeds the next are natural
+`calc` blocks:
+```lean
+-- Before
+have step1 : K * sin(πδ) ≤ K * πδ := mul_le_mul_of_nonneg_left h1 hKnn
+have step2 : K * πδ ≤ (K+1) * πδ := by gcongr; linarith
+have step3 : (K+1) * πδ = δ * ((K+1) * 2π) / 2 := by ring
+linarith [half_lt_self hgapZ]
+
+-- After
+calc K * sin(πδ)
+    ≤ K * πδ := mul_le_mul_of_nonneg_left h1 hKnn
+  _ ≤ (K+1) * πδ := by gcongr; linarith
+  _ = δ * ((K+1) * 2π) / 2 := by ring
+  _ < gapZ := by linarith [half_lt_self hgapZ]
+```
+
+## 13. Don't inline terms that produce metavariable LHS in `rw`
+
+`rw [zero_of_source_iso_zero _ hIZH.isoZero]` fails because the LHS is
+a metavariable. Keep a named `have` for the equation, then `rw` with it:
+```lean
+have hiI_zero : i_I = 0 := zero_of_source_iso_zero _ hIZH.isoZero
+exact hfH (by rw [← hpH, hiI_zero]; simp)
+```

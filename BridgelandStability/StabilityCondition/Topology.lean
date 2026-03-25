@@ -122,9 +122,8 @@ theorem StabilityCondition.false_of_all_hn_phases_below (σ τ : StabilityCondit
       _ = 0 := Finset.sum_const_zero
   -- But Im(Σ w i) = Im(m) = 0
   have him_eq : (∑ i : Fin F.n, w i).im = ∑ i : Fin F.n, (w i).im := by
-    have := map_sum Complex.imAddGroupHom w Finset.univ
-    simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
-    exact this
+    simpa only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] using
+      map_sum Complex.imAddGroupHom w Finset.univ
   have him_zero : (∑ i : Fin F.n, w i).im = 0 := by
     rw [← hsum]; exact Complex.ofReal_im m
   linarith
@@ -190,9 +189,8 @@ theorem StabilityCondition.false_of_all_hn_phases_above (σ τ : StabilityCondit
           Finset.sum_lt_sum (fun i _ ↦ him_ge i)
             ⟨i₀, Finset.mem_univ _, hw_pos i₀ hi₀⟩
   have him_eq : (∑ i : Fin F.n, w i).im = ∑ i : Fin F.n, (w i).im := by
-    have := map_sum Complex.imAddGroupHom w Finset.univ
-    simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
-    exact this
+    simpa only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] using
+      map_sum Complex.imAddGroupHom w Finset.univ
   have him_zero : (∑ i : Fin F.n, w i).im = 0 := by
     rw [← hsum]; exact Complex.ofReal_im m
   linarith
@@ -322,9 +320,8 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
     exact (Classical.choice Fσ.toPostnikovTower.top_iso).symm.isZero_iff.mpr htop
   have him_σ_pos : 0 < (∑ i : Fin Fσ.n, wσ i).im := by
     have him_eq : (∑ i : Fin Fσ.n, wσ i).im = ∑ i : Fin Fσ.n, (wσ i).im := by
-      have := map_sum Complex.imAddGroupHom wσ Finset.univ
-      simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
-      exact this
+      simpa only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] using
+        map_sum Complex.imAddGroupHom wσ Finset.univ
     rw [him_eq]
     have hge : ∀ i : Fin Fσ.n, 0 ≤ (wσ i).im := by
       intro i; by_cases hi : IsZero (Fσ.toPostnikovTower.factor i)
@@ -358,9 +355,8 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
           (by nlinarith [hτgt i, Real.pi_pos]))
   have him_τ_le : (∑ i : Fin Fτ.n, wτ i).im ≤ 0 := by
     have him_eq : (∑ i : Fin Fτ.n, wτ i).im = ∑ i : Fin Fτ.n, (wτ i).im := by
-      have := map_sum Complex.imAddGroupHom wτ Finset.univ
-      simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
-      exact this
+      simpa only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] using
+        map_sum Complex.imAddGroupHom wτ Finset.univ
     rw [him_eq]
     exact Finset.sum_nonpos (fun i _ ↦ hτ_le i)
   -- Both sums equal Z(X) * exp(-iπφ), so their imaginary parts are equal
@@ -431,9 +427,8 @@ theorem StabilityCondition.false_of_hn_phases_le_with_lt (σ τ : StabilityCondi
         (by nlinarith [hgt j₀, Real.pi_pos]))
   have him_neg : (∑ i : Fin F.n, w i).im < 0 := by
     have him_eq : (∑ i : Fin F.n, w i).im = ∑ i : Fin F.n, (w i).im := by
-      have := map_sum Complex.imAddGroupHom w Finset.univ
-      simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
-      exact this
+      simpa only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] using
+        map_sum Complex.imAddGroupHom w Finset.univ
     rw [him_eq]
     calc ∑ i : Fin F.n, (w i).im
         < ∑ i : Fin F.n, (0 : ℝ) :=
@@ -636,8 +631,8 @@ private theorem bridgeland_6_4_one_dir
           exact (Set.mem_Ioo.mp hU_σ_bds.2).1
         -- σ-phases of Y⟦-1⟧: max ≤ φ - 1
         have hYs_le : σ.slicing.leProp C (φ - 1) (Y⟦(-1 : ℤ)⟧) := by
-          have := σ.slicing.leProp_shift C φ Y (-1) hYle
-          simp only [Int.cast_neg, Int.cast_one] at this; exact this
+          simpa only [Int.cast_neg, Int.cast_one] using
+            σ.slicing.leProp_shift C φ Y (-1) hYle
         have hYs_P : FYs.φ ⟨0, hnFYs⟩ ≤ φ - 1 := by
           rw [← σ.slicing.phiPlus_eq C _ hYsZ FYs hnFYs hFYsfirst]
           exact phiPlus_le_of_leProp C σ.slicing hYsZ hYs_le

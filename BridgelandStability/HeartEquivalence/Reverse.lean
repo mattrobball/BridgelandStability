@@ -178,8 +178,8 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
             HNFiltration.chain_obj_gtProp C σ.slicing F (F.n - 1) (by grind) (by grind)
               (F.φ jLast) <|
               fun j ↦ by
-                have hjlt : (⟨j.val, by grind⟩ : Fin F.n) < jLast := by
-                  exact Fin.mk_lt_mk.mpr (by grind)
+                have hjlt : (⟨j.val, by grind⟩ : Fin F.n) < jLast :=
+                  Fin.mk_lt_mk.mpr (by grind)
                 exact F.hφ hjlt
           have hphase_lt :
               @StabilityFunction.phase _ _ t.heartFullSubcategoryAbelian
@@ -294,13 +294,13 @@ theorem phaseIndex_add_one
 
 theorem phaseBase_eq_of_mem_Ioc
     {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
-    phaseBase φ = φ := by
-  exact (toIocMod_eq_self zero_lt_one).2 (by simpa using hφ)
+    phaseBase φ = φ :=
+  (toIocMod_eq_self zero_lt_one).2 (by simpa using hφ)
 
 theorem phaseIndex_eq_zero_of_mem_Ioc
     {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
-    phaseIndex φ = 0 := by
-  exact (toIocDiv_eq_of_sub_zsmul_mem_Ioc (hp := zero_lt_one) (a := (0 : ℝ))
+    phaseIndex φ = 0 :=
+  (toIocDiv_eq_of_sub_zsmul_mem_Ioc (hp := zero_lt_one) (a := (0 : ℝ))
     (b := φ) (n := (0 : ℤ))) (by simpa using hφ)
 
 /-- Semistability in the heart with respect to the heart stability function. -/
@@ -317,8 +317,8 @@ abbrev HeartPhase
 slicing: objects whose `[-n]`-shift lies in the heart and is semistable there of
 phase `ψ`, together with the zero object. -/
 def shiftedHeartSemistable
-    (h : HeartStabilityData C) (ψ : ℝ) (n : ℤ) : ObjectProperty C := by
-  exact fun X ↦
+    (h : HeartStabilityData C) (ψ : ℝ) (n : ℤ) : ObjectProperty C :=
+  fun X ↦
     IsZero X ∨
       ∃ hX : h.t.heart (X⟦(-n : ℤ)⟧),
         let XH : h.t.heart.FullSubcategory := ⟨X⟦(-n : ℤ)⟧, hX⟩
@@ -763,8 +763,8 @@ theorem phasePredicate_hom_zero
       heart_hom_zero_of_semistable_phase_gt (C := C) h hEss' hFss' (by
         rw [hFphase', hEphase']
         exact hψ) (ObjectProperty.homMk g)
-    have hmap : g = 0 := by
-      exact congrArg InducedCategory.Hom.hom hg_zero
+    have hmap : g = 0 :=
+      congrArg InducedCategory.Hom.hom hg_zero
     exact (shiftFunctor C (-n₁ : ℤ)).map_injective (by simpa [g] using hmap)
   · let EH : h.t.heart.FullSubcategory := ⟨E⟦(-n₁ : ℤ)⟧, by simpa [n₁] using hEheart⟩
     let FH : h.t.heart.FullSubcategory := ⟨F⟦(-n₂ : ℤ)⟧, by simpa [n₂] using hFheart⟩
@@ -777,10 +777,8 @@ theorem phasePredicate_hom_zero
         dsimp [d]
         lia)).app E).symm
     let g : EH.obj⟦d⟧ ⟶ FH.obj := eE.hom ≫ (shiftFunctor C (-n₂ : ℤ)).map f
-    haveI : h.t.IsLE EH.obj 0 := by
-      exact (by simpa [EH, n₁] using hEheart.1 : h.t.IsLE EH.obj 0)
-    haveI : h.t.IsGE FH.obj 0 := by
-      exact (by simpa [FH, n₂] using hFheart.2 : h.t.IsGE FH.obj 0)
+    haveI : h.t.IsLE EH.obj 0 := by simpa [EH, n₁] using hEheart.1
+    haveI : h.t.IsGE FH.obj 0 := by simpa [FH, n₂] using hFheart.2
     haveI : h.t.IsLE (EH.obj⟦d⟧) (-d) :=
       h.t.isLE_shift EH.obj 0 d (-d) (by grind)
     have hg : g = 0 := by
@@ -942,10 +940,8 @@ theorem TStructure.heart_shortExact_triangle
       (heart_hι t) (heart_admissible t) g'
   -- hT : Triangle.mk (ι.map i) (ι.map g') δ ∈ distTriang C
   -- Factor ι.map i through f via hexact (i ≫ g' = 0 from the triangle)
-  have h_ig : (ι.map i) ≫ g = 0 := by
-    have := comp_distTriang_mor_zero₁₂ _ hT
-    -- this : ι.map i ≫ ι.map g' = 0; ι.map g' =_def g
-    change (ι.map i) ≫ g = 0 at this; exact this
+  have h_ig : (ι.map i) ≫ g = 0 :=
+    comp_distTriang_mor_zero₁₂ _ hT
   obtain ⟨β_hom, hβ_hom⟩ := hexact _ h_ig
   let β : K ⟶ A' := ObjectProperty.homMk β_hom
   have hβf : β ≫ f' = i := ι.map_injective (by

@@ -286,24 +286,18 @@ theorem HeartStabilityData.toH0primeHom_comp_H0primeFunctor_map
   let rhs :=
     f ≫ (h.t.truncGEπ 0).app X ≫ (h.t.truncGE 0).map g
   have h₁ : lhs = mid := by
-    exact
-      (by
-        simpa only [lhs, mid, Category.assoc] using
-          congrArg
-            (fun k => (h.toH0primeHom (C := C) E f).hom ≫ k)
-            ((h.t.truncLEι 0).naturality ((h.t.truncGE 0).map g))
-        : lhs = mid)
+    simpa only [lhs, mid, Category.assoc] using
+      congrArg
+        (fun k => (h.toH0primeHom (C := C) E f).hom ≫ k)
+        ((h.t.truncLEι 0).naturality ((h.t.truncGE 0).map g))
   have h₂ : mid = rhs := by
     dsimp [mid, rhs]
     rw [← Category.assoc, ← Category.assoc]
     exact congrArg (fun k => k ≫ (h.t.truncGE 0).map g)
       (h.toH0primeHom_hom (C := C) E f)
   have h₃ : rhs = f ≫ g ≫ (h.t.truncGEπ 0).app Y := by
-    exact
-      (by
-        simpa only [rhs, Category.assoc] using
-          congrArg (fun k => f ≫ k) (h.t.truncGEπ_naturality 0 g)
-        : rhs = f ≫ g ≫ (h.t.truncGEπ 0).app Y)
+    simpa only [rhs, Category.assoc] using
+      congrArg (fun k => f ≫ k) (h.t.truncGEπ_naturality 0 g)
   simpa [HeartStabilityData.H0primeFunctor, TStructure.truncLEGE, Category.assoc, lhs] using
     h₁.trans (h₂.trans h₃)
 

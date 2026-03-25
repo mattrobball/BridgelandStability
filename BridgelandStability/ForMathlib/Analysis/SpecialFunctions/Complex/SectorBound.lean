@@ -53,17 +53,15 @@ theorem eq_of_pos_mul_exp_eq {m₁ m₂ φ ψ : ℝ} (hm₁ : 0 < m₁) (hm₂ :
     rw [← mul_sub, abs_mul, abs_of_pos hpi]; nlinarith
   have hn0 : n = 0 := by
     by_contra h
-    have h1 : (1 : ℤ) ≤ |n| := Int.one_le_abs h
     have h2 : 2 * Real.pi ≤ |(n : ℝ)| * (2 * Real.pi) := by
-      exact le_mul_of_one_le_left (by positivity) (by exact_mod_cast h1)
+      exact le_mul_of_one_le_left (by positivity) (by exact_mod_cast Int.one_le_abs h)
     have h3 : |Real.pi * φ - Real.pi * ψ| = |(n : ℝ)| * (2 * Real.pi) := by
       have : Real.pi * φ - Real.pi * ψ = -(n • (2 * Real.pi)) := by linarith
       rw [this, abs_neg, zsmul_eq_mul, abs_mul,
         abs_of_pos (by positivity : (0 : ℝ) < 2 * Real.pi)]
     linarith
   rw [hn0, zero_zsmul, sub_eq_zero] at hn
-  have := mul_left_cancel₀ hpi.ne' hn
-  linarith
+  linarith [mul_left_cancel₀ hpi.ne' hn]
 
 /-! ### Sector estimate -/
 

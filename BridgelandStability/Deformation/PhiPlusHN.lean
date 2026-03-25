@@ -395,8 +395,8 @@ theorem hn_exists_with_phiPlus_reduction
       intro j
       by_cases hj : j.val < GK.n
       · have hGj := hGK ⟨j.val, hj⟩
-        have hGj' : t < GK.φ ⟨j.val, hj⟩ ∧ GK.φ ⟨j.val, hj⟩ < U := by
-          exact ⟨lt_trans hψB_gt hGj.1, hGj.2⟩
+        have hGj' : t < GK.φ ⟨j.val, hj⟩ ∧ GK.φ ⟨j.val, hj⟩ < U :=
+          ⟨lt_trans hψB_gt hGj.1, hGj.2⟩
         simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor, hj] using hGj'
       · have hj_lt : j.val < GK.n + 1 := by
           simpa [H, GK, HNFiltration.appendStrictFactor, HNFiltration.appendFactor] using j.is_lt
@@ -411,8 +411,8 @@ theorem hn_exists_with_phiPlus_reduction
   -- BOOTSTRAP from S₀ = ⊤ to X (modified from Lemma77:251-303)
   have hS0_ne : ¬IsZero (S0.1 : σ.slicing.IntervalCat C a b) := by
     intro hZ
-    let e0 : (S0.1 : σ.slicing.IntervalCat C a b) ≅ X := by
-      exact asIso S0.1.arrow
+    let e0 : (S0.1 : σ.slicing.IntervalCat C a b) ≅ X :=
+      asIso S0.1.arrow
     exact hX (hZ.of_iso e0.symm)
   -- Convert strict-epi hquot to subobject form
   have hS0_quot :
@@ -420,8 +420,8 @@ theorem hn_exists_with_phiPlus_reduction
         IsStrictMono A.arrow →
         t < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α := by
     intro A hA_top hA_strict
-    let e0 : (S0.1 : σ.slicing.IntervalCat C a b) ≅ X := by
-      exact asIso S0.1.arrow
+    let e0 : (S0.1 : σ.slicing.IntervalCat C a b) ≅ X :=
+      asIso S0.1.arrow
     let A' : Subobject X := (Subobject.map e0.hom).obj A
     have hA'_top : A' ≠ ⊤ := by
       intro hA'

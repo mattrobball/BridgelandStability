@@ -229,17 +229,15 @@ theorem phiPlus_lt_of_wSemistable
       -- K ∈ P(φ): phiPlus ≤ φ and phiMinus ≥ φ from GXorig having all phases = φ
       have hK_sem : σ.slicing.P φ K := by
         have hphiPlus_le : σ.slicing.phiPlus C K hKne ≤ φ := by
-          have := σ.slicing.phiPlus_le_phiPlus_of_hn C hKne GXorig hGXn
-          simp only [HNFiltration.phiPlus, hGXorig_phases_eq] at this; exact this
+          simpa only [HNFiltration.phiPlus, hGXorig_phases_eq] using
+            σ.slicing.phiPlus_le_phiPlus_of_hn C hKne GXorig hGXn
         have hphiMinus_ge : φ ≤ σ.slicing.phiMinus C K hKne := by
-          have := σ.slicing.phiMinus_ge_phiMinus_of_hn C hKne GXorig hGXn
-          simp only [HNFiltration.phiMinus, hGXorig_phases_eq] at this; exact this
-        have heq := le_antisymm (le_trans hphiPlus_le hphiMinus_ge)
+          simpa only [HNFiltration.phiMinus, hGXorig_phases_eq] using
+            σ.slicing.phiMinus_ge_phiMinus_of_hn C hKne GXorig hGXn
+        have heq := le_antisymm (hphiPlus_le.trans hphiMinus_ge)
           (σ.slicing.phiMinus_le_phiPlus C K hKne)
-        have hpe : σ.slicing.phiPlus C K hKne = φ :=
-          le_antisymm hphiPlus_le (le_trans hphiMinus_ge (heq ▸ le_refl _))
         have hsem := σ.slicing.semistable_of_phiPlus_eq_phiMinus C hKne heq
-        rwa [hpe] at hsem
+        rwa [le_antisymm hphiPlus_le (heq ▸ hphiMinus_ge)] at hsem
       have hm_gt_a : a < m := by
         obtain ⟨j_m, _, hj_m_eq⟩ := Finset.mem_image.mp
           (Finset.mem_filter.mp (Finset.max'_mem Slower hSlower_ne)).1
@@ -336,14 +334,14 @@ theorem phiMinus_gt_of_wSemistable
           le_antisymm (hall j)
             (hF₀_bot ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt)))
         have hphiPlus_le : σ.slicing.phiPlus C E hE ≤ ψ - ε₀ := by
-          have := σ.slicing.phiPlus_le_phiPlus_of_hn C hE F₀ hn₀
-          simp only [HNFiltration.phiPlus, hall_eq] at this; exact this
+          simpa only [HNFiltration.phiPlus, hall_eq] using
+            σ.slicing.phiPlus_le_phiPlus_of_hn C hE F₀ hn₀
         have heq_pm : σ.slicing.phiPlus C E hE = σ.slicing.phiMinus C E hE := by
           linarith [σ.slicing.phiMinus_le_phiPlus C E hE]
-        have hpe : σ.slicing.phiPlus C E hE = ψ - ε₀ :=
-          le_antisymm hphiPlus_le (by linarith [σ.slicing.phiMinus_le_phiPlus C E hE])
         have hsem' := σ.slicing.semistable_of_phiPlus_eq_phiMinus C hE heq_pm
-        rw [hpe] at hsem'; exact hsem hsem'
+        rw [le_antisymm hphiPlus_le
+          (by linarith [σ.slicing.phiMinus_le_phiPlus C E hE])] at hsem'
+        exact hsem hsem'
       -- Find gap: min phase above ψ-ε₀
       classical
       let Supper := ((Finset.univ : Finset (Fin F₀.n)).image F₀.φ).filter (ψ - ε₀ < ·)
@@ -437,17 +435,15 @@ theorem phiMinus_gt_of_wSemistable
       -- Y ∈ P(ψ-ε₀): all HN phases equal → semistable
       have hY_sem : σ.slicing.P (ψ - ε₀) Y := by
         have hphiPlus_le : σ.slicing.phiPlus C Y hYne ≤ ψ - ε₀ := by
-          have := σ.slicing.phiPlus_le_phiPlus_of_hn C hYne GYorig hGYn
-          simp only [HNFiltration.phiPlus, hGYorig_phases_eq] at this; exact this
+          simpa only [HNFiltration.phiPlus, hGYorig_phases_eq] using
+            σ.slicing.phiPlus_le_phiPlus_of_hn C hYne GYorig hGYn
         have hphiMinus_ge : ψ - ε₀ ≤ σ.slicing.phiMinus C Y hYne := by
-          have := σ.slicing.phiMinus_ge_phiMinus_of_hn C hYne GYorig hGYn
-          simp only [HNFiltration.phiMinus, hGYorig_phases_eq] at this; exact this
-        have heq_pm := le_antisymm (le_trans hphiPlus_le hphiMinus_ge)
+          simpa only [HNFiltration.phiMinus, hGYorig_phases_eq] using
+            σ.slicing.phiMinus_ge_phiMinus_of_hn C hYne GYorig hGYn
+        have heq_pm := le_antisymm (hphiPlus_le.trans hphiMinus_ge)
           (σ.slicing.phiMinus_le_phiPlus C Y hYne)
-        have hpe : σ.slicing.phiPlus C Y hYne = ψ - ε₀ :=
-          le_antisymm hphiPlus_le (le_trans hphiMinus_ge (heq_pm ▸ le_refl _))
         have hsem_Y := σ.slicing.semistable_of_phiPlus_eq_phiMinus C hYne heq_pm
-        rwa [hpe] at hsem_Y
+        rwa [le_antisymm hphiPlus_le (heq_pm ▸ hphiMinus_ge)] at hsem_Y
       -- GXorig: shift GX phases back for K's phiPlus bound
       let GXorig : HNFiltration C σ.slicing.P K :=
         { n := GX.n, chain := GX.chain, triangle := GX.triangle

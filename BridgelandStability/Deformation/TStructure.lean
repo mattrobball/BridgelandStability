@@ -395,9 +395,8 @@ theorem exists_deformedGt_deformedLe_triangle_of_hn
       Triangle.mk f g h ∈ distTriang C ∧
       σ.deformedGtPred C W hW ε₀ t X ∧
       σ.deformedLePred C W hW ε₀ t Y := by
-  obtain ⟨X, Y, GX, GY, f, g, h, hT, hprops⟩ :=
+  obtain ⟨X, Y, GX, GY, f, g, h, hT, hGX, hGY, -⟩ :=
     split_hn_filtration_at_cutoff (C := C) G t
-  have hGX := And.left hprops; have hGY := And.left (And.right hprops)
   exact ⟨X, Y, f, g, h, hT,
     ObjectProperty.ExtensionClosure.of_postnikovTower GX.toPostnikovTower
       (fun j ↦ ⟨GX.φ j, hGX j, GX.semistable j⟩),

@@ -173,8 +173,8 @@ theorem comp_of_destabilizing_with_quotient_bound
     {B : σ.slicing.IntervalCat C a b} {q : cokernel A.arrow ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q) :
     IsStrictMDQ (C := C) σ ssf (cokernel.π A.arrow ≫ q) where
-  strictEpi := by
-    exact Slicing.IntervalCat.comp_strictEpi
+  strictEpi :=
+    Slicing.IntervalCat.comp_strictEpi
       (C := C) (s := σ.slicing) (a := a) (b := b) (cokernel.π A.arrow) q
       (isStrictEpi_cokernel A.arrow) hq.strictEpi
   nonzero := hq.nonzero
@@ -245,8 +245,8 @@ theorem comp_of_destabilizing_with_quotient_bound
         rw [hEq]; exact hB_lt_A
       have hzero : A.arrow ≫ q' = 0 := hvanish hB'_lt_A
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
-      have hq'' : IsStrictEpi q'' := by
-        exact interval_strictEpi_of_strictEpi_comp
+      have hq'' : IsStrictEpi q'' :=
+        interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) (cokernel.π A.arrow) q''
           (by simpa [q''] using hq')
       obtain ⟨t, ht⟩ := (hq.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
@@ -266,8 +266,8 @@ theorem comp_of_destabilizing_with_quotient_bound
         lt_trans hlt hB_lt_A
       have hzero : A.arrow ≫ q' = 0 := hvanish hB'_lt_A
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
-      have hq'' : IsStrictEpi q'' := by
-        exact interval_strictEpi_of_strictEpi_comp
+      have hq'' : IsStrictEpi q'' :=
+        interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) (cokernel.π A.arrow) q''
           (by simpa [q''] using hq')
       have hmin :
@@ -349,8 +349,8 @@ theorem mdq_of_sigma_phase_split
       -- So q' factors through p_lo.
       -- Factor q' through p_lo using cokernel property
       obtain ⟨q'', hq'_eq⟩ := hcokernel q' hzero
-      have hq'' : IsStrictEpi q'' := by
-        exact interval_strictEpi_of_strictEpi_comp
+      have hq'' : IsStrictEpi q'' :=
+        interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) p_lo q''
           (by simpa [hq'_eq] using hq')
       obtain ⟨t, ht⟩ := (hq.minimal q'' hq'' hB'_nz hB'_ss).2 hEq
@@ -366,8 +366,8 @@ theorem mdq_of_sigma_phase_split
       have hzero : p_hi ≫ q' = 0 := by ext; exact hzero_C
       -- Factor through p_lo → MDQ minimality → contradiction
       obtain ⟨q'', hq'_eq⟩ := hcokernel q' hzero
-      have hq'' : IsStrictEpi q'' := by
-        exact interval_strictEpi_of_strictEpi_comp
+      have hq'' : IsStrictEpi q'' :=
+        interval_strictEpi_of_strictEpi_comp
           (C := C) (σ := σ) (a := a) (b := b) p_lo q''
           (by simpa [hq'_eq] using hq')
       have hmin :

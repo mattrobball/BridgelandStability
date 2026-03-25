@@ -215,8 +215,8 @@ theorem intervalProp_of_upper_boundary_triangle
     {f : X ⟶ Q} {g : Q ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
     s.intervalProp C a b₂ X := by
-  have hY_le : s.leProp C (a + 1) Y := by
-    exact ((s.leProp_mono (C := C) (t₁ := b₁) (t₂ := a + 1) hb₁) Y)
+  have hY_le : s.leProp C (a + 1) Y :=
+    ((s.leProp_mono (C := C) (t₁ := b₁) (t₂ := a + 1) hb₁) Y)
       (s.leProp_of_intervalProp C hY)
   have hX_gt : s.gtProp C a X :=
     s.gtProp_of_geProp (C := C) hab₁ hX_ge
@@ -249,8 +249,8 @@ theorem wPhaseOf_gt_of_upper_boundary_triangle
   have hXI : σ.slicing.intervalProp C a b₂ X :=
     intervalProp_of_upper_boundary_triangle (C := C) (s := σ.slicing)
       hab₁ hab₂ hb₁ hQ hX_ge hY hT
-  have hX_ge' : σ.slicing.geProp C (ψ + ε₀) X := by
-    exact ((σ.slicing.geProp_anti (C := C) (t₁ := ψ + ε₀) (t₂ := b₁)
+  have hX_ge' : σ.slicing.geProp C (ψ + ε₀) X :=
+    ((σ.slicing.geProp_anti (C := C) (t₁ := ψ + ε₀) (t₂ := b₁)
       (by grind)) X) hX_ge
   have henv_hi₂ : ψ ≤ b₂ - ε₀ := by
     linarith
@@ -296,8 +296,8 @@ theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
     (hT : Triangle.mk f g h ∈ distTriang C) :
     ψ < wPhaseOf (W (K₀.of C X)) (((ψ - ε₀) + (φ + ε₀)) / 2) := by
   have hY :
-      σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) Y := by
-    exact σ.slicing.intervalProp_of_semistable C hY_Pφ (by grind) (by grind)
+      σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) Y :=
+    σ.slicing.intervalProp_of_semistable C hY_Pφ (by grind) (by grind)
   exact wPhaseOf_gt_of_upper_source_boundary_target
     (C := C) (σ := σ) (W := W) (hW := hW)
     hQ hX_ge hY hXne hε₀ hε₀2 hε₀8 hψ_lo hψ_le hsin hT
@@ -507,8 +507,8 @@ theorem wPhaseOf_lt_of_lower_boundary_triangle
   have hY_I : σ.slicing.intervalProp C a₂ b Y :=
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
       ha₁ ha hK hX hY_le hT
-  have hY_le' : σ.slicing.leProp C (ψ - ε₀) Y := by
-    exact ((σ.slicing.leProp_mono (C := C) (t₁ := a₁) (t₂ := ψ - ε₀) (by grind)) Y) hY_le
+  have hY_le' : σ.slicing.leProp C (ψ - ε₀) Y :=
+    ((σ.slicing.leProp_mono (C := C) (t₁ := a₁) (t₂ := ψ - ε₀) (by grind)) Y) hY_le
   exact wPhaseOf_lt_of_leProp_source (C := C) σ W hW
     hY_I hYne hY_le' hε₀ hε₀2 (by grind) henv_hi hthin hsin
 
@@ -551,8 +551,8 @@ theorem wPhaseOf_lt_of_lower_source_boundary_P_phi
     (hT : Triangle.mk f g h ∈ distTriang C) :
     wPhaseOf (W (K₀.of C Y)) (((φ - ε₀) + (ψ + ε₀)) / 2) < ψ := by
   have hX :
-      σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) X := by
-    exact σ.slicing.intervalProp_of_semistable C hX_Pφ (by grind) (by grind)
+      σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) X :=
+    σ.slicing.intervalProp_of_semistable C hX_Pφ (by grind) (by grind)
   exact wPhaseOf_lt_of_lower_source_boundary_target
     (C := C) (σ := σ) (W := W) (hW := hW)
     hK hX hY_le hYne hε₀ hε₀2 hε₀8 hψ_hi hφ_le hsin hT
@@ -720,8 +720,8 @@ theorem intervalProp_of_wSemistable_upper_target
         simpa [map_add] using congrArg W
           (K₀.of_triangle C (Triangle.mk fX gY δY) hTQ)
       have hY_phase_lt :
-          wPhaseOf (W (K₀.of C Y)) ((a + b₂) / 2) < ψ := by
-        exact wPhaseOf_seesaw_dual hsum.symm
+          wPhaseOf (W (K₀.of C Y)) ((a + b₂) / 2) < ψ :=
+        wPhaseOf_seesaw_dual hsum.symm
           (by simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.2.2.2.1)
           hX_phase_gt (hW_interval hX₂ hX_zero) hX_range hY_range
       linarith

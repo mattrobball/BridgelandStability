@@ -378,21 +378,19 @@ noncomputable def componentTopologicalLinearLocalModel
             (Real.sin_pos_of_pos_of_lt_pi hπδ (by nlinarith [Real.pi_pos])).le
           have hKsin : K.toReal * Real.sin (Real.pi * δ) < gap := by
             have hKnn := ENNReal.toReal_nonneg (a := K)
-            have h1 : Real.sin (Real.pi * δ) ≤ Real.pi * δ := (Real.sin_lt hπδ).le
             have h4 : 0 < (K.toReal + 1) * (2 * Real.pi) := by positivity
             have h5 : δ * ((K.toReal + 1) * (2 * Real.pi)) ≤ gap := by
-              have := min_le_right (1/16 : ℝ) (gap / ((K.toReal + 1) * (2 * Real.pi)))
               calc δ * ((K.toReal + 1) * (2 * Real.pi))
-                  ≤ gap / ((K.toReal + 1) * (2 * Real.pi)) * ((K.toReal + 1) * (2 * Real.pi)) :=
-                    mul_le_mul_of_nonneg_right this (le_of_lt h4)
+                  ≤ gap / ((K.toReal + 1) * (2 * Real.pi)) *
+                      ((K.toReal + 1) * (2 * Real.pi)) := by
+                    gcongr; exact min_le_right _ _
                 _ = gap := div_mul_cancel₀ gap (ne_of_gt h4)
-            have step1 : K.toReal * Real.sin (Real.pi * δ) ≤ K.toReal * (Real.pi * δ) :=
-              mul_le_mul_of_nonneg_left h1 hKnn
-            have step2 : K.toReal * (Real.pi * δ) ≤ (K.toReal + 1) * (Real.pi * δ) := by
-              gcongr; linarith
-            have step3 : (K.toReal + 1) * (Real.pi * δ) =
-                δ * ((K.toReal + 1) * (2 * Real.pi)) / 2 := by ring
-            linarith [half_lt_self hgap]
+            calc K.toReal * Real.sin (Real.pi * δ)
+                ≤ K.toReal * (Real.pi * δ) :=
+                  mul_le_mul_of_nonneg_left (Real.sin_lt hπδ).le hKnn
+              _ ≤ (K.toReal + 1) * (Real.pi * δ) := by gcongr; linarith
+              _ = δ * ((K.toReal + 1) * (2 * Real.pi)) / 2 := by ring
+              _ < gap := by linarith [half_lt_self hgap]
           -- Exhibit basisNhd(τ', δ) as open neighborhood in comp
           refine Filter.mem_of_superset
             (IsOpen.mem_nhds

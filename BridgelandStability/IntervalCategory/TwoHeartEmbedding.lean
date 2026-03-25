@@ -287,8 +287,7 @@ theorem Slicing.phiPlus_lt_of_triangle_with_leProp (s : Slicing C)
           change GQ.φ j + ((-1 : ℤ) : ℝ) < FK.φ ⟨0, hnK⟩
           have h1 : GQ.φ j ≤ GQ.φ ⟨0, hnQ⟩ := by
             apply GQ.hφ.antitone; grind
-          have h2 : GQ.φ ⟨0, hnQ⟩ ≤ c := by
-            have := hGQ_le; change GQ.phiPlus C hnQ ≤ c at this; exact this
+          have h2 : GQ.φ ⟨0, hnQ⟩ ≤ c := hGQ_le
           have h3 : ((-1 : ℤ) : ℝ) = -1 := by grind
           grind
         exact s.hom_eq_zero_of_gt_phases C (FK.semistable ⟨0, hnK⟩) GQs hQs_gap β
@@ -327,8 +326,7 @@ theorem Slicing.phiMinus_gt_of_triangle_with_gtProp (s : Slicing C)
         have hE_gap : ∀ j : Fin FE.n,
             FQ.φ ⟨FQ.n - 1, by grind⟩ < FE.φ j := fun j ↦ by
           have h1 : a < FE.φ ⟨FE.n - 1, by grind⟩ := by
-            have := hE_gt hEZ
-            rw [s.phiMinus_eq C E hEZ FE hnE hneE] at this; exact this
+            have := hE_gt hEZ; rwa [s.phiMinus_eq C E hEZ FE hnE hneE] at this
           have h2 : FE.φ ⟨FE.n - 1, by grind⟩ ≤ FE.φ j := by
             apply FE.hφ.antitone; grind
           grind
@@ -502,8 +500,7 @@ theorem Slicing.phiMinus_gt_of_triangle_with_geProp (s : Slicing C)
         have hE_gap : ∀ j : Fin FE.n,
             FQ.φ ⟨FQ.n - 1, by grind⟩ < FE.φ j := fun j ↦ by
           have h1 : a < FE.φ ⟨FE.n - 1, by grind⟩ := by
-            have := hE_gt hEZ
-            rw [s.phiMinus_eq C E hEZ FE hnE hneE] at this; exact this
+            have := hE_gt hEZ; rwa [s.phiMinus_eq C E hEZ FE hnE hneE] at this
           have h2 : FE.φ ⟨FE.n - 1, by grind⟩ ≤ FE.φ j :=
             FE.hφ.antitone (Fin.mk_le_mk.mpr (by grind))
           grind
@@ -584,15 +581,15 @@ theorem Slicing.intervalProp_of_mono_leftHeart (s : Slicing C)
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
       (TStructure.heart_hι t) (TStructure.heart_admissible t) q
   have hKGtShift :
-      (s.phaseShift C a).gtProp C 0 K.obj := by
-    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C a).gtProp C 0 K.obj :=
+    ((Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a) K.obj).mp
+      K.property).1
   have hKGt : s.gtProp C a K.obj := (s.phaseShift_gtProp_zero C a K.obj).mp hKGtShift
   have hQLeShift :
-      (s.phaseShift C a).leProp C 1 (cokernel f).obj := by
-    exact (Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
+      (s.phaseShift C a).leProp C 1 (cokernel f).obj :=
+    ((Slicing.toTStructure_heart_iff (C := C) (s := s.phaseShift C a)
       (cokernel f).obj).mp
-      (cokernel f).property |>.2
+      (cokernel f).property).2
   have hQLe : s.leProp C (a + 1) (cokernel f).obj := by
     simpa [add_comm] using
       (s.phaseShift_leProp C a 1 (cokernel f).obj).mp hQLeShift
@@ -628,15 +625,15 @@ theorem Slicing.intervalProp_of_epi_rightHeart (s : Slicing C)
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
       (TStructure.heart_hι t) (TStructure.heart_admissible t) f
   have hKGeShift :
-      (s.phaseShift C (b - 1)).geProp C 0 K.obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
-      K.property |>.1
+      (s.phaseShift C (b - 1)).geProp C 0 K.obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) K.obj).mp
+      K.property).1
   have hKGe : s.geProp C (b - 1) K.obj :=
     (s.phaseShift_geProp_zero C (b - 1) K.obj).mp hKGeShift
   have hYLtShift :
-      (s.phaseShift C (b - 1)).ltProp C 1 Y.obj := by
-    exact (Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) Y.obj).mp
-      Y.property |>.2
+      (s.phaseShift C (b - 1)).ltProp C 1 Y.obj :=
+    ((Slicing.toTStructureGE_heart_iff (C := C) (s := s.phaseShift C (b - 1)) Y.obj).mp
+      Y.property).2
   have hYLt : s.ltProp C b Y.obj := by
     simpa [show 1 + (b - 1) = b by grind] using
       (s.phaseShift_ltProp C (b - 1) 1 Y.obj).mp hYLtShift

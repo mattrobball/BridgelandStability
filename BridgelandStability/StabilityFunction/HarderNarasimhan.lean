@@ -140,9 +140,7 @@ private lemma le_pullback_bot_of_comp_eq_zero {X Y : A} {M : Subobject X}
     M ≤ (Subobject.pullback p).obj ⊥ := by
   have hpb := Subobject.isPullback p (⊥ : Subobject Y)
   have hpb_zero : ((Subobject.pullback p).obj ⊥).arrow ≫ p = 0 := by
-    have := hpb.w
-    simp only [Subobject.bot_arrow, comp_zero] at this
-    rw [this]
+    have := hpb.w; simp only [Subobject.bot_arrow, comp_zero] at this; rw [this]
   exact Subobject.le_of_comm
     (hpb.isLimit.lift (PullbackCone.mk (0 : (M : A) ⟶ _) M.arrow (by simp [hMp])))
     (hpb.isLimit.fac _ WalkingCospan.right)
@@ -166,8 +164,8 @@ lemma card_subobject_cokernel_lt {E : A} {M : Subobject E}
     (hM_ne_bot : M ≠ ⊥) [hFin : Finite (Subobject E)] :
     Nat.card (Subobject (cokernel M.arrow)) < Nat.card (Subobject E) := by
   haveI := Fintype.ofFinite (Subobject E)
-  haveI : Finite (Subobject (cokernel M.arrow)) := by
-    exact Finite.of_injective _ (pullback_obj_injective_of_epi (cokernel.π M.arrow))
+  haveI : Finite (Subobject (cokernel M.arrow)) :=
+    Finite.of_injective _ (pullback_obj_injective_of_epi (cokernel.π M.arrow))
   haveI := Fintype.ofFinite (Subobject (cokernel M.arrow))
   rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
   exact Fintype.card_lt_of_injective_of_notMem
@@ -186,10 +184,10 @@ lemma pullback_cokernel_bot_eq {E : A} (M : Subobject E) :
         (⊥ : Subobject (cokernel M.arrow))).w
       simp only [Subobject.bot_arrow, comp_zero] at this; rw [this]
     have hker : kernelSubobject (cokernel.π M.arrow) = M := by
-      have := (ShortComplex.mk M.arrow (cokernel.π M.arrow)
-        (cokernel.condition M.arrow)).exact_iff_image_eq_kernel.mp
-        (ShortComplex.exact_cokernel M.arrow)
-      rw [imageSubobject_mono, Subobject.mk_arrow] at this; exact this.symm
+      simpa [imageSubobject_mono, Subobject.mk_arrow] using
+        ((ShortComplex.mk M.arrow (cokernel.π M.arrow)
+          (cokernel.condition M.arrow)).exact_iff_image_eq_kernel.mp
+          (ShortComplex.exact_cokernel M.arrow)).symm
     rw [← hker]
     exact Subobject.le_of_comm
       (factorThruKernelSubobject _ P.arrow hP)

@@ -70,8 +70,7 @@ theorem abs_arg_one_add_lt {u : ℂ} {ε : ℝ}
   have hu1 : ‖u‖ < 1 := lt_of_lt_of_le hu (Real.sin_le_one _)
   have hz : (1 : ℂ) + u ≠ 0 := by
     intro h
-    have h1 : (1 : ℂ) = -u := eq_neg_of_add_eq_zero_left h
-    have h2 : ‖(1 : ℂ)‖ = ‖u‖ := by rw [h1, norm_neg]
+    have h2 : ‖(1 : ℂ)‖ = ‖u‖ := by rw [eq_neg_of_add_eq_zero_left h, norm_neg]
     rw [norm_one] at h2; linarith
   have hre : 0 < ((1 : ℂ) + u).re := by
     simp only [Complex.add_re, Complex.one_re]

@@ -127,8 +127,7 @@ theorem P_in_deformedGtPred
           (Triangle.isZero₂_iff _ (P.triangle_dist ⟨k - 1, hk1⟩)).mpr
             ⟨hobj1_z.eq_of_src _ _, hfz.eq_of_tgt _ _⟩
         have := (Iso.isZero_iff (Classical.choice (P.triangle_obj₂ ⟨k - 1, hk1⟩))).mp hobj2_z
-        simp only [show k - 1 + 1 = k from by grind] at this
-        exact this
+        simpa only [show k - 1 + 1 = k from by grind] using this
     exact (Iso.isZero_iff (Classical.choice P.top_iso)).mp
       (this (G.n - (j₀.val + 1)) G.n le_rfl (by grind))
   -- Apply Lemma 3.4 to the triangle at j₀
@@ -439,16 +438,11 @@ theorem deformedGtLe_triangle
   -- Step 0: Get σ-HN of E
   obtain ⟨F⟩ := σ.slicing.hn_exists E
   -- Step 1: Split σ-HN at cutoff (t + ε)
-  obtain ⟨HIGH, REST, GH, GR, fH, gR, hR, hT1, hprops1⟩ :=
+  obtain ⟨HIGH, REST, GH, GR, fH, gR, hR, hT1, hH_phases, hR_phases, -⟩ :=
     split_hn_filtration_at_cutoff (C := C) F (t + ε)
-  have hH_phases := And.left hprops1
-  have hR_phases := And.left (And.right hprops1)
   -- Step 2: Split REST's filtration at cutoff (t - ε)
-  obtain ⟨MID, LOW, GM, GL, fM, gL, hL, hT2, hprops2⟩ :=
+  obtain ⟨MID, LOW, GM, GL, fM, gL, hL, hT2, hM_phases, hL_phases, -, hGM_contain⟩ :=
     split_hn_filtration_at_cutoff (C := C) GR (t - ε)
-  have hM_phases := And.left hprops2
-  have hL_phases := And.left (And.right hprops2)
-  have hGM_contain := And.right (And.right (And.right hprops2))
   -- Helper: ExtensionClosure is idempotent
   have ec_idem_gt : ∀ {X : C},
       (σ.deformedGtPred C W hW ε t).ExtensionClosure X →

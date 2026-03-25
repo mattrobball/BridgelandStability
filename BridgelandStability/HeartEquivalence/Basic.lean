@@ -123,10 +123,8 @@ theorem StabilityCondition.P_phi_shortExact_triangle
   obtain ⟨K, i, δ, hT⟩ :=
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
       (σ.P_phi_hom_vanishing C φ) (σ.P_phi_admissible C φ) g
-  have h_ig : (ι.map i) ≫ g.hom = 0 := by
-    have := comp_distTriang_mor_zero₁₂ _ hT
-    change (ι.map i) ≫ g.hom = 0 at this
-    exact this
+  have h_ig : (ι.map i) ≫ g.hom = 0 :=
+    comp_distTriang_mor_zero₁₂ _ hT
   have h_ig' : ObjectProperty.homMk (ι.map i) ≫ g = 0 := by
     ext
     exact h_ig
@@ -138,8 +136,7 @@ theorem StabilityCondition.P_phi_shortExact_triangle
   have hKer :=
     Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
       (σ.P_phi_hom_vanishing C φ) i g δ hT
-  have hfg' : f ≫ g = 0 := hfg
-  let γ : A ⟶ K := hKer.lift (KernelFork.ofι f hfg')
+  let γ : A ⟶ K := hKer.lift (KernelFork.ofι f hfg)
   have hγi : γ ≫ i = f := Fork.IsLimit.lift_ι hKer
   have hβγ : β ≫ γ = 𝟙 K :=
     Fork.IsLimit.hom_ext hKer (by simp [hγi, hβf])
@@ -159,8 +156,9 @@ theorem StabilityCondition.P_phi_shortExact_triangle
     rfl
   · simp only [Iso.refl_hom, Category.id_comp, Triangle.mk_mor₃, Functor.mapIso_hom,
       Iso.symm_hom]
-    rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, hβγ, ι.map_id,
-      Functor.map_id, Category.comp_id]
+    rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, hβγ]
+    change δ ≫ (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = δ
+    rw [Functor.map_id, Category.comp_id]
 
 /-- **Stability function restricted to P(φ).**
 The central charge `Z` of a stability condition, restricted to `σ`-semistable
@@ -323,8 +321,8 @@ noncomputable instance HeartStabilityData.instHeartFullSubcategoryAbelian
 sequence relations. This is the Grothendieck-group presentation of the heart
 used in Bridgeland Proposition 5.3. -/
 def HeartK0Subgroup (h : HeartStabilityData C) :
-    AddSubgroup (FreeAbelianGroup h.t.heart.FullSubcategory) := by
-  exact AddSubgroup.closure
+    AddSubgroup (FreeAbelianGroup h.t.heart.FullSubcategory) :=
+  AddSubgroup.closure
     {x | ∃ (S : ShortComplex h.t.heart.FullSubcategory), S.ShortExact ∧
         x = FreeAbelianGroup.of S.X₂ - FreeAbelianGroup.of S.X₁ -
           FreeAbelianGroup.of S.X₃}
@@ -403,8 +401,8 @@ theorem of_exact (h : HeartStabilityData C)
     { τ₁ := 𝟙 _
       τ₂ := 𝟙 _
       τ₃ := Limits.image.ι g }
-  have hExact : S.Exact := by
-    exact (ShortComplex.exact_iff_of_epi_of_isIso_of_mono φ).2 hExact₁
+  have hExact : S.Exact :=
+    (ShortComplex.exact_iff_of_epi_of_isIso_of_mono φ).2 hExact₁
   have hSE : S.ShortExact := ShortComplex.ShortExact.mk' hExact inferInstance inferInstance
   simpa [S] using HeartK0.of_shortExact (C := C) h hSE
 
@@ -472,8 +470,8 @@ theorem of_image_eq_zero (h : HeartStabilityData C)
   letI : Abelian h.t.heart.FullSubcategory := h.t.heartFullSubcategoryAbelian
   calc
     HeartK0.of (C := C) h (Limits.image f)
-        = HeartK0.of (C := C) h (0 : h.t.heart.FullSubcategory) := by
-            exact HeartK0.of_iso (C := C) h (Limits.imageZero' hf)
+        = HeartK0.of (C := C) h (0 : h.t.heart.FullSubcategory) :=
+            HeartK0.of_iso (C := C) h (Limits.imageZero' hf)
     _ = 0 := HeartK0.of_zero (C := C) h
 
 end HeartK0
@@ -529,10 +527,8 @@ theorem TStructure.heartFullSubcategory_shortExact_triangle
   obtain ⟨K, i, δ, hT⟩ :=
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
       (heart_hι t) (heart_admissible t) g
-  have h_ig : (ι.map i) ≫ g.hom = 0 := by
-    have := comp_distTriang_mor_zero₁₂ _ hT
-    change (ι.map i) ≫ g.hom = 0 at this
-    exact this
+  have h_ig : (ι.map i) ≫ g.hom = 0 :=
+    comp_distTriang_mor_zero₁₂ _ hT
   have h_ig' : ObjectProperty.homMk (ι.map i) ≫ g = 0 := by
     ext
     exact h_ig
@@ -566,12 +562,10 @@ theorem TStructure.heartFullSubcategory_shortExact_triangle
       Iso.symm_hom]
     rw [Category.assoc, ← (shiftFunctor C (1 : ℤ)).map_comp, ← ι.map_comp, hβγ]
     change δ ≫ (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) = δ
-    have hmap :
-        (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) =
-          𝟙 ((shiftFunctor C (1 : ℤ)).obj (ι.obj K)) := by
-      exact Functor.map_id (shiftFunctor C (1 : ℤ)) (ι.obj K)
-    rw [hmap]
-    exact Category.comp_id δ
+    have hmap : (shiftFunctor C (1 : ℤ)).map (𝟙 (ι.obj K)) =
+        𝟙 ((shiftFunctor C (1 : ℤ)).obj (ι.obj K)) :=
+      Functor.map_id (shiftFunctor C (1 : ℤ)) (ι.obj K)
+    rw [hmap]; exact Category.comp_id δ
 
 set_option backward.isDefEq.respectTransparency false in
 /-- A distinguished triangle whose three vertices lie in the heart induces a short
@@ -718,8 +712,8 @@ theorem HeartStabilityData.exists_preimage_of_pure
   have hX :
       K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C X := by
     calc
-      K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C (X⟦(0 : ℤ)⟧) := by
-        exact (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by grind)).app X)).symm
+      K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C (X⟦(0 : ℤ)⟧) :=
+        (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by grind)).app X)).symm
       _ = K₀.of C X := K₀.of_iso C ((shiftFunctorZero C ℤ).app X)
   rw [hX] at hshift
   simpa [H, HeartStabilityData.heartShiftOfPure] using hshift.symm

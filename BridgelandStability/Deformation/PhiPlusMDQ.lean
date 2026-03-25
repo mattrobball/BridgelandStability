@@ -591,8 +591,8 @@ theorem exists_strictMDQ_with_quotient_bound
                   have hzero := hvanish_helper q' hB'_ss (by rw [hEq])
                   let q'' : cokernel Ahi.arrow ⟶ B' :=
                     cokernel.desc Ahi.arrow q' hzero
-                  have hq'' : IsStrictEpi q'' := by
-                    exact interval_strictEpi_of_strictEpi_comp
+                  have hq'' : IsStrictEpi q'' :=
+                    interval_strictEpi_of_strictEpi_comp
                       (C := C) (σ := σ) (a := a) (b := b)
                       (cokernel.π Ahi.arrow) q'' <| by
                         simpa [q''] using hq'
@@ -608,8 +608,8 @@ theorem exists_strictMDQ_with_quotient_bound
                   have hzero := hvanish_helper q' hB'_ss (le_of_lt hlt)
                   let q'' : cokernel Ahi.arrow ⟶ B' :=
                     cokernel.desc Ahi.arrow q' hzero
-                  have hq'' : IsStrictEpi q'' := by
-                    exact interval_strictEpi_of_strictEpi_comp
+                  have hq'' : IsStrictEpi q'' :=
+                    interval_strictEpi_of_strictEpi_comp
                       (C := C) (σ := σ) (a := a) (b := b)
                       (cokernel.π Ahi.arrow) q'' <| by
                         simpa [q''] using hq'

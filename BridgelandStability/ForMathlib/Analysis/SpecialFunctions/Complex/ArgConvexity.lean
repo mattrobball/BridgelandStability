@@ -61,8 +61,7 @@ lemma arg_pos_of_mem_upperHalfPlaneUnion {z : ℂ} (hz : z ∈ upperHalfPlaneUni
       intro h0
       exact him.ne' (arg_eq_zero_iff.mp h0).2
     exact lt_of_le_of_ne h1 (Ne.symm h2)
-  · have hzeq : z = ↑z.re := Complex.ext rfl (by simp [him])
-    rw [hzeq, arg_ofReal_of_neg hre]
+  · rw [show z = ↑z.re from Complex.ext rfl (by simp [him]), arg_ofReal_of_neg hre]
     exact Real.pi_pos
 
 lemma im_nonneg_of_mem_upperHalfPlaneUnion {z : ℂ} (hz : z ∈ upperHalfPlaneUnion) :
@@ -161,17 +160,13 @@ lemma arg_lt_of_cross_pos {z₁ z₂ : ℂ}
   have hnn : 0 < ‖z₁‖ * ‖z₂‖ := mul_pos (norm_pos_iff.mpr hz₁) (norm_pos_iff.mpr hz₂)
   rw [cross_eq_norm_mul_sin] at hcross
   -- hcross : 0 < ‖z₁‖ * ‖z₂‖ * sin(arg z₂ - arg z₁)
-  have hsin : 0 < Real.sin (arg z₂ - arg z₁) := by
-    rcases (mul_pos_iff.mp hcross).elim id (fun ⟨h1, h2⟩ ↦ absurd h1 (not_lt.mpr hnn.le)) with
-      ⟨_, h⟩
-    exact h
+  have hsin : 0 < Real.sin (arg z₂ - arg z₁) :=
+    ((mul_pos_iff.mp hcross).elim id (fun ⟨h1, h2⟩ ↦ absurd h1 (not_lt.mpr hnn.le))).2
   by_contra h
   push_neg at h
   rcases h.eq_or_lt with heq | hlt
   · rw [heq, sub_self, Real.sin_zero] at hsin; exact lt_irrefl _ hsin
-  · have : Real.sin (arg z₂ - arg z₁) < 0 :=
-      sin_neg_of_neg_of_neg_pi_lt (sub_neg.mpr hlt) (by grind [arg_le_pi z₁])
-    linarith
+  · linarith [sin_neg_of_neg_of_neg_pi_lt (sub_neg.mpr hlt) (by grind [arg_le_pi z₁])]
 
 /-- **Strict see-saw**: if `z₁, z₂ ∈ UHP \ {0}` with `arg z₁ ≠ arg z₂`, then
 `arg(z₁ + z₂) < max(arg z₁, arg z₂)` (strict inequality). -/
@@ -202,9 +197,7 @@ lemma arg_add_lt_max {z₁ z₂ : ℂ}
     have : (z₁ + z₂).re * z₁.im - (z₁ + z₂).im * z₁.re = -cp := by
       simp only [Complex.add_re, Complex.add_im, cp]; ring
     rw [this]
-    have : 0 < z₂.re * z₁.im - z₂.im * z₁.re :=
-      cross_pos_of_arg_lt harg₂ hz₂ hz₁ h
-    linarith
+    linarith [cross_pos_of_arg_lt harg₂ hz₂ hz₁ h]
 
 /-- For `z₁, z₂` in the upper half plane union, `arg(z₁ + z₂) ≤ max(arg z₁, arg z₂)`.
 
@@ -245,9 +238,7 @@ lemma arg_add_le_max {z₁ z₂ : ℂ}
     have : (z₁ + z₂).re * z₁.im - (z₁ + z₂).im * z₁.re = -cp := by
       simp only [Complex.add_re, Complex.add_im, cp]; ring
     rw [this]
-    have hcp : 0 ≤ z₂.re * z₁.im - z₂.im * z₁.re :=
-      cross_nonneg_of_arg_le him₂ hz₂ hz₁ h
-    linarith
+    linarith [cross_nonneg_of_arg_le him₂ hz₂ hz₁ h]
 
 /-- For `z₁, z₂` in the upper half plane union, `min(arg z₁, arg z₂) ≤ arg(z₁ + z₂)`.
 
@@ -283,9 +274,7 @@ lemma min_arg_le_arg_add {z₁ z₂ : ℂ}
     have : z₂.re * (z₁ + z₂).im - z₂.im * (z₁ + z₂).re = -cp := by
       simp only [Complex.add_re, Complex.add_im, cp]; ring
     rw [this]
-    have hcp : 0 ≤ z₂.re * z₁.im - z₂.im * z₁.re :=
-      cross_nonneg_of_arg_le him₂ hz₂ hz₁ h
-    linarith
+    linarith [cross_nonneg_of_arg_le him₂ hz₂ hz₁ h]
 
 /-- The strict lower companion to `arg_add_lt_max`: if the arguments differ, then the
 argument of the sum is strictly larger than the smaller argument. -/
@@ -317,9 +306,7 @@ lemma min_arg_lt_arg_add {z₁ z₂ : ℂ}
       simp only [Complex.add_re, Complex.add_im, cp]
       ring
     rw [this]
-    have hcp : 0 < z₂.re * z₁.im - z₂.im * z₁.re :=
-      cross_pos_of_arg_lt harg₂ hz₂ hz₁ h
-    linarith
+    linarith [cross_pos_of_arg_lt harg₂ hz₂ hz₁ h]
 
 
 /-! ### Arg convexity for finite sums -/

@@ -390,13 +390,9 @@ theorem split_hn_filtration_at_cutoff
             · intro j; exact Fin.elim0 j
           · have hn2 : 2 ≤ F.n := by grind
             let G := F.prefix C (F.n - 1) (by grind) (by grind)
-            obtain ⟨X, Y', GX, GY', f', g', h', hT', hprops⟩ :=
+            obtain ⟨X, Y', GX, GY', f', g', h', hT', hGX_gt, hGY'_le, hGY'_bound, hGX_contain⟩ :=
               ih (F.chain.obj' (F.n - 1) (by grind)) G
                 (by change F.n - 1 ≤ m; grind)
-            have hGX_gt := And.left hprops
-            have hGY'_le := And.left (And.right hprops)
-            have hGY'_bound := And.left (And.right (And.right hprops))
-            have hGX_contain := And.right (And.right (And.right hprops))
             let T := F.triangle ⟨F.n - 1, by grind⟩
             let e₁ := Classical.choice (F.triangle_obj₁ ⟨F.n - 1, by grind⟩)
             let e₂ := Classical.choice (F.triangle_obj₂ ⟨F.n - 1, by grind⟩)

@@ -217,8 +217,8 @@ theorem wPhaseOf_eq_of_intervalProp_upper_inclusion
     constructor
     · linarith [hlo, hb, hthin₂]
     · linarith [hhi, hb, hthin₂]
-  have hWneE : W (K₀.of C E) ≠ 0 := by
-    exact σ.W_ne_zero_of_intervalProp C W hthin₁'
+  have hWneE : W (K₀.of C E) ≠ 0 :=
+    σ.W_ne_zero_of_intervalProp C W hthin₁'
       (stabSeminorm_lt_cos_of_hsin_hthin
         (C := C) (σ := σ) (W := W) hab₁ hε₀ hthin₁ hsin) hEne hI
   exact wPhaseOf_indep hWneE _ _ hbranch
@@ -274,8 +274,8 @@ theorem wPhaseOf_eq_of_intervalProp_lower_inclusion
     constructor
     · linarith [hlo, ha, hthin₂]
     · linarith [hhi, hthin₂]
-  have hWneE : W (K₀.of C E) ≠ 0 := by
-    exact σ.W_ne_zero_of_intervalProp C W hthin₁'
+  have hWneE : W (K₀.of C E) ≠ 0 :=
+    σ.W_ne_zero_of_intervalProp C W hthin₁'
       (stabSeminorm_lt_cos_of_hsin_hthin
         (C := C) (σ := σ) (W := W) ha₁ hε₀ hthin₁ hsin) hEne hI
   exact wPhaseOf_indep hWneE _ _ hbranch

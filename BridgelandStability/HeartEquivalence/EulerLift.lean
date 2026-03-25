@@ -101,8 +101,8 @@ theorem HeartStabilityData.heartK0ToK0_heartCohClass
   have hX :
       K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C X := by
     calc
-      K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C (X⟦(0 : ℤ)⟧) := by
-        exact (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by grind)).app X)).symm
+      K₀.of C ((X⟦(n : ℤ)⟧)⟦(-n : ℤ)⟧) = K₀.of C (X⟦(0 : ℤ)⟧) :=
+        (K₀.of_iso C ((shiftFunctorAdd' C (n : ℤ) (-n : ℤ) 0 (by grind)).app X)).symm
       _ = K₀.of C X := K₀.of_iso C ((shiftFunctorZero C ℤ).app X)
   rw [hX] at hshift
   simpa [X, H, HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure]
@@ -334,8 +334,8 @@ theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
       (h.t.truncGEπ 0).app E.obj := by
   have hLE0 : h.t.IsLE E.obj 0 := (h.t.mem_heart_iff E.obj).mp E.property |>.1
   haveI hIsoGEMapLE :
-      IsIso ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj)) := by
-    exact Functor.map_isIso (h.t.truncGE 0) ((h.t.truncLEι 0).app E.obj)
+      IsIso ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj)) :=
+    Functor.map_isIso (h.t.truncGE 0) ((h.t.truncLEι 0).app E.obj)
   let eLE : (h.t.truncLE 0).obj E.obj ≅ E.obj :=
     @asIso _ _ _ _ ((h.t.truncLEι 0).app E.obj)
       ((h.t.isLE_iff_isIso_truncLEι_app 0 E.obj).mp hLE0)
@@ -475,8 +475,8 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_f_eq_toH0primeHom
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f =
-      h.toH0primeHom (C := C) A f := by
-  exact h.H0primeObjIsoOfHeart_inv_comp_H0primeFunctor_map (C := C) A f
+      h.toH0primeHom (C := C) A f :=
+  h.H0primeObjIsoOfHeart_inv_comp_H0primeFunctor_map (C := C) A f
 
 /-- Comparison isomorphism between the heart-source `H0'` short complex and the image of the
 ambient distinguished-triangle short complex under `H0'`. -/
@@ -549,8 +549,8 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_cokernelπ_comp_cokern
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
     cokernel.π (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f ≫
       h.heartSourceH0primeShortComplex_cokernelDesc (C := C) A f g hfg =
-        (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g := by
-  exact cokernel.π_desc
+        (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g :=
+  cokernel.π_desc
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).zero

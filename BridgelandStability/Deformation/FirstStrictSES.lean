@@ -141,8 +141,8 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
     exact hKne (((σ.slicing.intervalProp C a b).ι).map_isZero hZ)
   have hB_ne : B ≠ ⊥ := by
     intro hB
-    have hzero : iKX = 0 := by
-      exact (Subobject.mk_eq_bot_iff_zero).mp
+    have hzero : iKX = 0 :=
+      (Subobject.mk_eq_bot_iff_zero).mp
         (show Subobject.mk iKX = ⊥ by simpa [B] using hB)
     have hId : 𝟙 KI = 0 := by
       apply (cancel_mono iKX).1
