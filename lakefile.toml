@@ -7,18 +7,18 @@ defaultTargets = ["BridgelandStability"]
 autoImplicit = false
 
 [[require]]
-name = "mathlib"
-scope = "leanprover-community"
-rev = "master"
-
-[[require]]
 name = "LeanArchitect"
 git = "https://github.com/mattrobball/LeanArchitect"
-rev = "e8c18617df9210f176e6fada714ab1e907e2cf93"
+rev = "extract-all-module"
 
 [[require]]
 name = "checkdecls"
 git = "https://github.com/PatrickMassot/checkdecls"
+rev = "master"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
 rev = "master"
 
 [[lean_lib]]
