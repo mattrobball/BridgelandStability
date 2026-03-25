@@ -13,17 +13,20 @@ import Mathlib.Topology.Algebra.Module.FiniteDimension
 This module states the theorem to be verified by `leanprover/comparator`.
 -/
 
-set_option autoImplicit false
+@[expose] public section
+
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
-
 open scoped Manifold
 
-namespace CategoryTheory.Triangulated
-
 universe w v u
+
+namespace CategoryTheory.Triangulated
 
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
