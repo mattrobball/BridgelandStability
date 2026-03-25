@@ -42,13 +42,16 @@ jobs:
         with:
           build: true
           build-args: BridgelandStability BridgelandBlueprint BridgelandBlueprint:blueprint
+          # Disable per-commit lake cache (2.3GB each, evicts the docs cache).
+          # Mathlib oleans come from `lake exe cache get` which lean-action runs
+          # automatically; our project oleans rebuild in ~90s.
+          use-github-cache: false
 
       - name: Run declaration linter
         run: lake exe runLinter
 
       - name: Compile blueprint and documentation
-        uses: leanprover-community/docgen-action@dac784713171529c96f6d0470f7af30249a02a5d
+        uses: leanprover-community/docgen-action@main
         with:
           blueprint: true
-          api-docs: false
           homepage: home_page
