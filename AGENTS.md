@@ -78,6 +78,18 @@ Names describe mathematical content, not bibliographic provenance.
 renaming public APIs, check 5-10 nearest Mathlib implementations for precedent.
 See `artifacts/mathlib-naming-notes.md`.
 
+## Repetition Means Missing API
+
+If the same boilerplate appears across many independent proofs, the problem
+is a missing lemma or simp attribute — not verbose syntax. Before doing a
+mechanical text replacement across files, stop and ask why every proof needs
+that code in the first place. Fix the upstream cause (add the lemma, register
+the simp attribute, fill the API gap) instead of making the repetition shorter.
+
+When adding simp lemmas: check what simp-normal form the goal is actually in
+after existing simp lemmas fire, and write the new lemma to close *that* form.
+Test in a real proof context with `lean_multi_attempt`, not in isolation.
+
 ## Reporting & Documentation
 
 Include actual declarations and proposed text in audits — not just file paths
