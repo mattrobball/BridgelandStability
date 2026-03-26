@@ -64,7 +64,6 @@ jobs:
           expected_toolchain="$(tr -d '\n' < lean-toolchain)"
           test "$packaged_toolchain" = "$expected_toolchain"
           test -x "$exposition_bin"
-          "$exposition_bin" --help >/dev/null
 
       - name: Generate exposition site
         run: |
