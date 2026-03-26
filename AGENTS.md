@@ -97,6 +97,21 @@ When adding simp lemmas: check what simp-normal form the goal is actually in
 after existing simp lemmas fire, and write the new lemma to close *that* form.
 Test in a real proof context with `lean_multi_attempt`, not in isolation.
 
+## Instance Design
+
+If you find yourself naming an instance to pass it via `@`, the typeclass
+design is wrong. Named instances (`@foo P P id P.isAdditive_of`) are a code
+smell — they mean the synthesizer cannot find the instance, which means
+*callers* won't be able to find it either. Fix the root cause:
+
+- **Composed functions** (`Q.of ∘ f`) are bad typeclass keys — instance
+  search won't reduce `∘ id` or reassociate compositions. Use an explicit
+  proof argument instead of `[P.IsAdditive (Q.of ∘ f)]`.
+- **Eta-expanded vs point-free** (`fun X => f X` vs `f`) can also block
+  unification. Pick one form and stick with it in the typeclass parameter.
+- If the instance is only needed in one or two places, a plain argument is
+  simpler than a typeclass.
+
 ## Reporting & Documentation
 
 Include actual declarations and proposed text in audits — not just file paths

@@ -99,4 +99,73 @@ theorem lift_of {A : Type*} [AddCommGroup A] (f : P.Obj → A) [P.IsAdditive f] 
     P.lift f (P.of X) = f X :=
   FreeAbelianGroup.lift_apply_of f X
 
+/-! ### Extensionality and induction -/
+
+/-- Two homomorphisms from `P.K0` that agree on generators are equal. -/
+theorem hom_ext {A : Type*} [AddCommGroup A] {f g : P.K0 →+ A}
+    (h : ∀ X : P.Obj, f (P.of X) = g (P.of X)) : f = g :=
+  AddMonoidHom.ext fun x => by
+    induction x using QuotientAddGroup.induction_on with
+    | H x =>
+      induction x using FreeAbelianGroup.induction_on with
+      | zero => simp [map_zero]
+      | of X => exact h X
+      | neg x ih => simp [map_neg, ih]
+      | add x y ihx ihy => simp [map_add, ihx, ihy]
+
+/-- Induction principle for `P.K0`: it suffices to check generators, zero, negation, and
+addition. -/
+@[elab_as_elim]
+theorem induction_on {motive : P.K0 → Prop} (x : P.K0)
+    (of : ∀ X : P.Obj, motive (P.of X))
+    (zero : motive 0)
+    (neg : ∀ a, motive a → motive (-a))
+    (add : ∀ a b, motive a → motive b → motive (a + b)) : motive x := by
+  induction x using QuotientAddGroup.induction_on with
+  | H x =>
+    induction x using FreeAbelianGroup.induction_on with
+    | zero => simpa [QuotientAddGroup.mk_zero] using zero
+    | of X => exact of X
+    | neg x ih => simpa [map_neg] using neg _ ih
+    | add x y ihx ihy => simpa [map_add] using add _ _ ihx ihy
+
+/-! ### Functorial maps -/
+
+/-- The class map is additive for its own presentation. -/
+instance isAdditive_of : P.IsAdditive P.of where
+  additive := P.of_rel
+
+/-- The induced map on Grothendieck groups from a function on objects that respects
+relations. The additivity proof is an explicit argument since composed functions
+`Q.of ∘ f` are not suited to typeclass inference. -/
+def map {Q : K0Presentation} (f : P.Obj → Q.Obj)
+    (hf : P.IsAdditive (Q.of ∘ f)) : P.K0 →+ Q.K0 :=
+  @P.lift _ _ (Q.of ∘ f) hf
+
+@[simp]
+theorem map_of {Q : K0Presentation} (f : P.Obj → Q.Obj)
+    (hf : P.IsAdditive (Q.of ∘ f)) (X : P.Obj) :
+    P.map f hf (P.of X) = Q.of (f X) :=
+  @P.lift_of _ _ (Q.of ∘ f) hf X
+
+/-- A compatible map on relations implies additivity of the induced object map. -/
+theorem IsAdditive.of_relMap {Q : K0Presentation} (fObj : P.Obj → Q.Obj)
+    (fRel : P.Rel → Q.Rel)
+    (h₁ : ∀ r, fObj (P.obj₁ r) = Q.obj₁ (fRel r))
+    (h₂ : ∀ r, fObj (P.obj₂ r) = Q.obj₂ (fRel r))
+    (h₃ : ∀ r, fObj (P.obj₃ r) = Q.obj₃ (fRel r)) :
+    P.IsAdditive (Q.of ∘ fObj) where
+  additive r := by simp only [Function.comp]; rw [h₂, h₁, h₃]; exact Q.of_rel (fRel r)
+
+theorem map_id : P.map id ⟨P.of_rel⟩ = AddMonoidHom.id P.K0 := by
+  apply P.hom_ext; intro X; simp [map]
+
+variable {P} in
+theorem map_comp {Q R : K0Presentation} (f : P.Obj → Q.Obj) (g : Q.Obj → R.Obj)
+    (hf : P.IsAdditive (Q.of ∘ f))
+    (hg : Q.IsAdditive (R.of ∘ g))
+    (hgf : P.IsAdditive (R.of ∘ g ∘ f)) :
+    P.map (g ∘ f) hgf = (Q.map g hg).comp (P.map f hf) := by
+  apply P.hom_ext; intro X; simp [map]
+
 end K0Presentation
