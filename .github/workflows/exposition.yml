@@ -1,0 +1,62 @@
+name: Exposition
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  exposition:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v5
+
+      - name: Checkout lean-exposition
+        uses: actions/checkout@v5
+        with:
+          repository: mattrobball/lean-exposition
+          path: lean-exposition
+
+      - name: Build BridgelandStability and extractDeps
+        uses: leanprover/lean-action@v1
+        with:
+          build: true
+          build-args: BridgelandStability extractDeps
+          use-github-cache: false
+
+      - name: Run declaration linter
+        run: lake exe runLinter
+
+      - name: Build exposition tool
+        working-directory: lean-exposition
+        run: |
+          lake exe cache get
+          lake build exposition
+
+      - name: Generate exposition site
+        run: |
+          lake env ./lean-exposition/.lake/build/bin/exposition \
+            --root BridgelandStability \
+            --exclude-lib BridgelandSpec \
+            --repo-url https://github.com/${{ github.repository }} \
+            --comparator-config comparator.json \
+            --tfb-exe extractDeps \
+            --output exposition-out
+
+      - name: Upload exposition site
+        uses: actions/upload-artifact@v4
+        with:
+          name: exposition-site
+          path: exposition-out/html-multi
+          if-no-files-found: error
+          retention-days: 7

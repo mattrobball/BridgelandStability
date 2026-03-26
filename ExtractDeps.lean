@@ -245,10 +245,10 @@ public unsafe def main (args : List String) : IO UInt32 := do
   let some ws ← Lake.loadWorkspace loadConfig |>.toBaseIO
     | do IO.eprintln "Failed to load Lake workspace"; return 1
 
-  -- Import project libraries, skipping spec/blueprint modules that have
-  -- meta-only dependencies not available at runtime.
+  -- Import project libraries, skipping spec modules that are not part of the
+  -- implementation surface we want to traverse.
   -- TODO: make this configurable via CLI flags
-  let skipLibs : Array Name := #[`BridgelandSpec, `BridgelandBlueprint]
+  let skipLibs : Array Name := #[`BridgelandSpec]
   let imports := ws.root.leanLibs
     |>.filter (fun lib => !skipLibs.contains lib.name)
     |>.flatMap (fun lib => lib.config.roots.map fun module => { module })

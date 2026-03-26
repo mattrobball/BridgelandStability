@@ -7,11 +7,6 @@ defaultTargets = ["BridgelandStability"]
 autoImplicit = false
 
 [[require]]
-name = "LeanArchitect"
-git = "https://github.com/mattrobball/LeanArchitect"
-rev = "extract-all-module"
-
-[[require]]
 name = "checkdecls"
 git = "https://github.com/PatrickMassot/checkdecls"
 rev = "master"
@@ -24,14 +19,9 @@ rev = "master"
 [[lean_lib]]
 name = "BridgelandStability"
 srcDir = "."
-leanOptions = {weak.blueprint.extractAll = true}
 
 [[lean_lib]]
 name = "BridgelandSpec"
-srcDir = "."
-
-[[lean_lib]]
-name = "BridgelandBlueprint"
 srcDir = "."
 
 [[lean_exe]]
