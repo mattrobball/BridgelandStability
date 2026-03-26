@@ -121,11 +121,7 @@ theorem HeartStabilityData.heartK0ToK0_comp_heartK0FromK0
     (h : HeartStabilityData C) [IsTriangulated C]
     [IsTriangleAdditive (fun E ↦ h.heartEulerClassObj (C := C) E)] :
     (h.heartK0ToK0 C).comp (h.heartK0FromK0 C) = AddMonoidHom.id (K₀ C) := by
-  apply QuotientAddGroup.addMonoidHom_ext
-  apply FreeAbelianGroup.lift_ext
-  intro E
-  change ((h.heartK0ToK0 C).comp (h.heartK0FromK0 C)) (K₀.of C E) =
-    (AddMonoidHom.id (K₀ C)) (K₀.of C E)
+  apply K₀.hom_ext; intro E
   rw [AddMonoidHom.comp_apply, h.heartK0FromK0_of (C := C), AddMonoidHom.id_apply]
   exact h.heartK0ToK0_heartEulerClassObj (C := C) E
 
@@ -133,11 +129,7 @@ theorem HeartStabilityData.heartK0FromK0_comp_heartK0ToK0
     (h : HeartStabilityData C) [IsTriangulated C]
     [IsTriangleAdditive (fun E ↦ h.heartEulerClassObj (C := C) E)] :
     (h.heartK0FromK0 C).comp (h.heartK0ToK0 C) = AddMonoidHom.id (HeartK0 (C := C) h) := by
-  apply QuotientAddGroup.addMonoidHom_ext
-  apply FreeAbelianGroup.lift_ext
-  intro E
-  change ((h.heartK0FromK0 C).comp (h.heartK0ToK0 C)) (HeartK0.of (C := C) h E) =
-    (AddMonoidHom.id (HeartK0 (C := C) h)) (HeartK0.of (C := C) h E)
+  apply HeartK0.hom_ext; intro E
   rw [AddMonoidHom.comp_apply, h.heartK0ToK0_of (C := C), h.heartK0FromK0_of (C := C),
     AddMonoidHom.id_apply]
   exact h.heartEulerClassObj_of_heart (C := C) E
@@ -188,11 +180,7 @@ theorem HeartStabilityData.ambientZ_eq_ZOnHeartK0_comp_heartK0FromK0
     (h : HeartStabilityData C)
     [IsTriangleAdditive (fun E ↦ h.heartEulerClassObj (C := C) E)] :
     h.ambientZ C = (h.ZOnHeartK0 (C := C)).comp (h.heartK0FromK0 C) := by
-  apply QuotientAddGroup.addMonoidHom_ext
-  apply FreeAbelianGroup.lift_ext
-  intro E
-  change h.ambientZ C (K₀.of C E) =
-    ((h.ZOnHeartK0 (C := C)).comp (h.heartK0FromK0 C)) (K₀.of C E)
+  apply K₀.hom_ext; intro E
   rw [h.ambientZ_of (C := C), AddMonoidHom.comp_apply, h.heartK0FromK0_of (C := C)]
   rfl
 
@@ -200,11 +188,7 @@ theorem HeartStabilityData.ambientZ_comp_heartK0ToK0
     (h : HeartStabilityData C) [IsTriangulated C]
     [IsTriangleAdditive (fun E ↦ h.heartEulerClassObj (C := C) E)] :
     (h.ambientZ C).comp (h.heartK0ToK0 C) = h.ZOnHeartK0 (C := C) := by
-  apply QuotientAddGroup.addMonoidHom_ext
-  apply FreeAbelianGroup.lift_ext
-  intro E
-  change ((h.ambientZ C).comp (h.heartK0ToK0 C)) (HeartK0.of (C := C) h E) =
-    (h.ZOnHeartK0 (C := C)) (HeartK0.of (C := C) h E)
+  apply HeartK0.hom_ext; intro E
   rw [AddMonoidHom.comp_apply, h.heartK0ToK0_of (C := C), h.ambientZ_of (C := C),
     h.eulerZObj_of_heart (C := C) E, h.ZOnHeartK0_of (C := C) E]
 

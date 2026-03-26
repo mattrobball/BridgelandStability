@@ -208,45 +208,8 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 theorem K₀_hom_eq_zero_of_vanishes_on_of (U : K₀ C →+ ℂ)
     (hU : ∀ E : C, U (K₀.of C E) = 0) :
     U = 0 := by
-  ext x
-  induction x using QuotientAddGroup.induction_on with
-  | H x =>
-      induction x using FreeAbelianGroup.induction_on with
-      | zero =>
-          change U (QuotientAddGroup.mk (0 : FreeAbelianGroup C)) = 0
-          exact map_zero U
-      | of E =>
-          change U (QuotientAddGroup.mk (FreeAbelianGroup.of E : FreeAbelianGroup C)) = 0
-          simpa [K₀.of] using hU E
-      | neg x hx =>
-          change U (QuotientAddGroup.mk (-FreeAbelianGroup.of x : FreeAbelianGroup C)) = 0
-          calc
-            U (QuotientAddGroup.mk (-FreeAbelianGroup.of x : FreeAbelianGroup C)) =
-                -U (QuotientAddGroup.mk (FreeAbelianGroup.of x : FreeAbelianGroup C)) := by
-                  show U (-((QuotientAddGroup.mk
-                    (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)) =
-                    -U ((QuotientAddGroup.mk
-                      (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)
-                  exact U.map_neg ((QuotientAddGroup.mk
-                    (FreeAbelianGroup.of x : FreeAbelianGroup C)) : K₀ C)
-            _ = 0 := by simp [hx]
-      | add x y hx hy =>
-          change U (QuotientAddGroup.mk (x + y : FreeAbelianGroup C)) = 0
-          calc
-            U (QuotientAddGroup.mk (x + y : FreeAbelianGroup C)) =
-                U (((QuotientAddGroup.mk (x : FreeAbelianGroup C)) : K₀ C) +
-                  ((QuotientAddGroup.mk (y : FreeAbelianGroup C)) : K₀ C)) := by
-                    rfl
-            _ = U (QuotientAddGroup.mk (x : FreeAbelianGroup C)) +
-                  U (QuotientAddGroup.mk (y : FreeAbelianGroup C)) := by
-                    show U (((QuotientAddGroup.mk (x : FreeAbelianGroup C)) : K₀ C) +
-                        ((QuotientAddGroup.mk (y : FreeAbelianGroup C)) : K₀ C)) =
-                      U ((QuotientAddGroup.mk (x : FreeAbelianGroup C)) : K₀ C) +
-                        U ((QuotientAddGroup.mk (y : FreeAbelianGroup C)) : K₀ C)
-                    exact U.map_add
-                      ((QuotientAddGroup.mk (x : FreeAbelianGroup C)) : K₀ C)
-                      ((QuotientAddGroup.mk (y : FreeAbelianGroup C)) : K₀ C)
-            _ = 0 := by simp [hx, hy]
+  apply K₀.hom_ext; intro E
+  exact hU E
 
 end
 

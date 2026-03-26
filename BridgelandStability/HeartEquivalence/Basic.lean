@@ -339,6 +339,18 @@ namespace HeartK0
 def of (h : HeartStabilityData C) (E : h.t.heart.FullSubcategory) : HeartK0 (C := C) h :=
   QuotientAddGroup.mk (FreeAbelianGroup.of E)
 
+@[simp]
+theorem heartPresentation_of (h : HeartStabilityData C) (E : h.t.heart.FullSubcategory) :
+    (heartPresentation (C := C) h).of E = HeartK0.of (C := C) h E := rfl
+
+/-- Two homomorphisms from `HeartK0` that agree on all heart object classes are equal. -/
+@[ext 1100]
+theorem hom_ext (h : HeartStabilityData C) {A : Type*} [AddCommGroup A]
+    {f g : HeartK0 (C := C) h →+ A}
+    (hfg : ∀ E : h.t.heart.FullSubcategory,
+      f (HeartK0.of (C := C) h E) = g (HeartK0.of (C := C) h E)) : f = g :=
+  (heartPresentation (C := C) h).hom_ext hfg
+
 /-- A short exact sequence in the heart yields the defining relation in `HeartK0`. -/
 theorem of_shortExact (h : HeartStabilityData C)
     {S : ShortComplex h.t.heart.FullSubcategory} (hS : S.ShortExact) :

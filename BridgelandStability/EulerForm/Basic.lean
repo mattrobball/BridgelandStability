@@ -576,13 +576,8 @@ instance eulerFormInner_isTriangleAdditive
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (eulerFormInner k C) where
   additive T hT := by
-    apply QuotientAddGroup.addMonoidHom_ext
-    apply FreeAbelianGroup.lift_ext
-    intro F
-    change (eulerFormInner k C T.obj₂) (K₀.of C F) =
-      (eulerFormInner k C T.obj₁) (K₀.of C F) +
-      (eulerFormInner k C T.obj₃) (K₀.of C F)
-    simp only [eulerFormInner, K₀.lift_of]
+    apply K₀.hom_ext; intro F
+    simp only [AddMonoidHom.add_apply, eulerFormInner, K₀.lift_of]
     letI := eulerFormObj_covariant_triangleAdditive (k := k) (C := C) F
     exact IsTriangleAdditive.additive (f := fun E ↦ eulerFormObj k C E F) T hT
 

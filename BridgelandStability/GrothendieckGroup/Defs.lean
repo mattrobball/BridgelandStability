@@ -70,6 +70,10 @@ instance K₀.instAddCommGroup : AddCommGroup (K₀ C) :=
 def K₀.of (X : C) : K₀ C :=
   QuotientAddGroup.mk (FreeAbelianGroup.of X)
 
+@[simp]
+theorem trianglePresentation_of (X : C) :
+    (trianglePresentation C).of X = K₀.of C X := rfl
+
 /-- For a distinguished triangle `T`, the class of `T.obj₂` equals the sum of the classes of
 `T.obj₁` and `T.obj₃` in `K₀ C`. -/
 lemma K₀.of_triangle (T : Pretriangulated.Triangle C) (hT : T ∈ distTriang C) :
@@ -163,6 +167,12 @@ def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] 
 lemma K₀.lift_of {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] (X : C) :
     K₀.lift C f (K₀.of C X) = f X :=
   (trianglePresentation C).lift_of f X
+
+/-- Two homomorphisms from `K₀ C` that agree on all object classes are equal. -/
+@[ext 1100]
+theorem K₀.hom_ext {A : Type*} [AddCommGroup A] {f g : K₀ C →+ A}
+    (h : ∀ X : C, f (K₀.of C X) = g (K₀.of C X)) : f = g :=
+  (trianglePresentation C).hom_ext h
 
 /-! ### K₀ additivity for Postnikov towers -/
 
