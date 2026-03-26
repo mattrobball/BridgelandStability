@@ -45,6 +45,7 @@ public import BridgelandStability.IntervalCategory.TwoHeartEmbedding
 public import BridgelandStability.NumericalStability.Basic
 public import BridgelandStability.NumericalStabilityManifold
 public import BridgelandStability.PostnikovTower.Defs
+public import BridgelandStability.Spec
 public import BridgelandStability.Slicing.Basic
 public import BridgelandStability.Slicing.ExtensionClosure
 public import BridgelandStability.Slicing.HNOperations

@@ -20,10 +20,6 @@ rev = "master"
 name = "BridgelandStability"
 srcDir = "."
 
-[[lean_lib]]
-name = "BridgelandSpec"
-srcDir = "."
-
 [[lean_exe]]
 name = "checkdecls"
 root = "Checkdecls"

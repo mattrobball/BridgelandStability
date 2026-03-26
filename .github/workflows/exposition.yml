@@ -69,7 +69,6 @@ jobs:
         run: |
           lake env /tmp/exposition-artifact/exposition-linux-x86_64-${{ env.LEAN_EXPOSITION_REF }}/exposition \
             --root BridgelandStability \
-            --exclude-lib BridgelandSpec \
             --repo-url https://github.com/${{ github.repository }} \
             --comparator-config comparator.json \
             --tfb-exe extractDeps \

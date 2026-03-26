@@ -18,7 +18,6 @@ public unsafe def main (args : List String) : IO UInt32 := do
   let some ws ← Lake.loadWorkspace config |>.toBaseIO
     | throw <| IO.userError "failed to load Lake workspace"
   let imports := ws.root.leanLibs
-    |>.filter (·.name != `BridgelandSpec)
     |>.flatMap (·.config.roots.map fun module => { module })
   enableInitializersExecution
   let env ← Lean.importModules imports {}
