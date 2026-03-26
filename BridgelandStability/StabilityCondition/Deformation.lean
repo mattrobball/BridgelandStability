@@ -577,6 +577,24 @@ theorem StabilityCondition.eq_of_same_Z_of_mem_basisNhd (σ : StabilityCondition
   exact lt_trans hdist <|
     (ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 (by linarith [hε8])
 
+/-- If `|x| < sin(πδ) / (2*(L+1))` and `L ≥ 0`, then `|x| * L < sin(πδ)`.
+This is the core bound used in the straight-line interpolation argument. -/
+private lemma abs_mul_lt_sin_of_lt_div {x L δ : ℝ} (hL : 0 ≤ L)
+    (hsinδ : 0 < Real.sin (Real.pi * δ))
+    (hx : |x| < Real.sin (Real.pi * δ) / (2 * (L + 1))) :
+    |x| * L < Real.sin (Real.pi * δ) := by
+  have hLp1 : 0 < L + 1 := by positivity
+  calc |x| * L
+      ≤ |x| * (L + 1) := by gcongr; linarith
+    _ < Real.sin (Real.pi * δ) / (2 * (L + 1)) * (L + 1) := by gcongr
+    _ = Real.sin (Real.pi * δ) / 2 := by field_simp [hLp1.ne']
+    _ < Real.sin (Real.pi * δ) := by nlinarith
+
+/-- `sin(π * δ) < 1` when `δ < 1/8`. -/
+private lemma sin_pi_mul_lt_one {δ : ℝ} (hδ : 0 < δ) (hδ8 : δ < 1 / 8) :
+    Real.sin (Real.pi * δ) < 1 :=
+  lt_trans (Real.sin_lt (by positivity)) (by nlinarith [Real.pi_lt_d4])
+
 /-- A small Bridgeland basis neighborhood, with radius below the local Theorem 7.1 witness,
 lies in the connected component of its center. This is the direct straight-line interpolation
 argument from Bridgeland §7. -/
@@ -707,21 +725,7 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
           exact min_le_right _ _
       have hWclose :
           stabSeminorm C ρ₀ (W s - ρ₀.Z) < ENNReal.ofReal (Real.sin (Real.pi * δ)) := by
-        have hmul : |(s : ℝ) - t| * L < Real.sin (Real.pi * δ) := by
-          have hLp1 : 0 < L + 1 := by positivity
-          have hmul_le : |(s : ℝ) - t| * L ≤ |(s : ℝ) - t| * (L + 1) := by
-            gcongr
-            linarith
-          have hmul_half : |(s : ℝ) - t| * (L + 1) < Real.sin (Real.pi * δ) / 2 := by
-            calc
-              |(s : ℝ) - t| * (L + 1)
-                  < (Real.sin (Real.pi * δ) / (2 * (L + 1))) * (L + 1) := by
-                      gcongr
-              _ = Real.sin (Real.pi * δ) / 2 := by
-                  field_simp [hLp1.ne']
-          have hhalf_lt : Real.sin (Real.pi * δ) / 2 < Real.sin (Real.pi * δ) := by
-            nlinarith
-          exact lt_of_le_of_lt hmul_le (lt_trans hmul_half hhalf_lt)
+        have hmul := abs_mul_lt_sin_of_lt_div hL_nonneg hsinδ_pos hsη'
         calc stabSeminorm C ρ₀ (W s - ρ₀.Z)
             = ENNReal.ofReal (|(s : ℝ) - t|) * stabSeminorm C ρ₀ (τ.Z - σ.Z) := by
                 dsimp [ρ₀]
@@ -734,12 +738,9 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
                 rw [← ENNReal.ofReal_mul (abs_nonneg _)]
             _ < ENNReal.ofReal (Real.sin (Real.pi * δ)) :=
                 (ENNReal.ofReal_lt_ofReal_iff hsinδ_pos).2 hmul
-      have hsinδ_lt_one : Real.sin (Real.pi * δ) < 1 := by
-        have hπδ_lt : Real.pi * δ < 1 := by
-          nlinarith [Real.pi_lt_d4, hδ8]
-        exact lt_trans (Real.sin_lt (by positivity)) hπδ_lt
       have hWclose1 : stabSeminorm C ρ₀ (W s - ρ₀.Z) < ENNReal.ofReal 1 :=
-        lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
+        lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2
+          (sin_pi_mul_lt_one hδ hδ8))
       obtain ⟨ρ, hρZ, hρmem⟩ :=
         ρ₀.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W s) hWclose1
           ε₁ hε₁ hε₁10 hWide₁ δ hδ hδ_lt_ε₁ hWclose
@@ -838,28 +839,10 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
     lt_of_lt_of_le hsη <| by
       dsimp [η]
       exact min_le_right _ _
-  have hsinδ_lt_one : Real.sin (Real.pi * δ) < 1 := by
-    have hπδ_lt : Real.pi * δ < 1 := by
-      nlinarith [Real.pi_lt_d4, hδ8]
-    exact lt_trans (Real.sin_lt (by positivity)) hπδ_lt
   have hWclose :
       stabSeminorm C ρ₀ (linearInterpolationZ C σ τ s - ρ₀.Z) <
         ENNReal.ofReal (Real.sin (Real.pi * δ)) := by
-    have hLp1 : 0 < L + 1 := by positivity
-    have hmul : |s - t| * L < Real.sin (Real.pi * δ) := by
-      have hmul_le : |s - t| * L ≤ |s - t| * (L + 1) := by
-        gcongr
-        linarith
-      have hmul_half : |s - t| * (L + 1) < Real.sin (Real.pi * δ) / 2 := by
-        calc
-          |s - t| * (L + 1)
-              < (Real.sin (Real.pi * δ) / (2 * (L + 1))) * (L + 1) := by
-                  gcongr
-          _ = Real.sin (Real.pi * δ) / 2 := by
-              field_simp [hLp1.ne']
-      have hhalf_lt : Real.sin (Real.pi * δ) / 2 < Real.sin (Real.pi * δ) := by
-        nlinarith
-      exact lt_of_le_of_lt hmul_le (lt_trans hmul_half hhalf_lt)
+    have hmul := abs_mul_lt_sin_of_lt_div hL_nonneg hsinδ_pos hsη'
     calc stabSeminorm C ρ₀ (linearInterpolationZ C σ τ s - ρ₀.Z)
         = ENNReal.ofReal |s - t| * stabSeminorm C ρ₀ (τ.Z - σ.Z) := by
             rw [hρ₀Z]
@@ -874,7 +857,8 @@ theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCond
             (ENNReal.ofReal_lt_ofReal_iff hsinδ_pos).2 hmul
   have hWclose1 :
       stabSeminorm C ρ₀ (linearInterpolationZ C σ τ s - ρ₀.Z) < ENNReal.ofReal 1 :=
-    lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinδ_lt_one)
+    lt_trans hWclose ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2
+      (sin_pi_mul_lt_one hδ hδ8))
   obtain ⟨ρ, hρZ, hρmem⟩ :=
     ρ₀.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C
       (linearInterpolationZ C σ τ s) hWclose1 ε₁ hε₁ hε₁10 hWide₁ δ hδ hδ_lt_ε₁ hWclose
