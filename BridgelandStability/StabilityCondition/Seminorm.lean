@@ -84,6 +84,15 @@ theorem slicingDist_triangle (s₁ s₂ s₃ : Slicing C) :
         exact add_le_add (le_iSup_of_le E (le_iSup_of_le hE le_rfl))
           (le_iSup_of_le E (le_iSup_of_le hE le_rfl))
 
+/-- The Bridgeland generalized metric makes `Slicing C` a pseudo-extended-metric space.
+This is **not** the topology used on `StabilityCondition C` (which combines `slicingDist`
+with the seminorm `stabSeminorm`); it is the intrinsic metric on slicings alone. -/
+noncomputable instance : PseudoEMetricSpace (Slicing C) where
+  edist := slicingDist C
+  edist_self := slicingDist_self C
+  edist_comm := slicingDist_symm C
+  edist_triangle := slicingDist_triangle C
+
 /-- If the slicing distance is less than `ε`, the intrinsic `φ⁺` values are within `ε`.
 This is one direction of **Lemma 6.1**. -/
 theorem phiPlus_sub_lt_of_slicingDist (s₁ s₂ : Slicing C) {E : C} (hE : ¬IsZero E)
