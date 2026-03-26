@@ -501,7 +501,7 @@ theorem semistable_of_lower_inclusion
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
     (σ.skewedStabilityFunction_of_near C W hW ha₂).Semistable C E ψ := by
   have hEI₂ : σ.slicing.intervalProp C a₂ b E :=
-    σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hSS.1
+    σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hSS.intervalProp
   have henv_lo₂ : a₂ + ε₀ ≤ ψ := by
     linarith
   have hthin₂' : b - a₂ < 1 := by
@@ -538,7 +538,7 @@ theorem semistable_of_lower_inclusion
   let XI₁ : σ.slicing.IntervalCat C a₁ b := ⟨X, hX₁⟩
   let XI₂ : σ.slicing.IntervalCat C a₂ b := ⟨X, hX₂⟩
   let YI₂ : σ.slicing.IntervalCat C a₂ b := ⟨Y, hY₂⟩
-  let EI₁ : σ.slicing.IntervalCat C a₁ b := ⟨E, hSS.1⟩
+  let EI₁ : σ.slicing.IntervalCat C a₁ b := ⟨E, hSS.intervalProp⟩
   let xK : XI₂ ⟶ KI₂ := ObjectProperty.homMk fX
   let kY : KI₂ ⟶ YI₂ := ObjectProperty.homMk gY
   let S₁ : ShortComplex (σ.slicing.IntervalCat C a₂ b) :=
@@ -560,10 +560,10 @@ theorem semistable_of_lower_inclusion
       (σ.slicing.intervalProp_implies_rightWindow
         (C := C) (a := a₂) (b := b) (by linarith) hQI).2
     have hQ₁ : σ.slicing.intervalProp C a₁ b Q :=
-      σ.slicing.third_intervalProp_of_triangle C ha₁ hSS.1 hK_ge₁ hQ_lt hT
+      σ.slicing.third_intervalProp_of_triangle C ha₁ hSS.intervalProp hK_ge₁ hQ_lt hT
     have hK_phase₁ :
         wPhaseOf (W (K₀.of C K)) ((a₁ + b) / 2) ≤ ψ :=
-      hSS.2.2.2.2 hT hK₁ hQ₁ hKne
+      hSS.le_of_distTriang hT hK₁ hQ₁ hKne
     have hK_eq :
         wPhaseOf (W (K₀.of C K)) ((a₁ + b) / 2) =
           wPhaseOf (W (K₀.of C K)) ((a₂ + b) / 2) :=
@@ -610,7 +610,7 @@ theorem semistable_of_lower_inclusion
         (C := C) (s := σ.slicing) (a := a₁) (b := b) hSX
       have hX_phase₁ :
           wPhaseOf (W (K₀.of C X)) ((a₁ + b) / 2) ≤ ψ :=
-        hSS.2.2.2.2 hTX hX₁ (cokernel xE₁).property hXZ
+        hSS.le_of_distTriang hTX hX₁ (cokernel xE₁).property hXZ
       have hX_eq :
           wPhaseOf (W (K₀.of C X)) ((a₁ + b) / 2) =
             wPhaseOf (W (K₀.of C X)) ((a₂ + b) / 2) :=
@@ -715,7 +715,7 @@ theorem semistable_of_target_subinterval
     σ.slicing.intervalProp_mono C (show a₂ ≤ a₂ by linarith) hb hKI
   have hK_phase₁ :
       wPhaseOf (W (K₀.of C K)) ((a₁ + b₁) / 2) ≤ ψ :=
-    hSS.2.2.2.2 hT hKI₁ hQI₁ hKne
+    hSS.le_of_distTriang hT hKI₁ hQI₁ hKne
   have hK_eq_lower :
       wPhaseOf (W (K₀.of C K)) ((a₂ + b₁) / 2) =
         wPhaseOf (W (K₀.of C K)) ((a₁ + b₁) / 2) :=
@@ -784,11 +784,11 @@ theorem semistable_of_target_envelope
     · refine σ.slicing.intervalProp_of_intrinsic_phases C hEZ ?_ ?_
       · dsimp [a]
         exact max_lt_iff.mpr
-          ⟨σ.slicing.phiMinus_gt_of_intervalProp C hEZ hSS.1,
+          ⟨σ.slicing.phiMinus_gt_of_intervalProp C hEZ hSS.intervalProp,
             σ.slicing.phiMinus_gt_of_intervalProp C hEZ hI₂⟩
       · dsimp [b]
         exact lt_min_iff.mpr
-          ⟨σ.slicing.phiPlus_lt_of_intervalProp C hEZ hSS.1,
+          ⟨σ.slicing.phiPlus_lt_of_intervalProp C hEZ hSS.intervalProp,
             σ.slicing.phiPlus_lt_of_intervalProp C hEZ hI₂⟩
   have henv_lo : a + ε₀ ≤ ψ := by
     have hlow : a ≤ ψ - ε₀ := by
@@ -848,7 +848,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
     haveI : IsIso p := IsStrictEpi.isIso hp
     let eC : X.obj ≅ Y.obj :=
       ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso (asIso p))
-    rw [← hX.2.2.2.1, ← K₀.of_iso C eC]
+    rw [← hX.phase_eq, ← K₀.of_iso C eC]
   · have hK : ¬IsZero (kernel p).obj := hKz
     let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
       ShortComplex.mk (kernel.ι p) p (kernel.condition p)
@@ -859,13 +859,13 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
       (C := C) (s := σ.slicing) (a := a) (b := b) hS
     have hK_le :
         wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α ≤ ψ :=
-      hX.2.2.2.2 hT (kernel p).property Y.property hK
+      hX.le_of_distTriang hT (kernel p).property Y.property hK
     have hX_phase :
-        wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α = ψ := hX.2.2.2.1
+        wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α = ψ := hX.phase_eq
     have hX_window :
         L < wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α ∧
           wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α < U :=
-      hWindow X.property hX.2.1
+      hWindow X.property hX.nonzero
     have hK_window :
         L < wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α ∧
           wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α < U :=
@@ -892,7 +892,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
       simpa [S, map_add] using congrArg ssf.W
         (Slicing.IntervalCat.K0_of_strictShortExact (C := C) (s := σ.slicing)
           (a := a) (b := b) hS)
-    exact wPhaseOf_seesaw hadd.symm hX.2.2.2.1 hK_range hY_Wne hY_range
+    exact wPhaseOf_seesaw hadd.symm hX.phase_eq hK_range hY_Wne hY_range
 
 /-- A minimal-phase strict kernel has semistable strict quotient. This is the mdq step used
 for the thin-interval HN recursion. The only quotient-side hypothesis needed is plain

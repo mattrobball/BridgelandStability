@@ -366,12 +366,13 @@ theorem wPhaseOf_add_two {w : ℂ} (hw : w ≠ 0) (α : ℝ) :
 A "strict subobject" of `E` in `P((a,b))` corresponds to a monomorphism in the abelian
 heart `P((a, a+1])` whose cokernel also lies in `P((a, b))`, which in turn gives a
 distinguished triangle with all vertices in the interval. -/
-def SkewedStabilityFunction.Semistable {s : Slicing C} {a b : ℝ}
-    (ssf : SkewedStabilityFunction C s a b) (E : C) (ψ : ℝ) : Prop :=
-  s.intervalProp C a b E ∧ ¬IsZero E ∧
-  ssf.W (K₀.of C E) ≠ 0 ∧
-  wPhaseOf (ssf.W (K₀.of C E)) ssf.α = ψ ∧
-  ∀ ⦃K Q : C⦄ ⦃f₁ : K ⟶ E⦄ ⦃f₂ : E ⟶ Q⦄ ⦃f₃ : Q ⟶ K⟦(1 : ℤ)⟧⦄,
+structure SkewedStabilityFunction.Semistable {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C s a b) (E : C) (ψ : ℝ) : Prop where
+  intervalProp : s.intervalProp C a b E
+  nonzero : ¬IsZero E
+  wNe : ssf.W (K₀.of C E) ≠ 0
+  phase_eq : wPhaseOf (ssf.W (K₀.of C E)) ssf.α = ψ
+  le_of_distTriang : ∀ ⦃K Q : C⦄ ⦃f₁ : K ⟶ E⦄ ⦃f₂ : E ⟶ Q⦄ ⦃f₃ : Q ⟶ K⟦(1 : ℤ)⟧⦄,
     Triangle.mk f₁ f₂ f₃ ∈ distTriang C →
     s.intervalProp C a b K → s.intervalProp C a b Q →
     ¬IsZero K →
@@ -397,7 +398,7 @@ lemma SkewedStabilityFunction.Semistable.phase_mem_Ioc
     {ssf : SkewedStabilityFunction C s a b} {E : C} {ψ : ℝ}
     (h : ssf.Semistable C E ψ) :
     ψ ∈ Set.Ioc (ssf.α - 1) (ssf.α + 1) :=
-  h.2.2.2.1 ▸ wPhaseOf_mem_Ioc _ _
+  h.phase_eq ▸ wPhaseOf_mem_Ioc _ _
 
 /-- The W-value of a W-semistable object satisfies the polar decomposition. -/
 lemma SkewedStabilityFunction.Semistable.polar
@@ -406,7 +407,7 @@ lemma SkewedStabilityFunction.Semistable.polar
     (h : ssf.Semistable C E ψ) :
     ssf.W (K₀.of C E) = ↑‖ssf.W (K₀.of C E)‖ *
       Complex.exp (↑(Real.pi * ψ) * Complex.I) :=
-  h.2.2.2.1 ▸ wPhaseOf_compat _ _
+  h.phase_eq ▸ wPhaseOf_compat _ _
 
 end
 

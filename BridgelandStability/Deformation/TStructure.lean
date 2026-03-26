@@ -187,15 +187,15 @@ theorem hom_eq_zero_of_enveloped_interval_semistable
       σ.deformedPred C W hW ε₀
         (wPhaseOf (W (K₀.of C E)) ((a + b) / 2)) E := by
     refine Or.inr ⟨a, b, hab, hthin, ?_, ?_, ?_⟩
-    · exact le_of_lt (hWindow hE_interval hE.2.1).1
-    · exact le_of_lt (hWindow hE_interval hE.2.1).2
+    · exact le_of_lt (hWindow hE_interval hE.nonzero).1
+    · exact le_of_lt (hWindow hE_interval hE.nonzero).2
     · simpa using hE
   have hFQ :
       σ.deformedPred C W hW ε₀
         (wPhaseOf (W (K₀.of C F)) ((a + b) / 2)) F := by
     refine Or.inr ⟨a, b, hab, hthin, ?_, ?_, ?_⟩
-    · exact le_of_lt (hWindow hF_interval hF.2.1).1
-    · exact le_of_lt (hWindow hF_interval hF.2.1).2
+    · exact le_of_lt (hWindow hF_interval hF.nonzero).1
+    · exact le_of_lt (hWindow hF_interval hF.nonzero).2
     · simpa using hF
   exact σ.hom_eq_zero_of_deformedPred C W hW hε₀ hε₀2 hε₀8 hsin hEQ hFQ hlt f
 
@@ -238,7 +238,7 @@ theorem exists_deformedHN_of_enveloped_interval
             E.property F.property hE hF hlt f.hom)
       (fun {Y} _hY {A} hA_ss _hA_strict _hA_dest ↦ by
         simpa [ssf, StabilityCondition.skewedStabilityFunction_of_near] using
-          (hWindow hA_ss.1 hA_ss.2.1).2)
+          (hWindow hA_ss.intervalProp hA_ss.nonzero).2)
       X hX
   let GQ : HNFiltration C (σ.deformedPred C W hW ε₀) X.obj :=
     { n := G.n

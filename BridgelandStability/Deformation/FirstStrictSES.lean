@@ -37,18 +37,18 @@ theorem SkewedStabilityFunction.semistable_of_iso
     {ssf : SkewedStabilityFunction C s a b}
     {E E' : C} (e : E ≅ E') {ψ : ℝ} (h : ssf.Semistable C E ψ) :
     ssf.Semistable C E' ψ := by
-  refine ⟨(s.intervalProp C a b).prop_of_iso e h.1, ?_, ?_, ?_, ?_⟩
-  · exact fun hE' ↦ h.2.1 ((Iso.isZero_iff e).mpr hE')
+  refine ⟨(s.intervalProp C a b).prop_of_iso e h.intervalProp, ?_, ?_, ?_, ?_⟩
+  · exact fun hE' ↦ h.nonzero ((Iso.isZero_iff e).mpr hE')
   · rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]
-    exact h.2.2.1
+    exact h.wNe
   · rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]
-    exact h.2.2.2.1
+    exact h.phase_eq
   · intro K Q f₁ f₂ f₃ hT hK hQ hKne
     have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
       isomorphic_distinguished _ hT _
         (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
           (by simp) (by simp) (by simp))
-    exact h.2.2.2.2 hT' hK hQ hKne
+    exact h.le_of_distTriang hT' hK hQ hKne
 
 section
 
@@ -251,7 +251,7 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
         simpa [hD] using hle
       exact hB_ne_top (top_le_iff.mp htop_le)
     have hD_ne_bot : D.1 ≠ ⊥ := fun hD =>
-      hssD.2.1
+      hssD.nonzero
         (((σ.slicing.intervalProp C a b).ι).map_isZero
           ((intervalSubobject_isZero_iff_eq_bot
             (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) D.1).mpr hD))

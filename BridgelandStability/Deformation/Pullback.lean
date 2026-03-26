@@ -461,7 +461,7 @@ theorem semistable_of_upper_inclusion
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
     (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
   have hEI₂ : σ.slicing.intervalProp C a b₂ E :=
-    σ.slicing.intervalProp_mono C (show a ≤ a by linarith) hb hSS.1
+    σ.slicing.intervalProp_mono C (show a ≤ a by linarith) hb hSS.intervalProp
   have henv_hi₂ : ψ ≤ b₂ - ε₀ := by
     linarith
   have hb₁_le : b₁ ≤ a + 1 := by
@@ -556,10 +556,10 @@ theorem semistable_of_upper_inclusion
         (σ.slicing.leProp_of_intervalProp C hQ₁)
     have hK_gt : σ.slicing.gtProp C a K := σ.slicing.gtProp_of_intervalProp C hKI
     have hK₁ : σ.slicing.intervalProp C a b₁ K :=
-      σ.slicing.first_intervalProp_of_triangle C hab₁ hSS.1 hQ_le hK_gt hT
+      σ.slicing.first_intervalProp_of_triangle C hab₁ hSS.intervalProp hQ_le hK_gt hT
     have hK_phase₁ :
         wPhaseOf (W (K₀.of C K)) ((a + b₁) / 2) ≤ ψ :=
-      hSS.2.2.2.2 hT hK₁ hQ₁ hKne
+      hSS.le_of_distTriang hT hK₁ hQ₁ hKne
     have hK_eq :
         wPhaseOf (W (K₀.of C K)) ((a + b₁) / 2) =
           wPhaseOf (W (K₀.of C K)) ((a + b₂) / 2) :=
@@ -660,11 +660,11 @@ theorem semistable_of_upper_inclusion
         (show σ.slicing.intervalProp C a b₂ (PB : σ.slicing.IntervalCat C a b₂).obj from
           (PB : σ.slicing.IntervalCat C a b₂).property)
     have hPB₁ : σ.slicing.intervalProp C a b₁ (PB : σ.slicing.IntervalCat C a b₂).obj :=
-      σ.slicing.first_intervalProp_of_triangle C hab₁ hSS.1 hY_le hPB_gt
+      σ.slicing.first_intervalProp_of_triangle C hab₁ hSS.intervalProp hY_le hPB_gt
         (by simpa [SR, pE] using hTR)
     have hPB_phase₁ :
         wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₁) / 2) ≤ ψ :=
-      hSS.2.2.2.2 (by simpa [SR, pE] using hTR) hPB₁ hY₁ hPB_ne
+      hSS.le_of_distTriang (by simpa [SR, pE] using hTR) hPB₁ hY₁ hPB_ne
     have hPB_eq :
         wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₁) / 2) =
           wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₂) / 2) :=

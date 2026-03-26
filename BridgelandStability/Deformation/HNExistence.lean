@@ -131,7 +131,7 @@ theorem interior_has_enveloped_HN_ssf
   -- F₁ = factor 0 is ssf-semistable with phase G.φ ⟨0, hGn⟩
   have hF₁_ss : ssf.Semistable C (P.factor ⟨0, hGn⟩) (G.φ ⟨0, hGn⟩) :=
     G.semistable ⟨0, hGn⟩
-  have hF₁_ne : ¬IsZero (P.factor ⟨0, hGn⟩) := hF₁_ss.2.1
+  have hF₁_ne : ¬IsZero (P.factor ⟨0, hGn⟩) := hF₁_ss.nonzero
   -- Phase confinement: phiMinus(F₁) > G.φ ⟨0, hGn⟩ - ε
   have hψ₁_conf := phase_confinement_from_stabSeminorm C σ W hW hab hε hε2 hthin hsin hF₁_ss
   -- phiPlus(E) < b - 4ε (from E ∈ P((a+2ε, b-4ε)))

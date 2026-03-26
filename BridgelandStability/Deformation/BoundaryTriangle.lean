@@ -647,12 +647,12 @@ theorem intervalProp_of_wSemistable_upper_target
     linarith
   obtain ⟨X, Y, fX, gY, δY, hTQ, hX_ge, hY₁⟩ :=
     exists_upper_boundary_triangle (C := C) (s := σ.slicing)
-      hab₁ hSS.1
+      hab₁ hSS.intervalProp
   have hb₁_le : b₁ ≤ a + 1 := by
     linarith
   have hX₂ : σ.slicing.intervalProp C a b₂ X :=
     intervalProp_of_upper_boundary_triangle (C := C) (s := σ.slicing)
-      hab₁ hab₂ hb₁_le hSS.1 hX_ge hY₁ hTQ
+      hab₁ hab₂ hb₁_le hSS.intervalProp hX_ge hY₁ hTQ
   have hY₂ : σ.slicing.intervalProp C a b₂ Y :=
     σ.slicing.intervalProp_mono C (show a ≤ a by linarith) hb hY₁
   by_cases hX_zero : IsZero X
@@ -660,7 +660,7 @@ theorem intervalProp_of_wSemistable_upper_target
   · have hX_phase_gt :
         ψ < wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) :=
       wPhaseOf_gt_of_upper_boundary_triangle
-        (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hab₂ hb hSS.1 hX_ge hY₁ hX_zero
+        (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hab₂ hb hSS.intervalProp hX_ge hY₁ hX_zero
         hε₀ hε₀2 henv_lo henv_hi hthin₂ hsin hTQ
     by_cases hY_zero : IsZero Y
     · haveI : IsIso fX :=
@@ -668,11 +668,11 @@ theorem intervalProp_of_wSemistable_upper_target
       have hX_phase_eq :
           wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) = ψ := by
         rw [K₀.of_iso C (asIso fX)]
-        simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.2.2.2.1
+        simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.phase_eq
       linarith
     · letI : Fact (a < b₂) := ⟨hab₂⟩
       letI : Fact (b₂ - a ≤ 1) := ⟨by linarith⟩
-      let EI₂ : σ.slicing.IntervalCat C a b₂ := ⟨E, hSS.1⟩
+      let EI₂ : σ.slicing.IntervalCat C a b₂ := ⟨E, hSS.intervalProp⟩
       let XI₂ : σ.slicing.IntervalCat C a b₂ := ⟨X, hX₂⟩
       let YI₂ : σ.slicing.IntervalCat C a b₂ := ⟨Y, hY₂⟩
       let xE : XI₂ ⟶ EI₂ := ObjectProperty.homMk fX
@@ -719,7 +719,7 @@ theorem intervalProp_of_wSemistable_upper_target
       have hY_phase_lt :
           wPhaseOf (W (K₀.of C Y)) ((a + b₂) / 2) < ψ :=
         wPhaseOf_seesaw_dual hsum.symm
-          (by simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.2.2.2.1)
+          (by simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.phase_eq)
           hX_phase_gt (hW_interval hX₂ hX_zero) hX_range hY_range
       linarith
 
@@ -738,22 +738,22 @@ theorem intervalProp_of_wSemistable_lower_target
     σ.slicing.intervalProp C a₂ b E := by
   obtain ⟨X, Y, fX, gY, δY, hTQ, hX₂, hY_le⟩ :=
     exists_lower_boundary_triangle (C := C) (s := σ.slicing)
-      (a₁ := a₂) (a₂ := a₁) (b := b) ha₂ hSS.1
+      (a₁ := a₂) (a₂ := a₁) (b := b) ha₂ hSS.intervalProp
   have hY₁ : σ.slicing.intervalProp C a₁ b Y :=
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
-      (a₁ := a₂) (a₂ := a₁) (b := b) ha₂ ha hSS.1 hX₂ hY_le hTQ
+      (a₁ := a₂) (a₂ := a₁) (b := b) ha₂ ha hSS.intervalProp hX₂ hY_le hTQ
   by_cases hY_zero : IsZero Y
   · exact σ.slicing.intervalProp_of_triangle C hX₂ (Or.inl hY_zero) hTQ
   · have hY_phase_lt :
       wPhaseOf (W (K₀.of C Y)) ((a₁ + b) / 2) < ψ :=
       wPhaseOf_lt_of_lower_boundary_triangle
-        (C := C) (σ := σ) (W := W) (hW := hW) ha₂ ha hSS.1 hX₂ hY_le hY_zero
+        (C := C) (σ := σ) (W := W) (hW := hW) ha₂ ha hSS.intervalProp hX₂ hY_le hY_zero
         hε₀ hε₀2 henv_lo henv_hi hthin₁ hsin hTQ
     letI : Fact (a₁ < b) := ⟨ha₁⟩
     letI : Fact (b - a₁ ≤ 1) := ⟨by linarith⟩
     have hX₁ : σ.slicing.intervalProp C a₁ b X :=
       σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hX₂
-    let EI₁ : σ.slicing.IntervalCat C a₁ b := ⟨E, hSS.1⟩
+    let EI₁ : σ.slicing.IntervalCat C a₁ b := ⟨E, hSS.intervalProp⟩
     let XI₁ : σ.slicing.IntervalCat C a₁ b := ⟨X, hX₁⟩
     let YI₁ : σ.slicing.IntervalCat C a₁ b := ⟨Y, hY₁⟩
     let xE : XI₁ ⟶ EI₁ := ObjectProperty.homMk fX

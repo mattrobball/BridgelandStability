@@ -162,7 +162,7 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
           have hGi_ge : Q.phiMinus C E hE ≤ G.φ i := by
             rw [Q.phiMinus_eq C E hE G hnG hlastG]
             exact G.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
-          exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.2.1
+          exact σ.slicing.intervalProp_of_intrinsic_phases C hSS_i.nonzero
             (by linarith) (by linarith)
     -- Reverse: σ-HN factors → reverse phase confinement → Q-intervalProp
     have reverse : ∀ (E : C) (hE : ¬IsZero E) (δ : ℝ), 0 < δ →

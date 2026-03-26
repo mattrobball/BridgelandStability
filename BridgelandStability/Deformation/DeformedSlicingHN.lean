@@ -48,24 +48,24 @@ theorem deformedPred_shift_one
   rcases h with hZ | ⟨a, b, hab, hthin, henv_lo, henv_hi, hSS⟩
   · exact Or.inl ((shiftFunctor C (1 : ℤ)).map_isZero hZ)
   · refine Or.inr ⟨a + 1, b + 1, by linarith, by linarith, by linarith, by linarith,
-      ?_, fun h ↦ hSS.2.1
+      ?_, fun h ↦ hSS.nonzero
       (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (1 : ℤ)) X h), ?_,
       ?_, fun K Q f₁ f₂ f₃ hT hK hQ hKne ↦ ?_⟩
     · -- intervalProp C (a+1) (b+1) (X⟦1⟧)
-      rcases hSS.1 with hZ' | ⟨F, hF⟩
-      · exact absurd hZ' hSS.2.1
+      rcases hSS.intervalProp with hZ' | ⟨F, hF⟩
+      · exact absurd hZ' hSS.nonzero
       · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
           simp only [HNFiltration.shiftHN, Int.cast_one]
           constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
     · -- W(K₀.of C (X⟦1⟧)) ≠ 0
       rw [K₀.of_shift_one, map_neg]
-      exact neg_ne_zero.mpr hSS.2.2.1
+      exact neg_ne_zero.mpr hSS.wNe
     · -- wPhaseOf = φ + 1
       change wPhaseOf (W (K₀.of C (X⟦(1 : ℤ)⟧))) ((a + 1 + (b + 1)) / 2) = φ + 1
       rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
       rw [K₀.of_shift_one, map_neg]
-      have hphase : wPhaseOf (W (K₀.of C X)) ((a + b) / 2) = φ := hSS.2.2.2.1
-      have hWne : W (K₀.of C X) ≠ 0 := hSS.2.2.1
+      have hphase : wPhaseOf (W (K₀.of C X)) ((a + b) / 2) = φ := hSS.phase_eq
+      have hWne : W (K₀.of C X) ≠ 0 := hSS.wNe
       exact (wPhaseOf_neg hWne _).trans (by linarith)
     · -- Semistability transport: shift by -1
       have hT_sh := Triangle.shift_distinguished _ hT (-1 : ℤ)
@@ -96,7 +96,7 @@ theorem deformedPred_shift_one
       have hKne1 : ¬IsZero (K⟦(-1 : ℤ)⟧) := fun h ↦
         hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (-1 : ℤ)) K h)
       have hsem : wPhaseOf (W (K₀.of C (K⟦(-1 : ℤ)⟧))) ((a + b) / 2) ≤ φ :=
-        hSS.2.2.2.2 hT' hK1 hQ1 hKne1
+        hSS.le_of_distTriang hT' hK1 hQ1 hKne1
       rw [K₀.of_shift_neg_one, map_neg] at hsem
       change wPhaseOf (W (K₀.of C K)) ((a + 1 + (b + 1)) / 2) ≤ φ + 1
       rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
@@ -120,11 +120,11 @@ theorem deformedPred_of_shift_one
   rcases h with hZ | ⟨a, b, hab, hthin, henv_lo, henv_hi, hSS⟩
   · exact Or.inl (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (1 : ℤ)) X hZ)
   · refine Or.inr ⟨a - 1, b - 1, by linarith, by linarith, by linarith, by linarith, ?_,
-      fun h ↦ hSS.2.1 ((shiftFunctor C (1 : ℤ)).map_isZero h), ?_, ?_,
+      fun h ↦ hSS.nonzero ((shiftFunctor C (1 : ℤ)).map_isZero h), ?_, ?_,
       fun K Q f₁ f₂ f₃ hT hK hQ hKne ↦ ?_⟩
     · -- intervalProp C (a-1) (b-1) X
-      rcases hSS.1 with hZ' | ⟨F, hF⟩
-      · exact absurd hZ' hSS.2.1
+      rcases hSS.intervalProp with hZ' | ⟨F, hF⟩
+      · exact absurd hZ' hSS.nonzero
       · exact Or.inr ⟨(F.shiftHN C σ.slicing (-1)).ofIso C
           ((shiftFunctorCompIsoId C (1 : ℤ) (-1 : ℤ) (by lia)).app X),
           fun i ↦ by
@@ -134,7 +134,7 @@ theorem deformedPred_of_shift_one
             constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
     · -- W(K₀.of C X) ≠ 0
       intro hw
-      apply hSS.2.2.1
+      apply hSS.wNe
       change W (K₀.of C (X⟦(1 : ℤ)⟧)) = 0
       rw [K₀.of_shift_one, map_neg]
       change W (K₀.of C X) = 0 at hw
@@ -143,9 +143,9 @@ theorem deformedPred_of_shift_one
       change wPhaseOf (W (K₀.of C X)) ((a - 1 + (b - 1)) / 2) = φ
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
       have hphase : wPhaseOf (-W (K₀.of C X)) ((a + b) / 2) = φ + 1 := by
-        have := hSS.2.2.2.1; rwa [K₀.of_shift_one, map_neg] at this
+        have := hSS.phase_eq; rwa [K₀.of_shift_one, map_neg] at this
       have hWne : W (K₀.of C X) ≠ 0 := by
-        intro hw; apply hSS.2.2.1; rw [K₀.of_shift_one, map_neg, neg_eq_zero]; exact hw
+        intro hw; apply hSS.wNe; rw [K₀.of_shift_one, map_neg, neg_eq_zero]; exact hw
       have key := wPhaseOf_neg hWne ((a + b) / 2 - 1)
       rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
       linarith
@@ -166,7 +166,7 @@ theorem deformedPred_of_shift_one
       have hKne1 : ¬IsZero (K⟦(1 : ℤ)⟧) := fun h ↦
         hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (1 : ℤ)) K h)
       have hsem : wPhaseOf (W (K₀.of C (K⟦(1 : ℤ)⟧))) ((a + b) / 2) ≤ φ + 1 :=
-        hSS.2.2.2.2 hT' hK1 hQ1 hKne1
+        hSS.le_of_distTriang hT' hK1 hQ1 hKne1
       rw [K₀.of_shift_one, map_neg] at hsem
       change wPhaseOf (W (K₀.of C K)) ((a - 1 + (b - 1)) / 2) ≤ φ
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
@@ -488,7 +488,7 @@ theorem deformedSlicing_hn_exists
             obtain ⟨ψ, hψ, hPred⟩ := hP
             rcases hPred with hZ | ⟨a', b', hab', hthin', _, _, hSS'⟩
             · exact Or.inl hZ
-            · exact σ.slicing.leProp_of_phiPlus_le C hSS'.2.1
+            · exact σ.slicing.leProp_of_phiPlus_le C hSS'.nonzero
                 (by linarith [(phase_confinement_from_stabSeminorm C σ W hW hab' hε hε2
                   hthin' hsin hSS').2])
           | ext hT' _ _ ih1 ih3 =>

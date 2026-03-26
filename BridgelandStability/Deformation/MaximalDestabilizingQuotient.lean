@@ -185,7 +185,7 @@ theorem SkewedStabilityFunction.exists_semistable_strictQuotient_le_phase_of_fin
       (by simpa [Subobject.mk_arrow] using hT_top)
     have hzero_obj : IsZero (cokernel T.1.arrow).obj :=
       ((σ.slicing.intervalProp C a b).ι).map_isZero (isZero_cokernel_of_epi T.1.arrow)
-    exact hT_ss.2.1 hzero_obj
+    exact hT_ss.nonzero hzero_obj
   have hphase0 :
       phaseQ S0.1 = wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := by
     let eI : cokernel ((⊥ : Subobject X).arrow) ≅ X := by
@@ -241,7 +241,7 @@ theorem IsStrictMDQ.id_of_semistable
     IsStrictMDQ (C := C) σ ssf (𝟙 X) where
   strictEpi := by
     simpa using (isStrictEpi_of_isIso (f := 𝟙 X))
-  nonzero := hss.2.1
+  nonzero := hss.nonzero
   semistable := hss
   minimal := by
     intro B' q' hq' hB'_nz hB'_ss
@@ -516,7 +516,7 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
         (C := C) (σ := σ) (a := a) (b := b) hFiniteLength hW_interval hWindow hWidth
         hq (𝟙 (cokernel A.arrow)) (isStrictEpi_of_isIso (f := 𝟙 _)) hcokA_obj_ne
     have hA_ne_bot : A ≠ ⊥ := fun hA_bot =>
-      hA_ss.2.1 (((σ.slicing.intervalProp C a b).ι).map_isZero
+      hA_ss.nonzero (((σ.slicing.intervalProp C a b).ι).map_isZero
         ((intervalSubobject_isZero_iff_eq_bot
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) A).mpr hA_bot))
     have hCok_lt_A :

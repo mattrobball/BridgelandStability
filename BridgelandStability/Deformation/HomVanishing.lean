@@ -68,19 +68,19 @@ lemma StabilityCondition.deformedPred_closedUnderIso (σ : StabilityCondition C)
   · exact Or.inl ((Iso.isZero_iff e).mp hZ)
   · refine Or.inr ⟨a, b, hab, hthin, henv_lo, henv_hi, ?_, ?_, ?_, ?_,
       fun K Q f₁ f₂ f₃ hT hK hQ hKne ↦ ?_⟩
-    · rcases hSS.1 with hZ' | ⟨F, hF⟩
-      · exact absurd hZ' hSS.2.1
+    · rcases hSS.intervalProp with hZ' | ⟨F, hF⟩
+      · exact absurd hZ' hSS.nonzero
       · exact Or.inr ⟨F.ofIso C e, hF⟩
-    · exact fun hE' ↦ hSS.2.1 ((Iso.isZero_iff e.symm).mp hE')
+    · exact fun hE' ↦ hSS.nonzero ((Iso.isZero_iff e.symm).mp hE')
     · rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]
-      exact hSS.2.2.1
+      exact hSS.wNe
     · rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]
-      exact hSS.2.2.2.1
+      exact hSS.phase_eq
     · have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
         isomorphic_distinguished _ hT _
           (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
             (by simp) (by simp) (by simp))
-      exact hSS.2.2.2.2 hT' hK hQ hKne
+      exact hSS.le_of_distTriang hT' hK hQ hKne
 
 theorem mem_phaseShiftHeart_of_phaseBounds_smallGap
     (s : Slicing C) {E : C} (hE : ¬IsZero E) {t : ℝ}
@@ -242,10 +242,10 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
     set δ' := (ψ₁ - ψ₂ - 2 * ε₀) / 4 with hδ'_def
     have hδ'_pos : 0 < δ' := by linarith
     have hEI : σ.slicing.intervalProp C (ψ₁ - ε₀ - δ') (ψ₁ + ε₀ + δ') E :=
-      σ.slicing.intervalProp_of_intrinsic_phases C hSS₁.2.1
+      σ.slicing.intervalProp_of_intrinsic_phases C hSS₁.nonzero
         (by linarith) (by linarith)
     have hFI : σ.slicing.intervalProp C (ψ₂ - ε₀ - δ') (ψ₂ + ε₀ + δ') F :=
-      σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.2.1
+      σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.nonzero
         (by linarith) (by linarith)
     have hdisjoint : ψ₂ + ε₀ + δ' ≤ ψ₁ - ε₀ - δ' := by
       simp only [hδ'_def]; linarith
@@ -270,20 +270,20 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       let t := ss.toTStructure
       have hE_heart : t.heart E := by
         simpa [t, ss, a] using
-          mem_phaseShiftHeart_of_midpoint_left (C := C) (s := σ.slicing) hSS₁.2.1
+          mem_phaseShiftHeart_of_midpoint_left (C := C) (s := σ.slicing) hSS₁.nonzero
             (le_of_lt hE_lo) (le_of_lt hE_hi) hgap hsmallGap hε₀2
       have hF_heart : t.heart F := by
         simpa [t, ss, a] using
-          mem_phaseShiftHeart_of_midpoint_right (C := C) (s := σ.slicing) hSS₂.2.1
+          mem_phaseShiftHeart_of_midpoint_right (C := C) (s := σ.slicing) hSS₂.nonzero
             (le_of_lt hF_lo) (le_of_lt hF_hi) hgap hsmallGap hε₀2
       have hE_window :
           σ.slicing.gtProp C a E ∧ σ.slicing.leProp C (ψ₁ + ε₀) E :=
         gtProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
-          (a := a) hE_heart hSS₁.2.1 (le_of_lt hE_hi)
+          (a := a) hE_heart hSS₁.nonzero (le_of_lt hE_hi)
       have hF_window :
           σ.slicing.geProp C (ψ₂ - ε₀) F ∧ σ.slicing.leProp C (a + 1) F :=
         geProp_leProp_of_phaseShiftHeart (C := C) (s := σ.slicing)
-          (a := a) hF_heart hSS₂.2.1 (le_of_lt hF_lo)
+          (a := a) hF_heart hSS₂.nonzero (le_of_lt hF_lo)
       have habE_left_src : a₁ < ψ₁ + ε₀ := by
         linarith [henv₁_lo]
       have hE_upper : σ.slicing.intervalProp C a₁ (ψ₁ + ε₀) E :=
@@ -293,9 +293,9 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have habE_left : a < ψ₁ + ε₀ := by
         linarith
       have hE_left : σ.slicing.intervalProp C a (ψ₁ + ε₀) E :=
-        σ.slicing.intervalProp_of_intrinsic_phases C hSS₁.2.1
-          (σ.slicing.phiMinus_gt_of_gtProp C hSS₁.2.1 hE_window.1)
-          (σ.slicing.phiPlus_lt_of_intervalProp C hSS₁.2.1 hE_upper)
+        σ.slicing.intervalProp_of_intrinsic_phases C hSS₁.nonzero
+          (σ.slicing.phiMinus_gt_of_gtProp C hSS₁.nonzero hE_window.1)
+          (σ.slicing.phiPlus_lt_of_intervalProp C hSS₁.nonzero hE_upper)
       have henvE_left_lo : a + ε₀ ≤ ψ₁ := by
         dsimp [a]
         linarith
@@ -313,8 +313,8 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have habF_right : ψ₂ - ε₀ < a + 1 := by
         linarith
       have hF_right : σ.slicing.intervalProp C (ψ₂ - ε₀) (a + 1) F :=
-        σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.2.1
-          (σ.slicing.phiMinus_gt_of_intervalProp C hSS₂.2.1 hF_lower)
+        σ.slicing.intervalProp_of_intrinsic_phases C hSS₂.nonzero
+          (σ.slicing.phiMinus_gt_of_intervalProp C hSS₂.nonzero hF_lower)
           (lt_trans hF_hi (by
             dsimp [a]
             linarith [hgap, hε₀2]))
@@ -523,7 +523,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       have hI_phase_le_big :
           wPhaseOf (W (K₀.of C I_H.obj)) ((ψ₂ - ε₀ + (a + 1 + δ)) / 2) ≤ ψ₂ := by
         simpa [StabilityCondition.skewedStabilityFunction_of_near] using
-          hSS₂_big.2.2.2.2 hT_I' hI_big hQ_big hIne
+          hSS₂_big.le_of_distTriang hT_I' hI_big hQ_big hIne
       have hI_phase_eq_right_big :
           wPhaseOf (W (K₀.of C I_H.obj)) αR =
             wPhaseOf (W (K₀.of C I_H.obj)) ((ψ₂ - ε₀ + (a + 1 + δ)) / 2) := by

@@ -71,7 +71,7 @@ theorem phiPlus_bound_of_destabilizing_subobject
     wPhaseOf (W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2) <
       b - ε := by
   let AI : σ.slicing.IntervalCat C a b := (A : σ.slicing.IntervalCat C a b)
-  have hA_ne : ¬IsZero AI.obj := hA_ss.2.1
+  have hA_ne : ¬IsZero AI.obj := hA_ss.nonzero
   have hSES := interval_strictShortExact_cokernel_of_strictMono
     (C := C) (s := σ.slicing) (a := a) (b := b) A.arrow hA_strict
   obtain ⟨δ, hT⟩ := Slicing.IntervalCat.exists_distTriang_of_strictShortExact
@@ -197,7 +197,7 @@ theorem comp_of_destabilizing_with_quotient_bound
         (C := C) (σ := σ) (a := a) (b := b) hFiniteLength hW_interval hWindow hWidth
         hq (𝟙 (cokernel A.arrow)) (isStrictEpi_of_isIso (f := 𝟙 _)) hcokA_obj_ne
     have hA_ne_bot : A ≠ ⊥ := fun hA_bot =>
-      hA_ss.2.1 (((σ.slicing.intervalProp C a b).ι).map_isZero
+      hA_ss.nonzero (((σ.slicing.intervalProp C a b).ι).map_isZero
         ((intervalSubobject_isZero_iff_eq_bot
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) A).mpr hA_bot))
     have hCok_lt_A :

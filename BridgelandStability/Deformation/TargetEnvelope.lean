@@ -43,8 +43,8 @@ theorem phase_confinement_from_stabSeminorm
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {ψ : ℝ}
     (hSS : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ) :
-    ψ - ε₀ < σ.slicing.phiMinus C E hSS.2.1 ∧
-    σ.slicing.phiPlus C E hSS.2.1 < ψ + ε₀ := by
+    ψ - ε₀ < σ.slicing.phiMinus C E hSS.nonzero ∧
+    σ.slicing.phiPlus C E hSS.nonzero < ψ + ε₀ := by
   have hthin1 : b - a < 1 := by linarith
   exact phase_confinement_of_wSemistable C σ hSS hε₀ hthin
     (hperturb_of_stabSeminorm C σ W hW hthin1 hε₀ hε₀2 hsin)
@@ -61,7 +61,7 @@ theorem gtProp_of_wSemistable_phase_gt
     (hSS : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ)
     (hgt : t < ψ - ε₀) :
     σ.slicing.gtProp C t E := by
-  have hE : ¬IsZero E := hSS.2.1
+  have hE : ¬IsZero E := hSS.nonzero
   have hconf := phase_confinement_from_stabSeminorm
     (C := C) (σ := σ) (W := W) (hW := hW) hab hε₀ hε₀2 hthin hsin hSS
   exact σ.slicing.gtProp_of_phiMinus_gt C hE (by linarith [hconf.1])
@@ -78,7 +78,7 @@ theorem ltProp_of_wSemistable_phase_lt
     (hSS : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ)
     (hlt : ψ + ε₀ < t) :
     σ.slicing.ltProp C t E := by
-  have hE : ¬IsZero E := hSS.2.1
+  have hE : ¬IsZero E := hSS.nonzero
   have hconf := phase_confinement_from_stabSeminorm
     (C := C) (σ := σ) (W := W) (hW := hW) hab hε₀ hε₀2 hthin hsin hSS
   exact σ.slicing.ltProp_of_phiPlus_lt C hE (by linarith [hconf.2])
@@ -113,17 +113,17 @@ theorem wPhaseOf_eq_of_semistable_of_target_envelope
         exact le_trans henv₂_hi hhi
     have hwphase_eq :
         wPhaseOf (W (K₀.of C E)) ((a₁ + b₁) / 2) = ψ := by
-      simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.2.2.2.1
+      simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.phase_eq
     simpa [hwphase_eq] using hpsi_branch
   have hEq :
       wPhaseOf (W (K₀.of C E)) ((a₁ + b₁) / 2) =
         wPhaseOf (W (K₀.of C E)) ((a₂ + b₂) / 2) :=
-    wPhaseOf_indep hSS.2.2.1 _ _ hbranch
+    wPhaseOf_indep hSS.wNe _ _ hbranch
   calc
     wPhaseOf (W (K₀.of C E)) ((a₂ + b₂) / 2)
         = wPhaseOf (W (K₀.of C E)) ((a₁ + b₁) / 2) := hEq.symm
     _ = ψ := by
-      simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.2.2.2.1
+      simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.phase_eq
 
 theorem semistable_of_target_envelope_triangleTest
     (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
@@ -140,7 +140,7 @@ theorem semistable_of_target_envelope_triangleTest
       ¬IsZero K →
       wPhaseOf (W (K₀.of C K)) ((a₂ + b₂) / 2) ≤ ψ) :
     (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
-  refine ⟨hI₂, hSS.2.1, hSS.2.2.1, ?_, htri⟩
+  refine ⟨hI₂, hSS.nonzero, hSS.wNe, ?_, htri⟩
   exact wPhaseOf_eq_of_semistable_of_target_envelope
     (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hSS hε₀ henv₂_lo henv₂_hi hthin₂
 

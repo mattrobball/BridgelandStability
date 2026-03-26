@@ -86,7 +86,7 @@ theorem phiPlus_lt_of_wSemistable
         a < φ → φ < b →
         φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀) :
-    σ.slicing.phiPlus C E hSS.2.1 < ψ + ε₀ := by
+    σ.slicing.phiPlus C E hSS.nonzero < ψ + ε₀ := by
   obtain ⟨hI, hE, _, hψ, hsemistable⟩ := hSS
   -- W nonvanishing and reformulated perturbation bounds
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
@@ -303,7 +303,7 @@ theorem phiMinus_gt_of_wSemistable
         a < φ → φ < b →
         φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀) :
-    ψ - ε₀ < σ.slicing.phiMinus C E hSS.2.1 := by
+    ψ - ε₀ < σ.slicing.phiMinus C E hSS.nonzero := by
   obtain ⟨hI, hE, _, hψ, hsemistable⟩ := hSS
   -- W nonvanishing and reformulated perturbation bounds
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
@@ -644,8 +644,8 @@ theorem phase_confinement_of_wSemistable
         a < φ → φ < b →
         φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
         wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀) :
-    ψ - ε₀ < σ.slicing.phiMinus C E hSS.2.1 ∧
-    σ.slicing.phiPlus C E hSS.2.1 < ψ + ε₀ :=
+    ψ - ε₀ < σ.slicing.phiMinus C E hSS.nonzero ∧
+    σ.slicing.phiPlus C E hSS.nonzero < ψ + ε₀ :=
   ⟨phiMinus_gt_of_wSemistable C σ hSS hε₀ hthin hperturb,
    phiPlus_lt_of_wSemistable C σ hSS hε₀ hthin hperturb⟩
 
@@ -675,11 +675,11 @@ theorem hom_eq_zero_of_wSemistable_gap
   have hδ_pos : 0 < δ := by linarith
   -- E ∈ P((ψ₁-ε₀-δ, ψ₁+ε₀+δ))
   have hEI : σ.slicing.intervalProp C (ψ₁ - ε₀ - δ) (ψ₁ + ε₀ + δ) E :=
-    σ.slicing.intervalProp_of_intrinsic_phases C hE.2.1
+    σ.slicing.intervalProp_of_intrinsic_phases C hE.nonzero
       (by linarith) (by linarith)
   -- F ∈ P((ψ₂-ε₀-δ, ψ₂+ε₀+δ))
   have hFI : σ.slicing.intervalProp C (ψ₂ - ε₀ - δ) (ψ₂ + ε₀ + δ) F :=
-    σ.slicing.intervalProp_of_intrinsic_phases C hF.2.1
+    σ.slicing.intervalProp_of_intrinsic_phases C hF.nonzero
       (by linarith) (by linarith)
   -- The gap: ψ₂+ε₀+δ ≤ ψ₁-ε₀-δ
   have hdisjoint : ψ₂ + ε₀ + δ ≤ ψ₁ - ε₀ - δ := by linarith
@@ -733,13 +733,13 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
   have hperturb_gt := perturb_gt_of_perturb C σ hperturb hthin
   have hperturb_lt := perturb_lt_of_perturb C σ hperturb hthin
   have hψ_lo : a - ε₀ < ψ := by
-    rw [← hX.2.2.2.1]
-    exact wPhaseOf_gt_of_intervalProp C σ hX.2.1 ssf.W
-      (le_of_lt (by linarith [ssf.hα_mem.1])) hX.1 hW_ne hperturb_gt
+    rw [← hX.phase_eq]
+    exact wPhaseOf_gt_of_intervalProp C σ hX.nonzero ssf.W
+      (le_of_lt (by linarith [ssf.hα_mem.1])) hX.intervalProp hW_ne hperturb_gt
   have hψ_hi : ψ < b + ε₀ := by
-    rw [← hX.2.2.2.1]
-    exact wPhaseOf_lt_of_intervalProp C σ hX.2.1 ssf.W
-      (le_of_lt (by linarith [ssf.hα_mem.2])) hX.1 hW_ne hperturb_lt
+    rw [← hX.phase_eq]
+    exact wPhaseOf_lt_of_intervalProp C σ hX.nonzero ssf.W
+      (le_of_lt (by linarith [ssf.hα_mem.2])) hX.intervalProp hW_ne hperturb_lt
   by_cases hKz : IsZero (kernel p).obj
   · have hKz' : IsZero (kernel p) :=
       Slicing.IntervalCat.isZero_of_obj_isZero (C := C) (s := σ.slicing) (a := a) (b := b) hKz
@@ -748,12 +748,12 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
     haveI : IsIso p := IsStrictEpi.isIso hp
     let eC : X.obj ≅ Y.obj := ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
       (asIso p))
-    rw [← hX.2.2.2.1, ← K₀.of_iso C eC]
+    rw [← hX.phase_eq, ← K₀.of_iso C eC]
   · have hK : ¬IsZero (kernel p).obj := hKz
     obtain ⟨δ, hT⟩ := Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart
       (C := C) (s := σ.slicing) (a := a) (b := b) hL
     have hK_le : wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α ≤ ψ :=
-      hX.2.2.2.2 hT (kernel p).property Y.property hK
+      hX.le_of_distTriang hT (kernel p).property Y.property hK
     have hK_lo : a - ε₀ < wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α :=
       wPhaseOf_gt_of_intervalProp C σ hK ssf.W
         (le_of_lt (by linarith [ssf.hα_mem.1])) (kernel p).property hW_ne hperturb_gt
@@ -771,7 +771,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
         congrArg ssf.W (K₀.of_triangle C (Triangle.mk S.f.hom S.g.hom δ) hT)
     exact wPhaseOf_seesaw
       hadd.symm
-      hX.2.2.2.1
+      hX.phase_eq
       ⟨by
           have : ψ - 1 < a - ε₀ := by
             have hmid : b + ε₀ - 1 < a - ε₀ := by linarith
@@ -817,20 +817,20 @@ theorem SkewedStabilityFunction.phase_le_of_triangle_quotient
   have hperturb_gt := perturb_gt_of_perturb C σ hperturb hthin
   have hperturb_lt := perturb_lt_of_perturb C σ hperturb hthin
   have hψ_lo : a - ε₀ < ψ := by
-    rw [← hX.2.2.2.1]
-    exact wPhaseOf_gt_of_intervalProp C σ hX.2.1 ssf.W
-      (le_of_lt (by linarith [ssf.hα_mem.1])) hX.1 hW_ne hperturb_gt
+    rw [← hX.phase_eq]
+    exact wPhaseOf_gt_of_intervalProp C σ hX.nonzero ssf.W
+      (le_of_lt (by linarith [ssf.hα_mem.1])) hX.intervalProp hW_ne hperturb_gt
   have hψ_hi : ψ < b + ε₀ := by
-    rw [← hX.2.2.2.1]
-    exact wPhaseOf_lt_of_intervalProp C σ hX.2.1 ssf.W
-      (le_of_lt (by linarith [ssf.hα_mem.2])) hX.1 hW_ne hperturb_lt
+    rw [← hX.phase_eq]
+    exact wPhaseOf_lt_of_intervalProp C σ hX.nonzero ssf.W
+      (le_of_lt (by linarith [ssf.hα_mem.2])) hX.intervalProp hW_ne hperturb_lt
   by_cases hKz : IsZero K
   · haveI : IsIso f₂ :=
       (Triangle.isZero₁_iff_isIso₂ (Triangle.mk f₁ f₂ f₃) hT).mp hKz
     let eC : X ≅ Y := asIso f₂
-    rw [← hX.2.2.2.1, ← K₀.of_iso C eC]
+    rw [← hX.phase_eq, ← K₀.of_iso C eC]
   · have hK_le : wPhaseOf (ssf.W (K₀.of C K)) ssf.α ≤ ψ :=
-      hX.2.2.2.2 hT hKI hYI hKz
+      hX.le_of_distTriang hT hKI hYI hKz
     have hK_lo : a - ε₀ < wPhaseOf (ssf.W (K₀.of C K)) ssf.α :=
       wPhaseOf_gt_of_intervalProp C σ hKz ssf.W
         (le_of_lt (by linarith [ssf.hα_mem.1])) hKI hW_ne hperturb_gt
@@ -848,7 +848,7 @@ theorem SkewedStabilityFunction.phase_le_of_triangle_quotient
         congrArg ssf.W (K₀.of_triangle C (Triangle.mk f₁ f₂ f₃) hT)
     exact wPhaseOf_seesaw
       hadd.symm
-      hX.2.2.2.1
+      hX.phase_eq
       ⟨by
           have : ψ - 1 < a - ε₀ := by
             have hmid : b + ε₀ - 1 < a - ε₀ := by linarith
