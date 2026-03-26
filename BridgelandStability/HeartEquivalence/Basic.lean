@@ -241,51 +241,7 @@ theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
     refine ⟨hE, ?_⟩
     intro B hB
     rw [σ.phase_eq_of_mem_P_phi C hφ B hB, σ.phase_eq_of_mem_P_phi C hφ E hE]
-  refine ⟨{
-    n := 1
-    hn := Nat.one_pos
-    chain := fun i => if i = 0 then ⊥ else ⊤
-    chain_strictMono := by
-      intro ⟨i, hi⟩ ⟨j, hj⟩ h
-      simp only [Fin.lt_def] at h
-      have hi0 : i = 0 := by lia
-      have hj1 : j = 1 := by lia
-      subst hi0
-      subst hj1
-      simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, ↓reduceIte,
-        Fin.mk_one, one_ne_zero, gt_iff_lt]
-      exact lt_of_le_of_ne bot_le
-        (Ne.symm (StabilityFunction.subobject_top_ne_bot_of_not_isZero hE))
-    chain_bot := by simp
-    chain_top := by simp
-    φ := fun _ => φ
-    φ_anti := fun i j hij =>
-      False.elim (by lia)
-    factor_phase := by
-      intro ⟨j, hj⟩
-      have hj0 : j = 0 := by lia
-      subst hj0
-      change Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ bot_le)) = φ
-      have htop :
-          Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ bot_le)) =
-            Z.phase ((⊤ : Subobject E) : (σ.slicing.P φ).FullSubcategory) :=
-        Z.phase_eq_of_iso
-          (StabilityFunction.Subobject.cokernelBotIso (⊤ : Subobject E) bot_le)
-      calc
-        Z.phase (cokernel (Subobject.ofLE ⊥ ⊤ bot_le))
-            = Z.phase ((⊤ : Subobject E) : (σ.slicing.P φ).FullSubcategory) := htop
-        _ = Z.phase E := Z.phase_eq_of_iso (asIso (⊤ : Subobject E).arrow)
-        _ = φ := σ.phase_eq_of_mem_P_phi C hφ E hE
-    factor_semistable := by
-      intro ⟨j, hj⟩
-      have hj0 : j = 0 := by lia
-      subst hj0
-      change Z.IsSemistable (cokernel (Subobject.ofLE ⊥ ⊤ bot_le))
-      refine Z.isSemistable_of_iso
-        ((asIso (⊤ : Subobject E).arrow).symm ≪≫
-          (StabilityFunction.Subobject.cokernelBotIso ⊤ bot_le).symm) ?_
-      exact hss
-  }⟩
+  exact exists_hn_of_semistable (stabilityFunctionOnPhase C σ hφ) hss
 
 end Lemma52
 

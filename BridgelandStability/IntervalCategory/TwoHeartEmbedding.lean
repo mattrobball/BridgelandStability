@@ -433,27 +433,7 @@ theorem Slicing.intervalProp_extension_closed (s : Slicing C)
     {f : A ⟶ E} {g : E ⟶ B} {h : B ⟶ A⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
     s.intervalProp C a b E := by
-  by_cases hE : IsZero E
-  · exact Or.inl hE
-  · right
-    have hPlus : s.phiPlus C E hE < b :=
-      s.phiPlus_lt_of_triangle C hE
-        (fun hA' ↦ s.phiPlus_lt_of_intervalProp C hA' hA)
-        (fun hB' ↦ s.phiPlus_lt_of_intervalProp C hB' hB) hT
-    have hMinus : a < s.phiMinus C E hE :=
-      s.phiMinus_gt_of_triangle C hE
-        (fun hA' ↦ s.phiMinus_gt_of_intervalProp C hA' hA)
-        (fun hB' ↦ s.phiMinus_gt_of_intervalProp C hB' hB) hT
-    obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C s hE
-    exact ⟨F, fun i ↦ by
-      constructor
-      · calc a < s.phiMinus C E hE := hMinus
-          _ = F.φ ⟨F.n - 1, by lia⟩ := s.phiMinus_eq C E hE F hn hlast
-          _ ≤ F.φ i := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
-      · calc F.φ i ≤ F.φ ⟨0, hn⟩ :=
-              F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))
-          _ = s.phiPlus C E hE := (s.phiPlus_eq C E hE F hn hfirst).symm
-          _ < b := hPlus⟩
+  exact intervalProp_of_triangle C s hA hB hT
 
 /-! ### Cokernel/quotient containment via the right heart (Lemma 4.3 dual)
 

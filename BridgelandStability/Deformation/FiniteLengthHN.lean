@@ -467,33 +467,7 @@ lemma intervalProp_of_postnikovTower (s : Slicing C) {E : C} {a b : ℝ}
     rcases hchain with hZ | ⟨F, hF⟩
     · exact Or.inl ((Iso.isZero_iff (Classical.choice P.top_iso)).mp hZ)
     · exact Or.inr ⟨F.ofIso C (Classical.choice P.top_iso), hF⟩
-  intro k
-  induction k with
-  | zero =>
-    intro _
-    rw [show P.chain.obj' 0 (by lia) = P.chain.left from rfl]
-    exact Or.inl P.base_isZero
-  | succ k ih =>
-    intro hk
-    have hchain_k := ih (by lia)
-    set T := P.triangle ⟨k, by lia⟩
-    have hT := P.triangle_dist ⟨k, by lia⟩
-    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by lia⟩)
-    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by lia⟩)
-    -- intervalProp for T.obj₁ (≅ chain(k))
-    have h₁ : s.intervalProp C a b T.obj₁ := by
-      rcases hchain_k with hZ | ⟨F, hF⟩
-      · exact Or.inl ((Iso.isZero_iff e₁.symm).mp hZ)
-      · exact Or.inr ⟨F.ofIso C e₁.symm, hF⟩
-    -- intervalProp for T.obj₃ = factor(k)
-    have h₃ : s.intervalProp C a b T.obj₃ := hfactors ⟨k, by lia⟩
-    -- Apply intervalProp_of_triangle
-    have h₂ : s.intervalProp C a b T.obj₂ :=
-      s.intervalProp_of_triangle C h₁ h₃ hT
-    -- Transport to chain(k+1)
-    rcases h₂ with hZ | ⟨F, hF⟩
-    · exact Or.inl ((Iso.isZero_iff e₂).mp hZ)
-    · exact Or.inr ⟨F.ofIso C e₂, hF⟩
+  exact fun k hk => intervalProp_chain_of_postnikovTower C s P hfactors k hk
 
 /-- Extension-closure of `gtProp` over Postnikov towers. -/
 lemma gtProp_of_postnikovTower (s : Slicing C) {E : C} {t : ℝ}

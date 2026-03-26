@@ -376,148 +376,21 @@ theorem arg_add_lt_max_local {z₁ z₂ : ℂ}
     (h₁ : z₁ ∈ upperHalfPlaneUnion) (h₂ : z₂ ∈ upperHalfPlaneUnion)
     (hne : Complex.arg z₁ ≠ Complex.arg z₂) :
     Complex.arg (z₁ + z₂) < max (Complex.arg z₁) (Complex.arg z₂) := by
-  have cross_eq_norm_mul_sin_local (w₁ w₂ : ℂ) :
-      w₁.re * w₂.im - w₁.im * w₂.re =
-        ‖w₁‖ * ‖w₂‖ * Real.sin (Complex.arg w₂ - Complex.arg w₁) := by
-    rw [← Complex.norm_mul_cos_arg w₁, ← Complex.norm_mul_sin_arg w₁,
-      ← Complex.norm_mul_cos_arg w₂, ← Complex.norm_mul_sin_arg w₂, Real.sin_sub]
-    ring
-  have cross_pos_of_arg_lt_local {w₁ w₂ : ℂ}
-      (hwarg₁ : 0 < Complex.arg w₁) (hw₁ : w₁ ≠ 0) (hw₂ : w₂ ≠ 0)
-      (hw : Complex.arg w₁ < Complex.arg w₂) :
-      0 < w₁.re * w₂.im - w₁.im * w₂.re := by
-    have hnn : 0 < ‖w₁‖ * ‖w₂‖ := mul_pos (norm_pos_iff.mpr hw₁) (norm_pos_iff.mpr hw₂)
-    rw [cross_eq_norm_mul_sin_local]
-    exact mul_pos hnn (Real.sin_pos_of_pos_of_lt_pi (sub_pos.mpr hw)
-      (by linarith [Complex.arg_le_pi w₂]))
-  have arg_lt_of_cross_pos_local {w₁ w₂ : ℂ}
-      (hw₁ : w₁ ≠ 0) (hw₂ : w₂ ≠ 0) (hwarg₂ : 0 < Complex.arg w₂)
-      (hcross : 0 < w₁.re * w₂.im - w₁.im * w₂.re) :
-      Complex.arg w₁ < Complex.arg w₂ := by
-    have hnn : 0 < ‖w₁‖ * ‖w₂‖ := mul_pos (norm_pos_iff.mpr hw₁) (norm_pos_iff.mpr hw₂)
-    rw [cross_eq_norm_mul_sin_local] at hcross
-    have hsin : 0 < Real.sin (Complex.arg w₂ - Complex.arg w₁) := by
-      rcases (mul_pos_iff.mp hcross).elim id
-        (fun ⟨h1, h2⟩ ↦ absurd h1 (not_lt.mpr hnn.le)) with ⟨_, h⟩
-      exact h
-    by_contra h
-    push_neg at h
-    rcases h.eq_or_lt with heq | hlt
-    · rw [heq, sub_self, Real.sin_zero] at hsin
-      exact lt_irrefl _ hsin
-    · have : Real.sin (Complex.arg w₂ - Complex.arg w₁) < 0 :=
-        Real.sin_neg_of_neg_of_neg_pi_lt (sub_neg.mpr hlt)
-          (by linarith [Complex.arg_le_pi w₁])
-      linarith
-  have hz₁ := upperHalfPlaneUnion_ne_zero h₁
-  have hz₂ := upperHalfPlaneUnion_ne_zero h₂
-  have hs_mem := mem_upperHalfPlaneUnion_of_add h₁ h₂
-  have hs_ne := upperHalfPlaneUnion_ne_zero hs_mem
-  have him₁ := im_nonneg_of_mem_upperHalfPlaneUnion h₁
-  have him₂ := im_nonneg_of_mem_upperHalfPlaneUnion h₂
-  have harg₁ := arg_pos_of_mem_upperHalfPlaneUnion h₁
-  have harg₂ := arg_pos_of_mem_upperHalfPlaneUnion h₂
-  set cp := z₁.re * z₂.im - z₁.im * z₂.re
-  rcases hne.lt_or_gt with h | h
-  · rw [max_eq_right h.le]
-    apply arg_lt_of_cross_pos_local hs_ne hz₂ harg₂
-    show 0 < (z₁ + z₂).re * z₂.im - (z₁ + z₂).im * z₂.re
-    have : (z₁ + z₂).re * z₂.im - (z₁ + z₂).im * z₂.re = cp := by
-      simp only [Complex.add_re, Complex.add_im, cp]
-      ring
-    rw [this]
-    exact cross_pos_of_arg_lt_local harg₁ hz₁ hz₂ h
-  · rw [max_eq_left h.le]
-    apply arg_lt_of_cross_pos_local hs_ne hz₁ harg₁
-    show 0 < (z₁ + z₂).re * z₁.im - (z₁ + z₂).im * z₁.re
-    have : (z₁ + z₂).re * z₁.im - (z₁ + z₂).im * z₁.re = -cp := by
-      simp only [Complex.add_re, Complex.add_im, cp]
-      ring
-    rw [this]
-    have : 0 < z₂.re * z₁.im - z₂.im * z₁.re :=
-      cross_pos_of_arg_lt_local harg₂ hz₂ hz₁ h
-    linarith
+  exact arg_add_lt_max h₁ h₂ hne
 
 theorem heart_phase_le_of_epi
     (h : HeartStabilityData C)
     {E Q : h.t.heart.FullSubcategory} (p : E ⟶ Q) [Epi p]
     (hss : HeartSemistable (C := C) h E) (hQ : ¬IsZero Q) :
     HeartPhase (C := C) h E ≤ HeartPhase (C := C) h Q := by
-  letI := h.t.hasHeartFullSubcategory
-  letI : Abelian h.t.heart.FullSubcategory := h.t.heartFullSubcategoryAbelian
-  letI : IsNormalMonoCategory h.t.heart.FullSubcategory := Abelian.toIsNormalMonoCategory
-  letI : IsNormalEpiCategory h.t.heart.FullSubcategory := Abelian.toIsNormalEpiCategory
-  letI : Balanced h.t.heart.FullSubcategory := by infer_instance
-  by_cases hker : IsZero (kernel p)
-  · haveI : Mono p := Preadditive.mono_of_kernel_zero
-        (zero_of_source_iso_zero _ hker.isoZero)
-    haveI : IsIso p := isIso_of_mono_of_epi p
-    exact le_of_eq (h.Z.phase_eq_of_iso (asIso p))
-  · have hK_sub : h.Z.phase (kernel p) ≤ h.Z.phase E := by
-      calc h.Z.phase (kernel p)
-          = h.Z.phase (kernelSubobject p : h.t.heart.FullSubcategory) :=
-            h.Z.phase_eq_of_iso (kernelSubobjectIso p).symm
-        _ ≤ h.Z.phase E := by
-            apply hss.2
-            intro hZ
-            exact hker (hZ.of_iso (kernelSubobjectIso p).symm)
-    by_contra hlt
-    push_neg at hlt
-    have hadd : h.Z.Zobj E = h.Z.Zobj (kernel p) + h.Z.Zobj Q :=
-      h.Z.additive _
-        (ShortComplex.ShortExact.mk' (ShortComplex.exact_kernel p) inferInstance inferInstance)
-    have hK_mem := h.Z.upper (kernel p) hker
-    have hQ_mem := h.Z.upper Q hQ
-    have pi_pos := Real.pi_pos
-    have hargK : Complex.arg (h.Z.Zobj (kernel p)) ≤ Complex.arg (h.Z.Zobj E) := by
-      unfold StabilityFunction.phase at hK_sub
-      exact le_of_mul_le_mul_left (by linarith) (div_pos one_pos pi_pos)
-    have hargQ : Complex.arg (h.Z.Zobj Q) < Complex.arg (h.Z.Zobj E) := by
-      unfold HeartPhase at hlt
-      unfold StabilityFunction.phase at hlt
-      exact lt_of_mul_lt_mul_left (by linarith) (div_pos one_pos pi_pos).le
-    rw [hadd] at hargK hargQ
-    have hub := arg_add_le_max hK_mem hQ_mem
-    have hQ_lt_max :
-        Complex.arg (h.Z.Zobj Q) <
-          max (Complex.arg (h.Z.Zobj (kernel p))) (Complex.arg (h.Z.Zobj Q)) :=
-      lt_of_lt_of_le hargQ hub
-    have hK_gt_Q :
-        Complex.arg (h.Z.Zobj Q) < Complex.arg (h.Z.Zobj (kernel p)) := by
-      rcases lt_max_iff.mp hQ_lt_max with h | h
-      · exact h
-      · exact absurd h (lt_irrefl _)
-    have hne : Complex.arg (h.Z.Zobj (kernel p)) ≠ Complex.arg (h.Z.Zobj Q) :=
-      ne_of_gt hK_gt_Q
-    have hstrict := arg_add_lt_max_local hK_mem hQ_mem hne
-    rw [max_eq_left hK_gt_Q.le] at hstrict
-    linarith
+  exact phase_le_of_epi h.Z p hss hQ
 
 theorem heart_hom_zero_of_semistable_phase_gt
     (h : HeartStabilityData C)
     {E F : h.t.heart.FullSubcategory}
     (hE : HeartSemistable (C := C) h E) (hF : HeartSemistable (C := C) h F)
     (hph : HeartPhase (C := C) h F < HeartPhase (C := C) h E) (f : E ⟶ F) : f = 0 := by
-  letI := h.t.hasHeartFullSubcategory
-  letI : Abelian h.t.heart.FullSubcategory := h.t.heartFullSubcategoryAbelian
-  by_contra hf
-  have hI : ¬IsZero (Limits.image f) := by
-    intro hZ
-    apply hf
-    have : Limits.image.ι f = 0 := zero_of_source_iso_zero _ hZ.isoZero
-    have hzero : factorThruImage f ≫ Limits.image.ι f = 0 := by
-      rw [this, comp_zero]
-    exact (Limits.image.fac f).symm.trans hzero
-  have hge := heart_phase_le_of_epi (C := C) h (factorThruImage f) hE hI
-  have hle : h.Z.phase (Limits.image f) ≤ h.Z.phase F := by
-    calc h.Z.phase (Limits.image f)
-        = h.Z.phase (imageSubobject f : h.t.heart.FullSubcategory) :=
-          h.Z.phase_eq_of_iso (imageSubobjectIso f).symm
-      _ ≤ h.Z.phase F := by
-          apply hF.2
-          intro hZ
-          exact hI (hZ.of_iso (imageSubobjectIso f).symm)
-  linarith
+  exact hom_zero_of_semistable_phase_gt h.Z hE hF hph f
 
 theorem phasePredicate_hom_zero_of_mem_Ioc
     (h : HeartStabilityData C)

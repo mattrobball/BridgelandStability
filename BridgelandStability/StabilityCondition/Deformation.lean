@@ -481,26 +481,8 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ
   rcases hτ' with ⟨hτ'Z, hτ'd⟩
   constructor
   · have hsub : stabSeminorm C σ ((τ'.Z - τ.Z) + (τ.Z - σ.Z)) ≤
-      stabSeminorm C σ (τ'.Z - τ.Z) + stabSeminorm C σ (τ.Z - σ.Z) := by
-      apply iSup_le; intro E; apply iSup_le; intro φ
-      apply iSup_le; intro hP; apply iSup_le; intro hE
-      calc ENNReal.ofReal (‖((τ'.Z - τ.Z) + (τ.Z - σ.Z)) (K₀.of C E)‖ /
-              ‖σ.Z (K₀.of C E)‖)
-          ≤ ENNReal.ofReal (‖(τ'.Z - τ.Z) (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖ +
-              ‖(τ.Z - σ.Z) (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) := by
-            apply ENNReal.ofReal_le_ofReal
-            rw [AddMonoidHom.add_apply, ← add_div]
-            exact div_le_div_of_nonneg_right (norm_add_le _ _) (norm_nonneg _)
-        _ = ENNReal.ofReal (‖(τ'.Z - τ.Z) (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) +
-            ENNReal.ofReal (‖(τ.Z - σ.Z) (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) :=
-          ENNReal.ofReal_add (div_nonneg (norm_nonneg _) (norm_nonneg _))
-            (div_nonneg (norm_nonneg _) (norm_nonneg _))
-        _ ≤ stabSeminorm C σ (τ'.Z - τ.Z) + stabSeminorm C σ (τ.Z - σ.Z) :=
-          add_le_add
-            (le_iSup_of_le E <| le_iSup_of_le φ <| le_iSup_of_le hP <|
-              le_iSup_of_le hE le_rfl)
-            (le_iSup_of_le E <| le_iSup_of_le φ <| le_iSup_of_le hP <|
-              le_iSup_of_le hE le_rfl)
+      stabSeminorm C σ (τ'.Z - τ.Z) + stabSeminorm C σ (τ.Z - σ.Z) :=
+      stabSeminorm_add_le C σ (τ'.Z - τ.Z) (τ.Z - σ.Z)
     have hbound : stabSeminorm C σ (τ'.Z - σ.Z) ≤
         K * ENNReal.ofReal (Real.sin (Real.pi * δ)) +
           stabSeminorm C σ (τ.Z - σ.Z) := by
