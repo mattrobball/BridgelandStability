@@ -441,7 +441,7 @@ theorem deformedGtLe_triangle
   obtain ⟨HIGH, REST, GH, GR, fH, gR, hR, hT1, hH_phases, hR_phases, -⟩ :=
     split_hn_filtration_at_cutoff (C := C) F (t + ε)
   -- Step 2: Split REST's filtration at cutoff (t - ε)
-  obtain ⟨MID, LOW, GM, GL, fM, gL, hL, hT2, hM_phases, hL_phases, -, hGM_contain⟩ :=
+  obtain ⟨MID, LOW, GM, GLow, fM, gL, hL, hT2, hM_phases, hL_phases, -, hGM_contain⟩ :=
     split_hn_filtration_at_cutoff (C := C) GR (t - ε)
   -- Helper: ExtensionClosure is idempotent
   have ec_idem_gt : ∀ {X : C},
@@ -469,12 +469,12 @@ theorem deformedGtLe_triangle
   -- Step 4: LOW ∈ Q(≤t) — each factor has phase ≤ t-ε, use P_in_deformedLtPred → Q(≤t)
   have hLOW : σ.deformedLePred C W hW ε t LOW := by
     apply ec_idem_le
-    exact ObjectProperty.ExtensionClosure.of_postnikovTower GL.toPostnikovTower (fun j ↦ by
-      by_cases hjz : IsZero (GL.toPostnikovTower.factor j)
+    exact ObjectProperty.ExtensionClosure.of_postnikovTower GLow.toPostnikovTower (fun j ↦ by
+      by_cases hjz : IsZero (GLow.toPostnikovTower.factor j)
       · exact ObjectProperty.ExtensionClosure.zero hjz
       · exact σ.deformedLePred_of_deformedLtPred C W hW _ <|
           P_in_deformedLtPred C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin
-            (show GL.φ j ≤ t - ε by linarith [hL_phases j]) (GL.semistable j) hjz)
+            (show GLow.φ j ≤ t - ε by linarith [hL_phases j]) (GLow.semistable j) hjz)
   -- Step 5: Handle MID
   by_cases hMIDz : IsZero MID
   · -- MID = 0 ⟹ REST is extension of MID (zero) and LOW (∈ Q(≤t)), so REST ∈ Q(≤t).
