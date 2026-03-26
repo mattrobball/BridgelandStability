@@ -11,7 +11,14 @@ the paper, the proof strategy is wrong.
 - Commit messages must describe what actually happened and why.
 - If local history contains a misleading docs/provenance commit, rewrite it locally instead of
   stacking a misleading revert on top.
-- AI-assisted commits should record truthful provenance in the commit body or footer.
+- All AI-assisted commits must disclose that AI was used. Do not leave AI involvement implicit.
+- If Codex materially authored or edited the patch, include this exact trailer:
+  `Co-authored-by: Codex <codex@openai.com>`
+- If Claude materially authored or edited the patch, include this exact trailer:
+  `Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>`
+- If multiple AI systems materially contributed, include every applicable co-author trailer.
+- If AI assistance was limited to review, planning, commit drafting, or other non-authoring help,
+  still record truthful provenance in the commit body or footer.
 
 ## Build & Lint Workflow
 
