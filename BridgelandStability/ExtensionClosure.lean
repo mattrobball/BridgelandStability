@@ -7,6 +7,7 @@ module
 
 public import BridgelandStability.PostnikovTower.Defs
 public import Mathlib.CategoryTheory.Triangulated.Triangulated
+public import Mathlib.CategoryTheory.Triangulated.Subcategory
 
 /-!
 # Extension Closure
@@ -117,5 +118,31 @@ theorem of_postnikovTower {C : Type u} [Category.{v} C]
     have h₁ : Q.ExtensionClosure T.obj₁ := .of_iso e₁.symm hchain_k
     have h₃ : Q.ExtensionClosure T.obj₃ := .mem (hfactors ⟨k, by grind⟩)
     exact .of_iso e₂ (.ext hT h₁ h₃)
+
+instance {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    (P : ObjectProperty C) : P.ExtensionClosure.IsClosedUnderIsomorphisms :=
+  ⟨fun e h => .of_iso e h⟩
+
+instance {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    (P : ObjectProperty C) : P.ExtensionClosure.IsTriangulatedClosed₂ :=
+  ⟨fun T hT h1 h3 => ⟨T.obj₂, .ext hT h1 h3, ⟨Iso.refl _⟩⟩⟩
+
+/-- Extension closure is a left adjoint: `P.ExtensionClosure ≤ Q` whenever `Q` contains
+zero objects, contains `P`, and is closed under extensions from distinguished triangles. -/
+theorem le_of_closed {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {P Q : ObjectProperty C}
+    (hzero : ∀ {E : C}, IsZero E → Q E)
+    (hmem : P ≤ Q)
+    (hext : ∀ {X E Y : C} {f : X ⟶ E} {g : E ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧},
+      Triangle.mk f g h ∈ distTriang C → Q X → Q Y → Q E) :
+    P.ExtensionClosure ≤ Q := by
+  intro E hE
+  induction hE with
+  | zero hZ => exact hzero hZ
+  | mem hP => exact hmem _ hP
+  | ext hT _ _ ih1 ih3 => exact hext hT ih1 ih3
 
 end CategoryTheory.ObjectProperty.ExtensionClosure
