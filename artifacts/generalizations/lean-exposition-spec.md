@@ -270,8 +270,6 @@ lake exe exposition          # emits _out/html-multi/ or site/
 
 CI time: ~90s build + ~30s site generation = **~2 minutes**.
 
-Compare: current leanblueprint + doc-gen4 pipeline takes **~2 hours**.
-
 ---
 
 ## Existing code we reuse

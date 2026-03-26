@@ -29,10 +29,10 @@ set_option backward.proofsInPublic true
 open scoped BigOperators
 
 /-!
-# Heart Equivalence and Blueprint Scaffolding
+# Heart Equivalence Infrastructure
 
 This file captures the definitions and theorem statements from the Bridgeland
-stability conditions blueprint (§§3–5) that are not yet present in the branch.
+stability conditions paper (§§3–5) that are not yet present in the branch.
 The currently formalized reverse direction is packaged through a local
 `PhasePackage`, isolating the induced phase predicates and their
 phase axioms before the ambient central charge and full HN existence are

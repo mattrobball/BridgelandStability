@@ -169,7 +169,7 @@ theorem stabSeminorm_zero (σ : StabilityCondition C) :
   simp [stabSeminorm, AddMonoidHom.zero_apply, norm_zero, zero_div,
     ENNReal.ofReal_zero]
 
-/-- The subspace `V(σ)` of group homomorphisms with finite seminorm (blueprint Node 6.3a).
+/-- The subspace `V(σ)` of group homomorphisms with finite seminorm.
 This is an `AddSubgroup` of `K₀ C →+ ℂ` consisting of those `U` for which
 `‖U‖_σ < ∞`. On a connected component of `Stab(D)`, this subspace is independent
 of the chosen `σ` (by Lemma 6.2). -/

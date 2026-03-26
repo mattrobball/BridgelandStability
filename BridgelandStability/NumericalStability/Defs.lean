@@ -44,7 +44,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 /-- A `k`-linear pretriangulated category is of finite type if all Hom spaces are
 finite-dimensional over `k` and for each pair of objects, only finitely many shifted
-Hom spaces are nonzero (blueprint B0). -/
+Hom spaces are nonzero. -/
 class IsFiniteType [Linear k C] : Prop where
   /-- Each Hom space `Hom(E, F)` is finite-dimensional over `k`. -/
   finite_dim : ∀ (E F : C), Module.Finite k (E ⟶ F)
@@ -53,7 +53,7 @@ class IsFiniteType [Linear k C] : Prop where
 
 /-! ### Object-level Euler form -/
 
-/-- The Euler form on objects (blueprint B1): `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])`.
+/-- The Euler form on objects: `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])`.
 This is defined as a finitely-supported sum using `finsum`. -/
 def eulerFormObj [Linear k C] (E F : C) : ℤ :=
   ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ (shiftFunctor C n).obj F) : ℤ)
