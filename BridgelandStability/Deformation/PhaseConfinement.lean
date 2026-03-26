@@ -686,109 +686,6 @@ theorem hom_eq_zero_of_wSemistable_gap
   -- Apply interval hom-vanishing
   exact σ.slicing.intervalHom_eq_zero C hEI hFI hdisjoint f
 
-/-- A nonzero strict quotient of a `W`-semistable interval object has `W`-phase at least
-that of the middle term. This is the quotient-side semistability inequality needed for the
-thin-interval HN recursion. -/
-theorem SkewedStabilityFunction.phase_le_of_strictQuotient
-    (σ : StabilityCondition C) {a b : ℝ}
-    {ssf : SkewedStabilityFunction C σ.slicing a b}
-    [Fact (a < b)] [Fact (b - a ≤ 1)]
-    {X Y : σ.slicing.IntervalCat C a b} {ψ ε₀ : ℝ}
-    (hX : ssf.Semistable C X.obj ψ)
-    (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (K₀.of C F) ≠ 0)
-    (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a < φ → φ < b →
-        φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-        wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀)
-    (p : X ⟶ Y) (hp : IsStrictEpi p)
-    (hY : ¬IsZero Y.obj) :
-    ψ ≤ wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α := by
-  let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
-    ShortComplex.mk (kernel.ι p) p (kernel.condition p)
-  let t := (σ.slicing.phaseShift C a).toTStructure
-  letI := t.hasHeartFullSubcategory
-  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
-  letI : CategoryWithHomology t.heart.FullSubcategory :=
-    CategoryTheory.categoryWithHomology_of_abelian (C := t.heart.FullSubcategory)
-  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := σ.slicing) a b (Fact.out : b - a ≤ 1)
-  have hEpi : Epi ((S.map FL).g) := by
-    simpa [S, FL] using
-      Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
-        (C := C) (s := σ.slicing) (a := a) (b := b) p hp
-  have hKerBase : IsLimit (KernelFork.ofι S.f S.zero) := by
-    simpa [S] using (kernelIsKernel p)
-  have hKer :
-      IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) :=
-    isLimitForkMapOfIsLimit' FL S.zero hKerBase
-  letI : (S.map FL).HasHomology :=
-    ShortComplex.HasHomology.mk' (ShortComplex.HomologyData.ofAbelian (S := S.map FL))
-  have hExact : (S.map FL).Exact := ShortComplex.exact_of_f_is_kernel (S := S.map FL) hKer
-  have hL : (S.map FL).ShortExact :=
-    ShortComplex.ShortExact.mk' hExact (Fork.IsLimit.mono hKer) hEpi
-  have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b → ssf.W (K₀.of C F) ≠ 0 :=
-    fun F φ hP hFne haφ hφb ↦ ssf.nonzero F φ haφ hφb hP hFne
-  have hperturb_gt := perturb_gt_of_perturb C σ hperturb hthin
-  have hperturb_lt := perturb_lt_of_perturb C σ hperturb hthin
-  have hψ_lo : a - ε₀ < ψ := by
-    rw [← hX.phase_eq]
-    exact wPhaseOf_gt_of_intervalProp C σ hX.nonzero ssf.W
-      (le_of_lt (by linarith [ssf.hα_mem.1])) hX.intervalProp hW_ne hperturb_gt
-  have hψ_hi : ψ < b + ε₀ := by
-    rw [← hX.phase_eq]
-    exact wPhaseOf_lt_of_intervalProp C σ hX.nonzero ssf.W
-      (le_of_lt (by linarith [ssf.hα_mem.2])) hX.intervalProp hW_ne hperturb_lt
-  by_cases hKz : IsZero (kernel p).obj
-  · have hKz' : IsZero (kernel p) :=
-      Slicing.IntervalCat.isZero_of_obj_isZero (C := C) (s := σ.slicing) (a := a) (b := b) hKz
-    have hkernel_zero : kernel.ι p = 0 := zero_of_source_iso_zero _ hKz'.isoZero
-    haveI : Mono p := Preadditive.mono_of_kernel_zero hkernel_zero
-    haveI : IsIso p := IsStrictEpi.isIso hp
-    let eC : X.obj ≅ Y.obj := ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
-      (asIso p))
-    rw [← hX.phase_eq, ← K₀.of_iso C eC]
-  · have hK : ¬IsZero (kernel p).obj := hKz
-    obtain ⟨δ, hT⟩ := Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart
-      (C := C) (s := σ.slicing) (a := a) (b := b) hL
-    have hK_le : wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α ≤ ψ :=
-      hX.le_of_distTriang hT (kernel p).property Y.property hK
-    have hK_lo : a - ε₀ < wPhaseOf (ssf.W (K₀.of C (kernel p).obj)) ssf.α :=
-      wPhaseOf_gt_of_intervalProp C σ hK ssf.W
-        (le_of_lt (by linarith [ssf.hα_mem.1])) (kernel p).property hW_ne hperturb_gt
-    have hY_ne : ssf.W (K₀.of C Y.obj) ≠ 0 := hW_interval Y.property hY
-    have hY_lo : a - ε₀ < wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α :=
-      wPhaseOf_gt_of_intervalProp C σ hY ssf.W
-        (le_of_lt (by linarith [ssf.hα_mem.1])) Y.property hW_ne hperturb_gt
-    have hY_hi : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α < b + ε₀ :=
-      wPhaseOf_lt_of_intervalProp C σ hY ssf.W
-        (le_of_lt (by linarith [ssf.hα_mem.2])) Y.property hW_ne hperturb_lt
-    have hadd :
-        ssf.W (K₀.of C X.obj) =
-          ssf.W (K₀.of C (kernel p).obj) + ssf.W (K₀.of C Y.obj) := by
-      simpa [S, map_add] using
-        congrArg ssf.W (K₀.of_triangle C (Triangle.mk S.f.hom S.g.hom δ) hT)
-    exact wPhaseOf_seesaw
-      hadd.symm
-      hX.phase_eq
-      ⟨by
-          have : ψ - 1 < a - ε₀ := by
-            have hmid : b + ε₀ - 1 < a - ε₀ := by linarith
-            linarith
-          linarith,
-        hK_le⟩
-      hY_ne
-      ⟨by
-          have : ψ - 1 < a - ε₀ := by
-            have hmid : b + ε₀ - 1 < a - ε₀ := by linarith
-            linarith
-          linarith, by
-          have hψ_up : b + ε₀ < ψ + 1 := by
-            have hmid : b + ε₀ < a - ε₀ + 1 := by linarith
-            linarith
-          linarith⟩
-
 /-- A nonzero quotient term in a distinguished triangle of a `W`-semistable interval object
 has `W`-phase at least that of the middle term, provided both outer terms remain in the same
 thin interval. This is the triangle-form quotient inequality used when the quotient is
@@ -866,5 +763,60 @@ theorem SkewedStabilityFunction.phase_le_of_triangle_quotient
             linarith
           linarith⟩
 
+/-- A nonzero strict quotient of a `W`-semistable interval object has `W`-phase at least
+that of the middle term. This is the quotient-side semistability inequality needed for the
+thin-interval HN recursion. Now delegates to `phase_le_of_triangle_quotient` after
+extracting the distinguished triangle from the strict short exact sequence. -/
+theorem SkewedStabilityFunction.phase_le_of_strictQuotient
+    (σ : StabilityCondition C) {a b : ℝ}
+    {ssf : SkewedStabilityFunction C σ.slicing a b}
+    [Fact (a < b)] [Fact (b - a ≤ 1)]
+    {X Y : σ.slicing.IntervalCat C a b} {ψ ε₀ : ℝ}
+    (hX : ssf.Semistable C X.obj ψ)
+    (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
+      ssf.W (K₀.of C F) ≠ 0)
+    (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
+        a < φ → φ < b →
+        φ - ε₀ < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
+        wPhaseOf (ssf.W (K₀.of C F)) ssf.α < φ + ε₀)
+    (p : X ⟶ Y) (hp : IsStrictEpi p)
+    (hY : ¬IsZero Y.obj) :
+    ψ ≤ wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α := by
+  let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
+    ShortComplex.mk (kernel.ι p) p (kernel.condition p)
+  let t := (σ.slicing.phaseShift C a).toTStructure
+  letI := t.hasHeartFullSubcategory
+  letI : Abelian t.heart.FullSubcategory := t.heartFullSubcategoryAbelian
+  letI : CategoryWithHomology t.heart.FullSubcategory :=
+    CategoryTheory.categoryWithHomology_of_abelian (C := t.heart.FullSubcategory)
+  let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := σ.slicing) a b (Fact.out : b - a ≤ 1)
+  have hEpi : Epi ((S.map FL).g) := by
+    simpa [S, FL] using
+      Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
+        (C := C) (s := σ.slicing) (a := a) (b := b) p hp
+  have hKerBase : IsLimit (KernelFork.ofι S.f S.zero) := by
+    simpa [S] using (kernelIsKernel p)
+  have hKer :
+      IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) :=
+    isLimitForkMapOfIsLimit' FL S.zero hKerBase
+  letI : (S.map FL).HasHomology :=
+    ShortComplex.HasHomology.mk' (ShortComplex.HomologyData.ofAbelian (S := S.map FL))
+  have hExact : (S.map FL).Exact := ShortComplex.exact_of_f_is_kernel (S := S.map FL) hKer
+  have hL : (S.map FL).ShortExact :=
+    ShortComplex.ShortExact.mk' hExact (Fork.IsLimit.mono hKer) hEpi
+  by_cases hKz : IsZero (kernel p).obj
+  · have hKz' : IsZero (kernel p) :=
+      Slicing.IntervalCat.isZero_of_obj_isZero (C := C) (s := σ.slicing) (a := a) (b := b) hKz
+    have hkernel_zero : kernel.ι p = 0 := zero_of_source_iso_zero _ hKz'.isoZero
+    haveI : Mono p := Preadditive.mono_of_kernel_zero hkernel_zero
+    haveI : IsIso p := IsStrictEpi.isIso hp
+    let eC : X.obj ≅ Y.obj := ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
+      (asIso p))
+    rw [← hX.phase_eq, ← K₀.of_iso C eC]
+  · obtain ⟨δ, hT⟩ := Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart
+      (C := C) (s := σ.slicing) (a := a) (b := b) hL
+    exact phase_le_of_triangle_quotient (C := C) σ hX hε₀ hthin hW_interval
+      hperturb hT (kernel p).property Y.property hY
 
 end CategoryTheory.Triangulated
