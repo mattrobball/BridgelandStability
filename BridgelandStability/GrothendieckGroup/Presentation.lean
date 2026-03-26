@@ -35,6 +35,7 @@ universe u v u' v' u'' v''
 
 /-- A presentation of a Grothendieck-style group: objects, relations, and
 the three-term decomposition `obj₂(r) = obj₁(r) + obj₃(r)`. -/
+@[nolint checkUnivs]
 structure K0Presentation (Obj : Type u) (Rel : Type v) where
   /-- The first term of the relation (e.g., `T.obj₁` or `S.X₁`). -/
   obj₁ : Rel → Obj

@@ -120,7 +120,6 @@ theorem stabilityCondition_compat_apply (σ : StabilityCondition C)
 /-- The imaginary part of `m · exp(iπψ) · exp(-iπφ)` is `m · sin(π(ψ - φ))`.
 This is the core identity underlying all phase-sign arguments in the Bridgeland
 deformation theory (Lemmas 6.1–6.4 and the HN existence proof). -/
-@[simp]
 theorem im_ofReal_mul_exp_mul_exp_neg (m ψ φ : ℝ) :
     ((m : ℂ) * Complex.exp (↑(Real.pi * ψ) * Complex.I) *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im =
