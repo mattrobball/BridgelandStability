@@ -203,12 +203,7 @@ theorem im_pos_of_phase_above {w : ℂ} {m φ ψ : ℝ} (hm : 0 < m)
     (hw : w = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I))
     (hlo : ψ < φ) (hhi : φ < ψ + 1) :
     0 < (w * Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im := by
-  rw [hw, mul_assoc, ← Complex.exp_add]
-  have harg : ↑(Real.pi * φ) * Complex.I + -(↑(Real.pi * ψ) * Complex.I) =
-      ↑(Real.pi * (φ - ψ)) * Complex.I := by push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero]
+  rw [hw, im_ofReal_mul_exp_mul_exp_neg]
   exact mul_pos hm (Real.sin_pos_of_pos_of_lt_pi
     (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos]))
 
@@ -251,15 +246,7 @@ theorem wPhaseOf_gt_of_im_pos {w : ℂ} {α ψ : ℝ}
       (by nlinarith [Real.pi_pos, hd.2])
       (by nlinarith [Real.pi_pos, hd.1])
   -- But Im = ‖w‖ · sin(...) > 0 and ‖w‖ ≥ 0, so sin > 0. Contradiction.
-  have hw := wPhaseOf_compat w α
-  rw [hw] at him
-  rw [mul_assoc, ← Complex.exp_add] at him
-  have harg : ↑(Real.pi * wPhaseOf w α) * Complex.I +
-      -(↑(Real.pi * ψ) * Complex.I) =
-      ↑(Real.pi * (wPhaseOf w α - ψ)) * Complex.I := by push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero] at him
+  rw [wPhaseOf_compat w α, im_ofReal_mul_exp_mul_exp_neg] at him
   linarith [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg w) hsin]
 
 /-! ### Dual im/wPhaseOf infrastructure (for lower bound arguments) -/
@@ -270,12 +257,7 @@ theorem im_neg_of_phase_below {w : ℂ} {m φ ψ : ℝ} (hm : 0 < m)
     (hw : w = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I))
     (hlo : ψ - 1 < φ) (hhi : φ < ψ) :
     (w * Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im < 0 := by
-  rw [hw, mul_assoc, ← Complex.exp_add]
-  have harg : ↑(Real.pi * φ) * Complex.I + -(↑(Real.pi * ψ) * Complex.I) =
-      ↑(Real.pi * (φ - ψ)) * Complex.I := by push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero]
+  rw [hw, im_ofReal_mul_exp_mul_exp_neg]
   exact mul_neg_of_pos_of_neg hm (Real.sin_neg_of_neg_of_neg_pi_lt
     (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos]))
 
@@ -314,14 +296,7 @@ theorem wPhaseOf_lt_of_im_neg {w : ℂ} {α ψ : ℝ}
       (by nlinarith [Real.pi_pos, hd.2])
   -- But Im = ‖w‖ · sin(...) < 0 and ‖w‖ ≥ 0, so sin < 0. Contradiction.
   have hw := wPhaseOf_compat w α
-  rw [hw] at him
-  rw [mul_assoc, ← Complex.exp_add] at him
-  have harg : ↑(Real.pi * wPhaseOf w α) * Complex.I +
-      -(↑(Real.pi * ψ) * Complex.I) =
-      ↑(Real.pi * (wPhaseOf w α - ψ)) * Complex.I := by push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero] at him
+  rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him
   linarith [mul_nonneg (norm_nonneg w) hsin]
 
 /-- **Imaginary part vanishes at exact phase.** If `wPhaseOf(w, α) = ψ`, then
@@ -360,14 +335,7 @@ theorem im_mul_exp_neg_eq_norm_mul_sin (w : ℂ) (α ψ : ℝ) :
     (w * Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im =
     ‖w‖ * Real.sin (Real.pi * (wPhaseOf w α - ψ)) := by
   conv_lhs => rw [wPhaseOf_compat w α]
-  rw [mul_assoc, ← Complex.exp_add]
-  have harg : ↑(Real.pi * wPhaseOf w α) * Complex.I +
-      -(↑(Real.pi * ψ) * Complex.I) =
-      ↑(Real.pi * (wPhaseOf w α - ψ)) * Complex.I := by
-    push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero]
+  rw [im_ofReal_mul_exp_mul_exp_neg]
 
 /-! ### Phase see-saw lemma -/
 
@@ -677,14 +645,7 @@ theorem wPhaseOf_gt_of_intervalProp
   push_neg at h -- h : wPhaseOf(W(E), α) ≤ a - ε
   set ψ := wPhaseOf (W (K₀.of C E)) α
   have hw := wPhaseOf_compat (W (K₀.of C E)) α
-  rw [hw] at him_pos
-  rw [mul_assoc, ← Complex.exp_add] at him_pos
-  have harg : ↑(Real.pi * ψ) * Complex.I +
-      -(↑(Real.pi * (a - ε)) * Complex.I) =
-      ↑(Real.pi * (ψ - (a - ε))) * Complex.I := by push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero] at him_pos
+  rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_pos
   -- ψ - (a - ε) ∈ (-1, 0] (from ψ > α - 1 and ψ ≤ a - ε)
   have hψ_range := wPhaseOf_mem_Ioc (W (K₀.of C E)) α
   have hψ_lo : α - 1 < ψ := hψ_range.1
@@ -729,14 +690,7 @@ theorem wPhaseOf_lt_of_intervalProp
   push_neg at h -- h : b + ε ≤ wPhaseOf(W(E), α)
   set ψ := wPhaseOf (W (K₀.of C E)) α
   have hw := wPhaseOf_compat (W (K₀.of C E)) α
-  rw [hw] at him_neg
-  rw [mul_assoc, ← Complex.exp_add] at him_neg
-  have harg : ↑(Real.pi * ψ) * Complex.I +
-      -(↑(Real.pi * (b + ε)) * Complex.I) =
-      ↑(Real.pi * (ψ - (b + ε))) * Complex.I := by push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero] at him_neg
+  rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_neg
   -- ψ - (b + ε) ∈ [0, 1) (from ψ ≥ b + ε and ψ ≤ α + 1)
   have hψ_range := wPhaseOf_mem_Ioc (W (K₀.of C E)) α
   have hψ_hi : ψ ≤ α + 1 := hψ_range.2

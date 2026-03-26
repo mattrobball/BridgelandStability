@@ -56,12 +56,7 @@ theorem im_divided_of_semistable (σ : StabilityCondition C) {F : C} {ψ φ : �
       (σ.Z (K₀.of C F) * exp (-(↑(Real.pi * φ) * I))).im =
         b * Real.sin (Real.pi * (ψ - φ)) := by
   obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ ψ F hss hne
-  exact ⟨b, hb, by
-    rw [hbZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * ψ) * I + -(↑(Real.pi * φ) * I) =
-        ↑(Real.pi * (ψ - φ)) * I from by push_cast; ring,
-      Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]⟩
+  exact ⟨b, hb, by rw [hbZ, im_ofReal_mul_exp_mul_exp_neg]⟩
 
 /-! ### Lemma 6.4: Local injectivity -/
 

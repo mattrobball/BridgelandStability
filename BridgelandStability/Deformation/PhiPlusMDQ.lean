@@ -66,14 +66,7 @@ theorem wPhaseOf_gt_of_narrow_interval
   push_neg at h
   set θ := wPhaseOf (W (K₀.of C E)) α
   have hw := wPhaseOf_compat (W (K₀.of C E)) α
-  rw [hw] at him_pos
-  rw [mul_assoc, ← Complex.exp_add] at him_pos
-  have harg : ↑(Real.pi * θ) * Complex.I +
-      -(↑(Real.pi * ψ) * Complex.I) =
-      ↑(Real.pi * (θ - ψ)) * Complex.I := by push_cast; ring
-  rw [harg, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-    zero_mul, add_zero] at him_pos
+  rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_pos
   have hsin : Real.sin (Real.pi * (θ - ψ)) ≤ 0 :=
     Real.sin_nonpos_of_nonpos_of_neg_pi_le
       (by nlinarith [Real.pi_pos])

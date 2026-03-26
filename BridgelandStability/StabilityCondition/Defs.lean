@@ -115,6 +115,23 @@ theorem stabilityCondition_compat_apply (σ : StabilityCondition C)
       σ.Z (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
   simpa using σ.compat φ E hE hNZ
 
+/-! ### Phase rotation identity -/
+
+/-- The imaginary part of `m · exp(iπψ) · exp(-iπφ)` is `m · sin(π(ψ - φ))`.
+This is the core identity underlying all phase-sign arguments in the Bridgeland
+deformation theory (Lemmas 6.1–6.4 and the HN existence proof). -/
+@[simp]
+theorem im_ofReal_mul_exp_mul_exp_neg (m ψ φ : ℝ) :
+    ((m : ℂ) * Complex.exp (↑(Real.pi * ψ) * Complex.I) *
+      Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im =
+      m * Real.sin (Real.pi * (ψ - φ)) := by
+  rw [mul_assoc, ← Complex.exp_add,
+    show ↑(Real.pi * ψ) * Complex.I + -(↑(Real.pi * φ) * Complex.I) =
+      ↑(Real.pi * (ψ - φ)) * Complex.I from by push_cast; ring,
+    Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+    Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
+    zero_mul, add_zero]
+
 /-! ### Generalized metric and seminorm -/
 
 open Real in
