@@ -45,6 +45,24 @@ theorem continuous_toStabilityCondition {v : K₀ C →+ Λ} :
 
 end StabilityCondition.WithClassMap
 
+/-! ### Central charge imaginary part helper -/
+
+/-- For a σ-semistable nonzero object of phase `ψ`, the imaginary part of
+`Z(F) · exp(-iπφ)` equals `b · sin(π(ψ - φ))` for some `b > 0`. This factors
+out the repeated "divide by exp, rewrite to sin" computation in the Lemma 6.4 proofs. -/
+theorem im_divided_of_semistable (σ : StabilityCondition C) {F : C} {ψ φ : ℝ}
+    (hne : ¬IsZero F) (hss : (σ.slicing.P ψ) F) :
+    ∃ b : ℝ, 0 < b ∧
+      (σ.Z (K₀.of C F) * exp (-(↑(Real.pi * φ) * I))).im =
+        b * Real.sin (Real.pi * (ψ - φ)) := by
+  obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ ψ F hss hne
+  exact ⟨b, hb, by
+    rw [hbZ, mul_assoc, ← exp_add,
+      show ↑(Real.pi * ψ) * I + -(↑(Real.pi * φ) * I) =
+        ↑(Real.pi * (ψ - φ)) * I from by push_cast; ring,
+      Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
+      Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]⟩
+
 /-! ### Lemma 6.4: Local injectivity -/
 
 /-- **One-sided phase impossibility for Lemma 6.4** (below). If `σ` and `τ` have the same
@@ -84,14 +102,9 @@ theorem StabilityCondition.false_of_all_hn_phases_below (σ τ : StabilityCondit
   have hw_neg : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       (w i).im < 0 := by
     intro i hi
-    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+    obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (F.semistable i)
     change (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im < 0
-    rw [hbZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * F.φ i) * I + -(↑(Real.pi * φ) * I) =
-        ↑(Real.pi * (F.φ i - φ)) * I from by push_cast; ring]
-    rw [Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]
-    exact mul_neg_of_pos_of_neg (by exact_mod_cast hb)
+    rw [hbim]; exact mul_neg_of_pos_of_neg hb
       (Real.sin_neg_of_neg_of_neg_pi_lt
         (by nlinarith [hlt i hi, Real.pi_pos])
         (by nlinarith [hgt i hi, Real.pi_pos]))
@@ -155,14 +168,9 @@ theorem StabilityCondition.false_of_all_hn_phases_above (σ τ : StabilityCondit
   have hw_pos : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       0 < (w i).im := by
     intro i hi
-    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+    obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (F.semistable i)
     change 0 < (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im
-    rw [hbZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * F.φ i) * I + -(↑(Real.pi * φ) * I) =
-        ↑(Real.pi * (F.φ i - φ)) * I from by push_cast; ring]
-    rw [Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]
-    exact mul_pos (by exact_mod_cast hb)
+    rw [hbim]; exact mul_pos hb
       (Real.sin_pos_of_pos_of_lt_pi
         (by nlinarith [hgt i hi, Real.pi_pos])
         (by nlinarith [hlt i hi, Real.pi_pos]))
@@ -276,14 +284,9 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
   have hσ_pos : ∀ i : Fin Fσ.n, ¬IsZero (Fσ.toPostnikovTower.factor i) →
       0 < (wσ i).im := by
     intro i hi
-    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (Fσ.φ i) _ (Fσ.semistable i) hi
+    obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (Fσ.semistable i)
     change 0 < (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im
-    rw [hbZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * Fσ.φ i) * I + -(↑(Real.pi * φ) * I) =
-        ↑(Real.pi * (Fσ.φ i - φ)) * I from by push_cast; ring]
-    rw [Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]
-    exact mul_pos (by exact_mod_cast hb)
+    rw [hbim]; exact mul_pos hb
       (Real.sin_pos_of_pos_of_lt_pi
         (by nlinarith [hσgt i, Real.pi_pos])
         (by nlinarith [hσlt i, Real.pi_pos]))
@@ -340,14 +343,9 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
     by_cases hi : IsZero (Fτ.toPostnikovTower.factor i)
     · change (τ.Z (K₀.of C _) * _).im ≤ 0
       rw [K₀.of_isZero C hi, map_zero, zero_mul]; exact le_rfl
-    · obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) τ (Fτ.φ i) _ (Fτ.semistable i) hi
+    · obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C τ hi (Fτ.semistable i)
       change (τ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
-      rw [hbZ, mul_assoc, ← exp_add,
-        show ↑(Real.pi * Fτ.φ i) * I + -(↑(Real.pi * φ) * I) =
-          ↑(Real.pi * (Fτ.φ i - φ)) * I from by push_cast; ring]
-      rw [Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-        Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]
-      exact mul_nonpos_of_nonneg_of_nonpos (by exact_mod_cast le_of_lt hb)
+      rw [hbim]; exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hb)
         (Real.sin_nonpos_of_nonpos_of_neg_pi_le
           (by nlinarith [hτle i, Real.pi_pos])
           (by nlinarith [hτgt i, Real.pi_pos]))
@@ -397,28 +395,18 @@ theorem StabilityCondition.false_of_hn_phases_le_with_lt (σ τ : StabilityCondi
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · change (σ.Z (K₀.of C _) * _).im ≤ 0
       rw [K₀.of_isZero C hi, map_zero, zero_mul]; exact le_rfl
-    · obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+    · obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (F.semistable i)
       change (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
-      rw [hbZ, mul_assoc, ← exp_add,
-        show ↑(Real.pi * F.φ i) * I + -(↑(Real.pi * φ) * I) =
-          ↑(Real.pi * (F.φ i - φ)) * I from by push_cast; ring]
-      rw [Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-        Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]
-      exact mul_nonpos_of_nonneg_of_nonpos (by exact_mod_cast le_of_lt hb)
+      rw [hbim]; exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hb)
         (Real.sin_nonpos_of_nonpos_of_neg_pi_le
           (by nlinarith [hle i, Real.pi_pos])
           (by nlinarith [hgt i, Real.pi_pos]))
   -- At least one term has Im < 0
   obtain ⟨j₀, hj₀ne, hj₀lt⟩ := hstrict
   have hw_neg : (w j₀).im < 0 := by
-    obtain ⟨b, hb, hbZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ j₀) _ (F.semistable j₀) hj₀ne
+    obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hj₀ne (F.semistable j₀)
     change (σ.Z (K₀.of C _) * exp (-(↑(Real.pi * φ) * I))).im < 0
-    rw [hbZ, mul_assoc, ← exp_add,
-      show ↑(Real.pi * F.φ j₀) * I + -(↑(Real.pi * φ) * I) =
-        ↑(Real.pi * (F.φ j₀ - φ)) * I from by push_cast; ring]
-    rw [Complex.mul_im, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
-      Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]
-    exact mul_neg_of_pos_of_neg (by exact_mod_cast hb)
+    rw [hbim]; exact mul_neg_of_pos_of_neg hb
       (Real.sin_neg_of_neg_of_neg_pi_lt
         (by nlinarith [hj₀lt, Real.pi_pos])
         (by nlinarith [hgt j₀, Real.pi_pos]))
