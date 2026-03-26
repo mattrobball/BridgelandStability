@@ -16,18 +16,16 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  LEAN_EXPOSITION_REPO: mattrobball/lean-exposition
+  LEAN_EXPOSITION_REF: e8fa65d41c5e8d3dc14f183dd30b97f784116bf2
+
 jobs:
   exposition:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
         uses: actions/checkout@v5
-
-      - name: Checkout lean-exposition
-        uses: actions/checkout@v5
-        with:
-          repository: mattrobball/lean-exposition
-          path: lean-exposition
 
       - name: Build BridgelandStability and extractDeps
         uses: leanprover/lean-action@v1
@@ -39,14 +37,38 @@ jobs:
       - name: Run declaration linter
         run: lake exe runLinter
 
-      - name: Build exposition tool
-        working-directory: lean-exposition
+      - name: Install published exposition binary
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          lake build exposition
+          artifact_name="exposition-linux-x86_64-$LEAN_EXPOSITION_REF"
+          artifact_dir="/tmp/exposition-artifact"
+          exposition_bin="$artifact_dir/$artifact_name/exposition"
+          run_id="$(gh run list \
+            -R "$LEAN_EXPOSITION_REPO" \
+            --workflow "Publish Exposition Binary" \
+            --event push \
+            --commit "$LEAN_EXPOSITION_REF" \
+            --status success \
+            --json databaseId \
+            --jq '.[0].databaseId')"
+          test -n "$run_id"
+          gh run download "$run_id" \
+            -R "$LEAN_EXPOSITION_REPO" \
+            -n "$artifact_name" \
+            -D "$artifact_dir"
+          tar -xzf \
+            "$artifact_dir/$artifact_name.tar.gz" \
+            -C "$artifact_dir"
+          packaged_toolchain="$(tr -d '\n' < "$artifact_dir/$artifact_name/lean-toolchain")"
+          expected_toolchain="$(tr -d '\n' < lean-toolchain)"
+          test "$packaged_toolchain" = "$expected_toolchain"
+          test -x "$exposition_bin"
+          "$exposition_bin" --help >/dev/null
 
       - name: Generate exposition site
         run: |
-          lake env ./lean-exposition/.lake/build/bin/exposition \
+          lake env /tmp/exposition-artifact/exposition-linux-x86_64-${{ env.LEAN_EXPOSITION_REF }}/exposition \
             --root BridgelandStability \
             --exclude-lib BridgelandSpec \
             --repo-url https://github.com/${{ github.repository }} \
