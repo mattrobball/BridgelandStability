@@ -53,9 +53,8 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 /-- The `K0Presentation` for distinguished triangles in a pretriangulated category:
 generators are objects of `C`, relations are distinguished triangles. -/
-abbrev trianglePresentation : K0Presentation where
-  Obj := C
-  Rel := {T : Pretriangulated.Triangle C // T ∈ distTriang C}
+abbrev trianglePresentation :
+    K0Presentation C {T : Pretriangulated.Triangle C // T ∈ distTriang C} where
   obj₁ := fun r => r.1.obj₁
   obj₂ := fun r => r.1.obj₂
   obj₃ := fun r => r.1.obj₃

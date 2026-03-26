@@ -15,7 +15,7 @@ public import Mathlib.Tactic
 A lightweight algebraic abstraction for Grothendieck group quotients. A
 `K0Presentation` specifies a type of objects, a type of relations, and
 three projections extracting the "middle = first + third" pattern. The
-quotient `P.K0 = FreeAbelianGroup P.Obj ⧸ {obj₂(r) - obj₁(r) - obj₃(r)}` is
+quotient `P.K0 = FreeAbelianGroup Obj ⧸ {obj₂(r) - obj₁(r) - obj₃(r)}` is
 the associated Grothendieck group.
 
 This factors out the identical quotient plumbing shared by:
@@ -31,15 +31,11 @@ set_option backward.privateInPublic true
 set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
 
-universe v u
+universe u v u' v' u'' v''
 
 /-- A presentation of a Grothendieck-style group: objects, relations, and
 the three-term decomposition `obj₂(r) = obj₁(r) + obj₃(r)`. -/
-structure K0Presentation where
-  /-- The type of objects (generators). -/
-  Obj : Type u
-  /-- The type of relations (e.g., distinguished triangles, short exact sequences). -/
-  Rel : Type v
+structure K0Presentation (Obj : Type u) (Rel : Type v) where
   /-- The first term of the relation (e.g., `T.obj₁` or `S.X₁`). -/
   obj₁ : Rel → Obj
   /-- The middle term (the one that equals the sum of the other two). -/
@@ -49,27 +45,27 @@ structure K0Presentation where
 
 namespace K0Presentation
 
-variable (P : K0Presentation.{u, v})
+variable {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel)
 
 /-- The subgroup of relations: `{obj₂(r) - obj₁(r) - obj₃(r) | r : Rel}`. -/
-def subgroup : AddSubgroup (FreeAbelianGroup P.Obj) :=
+def subgroup : AddSubgroup (FreeAbelianGroup Obj) :=
   AddSubgroup.closure
-    {x | ∃ r : P.Rel,
+    {x | ∃ r : Rel,
       x = FreeAbelianGroup.of (P.obj₂ r) - FreeAbelianGroup.of (P.obj₁ r) -
           FreeAbelianGroup.of (P.obj₃ r)}
 
 /-- The Grothendieck group: free abelian group on objects modulo the relations. -/
-abbrev K0 : Type _ := FreeAbelianGroup P.Obj ⧸ P.subgroup
+abbrev K0 : Type _ := FreeAbelianGroup Obj ⧸ P.subgroup
 
 instance : AddCommGroup P.K0 :=
-  inferInstanceAs (AddCommGroup (FreeAbelianGroup P.Obj ⧸ P.subgroup))
+  inferInstanceAs (AddCommGroup (FreeAbelianGroup Obj ⧸ P.subgroup))
 
 /-- The class map: sends an object to its equivalence class. -/
-def of (X : P.Obj) : P.K0 :=
+def of (X : Obj) : P.K0 :=
   QuotientAddGroup.mk (FreeAbelianGroup.of X)
 
 /-- The fundamental relation: `[obj₂(r)] = [obj₁(r)] + [obj₃(r)]`. -/
-theorem of_rel (r : P.Rel) :
+theorem of_rel (r : Rel) :
     P.of (P.obj₂ r) = P.of (P.obj₁ r) + P.of (P.obj₃ r) := by
   simp only [of, K0]
   apply Quotient.sound
@@ -82,11 +78,11 @@ theorem of_rel (r : P.Rel) :
   abel
 
 /-- A function on objects is *additive* for a presentation if it respects the relations. -/
-class IsAdditive {A : Type*} [AddCommGroup A] (f : P.Obj → A) : Prop where
-  additive : ∀ r : P.Rel, f (P.obj₂ r) = f (P.obj₁ r) + f (P.obj₃ r)
+class IsAdditive {A : Type*} [AddCommGroup A] (f : Obj → A) : Prop where
+  additive : ∀ r : Rel, f (P.obj₂ r) = f (P.obj₁ r) + f (P.obj₃ r)
 
 /-- The universal property: an additive function lifts uniquely to a group homomorphism. -/
-def lift {A : Type*} [AddCommGroup A] (f : P.Obj → A) [P.IsAdditive f] : P.K0 →+ A :=
+def lift {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 →+ A :=
   QuotientAddGroup.lift P.subgroup (FreeAbelianGroup.lift f)
     ((AddSubgroup.closure_le _).mpr fun x ⟨r, hx⟩ ↦ by
       simp only [SetLike.mem_coe, AddMonoidHom.mem_ker, hx, map_sub,
@@ -95,7 +91,7 @@ def lift {A : Type*} [AddCommGroup A] (f : P.Obj → A) [P.IsAdditive f] : P.K0 
       rw [h]; abel)
 
 @[simp]
-theorem lift_of {A : Type*} [AddCommGroup A] (f : P.Obj → A) [P.IsAdditive f] (X : P.Obj) :
+theorem lift_of {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] (X : Obj) :
     P.lift f (P.of X) = f X :=
   FreeAbelianGroup.lift_apply_of f X
 
@@ -103,7 +99,7 @@ theorem lift_of {A : Type*} [AddCommGroup A] (f : P.Obj → A) [P.IsAdditive f] 
 
 /-- Two homomorphisms from `P.K0` that agree on generators are equal. -/
 theorem hom_ext {A : Type*} [AddCommGroup A] {f g : P.K0 →+ A}
-    (h : ∀ X : P.Obj, f (P.of X) = g (P.of X)) : f = g :=
+    (h : ∀ X : Obj, f (P.of X) = g (P.of X)) : f = g :=
   AddMonoidHom.ext fun x => by
     induction x using QuotientAddGroup.induction_on with
     | H x =>
@@ -117,7 +113,7 @@ theorem hom_ext {A : Type*} [AddCommGroup A] {f g : P.K0 →+ A}
 addition. -/
 @[elab_as_elim]
 theorem induction_on {motive : P.K0 → Prop} (x : P.K0)
-    (of : ∀ X : P.Obj, motive (P.of X))
+    (of : ∀ X : Obj, motive (P.of X))
     (zero : motive 0)
     (neg : ∀ a, motive a → motive (-a))
     (add : ∀ a b, motive a → motive b → motive (a + b)) : motive x := by
@@ -138,30 +134,33 @@ instance isAdditive_of : P.IsAdditive P.of where
 /-- The induced map on Grothendieck groups from a function on objects that respects
 relations. The additivity proof is an explicit argument since composed functions
 `Q.of ∘ f` are not suited to typeclass inference. -/
-def map {Q : K0Presentation} (f : P.Obj → Q.Obj)
+def map {QObj : Type u'} {QRel : Type v'} {Q : K0Presentation QObj QRel} (f : Obj → QObj)
     (hf : P.IsAdditive (Q.of ∘ f)) : P.K0 →+ Q.K0 :=
-  @P.lift _ _ (Q.of ∘ f) hf
+  P.lift (f := Q.of ∘ f)
 
 @[simp]
-theorem map_of {Q : K0Presentation} (f : P.Obj → Q.Obj)
-    (hf : P.IsAdditive (Q.of ∘ f)) (X : P.Obj) :
+theorem map_of {QObj : Type u'} {QRel : Type v'} {Q : K0Presentation QObj QRel} (f : Obj → QObj)
+    (hf : P.IsAdditive (Q.of ∘ f)) (X : Obj) :
     P.map f hf (P.of X) = Q.of (f X) :=
-  @P.lift_of _ _ (Q.of ∘ f) hf X
+  P.lift_of (f := Q.of ∘ f) X
 
 /-- A compatible map on relations implies additivity of the induced object map. -/
-theorem IsAdditive.of_relMap {Q : K0Presentation} (fObj : P.Obj → Q.Obj)
-    (fRel : P.Rel → Q.Rel)
+theorem IsAdditive.of_relMap {QObj : Type u'} {QRel : Type v'} {Q : K0Presentation QObj QRel}
+    (fObj : Obj → QObj) (fRel : Rel → QRel)
     (h₁ : ∀ r, fObj (P.obj₁ r) = Q.obj₁ (fRel r))
     (h₂ : ∀ r, fObj (P.obj₂ r) = Q.obj₂ (fRel r))
     (h₃ : ∀ r, fObj (P.obj₃ r) = Q.obj₃ (fRel r)) :
     P.IsAdditive (Q.of ∘ fObj) where
   additive r := by simp only [Function.comp]; rw [h₂, h₁, h₃]; exact Q.of_rel (fRel r)
 
-theorem map_id : P.map id ⟨P.of_rel⟩ = AddMonoidHom.id P.K0 := by
+theorem map_id : P.map (Q := P) id ⟨P.of_rel⟩ = AddMonoidHom.id P.K0 := by
   apply P.hom_ext; intro X; simp [map]
 
-variable {P} in
-theorem map_comp {Q R : K0Presentation} (f : P.Obj → Q.Obj) (g : Q.Obj → R.Obj)
+variable {Obj : Type u} {Rel : Type v} {P : K0Presentation Obj Rel} in
+theorem map_comp
+    {QObj : Type u'} {QRel : Type v'} {Q : K0Presentation QObj QRel}
+    {RObj : Type u''} {RRel : Type v''} {R : K0Presentation RObj RRel}
+    (f : Obj → QObj) (g : QObj → RObj)
     (hf : P.IsAdditive (Q.of ∘ f))
     (hg : Q.IsAdditive (R.of ∘ g))
     (hgf : P.IsAdditive (R.of ∘ g ∘ f)) :

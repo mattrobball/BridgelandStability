@@ -317,9 +317,9 @@ noncomputable instance HeartStabilityData.instHeartFullSubcategoryAbelian
 
 /-- The `K0Presentation` for short exact sequences in the heart of a t-structure:
 generators are heart objects, relations are short exact sequences. -/
-abbrev heartPresentation (h : HeartStabilityData C) : K0Presentation where
-  Obj := h.t.heart.FullSubcategory
-  Rel := {S : ShortComplex h.t.heart.FullSubcategory // S.ShortExact}
+abbrev heartPresentation (h : HeartStabilityData C) :
+    K0Presentation h.t.heart.FullSubcategory
+      {S : ShortComplex h.t.heart.FullSubcategory // S.ShortExact} where
   obj₁ := fun S => S.1.X₁
   obj₂ := fun S => S.1.X₂
   obj₃ := fun S => S.1.X₃
