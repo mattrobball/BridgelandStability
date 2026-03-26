@@ -40,7 +40,6 @@ jobs:
       - name: Build exposition tool
         working-directory: lean-exposition
         run: |
-          lake exe cache get
           lake build exposition
 
       - name: Generate exposition site
