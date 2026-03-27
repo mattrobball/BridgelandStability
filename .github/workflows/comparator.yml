@@ -107,42 +107,21 @@ jobs:
 
       # ── Comparator manual (trusted, not sandboxed) ─────────────────
 
-      - name: Install exposition binary
+      - name: Build exposition binary
         if: steps.comparator.outcome == 'success'
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          # Fetch the exposition binary from the lean-exposition repo
-          artifact_name="exposition-linux-x86_64"
-          run_id="$(gh run list \
-            -R "$LEAN_EXPOSITION_REPO" \
-            --workflow "Publish Exposition Binary" \
-            --branch "$LEAN_EXPOSITION_REF" \
-            --status success \
-            --json databaseId \
-            --jq '.[0].databaseId')"
-          if [ -z "$run_id" ]; then
-            echo "No published exposition binary found for $LEAN_EXPOSITION_REF"
-            echo "Skipping manual generation"
-            exit 0
-          fi
-          mkdir -p /tmp/exposition-artifact
-          gh run download "$run_id" \
-            -R "$LEAN_EXPOSITION_REPO" \
-            -n "${artifact_name}-$(gh api repos/$LEAN_EXPOSITION_REPO/actions/runs/$run_id --jq '.head_sha')" \
-            -D /tmp/exposition-artifact || true
-          # Find and extract the binary
-          tarball="$(find /tmp/exposition-artifact -name '*.tar.gz' | head -1)"
-          if [ -n "$tarball" ]; then
-            tar -xzf "$tarball" -C /tmp/exposition-artifact
-            exposition_bin="$(find /tmp/exposition-artifact -name exposition -type f | head -1)"
-            chmod +x "$exposition_bin"
-            echo "EXPOSITION_BIN=$exposition_bin" >> "$GITHUB_ENV"
-          fi
+          git clone --depth 1 --branch "$LEAN_EXPOSITION_REF" \
+            "https://github.com/$LEAN_EXPOSITION_REPO" /tmp/lean-exposition
+          cd /tmp/lean-exposition
+          lake build exposition
+          echo "EXPOSITION_BIN=/tmp/lean-exposition/.lake/build/bin/exposition" >> "$GITHUB_ENV"
 
       - name: Generate comparator manual
         if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
         run: |
+          # Copy the page splitter script so the exposition tool can find it
+          mkdir -p scripts
+          cp /tmp/lean-exposition/scripts/split_pages.py scripts/
           lake env "$EXPOSITION_BIN" \
             --root BridgelandStability \
             --repo-url https://github.com/${{ github.repository }} \
