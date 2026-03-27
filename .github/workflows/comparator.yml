@@ -123,15 +123,16 @@ jobs:
       - name: Generate comparator manual
         if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
         run: |
-          # Copy the page splitter script so the exposition tool can find it
-          mkdir -p scripts
-          cp /tmp/lean-exposition/scripts/split_pages.py scripts/
           lake env "$EXPOSITION_BIN" \
             --root BridgelandStability \
             --repo-url https://github.com/${{ github.repository }} \
             --comparator-config comparator.json \
             --write-shadow comparator-shadow \
             --shadow-only
+
+      - name: Split into multi-page
+        if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
+        run: python3 /tmp/lean-exposition/scripts/split_pages.py comparator-shadow/_out/html-multi
 
       - name: Upload manual preview
         if: github.event_name == 'pull_request' && steps.comparator.outcome == 'success'
