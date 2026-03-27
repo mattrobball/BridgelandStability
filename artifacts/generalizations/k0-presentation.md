@@ -1,10 +1,14 @@
 # K0Presentation: Unified Grothendieck group quotient layer
 
-## Status: Proposed
+## Status: Implemented
 
-## Problem
+Implemented in `BridgelandStability/GrothendieckGroup/Presentation.lean`.
+Both `K₀` (via `trianglePresentation`) and `HeartK0` (via `heartPresentation`)
+are now defined as instances of `K0Presentation`.
 
-The project has two separate K₀ constructions that follow the identical algebraic
+## Problem (original)
+
+The project had two separate K₀ constructions that follow the identical algebraic
 pattern — free abelian group on objects, quotient by relations from a class of
 "exact sequences":
 
@@ -13,7 +17,7 @@ pattern — free abelian group on objects, quotient by relations from a class of
 2. **Heart K₀** (`HeartEquivalence/Basic.lean`): relations from short exact
    sequences `0 → A → B → C → 0`.
 
-The duplicated surface is ~6 declarations: subgroup, quotient type,
+The duplicated surface was ~6 declarations: subgroup, quotient type,
 `instAddCommGroup`, `of`, `of_rel`/`of_triangle`/`of_shortExact`, `lift`.
 
 ## Mathematical context
@@ -28,73 +32,56 @@ However, formalizing extriangulated categories is a substantial project orthogon
 to Bridgeland stability. The right move here is a lightweight **purely algebraic**
 abstraction at just the quotient/universal-property layer.
 
-## Proposed abstraction
+## Implementation
+
+In `GrothendieckGroup/Presentation.lean`:
 
 ```lean
-structure K0Presentation where
-  Obj : Type u
-  Rel : Type v
+structure K0Presentation (Obj : Type u) (Rel : Type v) where
   obj₁ : Rel → Obj
   obj₂ : Rel → Obj
   obj₃ : Rel → Obj
 
 namespace K0Presentation
 
-def subgroup (P : K0Presentation) : AddSubgroup (FreeAbelianGroup P.Obj) :=
-  AddSubgroup.closure
-    {x | ∃ r : P.Rel,
-      x = FreeAbelianGroup.of (P.obj₂ r) - FreeAbelianGroup.of (P.obj₁ r) -
-          FreeAbelianGroup.of (P.obj₃ r)}
-
-abbrev K0 (P : K0Presentation) : Type _ :=
-  FreeAbelianGroup P.Obj ⧸ P.subgroup
-
-instance (P : K0Presentation) : AddCommGroup P.K0 :=
-  inferInstanceAs (AddCommGroup (FreeAbelianGroup P.Obj ⧸ P.subgroup))
-
-def of (P : K0Presentation) (X : P.Obj) : P.K0 :=
-  QuotientAddGroup.mk (FreeAbelianGroup.of X)
-
-lemma of_rel (P : K0Presentation) (r : P.Rel) :
-    P.of (P.obj₂ r) = P.of (P.obj₁ r) + P.of (P.obj₃ r) := ...
-
-class IsAdditive (P : K0Presentation) {A : Type w} [AddCommGroup A]
-    (f : P.Obj → A) : Prop where
-  additive : ∀ r : P.Rel, f (P.obj₂ r) = f (P.obj₁ r) + f (P.obj₃ r)
-
-def lift (P : K0Presentation) {A : Type w} [AddCommGroup A]
-    (f : P.Obj → A) [P.IsAdditive f] : P.K0 →+ A := ...
-
-@[simp] lemma lift_of (P : K0Presentation) {A : Type w} [AddCommGroup A]
-    (f : P.Obj → A) [P.IsAdditive f] (X : P.Obj) :
-    P.lift f (P.of X) = f X := ...
+def subgroup : AddSubgroup (FreeAbelianGroup Obj) := ...
+abbrev K0 : Type _ := FreeAbelianGroup Obj ⧸ P.subgroup
+def of (X : Obj) : P.K0 := ...
+theorem of_rel (r : Rel) : P.of (P.obj₂ r) = P.of (P.obj₁ r) + P.of (P.obj₃ r) := ...
+class IsAdditive {A : Type*} [AddCommGroup A] (f : Obj → A) : Prop where ...
+def lift {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 →+ A := ...
+theorem hom_ext {f g : P.K0 →+ A} (h : ∀ X, f (P.of X) = g (P.of X)) : f = g := ...
+theorem induction_on (x : P.K0) ... : motive x := ...
+def map (f : Obj → QObj) (hf : P.IsAdditive (Q.of ∘ f)) : P.K0 →+ Q.K0 := ...
 
 end K0Presentation
 ```
 
 ## Instantiations
 
-```lean
-abbrev trianglePresentation (C) : K0Presentation where
-  Obj := C
-  Rel := {T : Pretriangulated.Triangle C // T ∈ distTriang C}
-  obj₁ := fun T => T.1.obj₁
-  obj₂ := fun T => T.1.obj₂
-  obj₃ := fun T => T.1.obj₃
+In `GrothendieckGroup/Defs.lean`:
 
-abbrev heartPresentation (h : HeartStabilityData C) : K0Presentation where
-  Obj := h.t.heart.FullSubcategory
-  Rel := {S : ShortComplex h.t.heart.FullSubcategory // S.ShortExact}
+```lean
+abbrev trianglePresentation :
+    K0Presentation C {T : Pretriangulated.Triangle C // T ∈ distTriang C} where
+  obj₁ := fun r => r.1.obj₁
+  obj₂ := fun r => r.1.obj₂
+  obj₃ := fun r => r.1.obj₃
+
+def K₀ : Type _ := (trianglePresentation C).K0
+```
+
+In `HeartEquivalence/Basic.lean`:
+
+```lean
+abbrev heartPresentation (h : HeartStabilityData C) :
+    K0Presentation h.t.heart.FullSubcategory
+      {S : ShortComplex h.t.heart.FullSubcategory // S.ShortExact} where
   obj₁ := fun S => S.1.X₁
   obj₂ := fun S => S.1.X₂
   obj₃ := fun S => S.1.X₃
-```
 
-Public names stay as wrappers:
-
-```lean
-abbrev K₀ C := (trianglePresentation C).K0
-abbrev HeartK0 h := (heartPresentation h).K0
+def HeartK0 (h : HeartStabilityData C) : Type _ := (heartPresentation h).K0
 ```
 
 ## Design decisions
@@ -120,12 +107,11 @@ abbrev HeartK0 h := (heartPresentation h).K0
   different presentations and cannot be abstracted.
 - The `IsTriangleAdditive` typeclass — this is triangulated-specific and stays.
 
-## Effort estimate
+## Outcome
 
-Small. The proofs for `of_rel`, `lift`, `lift_of` are copy-paste from the
-existing `K₀` versions with `Triangle`/`ShortComplex` replaced by `P.Rel`.
-The main work is rewiring downstream consumers to use the wrapper names,
-which should be transparent if `abbrev` is used correctly.
+The refactoring also added `hom_ext`, `induction_on`, and `map` at the
+`K0Presentation` level, which were then inherited by both `K₀` and `HeartK0`.
+The `abbrev` strategy kept all downstream consumers working without changes.
 
 ## References
 

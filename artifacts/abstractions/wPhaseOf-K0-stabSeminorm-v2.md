@@ -46,17 +46,15 @@ Category-dependent API (PhaseArithmetic.lean, ~30 theorems):
 | `wPhaseOf_lt_of_add_le_lt` / `_gt` | additivity phase bounds |
 | `wPhaseOf_gt_of_intervalProp` / `_lt` | Lemma 7.3(b) bounds for interval objects |
 
-### 2. `K₀` (GrothendieckGroup/Defs.lean)
+### 2. `K₀` (GrothendieckGroup/Defs.lean, Presentation.lean)
 
-Definition:
+Definition (via `K0Presentation`):
 ```lean
-def K₀Subgroup : AddSubgroup (FreeAbelianGroup C) :=
-  AddSubgroup.closure
-    {x | ∃ (T : Pretriangulated.Triangle C), (T ∈ distTriang C) ∧
-        x = FreeAbelianGroup.of T.obj₂ - FreeAbelianGroup.of T.obj₁ -
-          FreeAbelianGroup.of T.obj₃}
+abbrev trianglePresentation :
+    K0Presentation C {T : Pretriangulated.Triangle C // T ∈ distTriang C} where
+  obj₁ := fun r => r.1.obj₁; obj₂ := fun r => r.1.obj₂; obj₃ := fun r => r.1.obj₃
 
-def K₀ : Type _ := FreeAbelianGroup C ⧸ K₀Subgroup C
+def K₀ : Type _ := (trianglePresentation C).K0
 ```
 
 Core API:
@@ -71,6 +69,7 @@ Core API:
 | `K₀.of_shift_one` / `of_shift_neg_one` | `[X⟦1⟧] = -[X]` (`@[simp]`) |
 | `IsTriangleAdditive` | Typeclass for triangle-respecting functions |
 | `K₀.lift` / `K₀.lift_of` | Universal property |
+| `K₀.hom_ext` | Extensionality for morphisms out of `K₀` (`@[ext]`) |
 | `K₀.of_postnikovTower_eq_sum` | `[E] = Σ [Fᵢ]` (Postnikov decomposition) |
 
 ### 3. `stabSeminorm` (StabilityCondition/Defs.lean)
@@ -110,30 +109,17 @@ Companion `slicingDist`:
 
 ## Phase 2: Duplication Analysis
 
-### 2A. K₀ and HeartK0: K0Presentation proposal
+### 2A. K₀ and HeartK0: K0Presentation (implemented)
 
-The existing proposal at `artifacts/generalizations/k0-presentation.md` remains valid. The
-duplicated pattern is confirmed:
+The `K0Presentation` refactoring proposed in `artifacts/generalizations/k0-presentation.md`
+has been implemented. Both K₀ constructions now share the common abstraction:
 
-**Triangulated K₀** (`GrothendieckGroup/Defs.lean`):
-- `K₀Subgroup` = `AddSubgroup.closure {[T.obj₂] - [T.obj₁] - [T.obj₃] | T ∈ distTriang}`
-- `K₀` = `FreeAbelianGroup C ⧸ K₀Subgroup C`
-- `K₀.of`, `K₀.of_triangle`, `K₀.lift`, `K₀.lift_of`
+- **Triangulated K₀**: `K₀ C = (trianglePresentation C).K0`
+- **Heart K₀**: `HeartK0 h = (heartPresentation h).K0`
 
-**Heart K₀** (`HeartEquivalence/Basic.lean`):
-- `HeartK0Subgroup` = `AddSubgroup.closure {[S.X₂] - [S.X₁] - [S.X₃] | S.ShortExact}`
-- `HeartK0` = `FreeAbelianGroup heart ⧸ HeartK0Subgroup`
-- `HeartK0.of`, `HeartK0.of_shortExact`, `ZOnHeartK0` (via `QuotientAddGroup.lift`)
-
-The proposal does not need updating. One minor note: the `HeartK0` in the codebase
-does *not* have a standalone `lift` definition -- the universal property is inlined
-into `ZOnHeartK0` and `heartK0ToK0` via `QuotientAddGroup.lift` each time. This
-makes the factoring more valuable, not less, since a shared `K0Presentation.lift`
-would eliminate three copies of the same `(AddSubgroup.closure_le _).mpr` proof
-pattern.
-
-**Verdict**: Proposal is still valid, effort is small, and it would deduplicate
-~6 shared declarations plus 3 copies of the universal-property proof.
+The refactoring also added `K0Presentation.hom_ext` (extensionality),
+`K0Presentation.induction_on`, and `K0Presentation.map` (functorial maps),
+which are inherited by both instantiations.
 
 ### 2B. wPhaseOf: Overlap with Mathlib's Complex.arg API
 
@@ -296,23 +282,11 @@ currently proved. Proposal below.
 
 ### Proposal A: K0Presentation factoring
 
-**Status**: Propose (reaffirm existing proposal).
+**Status**: Implemented.
 
-The proposal at `artifacts/generalizations/k0-presentation.md` is still valid and
-needs no updating. It would deduplicate:
-- 2x `*Subgroup` definitions
-- 2x quotient type definitions
-- 2x `AddCommGroup` instances
-- 2x `of` maps
-- 2x `of_rel` / `of_triangle` / `of_shortExact` proofs
-- 3x `QuotientAddGroup.lift` universal-property proofs (K₀.lift, ZOnHeartK0, heartK0ToK0)
-
-The shared `K0Presentation.lift` would also lay groundwork for `K₀.hom_ext`
-(extensionality for morphisms out of K₀), which is currently missing and inlined
-~5 times via `QuotientAddGroup.addMonoidHom_ext` + `FreeAbelianGroup.lift_ext`.
-
-**Effort**: Small. Proof-copy from existing K₀ into the generic structure, then
-rewire downstream consumers through `abbrev` wrappers.
+See `GrothendieckGroup/Presentation.lean`. Deduplicated the subgroup, quotient,
+instance, class map, relation lemma, universal property, and extensionality across
+both `K₀` and `HeartK0`. Also added `induction_on` and `map` at the generic level.
 
 ### Proposal B: PseudoEMetricSpace on Slicing C
 
@@ -448,7 +422,7 @@ However:
 
 | Item | Proposal | Status | Effort |
 |---|---|---|---|
-| K0 / HeartK0 duplication | K0Presentation factoring | **Propose** (reaffirm) | Small |
+| K0 / HeartK0 duplication | K0Presentation factoring | **Implemented** | -- |
 | slicingDist metric | PseudoEMetricSpace instance | **Propose** (conditional) | Medium |
 | ForMathlib complex lemmas | Mathlib upstreaming PR | **Propose** (external) | Small/file |
 | wPhaseOf file reorganization | Move pure lemmas | **Decline** | -- |

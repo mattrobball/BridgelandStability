@@ -27,7 +27,7 @@ deformation theorem, manifold structure) is novel relative to Mathlib.
 |---|---|---|---|
 | StabilityCondition | StabilityCondition/Defs.lean | Maximal | WithClassMap parametrization well-designed for bare + numerical variants |
 | PostnikovTower | PostnikovTower/Defs.lean | Maximal | Deliberately weaker than Mathlib's SpectralObject (no coherence burden) |
-| K₀ | GrothendieckGroup/Defs.lean | Maximal | Mathlib has no categorical K₀; add K₀.hom_ext to eliminate 5+ repeated patterns |
+| K₀ | GrothendieckGroup/Defs.lean, Presentation.lean | Maximal | Built on K0Presentation; K₀.hom_ext and induction_on now provided |
 | IntervalCat | IntervalCategory/Basic.lean | Maximal | Open interval and b-a≤1 both mathematically forced; quasi-abelian infra is upstream-ready |
 | stabSeminorm | StabilityCondition/Defs.lean | Maximal | Could weaken to PreStabilityCondition; register PseudoEMetricSpace on Slicing |
 
@@ -43,7 +43,7 @@ deformation theorem, manifold structure) is novel relative to Mathlib.
 7. **Pure-ℂ wPhaseOf lemmas** (~24 with no category dependency)
 
 ### Internal improvements
-8. **K₀.hom_ext** lemma — eliminates 5+ repeated two-step extension patterns
+8. ~~**K₀.hom_ext** lemma~~ — done (via K0Presentation)
 9. **Register PseudoEMetricSpace** on `Slicing C` — all 3 axioms already proved
 10. **Weaken stabSeminorm** to `PreStabilityCondition` — definition doesn't need locallyFinite
 11. **AbelianHNFiltration ↔ HNFiltration bridge** — currently ad-hoc in HeartEquivalence

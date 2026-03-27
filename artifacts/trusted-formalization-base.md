@@ -91,22 +91,27 @@ def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
 **Paper (implicit).** K(D) is the free abelian group on objects of D modulo
 [B] = [A] + [C] for each distinguished triangle A → B → C → A[1].
 
+The quotient plumbing is factored through `K0Presentation` (in
+`GrothendieckGroup/Presentation.lean`), a lightweight algebraic
+abstraction reused by both the triangulated K₀ and the heart K₀.
+
 ```lean
 -- Paper: K(D) = Free(Ob D) / ⟨[B] - [A] - [C] : A → B → C → A[1] distinguished⟩
-def K₀Subgroup : AddSubgroup (FreeAbelianGroup C) :=
-  AddSubgroup.closure
-    {x | ∃ (T : Pretriangulated.Triangle C), (T ∈ distTriang C) ∧
-        x = FreeAbelianGroup.of T.obj₂ - FreeAbelianGroup.of T.obj₁ -
-          FreeAbelianGroup.of T.obj₃}
+-- Instantiates K0Presentation with distinguished triangles as the relation type
+abbrev trianglePresentation :
+    K0Presentation C {T : Pretriangulated.Triangle C // T ∈ distTriang C} where
+  obj₁ := fun r => r.1.obj₁
+  obj₂ := fun r => r.1.obj₂
+  obj₃ := fun r => r.1.obj₃
 
-def K₀ : Type _ := FreeAbelianGroup C ⧸ K₀Subgroup C
+def K₀ : Type _ := (trianglePresentation C).K0
 
 instance K₀.instAddCommGroup : AddCommGroup (K₀ C) :=
-  inferInstanceAs (AddCommGroup (FreeAbelianGroup C ⧸ K₀Subgroup C))
+  inferInstanceAs (AddCommGroup (trianglePresentation C).K0)
 
 -- Paper: [E] ∈ K(D) denotes the class of an object E
 def K₀.of (X : C) : K₀ C :=
-  (QuotientAddGroup.mk (FreeAbelianGroup.of X) : FreeAbelianGroup C ⧸ K₀Subgroup C)
+  QuotientAddGroup.mk (FreeAbelianGroup.of X)
 
 -- Paper: f is triangle-additive if f(B) = f(A) + f(C) for each dist. triangle A → B → C → A[1]
 class IsTriangleAdditive {A : Type*} [AddCommGroup A] (f : C → A) : Prop where
@@ -115,15 +120,10 @@ class IsTriangleAdditive {A : Type*} [AddCommGroup A] (f : C → A) : Prop where
 
 -- Paper: universal property — triangle-additive f : Ob D → A lifts to K(D) →+ A
 def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] : K₀ C →+ A :=
-  QuotientAddGroup.lift (K₀Subgroup C) (FreeAbelianGroup.lift f)
-    ((AddSubgroup.closure_le _).mpr fun x ⟨T, hT, hx⟩ ↦ by
-      simp only [SetLike.mem_coe, AddMonoidHom.mem_ker, hx, map_sub,
-        FreeAbelianGroup.lift_apply_of]
-      have h := IsTriangleAdditive.additive (f := f) T hT
-      rw [h]; abel)
+  (trianglePresentation C).lift f
 ```
 
-**Declarations:** `K₀Subgroup`, `K₀`, `K₀.instAddCommGroup`, `K₀.of`,
+**Declarations:** `trianglePresentation`, `K₀`, `K₀.instAddCommGroup`, `K₀.of`,
 `IsTriangleAdditive`, `K₀.lift`
 
 ---
