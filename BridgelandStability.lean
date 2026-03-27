@@ -62,7 +62,7 @@ public import BridgelandStability.StabilityFunction.Basic
 public import BridgelandStability.StabilityFunction.HarderNarasimhan
 public import BridgelandStability.StabilityFunction.MDQ
 public import BridgelandStability.StabilityFunction.Uniqueness
-public import BridgelandStability.ForMathlib.CategoryTheory.QuasiAbelian.Basic
+public import BridgelandStability.QuasiAbelian.Basic
 public import BridgelandStability.TStructure.AbelianSubcategoryImageFactorisation
 public import BridgelandStability.TStructure.HeartAbelian
 
