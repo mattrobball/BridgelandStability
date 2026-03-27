@@ -10,22 +10,22 @@
 })()</script>
     <base href="../"><meta charset="utf-8">
     <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <title>BridgelandStability Comparator Manual</title><link rel="stylesheet" href="../book.css">
-    <link rel="stylesheet" href="../verso-vars.css">
+    <title>BridgelandStability Comparator Manual</title><link rel="stylesheet" href="book.css">
+    <link rel="stylesheet" href="verso-vars.css">
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
-    <script src="../-verso-search/elasticlunr.min.js"></script>
-    <script src="../-verso-search/fuzzysort.min.js"></script>
-    <script src="../-verso-search/searchIndex.js"></script>
-    <script type="module" src="../-verso-search/search-init.js"></script>
-    <link rel="stylesheet" href="../-verso-search/search-box.css">
-    <link rel="stylesheet" href="../-verso-search/search-highlight.css">
-    <link rel="stylesheet" href="../-verso-search/domain-display.css">
-    <script src="../-verso-data/katex/katex.js"></script>
-    <script src="../-verso-data/katex/math.js"></script>
-    <script src="../-verso-data/popper.min.js"></script>
-    <script src="../-verso-data/tippy-bundle.umd.min.js"></script>
-    <link rel="stylesheet" href="../-verso-data/tippy-border.css">
-    <link rel="stylesheet" href="../-verso-data/katex/katex.css">
+    <script src="-verso-search/elasticlunr.min.js"></script>
+    <script src="-verso-search/fuzzysort.min.js"></script>
+    <script src="-verso-search/searchIndex.js"></script>
+    <script type="module" src="-verso-search/search-init.js"></script>
+    <link rel="stylesheet" href="-verso-search/search-box.css">
+    <link rel="stylesheet" href="-verso-search/search-highlight.css">
+    <link rel="stylesheet" href="-verso-search/domain-display.css">
+    <script src="-verso-data/katex/katex.js"></script>
+    <script src="-verso-data/katex/math.js"></script>
+    <script src="-verso-data/popper.min.js"></script>
+    <script src="-verso-data/tippy-bundle.umd.min.js"></script>
+    <link rel="stylesheet" href="-verso-data/tippy-border.css">
+    <link rel="stylesheet" href="-verso-data/katex/katex.css">
     <style>#graph-root { background: var(--site-card, #fffdf8); border: 1px solid var(--site-border, #d8cdbd); border-radius: 14px; min-height: 620px; padding: 1rem; margin: 1rem 0; } #graph-root svg { display: block; }</style><style>main section > h2, main section > h3, main section > h4 { border-left: 4px solid var(--verso-structure-color, #154734); padding-left: 0.6rem; }</style><style>:root { --site-ink: #193428; --site-muted: #5a655f; --site-warm: #fbf7ef; --site-card: #fffdf8; --site-accent: #a14d2a; --site-border: #d8cdbd; --verso-structure-color: #154734; --verso-toc-background-color: #f4efe5; --verso-selected-color: #f0dcc8; --verso-text-font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif; --verso-structure-font-family: 'Avenir Next Condensed', 'Gill Sans', sans-serif; --verso-code-font-family: 'Iosevka Term', 'JetBrains Mono', monospace; }</style><style>.hl.lean.block { background: #faf4e8; border: 1px solid #eadfcf; border-radius: 10px; padding: 0.85rem 1rem; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7); }</style><style>details.collapsible-proof > summary { cursor: pointer; color: var(--site-muted, #666); font-style: italic; margin: 0.3em 0; user-select: none; font-family: var(--verso-structure-font-family, sans-serif); font-size: 0.88rem; }</style><style>details.collapsible-proof > summary:hover { color: var(--site-accent, #a14d2a); }</style><style>body { color: var(--site-ink); }</style><style>
 
 .hl.lean {
@@ -885,7 +885,7 @@ window.onload = () => {
 </script>
     <script>
       document.addEventListener('DOMContentLoaded',function(){var el=document.getElementById('graph-data');if(!el)return;var data=JSON.parse(el.textContent);var root=document.getElementById('graph-root');if(!root)return;var w=root.clientWidth,h=600;var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width','100%');svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);root.appendChild(svg);var nodeMap={};data.nodes.forEach(function(n){nodeMap[n.id]=n;});var groups=Array.from(new Set(data.nodes.map(function(n){return n.groupKey})));var colors=['#3d6b59','#b96d2d','#7a4e7a','#2f5f87','#8a3b3b','#5f6f2e','#9a5b8f','#6b5041'];function groupColor(g){return colors[groups.indexOf(g)%colors.length]}var sim=d3.forceSimulation(data.nodes).force('link',d3.forceLink(data.edges).id(function(d){return d.id}).distance(80).strength(0.2)).force('charge',d3.forceManyBody().strength(-210)).force('center',d3.forceCenter(w/2,h/2)).force('collide',d3.forceCollide(22));var g=document.createElementNS('http://www.w3.org/2000/svg','g');svg.appendChild(g);var linkG=document.createElementNS('http://www.w3.org/2000/svg','g');g.appendChild(linkG);var nodeG=document.createElementNS('http://www.w3.org/2000/svg','g');g.appendChild(nodeG);data.edges.forEach(function(e){var line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('stroke','#b8b0a4');line.setAttribute('stroke-opacity','0.6');line.setAttribute('stroke-width','1.2');line._data=e;linkG.appendChild(line)});data.nodes.forEach(function(n){var ng=document.createElementNS('http://www.w3.org/2000/svg','g');ng.setAttribute('cursor','pointer');var c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('r','10');c.setAttribute('fill',groupColor(n.groupKey));c.setAttribute('stroke','#1f6b4b');c.setAttribute('stroke-width','2');ng.appendChild(c);var t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('dx','14');t.setAttribute('dy','4');t.setAttribute('font-size','11');t.setAttribute('fill','#333');t.textContent=n.label;ng.appendChild(t);ng._data=n;ng.addEventListener('click',function(){if(n.href)window.location.href=n.href});nodeG.appendChild(ng)});sim.on('tick',function(){linkG.childNodes.forEach(function(l){l.setAttribute('x1',l._data.source.x);l.setAttribute('y1',l._data.source.y);l.setAttribute('x2',l._data.target.x);l.setAttribute('y2',l._data.target.y)});nodeG.childNodes.forEach(function(ng){var d=ng._data;ng.setAttribute('transform','translate('+d.x+','+d.y+')')})});var zoom=d3.zoom().scaleExtent([0.25,4]).on('zoom',function(e){g.setAttribute('transform',e.transform)});d3.select(svg).call(zoom)})</script>
-    <script src="../-verso-search/search-highlight.js" defer="defer"></script>
+    <script src="-verso-search/search-highlight.js" defer="defer"></script>
     </head>
 <body>
 <header><div class="header-logo-wrapper"></div><div class="header-title-wrapper"><a href="../" class="header-title"><h1>BridgelandStability Comparator Manual</h1></a></div></header>
@@ -919,5 +919,6 @@ window.onload = () => {
               </section>
             
 </div></main></div>
+
 </body>
 </html>
