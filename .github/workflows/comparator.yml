@@ -116,6 +116,10 @@ jobs:
           lake build exposition
           echo "EXPOSITION_BIN=/tmp/lean-exposition/.lake/build/bin/exposition" >> "$GITHUB_ENV"
 
+      - name: Build project for exposition
+        if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
+        run: lake build BridgelandStability
+
       - name: Generate comparator manual
         if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
         run: |
