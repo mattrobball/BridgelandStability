@@ -1,0 +1,1 @@
+window.docContents[195].resolve({"/#BridgelandStability-Comparator-Manual":{"contents":"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n","context":"","header":"BridgelandStability Comparator Manual","id":"/#BridgelandStability-Comparator-Manual"}});

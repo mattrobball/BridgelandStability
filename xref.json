@@ -1,0 +1,1231 @@
+{"Verso.Genre.Manual.section":
+ {"title": "Sections or chapters of the manual",
+  "description": null,
+  "contents":
+  {"shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabseminorm-145-150":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabseminorm-145-150",
+     "data":
+     {"title": "CategoryTheory.Triangulated.stabSeminorm",
+      "shortTitle": null,
+      "sectionNum": "10.7.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title": "CategoryTheory.Triangulated.stabSeminorm",
+        "shortTitle": null,
+        "number": "7"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-tostabilitycondition-96-101":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-tostabilitycondition-96-101",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.toStabilityCondition",
+      "shortTitle": null,
+      "sectionNum": "10.5.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.toStabilityCondition",
+        "shortTitle": null,
+        "number": "5"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-topologicalspace-169-175":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-topologicalspace-169-175",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace",
+      "shortTitle": null,
+      "sectionNum": "10.10.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace",
+        "shortTitle": null,
+        "number": "10"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-insttopologicalspace-177-179":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-insttopologicalspace-177-179",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.instTopologicalSpace",
+      "shortTitle": null,
+      "sectionNum": "10.11.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.instTopologicalSpace",
+        "shortTitle": null,
+        "number": "11"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-componentindex-181-183":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-componentindex-181-183",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex",
+      "shortTitle": null,
+      "sectionNum": "10.12.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex",
+        "shortTitle": null,
+        "number": "12"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-component-185-187":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-component-185-187",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component",
+      "shortTitle": null,
+      "sectionNum": "10.13.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component",
+        "shortTitle": null,
+        "number": "13"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-89-94":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-withclassmap-89-94",
+     "data":
+     {"title": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap",
+      "shortTitle": null,
+      "sectionNum": "10.4.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap",
+        "shortTitle": null,
+        "number": "4"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-topologicalspace-159-165":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-topologicalspace-159-165",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.StabilityCondition.topologicalSpace",
+      "shortTitle": null,
+      "sectionNum": "10.9.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.StabilityCondition.topologicalSpace",
+        "shortTitle": null,
+        "number": "9"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-105-108":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-stabilitycondition-105-108",
+     "data":
+     {"title": "CategoryTheory.Triangulated.StabilityCondition",
+      "shortTitle": null,
+      "sectionNum": "10.6.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title": "CategoryTheory.Triangulated.StabilityCondition",
+        "shortTitle": null,
+        "number": "6"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-slicingdist-137-143":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-slicingdist-137-143",
+     "data":
+     {"title": "CategoryTheory.Triangulated.slicingDist",
+      "shortTitle": null,
+      "sectionNum": "10.3.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title": "CategoryTheory.Triangulated.slicingDist",
+        "shortTitle": null,
+        "number": "3"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-prestabilitycondition-withclassmap-toprestabilitycondition-70-78":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-prestabilitycondition-withclassmap-toprestabilitycondition-70-78",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.toPreStabilityCondition",
+      "shortTitle": null,
+      "sectionNum": "10.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.toPreStabilityCondition",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-prestabilitycondition-withclassmap-56-68":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-prestabilitycondition-withclassmap-56-68",
+     "data":
+     {"title": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
+      "shortTitle": null,
+      "sectionNum": "10.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title":
+        "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-basisnhd-154-157":
+   [{"id":
+     "shadow-entry-bridgelandstability-stabilitycondition-defs-categorytheory-triangulated-basisnhd-154-157",
+     "data":
+     {"title": "CategoryTheory.Triangulated.basisNhd",
+      "shortTitle": null,
+      "sectionNum": "10.8.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs", "shortTitle": null, "number": "10"},
+       {"title": "CategoryTheory.Triangulated.basisNhd",
+        "shortTitle": null,
+        "number": "8"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-phiplus-469-475":
+   [{"id":
+     "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-phiplus-469-475",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing.phiPlus",
+      "shortTitle": null,
+      "sectionNum": "8.6.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"},
+       {"title": "CategoryTheory.Triangulated.Slicing.phiPlus",
+        "shortTitle": null,
+        "number": "6"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-phiminus-477-483":
+   [{"id":
+     "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-phiminus-477-483",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing.phiMinus",
+      "shortTitle": null,
+      "sectionNum": "8.7.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"},
+       {"title": "CategoryTheory.Triangulated.Slicing.phiMinus",
+        "shortTitle": null,
+        "number": "7"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-intervalprop-198-201":
+   [{"id":
+     "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-intervalprop-198-201",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing.intervalProp",
+      "shortTitle": null,
+      "sectionNum": "8.3.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"},
+       {"title": "CategoryTheory.Triangulated.Slicing.intervalProp",
+        "shortTitle": null,
+        "number": "3"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-72-92":
+   [{"id":
+     "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-slicing-72-92",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing",
+      "shortTitle": null,
+      "sectionNum": "8.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"},
+       {"title": "CategoryTheory.Triangulated.Slicing",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-hnfiltration-exists-nonzero-last-437-465":
+   [{"id":
+     "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-hnfiltration-exists-nonzero-last-437-465",
+     "data":
+     {"title": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
+      "shortTitle": null,
+      "sectionNum": "8.5.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"},
+       {"title": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
+        "shortTitle": null,
+        "number": "5"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-hnfiltration-exists-nonzero-first-371-400":
+   [{"id":
+     "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-hnfiltration-exists-nonzero-first-371-400",
+     "data":
+     {"title": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first",
+      "shortTitle": null,
+      "sectionNum": "8.4.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"},
+       {"title":
+        "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first",
+        "shortTitle": null,
+        "number": "4"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-hnfiltration-61-70":
+   [{"id":
+     "shadow-entry-bridgelandstability-slicing-defs-categorytheory-triangulated-hnfiltration-61-70",
+     "data":
+     {"title": "CategoryTheory.Triangulated.HNFiltration",
+      "shortTitle": null,
+      "sectionNum": "8.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"},
+       {"title": "CategoryTheory.Triangulated.HNFiltration",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-postnikovtower-defs-categorytheory-triangulated-postnikovtower-factor-87-90":
+   [{"id":
+     "shadow-entry-bridgelandstability-postnikovtower-defs-categorytheory-triangulated-postnikovtower-factor-87-90",
+     "data":
+     {"title": "CategoryTheory.Triangulated.PostnikovTower.factor",
+      "shortTitle": null,
+      "sectionNum": "5.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "PostnikovTower.Defs", "shortTitle": null, "number": "5"},
+       {"title": "CategoryTheory.Triangulated.PostnikovTower.factor",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-postnikovtower-defs-categorytheory-triangulated-postnikovtower-53-81":
+   [{"id":
+     "shadow-entry-bridgelandstability-postnikovtower-defs-categorytheory-triangulated-postnikovtower-53-81",
+     "data":
+     {"title": "CategoryTheory.Triangulated.PostnikovTower",
+      "shortTitle": null,
+      "sectionNum": "5.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "PostnikovTower.Defs", "shortTitle": null, "number": "5"},
+       {"title": "CategoryTheory.Triangulated.PostnikovTower",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-numericalstabilitymanifold-categorytheory-triangulated-numericalstabilitycondition-existscomplexmanifoldonconnectedcomponent-764-780":
+   [{"id":
+     "shadow-entry-bridgelandstability-numericalstabilitymanifold-categorytheory-triangulated-numericalstabilitycondition-existscomplexmanifoldonconnectedcomponent-764-780",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent",
+      "shortTitle": null,
+      "sectionNum": "1.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Overview", "shortTitle": null, "number": "1"},
+       {"title":
+        "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-numericalstability-defs-categorytheory-triangulated-isfinitetype-45-52":
+   [{"id":
+     "shadow-entry-bridgelandstability-numericalstability-defs-categorytheory-triangulated-isfinitetype-45-52",
+     "data":
+     {"title": "CategoryTheory.Triangulated.IsFiniteType",
+      "shortTitle": null,
+      "sectionNum": "4.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "NumericalStability.Defs", "shortTitle": null, "number": "4"},
+       {"title": "CategoryTheory.Triangulated.IsFiniteType",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-numericalstability-defs-categorytheory-triangulated-eulerformobj-56-59":
+   [{"id":
+     "shadow-entry-bridgelandstability-numericalstability-defs-categorytheory-triangulated-eulerformobj-56-59",
+     "data":
+     {"title": "CategoryTheory.Triangulated.eulerFormObj",
+      "shortTitle": null,
+      "sectionNum": "4.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "NumericalStability.Defs", "shortTitle": null, "number": "4"},
+       {"title": "CategoryTheory.Triangulated.eulerFormObj",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-intervalcategory-quasiabelian-categorytheory-triangulated-slicing-intervalcat-haskernels-119-122":
+   [{"id":
+     "shadow-entry-bridgelandstability-intervalcategory-quasiabelian-categorytheory-triangulated-slicing-intervalcat-haskernels-119-122",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels",
+      "shortTitle": null,
+      "sectionNum": "11.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "IntervalCategory.QuasiAbelian",
+        "shortTitle": null,
+        "number": "11"},
+       {"title": "CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-intervalcategory-quasiabelian-categorytheory-triangulated-slicing-intervalcat-hascokernels-200-203":
+   [{"id":
+     "shadow-entry-bridgelandstability-intervalcategory-quasiabelian-categorytheory-triangulated-slicing-intervalcat-hascokernels-200-203",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels",
+      "shortTitle": null,
+      "sectionNum": "11.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "IntervalCategory.QuasiAbelian",
+        "shortTitle": null,
+        "number": "11"},
+       {"title": "CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-intervalcategory-finitelength-categorytheory-triangulated-slicing-islocallyfinite-261-279":
+   [{"id":
+     "shadow-entry-bridgelandstability-intervalcategory-finitelength-categorytheory-triangulated-slicing-islocallyfinite-261-279",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing.IsLocallyFinite",
+      "shortTitle": null,
+      "sectionNum": "12.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "IntervalCategory.FiniteLength",
+        "shortTitle": null,
+        "number": "12"},
+       {"title": "CategoryTheory.Triangulated.Slicing.IsLocallyFinite",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-intervalcategory-basic-categorytheory-triangulated-slicing-intervalcat-72-78":
+   [{"id":
+     "shadow-entry-bridgelandstability-intervalcategory-basic-categorytheory-triangulated-slicing-intervalcat-72-78",
+     "data":
+     {"title": "CategoryTheory.Triangulated.Slicing.IntervalCat",
+      "shortTitle": null,
+      "sectionNum": "9.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "IntervalCategory.Basic", "shortTitle": null, "number": "9"},
+       {"title": "CategoryTheory.Triangulated.Slicing.IntervalCat",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-subgroup-51-56":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-subgroup-51-56",
+     "data":
+     {"title": "K0Presentation.subgroup",
+      "shortTitle": null,
+      "sectionNum": "3.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Presentation",
+        "shortTitle": null,
+        "number": "3"},
+       {"title": "K0Presentation.subgroup",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-lift-85-92":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-lift-85-92",
+     "data":
+     {"title": "K0Presentation.lift",
+      "shortTitle": null,
+      "sectionNum": "3.5.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Presentation",
+        "shortTitle": null,
+        "number": "3"},
+       {"title": "K0Presentation.lift", "shortTitle": null, "number": "5"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-k0-58-59":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-k0-58-59",
+     "data":
+     {"title": "K0Presentation.K0",
+      "shortTitle": null,
+      "sectionNum": "3.4.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Presentation",
+        "shortTitle": null,
+        "number": "3"},
+       {"title": "K0Presentation.K0", "shortTitle": null, "number": "4"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-isadditive-81-83":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-isadditive-81-83",
+     "data":
+     {"title": "K0Presentation.IsAdditive",
+      "shortTitle": null,
+      "sectionNum": "3.3.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Presentation",
+        "shortTitle": null,
+        "number": "3"},
+       {"title": "K0Presentation.IsAdditive",
+        "shortTitle": null,
+        "number": "3"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-36-45":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-presentation-k0presentation-36-45",
+     "data":
+     {"title": "K0Presentation",
+      "shortTitle": null,
+      "sectionNum": "3.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Presentation",
+        "shortTitle": null,
+        "number": "3"},
+       {"title": "K0Presentation", "shortTitle": null, "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-trianglepresentation-54-60":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-trianglepresentation-54-60",
+     "data":
+     {"title": "CategoryTheory.Triangulated.trianglePresentation",
+      "shortTitle": null,
+      "sectionNum": "2.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"},
+       {"title": "CategoryTheory.Triangulated.trianglePresentation",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k-of-69-71":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k-of-69-71",
+     "data":
+     {"title": "CategoryTheory.Triangulated.K₀.of",
+      "shortTitle": null,
+      "sectionNum": "2.6.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"},
+       {"title": "CategoryTheory.Triangulated.K₀.of",
+        "shortTitle": null,
+        "number": "6"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k-lift-160-163":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k-lift-160-163",
+     "data":
+     {"title": "CategoryTheory.Triangulated.K₀.lift",
+      "shortTitle": null,
+      "sectionNum": "2.7.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"},
+       {"title": "CategoryTheory.Triangulated.K₀.lift",
+        "shortTitle": null,
+        "number": "7"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k-instaddcommgroup-66-67":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k-instaddcommgroup-66-67",
+     "data":
+     {"title": "CategoryTheory.Triangulated.K₀.instAddCommGroup",
+      "shortTitle": null,
+      "sectionNum": "2.5.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"},
+       {"title": "CategoryTheory.Triangulated.K₀.instAddCommGroup",
+        "shortTitle": null,
+        "number": "5"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k--62-64":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-k--62-64",
+     "data":
+     {"title": "CategoryTheory.Triangulated.K₀",
+      "shortTitle": null,
+      "sectionNum": "2.4.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"},
+       {"title": "CategoryTheory.Triangulated.K₀",
+        "shortTitle": null,
+        "number": "4"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-istriangleadditive-149-153":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-istriangleadditive-149-153",
+     "data":
+     {"title": "CategoryTheory.Triangulated.IsTriangleAdditive",
+      "shortTitle": null,
+      "sectionNum": "2.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"},
+       {"title": "CategoryTheory.Triangulated.IsTriangleAdditive",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-instisadditivesubtypetrianglememsetdistinguishedtrianglestrianglepresentationofistriangleadditive-156-158":
+   [{"id":
+     "shadow-entry-bridgelandstability-grothendieckgroup-defs-categorytheory-triangulated-instisadditivesubtypetrianglememsetdistinguishedtrianglestrianglepresentationofistriangleadditive-156-158",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive",
+      "shortTitle": null,
+      "sectionNum": "2.3.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"},
+       {"title":
+        "CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive",
+        "shortTitle": null,
+        "number": "3"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-subobject-isstrict-415-419":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-subobject-isstrict-415-419",
+     "data":
+     {"title": "CategoryTheory.Subobject.IsStrict",
+      "shortTitle": null,
+      "sectionNum": "6.3.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.Subobject.IsStrict",
+        "shortTitle": null,
+        "number": "3"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-strictsubobject-433-435":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-strictsubobject-433-435",
+     "data":
+     {"title": "CategoryTheory.StrictSubobject",
+      "shortTitle": null,
+      "sectionNum": "6.4.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.StrictSubobject",
+        "shortTitle": null,
+        "number": "4"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictnoetherianobject-456-458":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictnoetherianobject-456-458",
+     "data":
+     {"title": "CategoryTheory.IsStrictNoetherianObject",
+      "shortTitle": null,
+      "sectionNum": "6.8.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.IsStrictNoetherianObject",
+        "shortTitle": null,
+        "number": "8"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictnoetherianobject-451-454":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictnoetherianobject-451-454",
+     "data":
+     {"title": "CategoryTheory.isStrictNoetherianObject",
+      "shortTitle": null,
+      "sectionNum": "6.6.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.isStrictNoetherianObject",
+        "shortTitle": null,
+        "number": "6"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictmono-73-76":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictmono-73-76",
+     "data":
+     {"title": "CategoryTheory.IsStrictMono",
+      "shortTitle": null,
+      "sectionNum": "6.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.IsStrictMono",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictartinianobject-444-446":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictartinianobject-444-446",
+     "data":
+     {"title": "CategoryTheory.IsStrictArtinianObject",
+      "shortTitle": null,
+      "sectionNum": "6.7.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.IsStrictArtinianObject",
+        "shortTitle": null,
+        "number": "7"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictartinianobject-439-442":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrictartinianobject-439-442",
+     "data":
+     {"title": "CategoryTheory.isStrictArtinianObject",
+      "shortTitle": null,
+      "sectionNum": "6.5.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.isStrictArtinianObject",
+        "shortTitle": null,
+        "number": "5"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrict-64-71":
+   [{"id":
+     "shadow-entry-bridgelandstability-formathlib-categorytheory-quasiabelian-basic-categorytheory-isstrict-64-71",
+     "data":
+     {"title": "CategoryTheory.IsStrict",
+      "shortTitle": null,
+      "sectionNum": "6.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"},
+       {"title": "CategoryTheory.IsStrict",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-defs-categorytheory-triangulated-numericalcomponent-42-46":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-defs-categorytheory-triangulated-numericalcomponent-42-46",
+     "data":
+     {"title": "CategoryTheory.Triangulated.NumericalComponent",
+      "shortTitle": null,
+      "sectionNum": "13.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Defs", "shortTitle": null, "number": "13"},
+       {"title": "CategoryTheory.Triangulated.NumericalComponent",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericalquotientmap-606-610":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericalquotientmap-606-610",
+     "data":
+     {"title": "CategoryTheory.Triangulated.numericalQuotientMap",
+      "shortTitle": null,
+      "sectionNum": "7.8.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title": "CategoryTheory.Triangulated.numericalQuotientMap",
+        "shortTitle": null,
+        "number": "8"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericallyfinite-612-617":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericallyfinite-612-617",
+     "data":
+     {"title": "CategoryTheory.Triangulated.NumericallyFinite",
+      "shortTitle": null,
+      "sectionNum": "7.9.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title": "CategoryTheory.Triangulated.NumericallyFinite",
+        "shortTitle": null,
+        "number": "9"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericalk-instaddcommgroup-600-604":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericalk-instaddcommgroup-600-604",
+     "data":
+     {"title": "CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup",
+      "shortTitle": null,
+      "sectionNum": "7.7.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title": "CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup",
+        "shortTitle": null,
+        "number": "7"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericalk--595-598":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-numericalk--595-598",
+     "data":
+     {"title": "CategoryTheory.Triangulated.NumericalK₀",
+      "shortTitle": null,
+      "sectionNum": "7.6.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title": "CategoryTheory.Triangulated.NumericalK₀",
+        "shortTitle": null,
+        "number": "6"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerformrad-590-593":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerformrad-590-593",
+     "data":
+     {"title": "CategoryTheory.Triangulated.eulerFormRad",
+      "shortTitle": null,
+      "sectionNum": "7.5.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title": "CategoryTheory.Triangulated.eulerFormRad",
+        "shortTitle": null,
+        "number": "5"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerformobj-contravariant-triangleadditive-324-414":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerformobj-contravariant-triangleadditive-324-414",
+     "data":
+     {"title":
+      "CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive",
+      "shortTitle": null,
+      "sectionNum": "7.1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title":
+        "CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerforminner-istriangleadditive-573-582":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerforminner-istriangleadditive-573-582",
+     "data":
+     {"title": "CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive",
+      "shortTitle": null,
+      "sectionNum": "7.3.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title":
+        "CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive",
+        "shortTitle": null,
+        "number": "3"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerforminner-567-571":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerforminner-567-571",
+     "data":
+     {"title": "CategoryTheory.Triangulated.eulerFormInner",
+      "shortTitle": null,
+      "sectionNum": "7.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title": "CategoryTheory.Triangulated.eulerFormInner",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/"}],
+   "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerform-584-588":
+   [{"id":
+     "shadow-entry-bridgelandstability-eulerform-basic-categorytheory-triangulated-eulerform-584-588",
+     "data":
+     {"title": "CategoryTheory.Triangulated.eulerForm",
+      "shortTitle": null,
+      "sectionNum": "7.4.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"},
+       {"title": "CategoryTheory.Triangulated.eulerForm",
+        "shortTitle": null,
+        "number": "4"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--StabilityCondition___Defs":
+   [{"id": "BridgelandStability-Comparator-Manual--StabilityCondition___Defs",
+     "data":
+     {"title": "StabilityCondition.Defs",
+      "shortTitle": null,
+      "sectionNum": "10.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "StabilityCondition.Defs",
+        "shortTitle": null,
+        "number": "10"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--Slicing___Defs":
+   [{"id": "BridgelandStability-Comparator-Manual--Slicing___Defs",
+     "data":
+     {"title": "Slicing.Defs",
+      "shortTitle": null,
+      "sectionNum": "8.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Slicing.Defs", "shortTitle": null, "number": "8"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--PostnikovTower___Defs":
+   [{"id": "BridgelandStability-Comparator-Manual--PostnikovTower___Defs",
+     "data":
+     {"title": "PostnikovTower.Defs",
+      "shortTitle": null,
+      "sectionNum": "5.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "PostnikovTower.Defs", "shortTitle": null, "number": "5"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--Overview--Dependency-graph":
+   [{"id": "BridgelandStability-Comparator-Manual--Overview--Dependency-graph",
+     "data":
+     {"title": "Dependency graph",
+      "shortTitle": null,
+      "sectionNum": "1.2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Overview", "shortTitle": null, "number": "1"},
+       {"title": "Dependency graph", "shortTitle": null, "number": "2"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--Overview":
+   [{"id": "BridgelandStability-Comparator-Manual--Overview",
+     "data":
+     {"title": "Overview",
+      "shortTitle": null,
+      "sectionNum": "1.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "Overview", "shortTitle": null, "number": "1"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--NumericalStability___Defs":
+   [{"id": "BridgelandStability-Comparator-Manual--NumericalStability___Defs",
+     "data":
+     {"title": "NumericalStability.Defs",
+      "shortTitle": null,
+      "sectionNum": "4.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "NumericalStability.Defs",
+        "shortTitle": null,
+        "number": "4"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--IntervalCategory___QuasiAbelian":
+   [{"id":
+     "BridgelandStability-Comparator-Manual--IntervalCategory___QuasiAbelian",
+     "data":
+     {"title": "IntervalCategory.QuasiAbelian",
+      "shortTitle": null,
+      "sectionNum": "11.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "IntervalCategory.QuasiAbelian",
+        "shortTitle": null,
+        "number": "11"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--IntervalCategory___FiniteLength":
+   [{"id":
+     "BridgelandStability-Comparator-Manual--IntervalCategory___FiniteLength",
+     "data":
+     {"title": "IntervalCategory.FiniteLength",
+      "shortTitle": null,
+      "sectionNum": "12.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "IntervalCategory.FiniteLength",
+        "shortTitle": null,
+        "number": "12"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--IntervalCategory___Basic":
+   [{"id": "BridgelandStability-Comparator-Manual--IntervalCategory___Basic",
+     "data":
+     {"title": "IntervalCategory.Basic",
+      "shortTitle": null,
+      "sectionNum": "9.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "IntervalCategory.Basic", "shortTitle": null, "number": "9"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--GrothendieckGroup___Presentation":
+   [{"id":
+     "BridgelandStability-Comparator-Manual--GrothendieckGroup___Presentation",
+     "data":
+     {"title": "GrothendieckGroup.Presentation",
+      "shortTitle": null,
+      "sectionNum": "3.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Presentation",
+        "shortTitle": null,
+        "number": "3"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--GrothendieckGroup___Defs":
+   [{"id": "BridgelandStability-Comparator-Manual--GrothendieckGroup___Defs",
+     "data":
+     {"title": "GrothendieckGroup.Defs",
+      "shortTitle": null,
+      "sectionNum": "2.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "GrothendieckGroup.Defs", "shortTitle": null, "number": "2"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--ForMathlib___CategoryTheory___QuasiAbelian___Basic":
+   [{"id":
+     "BridgelandStability-Comparator-Manual--ForMathlib___CategoryTheory___QuasiAbelian___Basic",
+     "data":
+     {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+      "shortTitle": null,
+      "sectionNum": "6.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "ForMathlib.CategoryTheory.QuasiAbelian.Basic",
+        "shortTitle": null,
+        "number": "6"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--EulerForm___Defs":
+   [{"id": "BridgelandStability-Comparator-Manual--EulerForm___Defs",
+     "data":
+     {"title": "EulerForm.Defs",
+      "shortTitle": null,
+      "sectionNum": "13.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Defs", "shortTitle": null, "number": "13"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual--EulerForm___Basic":
+   [{"id": "BridgelandStability-Comparator-Manual--EulerForm___Basic",
+     "data":
+     {"title": "EulerForm.Basic",
+      "shortTitle": null,
+      "sectionNum": "7.",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null},
+       {"title": "EulerForm.Basic", "shortTitle": null, "number": "7"}]},
+     "address": "/"}],
+   "BridgelandStability-Comparator-Manual":
+   [{"id": "BridgelandStability-Comparator-Manual",
+     "data":
+     {"title": "BridgelandStability Comparator Manual",
+      "shortTitle": null,
+      "sectionNum": "",
+      "context":
+      [{"title": "BridgelandStability Comparator Manual",
+        "shortTitle": null,
+        "number": null}]},
+     "address": "/"}]}},
+ "Verso.Genre.Manual.example":
+ {"title": "Verso.Genre.Manual.example",
+  "description": null,
+  "contents":
+  {"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent":
+   [{"id":
+     "CategoryTheory___Triangulated___NumericalStabilityCondition___existsComplexManifoldOnConnectedComponent",
+     "data":
+     {"/#CategoryTheory___Triangulated___NumericalStabilityCondition___existsComplexManifoldOnConnectedComponent":
+      {"display":
+       "NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent",
+       "context":
+       ["BridgelandStability Comparator Manual",
+        "Overview",
+        "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent"]}},
+     "address": "/"}]}},
+ "Verso.Genre.Manual.doc.tech":
+ {"title": "Terminology",
+  "description": "Definitions of technical terms",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.tactic.conv":
+ {"title": "Conversion Tactics",
+  "description": "Tactics for performing targeted rewriting of subterms",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.tactic":
+ {"title": "Tactic Documentation",
+  "description": "Detailed descriptions of tactics",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.suggestion":
+ {"title": "Lean constant suggestions",
+  "description": "Search suggestions for Lean constants",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.option":
+ {"title": "Compiler options", "description": null, "contents": {}},
+ "Verso.Genre.Manual.doc":
+ {"title": "Lean constant reference",
+  "description": "Documentation for Lean constants",
+  "contents": {}}}

@@ -1,0 +1,1 @@
+window.docContents[77].resolve({"/#BridgelandStability-Comparator-Manual--EulerForm___Defs":{"contents":"Module BridgelandStability.EulerForm.Defs — 1 declarations (Definition)\n\n\n\n","context":"BridgelandStability Comparator Manual","header":"13. EulerForm.Defs","id":"/#BridgelandStability-Comparator-Manual--EulerForm___Defs"}});
