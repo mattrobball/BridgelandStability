@@ -254,7 +254,8 @@ theorem sector_bound (σ : StabilityCondition C) (U : K₀ C →+ ℂ)
     intro i
     by_cases hi : IsZero (P.factor i)
     · have h0 := K₀.of_isZero C hi; simp [h0]
-    · obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
+    · obtain ⟨m, hm, hmZ⟩ :=
+        stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
       rw [hmZ]; congr 1
       rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]
