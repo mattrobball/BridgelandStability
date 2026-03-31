@@ -6,7 +6,6 @@ Authors: Formalization
 module
 
 public import BridgelandStability.EulerForm.Basic
-public import Mathlib.Geometry.Manifold.Complex
 
 /-!
 # Euler Form Definitions — Comparator Interface
