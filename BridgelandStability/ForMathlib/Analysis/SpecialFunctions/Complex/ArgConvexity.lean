@@ -134,7 +134,7 @@ lemma arg_le_of_cross_nonneg {z₁ z₂ : ℂ}
   have hnn : 0 < ‖z₁‖ * ‖z₂‖ := mul_pos (norm_pos_iff.mpr hz₁) (norm_pos_iff.mpr hz₂)
   rw [cross_eq_norm_mul_sin, mul_nonneg_iff_right_nonneg_of_pos hnn] at hcross
   by_contra h
-  push_neg at h
+  push Not at h
   have hlt : arg z₂ - arg z₁ < 0 := sub_neg.mpr h
   have hge : -π < arg z₂ - arg z₁ := by linarith [arg_le_pi z₁]
   exact absurd hcross (not_le.mpr (sin_neg_of_neg_of_neg_pi_lt hlt hge))
@@ -162,7 +162,7 @@ lemma arg_lt_of_cross_pos {z₁ z₂ : ℂ}
   have hsin : 0 < Real.sin (arg z₂ - arg z₁) :=
     ((mul_pos_iff.mp hcross).elim id (fun ⟨h1, h2⟩ ↦ absurd h1 (not_lt.mpr hnn.le))).2
   by_contra h
-  push_neg at h
+  push Not at h
   rcases h.eq_or_lt with heq | hlt
   · rw [heq, sub_self, Real.sin_zero] at hsin; exact lt_irrefl _ hsin
   · linarith [sin_neg_of_neg_of_neg_pi_lt (sub_neg.mpr hlt) (by linarith [arg_le_pi z₁])]
@@ -306,7 +306,6 @@ lemma min_arg_lt_arg_add {z₁ z₂ : ℂ}
       ring
     rw [this]
     linarith [cross_pos_of_arg_lt harg₂ hz₂ hz₁ h]
-
 
 /-! ### Arg convexity for finite sums -/
 

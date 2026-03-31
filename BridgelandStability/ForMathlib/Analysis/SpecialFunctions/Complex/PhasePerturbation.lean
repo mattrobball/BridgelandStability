@@ -85,7 +85,7 @@ theorem abs_arg_one_add_lt {u : ℂ} {ε : ℝ}
       _ = ‖u‖ := by congr 1; ring
   have hsin_abs := sin_abs_eq_abs_sin harg_lt
   by_contra h
-  push_neg at h
+  push Not at h
   have hmono :
       Real.sin (Real.pi * ε) ≤
         Real.sin (|Complex.arg ((1 : ℂ) + u)|) :=

@@ -287,7 +287,7 @@ lemma HNFiltration.shiftHN_phiPlus (s : Slicing C) {E : C}
 lemma HNFiltration.n_pos {P : ℝ → ObjectProperty C} {E : C}
     (F : HNFiltration C P E) (hE : ¬IsZero E) : 0 < F.n := by
   by_contra h
-  push_neg at h
+  push Not at h
   exact hE (F.zero_isZero (by lia))
 
 /-- For any HN filtration of a nonzero object, at least one factor is nonzero.
@@ -296,7 +296,7 @@ lemma HNFiltration.exists_nonzero_factor {P : ℝ → ObjectProperty C} {E : C}
     (F : HNFiltration C P E) (hE : ¬IsZero E) :
     ∃ (i : Fin F.n), ¬IsZero (F.triangle i).obj₃ := by
   by_contra hall
-  push_neg at hall
+  push Not at hall
   -- All factors are zero. Show chain(k) ≅ 0 for all k by induction.
   suffices ∀ (k : ℕ) (hk : k < F.n + 1), IsZero (F.chain.obj ⟨k, hk⟩) by
     exact hE (IsZero.of_iso (this F.n (by lia)) (Classical.choice F.top_iso).symm)
@@ -389,7 +389,7 @@ lemma HNFiltration.exists_nonzero_first (s : Slicing C) {E : C} (hE : ¬IsZero E
     by_cases hfirst : IsZero (G.triangle ⟨0, hGn0⟩).obj₃
     · -- First factor is zero; drop it and recurse
       have hn1 : 1 < G.n := by
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have : ∀ (i : Fin G.n), IsZero (G.triangle i).obj₃ := fun i ↦ by
           have : i = ⟨0, hGn0⟩ := Fin.ext (by lia)
           subst this; exact hfirst
@@ -454,7 +454,7 @@ lemma HNFiltration.exists_nonzero_last (s : Slicing C) {E : C} (hE : ¬IsZero E)
     have hGn0 : 0 < G.n := G.n_pos C hE
     by_cases hlast : IsZero (G.triangle ⟨G.n - 1, by lia⟩).obj₃
     · have hn1 : 1 < G.n := by
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have : ∀ (i : Fin G.n), IsZero (G.triangle i).obj₃ := fun i ↦ by
           have : i = ⟨G.n - 1, by lia⟩ := Fin.ext (by lia)
           subst this; exact hlast
@@ -481,7 +481,6 @@ noncomputable def Slicing.phiMinus (s : Slicing C) (E : C) (hE : ¬IsZero E) : �
   let F := (HNFiltration.exists_nonzero_last C s hE).choose
   let hn : 0 < F.n := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
   F.φ ⟨F.n - 1, Nat.sub_one_lt_of_le hn le_rfl⟩
-
 
 end Slicing
 

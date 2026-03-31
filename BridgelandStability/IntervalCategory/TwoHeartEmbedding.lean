@@ -252,7 +252,7 @@ theorem Slicing.phiPlus_lt_of_triangle_with_leProp (s : Slicing C)
   obtain ⟨FK, hnK, hneK⟩ := HNFiltration.exists_nonzero_first C s hK
   rw [s.phiPlus_eq C K hK FK hnK hneK]
   by_contra hge
-  push_neg at hge
+  push Not at hge
   -- hge : b ≤ FK.φ ⟨0, hnK⟩ (top factor has phase ≥ b)
   -- Show all maps from FK's top factor to K are zero
   have hK_factor_zero : ∀ α : (FK.triangle ⟨0, hnK⟩).obj₃ ⟶ K, α = 0 := by
@@ -312,7 +312,7 @@ theorem Slicing.phiMinus_gt_of_triangle_with_gtProp (s : Slicing C)
   obtain ⟨FQ, hnQ, hneQ⟩ := HNFiltration.exists_nonzero_last C s hQ
   rw [s.phiMinus_eq C Q hQ FQ hnQ hneQ]
   by_contra hle
-  push_neg at hle
+  push Not at hle
   -- hle : FQ.φ ⟨FQ.n - 1, _⟩ ≤ a (bottom factor has phase ≤ a)
   -- Show all maps from Q to FQ's bottom factor are zero
   have hQ_factor_zero :
@@ -467,7 +467,7 @@ theorem Slicing.phiMinus_gt_of_triangle_with_geProp (s : Slicing C)
   obtain ⟨FQ, hnQ, hneQ⟩ := HNFiltration.exists_nonzero_last C s hQ
   rw [s.phiMinus_eq C Q hQ FQ hnQ hneQ]
   by_contra hle
-  push_neg at hle
+  push Not at hle
   -- hle : FQ.φ ⟨FQ.n - 1, _⟩ ≤ a (bottom factor has phase ≤ a)
   have hQ_factor_zero :
       ∀ β : Q ⟶ (FQ.triangle ⟨FQ.n - 1, by lia⟩).obj₃, β = 0 := by

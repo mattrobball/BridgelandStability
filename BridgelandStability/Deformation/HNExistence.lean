@@ -125,7 +125,7 @@ theorem interior_has_enveloped_HN_ssf
   -- Part B: Tight upper bound on phases (Bridgeland p.23 argument)
   -- The first HN factor F₁ has phase ψ₁ < b - 3ε
   have hGn : 0 < G.n := by
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by lia))
   set P := G.toPostnikovTower with hP_def
   -- F₁ = factor 0 is ssf-semistable with phase G.φ ⟨0, hGn⟩
@@ -345,6 +345,5 @@ theorem sigmaSemistable_hasDeformedHN
     hε (by linarith : ε < 1 / 10) hthin hsin hFL hE hInt
   -- Phase bounds: a+ε < G.φ j < b-ε gives φ-2ε < G.φ j < φ+4ε
   exact ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
-
 
 end CategoryTheory.Triangulated

@@ -29,7 +29,6 @@ section Preabelian
 
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 
-
 /-!
 # Finite Length and Skewed Stability Functions
 

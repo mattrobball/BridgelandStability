@@ -32,7 +32,6 @@ namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-
 section Preabelian
 
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]

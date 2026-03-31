@@ -395,7 +395,6 @@ instance HeartStabilityData.heartEulerClassObj_isTriangleAdditive
     exact h.heartEulerClassObj_triangle_of_bounds (C := C) T hT hab
       h₁LE h₁GE h₂LE h₂GE h₃LE h₃GE
 
-
 end Proposition53
 
 end CategoryTheory.Triangulated

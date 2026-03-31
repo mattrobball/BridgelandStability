@@ -33,7 +33,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-! ### P(s) ⊂ Q(>t) and P(s) ⊂ Q(<t) -/
 
 /-- **P(s) ⊂ Q(>t) for s ≥ t + ε** (Bridgeland p.24 ¶3). A σ-semistable object of
@@ -53,7 +52,7 @@ theorem P_in_deformedGtPred
   -- Step 1: Q-HN filtration with phases in (s-2ε, s+4ε)
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
   have hGn : 0 < G.n := by
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by lia))
   set P := G.toPostnikovTower
   -- Step 2: All factors have σ-intervalProp
@@ -183,7 +182,7 @@ theorem P_in_deformedLtPred
   -- Dual of P_in_deformedGtPred: get Q-HN, show all phases < t
   obtain ⟨G, hGφ⟩ := sigmaSemistable_hasDeformedHN C σ W hW hε₀ hε₀10 hWide hε hεε₀ hsin hP hE
   have hGn : 0 < G.n := by
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     exact hE (G.toPostnikovTower.zero_isZero (show G.n = 0 by lia))
   set P := G.toPostnikovTower
   -- All factors have σ-intervalProp
@@ -543,6 +542,5 @@ theorem deformedGtLe_triangle
     have hZ13 : σ.deformedGtPred C W hW ε t Z13 :=
       .ext oct2.mem hHIGH hXM
     exact ⟨Z13, V, vE, gR ≫ vR, wZ13, hTZ, hZ13, hV⟩
-
 
 end CategoryTheory.Triangulated

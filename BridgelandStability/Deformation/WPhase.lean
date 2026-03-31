@@ -411,5 +411,4 @@ lemma SkewedStabilityFunction.Semistable.polar
 
 end
 
-
 end CategoryTheory.Triangulated

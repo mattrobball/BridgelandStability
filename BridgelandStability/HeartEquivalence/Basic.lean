@@ -746,7 +746,6 @@ theorem HeartStabilityData.heartK0ToK0_surjective
           rw [map_add, hx', hy']
           rfl
 
-
 end Proposition53
 
 end CategoryTheory.Triangulated

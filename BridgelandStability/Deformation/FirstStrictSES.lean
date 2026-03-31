@@ -116,7 +116,7 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
     hX (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
   by_contra hle
-  push_neg at hle
+  push Not at hle
   apply hns
   refine ⟨X.property, hX_obj, hW_interval X.property hX_obj, rfl, ?_⟩
   intro K Q f₁ f₂ f₃ hT hK hQ hKne
@@ -340,6 +340,5 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable
   exact ⟨M, hM_ne, hM_ne_top, hM_strict, hM_ss, hphase_gt, hS⟩
 
 end
-
 
 end CategoryTheory.Triangulated

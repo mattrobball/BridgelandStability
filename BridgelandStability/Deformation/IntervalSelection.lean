@@ -572,7 +572,7 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
             wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := fun hsem =>
     hns ⟨X.property, hX_obj, hW_X, rfl,
       fun {K Q} {f₁} {f₂} {f₃} hT hK hQ hKne ↦ hsem hT hK hQ hKne⟩
-  push_neg at htri
+  push Not at htri
   obtain ⟨K, Q, f₁, f₂, f₃, hT, hK, hQ, hKne, hgt⟩ := htri
   let KI : σ.slicing.IntervalCat C a b := ⟨K, hK⟩
   let QI : σ.slicing.IntervalCat C a b := ⟨Q, hQ⟩
@@ -722,7 +722,7 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
             wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α := fun hsem =>
     hns ⟨X.property, hX_obj, hW_X, rfl,
       fun {K Q} {f₁} {f₂} {f₃} hT hK hQ hKne ↦ hsem hT hK hQ hKne⟩
-  push_neg at htri
+  push Not at htri
   obtain ⟨K, Q, f₁, f₂, f₃, hT, hK, hQ, hKne, hgt⟩ := htri
   let KI : σ.slicing.IntervalCat C a b := ⟨K, hK⟩
   let QI : σ.slicing.IntervalCat C a b := ⟨Q, hQ⟩

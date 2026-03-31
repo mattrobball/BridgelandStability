@@ -241,7 +241,7 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
   have hMZ0 : 0 ≤ M_Z := ENNReal.toReal_nonneg
   have hMZ_lt_sin : M_Z < Real.sin (Real.pi * ε) := by
     by_contra hle
-    push_neg at hle
+    push Not at hle
     have h1 : ENNReal.ofReal (Real.sin (Real.pi * ε)) ≤ ENNReal.ofReal M_Z :=
       ENNReal.ofReal_le_ofReal hle
     rw [ENNReal.ofReal_toReal hZdiff_ne] at h1
@@ -308,7 +308,7 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
   set N_Z := (stabSeminorm C τ (σ.Z - τ.Z)).toReal with hNZ_def
   have hNZ_lt_cos : N_Z < c := by
     by_contra hle
-    push_neg at hle
+    push Not at hle
     have h1 : ENNReal.ofReal c ≤ ENNReal.ofReal N_Z := ENNReal.ofReal_le_ofReal hle
     rw [ENNReal.ofReal_toReal hZτ_ne] at h1
     exact absurd hZτ_bound (not_lt.mpr h1)
@@ -359,7 +359,7 @@ theorem stabSeminorm_center_dominates_of_basisNhd (σ τ : StabilityCondition C)
   set M_Z := (stabSeminorm C σ (τ.Z - σ.Z)).toReal with hMZ_def
   have hMZ_lt_cos : M_Z < Real.cos (Real.pi * ε) := by
     by_contra hle
-    push_neg at hle
+    push Not at hle
     have h1 : ENNReal.ofReal (Real.cos (Real.pi * ε)) ≤ ENNReal.ofReal M_Z :=
       ENNReal.ofReal_le_ofReal hle
     rw [ENNReal.ofReal_toReal hZdiff_ne] at h1

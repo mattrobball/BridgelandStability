@@ -255,7 +255,7 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
     -- choose the midpoint heart A = P((a,a+1]) with a = (ψ₁ + ψ₂)/2 - 1/2,
     -- factor f in A, then compare the image in the paper's two thin target windows
     -- P((a, ψ₁ + ε₀)) and P((ψ₂ - ε₀, a + 1)).
-    push_neg at hlargeGap
+    push Not at hlargeGap
     by_cases hf : f = 0
     · exact hf
     · set a : ℝ := (ψ₁ + ψ₂) / 2 - 1 / 2
@@ -537,6 +537,5 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         exact hI_phase_le_big
       rw [← hI_phase_eq_left_right] at hI_phase_le_right
       linarith
-
 
 end CategoryTheory.Triangulated

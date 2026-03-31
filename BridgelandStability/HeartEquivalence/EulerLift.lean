@@ -39,7 +39,6 @@ section Proposition53
 
 variable [IsTriangulated C]
 
-
 /-! ## Euler Lift and K₀ Isomorphism -/
 
 /-- The `n`th heart cohomology class of `E`, weighted by the parity sign relating shifts in
@@ -148,7 +147,6 @@ theorem HeartStabilityData.heartCohClassSum_succ
         h.heartCohClass (C := C) (b + ((n + 1 : ℕ) : ℤ)) E := by
   rw [HeartStabilityData.heartCohClassSum, HeartStabilityData.heartCohClassSum,
     Finset.sum_range_succ]
-
 
 /-- Telescoping formula for the classes of bounded truncations: if `E` is
 concentrated in degrees `≥ b`, then `τ≤(b+n)E` is the sum of the heart
@@ -833,7 +831,6 @@ theorem HeartStabilityData.heartCohClass_zero_of_heart
     h.heartCohClass (C := C) 0 E.obj = HeartK0.of (C := C) h E := by
   simpa [HeartStabilityData.heartCohClass, HeartStabilityData.heartCoh] using
     HeartK0.of_iso (C := C) h (h.H0FunctorObjIsoOfHeart (C := C) E)
-
 
 end Proposition53
 

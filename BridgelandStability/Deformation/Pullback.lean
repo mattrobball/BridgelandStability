@@ -731,5 +731,4 @@ theorem semistable_of_upper_inclusion
         rfl hX_phase_gt_pb hX_Wne hX_range_pb hK_range_pb
     linarith
 
-
 end CategoryTheory.Triangulated

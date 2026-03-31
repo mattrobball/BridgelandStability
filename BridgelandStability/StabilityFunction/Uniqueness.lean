@@ -23,7 +23,6 @@ namespace CategoryTheory
 
 variable {A : Type u} [Category.{v} A] [Abelian A]
 
-
 /-!
 # HN Filtration Uniqueness and Intrinsic Phases
 
@@ -203,8 +202,6 @@ private lemma semistable_eq_bot_of_phase_gt_max {Z : StabilityFunction A} {E : A
       (fun j _ ↦ lt_of_le_of_lt (F.φ_anti.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) hph)
   rw [F.chain_bot] at hle
   exact le_bot_iff.mp hle
-
-
 
 /-- If `f` is epi, then `imageSubobject f = ⊤`. -/
 private lemma imageSubobject_epi_eq_top {X Y : A} (f : X ⟶ Y) [Epi f] :

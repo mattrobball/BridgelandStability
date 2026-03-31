@@ -100,7 +100,7 @@ theorem phiPlus_sub_lt_of_slicingDist (s₁ s₂ : Slicing C) {E : C} (hE : ¬Is
     (hd : slicingDist C s₁ s₂ < ENNReal.ofReal ε) :
     |s₁.phiPlus C E hE - s₂.phiPlus C E hE| < ε := by
   by_contra h
-  push_neg at h
+  push Not at h
   have h1 : ENNReal.ofReal ε ≤ ENNReal.ofReal
       (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
            |s₁.phiMinus C E hE - s₂.phiMinus C E hE|) :=
@@ -118,7 +118,7 @@ theorem phiMinus_sub_lt_of_slicingDist (s₁ s₂ : Slicing C) {E : C} (hE : ¬I
     (hd : slicingDist C s₁ s₂ < ENNReal.ofReal ε) :
     |s₁.phiMinus C E hE - s₂.phiMinus C E hE| < ε := by
   by_contra h
-  push_neg at h
+  push Not at h
   have h1 : ENNReal.ofReal ε ≤ ENNReal.ofReal
       (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
            |s₁.phiMinus C E hE - s₂.phiMinus C E hE|) :=
@@ -473,7 +473,7 @@ theorem stabSeminorm_le_of_near (σ τ : StabilityCondition C)
     · nlinarith [Real.pi_pos]
     · nlinarith [Real.pi_pos]
   have hMZ_lt : M_Z < Real.cos (Real.pi * ε) := by
-    by_contra hle; push_neg at hle
+    by_contra hle; push Not at hle
     have h1 : ENNReal.ofReal (Real.cos (Real.pi * ε)) ≤ ENNReal.ofReal M_Z :=
       ENNReal.ofReal_le_ofReal hle
     rw [ENNReal.ofReal_toReal hZdiff_ne] at h1
@@ -572,7 +572,7 @@ theorem finiteSeminormSubgroup_eq_of_basisNhd (σ τ : StabilityCondition C)
   set M_Z := (stabSeminorm C σ (τ.Z - σ.Z)).toReal with hMZ_def
   have hMZ0 : 0 ≤ M_Z := ENNReal.toReal_nonneg
   have hMZ_lt_sin : M_Z < Real.sin (Real.pi * ε) := by
-    by_contra hle; push_neg at hle
+    by_contra hle; push Not at hle
     have h1 : ENNReal.ofReal (Real.sin (Real.pi * ε)) ≤ ENNReal.ofReal M_Z :=
       ENNReal.ofReal_le_ofReal hle
     rw [ENNReal.ofReal_toReal hZdiff_ne] at h1
@@ -641,6 +641,5 @@ theorem finiteSeminormSubgroup_eq_of_basisNhd (σ τ : StabilityCondition C)
     exact stabSeminorm_lt_top_of_near C τ σ hε hε2 hd_sym hZτ_bound U hU
   ext U; simp only [finiteSeminormSubgroup, AddSubgroup.mem_mk]
   exact ⟨hfwd U, hrev U⟩
-
 
 end CategoryTheory.Triangulated
