@@ -270,7 +270,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_isSemistable_of_mem_P_phi
       (C := C) (P := t.heart) (X := B') hZ)
   have hphiPlus_le : σ.slicing.phiPlus C B'.obj hBobj ≤ φ := by
     by_contra hgt
-    push_neg at hgt
+    push Not at hgt
     have hBheart := (σ.slicing.toTStructure_heart_iff C B'.obj).mp B'.property
     obtain ⟨F, hn, hfirst⟩ := HNFiltration.exists_nonzero_first C σ.slicing hBobj
     have htop : σ.slicing.phiPlus C B'.obj hBobj = F.φ ⟨0, hn⟩ :=
@@ -292,7 +292,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_isSemistable_of_mem_P_phi
     have hα :
         ∃ α : (F.triangle ⟨0, hn⟩).obj₃ ⟶ B'.obj, α ≠ 0 := by
       by_contra hzero
-      push_neg at hzero
+      push Not at hzero
       exact hfirst (F.isZero_factor_zero_of_hom_eq_zero C σ.slicing hn hzero)
     rcases hα with ⟨α, hα⟩
     let A0 : t.heart.FullSubcategory := ⟨(F.triangle ⟨0, hn⟩).obj₃, hA0_heart⟩
@@ -403,7 +403,6 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
   exact append_hn_filtration_of_mono Z i F eB hB hlast
 
 end AbelianHelpers
-
 
 end Proposition53
 

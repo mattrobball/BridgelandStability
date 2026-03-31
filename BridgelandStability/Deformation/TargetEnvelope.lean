@@ -99,14 +99,14 @@ theorem wPhaseOf_eq_of_semistable_of_target_envelope
       constructor
       · have hlo : ((a₂ + b₂) / 2) - 1 < a₂ + ε₀ := by
           by_contra h
-          push_neg at h
+          push Not at h
           have hwidth : b₂ - a₂ < 1 - 2 * ε₀ := by
             linarith
           nlinarith
         exact lt_of_lt_of_le hlo henv₂_lo
       · have hhi : b₂ - ε₀ ≤ ((a₂ + b₂) / 2) + 1 := by
           by_contra h
-          push_neg at h
+          push Not at h
           have hwidth : b₂ - a₂ < 1 - 2 * ε₀ := by
             linarith
           nlinarith
@@ -328,6 +328,5 @@ theorem wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
     wPhaseOf_lt_of_intervalProp C σ hEne W
       (by linarith) hI hW_ne hpert_hi
   constructor <;> linarith
-
 
 end CategoryTheory.Triangulated

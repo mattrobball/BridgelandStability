@@ -23,7 +23,6 @@ namespace CategoryTheory
 
 variable {A : Type u} [Category.{v} A] [Abelian A]
 
-
 /-!
 # Maximally Destabilizing Quotients
 
@@ -431,7 +430,7 @@ theorem IsMDQ.lt_phase_of_kernel_mdq
     rw [hT_eq] at hZ_T
     linear_combination -hZ_T + hZ_K + hZ_K'
   by_contra hle
-  push_neg at hle
+  push Not at hle
   have hQ_le : Z.phase Q ≤ Z.phase B := by
     unfold StabilityFunction.phase
     rw [hZ_Q]
@@ -852,6 +851,5 @@ theorem StabilityFunction.hasHN_of_artinian_noetherian (Z : StabilityFunction A)
   obtain ⟨B, q, hq, F, hF⟩ :=
     exists_hn_with_mdq_of_artinian_noetherian_subobject Z (E := E) S hS_nz
   exact ⟨F.ofIso (Subobject.underlyingIso (𝟙 E))⟩
-
 
 end CategoryTheory

@@ -31,7 +31,6 @@ namespace CategoryTheory
 
 variable {A : Type u} [Category.{v} A] [Abelian A]
 
-
 /-! ### Harder-Narasimhan filtrations (abelian setting) -/
 
 /-- A Harder-Narasimhan filtration of a nonzero object `E` in an abelian category,
@@ -222,7 +221,6 @@ lemma exists_maxPhase_maximal_subobject (Z : StabilityFunction A) (E : A)
   exact lt_of_le_of_ne hle (fun heq ↦
     absurd (hM_max_in_S ⟨hB_ne, heq⟩ hB.le) (not_le_of_gt hB))
 
-
 /-- In an abelian category, if `M.arrow` is not an epimorphism, then `cokernel M.arrow`
 is nonzero. This applies when `M ≠ ⊤` as a subobject. -/
 lemma cokernel_nonzero_of_ne_top {E : A} {M : Subobject E} (hM : M ≠ ⊤) :
@@ -335,7 +333,7 @@ private lemma phase_subobject_cokernel_lt
     rwa [← Subobject.mk_arrow B, Subobject.mk_eq_bot_iff_zero]
   have hmin := Z.min_phase_le_of_shortExact _ hse hM'_nz hB_nz
   by_contra hge
-  push_neg at hge
+  push Not at hge
   rw [min_eq_left hge] at hmin
   linarith
 
@@ -763,7 +761,7 @@ lemma phase_cokernel_lt_of_destabilizing_semistable_subobject
           min_arg_le_arg_add hA_mem hQ_mem
     exact not_le_of_gt hA_arg hsum_ge
   by_contra hge
-  push_neg at hge
+  push Not at hge
   have hQ_arg : arg (Z.Zobj E) ≤ arg (Z.Zobj (cokernel A'.arrow)) := by
     unfold StabilityFunction.phase at hge
     exact le_of_mul_le_mul_left hge (div_pos one_pos Real.pi_pos)
@@ -868,7 +866,7 @@ lemma phase_le_of_epi (Z : StabilityFunction A)
             intro hZ
             exact hker (hZ.of_iso (kernelSubobjectIso p).symm)
     by_contra hlt
-    push_neg at hlt
+    push Not at hlt
     have hadd : Z.Zobj E = Z.Zobj (kernel p) + Z.Zobj Q :=
       Z.additive _
         (ShortComplex.ShortExact.mk' (ShortComplex.exact_kernel p) inferInstance inferInstance)

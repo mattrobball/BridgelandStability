@@ -27,7 +27,6 @@ section Slicing
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-
 /-!
 # Intrinsic Phases and Phase Bounds
 
@@ -185,7 +184,7 @@ theorem HNFiltration.phiPlus_le_of_nonzero_factor (s : Slicing C) {E : C}
     (hne : ¬IsZero (F₁.triangle ⟨0, hn₁⟩).obj₃) :
     F₁.phiPlus C hn₁ ≤ F₂.phiPlus C hn₂ := by
   by_contra hlt
-  push_neg at hlt
+  push Not at hlt
   -- F₁.φ(0) > F₂.φ(0), so all F₂ phases < F₁.φ(0)
   have hgap : ∀ j : Fin F₂.n, F₂.φ j < F₁.φ ⟨0, hn₁⟩ := fun j ↦
     lt_of_le_of_lt (F₂.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val)))
@@ -267,7 +266,7 @@ theorem HNFiltration.phiMinus_ge_of_nonzero_last_factor (s : Slicing C) {E : C}
     (hne₂ : ¬IsZero (F₂.triangle ⟨F₂.n - 1, by lia⟩).obj₃) :
     F₁.phiMinus C hn₁ ≤ F₂.phiMinus C hn₂ := by
   by_contra hlt
-  push_neg at hlt
+  push Not at hlt
   -- F₁.φ(n₁-1) > F₂.φ(n₂-1), so all F₁ phases > F₂.φ(n₂-1)
   have hgap : ∀ j : Fin F₁.n, F₂.φ ⟨F₂.n - 1, by lia⟩ < F₁.φ j := fun j ↦
     lt_of_lt_of_le (by change F₂.phiMinus C hn₂ < F₁.phiMinus C hn₁; exact hlt)
@@ -287,7 +286,6 @@ theorem HNFiltration.phiMinus_eq_of_nonzero_last_factors (s : Slicing C) {E : C}
     F₁.phiMinus C hn₁ = F₂.phiMinus C hn₂ :=
   le_antisymm (F₁.phiMinus_ge_of_nonzero_last_factor C s F₂ hn₁ hn₂ hne₂)
     (F₂.phiMinus_ge_of_nonzero_last_factor C s F₁ hn₂ hn₁ hne₁)
-
 
 /-- For any nonzero object, there exists an HN filtration with both nonzero first and
 last factors. This follows from `exists_nonzero_first` by repeatedly dropping zero
@@ -309,7 +307,7 @@ lemma HNFiltration.exists_both_nonzero (s : Slicing C) {E : C} (hE : ¬IsZero E)
     intro G hGn hG hGfirst
     by_cases hlast : IsZero (G.triangle ⟨G.n - 1, by lia⟩).obj₃
     · have hn1 : 1 < G.n := by
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have : (⟨0, hG⟩ : Fin G.n) = ⟨G.n - 1, by lia⟩ := Fin.ext (by lia)
         rw [this] at hGfirst; exact hGfirst hlast
       exact ih (G.dropLast C hn1 hlast) (by change G.n - 1 ≤ m; lia)
@@ -323,7 +321,6 @@ independent of the choice of filtration (assuming the first/last factors are non
 We define intrinsic `phiPlus` and `phiMinus` using `Classical.choice` and prove
 they agree with any filtration having nonzero boundary factors.
 -/
-
 
 /-- `Slicing.phiPlus` equals `G.φ ⟨0, hn⟩` for any HN filtration `G` with nonzero
 first factor. -/
@@ -355,7 +352,7 @@ theorem Slicing.phiMinus_eq (s : Slicing C) (E : C) (hE : ¬IsZero E)
 theorem Slicing.phiMinus_le_phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) :
     s.phiMinus C E hE ≤ s.phiPlus C E hE := by
   by_contra hlt
-  push_neg at hlt
+  push Not at hlt
   -- phiMinus > phiPlus. The filtration from exists_nonzero_last has all phases ≥ phiMinus,
   -- and from exists_nonzero_first all phases ≤ phiPlus. So there's a phase gap.
   let Fp := (HNFiltration.exists_nonzero_first C s hE).choose
@@ -425,7 +422,7 @@ lemma Slicing.phiPlus_gt_of_intervalProp (s : Slicing C) {E : C} (hE : ¬IsZero 
   · exact absurd hZ hE
   · have hGn : 0 < G.n := G.n_pos C hE
     by_contra hle
-    push_neg at hle
+    push Not at hle
     -- phiPlus(E) ≤ a. Get a filtration F with nonzero first factor.
     obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_first C s hE
     rw [s.phiPlus_eq C E hE F hnF hneF] at hle
@@ -546,7 +543,7 @@ lemma Slicing.phase_le_phiPlus_of_nonzero_hom (s : Slicing C) {A X : C} {φ : �
     (hA : (s.P φ) A) (hX : ¬IsZero X) (f : A ⟶ X) (hf : f ≠ 0) :
     φ ≤ s.phiPlus C X hX := by
   by_contra h
-  push_neg at h
+  push Not at h
   obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_first C s hX
   have hlt : ∀ j : Fin F.n, F.φ j < φ := fun j ↦
     calc F.φ j ≤ F.φ ⟨0, hnF⟩ := F.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))
@@ -560,14 +557,13 @@ lemma Slicing.phiMinus_le_phase_of_nonzero_hom (s : Slicing C) {X B : C} {ψ : �
     (hB : (s.P ψ) B) (hX : ¬IsZero X) (f : X ⟶ B) (hf : f ≠ 0) :
     s.phiMinus C X hX ≤ ψ := by
   by_contra h
-  push_neg at h
+  push Not at h
   obtain ⟨F, hnF, hneF⟩ := HNFiltration.exists_nonzero_last C s hX
   have hgt : ∀ j : Fin F.n, ψ < F.φ j := fun j ↦
     calc ψ < s.phiMinus C X hX := h
       _ = F.φ ⟨F.n - 1, by lia⟩ := s.phiMinus_eq C X hX F hnF hneF
       _ ≤ F.φ j := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
   exact hf (s.hom_eq_zero_of_lt_phases C hB F hgt f)
-
 
 end Slicing
 

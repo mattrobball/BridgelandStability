@@ -807,5 +807,4 @@ noncomputable def StabilityCondition.P_phi_abelian
   AbelianSubcategory.abelian (σ.slicing.P φ).ι
     (σ.P_phi_hom_vanishing C φ) (σ.P_phi_admissible C φ)
 
-
 end CategoryTheory.Triangulated

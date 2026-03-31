@@ -26,7 +26,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-!
 # Deformed Slicing HN Existence
 
@@ -340,7 +339,7 @@ theorem deformedSlicing_hn_exists
   -- Get σ-HN of E
   obtain ⟨F⟩ := σ.slicing.hn_exists E
   have hFn : 0 < F.n := by
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     exact hEz (F.toPostnikovTower.zero_isZero (show F.n = 0 by lia))
   -- Each σ-factor has Q-HN via sigmaSemistable_hasDeformedHN
   have hfactor_hn : ∀ j : Fin F.n, ¬IsZero (F.toPostnikovTower.factor j) →
@@ -569,7 +568,7 @@ theorem deformedSlicing_hn_exists
       let GX := GX_mid.ofIso C eX
       -- Phase lower bound: GX_mid phases > t' (from GX_hi's phases via the bound)
       have hGXn_pos : 0 < GX_hi.n := by
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have hXhiz := GX_hi.toPostnikovTower.zero_isZero (show GX_hi.n = 0 by lia)
         exact hXz ((Iso.isZero_iff (asIso f_hi)).mp hXhiz)
       have hGX_lo_bound : ∀ j : Fin GX.n, t' < GX.φ j := by
@@ -594,6 +593,5 @@ theorem deformedSlicing_hn_exists
         hGX_hi_bound
         (fun i ↦ le_trans (hGY_hi i) (by simp [t']; linarith))
       exact ⟨G, hG_lo, hG_hi⟩
-
 
 end CategoryTheory.Triangulated

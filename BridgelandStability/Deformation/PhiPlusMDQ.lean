@@ -30,7 +30,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-- **Phase lower bound via Im argument** (generalized `wPhaseOf_gt_of_intervalProp`).
 
 If `E ∈ P((c, d))` and every σ-semistable factor of phase `φ ∈ (c, d)` has
@@ -63,7 +62,7 @@ theorem wPhaseOf_gt_of_narrow_interval
     exact im_pos_of_phase_above (norm_pos_iff.mpr hWne) (wPhaseOf_compat _ _) hlo hhi
   have him_pos := im_W_pos_of_intervalProp C σ hE W hI him
   by_contra h
-  push_neg at h
+  push Not at h
   set θ := wPhaseOf (W (K₀.of C E)) α
   have hw := wPhaseOf_compat (W (K₀.of C E)) α
   rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_pos
@@ -269,7 +268,7 @@ theorem exists_strictMDQ_with_quotient_bound
               W hW_stab hε hε2 hε8 hab hthin hsin hssf ht_lo hψ_lo_S hQLo_S
               hA_ss hA_strict hA_phase_gt hA_ne_top hA_phase_upper hqA⟩
         · -- Case 3: φ⁺(QS) > ψ(QS) + ε → φ⁺ SPLIT BRANCH
-          push_neg at hphiPlus_QS -- hphiPlus_QS : ψQS + ε < φ⁺(QS)
+          push Not at hphiPlus_QS -- hphiPlus_QS : ψQS + ε < φ⁺(QS)
           -- Extract σ-HN filtration from QS.property (intervalProp definition)
           rcases QS.property with hQSZ | ⟨F_QS, hF_QS⟩
           · exact absurd hQSZ (by
@@ -279,7 +278,7 @@ theorem exists_strictMDQ_with_quotient_bound
                   (Slicing.IntervalCat.isZero_of_obj_isZero
                     (C := C) (s := σ.slicing) (a := a) (b := b) hZ))))
           · have hFn : 0 < F_QS.n := by
-              by_contra h; push_neg at h
+              by_contra h; push Not at h
               exact hQS_obj_ne (F_QS.toPostnikovTower.zero_isZero (show F_QS.n = 0 by lia))
             -- Split at cutoff t_cut = ψQS + ε
             let t_cut : ℝ := ψQS + ε
@@ -612,6 +611,5 @@ theorem exists_strictMDQ_with_quotient_bound
                     (hqAhi.minimal q'' hq'' hB'_nz hB'_ss).1
                   exact False.elim ((not_lt_of_ge hmin) hlt)
             }⟩
-
 
 end CategoryTheory.Triangulated

@@ -202,13 +202,13 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
     · -- |σ.phiPlus(E) - Q.phiPlus(E)| ≤ ε
       intro E hE; rw [abs_le]; constructor
       · -- Q.phiPlus(E) ≤ σ.phiPlus(E) + ε
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have := Q.phiPlus_lt_of_intervalProp C hE
           (reverse E hE _ (by linarith : (0 : ℝ) < Q.phiPlus C E hE -
             σ.slicing.phiPlus C E hE - ε))
         linarith
       · -- σ.phiPlus(E) ≤ Q.phiPlus(E) + ε
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have := σ.slicing.phiPlus_lt_of_intervalProp C hE
           (forward E hE _ (by linarith : (0 : ℝ) < σ.slicing.phiPlus C E hE -
             Q.phiPlus C E hE - ε))
@@ -216,13 +216,13 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
     · -- |σ.phiMinus(E) - Q.phiMinus(E)| ≤ ε
       intro E hE; rw [abs_le]; constructor
       · -- Q.phiMinus(E) - ε ≤ σ.phiMinus(E)
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have := σ.slicing.phiMinus_gt_of_intervalProp C hE
           (forward E hE _ (by linarith : (0 : ℝ) < Q.phiMinus C E hE -
             σ.slicing.phiMinus C E hE - ε))
         linarith
       · -- σ.phiMinus(E) ≤ Q.phiMinus(E) + ε
-        by_contra h; push_neg at h
+        by_contra h; push Not at h
         have := Q.phiMinus_gt_of_intervalProp C hE
           (reverse E hE _ (by linarith : (0 : ℝ) < σ.slicing.phiMinus C E hE -
             Q.phiMinus C E hE - ε))

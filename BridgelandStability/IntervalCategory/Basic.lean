@@ -138,11 +138,11 @@ theorem Slicing.intervalFiniteLength (s : Slicing C)
       constructor
       · -- t - η ≤ a < F.φ i
         by_contra h
-        push_neg at h
+        push Not at h
         linarith
       · -- F.φ i < b ≤ t + η
         by_contra h
-        push_neg at h
+        push Not at h
         linarith⟩
 
 /-! ### Interval containment -/
@@ -204,7 +204,7 @@ instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
       have hX_lt : s.phiPlus C X hX < b := by
         rw [s.phiPlus_eq C X hX FX hnX hneX]
         by_contra hle
-        push_neg at hle
+        push Not at hle
         have hzeroY : ∀ α : (FX.triangle ⟨0, hnX⟩).obj₃ ⟶ Y, α = 0 := by
           intro α
           by_cases hY0 : IsZero Y
@@ -231,7 +231,7 @@ instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
       have hX_gt : a < s.phiMinus C X hX := by
         rw [s.phiMinus_eq C X hX GX hnX' hneX']
         by_contra hge
-        push_neg at hge
+        push Not at hge
         have hzeroY : ∀ β : Y ⟶ (GX.triangle ⟨GX.n - 1, by lia⟩).obj₃, β = 0 := by
           intro β
           by_cases hY0 : IsZero Y
@@ -311,6 +311,5 @@ theorem Slicing.intervalHom_eq_zero (s : Slicing C) {A B : C}
   · exact hBZ.eq_of_tgt f 0
   exact s.hom_eq_zero_of_phase_gap C FA FB
     (fun i j ↦ by grind) f
-
 
 end CategoryTheory.Triangulated

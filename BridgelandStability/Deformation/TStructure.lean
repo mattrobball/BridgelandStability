@@ -455,5 +455,4 @@ theorem exists_deformedGt_deformedLe_triangle_of_enveloped_interval
   exact exists_deformedGt_deformedLe_triangle_of_hn
     (C := C) (σ := σ) (W := W) (hW := hW) G t
 
-
 end CategoryTheory.Triangulated

@@ -102,7 +102,7 @@ theorem phiPlus_lt_of_wSemistable
     rw [← hψ]; exact wPhaseOf_lt_of_intervalProp C σ hE ssf.W
       (le_of_lt (by linarith [ssf.hα_mem.2])) hI hW_ne hperturb_lt
   -- Proof by contradiction (Bridgeland p.21: use top σ-factor)
-  by_contra hgt; push_neg at hgt
+  by_contra hgt; push Not at hgt
   -- Set φ = phiPlus(E) ≥ ψ + ε₀
   set φ := σ.slicing.phiPlus C E hE with hφ_def
   have hφ_ge : ψ + ε₀ ≤ φ := hgt
@@ -126,7 +126,7 @@ theorem phiPlus_lt_of_wSemistable
     have hF₀_top : F₀.φ ⟨0, hn₀⟩ = φ := (σ.slicing.phiPlus_eq C E hE F₀ hn₀ hne₀).symm
     -- Not all HN phases equal φ (otherwise σ-semistable, contradicting hsem)
     have hexists_lower : ∃ j : Fin F₀.n, F₀.φ j < φ := by
-      by_contra hall; push_neg at hall
+      by_contra hall; push Not at hall
       -- All phases ≥ φ (from hall) and ≤ φ (antitone from F₀.φ(0) = φ), so all = φ.
       -- phiPlus = phiMinus = φ, so E is σ-semistable via semistable_of_phiPlus_eq_phiMinus.
       have hall_eq : ∀ j : Fin F₀.n, F₀.φ j = φ := fun j ↦
@@ -162,7 +162,7 @@ theorem phiPlus_lt_of_wSemistable
       by_cases hj : F₀.φ j < φ
       · left; exact Finset.le_max' Slower (F₀.φ j)
           (Finset.mem_filter.mpr ⟨Finset.mem_image.mpr ⟨j, Finset.mem_univ _, rfl⟩, hj⟩)
-      · right; push_neg at hj
+      · right; push Not at hj
         exact le_antisymm (hF₀_top ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le _))) hj
     set t₀ := (m + φ) / 2
     have ht₀_lt : t₀ < φ := by simp only [t₀]; linarith
@@ -319,7 +319,7 @@ theorem phiMinus_gt_of_wSemistable
     rw [← hψ]; exact wPhaseOf_lt_of_intervalProp C σ hE ssf.W
       (le_of_lt (by linarith [ssf.hα_mem.2])) hI hW_ne hperturb_lt
   -- Proof by contradiction: assume phiMinus ≤ ψ - ε₀
-  by_contra hlt; push_neg at hlt
+  by_contra hlt; push Not at hlt
   rcases eq_or_lt_of_le hlt with heq | hlt
   · -- Boundary case: phiMinus(E) = ψ - ε₀.
     have hψε_gt_a : a < ψ - ε₀ := lt_of_lt_of_le
@@ -341,7 +341,7 @@ theorem phiMinus_gt_of_wSemistable
         linarith [σ.slicing.phiMinus_eq C E hE F₀ hn₀ hneL₀]
       -- Not all HN phases = ψ-ε₀ (otherwise E σ-semistable → contradiction)
       have hexists_upper : ∃ j : Fin F₀.n, ψ - ε₀ < F₀.φ j := by
-        by_contra hall; push_neg at hall
+        by_contra hall; push Not at hall
         have hall_eq : ∀ j : Fin F₀.n, F₀.φ j = ψ - ε₀ := fun j ↦
           le_antisymm (hall j)
             (hF₀_bot ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt)))
@@ -370,7 +370,7 @@ theorem phiMinus_gt_of_wSemistable
         by_cases hj : ψ - ε₀ < F₀.φ j
         · right; exact Supper.min'_le (F₀.φ j)
             (Finset.mem_filter.mpr ⟨Finset.mem_image.mpr ⟨j, Finset.mem_univ _, rfl⟩, hj⟩)
-        · left; push_neg at hj; exact le_antisymm hj
+        · left; push Not at hj; exact le_antisymm hj
             (hF₀_bot ▸ F₀.hφ.antitone (Fin.mk_le_mk.mpr (Nat.le_sub_one_of_lt j.isLt)))
       set t_lo := ((ψ - ε₀) + m_lo) / 2
       have ht_lo_gt : ψ - ε₀ < t_lo := by simp only [t_lo]; linarith

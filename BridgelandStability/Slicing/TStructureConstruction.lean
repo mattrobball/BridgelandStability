@@ -87,7 +87,7 @@ theorem Slicing.exists_triangle_gtProp_leProp (s : Slicing C)
         Or.inr ⟨F, hn0, by simp only [HNFiltration.phiMinus]; exact hall_pos ⟨F.n - 1, by lia⟩,
           fun hn0 ↦ le_refl _, fun j ↦ ⟨j, rfl⟩⟩,
         Or.inl (isZero_zero C)⟩
-    · push_neg at hall_pos
+    · push Not at hall_pos
       by_cases hall_neg : ∀ j : Fin F.n, F.φ j ≤ 0
       · -- All phases ≤ 0: X = 0, Y = A, filtration is F itself
         refine ⟨0, A, Or.inl (isZero_zero C), 0, 𝟙 A, 0,
@@ -96,10 +96,10 @@ theorem Slicing.exists_triangle_gtProp_leProp (s : Slicing C)
           Or.inr ⟨F, hn0, hall_neg ⟨0, hn0⟩, fun _ j ↦
             F.hφ.antitone (Fin.mk_le_mk.mpr (by lia)), fun j ↦ ⟨j, rfl⟩⟩⟩
       · -- Mixed case: some phases > 0 and some ≤ 0
-        push_neg at hall_neg
+        push Not at hall_neg
         -- F.n ≥ 2: can't be mixed with only one factor
         have hn2 : 2 ≤ F.n := by
-          by_contra hlt; push_neg at hlt
+          by_contra hlt; push Not at hlt
           obtain ⟨j, hj⟩ := hall_neg; obtain ⟨j', hj'⟩ := hall_pos
           have heq : F.φ j = F.φ j' := congrArg F.φ (Fin.ext (by lia))
           linarith
@@ -245,14 +245,14 @@ theorem Slicing.exists_triangle_geProp_ltProp (s : Slicing C)
     by_cases hall_nonneg : ∀ j : Fin F.n, 0 ≤ F.φ j
     · exact ⟨A, 0, s.geProp_of_hn C F 0 hall_nonneg hn0, Or.inl (isZero_zero C),
         𝟙 A, 0, 0, contractible_distinguished A⟩
-    · push_neg at hall_nonneg
+    · push Not at hall_nonneg
       by_cases hall_neg : ∀ j : Fin F.n, F.φ j < 0
       · exact ⟨0, A, Or.inl (isZero_zero C), s.ltProp_of_hn C F 0 hall_neg hn0,
           0, 𝟙 A, 0, contractible_distinguished₁ A⟩
-      · push_neg at hall_neg
+      · push Not at hall_neg
         have hn2 : 2 ≤ F.n := by
           by_contra hlt
-          push_neg at hlt
+          push Not at hlt
           obtain ⟨j, hj⟩ := hall_nonneg
           obtain ⟨j', hj'⟩ := hall_neg
           have heq : F.φ j = F.φ j' := congrArg F.φ (Fin.ext (by lia))

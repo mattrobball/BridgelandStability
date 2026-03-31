@@ -151,7 +151,7 @@ lemma Slicing.semistable_of_triangle (s : Slicing C) {A E B : C} (φ : ℝ)
   · exact s.zero_mem' C φ E hEZ
   -- phiPlus(E) ≤ φ (by contradiction via phiPlus_lt_of_triangle)
   have hle : s.phiPlus C E hEZ ≤ φ := by
-    by_contra hgt; push_neg at hgt
+    by_contra hgt; push Not at hgt
     exact absurd
       (s.phiPlus_lt_of_triangle C hEZ
         (fun hA' ↦ lt_of_eq_of_lt
@@ -161,7 +161,7 @@ lemma Slicing.semistable_of_triangle (s : Slicing C) {A E B : C} (φ : ℝ)
       (lt_irrefl _)
   -- φ ≤ phiMinus(E) (by contradiction via phiMinus_gt_of_triangle)
   have hge : φ ≤ s.phiMinus C E hEZ := by
-    by_contra hlt; push_neg at hlt
+    by_contra hlt; push Not at hlt
     exact absurd
       (s.phiMinus_gt_of_triangle C hEZ
         (fun hA' ↦ by
@@ -490,7 +490,6 @@ lemma Slicing.zero_of_geProp_ltProp_general (s : Slicing C) (t : ℝ) {X Y : C}
   have hX' := (s.phaseShift_geProp_zero C t X).mpr hX
   have hY' := (s.phaseShift_ltProp_zero C t Y).mpr hY
   exact (s.phaseShift C t).zero_of_geProp_ltProp C hX' hY' f
-
 
 /-! ### Inverse phase shift for HN filtrations -/
 

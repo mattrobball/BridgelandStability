@@ -27,7 +27,6 @@ section Slicing
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-
 /-!
 # Extension-Closure of Subcategory Predicates
 
@@ -60,7 +59,7 @@ lemma Slicing.leProp_of_triangle (s : Slicing C) {A E B : C} (t : ℝ)
   obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_first C s hEZ
   refine ⟨FE, hnE, ?_⟩
   by_contra hgt
-  push_neg at hgt
+  push Not at hgt
   -- F⁺ = FE.factor(0) is semistable of phase φ⁺(E) > t
   -- All maps F⁺ → A vanish
   have hA_vanish : ∀ α : (FE.triangle ⟨0, hnE⟩).obj₃ ⟶ A, α = 0 := by
@@ -104,7 +103,7 @@ lemma Slicing.ltProp_of_triangle (s : Slicing C) {A E B : C} (t : ℝ)
   obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_first C s hEZ
   refine ⟨FE, hnE, ?_⟩
   by_contra hge
-  push_neg at hge
+  push Not at hge
   have hA_vanish : ∀ α : (FE.triangle ⟨0, hnE⟩).obj₃ ⟶ A, α = 0 := by
     intro α
     rcases hA with hAZ | ⟨FA, hnA, hFA_lt⟩
@@ -147,7 +146,7 @@ lemma Slicing.gtProp_of_triangle (s : Slicing C) {A E B : C} (t : ℝ)
   obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hEZ
   refine ⟨FE, hnE, ?_⟩
   by_contra hle
-  push_neg at hle
+  push Not at hle
   -- F⁻ = FE.factor(n-1) is semistable of phase φ⁻(E) ≤ t
   -- All maps A → F⁻ vanish
   have hA_vanish :
@@ -191,7 +190,7 @@ lemma Slicing.phiPlus_lt_of_triangle (s : Slicing C) {A E B : C}
     (hT : Triangle.mk f g h ∈ distTriang C) :
     s.phiPlus C E hE < t := by
   by_contra hge
-  push_neg at hge
+  push Not at hge
   obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_first C s hE
   -- F⁺ has phase φ⁺(E) ≥ t
   have hFE_ge : t ≤ FE.φ ⟨0, hnE⟩ := by
@@ -242,7 +241,7 @@ lemma Slicing.phiMinus_gt_of_triangle (s : Slicing C) {A E B : C}
     (hT : Triangle.mk f g h ∈ distTriang C) :
     t < s.phiMinus C E hE := by
   by_contra hle
-  push_neg at hle
+  push Not at hle
   obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hE
   -- F⁻ has phase φ⁻(E) ≤ t
   have hFE_le : FE.φ ⟨FE.n - 1, by lia⟩ ≤ t := by
@@ -336,7 +335,7 @@ theorem Slicing.phiPlus_triangle_le (s : Slicing C) {A E B : C}
   rw [s.phiPlus_eq C A hA FA hnA hneA, s.phiPlus_eq C E hE FE hnE hneE]
   -- Suppose for contradiction that φ⁺(A) > φ⁺(E)
   by_contra hlt
-  push_neg at hlt
+  push Not at hlt
   -- All E-phases < FA.φ(0)
   have hE_gap : ∀ j : Fin FE.n, FE.φ j < FA.φ ⟨0, hnA⟩ := fun j ↦
     lt_of_le_of_lt (FE.hφ.antitone (Fin.mk_le_mk.mpr (Nat.zero_le j.val))) hlt
@@ -399,7 +398,7 @@ theorem Slicing.phiMinus_triangle_le (s : Slicing C) {A E B : C}
   rw [s.phiMinus_eq C E hE FE hnE hneE, s.phiMinus_eq C B hB FB hnB hneB]
   -- Suppose for contradiction that φ⁻(E) > φ⁻(B)
   by_contra hlt
-  push_neg at hlt
+  push Not at hlt
   -- All E-phases > FB.φ(n-1)
   have hE_gap : ∀ j : Fin FE.n, FB.φ ⟨FB.n - 1, by lia⟩ < FE.φ j := fun j ↦
     lt_of_lt_of_le hlt (FE.hφ.antitone (Fin.mk_le_mk.mpr (by lia)))
@@ -455,7 +454,7 @@ theorem Slicing.phiMinus_triangle_le' (s : Slicing C) {A E B : C}
   obtain ⟨FE, hnE, hneE⟩ := HNFiltration.exists_nonzero_last C s hE
   rw [s.phiMinus_eq C E hE FE hnE hneE, s.phiMinus_eq C B hB FB hnB hneB]
   by_contra hlt
-  push_neg at hlt
+  push Not at hlt
   have hE_gap : ∀ j : Fin FE.n, FB.φ ⟨FB.n - 1, by lia⟩ < FE.φ j := fun j ↦
     lt_of_lt_of_le hlt (FE.hφ.antitone (Fin.mk_le_mk.mpr (by lia)))
   have hB_factor_zero :
@@ -486,7 +485,6 @@ theorem Slicing.phiMinus_triangle_le' (s : Slicing C) {A E B : C}
         exact s.hom_eq_zero_of_lt_phases C
           (FB.semistable ⟨FB.n - 1, by lia⟩) GAs hAs_gap γ
   exact hneB (FB.isZero_factor_last_of_hom_eq_zero C s hnB hB_factor_zero)
-
 
 end Slicing
 

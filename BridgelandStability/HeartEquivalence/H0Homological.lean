@@ -37,7 +37,6 @@ section Proposition53
 
 variable [IsTriangulated C]
 
-
 /-! ## H0 Homological Properties -/
 
 /-- Shifting `τ≥n X` by `n` identifies it with `τ≥0 (X⟦n⟧)`. -/
@@ -841,7 +840,6 @@ theorem HeartStabilityData.H0Functor_five_term_relation
       (@Preadditive.preadditiveHasZeroMorphisms _ _ P) J
       ((h.H0Functor (C := C)).homologySequence_exact₁ T hT n (n + 1) rfl)
   exact HeartK0.of_exact_five (C := C) h hw₀ hw₁ hw₂ hex₀ hex₁ hex₂
-
 
 end Proposition53
 

@@ -161,7 +161,6 @@ lemma Slicing.ltProp_of_intervalProp (s : Slicing C) {a b : ℝ} {E : C}
     · exact Or.inr ⟨F, hn, (hF ⟨0, hn⟩).2⟩
     · exact Or.inl (F.toPostnikovTower.zero_isZero (by lia))
 
-
 /-! ### Hom-vanishing for HN-filtered objects
 
 These lemmas extend the pointwise hom-vanishing axiom of a slicing to
@@ -308,7 +307,6 @@ lemma Slicing.hom_eq_zero_of_lt_phases (s : Slicing C) {B E : C} {ψ : ℝ}
   have : f = eE.inv ≫ (eE.hom ≫ f) := by
     rw [← Category.assoc, eE.inv_hom_id, Category.id_comp]
   rw [this, h1, comp_zero]
-
 
 end Slicing
 

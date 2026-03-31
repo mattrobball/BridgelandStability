@@ -33,7 +33,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-- Every stability condition admits a small Bridgeland basis neighbourhood contained in its
 topological connected component. This is the local connectedness input actually needed later. -/
 theorem exists_basisNhd_subset_connectedComponent (σ : StabilityCondition C) :

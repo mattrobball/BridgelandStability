@@ -180,5 +180,4 @@ theorem no_exp_decomp_above {ψ : ℝ} {n : ℕ} (hn : 0 < n)
   simp only [show ∀ z : ℂ, Complex.imAddGroupHom z = z.im from fun _ ↦ rfl] at this
   linarith
 
-
 end CategoryTheory.Triangulated

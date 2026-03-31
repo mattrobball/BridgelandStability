@@ -141,11 +141,11 @@ lemma mem_upperHalfPlaneUnion_of_arg_pos {z : ℂ}
   by_cases him : 0 < z.im
   · exact Or.inl him
   · right
-    push_neg at him
+    push Not at him
     have him' : z.im = 0 := le_antisymm him (Complex.arg_nonneg_iff.mp h.le)
     exact ⟨him', by
       by_contra hre
-      push_neg at hre
+      push Not at hre
       have : Complex.arg z = 0 := Complex.arg_eq_zero_iff.mpr ⟨hre, him'⟩
       linarith⟩
 
@@ -236,7 +236,7 @@ theorem wPhaseOf_gt_of_im_pos {w : ℂ} {α ψ : ℝ}
   -- If sin > 0, then π(wPhaseOf(w, α) - ψ) ∈ (0, π) ∪ (-2π, -π), i.e.,
   -- wPhaseOf - ψ ∈ (0, 1) ∪ (-2, -1). The range condition rules out (-2, -1).
   by_contra h
-  push_neg at h -- h : wPhaseOf w α ≤ ψ
+  push Not at h -- h : wPhaseOf w α ≤ ψ
   -- wPhaseOf(w, α) ∈ (ψ - 1, ψ], so wPhaseOf - ψ ∈ (-1, 0]
   -- sin(π(wPhaseOf - ψ)) ≤ 0 on (-1, 0] (since π · (-1, 0] = (-π, 0])
   have hd : wPhaseOf w α - ψ ∈ Set.Ioc (-1) 0 :=
@@ -285,7 +285,7 @@ theorem wPhaseOf_lt_of_im_neg {w : ℂ} {α ψ : ℝ}
     (hrange : wPhaseOf w α ∈ Set.Ioo (ψ - 1) (ψ + 1)) :
     wPhaseOf w α < ψ := by
   by_contra h
-  push_neg at h -- h : ψ ≤ wPhaseOf w α
+  push Not at h -- h : ψ ≤ wPhaseOf w α
   -- wPhaseOf(w, α) ∈ [ψ, ψ + 1), so wPhaseOf - ψ ∈ [0, 1)
   -- sin(π(wPhaseOf - ψ)) ≥ 0 on [0, 1) (since π · [0, 1) = [0, π))
   have hd : wPhaseOf w α - ψ ∈ Set.Ico 0 1 :=
@@ -354,7 +354,7 @@ theorem wPhaseOf_seesaw {w w₁ w₂ : ℂ} {α ψ : ℝ}
     (hw₂_range : wPhaseOf w₂ α ∈ Set.Ioo (ψ - 1) (ψ + 1)) :
     ψ ≤ wPhaseOf w₂ α := by
   by_contra h
-  push_neg at h
+  push Not at h
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   have him_w : (w * rot).im = 0 := im_eq_zero_of_wPhaseOf_eq hψ
   have him_w₁ : (w₁ * rot).im ≤ 0 := by
@@ -415,7 +415,7 @@ theorem wPhaseOf_seesaw_dual {w w₁ w₂ : ℂ} {α ψ : ℝ}
     (hw₂_range : wPhaseOf w₂ α ∈ Set.Ioo (ψ - 1) (ψ + 1)) :
     wPhaseOf w₂ α < ψ := by
   by_contra h
-  push_neg at h
+  push Not at h
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   have him_w : (w * rot).im = 0 := im_eq_zero_of_wPhaseOf_eq hψ
   have him_w₁ : 0 < (w₁ * rot).im := by
@@ -642,7 +642,7 @@ theorem wPhaseOf_gt_of_intervalProp
   -- Im > 0 means sin(π(ψ - (a-ε))) > 0
   -- If ψ ≤ a - ε, then ψ - (a-ε) ≤ 0, and we need to check sin ≤ 0
   by_contra h
-  push_neg at h -- h : wPhaseOf(W(E), α) ≤ a - ε
+  push Not at h -- h : wPhaseOf(W(E), α) ≤ a - ε
   set ψ := wPhaseOf (W (K₀.of C E)) α
   have hw := wPhaseOf_compat (W (K₀.of C E)) α
   rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_pos
@@ -687,7 +687,7 @@ theorem wPhaseOf_lt_of_intervalProp
     exact im_neg_of_phase_below hm (wPhaseOf_compat _ _) hlo hhi
   have him_neg := im_W_neg_of_intervalProp C σ hE W hI him
   by_contra h
-  push_neg at h -- h : b + ε ≤ wPhaseOf(W(E), α)
+  push Not at h -- h : b + ε ≤ wPhaseOf(W(E), α)
   set ψ := wPhaseOf (W (K₀.of C E)) α
   have hw := wPhaseOf_compat (W (K₀.of C E)) α
   rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_neg
@@ -699,6 +699,5 @@ theorem wPhaseOf_lt_of_intervalProp
       (by nlinarith [Real.pi_pos])
       (by nlinarith [Real.pi_pos, hψ_hi])
   linarith [mul_nonneg (norm_nonneg (W (K₀.of C E))) hsin]
-
 
 end CategoryTheory.Triangulated

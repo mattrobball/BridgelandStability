@@ -27,7 +27,6 @@ section Slicing
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-
 /-!
 # HN Filtration Operations
 
@@ -253,7 +252,6 @@ instance Slicing.geProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     rcases hE with hZ | ⟨F, hF, hge⟩
     · exact Or.inl (IsZero.of_iso hZ e.symm)
     · exact Or.inr ⟨F.ofIso C e, hF, hge⟩
-
 
 end Slicing
 

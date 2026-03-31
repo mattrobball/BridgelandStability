@@ -38,7 +38,6 @@ section Proposition53
 
 variable [IsTriangulated C]
 
-
 /-! ## Reverse Direction and Roundtrips -/
 
 theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local

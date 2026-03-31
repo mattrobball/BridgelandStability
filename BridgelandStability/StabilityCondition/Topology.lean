@@ -111,7 +111,7 @@ theorem StabilityCondition.false_of_all_hn_phases_below (σ τ : StabilityCondit
     rw [K₀.of_isZero C hi, map_zero, zero_mul]
   -- At least one nonzero factor exists (otherwise Z(E) = 0, contradicting m > 0)
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) := by
-    by_contra hall; push_neg at hall
+    by_contra hall; push Not at hall
     have : (m : ℂ) = 0 := by
       rw [hsum, Finset.sum_eq_zero (fun i _ ↦ hw_zero i (hall i))]
     exact absurd (Complex.ofReal_eq_zero.mp this) (ne_of_gt hm)
@@ -175,7 +175,7 @@ theorem StabilityCondition.false_of_all_hn_phases_above (σ τ : StabilityCondit
     change σ.Z (K₀.of C _) * _ = 0
     rw [K₀.of_isZero C hi, map_zero, zero_mul]
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) := by
-    by_contra hall; push_neg at hall
+    by_contra hall; push Not at hall
     have : (m : ℂ) = 0 := by
       rw [hsum, Finset.sum_eq_zero (fun i _ ↦ hw_zero i (hall i))]
     exact absurd (Complex.ofReal_eq_zero.mp this) (ne_of_gt hm)
@@ -245,13 +245,13 @@ theorem StabilityCondition.phiMinus_le_le_phiPlus (σ τ : StabilityCondition C)
   constructor
   · -- phiMinus ≤ φ: if not, all phases > φ, contradicting false_of_all_hn_phases_above
     rw [hpM]
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     exact σ.false_of_all_hn_phases_above C τ hZ hE hτ F
       (fun i _ ↦ lt_of_lt_of_le h (hFle i))
       (fun i _ ↦ lt_of_le_of_lt (hFge i) hP_lt)
   · -- φ ≤ phiPlus: if not, all phases < φ, contradicting false_of_all_hn_phases_below
     rw [hpP]
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     exact σ.false_of_all_hn_phases_below C τ hZ hE hτ F
       (fun i _ ↦ lt_of_le_of_lt (hFge i) h)
       (fun i _ ↦ lt_of_lt_of_le hM_gt (hFle i))
@@ -290,7 +290,7 @@ theorem StabilityCondition.false_of_gt_and_le_phases (σ τ : StabilityCondition
     intro i hi; change σ.Z (K₀.of C _) * _ = 0
     rw [K₀.of_isZero C hi, map_zero, zero_mul]
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin Fσ.n, ¬IsZero (Fσ.toPostnikovTower.factor i) := by
-    by_contra hall; push_neg at hall
+    by_contra hall; push Not at hall
     -- All factors are zero → each chain object is zero by induction → E is zero
     apply hX
     have hbase : IsZero (Fσ.toPostnikovTower.chain.left) :=
@@ -475,7 +475,7 @@ private theorem bridgeland_6_4_one_dir
   -- If all phases = φ, done
   by_cases hall_eq : ∀ i : Fin F.n, F.φ i = φ
   · exact σ.slicing.semistable_of_HN_all_eq C F hall_eq
-  push_neg at hall_eq
+  push Not at hall_eq
   -- Step 2: Split E at cutoff φ using exists_triangle_gtProp_leProp on the
   -- phase-shifted slicing
   let Fs := F.phaseShift (C := C) φ
@@ -543,7 +543,7 @@ private theorem bridgeland_6_4_one_dir
     -- If all phases = φ, done. If some < φ, contradiction
     by_cases hall_eq_Y : ∀ i : Fin FY.n, FY.φ i = φ
     · exact σ.slicing.semistable_of_HN_all_eq C FY hall_eq_Y
-    push_neg at hall_eq_Y
+    push Not at hall_eq_Y
     obtain ⟨j, hj_ne⟩ := hall_eq_Y
     have hj_lt : FY.φ j < φ := lt_of_le_of_ne (hFY_le j) hj_ne
     -- Factor j might be zero. Find a nonzero factor with phase < φ
@@ -580,7 +580,7 @@ private theorem bridgeland_6_4_one_dir
   obtain ⟨GX, hnGX, hGXfirst, hGXlast⟩ := HNFiltration.exists_both_nonzero C τ.slicing hXne
   -- Show τ.phiPlus(X) ≤ φ
   have hτP_le : τ.slicing.phiPlus C X hXne ≤ φ := by
-    by_contra hτP_gt; push_neg at hτP_gt
+    by_contra hτP_gt; push Not at hτP_gt
     set ψ := GX.φ ⟨0, hnGX⟩
     have hψ_gt : φ < ψ := by
       calc φ < τ.slicing.phiPlus C X hXne := hτP_gt
