@@ -7,11 +7,6 @@ defaultTargets = ["BridgelandStability"]
 autoImplicit = false
 
 [[require]]
-name = "checkdecls"
-git = "https://github.com/PatrickMassot/checkdecls"
-rev = "master"
-
-[[require]]
 name = "mathlib"
 scope = "leanprover-community"
 rev = "master"
@@ -19,11 +14,6 @@ rev = "master"
 [[lean_lib]]
 name = "BridgelandStability"
 srcDir = "."
-
-[[lean_exe]]
-name = "checkdecls"
-root = "Checkdecls"
-supportInterpreter = true
 
 [[lean_exe]]
 name = "extractDeps"
