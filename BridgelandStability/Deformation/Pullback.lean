@@ -501,7 +501,8 @@ theorem semistable_of_upper_inclusion
     ⟨wPhaseOf_gt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_lo,
       wPhaseOf_lt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_hi⟩
   have hW_ne_big :
-      ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G → W (K₀.of C G) ≠ 0 := fun {_} hG hGne =>
+      ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G →
+        W (K₀.of C G) ≠ 0 := fun {_} hG hGne =>
     σ.W_ne_zero_of_intervalProp C W hthin₂' hsmall₂ hGne hG
   refine semistable_of_target_envelope_triangleTest
     (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hSS hab₂ hEI₂ hε₀ henv_lo henv_hi₂

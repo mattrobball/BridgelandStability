@@ -82,7 +82,8 @@ theorem im_Z_nonpos_of_heart_phases
   by_cases hi : IsZero (P.factor i)
   · simp [K₀.of_isZero C hi]
   · -- Nonzero factor: Z(factor) = m · exp(iπ · F.φ i) with m > 0
-    obtain ⟨m, hm, hval⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
+    obtain ⟨m, hm, hval⟩ :=
+      stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
     rw [hval, im_ofReal_mul_exp_mul_exp_neg]
     exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hm)
       (Real.sin_nonpos_of_nonpos_of_neg_pi_le
@@ -128,7 +129,8 @@ theorem P_phi_of_im_zero_heart
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · simp [K₀.of_isZero C hi]
-    · obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+    · obtain ⟨mi, hmi, hvali⟩ :=
+        stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
       rw [hvali, im_ofReal_mul_exp_mul_exp_neg]
       exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hmi)
         (Real.sin_nonpos_of_nonpos_of_neg_pi_le
@@ -152,7 +154,8 @@ theorem P_phi_of_im_zero_heart
       ¬IsZero (F.toPostnikovTower.factor i) → F.φ i = φ := by
     intro i hi
     have him := hterm_zero i (Finset.mem_univ _)
-    obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+    obtain ⟨mi, hmi, hvali⟩ :=
+      stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
     rw [hvali, im_ofReal_mul_exp_mul_exp_neg] at him
     have hsin_zero : Real.sin (Real.pi * (F.φ i - φ)) = 0 := by
       rcases mul_eq_zero.mp him with h | h
@@ -264,7 +267,8 @@ theorem im_Z_nonneg_of_phases_above
   intro i _
   by_cases hi : IsZero (P.factor i)
   · simp [K₀.of_isZero C hi]
-  · obtain ⟨m, hm, hval⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
+  · obtain ⟨m, hm, hval⟩ :=
+      stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
     rw [hval, im_ofReal_mul_exp_mul_exp_neg]
     exact mul_nonneg (le_of_lt hm)
       (Real.sin_nonneg_of_nonneg_of_le_pi
@@ -302,7 +306,8 @@ theorem P_phi_of_im_zero_above
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · simp [K₀.of_isZero C hi]
-    · obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+    · obtain ⟨mi, hmi, hvali⟩ :=
+        stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
       rw [hvali, im_ofReal_mul_exp_mul_exp_neg]
       exact mul_nonneg (le_of_lt hmi)
         (Real.sin_nonneg_of_nonneg_of_le_pi
@@ -323,7 +328,8 @@ theorem P_phi_of_im_zero_above
       ¬IsZero (F.toPostnikovTower.factor i) → F.φ i = φ := by
     intro i hi
     have him := hterm_zero i (Finset.mem_univ _)
-    obtain ⟨mi, hmi, hvali⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+    obtain ⟨mi, hmi, hvali⟩ :=
+      stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
     rw [hvali, im_ofReal_mul_exp_mul_exp_neg] at him
     have hsin_zero : Real.sin (Real.pi * (F.φ i - φ)) = 0 := by
       rcases mul_eq_zero.mp him with h | h

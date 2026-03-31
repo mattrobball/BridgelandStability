@@ -22,16 +22,19 @@ the paper, the proof strategy is wrong.
 
 ## Build & Lint Workflow
 
-Always run these three steps in order before committing:
+Always run these steps in order before committing:
 
 ```bash
 lake exe cache get                # fetch Mathlib cached oleans (skip if already cached)
 lake build BridgelandStability    # build only our project, not all of Mathlib
 lake exe runLinter                # the actual Mathlib declaration linter
+lake exe lint-style               # Mathlib style checker (line length, etc.)
 ```
 
 - **Never** run bare `lake build` — it rebuilds Mathlib from source (~30+ min).
-- **`lake exe runLinter`** is the linter. Not build warnings. Not `lake exe lint-style`.
+- **`lake exe runLinter`** is the declaration linter (unused arguments, missing docs, etc.).
+- **`lake exe lint-style`** is the style checker (line length, formatting conventions).
+  Both must pass.
 - After `lake update`, always re-run `lake exe cache get`.
 
 ## Tactic Selection

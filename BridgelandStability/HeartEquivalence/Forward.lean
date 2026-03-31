@@ -200,7 +200,8 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
     intro i hi
     have hi_ne : ¬IsZero (P.factor i) := by
       simpa [s, P] using hi
-    obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi_ne
+    obtain ⟨m, hm, hmZ⟩ :=
+      stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi_ne
     rw [show f i = (m : ℂ) * Complex.exp (↑(Real.pi * F.φ i) * Complex.I) by
       simpa [f] using hmZ]
     rw [Complex.arg_real_mul _ hm, Complex.arg_exp_mul_I, toIocMod_eq_self]

@@ -353,7 +353,8 @@ theorem isOpen_classMapAmbientLocus (v : K₀ C →+ Λ)
   have hset :
       {σ : ClassMapStabilityCondition C v |
         ConnectedComponents.mk (σ : StabilityCondition C) = cc} =
-        ((↑) : ClassMapStabilityCondition C v → StabilityCondition C) ⁻¹' connectedComponent σ₀ := by
+        ((↑) : ClassMapStabilityCondition C v → StabilityCondition C) ⁻¹'
+          connectedComponent σ₀ := by
     ext σ
     rw [Set.mem_setOf_eq, Set.mem_preimage, ← ConnectedComponents.coe_eq_coe']
     constructor

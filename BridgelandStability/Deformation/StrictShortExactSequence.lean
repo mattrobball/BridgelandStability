@@ -953,7 +953,8 @@ theorem SkewedStabilityFunction.phase_cokernel_lt_of_phase_gt_strictSubobject
   have hcokA_range :
       wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
-    constructor <;> dsimp [ψY] <;> linarith [hcokA_window.1, hcokA_window.2, hY_window.1, hY_window.2]
+    constructor <;> dsimp [ψY] <;>
+      linarith [hcokA_window.1, hcokA_window.2, hY_window.1, hY_window.2]
   have haddY :
       ssf.W (K₀.of C Y.obj) =
         ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj) +
