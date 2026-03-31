@@ -100,23 +100,23 @@ theorem of_postnikovTower {C : Type u} [Category.{v} C]
     {Q : ObjectProperty C} {E : C} (P : Triangulated.PostnikovTower C E)
     (hfactors : ∀ i, Q (P.factor i)) : Q.ExtensionClosure E := by
   suffices h : ∀ k (hk : k ≤ P.n),
-      Q.ExtensionClosure (P.chain.obj' k (by grind)) by
+      Q.ExtensionClosure (P.chain.obj' k (by lia)) by
     exact .of_iso (Classical.choice P.top_iso) (h P.n le_rfl)
   intro k
   induction k with
   | zero =>
     intro _
-    rw [show P.chain.obj' 0 (by grind) = P.chain.left from rfl]
+    rw [show P.chain.obj' 0 (by lia) = P.chain.left from rfl]
     exact .zero P.base_isZero
   | succ k ih =>
     intro hk
-    have hchain_k := ih (by grind)
-    set T := P.triangle ⟨k, by grind⟩
-    have hT := P.triangle_dist ⟨k, by grind⟩
-    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by grind⟩)
-    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by grind⟩)
+    have hchain_k := ih (by lia)
+    set T := P.triangle ⟨k, by lia⟩
+    have hT := P.triangle_dist ⟨k, by lia⟩
+    have e₁ := Classical.choice (P.triangle_obj₁ ⟨k, by lia⟩)
+    have e₂ := Classical.choice (P.triangle_obj₂ ⟨k, by lia⟩)
     have h₁ : Q.ExtensionClosure T.obj₁ := .of_iso e₁.symm hchain_k
-    have h₃ : Q.ExtensionClosure T.obj₃ := .mem (hfactors ⟨k, by grind⟩)
+    have h₃ : Q.ExtensionClosure T.obj₃ := .mem (hfactors ⟨k, by lia⟩)
     exact .of_iso e₂ (.ext hT h₁ h₃)
 
 instance {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]

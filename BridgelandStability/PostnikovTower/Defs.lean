@@ -70,9 +70,9 @@ structure PostnikovTower (E : C) where
   /-- Each triangle is distinguished. -/
   triangle_dist : ∀ i, triangle i ∈ distTriang C
   /-- The triangle's first object is isomorphic to the i-th chain object. -/
-  triangle_obj₁ : ∀ i, Nonempty ((triangle i).obj₁ ≅ chain.obj' i.val (by grind))
+  triangle_obj₁ : ∀ i, Nonempty ((triangle i).obj₁ ≅ chain.obj' i.val (by lia))
   /-- The triangle's second object is isomorphic to the (i+1)-th chain object. -/
-  triangle_obj₂ : ∀ i, Nonempty ((triangle i).obj₂ ≅ chain.obj' (i.val + 1) (by grind))
+  triangle_obj₂ : ∀ i, Nonempty ((triangle i).obj₂ ≅ chain.obj' (i.val + 1) (by lia))
   /-- The leftmost object is zero. -/
   base_isZero : IsZero (chain.left)
   /-- The rightmost object is isomorphic to `E`. -/
