@@ -14,8 +14,3 @@ rev = "master"
 [[lean_lib]]
 name = "BridgelandStability"
 srcDir = "."
-
-[[lean_exe]]
-name = "extractDeps"
-root = "ExtractDeps"
-supportInterpreter = true
