@@ -497,7 +497,7 @@ noncomputable def HeartStabilityData.heartSourceH0primeShortComplexIso
   · change
       (h.H0primeObjIsoOfHeart (C := C) A).inv ≫ (h.H0primeFunctor (C := C)).map f =
         ((h.H0primeObjIsoOfHeart (C := C) A).inv ≫
-          (h.H0primeFunctor (C := C)).map f) ≫ 𝟙 _ 
+          (h.H0primeFunctor (C := C)).map f) ≫ 𝟙 _
     simp
   · simp [HeartStabilityData.heartSourceH0primeShortComplex, shortComplexOfDistTriangle]
 
