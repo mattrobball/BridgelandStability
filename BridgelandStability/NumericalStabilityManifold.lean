@@ -7,7 +7,7 @@ module
 
 public import BridgelandStability.StabilityCondition.LocalHomeomorphism
 public import BridgelandStability.NumericalStability.Basic
-public import BridgelandStability.EulerForm.Defs
+public import BridgelandStability.EulerForm.Basic
 public import Mathlib.Analysis.Normed.Module.Connected
 public import Mathlib.Geometry.Manifold.Complex
 public import Mathlib.Topology.Algebra.Module.FiniteDimension

@@ -636,4 +636,10 @@ abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComp
   StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
     (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 
+/-- A connected component of numerical stability conditions. -/
+abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
+    [(shiftFunctor C (1 : ℤ)).Linear k]
+    (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
+  StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
+
 end CategoryTheory.Triangulated

@@ -6,7 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.Slicing.Defs
-public import BridgelandStability.GrothendieckGroup.Defs
+public import BridgelandStability.GrothendieckGroup.Basic
 public import BridgelandStability.IntervalCategory.FiniteLength
 public import BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.SectorBound
 public import Mathlib.Topology.IsLocalHomeomorph

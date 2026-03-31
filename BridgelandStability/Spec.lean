@@ -5,7 +5,7 @@ Authors: Formalization
 -/
 module
 
-public import BridgelandStability.EulerForm.Defs
+public import BridgelandStability.EulerForm.Basic
 public import Mathlib.Geometry.Manifold.Complex
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
 
