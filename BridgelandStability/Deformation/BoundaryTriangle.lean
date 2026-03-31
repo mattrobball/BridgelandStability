@@ -785,5 +785,4 @@ theorem intervalProp_of_wSemistable_lower_target
           (X := EI₁) (Y := YI₁) hSS hε₀ hthin₁ hW_interval hpert₁ qY hqY_strict hY_zero)
     linarith
 
-
 end CategoryTheory.Triangulated

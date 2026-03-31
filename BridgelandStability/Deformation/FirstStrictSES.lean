@@ -341,5 +341,4 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable
 
 end
 
-
 end CategoryTheory.Triangulated

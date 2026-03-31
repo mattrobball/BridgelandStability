@@ -23,7 +23,6 @@ namespace CategoryTheory
 
 variable {A : Type u} [Category.{v} A] [Abelian A]
 
-
 /-!
 # Maximally Destabilizing Quotients
 
@@ -852,6 +851,5 @@ theorem StabilityFunction.hasHN_of_artinian_noetherian (Z : StabilityFunction A)
   obtain ⟨B, q, hq, F, hF⟩ :=
     exists_hn_with_mdq_of_artinian_noetherian_subobject Z (E := E) S hS_nz
   exact ⟨F.ofIso (Subobject.underlyingIso (𝟙 E))⟩
-
 
 end CategoryTheory

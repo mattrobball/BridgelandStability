@@ -731,5 +731,4 @@ theorem wPhaseOf_cokernel_kernelSubobject_eq
     exact hsumB.symm.trans hsumC
   exact congrArg (fun x ↦ wPhaseOf x ssf.α) hWB.symm
 
-
 end CategoryTheory.Triangulated

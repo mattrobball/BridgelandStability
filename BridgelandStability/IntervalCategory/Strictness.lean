@@ -29,7 +29,6 @@ section Preabelian
 
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 
-
 /-!
 # Strictness Properties of Interval Categories (Part 2)
 
@@ -587,7 +586,6 @@ theorem Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart (s : Slicing C)
   have hcolim : IsColimit (CokernelCofork.ofπ g (kernel.condition g)) :=
     isColimitOfReflects FL hmap
   exact isStrictEpi_of_isColimitCokernelCofork hcolim
-
 
 end Preabelian
 

@@ -525,5 +525,4 @@ lemma ltProp_of_postnikovTower (s : Slicing C) {E : C} {t : ℝ}
       have h₂ : s.ltProp C t T.obj₂ := s.ltProp_of_triangle C t h₁ h₃ hT
       exact (s.ltProp C t).prop_of_iso e₂ h₂
 
-
 end CategoryTheory.Triangulated

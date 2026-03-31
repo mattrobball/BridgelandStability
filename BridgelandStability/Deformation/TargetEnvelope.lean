@@ -329,5 +329,4 @@ theorem wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
       (by linarith) hI hW_ne hpert_hi
   constructor <;> linarith
 
-
 end CategoryTheory.Triangulated

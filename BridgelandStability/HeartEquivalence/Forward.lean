@@ -404,7 +404,6 @@ theorem StabilityFunction.append_hn_filtration_of_mono_local
 
 end AbelianHelpers
 
-
 end Proposition53
 
 end CategoryTheory.Triangulated

@@ -30,7 +30,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-- **Phase lower bound via Im argument** (generalized `wPhaseOf_gt_of_intervalProp`).
 
 If `E ∈ P((c, d))` and every σ-semistable factor of phase `φ ∈ (c, d)` has
@@ -612,6 +611,5 @@ theorem exists_strictMDQ_with_quotient_bound
                     (hqAhi.minimal q'' hq'' hB'_nz hB'_ss).1
                   exact False.elim ((not_lt_of_ge hmin) hlt)
             }⟩
-
 
 end CategoryTheory.Triangulated

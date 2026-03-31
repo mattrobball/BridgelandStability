@@ -346,5 +346,4 @@ theorem sigmaSemistable_hasDeformedHN
   -- Phase bounds: a+ε < G.φ j < b-ε gives φ-2ε < G.φ j < φ+4ε
   exact ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
 
-
 end CategoryTheory.Triangulated

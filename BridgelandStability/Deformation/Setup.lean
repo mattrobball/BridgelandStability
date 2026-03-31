@@ -238,5 +238,4 @@ theorem StabilityCondition.slicingDist_le_of_near (σ τ : StabilityCondition C)
     slicingDist C σ.slicing τ.slicing ≤ ENNReal.ofReal ε :=
   slicingDist_le_of_phase_bounds C σ.slicing τ.slicing hP hM
 
-
 end CategoryTheory.Triangulated

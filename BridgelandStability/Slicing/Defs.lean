@@ -482,7 +482,6 @@ noncomputable def Slicing.phiMinus (s : Slicing C) (E : C) (hE : ¬IsZero E) : �
   let hn : 0 < F.n := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
   F.φ ⟨F.n - 1, Nat.sub_one_lt_of_le hn le_rfl⟩
 
-
 end Slicing
 
 end CategoryTheory.Triangulated

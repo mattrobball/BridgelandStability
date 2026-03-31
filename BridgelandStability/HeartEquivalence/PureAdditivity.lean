@@ -37,7 +37,6 @@ section Proposition53
 
 variable [IsTriangulated C]
 
-
 /-! ## Pure/Amplitude Formulas -/
 
 theorem HeartStabilityData.heartCohClass_of_heart_shift
@@ -810,7 +809,6 @@ theorem HeartStabilityData.eulerZObj_additive_of_heart_shortExact
   rw [h.eulerZObj_of_heart (C := C) S.X₂, h.eulerZObj_of_heart (C := C) S.X₁,
     h.eulerZObj_of_heart (C := C) S.X₃]
   exact h.Z.additive S hS
-
 
 end Proposition53
 

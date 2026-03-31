@@ -37,7 +37,6 @@ section Proposition53
 
 variable [IsTriangulated C]
 
-
 /-! ## H0 Functor Construction -/
 
 /-- The degree-`n` heart cohomology object of `E`, realized as the pure
@@ -520,7 +519,6 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_iff_truncGE
     ShortComplex.exact_iff_of_iso
       (((shortComplexOfDistTriangle T hT).mapNatIso
         (h.toH0primeNatIsoViaTruncGE (C := C) E)).symm)
-
 
 end Proposition53
 

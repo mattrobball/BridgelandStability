@@ -33,7 +33,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-! ### P(s) ⊂ Q(>t) and P(s) ⊂ Q(<t) -/
 
 /-- **P(s) ⊂ Q(>t) for s ≥ t + ε** (Bridgeland p.24 ¶3). A σ-semistable object of
@@ -543,6 +542,5 @@ theorem deformedGtLe_triangle
     have hZ13 : σ.deformedGtPred C W hW ε t Z13 :=
       .ext oct2.mem hHIGH hXM
     exact ⟨Z13, V, vE, gR ≫ vR, wZ13, hTZ, hZ13, hV⟩
-
 
 end CategoryTheory.Triangulated

@@ -312,5 +312,4 @@ theorem Slicing.intervalHom_eq_zero (s : Slicing C) {A B : C}
   exact s.hom_eq_zero_of_phase_gap C FA FB
     (fun i j ↦ by grind) f
 
-
 end CategoryTheory.Triangulated

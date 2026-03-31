@@ -27,7 +27,6 @@ section Slicing
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-
 /-!
 # Intrinsic Phases and Phase Bounds
 
@@ -288,7 +287,6 @@ theorem HNFiltration.phiMinus_eq_of_nonzero_last_factors (s : Slicing C) {E : C}
   le_antisymm (F₁.phiMinus_ge_of_nonzero_last_factor C s F₂ hn₁ hn₂ hne₂)
     (F₂.phiMinus_ge_of_nonzero_last_factor C s F₁ hn₂ hn₁ hne₁)
 
-
 /-- For any nonzero object, there exists an HN filtration with both nonzero first and
 last factors. This follows from `exists_nonzero_first` by repeatedly dropping zero
 last factors (which preserves the nonzero first factor). -/
@@ -323,7 +321,6 @@ independent of the choice of filtration (assuming the first/last factors are non
 We define intrinsic `phiPlus` and `phiMinus` using `Classical.choice` and prove
 they agree with any filtration having nonzero boundary factors.
 -/
-
 
 /-- `Slicing.phiPlus` equals `G.φ ⟨0, hn⟩` for any HN filtration `G` with nonzero
 first factor. -/
@@ -567,7 +564,6 @@ lemma Slicing.phiMinus_le_phase_of_nonzero_hom (s : Slicing C) {X B : C} {ψ : �
       _ = F.φ ⟨F.n - 1, by lia⟩ := s.phiMinus_eq C X hX F hnF hneF
       _ ≤ F.φ j := F.hφ.antitone (Fin.mk_le_mk.mpr (by lia))
   exact hf (s.hom_eq_zero_of_lt_phases C hB F hgt f)
-
 
 end Slicing
 

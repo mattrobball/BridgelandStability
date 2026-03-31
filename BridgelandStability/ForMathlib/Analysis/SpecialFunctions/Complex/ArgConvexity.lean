@@ -307,7 +307,6 @@ lemma min_arg_lt_arg_add {z₁ z₂ : ℂ}
     rw [this]
     linarith [cross_pos_of_arg_lt harg₂ hz₂ hz₁ h]
 
-
 /-! ### Arg convexity for finite sums -/
 
 open Complex

@@ -34,7 +34,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-- A chosen representative of a connected component of `StabilityCondition C`. -/
 def componentRep (cc : ConnectedComponents (StabilityCondition C)) : StabilityCondition C :=
   Classical.choose cc.exists_rep

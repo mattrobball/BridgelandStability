@@ -27,7 +27,6 @@ section Slicing
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 
-
 /-!
 # Extension-Closure of Subcategory Predicates
 
@@ -486,7 +485,6 @@ theorem Slicing.phiMinus_triangle_le' (s : Slicing C) {A E B : C}
         exact s.hom_eq_zero_of_lt_phases C
           (FB.semistable ⟨FB.n - 1, by lia⟩) GAs hAs_gap γ
   exact hneB (FB.isZero_factor_last_of_hom_eq_zero C s hnB hB_factor_zero)
-
 
 end Slicing
 

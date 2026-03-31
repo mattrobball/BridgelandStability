@@ -491,7 +491,6 @@ lemma Slicing.zero_of_geProp_ltProp_general (s : Slicing C) (t : ℝ) {X Y : C}
   have hY' := (s.phaseShift_ltProp_zero C t Y).mpr hY
   exact (s.phaseShift C t).zero_of_geProp_ltProp C hX' hY' f
 
-
 /-! ### Inverse phase shift for HN filtrations -/
 
 /-- Inverse phase shift: given an HN filtration of `E` with respect to

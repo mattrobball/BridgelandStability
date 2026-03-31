@@ -26,7 +26,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 
-
 /-!
 # Deformed Slicing HN Existence
 
@@ -594,6 +593,5 @@ theorem deformedSlicing_hn_exists
         hGX_hi_bound
         (fun i ↦ le_trans (hGY_hi i) (by simp [t']; linarith))
       exact ⟨G, hG_lo, hG_hi⟩
-
 
 end CategoryTheory.Triangulated

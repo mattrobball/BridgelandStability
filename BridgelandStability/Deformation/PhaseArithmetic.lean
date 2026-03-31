@@ -700,5 +700,4 @@ theorem wPhaseOf_lt_of_intervalProp
       (by nlinarith [Real.pi_pos, hψ_hi])
   linarith [mul_nonneg (norm_nonneg (W (K₀.of C E))) hsin]
 
-
 end CategoryTheory.Triangulated

@@ -31,7 +31,6 @@ namespace CategoryTheory
 
 variable {A : Type u} [Category.{v} A] [Abelian A]
 
-
 /-! ### Harder-Narasimhan filtrations (abelian setting) -/
 
 /-- A Harder-Narasimhan filtration of a nonzero object `E` in an abelian category,
@@ -221,7 +220,6 @@ lemma exists_maxPhase_maximal_subobject (Z : StabilityFunction A) (E : A)
   rw [hM_phase]
   exact lt_of_le_of_ne hle (fun heq ↦
     absurd (hM_max_in_S ⟨hB_ne, heq⟩ hB.le) (not_le_of_gt hB))
-
 
 /-- In an abelian category, if `M.arrow` is not an epimorphism, then `cokernel M.arrow`
 is nonzero. This applies when `M ≠ ⊤` as a subobject. -/

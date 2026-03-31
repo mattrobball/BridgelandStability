@@ -538,5 +538,4 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
       rw [← hI_phase_eq_left_right] at hI_phase_le_right
       linarith
 
-
 end CategoryTheory.Triangulated

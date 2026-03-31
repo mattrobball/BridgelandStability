@@ -642,5 +642,4 @@ theorem finiteSeminormSubgroup_eq_of_basisNhd (σ τ : StabilityCondition C)
   ext U; simp only [finiteSeminormSubgroup, AddSubgroup.mem_mk]
   exact ⟨hfwd U, hrev U⟩
 
-
 end CategoryTheory.Triangulated
