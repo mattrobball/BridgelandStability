@@ -25,13 +25,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Deformation theorem (Theorem 7.1) -/
 
@@ -39,15 +40,15 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 
 This packages the actual object constructed in the deformation proof, rather than
 hiding it behind an existential theorem statement. -/
-def StabilityCondition.deformed (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ)
+def StabilityCondition.WithClassMap.deformed (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
-    StabilityCondition C := by
+    StabilityCondition.WithClassMap C v := by
   have hε₀8 : ε₀ < 1 / 8 := by linarith
   have hε₀2 : ε₀ < 1 / 4 := by linarith
   let hSector : SectorFiniteLength (C := C) σ ε₀ hε₀ hε₀2 :=
@@ -83,8 +84,8 @@ def StabilityCondition.deformed (σ : StabilityCondition C)
   haveI : IsStrictNoetherianObject E := hstrictE.2
   exact ⟨inferInstance, inferInstance⟩
 
-@[simp] theorem StabilityCondition.deformed_Z (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ)
+@[simp] theorem StabilityCondition.WithClassMap.deformed_Z (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
@@ -95,8 +96,8 @@ def StabilityCondition.deformed (σ : StabilityCondition C)
 
 /-- The canonical deformation attached to `W` has slicing distance at most `ε`
 from the original stability condition `σ`. -/
-theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ)
+theorem StabilityCondition.WithClassMap.slicingDist_deformed_le (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
@@ -119,7 +120,7 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
           rename_i E'
           rcases hE with ⟨ψ, hψ, hQ⟩
           have hQ' : Q.P ψ E' := by
-            simpa [Q, StabilityCondition.deformedSlicing] using hQ
+            simpa [Q, StabilityCondition.WithClassMap.deformedSlicing] using hQ
           exact Q.gtProp_of_semistable C ψ t E' hQ' hψ
       | ext hT _ _ ihX ihY =>
           exact Q.gtProp_of_triangle C t ihX ihY hT
@@ -135,7 +136,7 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
           rename_i E'
           rcases hE with ⟨ψ, hψ, hQ⟩
           have hQ' : Q.P ψ E' := by
-            simpa [Q, StabilityCondition.deformedSlicing] using hQ
+            simpa [Q, StabilityCondition.WithClassMap.deformedSlicing] using hQ
           exact Or.inr ⟨HNFiltration.single C E' ψ hQ',
             show 0 < 1 from by linarith, hψ⟩
       | ext hT _ _ ihX ihY =>
@@ -227,7 +228,7 @@ theorem StabilityCondition.slicingDist_deformed_le (σ : StabilityCondition C)
           (reverse E hE _ (by linarith : (0 : ℝ) < σ.slicing.phiMinus C E hE -
             Q.phiMinus C E hE - ε))
         linarith
-  simpa [StabilityCondition.deformed, Q] using hdist
+  simpa [StabilityCondition.WithClassMap.deformed, Q] using hdist
 
 /-- **Bridgeland's Theorem 7.1** (deformation of stability conditions). Under the
 usual small-deformation hypothesis on `W`, there exists a locally-finite stability
@@ -235,16 +236,16 @@ condition `τ = (W, Q)` with `d(P, Q) < ε`.
 
 This is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict
 hypothesis `‖W - Z‖_σ < sin(πε)`. -/
-theorem StabilityCondition.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
-    (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ)
+theorem StabilityCondition.WithClassMap.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
+    (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
-    ∃ (τ : StabilityCondition C), τ.Z = W ∧
+    ∃ (τ : StabilityCondition.WithClassMap C v), τ.Z = W ∧
       slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε := by
   set x := (stabSeminorm C σ (W - σ.Z)).toReal
   have hx_lt : x < Real.sin (Real.pi * ε) := by

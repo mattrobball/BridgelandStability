@@ -24,13 +24,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 theorem exists_upper_boundary_triangle
     (s : Slicing C) {a b₁ b₂ : ℝ}
@@ -84,7 +85,7 @@ theorem Slicing.gtProp_of_geProp
   · exact Or.inr ⟨F, hF, lt_of_lt_of_le hab hge⟩
 
 theorem wPhaseOf_gt_of_geProp_target
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b ψ ε₀ : ℝ} {E : C}
     (hI : σ.slicing.intervalProp C a b E) (hEne : ¬IsZero E)
@@ -94,7 +95,7 @@ theorem wPhaseOf_gt_of_geProp_target
     (hthin : b - a + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
-    ψ < wPhaseOf (W (K₀.of C E)) ((a + b) / 2) := by
+    ψ < wPhaseOf (W (cl C v E)) ((a + b) / 2) := by
   have hthin1 : b - a < 1 := by
     linarith
   let hpert := hperturb_of_stabSeminorm C σ W hW hthin1 hε₀ hε₀2 hsin
@@ -114,26 +115,26 @@ theorem wPhaseOf_gt_of_geProp_target
         _ < b := σ.slicing.phiPlus_lt_of_intervalProp C hEne hI
   set P := F.toPostnikovTower
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
-  have hWE : W (K₀.of C E) =
-      ∑ i : Fin F.n, W (K₀.of C (P.factor i)) := by
-    rw [K₀.of_postnikovTower_eq_sum C P, map_sum]
+  have hWE : W (cl C v E) =
+      ∑ i : Fin F.n, W (cl C v (P.factor i)) := by
+    rw [cl_postnikovTower_eq_sum C v P, map_sum]
   have him_pos :
-      0 < (W (K₀.of C E) * rot).im := by
+      0 < (W (cl C v E) * rot).im := by
     rw [hWE, Finset.sum_mul]
-    rw [show (∑ i : Fin F.n, W (K₀.of C (P.factor i)) * rot).im =
-        ∑ i : Fin F.n, (W (K₀.of C (P.factor i)) * rot).im from
+    rw [show (∑ i : Fin F.n, W (cl C v (P.factor i)) * rot).im =
+        ∑ i : Fin F.n, (W (cl C v (P.factor i)) * rot).im from
       map_sum Complex.imAddGroupHom _ _]
     apply lt_of_lt_of_le _ (Finset.single_le_sum
-      (f := fun i ↦ (W (K₀.of C (P.factor i)) * rot).im)
+      (f := fun i ↦ (W (cl C v (P.factor i)) * rot).im)
       (fun i _ ↦ ?_) (Finset.mem_univ ⟨0, hn⟩))
     · obtain ⟨hlo_pert, hhi_pert⟩ := hpert _ _ (F.semistable ⟨0, hn⟩) hfirst
         (by linarith [(hphases ⟨0, hn⟩).1]) (hphases ⟨0, hn⟩).2
       have hlo_pert' :
           F.φ ⟨0, hn⟩ - ε₀ <
-            wPhaseOf (W (K₀.of C (P.factor ⟨0, hn⟩))) ((a + b) / 2) := by
+            wPhaseOf (W (cl C v (P.factor ⟨0, hn⟩))) ((a + b) / 2) := by
         simpa [P] using hlo_pert
       have hhi_pert' :
-          wPhaseOf (W (K₀.of C (P.factor ⟨0, hn⟩))) ((a + b) / 2) < F.φ ⟨0, hn⟩ + ε₀ := by
+          wPhaseOf (W (cl C v (P.factor ⟨0, hn⟩))) ((a + b) / 2) < F.φ ⟨0, hn⟩ + ε₀ := by
         simpa [P] using hhi_pert
       exact im_pos_of_phase_above
         (norm_pos_iff.mpr (σ.W_ne_zero_of_seminorm_lt_one C W hW
@@ -147,14 +148,14 @@ theorem wPhaseOf_gt_of_geProp_target
             linarith [(hphases ⟨0, hn⟩).2, hbψ]
           linarith [hhi_pert', hupper])
     · by_cases hi : IsZero (P.factor i)
-      · simp [K₀.of_isZero C hi]
+      · simp [cl_isZero (C := C) (v := v) hi]
       · obtain ⟨hlo_pert, hhi_pert⟩ := hpert _ _ (F.semistable i) hi
           (by linarith [(hphases i).1]) (hphases i).2
         have hlo_pert' :
-            F.φ i - ε₀ < wPhaseOf (W (K₀.of C (P.factor i))) ((a + b) / 2) := by
+            F.φ i - ε₀ < wPhaseOf (W (cl C v (P.factor i))) ((a + b) / 2) := by
           simpa [P] using hlo_pert
         have hhi_pert' :
-            wPhaseOf (W (K₀.of C (P.factor i))) ((a + b) / 2) < F.φ i + ε₀ := by
+            wPhaseOf (W (cl C v (P.factor i))) ((a + b) / 2) < F.φ i + ε₀ := by
           simpa [P] using hhi_pert
         exact le_of_lt <| im_pos_of_phase_above
           (norm_pos_iff.mpr (σ.W_ne_zero_of_seminorm_lt_one C W hW (F.semistable i) hi))
@@ -167,30 +168,30 @@ theorem wPhaseOf_gt_of_geProp_target
               linarith [(hphases i).2, hbψ]
             linarith [hhi_pert', hupper])
   have hW_ne_ab : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
-      a < θ → θ < b → W (K₀.of C G) ≠ 0 := fun G θ hG hGne _ _ =>
+      a < θ → θ < b → W (cl C v G) ≠ 0 := fun G θ hG hGne _ _ =>
     σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
   have hpert_gt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
-      a - ε₀ < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
-        wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < a - ε₀ + 1 := by
+      a - ε₀ < wPhaseOf (W (cl C v G)) ((a + b) / 2) ∧
+        wPhaseOf (W (cl C v G)) ((a + b) / 2) < a - ε₀ + 1 := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
     exact ⟨by linarith, by linarith⟩
   have hpert_lt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
-      b + ε₀ - 1 < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
-        wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < b + ε₀ := by
+      b + ε₀ - 1 < wPhaseOf (W (cl C v G)) ((a + b) / 2) ∧
+        wPhaseOf (W (cl C v G)) ((a + b) / 2) < b + ε₀ := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
     exact ⟨by linarith, by linarith⟩
   have hphase_lo :
-      a - ε₀ < wPhaseOf (W (K₀.of C E)) ((a + b) / 2) :=
+      a - ε₀ < wPhaseOf (W (cl C v E)) ((a + b) / 2) :=
     wPhaseOf_gt_of_intervalProp C σ hEne W (by linarith) hI hW_ne_ab hpert_gt
   have hphase_hi :
-      wPhaseOf (W (K₀.of C E)) ((a + b) / 2) < b + ε₀ :=
+      wPhaseOf (W (cl C v E)) ((a + b) / 2) < b + ε₀ :=
     wPhaseOf_lt_of_intervalProp C σ hEne W (by linarith) hI hW_ne_ab hpert_lt
   have hrange :
-      wPhaseOf (W (K₀.of C E)) ((a + b) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) := by
+      wPhaseOf (W (cl C v E)) ((a + b) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) := by
     constructor
     · have : ψ - 1 < a - ε₀ := by
         linarith
@@ -224,7 +225,7 @@ theorem intervalProp_of_upper_boundary_triangle
 end
 
 theorem wPhaseOf_gt_of_upper_boundary_triangle
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b₁ b₂ ψ ε₀ : ℝ}
     (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
@@ -240,7 +241,7 @@ theorem wPhaseOf_gt_of_upper_boundary_triangle
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ Q} {g : Q ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
-    ψ < wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) := by
+    ψ < wPhaseOf (W (cl C v X)) ((a + b₂) / 2) := by
   have hb₁ : b₁ ≤ a + 1 := by
     have : b₂ - a < 1 := by
       linarith
@@ -257,7 +258,7 @@ theorem wPhaseOf_gt_of_upper_boundary_triangle
     hXI hXne hX_ge' hε₀ hε₀2 henv_lo henv_hi₂ hthin hsin
 
 theorem wPhaseOf_gt_of_upper_source_boundary_target
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {φ ψ ε₀ : ℝ} {Q X Y : C}
     (hQ : σ.slicing.intervalProp C (ψ - ε₀) (φ + ε₀) Q)
@@ -270,7 +271,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_target
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ Q} {g : Q ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
-    ψ < wPhaseOf (W (K₀.of C X)) (((ψ - ε₀) + (φ + ε₀)) / 2) := by
+    ψ < wPhaseOf (W (cl C v X)) (((ψ - ε₀) + (φ + ε₀)) / 2) := by
   have hthin : (φ + ε₀) - (ψ - ε₀) + 2 * ε₀ < 1 := by
     linarith [hε₀8]
   exact wPhaseOf_gt_of_upper_boundary_triangle
@@ -280,7 +281,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_target
     hε₀ hε₀2 (by linarith) (by linarith) hthin hsin hT
 
 theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {φ ψ ε₀ : ℝ} {Q X Y : C}
     (hQ : σ.slicing.intervalProp C (ψ - ε₀) (φ + ε₀) Q)
@@ -293,7 +294,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ Q} {g : Q ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
-    ψ < wPhaseOf (W (K₀.of C X)) (((ψ - ε₀) + (φ + ε₀)) / 2) := by
+    ψ < wPhaseOf (W (cl C v X)) (((ψ - ε₀) + (φ + ε₀)) / 2) := by
   have hY :
       σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) Y :=
     σ.slicing.intervalProp_of_semistable C hY_Pφ (by linarith) (by linarith)
@@ -302,7 +303,7 @@ theorem wPhaseOf_gt_of_upper_source_boundary_P_phi
     hQ hX_ge hY hXne hε₀ hε₀2 hε₀8 hψ_lo hψ_le hsin hT
 
 theorem wPhaseOf_lt_of_leProp_source
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b ψ ε₀ : ℝ} {E : C}
     (hI : σ.slicing.intervalProp C a b E) (hEne : ¬IsZero E)
@@ -312,7 +313,7 @@ theorem wPhaseOf_lt_of_leProp_source
     (hthin : b - a + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
-    wPhaseOf (W (K₀.of C E)) ((a + b) / 2) < ψ := by
+    wPhaseOf (W (cl C v E)) ((a + b) / 2) < ψ := by
   have hthin1 : b - a < 1 := by
     linarith
   let hpert := hperturb_of_stabSeminorm C σ W hW hthin1 hε₀ hε₀2 hsin
@@ -332,29 +333,29 @@ theorem wPhaseOf_lt_of_leProp_source
         _ ≤ ψ - ε₀ := hphi_upper
   set P := F.toPostnikovTower
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
-  have hWE : W (K₀.of C E) =
-      ∑ i : Fin F.n, W (K₀.of C (P.factor i)) := by
-    rw [K₀.of_postnikovTower_eq_sum C P, map_sum]
+  have hWE : W (cl C v E) =
+      ∑ i : Fin F.n, W (cl C v (P.factor i)) := by
+    rw [cl_postnikovTower_eq_sum C v P, map_sum]
   have him_neg :
-      (W (K₀.of C E) * rot).im < 0 := by
+      (W (cl C v E) * rot).im < 0 := by
     rw [hWE, Finset.sum_mul]
-    rw [show (∑ i : Fin F.n, W (K₀.of C (P.factor i)) * rot).im =
-        ∑ i : Fin F.n, (W (K₀.of C (P.factor i)) * rot).im from
+    rw [show (∑ i : Fin F.n, W (cl C v (P.factor i)) * rot).im =
+        ∑ i : Fin F.n, (W (cl C v (P.factor i)) * rot).im from
       map_sum Complex.imAddGroupHom _ _]
-    suffices h : 0 < ∑ i : Fin F.n, -(W (K₀.of C (P.factor i)) * rot).im by
+    suffices h : 0 < ∑ i : Fin F.n, -(W (cl C v (P.factor i)) * rot).im by
       linarith [Finset.sum_neg_distrib (G := ℝ) (s := Finset.univ)
-        (f := fun i ↦ (W (K₀.of C (P.factor i)) * rot).im)]
+        (f := fun i ↦ (W (cl C v (P.factor i)) * rot).im)]
     apply lt_of_lt_of_le _ (Finset.single_le_sum
-      (f := fun i ↦ -(W (K₀.of C (P.factor i)) * rot).im)
+      (f := fun i ↦ -(W (cl C v (P.factor i)) * rot).im)
       (fun i _ ↦ ?_) (Finset.mem_univ ⟨0, hn⟩))
     · obtain ⟨hlo_pert, hhi_pert⟩ := hpert _ _ (F.semistable ⟨0, hn⟩) hfirst
           (hphases ⟨0, hn⟩).1 (lt_of_le_of_lt (hphases ⟨0, hn⟩).2 <| by linarith)
       have hlo_pert' :
           F.φ ⟨0, hn⟩ - ε₀ <
-            wPhaseOf (W (K₀.of C (P.factor ⟨0, hn⟩))) ((a + b) / 2) := by
+            wPhaseOf (W (cl C v (P.factor ⟨0, hn⟩))) ((a + b) / 2) := by
         simpa [P] using hlo_pert
       have hhi_pert' :
-          wPhaseOf (W (K₀.of C (P.factor ⟨0, hn⟩))) ((a + b) / 2) <
+          wPhaseOf (W (cl C v (P.factor ⟨0, hn⟩))) ((a + b) / 2) <
             F.φ ⟨0, hn⟩ + ε₀ := by
         simpa [P] using hhi_pert
       exact neg_pos.mpr <| im_neg_of_phase_below
@@ -367,15 +368,15 @@ theorem wPhaseOf_lt_of_leProp_source
           linarith [hlo_pert', hlower, (hphases ⟨0, hn⟩).1])
         (by linarith [hhi_pert', (hphases ⟨0, hn⟩).2])
     · by_cases hi : IsZero (P.factor i)
-      · simp [P, K₀.of_isZero C hi]
+      · simp [P, cl_isZero (C := C) (v := v) hi]
       · obtain ⟨hlo_pert, hhi_pert⟩ := hpert _ _ (F.semistable i) hi (hphases i).1
             (lt_of_le_of_lt (hphases i).2 <| by linarith)
         have hlo_pert' :
             F.φ i - ε₀ <
-              wPhaseOf (W (K₀.of C (P.factor i))) ((a + b) / 2) := by
+              wPhaseOf (W (cl C v (P.factor i))) ((a + b) / 2) := by
           simpa [P] using hlo_pert
         have hhi_pert' :
-            wPhaseOf (W (K₀.of C (P.factor i))) ((a + b) / 2) < F.φ i + ε₀ := by
+            wPhaseOf (W (cl C v (P.factor i))) ((a + b) / 2) < F.φ i + ε₀ := by
           simpa [P] using hhi_pert
         exact le_of_lt <| neg_pos.mpr <| im_neg_of_phase_below
           (norm_pos_iff.mpr (σ.W_ne_zero_of_seminorm_lt_one C W hW (F.semistable i) hi))
@@ -386,32 +387,32 @@ theorem wPhaseOf_lt_of_leProp_source
             linarith [hlo_pert', hlower, (hphases i).1])
           (by linarith [hhi_pert', (hphases i).2])
   have hW_ne_ab : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
-      a < θ → θ < b → W (K₀.of C G) ≠ 0 := fun G θ hG hGne _ _ =>
+      a < θ → θ < b → W (cl C v G) ≠ 0 := fun G θ hG hGne _ _ =>
     σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
   have hpert_gt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
-      a - ε₀ < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
-        wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < a - ε₀ + 1 := by
+      a - ε₀ < wPhaseOf (W (cl C v G)) ((a + b) / 2) ∧
+        wPhaseOf (W (cl C v G)) ((a + b) / 2) < a - ε₀ + 1 := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
     exact ⟨by linarith, by linarith⟩
   have hpert_lt : ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
       a < θ → θ < b →
-      b + ε₀ - 1 < wPhaseOf (W (K₀.of C G)) ((a + b) / 2) ∧
-        wPhaseOf (W (K₀.of C G)) ((a + b) / 2) < b + ε₀ := by
+      b + ε₀ - 1 < wPhaseOf (W (cl C v G)) ((a + b) / 2) ∧
+        wPhaseOf (W (cl C v G)) ((a + b) / 2) < b + ε₀ := by
     intro G θ hG hGne haθ hθb
     obtain ⟨hlo, hhi⟩ := hpert G θ hG hGne haθ hθb
     exact ⟨by linarith, by linarith⟩
   have hphase_lo :
-      a - ε₀ < wPhaseOf (W (K₀.of C E)) ((a + b) / 2) :=
+      a - ε₀ < wPhaseOf (W (cl C v E)) ((a + b) / 2) :=
     wPhaseOf_gt_of_intervalProp C σ hEne W
       (by linarith) hI hW_ne_ab hpert_gt
   have hphase_hi :
-      wPhaseOf (W (K₀.of C E)) ((a + b) / 2) < b + ε₀ :=
+      wPhaseOf (W (cl C v E)) ((a + b) / 2) < b + ε₀ :=
     wPhaseOf_lt_of_intervalProp C σ hEne W
       (by linarith) hI hW_ne_ab hpert_lt
   have hrange :
-      wPhaseOf (W (K₀.of C E)) ((a + b) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) := by
+      wPhaseOf (W (cl C v E)) ((a + b) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) := by
     constructor
     · have : ψ - 1 < a - ε₀ := by
         linarith
@@ -485,7 +486,7 @@ theorem intervalProp_of_lower_boundary_triangle
 end
 
 theorem wPhaseOf_lt_of_lower_boundary_triangle
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a₁ a₂ b ψ ε₀ : ℝ}
     (ha₁ : a₁ < b) (ha : a₂ ≤ a₁)
@@ -501,7 +502,7 @@ theorem wPhaseOf_lt_of_lower_boundary_triangle
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ K} {g : K ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
-    wPhaseOf (W (K₀.of C Y)) ((a₂ + b) / 2) < ψ := by
+    wPhaseOf (W (cl C v Y)) ((a₂ + b) / 2) < ψ := by
   have hY_I : σ.slicing.intervalProp C a₂ b Y :=
     intervalProp_of_lower_boundary_triangle (C := C) (s := σ.slicing)
       ha₁ ha hK hX hY_le hT
@@ -511,7 +512,7 @@ theorem wPhaseOf_lt_of_lower_boundary_triangle
     hY_I hYne hY_le' hε₀ hε₀2 (by linarith) henv_hi hthin hsin
 
 theorem wPhaseOf_lt_of_lower_source_boundary_target
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {φ ψ ε₀ : ℝ} {K X Y : C}
     (hK : σ.slicing.intervalProp C (φ - ε₀) (ψ + ε₀) K)
@@ -524,7 +525,7 @@ theorem wPhaseOf_lt_of_lower_source_boundary_target
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ K} {g : K ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
-    wPhaseOf (W (K₀.of C Y)) (((φ - ε₀) + (ψ + ε₀)) / 2) < ψ := by
+    wPhaseOf (W (cl C v Y)) (((φ - ε₀) + (ψ + ε₀)) / 2) < ψ := by
   have hthin : (ψ + ε₀) - (φ - ε₀) + 2 * ε₀ < 1 := by
     linarith [hε₀8]
   exact wPhaseOf_lt_of_lower_boundary_triangle
@@ -534,7 +535,7 @@ theorem wPhaseOf_lt_of_lower_source_boundary_target
     hε₀ hε₀2 (by linarith) (by linarith) hthin hsin hT
 
 theorem wPhaseOf_lt_of_lower_source_boundary_P_phi
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {φ ψ ε₀ : ℝ} {K X Y : C}
     (hK : σ.slicing.intervalProp C (φ - ε₀) (ψ + ε₀) K)
@@ -547,7 +548,7 @@ theorem wPhaseOf_lt_of_lower_source_boundary_P_phi
       ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
     {f : X ⟶ K} {g : K ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g h ∈ distTriang C) :
-    wPhaseOf (W (K₀.of C Y)) (((φ - ε₀) + (ψ + ε₀)) / 2) < ψ := by
+    wPhaseOf (W (cl C v Y)) (((φ - ε₀) + (ψ + ε₀)) / 2) < ψ := by
   have hX :
       σ.slicing.intervalProp C (ψ - ε₀) (ψ + ε₀) X :=
     σ.slicing.intervalProp_of_semistable C hX_Pφ (by linarith) (by linarith)
@@ -632,7 +633,7 @@ theorem exists_lower_boundary_strictShortExact
   · simp [S, KI]
 
 theorem intervalProp_of_wSemistable_upper_target
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b₁ b₂ ψ ε₀ : ℝ} (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
     {E : C}
@@ -658,7 +659,7 @@ theorem intervalProp_of_wSemistable_upper_target
   by_cases hX_zero : IsZero X
   · exact σ.slicing.intervalProp_of_triangle C (Or.inl hX_zero) hY₁ hTQ
   · have hX_phase_gt :
-        ψ < wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) :=
+        ψ < wPhaseOf (W (cl C v X)) ((a + b₂) / 2) :=
       wPhaseOf_gt_of_upper_boundary_triangle
         (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hab₂ hb hSS.intervalProp hX_ge hY₁ hX_zero
         hε₀ hε₀2 henv_lo henv_hi hthin₂ hsin hTQ
@@ -666,9 +667,9 @@ theorem intervalProp_of_wSemistable_upper_target
     · haveI : IsIso fX :=
         (Triangle.isZero₃_iff_isIso₁ (Triangle.mk fX gY δY) hTQ).mp hY_zero
       have hX_phase_eq :
-          wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) = ψ := by
-        rw [K₀.of_iso C (asIso fX)]
-        simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.phase_eq
+          wPhaseOf (W (cl C v X)) ((a + b₂) / 2) = ψ := by
+        rw [cl_iso C v (asIso fX)]
+        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using hSS.phase_eq
       linarith
     · letI : Fact (a < b₂) := ⟨hab₂⟩
       letI : Fact (b₂ - a ≤ 1) := ⟨by linarith⟩
@@ -689,42 +690,42 @@ theorem intervalProp_of_wSemistable_upper_target
       have hqY_strict : IsStrictEpi qY := ⟨hS.shortExact.epi_g, hS.strict_g⟩
       let hpert₂ := hperturb_of_stabSeminorm C σ W hW hthin₂' hε₀ hε₀2 hsin
       have hW_interval :
-          ∀ {F : C}, σ.slicing.intervalProp C a b₂ F → ¬IsZero F → W (K₀.of C F) ≠ 0 :=
+          ∀ {F : C}, σ.slicing.intervalProp C a b₂ F → ¬IsZero F → W (cl C v F) ≠ 0 :=
         fun hF hFne => σ.W_ne_zero_of_intervalProp C W hthin₂'
           (stabSeminorm_lt_cos_of_hsin_hthin
             (C := C) (σ := σ) (W := W) hab₂ hε₀ hthin₂ hsin) hFne hF
       have hY_phase_ge :
-          ψ ≤ wPhaseOf (W (K₀.of C Y)) ((a + b₂) / 2) := by
+          ψ ≤ wPhaseOf (W (cl C v Y)) ((a + b₂) / 2) := by
         let ssf₂ := σ.skewedStabilityFunction_of_near C W hW hab₂
-        simpa [StabilityCondition.skewedStabilityFunction_of_near, EI₂, YI₂, qY] using
+        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, EI₂, YI₂, qY] using
           (SkewedStabilityFunction.phase_le_of_strictQuotient
             (C := C) (σ := σ) (a := a) (b := b₂) (ssf := ssf₂)
             (X := EI₂) (Y := YI₂) hSS hε₀ hthin₂ hW_interval hpert₂ qY hqY_strict hY_zero)
       have henv_hi₂ : ψ ≤ b₂ - ε₀ := by
         linarith
       have hX_range :
-          wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) :=
+          wPhaseOf (W (cl C v X)) ((a + b₂) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) :=
         wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
           (C := C) (σ := σ) (W := W) (hW := hW) hX₂ hX_zero hε₀ hε₀2 henv_lo henv_hi₂
           hthin₂ hsin
       have hY_range :
-          wPhaseOf (W (K₀.of C Y)) ((a + b₂) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) :=
+          wPhaseOf (W (cl C v Y)) ((a + b₂) / 2) ∈ Set.Ioo (ψ - 1) (ψ + 1) :=
         wPhaseOf_mem_Ioo_of_intervalProp_target_envelope
           (C := C) (σ := σ) (W := W) (hW := hW) hY₂ hY_zero hε₀ hε₀2 henv_lo henv_hi₂
           hthin₂ hsin
       have hsum :
-          W (K₀.of C E) = W (K₀.of C X) + W (K₀.of C Y) := by
+          W (cl C v E) = W (cl C v X) + W (cl C v Y) := by
         simpa [map_add] using congrArg W
-          (K₀.of_triangle C (Triangle.mk fX gY δY) hTQ)
+          (cl_triangle C v (Triangle.mk fX gY δY) hTQ)
       have hY_phase_lt :
-          wPhaseOf (W (K₀.of C Y)) ((a + b₂) / 2) < ψ :=
+          wPhaseOf (W (cl C v Y)) ((a + b₂) / 2) < ψ :=
         wPhaseOf_seesaw_dual hsum.symm
-          (by simpa [StabilityCondition.skewedStabilityFunction_of_near] using hSS.phase_eq)
+          (by simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using hSS.phase_eq)
           hX_phase_gt (hW_interval hX₂ hX_zero) hX_range hY_range
       linarith
 
 theorem intervalProp_of_wSemistable_lower_target
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     [IsTriangulated C]
     {a₁ a₂ b ψ ε₀ : ℝ} (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₁ ≤ a₂)
@@ -745,7 +746,7 @@ theorem intervalProp_of_wSemistable_lower_target
   by_cases hY_zero : IsZero Y
   · exact σ.slicing.intervalProp_of_triangle C hX₂ (Or.inl hY_zero) hTQ
   · have hY_phase_lt :
-      wPhaseOf (W (K₀.of C Y)) ((a₁ + b) / 2) < ψ :=
+      wPhaseOf (W (cl C v Y)) ((a₁ + b) / 2) < ψ :=
       wPhaseOf_lt_of_lower_boundary_triangle
         (C := C) (σ := σ) (W := W) (hW := hW) ha₂ ha hSS.intervalProp hX₂ hY_le hY_zero
         hε₀ hε₀2 henv_lo henv_hi hthin₁ hsin hTQ
@@ -772,14 +773,14 @@ theorem intervalProp_of_wSemistable_lower_target
       linarith
     let hpert₁ := hperturb_of_stabSeminorm C σ W hW hthin₁' hε₀ hε₀2 hsin
     have hW_interval :
-        ∀ {F : C}, σ.slicing.intervalProp C a₁ b F → ¬IsZero F → W (K₀.of C F) ≠ 0 :=
+        ∀ {F : C}, σ.slicing.intervalProp C a₁ b F → ¬IsZero F → W (cl C v F) ≠ 0 :=
       fun hF hFne => σ.W_ne_zero_of_intervalProp C W hthin₁'
         (stabSeminorm_lt_cos_of_hsin_hthin
           (C := C) (σ := σ) (W := W) ha₁ hε₀ hthin₁ hsin) hFne hF
     have hY_phase_ge :
-        ψ ≤ wPhaseOf (W (K₀.of C Y)) ((a₁ + b) / 2) := by
+        ψ ≤ wPhaseOf (W (cl C v Y)) ((a₁ + b) / 2) := by
       let ssf₁ := σ.skewedStabilityFunction_of_near C W hW ha₁
-      simpa [StabilityCondition.skewedStabilityFunction_of_near, EI₁, YI₁, qY] using
+      simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, EI₁, YI₁, qY] using
         (SkewedStabilityFunction.phase_le_of_strictQuotient
           (C := C) (σ := σ) (a := a₁) (b := b) (ssf := ssf₁)
           (X := EI₁) (Y := YI₁) hSS hε₀ hthin₁ hW_interval hpert₁ qY hqY_strict hY_zero)

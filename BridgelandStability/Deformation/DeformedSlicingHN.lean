@@ -18,13 +18,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-!
 # Deformed Slicing HN Existence
@@ -38,7 +39,7 @@ truncation-zero lemmas, and the main `deformedSlicing_hn_exists` theorem.
 /-- Forward shift for `deformedPred`: if `E` is Q-semistable of phase `φ`, then `E⟦1⟧`
 is Q-semistable of phase `φ + 1`. Extracted from `deformedSlicing.shift_iff`. -/
 theorem deformedPred_shift_one
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε)
     {φ : ℝ} {X : C}
@@ -56,15 +57,15 @@ theorem deformedPred_shift_one
       · exact Or.inr ⟨F.shiftHN C σ.slicing 1, fun i ↦ by
           simp only [HNFiltration.shiftHN, Int.cast_one]
           constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
-    · -- W(K₀.of C (X⟦1⟧)) ≠ 0
-      rw [K₀.of_shift_one, map_neg]
+    · -- W(cl C v (X⟦1⟧)) ≠ 0
+      rw [cl_shift_one, map_neg]
       exact neg_ne_zero.mpr hSS.wNe
     · -- wPhaseOf = φ + 1
-      change wPhaseOf (W (K₀.of C (X⟦(1 : ℤ)⟧))) ((a + 1 + (b + 1)) / 2) = φ + 1
+      change wPhaseOf (W (cl C v (X⟦(1 : ℤ)⟧))) ((a + 1 + (b + 1)) / 2) = φ + 1
       rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
-      rw [K₀.of_shift_one, map_neg]
-      have hphase : wPhaseOf (W (K₀.of C X)) ((a + b) / 2) = φ := hSS.phase_eq
-      have hWne : W (K₀.of C X) ≠ 0 := hSS.wNe
+      rw [cl_shift_one, map_neg]
+      have hphase : wPhaseOf (W (cl C v X)) ((a + b) / 2) = φ := hSS.phase_eq
+      have hWne : W (cl C v X) ≠ 0 := hSS.wNe
       exact (wPhaseOf_neg hWne _).trans (by linarith)
     · -- Semistability transport: shift by -1
       have hT_sh := Triangle.shift_distinguished _ hT (-1 : ℤ)
@@ -94,12 +95,12 @@ theorem deformedPred_shift_one
             constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
       have hKne1 : ¬IsZero (K⟦(-1 : ℤ)⟧) := fun h ↦
         hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (-1 : ℤ)) K h)
-      have hsem : wPhaseOf (W (K₀.of C (K⟦(-1 : ℤ)⟧))) ((a + b) / 2) ≤ φ :=
+      have hsem : wPhaseOf (W (cl C v (K⟦(-1 : ℤ)⟧))) ((a + b) / 2) ≤ φ :=
         hSS.le_of_distTriang hT' hK1 hQ1 hKne1
-      rw [K₀.of_shift_neg_one, map_neg] at hsem
-      change wPhaseOf (W (K₀.of C K)) ((a + 1 + (b + 1)) / 2) ≤ φ + 1
+      rw [cl_shift_neg_one, map_neg] at hsem
+      change wPhaseOf (W (cl C v K)) ((a + 1 + (b + 1)) / 2) ≤ φ + 1
       rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
-      by_cases hWK : W (K₀.of C K) = 0
+      by_cases hWK : W (cl C v K) = 0
       · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; linarith
       · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
         rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
@@ -110,7 +111,7 @@ theorem deformedPred_shift_one
 /-- Backward shift for `deformedPred`: if `E⟦1⟧` is Q-semistable of phase `φ + 1`,
 then `E` is Q-semistable of phase `φ`. -/
 theorem deformedPred_of_shift_one
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε)
     {φ : ℝ} {X : C}
@@ -131,20 +132,20 @@ theorem deformedPred_of_shift_one
               (F.shiftHN C σ.slicing (-1)).φ i < b - 1
             simp only [HNFiltration.shiftHN, Int.cast_neg, Int.cast_one]
             constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
-    · -- W(K₀.of C X) ≠ 0
+    · -- W(cl C v X) ≠ 0
       intro hw
       apply hSS.wNe
-      change W (K₀.of C (X⟦(1 : ℤ)⟧)) = 0
-      rw [K₀.of_shift_one, map_neg]
-      change W (K₀.of C X) = 0 at hw
+      change W (cl C v (X⟦(1 : ℤ)⟧)) = 0
+      rw [cl_shift_one, map_neg]
+      change W (cl C v X) = 0 at hw
       rw [hw, neg_zero]
     · -- wPhaseOf = φ
-      change wPhaseOf (W (K₀.of C X)) ((a - 1 + (b - 1)) / 2) = φ
+      change wPhaseOf (W (cl C v X)) ((a - 1 + (b - 1)) / 2) = φ
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
-      have hphase : wPhaseOf (-W (K₀.of C X)) ((a + b) / 2) = φ + 1 := by
-        have := hSS.phase_eq; rwa [K₀.of_shift_one, map_neg] at this
-      have hWne : W (K₀.of C X) ≠ 0 := by
-        intro hw; apply hSS.wNe; rw [K₀.of_shift_one, map_neg, neg_eq_zero]; exact hw
+      have hphase : wPhaseOf (-W (cl C v X)) ((a + b) / 2) = φ + 1 := by
+        have := hSS.phase_eq; rwa [cl_shift_one, map_neg] at this
+      have hWne : W (cl C v X) ≠ 0 := by
+        intro hw; apply hSS.wNe; rw [cl_shift_one, map_neg, neg_eq_zero]; exact hw
       have key := wPhaseOf_neg hWne ((a + b) / 2 - 1)
       rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
       linarith
@@ -164,20 +165,20 @@ theorem deformedPred_of_shift_one
             constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
       have hKne1 : ¬IsZero (K⟦(1 : ℤ)⟧) := fun h ↦
         hKne (IsZero.of_full_of_faithful_of_isZero (shiftFunctor C (1 : ℤ)) K h)
-      have hsem : wPhaseOf (W (K₀.of C (K⟦(1 : ℤ)⟧))) ((a + b) / 2) ≤ φ + 1 :=
+      have hsem : wPhaseOf (W (cl C v (K⟦(1 : ℤ)⟧))) ((a + b) / 2) ≤ φ + 1 :=
         hSS.le_of_distTriang hT' hK1 hQ1 hKne1
-      rw [K₀.of_shift_one, map_neg] at hsem
-      change wPhaseOf (W (K₀.of C K)) ((a - 1 + (b - 1)) / 2) ≤ φ
+      rw [cl_shift_one, map_neg] at hsem
+      change wPhaseOf (W (cl C v K)) ((a - 1 + (b - 1)) / 2) ≤ φ
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
-      by_cases hWK : W (K₀.of C K) = 0
+      by_cases hWK : W (cl C v K) = 0
       · simp only [hWK, neg_zero, wPhaseOf_zero] at hsem ⊢; linarith
       · have key := wPhaseOf_neg hWK ((a + b) / 2 - 1)
         rw [show (a + b) / 2 - 1 + 1 = (a + b) / 2 from by ring] at key
         linarith
 
 /-- `Q(>t)⟦1⟧ ⊆ Q(>t+1)`: the forward shift sends `Q(>t)`-objects to `Q(>t+1)`. -/
-theorem StabilityCondition.deformedGtPred_shift_one
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+theorem StabilityCondition.WithClassMap.deformedGtPred_shift_one
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε)
     {t : ℝ} {X : C}
@@ -193,8 +194,8 @@ theorem StabilityCondition.deformedGtPred_shift_one
     exact .ext (Triangle.shift_distinguished _ hT (1 : ℤ)) ihX ihY
 
 /-- `Q(≤t)⟦1⟧ ⊆ Q(≤t+1)`: the forward shift sends `Q(≤t)`-objects to `Q(≤t+1)`. -/
-theorem StabilityCondition.deformedLePred_shift_one
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+theorem StabilityCondition.WithClassMap.deformedLePred_shift_one
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε)
     {t : ℝ} {X : C}
@@ -210,8 +211,8 @@ theorem StabilityCondition.deformedLePred_shift_one
     exact .ext (Triangle.shift_distinguished _ hT (1 : ℤ)) ihX ihY
 
 /-- `Q(≤t)⟦-1⟧ ⊆ Q(≤t-1)`: the backward shift sends `Q(≤t)`-objects to `Q(≤t-1)`. -/
-theorem StabilityCondition.deformedLePred_shift_neg_one
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+theorem StabilityCondition.WithClassMap.deformedLePred_shift_neg_one
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε)
     {t : ℝ} {X : C}
@@ -238,7 +239,7 @@ theorem StabilityCondition.deformedLePred_shift_neg_one
 
 /-- If `X ∈ Q(>t) ∩ Q(≤t)`, then `X = 0`. -/
 theorem isZero_of_deformedGtPred_deformedLePred
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
@@ -252,7 +253,7 @@ theorem isZero_of_deformedGtPred_deformedLePred
 /-- **Third-vertex closure for Q(>t)**: if distinguished triangle X → S → Y
 with X, S ∈ Q(>t), then Y ∈ Q(>t). Uses rotation + forward shift + ExtensionClosure. -/
 theorem deformedGtPred_of_triangle_obj₃
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε)
     {t : ℝ} {X S Y : C} {f : X ⟶ S} {g : S ⟶ Y} {h : Y ⟶ X⟦(1 : ℤ)⟧}
@@ -271,7 +272,7 @@ theorem deformedGtPred_of_triangle_obj₃
 /-- **First-vertex closure for Q(≤t)**: if distinguished triangle X → R₀ → R₁
 with R₀, R₁ ∈ Q(≤t), then X ∈ Q(≤t). Uses invRotate + backward shift + ExtensionClosure. -/
 theorem deformedLePred_of_triangle_obj₁
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε)
     {t : ℝ} {X R₀ R₁ : C} {f : X ⟶ R₀} {g : R₀ ⟶ R₁} {h : R₁ ⟶ X⟦(1 : ℤ)⟧}
@@ -290,7 +291,7 @@ theorem deformedLePred_of_triangle_obj₁
 /-- If `S ∈ Q(>t)` and dist triangle `X → S → Y` with `X ∈ Q(>t)`, `Y ∈ Q(≤t)`,
 then `Y = 0`. (The Q(≤t) part of a Q(>t) object is zero.) -/
 theorem isZero_deformedLe_of_deformedGt_triangle
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
@@ -306,7 +307,7 @@ theorem isZero_deformedLe_of_deformedGt_triangle
 /-- Dual: if `S ∈ Q(≤t)` and dist triangle `X → S → Y` with `X ∈ Q(>t)`, `Y ∈ Q(≤t)`,
 then `X = 0`. -/
 theorem isZero_deformedGt_of_deformedLe_triangle
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
@@ -323,7 +324,7 @@ theorem isZero_deformedGt_of_deformedLe_triangle
 Combines `deformedGtLe_triangle` (Step 2) with
 `exists_hn_of_deformedGt_deformedLe_triangle`. -/
 theorem deformedSlicing_hn_exists
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
