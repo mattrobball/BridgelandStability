@@ -123,8 +123,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
           exact cokernelZeroIsoTarget
         let eC : (cokernel ((⊥ : Subobject Y).arrow)).obj ≅ Y.obj :=
           (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
-        simpa [ψY] using
-          congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+        simp only [ψY]; exact ssf.wPhase_iso eC
       have hψY_hi : ψY < U := (hWindow Y.property hS_obj).2
       have hsingle_n : Gsingle.n = 1 := by
         simp [Gsingle, HNFiltration.single]
@@ -215,7 +214,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
             cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA eK hw
           let eC' :=
             (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eC
-          simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC')
+          exact ssf.wPhase_iso eC'
         have hgtA' :
             ψB < ssf.wPhase (cokernel A'.arrow).obj := by
           simpa [ψB] using
@@ -301,7 +300,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA e0 hw
       let eC' :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eC
-      simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC')
+      exact ssf.wPhase_iso eC'
     rw [hphase_A]
     exact hquot A' hA'_top hA'_strict
   obtain ⟨G0, hG0⟩ := h S0 hS0_ne t hS0_quot

@@ -161,9 +161,7 @@ theorem SkewedStabilityFunction.exists_semistable_strictQuotient_le_phase_of_fin
               phaseQ pbA =
                 ssf.wPhase (cokernel A.arrow).obj := by
             dsimp [phaseQ, pbA]
-            simpa [SkewedStabilityFunction.wPhase] using
-              congrArg (fun z ↦ wPhaseOf z ssf.α)
-                (ssf.Wobj_cokernel_pullback_eq
+            exact ssf.wPhase_congr (ssf.Wobj_cokernel_pullback_eq
                 (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) S.1 S.2
                 (B := A) hA_strict)
           have hpb_phase_lt : phaseQ pbA < phaseQ S.1 := by
@@ -197,7 +195,7 @@ theorem SkewedStabilityFunction.exists_semistable_strictQuotient_le_phase_of_fin
     let eC : (cokernel ((⊥ : Subobject X).arrow)).obj ≅ X.obj :=
       (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
     simpa [phaseQ, S0] using
-      congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+      ssf.wPhase_iso eC
   exact ⟨T.1, hT_ne_top, T.2, hT_ss, hT_phase_le.trans_eq hphase0⟩
 
 variable [IsTriangulated C] in
@@ -813,7 +811,7 @@ theorem IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
     have hphase :
         ssf.wPhase B.obj =
           ssf.wPhase X.obj := by
-      simpa using congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eX).symm
+      exact ssf.wPhase_iso eX.symm
     exact hphase ▸
       (ssf.semistable_of_iso
         (C := C) (s := σ.slicing) (a := a) (b := b) eX.symm hq.semistable)
@@ -957,8 +955,7 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
     hB_Wne (hWB_eq.trans hzero)
   let ψM : ℝ := ssf.wPhase (cokernel M.arrow).obj
   have hψ_eq : ssf.wPhase B.obj = ssf.wPhase (cokernel M.arrow).obj := by
-    simpa [SkewedStabilityFunction.wPhase] using
-      congrArg (fun z ↦ wPhaseOf z ssf.α) hWB_eq
+    exact ssf.wPhase_congr hWB_eq
   have hM_range :
       ssf.wPhase (cokernel M.arrow).obj ∈
         Set.Ioo

@@ -379,6 +379,27 @@ abbrev SkewedStabilityFunction.wNe
     (ssf : SkewedStabilityFunction C v s a b) (E : C) : Prop :=
   ssf.W (cl C v E) ≠ 0
 
+/-- Equal charges give equal W-phases. -/
+theorem SkewedStabilityFunction.wPhase_congr
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) {E E' : C}
+    (h : ssf.W (cl C v E) = ssf.W (cl C v E')) :
+    ssf.wPhase E = ssf.wPhase E' := by
+  simp only [SkewedStabilityFunction.wPhase, h]
+
+/-- Isomorphic objects have the same W-phase. -/
+theorem SkewedStabilityFunction.wPhase_iso
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) {E E' : C} (e : E ≅ E') :
+    ssf.wPhase E = ssf.wPhase E' :=
+  ssf.wPhase_congr (congrArg ssf.W (cl_iso C v e))
+
 /-- The W-phase of an object lies in `(α - 1, α + 1]`. -/
 theorem SkewedStabilityFunction.wPhase_mem_Ioc
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]

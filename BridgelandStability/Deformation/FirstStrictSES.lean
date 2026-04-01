@@ -85,7 +85,7 @@ theorem SkewedStabilityFunction.maxPhase_strictSubobject_ne_top_of_not_semistabl
         (((⊤ : Subobject X) : σ.slicing.IntervalCat C a b).obj) ≅ X.obj :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
           (asIso (⊤ : Subobject X).arrow)
-    simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+    exact ssf.wPhase_iso eC
   let eC :
       (((⊤ : Subobject X) : σ.slicing.IntervalCat C a b).obj) ≅ X.obj :=
     (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso

@@ -165,9 +165,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
   have hpb_phase_eq :
       ssf.wPhase (cokernel pbB.arrow).obj =
         ssf.wPhase (cokernel B.arrow).obj := by
-    simpa [SkewedStabilityFunction.wPhase] using
-      congrArg (fun z ↦ wPhaseOf z ssf.α)
-        (ssf.Wobj_cokernel_pullback_eq
+    exact ssf.wPhase_congr (ssf.Wobj_cokernel_pullback_eq
         (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
         (B := B) hB_strict)
   have hpb_phase_lt :
@@ -271,9 +269,7 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
   have hpb_phase_eq :
       ssf.wPhase (cokernel pbB.arrow).obj =
         ssf.wPhase (cokernel B.arrow).obj := by
-    simpa [SkewedStabilityFunction.wPhase] using
-      congrArg (fun z ↦ wPhaseOf z ssf.α)
-        (ssf.Wobj_cokernel_pullback_eq
+    exact ssf.wPhase_congr (ssf.Wobj_cokernel_pullback_eq
         (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
         (B := B) hB_strict)
   have hpb_phase_lt :
@@ -516,8 +512,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
           (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
         have hbot_phase_eq :
             ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj = ψY := by
-          simpa [ψY] using
-            congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+          simp only [ψY]; exact ssf.wPhase_iso eC
         have hψY_hi : ψY < U := (hWindow Y.property hY_obj_ne).2
         have hj_lt : j.val < 1 := j.is_lt
         have hj0 : j.val = 0 := by
@@ -556,8 +551,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
             (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
           have hphase_bot :
               ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj = ψY := by
-            simpa [ψY] using
-              congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+            simp only [ψY]; exact ssf.wPhase_iso eC
           have hssY : ssf.Semistable C Y.obj ψY := by
             exact hphase_bot ▸
               (ssf.semistable_of_iso
@@ -680,7 +674,7 @@ theorem wPhaseOf_cokernel_mapMono_eq
   let eC :=
     (Slicing.IntervalCat.ι (C := C) (s := s) a b).mapIso
       (Subobject.cokernelMapMonoIso f h)
-  simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+  exact ssf.wPhase_iso eC
 
 /-- The cokernel of the inclusion `A ≤ ⊤` in an interval category is canonically the cokernel
 of `A.arrow`. -/
@@ -702,7 +696,7 @@ theorem wPhaseOf_cokernel_ofLE_top_eq
   let eC :=
     (Slicing.IntervalCat.ι (C := C) (s := s) a b).mapIso
       (interval_cokernelTopIso (C := C) (s := s) (a := a) (b := b) A)
-  simpa using congrArg (fun x ↦ wPhaseOf (W x) α) (cl_iso C v eC)
+  exact congrArg (fun x ↦ wPhaseOf (W x) α) (cl_iso C v eC)
 
 theorem wPhaseOf_cokernel_kernelSubobject_eq
     [IsTriangulated C]

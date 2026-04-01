@@ -185,8 +185,7 @@ theorem hn_exists_with_phiPlus_reduction
           exact cokernelZeroIsoTarget
         let eC : (cokernel ((⊥ : Subobject Y).arrow)).obj ≅ Y.obj :=
           (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
-        simpa [ψY] using
-          congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+        simp only [ψY]; exact ssf.wPhase_iso eC
       have hψY_hi : ψY < U := (hWindow Y.property hS_obj).2
       have hsingle_n : Gsingle.n = 1 := by
         simp [Gsingle, HNFiltration.single]
@@ -219,7 +218,7 @@ theorem hn_exists_with_phiPlus_reduction
           exact cokernelZeroIsoTarget
         let eC := (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
         have hbot_eq : ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj = ψY := by
-          simpa [ψY] using congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+          simp only [ψY]; exact ssf.wPhase_iso eC
         linarith
       -- Construct hQuotLo_ss from hquot (weaken: all quotients → semistable quotients)
       have hQuotLo_ss : ∀ {B' : σ.slicing.IntervalCat C a b} (q' : Y ⟶ B'),
@@ -321,7 +320,7 @@ theorem hn_exists_with_phiPlus_reduction
             cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA eK hw
           let eC' :=
             (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eC
-          simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC')
+          exact ssf.wPhase_iso eC'
         have hgtA' :
             ψB < ssf.wPhase (cokernel A'.arrow).obj := by
           simpa [ψB] using
@@ -451,7 +450,7 @@ theorem hn_exists_with_phiPlus_reduction
         cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA e0 hw
       let eC' :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eC
-      simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC')
+      exact ssf.wPhase_iso eC'
     rw [hphase_A]
     -- Convert: apply hquot to cokernel.π A'.arrow (a strict epi from X)
     have hA'_nonzero : ¬IsZero (cokernel A'.arrow).obj := fun hZ =>

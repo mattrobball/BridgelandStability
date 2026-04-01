@@ -156,8 +156,7 @@ theorem exists_strictMDQ_with_quotient_bound
       have : ssf.W (cl C v (cokernel S0.1.arrow).obj) = ssf.W (cl C v X.obj) := by
         congr 1; exact cl_iso C v hiso
       have hEq : ssf.wPhase (cokernel S0.1.arrow).obj = ssf.wPhase X.obj := by
-        simpa [SkewedStabilityFunction.wPhase] using
-          congrArg (fun z ↦ wPhaseOf z ssf.α) this
+        exact ssf.wPhase_congr this
       rw [hEq]
       exact hψ_X_upper
     obtain ⟨B, q, hq⟩ := h S0 hS0_ne hψ_S0 hQLo0
@@ -240,8 +239,7 @@ theorem exists_strictMDQ_with_quotient_bound
               congr 1; exact cl_iso C v hiso_T
             have hEq : ssf.wPhase (cokernel Tsub.arrow).obj =
                 ssf.wPhase (cokernel A.arrow).obj := by
-              simpa [SkewedStabilityFunction.wPhase] using
-                congrArg (fun z ↦ wPhaseOf z ssf.α) this
+              exact ssf.wPhase_congr this
             rw [hEq]
             linarith
           -- RECURSIVE CALL
@@ -506,8 +504,7 @@ theorem exists_strictMDQ_with_quotient_bound
                 congr 1; exact cl_iso C v hiso
               have hEq : ssf.wPhase (Ahi : σ.slicing.IntervalCat C a b).obj =
                   ssf.wPhase X_hi := by
-                simpa [SkewedStabilityFunction.wPhase] using
-                  congrArg (fun z ↦ wPhaseOf z ssf.α) this
+                exact ssf.wPhase_congr this
               rw [hEq]
               exact hψ_Xhi_gt
             -- Step 3: Seesaw → ψ(cokernel Ahi.arrow) < ψ(QS)
@@ -527,8 +524,7 @@ theorem exists_strictMDQ_with_quotient_bound
                 congr 1; exact cl_iso C v hiso_T
               have hEq : ssf.wPhase (cokernel Tsub.arrow).obj =
                   ssf.wPhase (cokernel Ahi.arrow).obj := by
-                simpa [SkewedStabilityFunction.wPhase] using
-                  congrArg (fun z ↦ wPhaseOf z ssf.α) this
+                exact ssf.wPhase_congr this
               rw [hEq]
               linarith
             -- Step 5: Recursive call

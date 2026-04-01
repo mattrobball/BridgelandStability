@@ -538,7 +538,7 @@ lemma intervalLiftSub_wPhase_eq
         (A : s.IntervalCat C a b).obj :=
     (Slicing.IntervalCat.ι (C := C) (s := s) a b).mapIso eI
   simpa [eI, eC] using
-    congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+    ssf.wPhase_iso eC
 
 end
 
@@ -616,7 +616,7 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
           ((⊤ : Subobject X) : σ.slicing.IntervalCat C a b).obj ≅ KI.obj :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
       simpa [phaseObj] using
-        congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC).symm
+        (ssf.wPhase_iso eC).symm
     have hIsoTop :
         phaseObj ((⊤ : Subobject X) : σ.slicing.IntervalCat C a b) = phaseObj X := by
       let eC :
@@ -624,7 +624,7 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
           (asIso (⊤ : Subobject X).arrow)
       simpa [phaseObj] using
-        congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+        ssf.wPhase_iso eC
     have hEqPhase : phaseObj KI = phaseObj X := hIsoK.trans hIsoTop
     have : phaseObj X < phaseObj X := by
       simpa [phaseObj, KI] using hgt.trans_eq hEqPhase
@@ -637,7 +637,7 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
       (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
         (Subobject.underlyingIso iKX)
     simpa [B, KI] using
-      congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+      ssf.wPhase_iso eC
   refine ⟨B, hB_ne_bot, hB_ne_top, hB_strict, ?_⟩
   rwa [hB_phase_eq]
 
@@ -759,14 +759,14 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
           ((⊤ : Subobject X) : σ.slicing.IntervalCat C a b).obj ≅ KI.obj :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
       simpa [phaseObj] using
-        congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC).symm
+        (ssf.wPhase_iso eC).symm
     have hIsoTop :
         phaseObj ((⊤ : Subobject X) : σ.slicing.IntervalCat C a b) = phaseObj X := by
       let eC :
           ((⊤ : Subobject X) : σ.slicing.IntervalCat C a b).obj ≅ X.obj :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
           (asIso (⊤ : Subobject X).arrow)
-      simpa [phaseObj] using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+      exact ssf.wPhase_iso eC
     have hEqPhase : phaseObj KI = phaseObj X := hIsoK.trans hIsoTop
     have hEqPhase' :
         ssf.wPhase K =

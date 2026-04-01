@@ -449,9 +449,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
     have hEq :
         ssf.wPhase (cokernel pbB.arrow).obj =
           ssf.wPhase (cokernel B.arrow).obj := by
-      simpa [SkewedStabilityFunction.wPhase] using
-        congrArg (fun z ↦ wPhaseOf z ssf.α)
-          (ssf.Wobj_cokernel_pullback_eq
+      exact ssf.wPhase_congr (ssf.Wobj_cokernel_pullback_eq
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
           (B := B) hB_strict)
     exact hpb_quot_gt.trans_eq hEq
@@ -855,8 +853,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
     let eC : X.obj ≅ Y.obj :=
       ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso (asIso p))
     have hEq : ssf.wPhase X.obj = ssf.wPhase Y.obj := by
-      simpa [SkewedStabilityFunction.wPhase] using
-        congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
+      exact ssf.wPhase_iso eC
     calc
       ψ = ssf.wPhase X.obj := hX.phase_eq.symm
       _ = ssf.wPhase Y.obj := hEq
