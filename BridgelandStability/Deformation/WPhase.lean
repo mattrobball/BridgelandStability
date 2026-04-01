@@ -356,6 +356,29 @@ theorem wPhaseOf_add_two {w : ℂ} (hw : w ≠ 0) (α : ℝ) :
   rw [neg_neg, show (α + 1 : ℝ) + 1 = α + 2 from by ring] at h2
   linarith
 
+/-! ### W-phase and nonvanishing -/
+
+/-- The W-phase of an object `E`, i.e. `wPhaseOf(W(v[E]), α)`. This is the
+phase function on the interval category used throughout the deformation
+construction. -/
+noncomputable abbrev SkewedStabilityFunction.wPhase
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) : ℝ :=
+  wPhaseOf (ssf.W (cl C v E)) ssf.α
+
+/-- The charge `W(v[E])` is nonzero. This is the nonvanishing condition
+that ensures the W-phase is well-defined. -/
+abbrev SkewedStabilityFunction.wNe
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) : Prop :=
+  ssf.W (cl C v E) ≠ 0
+
 /-! ### W-semistability in interval categories -/
 
 /-- **W-semistability**. An object `E` in `P((a, b))` is *W-semistable* of W-phase `ψ` if:

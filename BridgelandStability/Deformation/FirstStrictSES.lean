@@ -37,14 +37,13 @@ theorem SkewedStabilityFunction.semistable_of_iso
     {s : Slicing C} {a b : ℝ}
     {ssf : SkewedStabilityFunction C v s a b}
     {E E' : C} (e : E ≅ E') {ψ : ℝ} (h : ssf.Semistable C E ψ) :
-    ssf.Semistable C E' ψ := by
-  refine ⟨(s.intervalProp C a b).prop_of_iso e h.intervalProp, ?_, ?_, ?_, ?_⟩
-  · exact fun hE' ↦ h.nonzero ((Iso.isZero_iff e).mpr hE')
-  · rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]
-    exact h.wNe
-  · rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]
-    exact h.phase_eq
-  · intro K Q f₁ f₂ f₃ hT hK hQ hKne
+    ssf.Semistable C E' ψ where
+  intervalProp := (s.intervalProp C a b).prop_of_iso e h.intervalProp
+  nonzero hE' := h.nonzero ((Iso.isZero_iff e).mpr hE')
+  wNe := (cl_iso C v e).symm ▸ h.wNe
+  phase_eq := (cl_iso C v e).symm ▸ h.phase_eq
+  le_of_distTriang := by
+    intro K Q f₁ f₂ f₃ hT hK hQ hKne
     have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
       isomorphic_distinguished _ hT _
         (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
