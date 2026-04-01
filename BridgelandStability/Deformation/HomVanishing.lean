@@ -26,13 +26,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Deformed slicing predicate -/
 
@@ -44,22 +45,22 @@ The thinness constraint ensures phase confinement (Node 7.3) is always available
 The enveloping condition (matching Bridgeland §7) ensures the object's W-phase is well
 inside the interval, which is needed for heart factorization arguments in hom-vanishing
 (Lemma 7.6) and interval independence (Lemma 7.5). -/
-def StabilityCondition.deformedPred (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+def StabilityCondition.WithClassMap.deformedPred (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (ψ : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (a b : ℝ) (hab : a < b) (_ : b - a + 2 * ε₀ < 1)
     (_ : a + ε₀ ≤ ψ) (_ : ψ ≤ b - ε₀),
     (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ
 
 /-- Zero objects are in every `Q(ψ)`. -/
-lemma StabilityCondition.deformedPred_zero (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+lemma StabilityCondition.WithClassMap.deformedPred_zero (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ ψ : ℝ) {E : C} (hE : IsZero E) :
     σ.deformedPred C W hW ε₀ ψ E :=
   Or.inl hE
 
-lemma StabilityCondition.deformedPred_closedUnderIso (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+lemma StabilityCondition.WithClassMap.deformedPred_closedUnderIso (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ ψ : ℝ) :
     (σ.deformedPred C W hW ε₀ ψ).IsClosedUnderIsomorphisms := by
   constructor
@@ -72,9 +73,9 @@ lemma StabilityCondition.deformedPred_closedUnderIso (σ : StabilityCondition C)
       · exact absurd hZ' hSS.nonzero
       · exact Or.inr ⟨F.ofIso C e, hF⟩
     · exact fun hE' ↦ hSS.nonzero ((Iso.isZero_iff e.symm).mp hE')
-    · rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]
+    · rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]
       exact hSS.wNe
-    · rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]
+    · rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]
       exact hSS.phase_eq
     · have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
         isomorphic_distinguished _ hT _
@@ -203,9 +204,9 @@ theorem mem_phaseShiftHeart_of_midpoint_right
 **Remaining blockers**: Both cases require **Lemma 7.5** (interval independence)
 to place E and F in a common thin interval. Additionally, the small-gap case
 requires abelian heart factorization and K₀ arithmetic in the heart. -/
-theorem StabilityCondition.hom_eq_zero_of_deformedPred
-    (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
+    (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (hε₀8 : ε₀ < 1 / 8)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε₀)))
@@ -406,49 +407,49 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
         linarith
       have hW_ne_left :
           ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
-            a < θ → θ < ψ₁ + ε₀ → W (K₀.of C G) ≠ 0 := fun G θ hG hGne _ _ =>
+            a < θ → θ < ψ₁ + ε₀ → W (cl C v G) ≠ 0 := fun G θ hG hGne _ _ =>
         σ.W_ne_zero_of_seminorm_lt_one C W hW hG hGne
       have hpert_left := hperturb_of_stabSeminorm C σ W hW hleftThin' hε₀ hε₀2 hsin
       have hpert_left_lo :
           ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
             a < θ → θ < ψ₁ + ε₀ →
-            a - ε₀ < wPhaseOf (W (K₀.of C G)) αL ∧
-              wPhaseOf (W (K₀.of C G)) αL < a - ε₀ + 1 := by
+            a - ε₀ < wPhaseOf (W (cl C v G)) αL ∧
+              wPhaseOf (W (cl C v G)) αL < a - ε₀ + 1 := by
         intro G θ hG hGne haθ hθ
         obtain ⟨hlo, hhi⟩ := hpert_left G θ hG hGne haθ hθ
         simpa [αL] using ⟨by linarith, by linarith⟩
       have hpert_left_hi :
           ∀ (G : C) (θ : ℝ), σ.slicing.P θ G → ¬IsZero G →
             a < θ → θ < ψ₁ + ε₀ →
-            ψ₁ + ε₀ + ε₀ - 1 < wPhaseOf (W (K₀.of C G)) αL ∧
-              wPhaseOf (W (K₀.of C G)) αL < ψ₁ + ε₀ + ε₀ := by
+            ψ₁ + ε₀ + ε₀ - 1 < wPhaseOf (W (cl C v G)) αL ∧
+              wPhaseOf (W (cl C v G)) αL < ψ₁ + ε₀ + ε₀ := by
         intro G θ hG hGne haθ hθ
         obtain ⟨hlo, hhi⟩ := hpert_left G θ hG hGne haθ hθ
         simpa [αL] using ⟨by linarith, by linarith⟩
-      have hI_phase_left_lo : a - ε₀ < wPhaseOf (W (K₀.of C I_H.obj)) αL := by
+      have hI_phase_left_lo : a - ε₀ < wPhaseOf (W (cl C v I_H.obj)) αL := by
         have hαL_ge : a - ε₀ ≤ αL := by
           simp [αL]
           linarith
         exact wPhaseOf_gt_of_intervalProp C σ hIne W hαL_ge
           hI_left hW_ne_left hpert_left_lo
-      have hI_phase_left_hi' : wPhaseOf (W (K₀.of C I_H.obj)) αL < ψ₁ + ε₀ + ε₀ := by
+      have hI_phase_left_hi' : wPhaseOf (W (cl C v I_H.obj)) αL < ψ₁ + ε₀ + ε₀ := by
         have hαL_le : αL ≤ ψ₁ + ε₀ + ε₀ := by
           simp [αL]
           linarith
         exact wPhaseOf_lt_of_intervalProp (C := C) (σ := σ) (E := I_H.obj) hIne W
           (α := αL) (a := a) (b := ψ₁ + ε₀) (ε := ε₀) hαL_le
           hI_left hW_ne_left hpert_left_hi
-      have hI_phase_left_hi : wPhaseOf (W (K₀.of C I_H.obj)) αL < ψ₁ + 2 * ε₀ := by
+      have hI_phase_left_hi : wPhaseOf (W (cl C v I_H.obj)) αL < ψ₁ + 2 * ε₀ := by
         linarith
-      have hWneI : W (K₀.of C I_H.obj) ≠ 0 :=
+      have hWneI : W (cl C v I_H.obj) ≠ 0 :=
         σ.W_ne_zero_of_intervalProp C W hleftThin'
           (stabSeminorm_lt_cos_of_hsin_hthin
             (C := C) (σ := σ) (W := W) hab_left hε₀ hleftThin hsin) hIne hI_left
       have hI_phase_eq_left_right :
-          wPhaseOf (W (K₀.of C I_H.obj)) αL =
-            wPhaseOf (W (K₀.of C I_H.obj)) αR := by
+          wPhaseOf (W (cl C v I_H.obj)) αL =
+            wPhaseOf (W (cl C v I_H.obj)) αR := by
         have hbranch :
-            wPhaseOf (W (K₀.of C I_H.obj)) αL ∈ Set.Ioc (αR - 1) (αR + 1) := by
+            wPhaseOf (W (cl C v I_H.obj)) αL ∈ Set.Ioc (αR - 1) (αR + 1) := by
           constructor
           · simp [αL, αR] at *
             linarith
@@ -470,14 +471,14 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
           (C := C) (s := σ.slicing) (a := a) (b := ψ₁ + ε₀) pL
       have hW_interval_left :
           ∀ {G : C}, σ.slicing.intervalProp C a (ψ₁ + ε₀) G → ¬IsZero G →
-            W (K₀.of C G) ≠ 0 := fun hG hGne =>
+            W (cl C v G) ≠ 0 := fun hG hGne =>
         σ.W_ne_zero_of_intervalProp C W hleftThin'
           (stabSeminorm_lt_cos_of_hsin_hthin
             (C := C) (σ := σ) (W := W) hab_left hε₀ hleftThin hsin) hGne hG
       have hI_phase_ge_left :
-          ψ₁ ≤ wPhaseOf (W (K₀.of C I_H.obj)) αL := by
+          ψ₁ ≤ wPhaseOf (W (cl C v I_H.obj)) αL := by
         let ssfL := σ.skewedStabilityFunction_of_near C W hW habE_left
-        simpa [StabilityCondition.skewedStabilityFunction_of_near, EL, IL, pL] using
+        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, EL, IL, pL] using
           (SkewedStabilityFunction.phase_le_of_strictQuotient
             (C := C) (σ := σ) (a := a) (b := ψ₁ + ε₀) (ssf := ssfL)
             (X := EL) (Y := IL) hSS₁_left hε₀ hleftThin hW_interval_left hpert_left pL
@@ -521,18 +522,18 @@ theorem StabilityCondition.hom_eq_zero_of_deformedPred
             (hQ_phiMinus_right hQZ)
             (lt_of_le_of_lt (σ.slicing.phiPlus_le_of_leProp C hQZ hQ_le) (by linarith))
       have hI_phase_le_big :
-          wPhaseOf (W (K₀.of C I_H.obj)) ((ψ₂ - ε₀ + (a + 1 + δ)) / 2) ≤ ψ₂ := by
-        simpa [StabilityCondition.skewedStabilityFunction_of_near] using
+          wPhaseOf (W (cl C v I_H.obj)) ((ψ₂ - ε₀ + (a + 1 + δ)) / 2) ≤ ψ₂ := by
+        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using
           hSS₂_big.le_of_distTriang hT_I' hI_big hQ_big hIne
       have hI_phase_eq_right_big :
-          wPhaseOf (W (K₀.of C I_H.obj)) αR =
-            wPhaseOf (W (K₀.of C I_H.obj)) ((ψ₂ - ε₀ + (a + 1 + δ)) / 2) := by
+          wPhaseOf (W (cl C v I_H.obj)) αR =
+            wPhaseOf (W (cl C v I_H.obj)) ((ψ₂ - ε₀ + (a + 1 + δ)) / 2) := by
         simpa [αR] using
           (wPhaseOf_eq_of_intervalProp_upper_inclusion
             (C := C) (σ := σ) (W := W) (hW := hW) habF_right (by linarith)
             hI_right hIne hε₀ hε₀2 hthin_big hsin)
       have hI_phase_le_right :
-          wPhaseOf (W (K₀.of C I_H.obj)) αR ≤ ψ₂ := by
+          wPhaseOf (W (cl C v I_H.obj)) αR ≤ ψ₂ := by
         rw [hI_phase_eq_right_big]
         exact hI_phase_le_big
       rw [← hI_phase_eq_left_right] at hI_phase_le_right

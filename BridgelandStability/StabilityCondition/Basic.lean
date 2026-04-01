@@ -37,6 +37,7 @@ namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 variable {Λ : Type u'} [AddCommGroup Λ]
 
 /-! ### Ext theorems -/
@@ -77,10 +78,10 @@ end StabilityCondition
 omit [IsTriangulated C] in
 /-- The ordinary compatibility statement for a prestability condition, with the
 identity class map simplified away. -/
-theorem preStabilityCondition_compat_apply (σ : PreStabilityCondition C)
+theorem preStabilityCondition_compat_apply (σ : PreStabilityCondition.WithClassMap C v)
     (φ : ℝ) (E : C) (hE : σ.slicing.P φ E) (hNZ : ¬IsZero E) :
     ∃ (m : ℝ), 0 < m ∧
-      σ.Z (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
+      σ.Z (cl C v E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
   simpa using σ.compat φ E hE hNZ
 
 /-! ### Phase rigidity for same central charge -/
@@ -88,12 +89,12 @@ theorem preStabilityCondition_compat_apply (σ : PreStabilityCondition C)
 /-- **Lemma 6.4 sublemma**. If two stability conditions `σ` and `τ` have the same central
 charge `Z`, and a nonzero object `E` is `σ`-semistable of phase `φ` and `τ`-semistable
 of phase `ψ` with `|φ - ψ| < 2`, then `φ = ψ`. -/
-theorem StabilityCondition.phase_eq_of_same_Z (σ τ : StabilityCondition C)
+theorem StabilityCondition.WithClassMap.phase_eq_of_same_Z (σ τ : StabilityCondition.WithClassMap C v)
     (hZ : σ.Z = τ.Z) {E : C} {φ ψ : ℝ}
     (hσ : σ.slicing.P φ E) (hτ : τ.slicing.P ψ E) (hE : ¬IsZero E)
     (habs : |φ - ψ| < 2) : φ = ψ := by
-  obtain ⟨m₁, hm₁, h₁⟩ := stabilityCondition_compat_apply (C := C) σ φ E hσ hE
-  obtain ⟨m₂, hm₂, h₂⟩ := stabilityCondition_compat_apply (C := C) τ ψ E hτ hE
+  obtain ⟨m₁, hm₁, h₁⟩ := σ.compat φ E hσ hE
+  obtain ⟨m₂, hm₂, h₂⟩ := τ.compat ψ E hτ hE
   rw [hZ] at h₁
   exact eq_of_pos_mul_exp_eq hm₁ hm₂ habs (h₁.symm.trans h₂)
 

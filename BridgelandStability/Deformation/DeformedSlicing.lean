@@ -25,13 +25,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Deformed slicing construction -/
 
@@ -45,8 +46,8 @@ is Lemma 7.6 via `hom_eq_zero_of_deformedPred`. The `hn_exists` field delegates 
 `deformedSlicing_hn_exists`, which combines `deformedGtLe_triangle` (sorry: iterated
 octahedral assembly over σ-HN factors) with
 `exists_hn_of_deformedGt_deformedLe_triangle`. -/
-def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+def StabilityCondition.WithClassMap.deformedSlicing (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
@@ -63,10 +64,10 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
         rcases hSS.intervalProp with hZ' | ⟨F, hF⟩
         · exact absurd hZ' hSS.nonzero
         · exact Or.inr ⟨F.ofIso C e, hF⟩
-      · -- W(K₀.of C E') ≠ 0
-        rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]; exact hSS.wNe
+      · -- W(cl C v E') ≠ 0
+        rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]; exact hSS.wNe
       · -- wPhaseOf = φ
-        rw [show K₀.of C E' = K₀.of C E from (K₀.of_iso C e).symm]; exact hSS.phase_eq
+        rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]; exact hSS.phase_eq
       · -- semistability: compose triangle with iso
         have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
           isomorphic_distinguished _ hT _
@@ -89,9 +90,9 @@ def StabilityCondition.deformedSlicing (σ : StabilityCondition C)
 of Q-phase `ψ`, the central charge `W([E])` lies on the ray `ℝ₊ · exp(iπψ)`. This
 follows directly from the `Semistable` definition, which stores
 `wPhaseOf(W([E]), α) = ψ`. -/
-theorem StabilityCondition.deformedSlicing_compat
-    (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+theorem StabilityCondition.WithClassMap.deformedSlicing_compat
+    (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith))
@@ -101,11 +102,11 @@ theorem StabilityCondition.deformedSlicing_compat
     (hQ : (σ.deformedSlicing C W hW ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin).P ψ E)
     (hE : ¬IsZero E) :
     ∃ (m : ℝ), 0 < m ∧
-      W (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * ψ) * Complex.I) := by
+      W (cl C v E) = ↑m * Complex.exp (↑(Real.pi * ψ) * Complex.I) := by
   -- hQ : deformedPred, so either IsZero or ∃ a b hab hthin, Semistable
   rcases hQ with hEZ | ⟨a, b, hab, _, _, _, hSS⟩
   · exact absurd hEZ hE
-  · exact ⟨‖W (K₀.of C E)‖, norm_pos_iff.mpr hSS.wNe, hSS.polar⟩
+  · exact ⟨‖W (cl C v E)‖, norm_pos_iff.mpr hSS.wNe, hSS.polar⟩
 
 /-! #### Step A4: Main theorem -/
 
@@ -124,7 +125,7 @@ The proof applies `sigmaSemistable_hasDeformedHN` to obtain a Q-HN filtration fo
 whose factors have phases in `(φ - 2ε, φ + 4ε)`, then enlarges this by `δ`.
 -/
 theorem sigma_semistable_intervalProp
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
@@ -141,7 +142,7 @@ theorem sigma_semistable_intervalProp
   exact Or.inr ⟨G, fun j ↦ ⟨by linarith [(hGφ j).1], by linarith [(hGφ j).2]⟩⟩
 
 theorem deformed_intervalProp_subset_sigma_intervalProp
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)

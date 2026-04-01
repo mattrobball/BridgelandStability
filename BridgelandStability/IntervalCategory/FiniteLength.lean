@@ -18,7 +18,7 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
@@ -658,33 +658,36 @@ end Preabelian
 /-! ### Skewed stability functions (Definition 4.4) -/
 
 /-- A *skewed stability function* on a thin subcategory `P((a, b))` with `b - a ≤ 1`.
-This is a group homomorphism `W : K₀ C →+ ℂ` together with a real parameter `α ∈ (a, b)`
-such that for every nonzero semistable object `E` of phase `φ ∈ (a, b)`, `W([E]) ≠ 0`.
+This is a group homomorphism `W : Λ →+ ℂ` (the charge on the target lattice) together
+with a class map `v : K₀ C →+ Λ` and a real parameter `α ∈ (a, b)`, such that for
+every nonzero semistable object `E` of phase `φ ∈ (a, b)`, `W(v[E]) ≠ 0`.
 
-In the deformation theorem, `W` is a perturbation of the central charge `Z` of a
-stability condition, and `α` is chosen so that `W`-phases are well-defined in
-`(α - 1/2, α + 1/2)` for objects in `P((a, b))`. -/
-structure SkewedStabilityFunction (s : Slicing C) (a b : ℝ) where
+In the deformation theorem, `W` is a perturbation of the central charge `Z : Λ → ℂ`
+of a stability condition `(Z, P)` on `D` with respect to `Λ`, and `α` is chosen so
+that `W`-phases are well-defined in `(α - 1/2, α + 1/2)` for objects in `P((a, b))`. -/
+structure SkewedStabilityFunction {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
+    (s : Slicing C) (a b : ℝ) where
   /-- The group homomorphism (typically a perturbation of the central charge). -/
-  W : K₀ C →+ ℂ
+  W : Λ →+ ℂ
   /-- The skewing parameter, lying in the interval `(a, b)`. -/
   α : ℝ
   /-- The skewing parameter lies in the interval. -/
   hα_mem : a < α ∧ α < b
   /-- For every nonzero semistable object of phase `φ ∈ (a, b)`, the central charge
-  `W([E])` is nonzero. -/
+  `W(v[E])` is nonzero. -/
   nonzero : ∀ (E : C) (φ : ℝ), a < φ → φ < b →
-    (s.P φ) E → ¬IsZero E → W (K₀.of C E) ≠ 0
+    (s.P φ) E → ¬IsZero E → W (cl C v E) ≠ 0
 
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 
 /-- The central charge of a `SkewedStabilityFunction` is additive on strict short exact
 sequences in the thin interval category. -/
 theorem SkewedStabilityFunction.strict_additive {s : Slicing C}
-    (ssf : SkewedStabilityFunction C s a b)
+    (ssf : SkewedStabilityFunction C v s a b)
     {S : ShortComplex (s.IntervalCat C a b)} (hS : StrictShortExact S) :
-    ssf.W (K₀.of C S.X₂.obj) = ssf.W (K₀.of C S.X₁.obj) + ssf.W (K₀.of C S.X₃.obj) := by
-  rw [Slicing.IntervalCat.K0_of_strictShortExact (C := C) (s := s) (a := a) (b := b) hS,
+    ssf.W (cl C v S.X₂.obj) = ssf.W (cl C v S.X₁.obj) + ssf.W (cl C v S.X₃.obj) := by
+  simp only [cl, Slicing.IntervalCat.K0_of_strictShortExact (C := C) (s := s) (a := a) (b := b) hS,
     map_add]
 
 end CategoryTheory.Triangulated

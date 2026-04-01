@@ -27,13 +27,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Node 7.0: ε₀ extraction from local finiteness -/
 
@@ -41,7 +42,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 real `ε₀ < 1/8` such that for all `t`, every object in `P((t - 4ε₀, t + 4ε₀))` has
 finite length. The width `8ε₀` is chosen to fit inside the local finiteness
 parameter `2η`. -/
-theorem StabilityCondition.exists_epsilon0 (σ : StabilityCondition C) :
+theorem StabilityCondition.WithClassMap.exists_epsilon0 (σ : StabilityCondition.WithClassMap C v) :
     ∃ ε₀ : ℝ, ∃ hε₀ : 0 < ε₀, ∃ hε₀' : ε₀ < 1 / 8,
       ∀ t : ℝ,
         let a := t - 4 * ε₀
@@ -84,7 +85,7 @@ theorem StabilityCondition.exists_epsilon0 (σ : StabilityCondition C) :
   simpa using hlf t E
 
 /-- Variant of ε₀ extraction providing 2ε₀-intervals for the sector bound. -/
-theorem StabilityCondition.exists_epsilon0_sector (σ : StabilityCondition C) :
+theorem StabilityCondition.WithClassMap.exists_epsilon0_sector (σ : StabilityCondition.WithClassMap C v) :
     ∃ ε₀ : ℝ, ∃ hε₀ : 0 < ε₀, ∃ hε₀' : ε₀ < 1 / 4,
       ∀ t : ℝ,
         let a := t - 2 * ε₀
@@ -133,7 +134,7 @@ omit [IsTriangulated C]
 /-- The local-finiteness input on windows of radius `2 ε₀`: every interval
 `P((t - 2 ε₀, t + 2 ε₀))` has strict finite length. This is the thin-sector
 hypothesis used to start the deformation argument. -/
-def SectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
+def SectorFiniteLength (σ : StabilityCondition.WithClassMap C v) (ε₀ : ℝ)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4) : Prop :=
   ∀ t : ℝ,
     let a := t - 2 * ε₀
@@ -150,7 +151,7 @@ def SectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
 /-- The wide local-finiteness input used in Bridgeland's p.24 Nodes 7.8–7.9: every interval of
 radius `4 ε₀` has strict finite length. This is the witness needed to apply Lemma 7.7 in the
 windows `P((t - 3 ε₀, t + 5 ε₀))` and `P((t - 3 ε₀, t + 5 ε₀ + δ))`. -/
-def WideSectorFiniteLength (σ : StabilityCondition C) (ε₀ : ℝ)
+def WideSectorFiniteLength (σ : StabilityCondition.WithClassMap C v) (ε₀ : ℝ)
     (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8) : Prop :=
   ∀ t : ℝ,
     let a := t - 4 * ε₀
@@ -171,7 +172,7 @@ end FiniteLengthDefs
 /-- **Phase confinement**. If `d(σ.P, τ.P) < ε` and `E` is `τ`-semistable of phase `φ`,
 then `E` lies in the `σ`-interval subcategory `P((φ - ε, φ + ε))`. This is the
 fundamental input for the deformation construction. -/
-theorem intervalProp_of_semistable_near (σ τ : StabilityCondition C) {E : C} {φ ε : ℝ}
+theorem intervalProp_of_semistable_near (σ τ : StabilityCondition.WithClassMap C v) {E : C} {φ ε : ℝ}
     (hE : ¬IsZero E) (hτ : (τ.slicing.P φ) E)
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε) :
     σ.slicing.intervalProp C (φ - ε) (φ + ε) E := by
@@ -218,7 +219,7 @@ end
 
 /-- If `d(P, Q) < ε` and `E` is `τ`-semistable of phase `φ`, then both `σ.φ⁺(E)` and
 `σ.φ⁻(E)` lie in `(φ - ε, φ + ε)`. -/
-theorem phiPlus_phiMinus_near (σ τ : StabilityCondition C) {E : C} {φ ε : ℝ}
+theorem phiPlus_phiMinus_near (σ τ : StabilityCondition.WithClassMap C v) {E : C} {φ ε : ℝ}
     (hE : ¬IsZero E) (hτ : (τ.slicing.P φ) E)
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε) :
     φ - ε < σ.slicing.phiPlus C E hE ∧ σ.slicing.phiPlus C E hE < φ + ε ∧
@@ -229,7 +230,7 @@ theorem phiPlus_phiMinus_near (σ τ : StabilityCondition C) {E : C} {φ ε : �
 /-! ### Distance bound infrastructure -/
 
 /-- If `σ` and `τ` have pointwise phase bounds, then `d(P, Q) ≤ ε`. -/
-theorem StabilityCondition.slicingDist_le_of_near (σ τ : StabilityCondition C)
+theorem StabilityCondition.WithClassMap.slicingDist_le_of_near (σ τ : StabilityCondition.WithClassMap C v)
     {ε : ℝ}
     (hP : ∀ (E : C) (hE : ¬IsZero E),
       |σ.slicing.phiPlus C E hE - τ.slicing.phiPlus C E hE| ≤ ε)

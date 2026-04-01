@@ -35,13 +35,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### φ⁺ bound on destabilizing subobjects -/
 
@@ -52,7 +53,7 @@ and `A` is a W-semistable strict subobject with `ψ(A) > ψ(Y)`, then `ψ(A) < b
 **Proof**: `phiPlus_triangle_le` gives `φ⁺(A) ≤ φ⁺(Y)`. Phase confinement gives
 `ψ(A) − ε < φ⁻(A) ≤ φ⁺(A)`. Combining: `ψ(A) < φ⁺(Y) + ε ≤ ψ(Y) + 2ε < b − ε`. -/
 theorem phiPlus_bound_of_destabilizing_subobject
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -61,14 +62,14 @@ theorem phiPlus_bound_of_destabilizing_subobject
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     {Y : σ.slicing.IntervalCat C a b} (hYne : ¬IsZero Y.obj)
     (hphiPlus : σ.slicing.phiPlus C Y.obj hYne ≤
-      wPhaseOf (W (K₀.of C Y.obj)) ((a + b) / 2) + ε)
-    (hψ_upper : wPhaseOf (W (K₀.of C Y.obj)) ((a + b) / 2) < b - 3 * ε)
+      wPhaseOf (W (cl C v Y.obj)) ((a + b) / 2) + ε)
+    (hψ_upper : wPhaseOf (W (cl C v Y.obj)) ((a + b) / 2) < b - 3 * ε)
     {A : Subobject Y}
     (hA_ss : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C
       (A : σ.slicing.IntervalCat C a b).obj
-      (wPhaseOf (W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2)))
+      (wPhaseOf (W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2)))
     (hA_strict : IsStrictMono A.arrow) :
-    wPhaseOf (W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2) <
+    wPhaseOf (W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2) <
       b - ε := by
   let AI : σ.slicing.IntervalCat C a b := (A : σ.slicing.IntervalCat C a b)
   have hA_ne : ¬IsZero AI.obj := hA_ss.nonzero
@@ -92,7 +93,7 @@ Converts both to `deformedPred` using `(a, b)` as the witness interval, then app
 This is the localized version of `hHom` that avoids the universal quantifier problem:
 it only requires the enveloping condition for the two specific objects involved. -/
 theorem hom_eq_zero_of_enveloped_semistable
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
@@ -100,24 +101,24 @@ theorem hom_eq_zero_of_enveloped_semistable
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     {E F : C}
     (hE : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E
-      (wPhaseOf (W (K₀.of C E)) ((a + b) / 2)))
+      (wPhaseOf (W (cl C v E)) ((a + b) / 2)))
     (hF : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C F
-      (wPhaseOf (W (K₀.of C F)) ((a + b) / 2)))
-    (hgap : wPhaseOf (W (K₀.of C F)) ((a + b) / 2) <
-      wPhaseOf (W (K₀.of C E)) ((a + b) / 2))
+      (wPhaseOf (W (cl C v F)) ((a + b) / 2)))
+    (hgap : wPhaseOf (W (cl C v F)) ((a + b) / 2) <
+      wPhaseOf (W (cl C v E)) ((a + b) / 2))
     -- Enveloping: both phases in [a+ε, b−ε]
-    (hE_lo : a + ε ≤ wPhaseOf (W (K₀.of C E)) ((a + b) / 2))
-    (hE_hi : wPhaseOf (W (K₀.of C E)) ((a + b) / 2) ≤ b - ε)
-    (hF_lo : a + ε ≤ wPhaseOf (W (K₀.of C F)) ((a + b) / 2))
-    (hF_hi : wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ≤ b - ε)
+    (hE_lo : a + ε ≤ wPhaseOf (W (cl C v E)) ((a + b) / 2))
+    (hE_hi : wPhaseOf (W (cl C v E)) ((a + b) / 2) ≤ b - ε)
+    (hF_lo : a + ε ≤ wPhaseOf (W (cl C v F)) ((a + b) / 2))
+    (hF_hi : wPhaseOf (W (cl C v F)) ((a + b) / 2) ≤ b - ε)
     (f : E ⟶ F) : f = 0 := by
   -- Convert E to deformedPred using (a, b) as witness interval
   have hE_dp : σ.deformedPred C W hW ε
-      (wPhaseOf (W (K₀.of C E)) ((a + b) / 2)) E :=
+      (wPhaseOf (W (cl C v E)) ((a + b) / 2)) E :=
     Or.inr ⟨a, b, hab, hthin, hE_lo, hE_hi, hE⟩
   -- Convert F to deformedPred using (a, b) as witness interval
   have hF_dp : σ.deformedPred C W hW ε
-      (wPhaseOf (W (K₀.of C F)) ((a + b) / 2)) F :=
+      (wPhaseOf (W (cl C v F)) ((a + b) / 2)) F :=
     Or.inr ⟨a, b, hab, hthin, hF_lo, hF_hi, hF⟩
   -- Apply Lemma 7.6 (sorry-free)
   exact σ.hom_eq_zero_of_deformedPred C W hW hε hε2 hε8 hsin hE_dp hF_dp hgap f
@@ -133,19 +134,19 @@ Combined with `ψ(A) < U_hom`, both objects are in `[a+ε, b−ε]`, enabling
 This avoids the unsolvable universal hHom problem (which requires interval independence
 for objects near the boundary `a`). -/
 theorem comp_of_destabilizing_with_quotient_bound
-    (σ : StabilityCondition C) {a b : ℝ}
-    {ssf : SkewedStabilityFunction C σ.slicing a b}
+    (σ : StabilityCondition.WithClassMap C v) {a b : ℝ}
+    {ssf : SkewedStabilityFunction C v σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hFiniteLength : ThinFiniteLengthInInterval (C := C) σ a b)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (K₀.of C F) ≠ 0)
+      ssf.W (cl C v F) ≠ 0)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (K₀.of C F)) ssf.α ∧
-        wPhaseOf (ssf.W (K₀.of C F)) ssf.α < U)
+      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
+        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
     (hWidth : U - L < 1)
     -- Perturbation data for deformedPred conversion
-    (W : K₀ C →+ ℂ) (hW_stab : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+    (W : Λ →+ ℂ) (hW_stab : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hab : a < b) (hthin : b - a + 2 * ε < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
@@ -154,21 +155,21 @@ theorem comp_of_destabilizing_with_quotient_bound
     {t_lo : ℝ} (ht_lo : a + ε ≤ t_lo)
     {X : σ.slicing.IntervalCat C a b}
     -- Phase lower bound on X itself (from outer recursion's quotient lower bound on ⊥)
-    (hψ_X_lo : t_lo < wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α)
+    (hψ_X_lo : t_lo < wPhaseOf (ssf.W (cl C v X.obj)) ssf.α)
     (hQuotLo : ∀ {B' : σ.slicing.IntervalCat C a b} (q' : X ⟶ B'),
       IsStrictEpi q' → ¬IsZero B'.obj →
-      ssf.Semistable C B'.obj (wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α) →
-      t_lo < wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α)
+      ssf.Semistable C B'.obj (wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α) →
+      t_lo < wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α)
     -- Destabilizing subobject data
     {A : Subobject X}
     (hA_ss : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
-      (wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+      (wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
     (hA_strict : IsStrictMono A.arrow)
-    (hA_phase : wPhaseOf (ssf.W (K₀.of C X.obj)) ssf.α <
-      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α)
+    (hA_phase : wPhaseOf (ssf.W (cl C v X.obj)) ssf.α <
+      wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α)
     (hA_top : A ≠ ⊤)
     (hA_phase_upper :
-      wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < b - ε)
+      wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < b - ε)
     -- MDQ on cokernel
     {B : σ.slicing.IntervalCat C a b} {q : cokernel A.arrow ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q) :
@@ -191,8 +192,8 @@ theorem comp_of_destabilizing_with_quotient_bound
       exact hq.nonzero (((σ.slicing.intervalProp C a b).ι).map_isZero
         (IsZero.of_epi_eq_zero q hzero))
     have hB_le_cok :
-        wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
-          wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α :=
+        wPhaseOf (ssf.W (cl C v B.obj)) ssf.α ≤
+          wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α :=
       IsStrictMDQ.phase_le_of_strictQuotient
         (C := C) (σ := σ) (a := a) (b := b) hFiniteLength hW_interval hWindow hWidth
         hq (𝟙 (cokernel A.arrow)) (isStrictEpi_of_isIso (f := 𝟙 _)) hcokA_obj_ne
@@ -201,28 +202,28 @@ theorem comp_of_destabilizing_with_quotient_bound
         ((intervalSubobject_isZero_iff_eq_bot
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) A).mpr hA_bot))
     have hCok_lt_A :
-        wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α <
-          wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
+        wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α <
+          wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
       lt_trans
         (ssf.phase_cokernel_lt_of_phase_gt_strictSubobject
           (C := C) (σ := σ) (a := a) (b := b)
           hA_ne_bot hA_top hA_strict hA_phase hW_interval hWindow hWidth)
         hA_phase
     have hB_lt_A :
-        wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α <
-          wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
+        wPhaseOf (ssf.W (cl C v B.obj)) ssf.α <
+          wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
       lt_of_le_of_lt hB_le_cok hCok_lt_A
     -- KEY NEW CONTENT: local Hom vanishing via deformedPred
     -- B' is a W-semistable strict quotient of X → quotient lower bound applies
-    have hB'_lo : a + ε ≤ wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α :=
+    have hB'_lo : a + ε ≤ wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α :=
       le_of_lt (lt_of_le_of_lt ht_lo (hQuotLo q' hq' hB'_nz hB'_ss))
     -- A has ψ(A) > ψ(X) > t_lo ≥ a + ε (using hA_phase and hψ_X_lo)
-    have hA_lo : a + ε ≤ wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
+    have hA_lo : a + ε ≤ wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
       le_of_lt (lt_of_le_of_lt ht_lo (lt_trans hψ_X_lo hA_phase))
     -- Helper: prove A.arrow ≫ q' = 0 via deformedPred
     have hvanish : ∀ (hB'_lt_A :
-        wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α <
-          wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
+        wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α <
+          wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
         A.arrow ≫ q' = 0 := by
       intro hB'_lt_A
       subst hssf
@@ -234,13 +235,13 @@ theorem comp_of_destabilizing_with_quotient_bound
         (A.arrow ≫ q').hom
     -- Case split (same structure as original)
     by_cases hle :
-        wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
-          wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α
+        wPhaseOf (ssf.W (cl C v B.obj)) ssf.α ≤
+          wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α
     · refine ⟨hle, ?_⟩
       intro hEq
       have hB'_lt_A :
-          wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α <
-            wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α := by
+          wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α <
+            wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α := by
         rw [hEq]; exact hB_lt_A
       have hzero : A.arrow ≫ q' = 0 := hvanish hB'_lt_A
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
@@ -256,12 +257,12 @@ theorem comp_of_destabilizing_with_quotient_bound
         _ = cokernel.π A.arrow ≫ (q ≫ t) := by rw [ht]
         _ = (cokernel.π A.arrow ≫ q) ≫ t := by rw [Category.assoc]
     · have hlt :
-          wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α <
-            wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α :=
+          wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α <
+            wPhaseOf (ssf.W (cl C v B.obj)) ssf.α :=
         lt_of_not_ge hle
       have hB'_lt_A :
-          wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α <
-            wPhaseOf (ssf.W (K₀.of C (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
+          wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α <
+            wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α :=
         lt_trans hlt hB_lt_A
       have hzero : A.arrow ≫ q' = 0 := hvanish hB'_lt_A
       let q'' : cokernel A.arrow ⟶ B' := cokernel.desc A.arrow q' hzero
@@ -270,8 +271,8 @@ theorem comp_of_destabilizing_with_quotient_bound
           (C := C) (σ := σ) (a := a) (b := b) (cokernel.π A.arrow) q''
           (by simpa [q''] using hq')
       have hmin :
-          wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
-            wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α :=
+          wPhaseOf (ssf.W (cl C v B.obj)) ssf.α ≤
+            wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α :=
         (hq.minimal q'' hq'' hB'_nz hB'_ss).1
       exact False.elim ((not_lt_of_ge hmin) hlt)
 
@@ -288,8 +289,8 @@ gives `ψ(B) ≤ ψ(E)`, hence `φ⁺(B') < ψ(E) + ε = t_cut`. So `B' ∈ ltPr
 while `X_hi ∈ geProp(t_cut)`, giving `Hom(X_hi, B') = 0` by
 `zero_of_geProp_ltProp_general`. Hence `E → B'` factors through `E → E_lo → B'`. -/
 theorem mdq_of_sigma_phase_split
-    (σ : StabilityCondition C) {a b : ℝ}
-    {ssf : SkewedStabilityFunction C σ.slicing a b}
+    (σ : StabilityCondition.WithClassMap C v) {a b : ℝ}
+    {ssf : SkewedStabilityFunction C v σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     -- The object E being split
     {E : σ.slicing.IntervalCat C a b}
@@ -310,9 +311,9 @@ theorem mdq_of_sigma_phase_split
     -- Phase confinement: W-semistable objects with ψ ≤ ψ(B) have all σ-phases < t_cut
     -- (follows from phiPlus_lt_of_wSemistable + ψ(B) + ε ≤ t_cut at the call site)
     (hPhaseConf : ∀ {F : σ.slicing.IntervalCat C a b}
-      (_ : ssf.Semistable C F.obj (wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α)),
-      wPhaseOf (ssf.W (K₀.of C F.obj)) ssf.α ≤
-        wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α →
+      (_ : ssf.Semistable C F.obj (wPhaseOf (ssf.W (cl C v F.obj)) ssf.α)),
+      wPhaseOf (ssf.W (cl C v F.obj)) ssf.α ≤
+        wPhaseOf (ssf.W (cl C v B.obj)) ssf.α →
       σ.slicing.ltProp C t_cut F.obj) :
     IsStrictMDQ (C := C) σ ssf (p_lo ≫ q) where
   strictEpi :=
@@ -324,8 +325,8 @@ theorem mdq_of_sigma_phase_split
     intro B' q' hq' hB'_nz hB'_ss
     -- Helper: prove p_hi.hom ≫ q'.hom = 0 when ψ(B') ≤ ψ(B)
     -- X_hi ∈ geProp(t_cut), B' ∈ ltProp(t_cut) from hPhaseConf → Hom = 0
-    have hvanish : wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α ≤
-        wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α →
+    have hvanish : wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α ≤
+        wPhaseOf (ssf.W (cl C v B.obj)) ssf.α →
         p_hi.hom ≫ q'.hom = 0 := by
       intro hle
       have hB'_lt := hPhaseConf hB'_ss hle
@@ -333,8 +334,8 @@ theorem mdq_of_sigma_phase_split
         hX_hi_ge hB'_lt (p_hi.hom ≫ q'.hom)
     -- Case split
     by_cases hle :
-        wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
-          wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α
+        wPhaseOf (ssf.W (cl C v B.obj)) ssf.α ≤
+          wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α
     · refine ⟨hle, ?_⟩
       intro hEq
       -- ψ(B') = ψ(B), so B' ∈ ltProp(t_cut)
@@ -358,8 +359,8 @@ theorem mdq_of_sigma_phase_split
         _ = p_lo ≫ (q ≫ t) := by rw [ht]
         _ = (p_lo ≫ q) ≫ t := by rw [Category.assoc]
     · have hlt :
-          wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α <
-            wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α :=
+          wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α <
+            wPhaseOf (ssf.W (cl C v B.obj)) ssf.α :=
         lt_of_not_ge hle
       have hzero_C : p_hi.hom ≫ q'.hom = 0 := hvanish (le_of_lt hlt)
       have hzero : p_hi ≫ q' = 0 := by ext; exact hzero_C
@@ -370,8 +371,8 @@ theorem mdq_of_sigma_phase_split
           (C := C) (σ := σ) (a := a) (b := b) p_lo q''
           (by simpa [hq'_eq] using hq')
       have hmin :
-          wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α ≤
-            wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α :=
+          wPhaseOf (ssf.W (cl C v B.obj)) ssf.α ≤
+            wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α :=
         (hq.minimal q'' hq'' hB'_nz hB'_ss).1
       exact False.elim ((not_lt_of_ge hmin) hlt)
 

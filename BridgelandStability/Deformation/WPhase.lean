@@ -24,24 +24,25 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Node 7.2a: W restricts to a skewed stability function -/
 
 /-- **W-nonvanishing**. If the seminorm `‖W - Z‖_σ < 1`, then `W([E]) ≠ 0` for every
 nonzero `σ`-semistable object `E`. The proof uses the triangle inequality:
 `‖W([E])‖ ≥ ‖Z([E])‖ - ‖(W-Z)([E])‖ ≥ (1 - M) · ‖Z([E])‖ > 0`. -/
-theorem StabilityCondition.W_ne_zero_of_seminorm_lt_one (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ)
+theorem StabilityCondition.WithClassMap.W_ne_zero_of_seminorm_lt_one (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1) {E : C} {φ : ℝ}
     (hP : σ.slicing.P φ E) (hE : ¬IsZero E) :
-    W (K₀.of C E) ≠ 0 := by
+    W (cl C v E) ≠ 0 := by
   have hfin : stabSeminorm C σ (W - σ.Z) ≠ ⊤ := ne_top_of_lt hW
   set M := (stabSeminorm C σ (W - σ.Z)).toReal
   have hM1 : M < 1 := by
@@ -49,8 +50,8 @@ theorem StabilityCondition.W_ne_zero_of_seminorm_lt_one (σ : StabilityCondition
       (ENNReal.toReal_ofReal (by linarith : (0 : ℝ) ≤ 1)).symm]
     exact (ENNReal.toReal_lt_toReal hfin ENNReal.ofReal_ne_top).mpr hW
   -- Z([E]) = m · exp(iπφ) with m > 0, so ‖Z([E])‖ = m > 0
-  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E hP hE
-  have hZ_pos : (0 : ℝ) < ‖σ.Z (K₀.of C E)‖ := by
+  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
+  have hZ_pos : (0 : ℝ) < ‖σ.Z (cl C v E)‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   -- ‖(W - Z)([E])‖ ≤ M · ‖Z([E])‖
@@ -58,18 +59,18 @@ theorem StabilityCondition.W_ne_zero_of_seminorm_lt_one (σ : StabilityCondition
   -- If W([E]) = 0, then (W - Z)([E]) = -Z([E]), so ‖(W-Z)([E])‖ = ‖Z([E])‖
   -- But ‖(W-Z)([E])‖ ≤ M · ‖Z([E])‖ with M < 1, contradicting ‖Z([E])‖ > 0
   intro hw0
-  have hWZ : (W - σ.Z) (K₀.of C E) = W (K₀.of C E) - σ.Z (K₀.of C E) :=
-    AddMonoidHom.sub_apply W σ.Z (K₀.of C E)
+  have hWZ : (W - σ.Z) (cl C v E) = W (cl C v E) - σ.Z (cl C v E) :=
+    AddMonoidHom.sub_apply W σ.Z (cl C v E)
   rw [hWZ, hw0, zero_sub, norm_neg] at hbd
   nlinarith
 
 /-- **Node 7.2a**. Given a stability condition `σ` and a group homomorphism `W` with
 `‖W - Z‖_σ < 1`, `W` restricts to a `SkewedStabilityFunction` on any interval `(a, b)`
 with `a < b`. The skewing parameter is `(a + b) / 2`. -/
-def StabilityCondition.skewedStabilityFunction_of_near (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+def StabilityCondition.WithClassMap.skewedStabilityFunction_of_near (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b) :
-    SkewedStabilityFunction C σ.slicing a b where
+    SkewedStabilityFunction C v σ.slicing a b where
   W := W
   α := (a + b) / 2
   hα_mem := ⟨by linarith, by linarith⟩
@@ -82,10 +83,10 @@ def StabilityCondition.skewedStabilityFunction_of_near (σ : StabilityCondition 
 `P((a, b))` with `b - a < 1`, the central charge satisfies `‖Z([E])‖ > 0`. The proof
 decomposes `E` via its HN filtration and applies the sector estimate
 `norm_sum_exp_ge_cos_mul_sum` to bound `‖Z(E)‖` from below. -/
-theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C)
+theorem StabilityCondition.WithClassMap.norm_Z_pos_of_intervalProp (σ : StabilityCondition.WithClassMap C v)
     {E : C} (hE : ¬IsZero E) {a b : ℝ} (hab : b - a < 1)
     (hI : σ.slicing.intervalProp C a b E) :
-    0 < ‖σ.Z (K₀.of C E)‖ := by
+    0 < ‖σ.Z (cl C v E)‖ := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
   -- All HN phases are in (a, b)
   have hphases : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b := by
@@ -103,18 +104,18 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
         _ < b := σ.slicing.phiPlus_lt_of_intervalProp C hE hI
   set P := F.toPostnikovTower
   -- K₀ decomposition: Z(E) = Σ Z(Fᵢ) = Σ ‖Z(Fᵢ)‖ * exp(iπφᵢ)
-  have hZE : σ.Z (K₀.of C E) =
-      ∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i)) := by
-    rw [K₀.of_postnikovTower_eq_sum C P, map_sum]
+  have hZE : σ.Z (cl C v E) =
+      ∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) := by
+    rw [cl_postnikovTower_eq_sum C v P, map_sum]
   have hZi : ∀ i : Fin F.n,
-      σ.Z (K₀.of C (P.factor i)) =
-      ↑(‖σ.Z (K₀.of C (P.factor i))‖) *
+      σ.Z (cl C v (P.factor i)) =
+      ↑(‖σ.Z (cl C v (P.factor i))‖) *
         Complex.exp (↑(Real.pi * F.φ i) * Complex.I) := by
     intro i
     by_cases hi : IsZero (P.factor i)
-    · simp [K₀.of_isZero C hi]
+    · simp [cl_isZero (C := C) (v := v) hi]
     · obtain ⟨m, hm, hmZ⟩ :=
-        stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
+        σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
       rw [hmZ]; congr 1
       rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]
@@ -135,23 +136,23 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
   -- Apply sector estimate
   have hsector :
       Real.cos (Real.pi * (b - a) / 2) *
-        ∑ i : Fin F.n, ‖σ.Z (K₀.of C (P.factor i))‖ ≤
-      ‖σ.Z (K₀.of C E)‖ := by
+        ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖ ≤
+      ‖σ.Z (cl C v E)‖ := by
     calc Real.cos (Real.pi * (b - a) / 2) *
-            ∑ i : Fin F.n, ‖σ.Z (K₀.of C (P.factor i))‖
+            ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖
         ≤ ‖∑ i : Fin F.n,
-            ↑(‖σ.Z (K₀.of C (P.factor i))‖) *
+            ↑(‖σ.Z (cl C v (P.factor i))‖) *
               Complex.exp (↑(Real.pi * F.φ i) * Complex.I)‖ :=
           norm_sum_exp_ge_cos_mul_sum
             (fun i _ ↦ norm_nonneg _) hw0 hw (fun i _ ↦ hθ i)
-      _ = ‖∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i))‖ := by
+      _ = ‖∑ i : Fin F.n, σ.Z (cl C v (P.factor i))‖ := by
           congr 1; exact Finset.sum_congr rfl (fun i _ ↦ (hZi i).symm)
-      _ = ‖σ.Z (K₀.of C E)‖ := by rw [← hZE]
+      _ = ‖σ.Z (cl C v E)‖ := by rw [← hZE]
   -- First factor is nonzero, so ‖Z(F₀)‖ > 0
   have hfactor_pos :
-      0 < ‖σ.Z (K₀.of C (P.factor ⟨0, hn⟩))‖ := by
+      0 < ‖σ.Z (cl C v (P.factor ⟨0, hn⟩))‖ := by
     obtain ⟨m, hm, hmZ⟩ :=
-      stabilityCondition_compat_apply (C := C) σ _ _ (F.semistable ⟨0, hn⟩) hfirst
+      σ.compat _ _ (F.semistable ⟨0, hn⟩) hfirst
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs,
       abs_of_pos hm, Complex.norm_exp_ofReal_mul_I, mul_one]
     exact hm
@@ -159,10 +160,10 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
     Real.cos_pos_of_mem_Ioo
       ⟨by nlinarith [Real.pi_pos], by nlinarith [Real.pi_pos]⟩
   have hsum_pos : 0 < ∑ i : Fin F.n,
-      ‖σ.Z (K₀.of C (P.factor i))‖ := by
+      ‖σ.Z (cl C v (P.factor i))‖ := by
     apply lt_of_lt_of_le hfactor_pos
     exact Finset.single_le_sum
-      (f := fun i ↦ ‖σ.Z (K₀.of C (P.factor i))‖)
+      (f := fun i ↦ ‖σ.Z (cl C v (P.factor i))‖)
       (fun i _ ↦ norm_nonneg _)
       (Finset.mem_univ (⟨0, hn⟩ : Fin F.n))
   exact lt_of_lt_of_le (mul_pos hcos_pos hsum_pos) hsector
@@ -170,12 +171,12 @@ theorem StabilityCondition.norm_Z_pos_of_intervalProp (σ : StabilityCondition C
 /-- **W-nonvanishing for interval objects**. If `‖W - Z‖_σ < cos(π(b-a)/2)` and `E` is
 a nonzero object in `P((a, b))` with `b - a < 1`, then `W([E]) ≠ 0`. The proof combines
 the Z-nonvanishing bound with the sector bound on `W - Z`. -/
-theorem StabilityCondition.W_ne_zero_of_intervalProp (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) {a b : ℝ} (hab : b - a < 1)
+theorem StabilityCondition.WithClassMap.W_ne_zero_of_intervalProp (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) {a b : ℝ} (hab : b - a < 1)
     (hsmall : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.cos (Real.pi * (b - a) / 2)))
     {E : C} (hE : ¬IsZero E) (hI : σ.slicing.intervalProp C a b E) :
-    W (K₀.of C E) ≠ 0 := by
+    W (cl C v E) ≠ 0 := by
   -- Derive a < b
   have hab_pos : 0 < b - a := by
     rcases hI with hZ | ⟨F, hF⟩
@@ -202,9 +203,9 @@ theorem StabilityCondition.W_ne_zero_of_intervalProp (σ : StabilityCondition C)
     have hP := σ.slicing.phiPlus_lt_of_intervalProp C hE hI
     have hM := σ.slicing.phiMinus_gt_of_intervalProp C hE hI
     linarith
-  have hWZ_bound : ‖(W - σ.Z) (K₀.of C E)‖ ≤
+  have hWZ_bound : ‖(W - σ.Z) (cl C v E)‖ ≤
       M / Real.cos (Real.pi * (b - a) / 2) *
-        ‖σ.Z (K₀.of C E)‖ :=
+        ‖σ.Z (cl C v E)‖ :=
     sector_bound' C σ (W - σ.Z) hE hab_pos.le
       hab hwidth hM0
       (fun A φ hP hA ↦ stabSeminorm_bound_real C σ _ hfin hP hA)
@@ -213,15 +214,16 @@ theorem StabilityCondition.W_ne_zero_of_intervalProp (σ : StabilityCondition C)
     (div_lt_one hcos_pos).mpr hM_lt
   -- If W(E) = 0, then ‖(W-Z)(E)‖ = ‖Z(E)‖, contradicting the bound
   intro hw0
-  have hWZ : (W - σ.Z) (K₀.of C E) =
-      W (K₀.of C E) - σ.Z (K₀.of C E) :=
-    AddMonoidHom.sub_apply W σ.Z (K₀.of C E)
+  have hWZ : (W - σ.Z) (cl C v E) =
+      W (cl C v E) - σ.Z (cl C v E) :=
+    AddMonoidHom.sub_apply W σ.Z (cl C v E)
   rw [hWZ, hw0, zero_sub, norm_neg] at hWZ_bound
   nlinarith
 
 section
 
 omit [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### W-phase definition -/
 
@@ -367,16 +369,16 @@ A "strict subobject" of `E` in `P((a,b))` corresponds to a monomorphism in the a
 heart `P((a, a+1])` whose cokernel also lies in `P((a, b))`, which in turn gives a
 distinguished triangle with all vertices in the interval. -/
 structure SkewedStabilityFunction.Semistable {s : Slicing C} {a b : ℝ}
-    (ssf : SkewedStabilityFunction C s a b) (E : C) (ψ : ℝ) : Prop where
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) (ψ : ℝ) : Prop where
   intervalProp : s.intervalProp C a b E
   nonzero : ¬IsZero E
-  wNe : ssf.W (K₀.of C E) ≠ 0
-  phase_eq : wPhaseOf (ssf.W (K₀.of C E)) ssf.α = ψ
+  wNe : ssf.W (cl C v E) ≠ 0
+  phase_eq : wPhaseOf (ssf.W (cl C v E)) ssf.α = ψ
   le_of_distTriang : ∀ ⦃K Q : C⦄ ⦃f₁ : K ⟶ E⦄ ⦃f₂ : E ⟶ Q⦄ ⦃f₃ : Q ⟶ K⟦(1 : ℤ)⟧⦄,
     Triangle.mk f₁ f₂ f₃ ∈ distTriang C →
     s.intervalProp C a b K → s.intervalProp C a b Q →
     ¬IsZero K →
-    wPhaseOf (ssf.W (K₀.of C K)) ssf.α ≤ ψ
+    wPhaseOf (ssf.W (cl C v K)) ssf.α ≤ ψ
 
 /-- **α-independence of wPhaseOf.** For a nonzero complex number `w`, if
 `wPhaseOf w α₁ ∈ (α₂ - 1, α₂ + 1]`, then `wPhaseOf w α₁ = wPhaseOf w α₂`.
@@ -395,7 +397,7 @@ theorem wPhaseOf_indep {w : ℂ} (hw : w ≠ 0) (α₁ α₂ : ℝ)
 /-- The W-phase of a W-semistable object is in `(α - 1, α + 1]`. -/
 lemma SkewedStabilityFunction.Semistable.phase_mem_Ioc
     {s : Slicing C} {a b : ℝ}
-    {ssf : SkewedStabilityFunction C s a b} {E : C} {ψ : ℝ}
+    {ssf : SkewedStabilityFunction C v s a b} {E : C} {ψ : ℝ}
     (h : ssf.Semistable C E ψ) :
     ψ ∈ Set.Ioc (ssf.α - 1) (ssf.α + 1) :=
   h.phase_eq ▸ wPhaseOf_mem_Ioc _ _
@@ -403,9 +405,9 @@ lemma SkewedStabilityFunction.Semistable.phase_mem_Ioc
 /-- The W-value of a W-semistable object satisfies the polar decomposition. -/
 lemma SkewedStabilityFunction.Semistable.polar
     {s : Slicing C} {a b : ℝ}
-    {ssf : SkewedStabilityFunction C s a b} {E : C} {ψ : ℝ}
+    {ssf : SkewedStabilityFunction C v s a b} {E : C} {ψ : ℝ}
     (h : ssf.Semistable C E ψ) :
-    ssf.W (K₀.of C E) = ↑‖ssf.W (K₀.of C E)‖ *
+    ssf.W (cl C v E) = ↑‖ssf.W (cl C v E)‖ *
       Complex.exp (↑(Real.pi * ψ) * Complex.I) :=
   h.phase_eq ▸ wPhaseOf_compat _ _
 

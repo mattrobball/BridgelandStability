@@ -25,12 +25,13 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Thin-interval pullback infrastructure -/
 
@@ -449,7 +450,7 @@ noncomputable def interval_cokernel_pullbackTopIso
 
 theorem semistable_of_upper_inclusion
     [IsTriangulated C]
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b₁ b₂ ψ ε₀ : ℝ} (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
     {E : C}
@@ -476,33 +477,33 @@ theorem semistable_of_upper_inclusion
   let hpert₂ := hperturb_of_stabSeminorm C σ W hW hthin₂' hε₀ hε₀2 hsin
   have hW_ne₂ :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a < φ → φ < b₂ → W (K₀.of C F) ≠ 0 := fun F φ hP hFne _ _ =>
+        a < φ → φ < b₂ → W (cl C v F) ≠ 0 := fun F φ hP hFne _ _ =>
     σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   have hpert₂_lo :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b₂ →
-        a - ε₀ < wPhaseOf (W (K₀.of C F)) ((a + b₂) / 2) ∧
-          wPhaseOf (W (K₀.of C F)) ((a + b₂) / 2) < a - ε₀ + 1 := by
+        a - ε₀ < wPhaseOf (W (cl C v F)) ((a + b₂) / 2) ∧
+          wPhaseOf (W (cl C v F)) ((a + b₂) / 2) < a - ε₀ + 1 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert₂ F φ hP hFne haφ hφb
     exact ⟨by linarith, by linarith⟩
   have hpert₂_hi :
       ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b₂ →
-        b₂ + ε₀ - 1 < wPhaseOf (W (K₀.of C F)) ((a + b₂) / 2) ∧
-          wPhaseOf (W (K₀.of C F)) ((a + b₂) / 2) < b₂ + ε₀ := by
+        b₂ + ε₀ - 1 < wPhaseOf (W (cl C v F)) ((a + b₂) / 2) ∧
+          wPhaseOf (W (cl C v F)) ((a + b₂) / 2) < b₂ + ε₀ := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert₂ F φ hP hFne haφ hφb
     exact ⟨by linarith, by linarith⟩
   have hWindow₂ :
       ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G →
-        a - ε₀ < wPhaseOf (W (K₀.of C G)) ((a + b₂) / 2) ∧
-          wPhaseOf (W (K₀.of C G)) ((a + b₂) / 2) < b₂ + ε₀ := fun {G} hG hGne =>
+        a - ε₀ < wPhaseOf (W (cl C v G)) ((a + b₂) / 2) ∧
+          wPhaseOf (W (cl C v G)) ((a + b₂) / 2) < b₂ + ε₀ := fun {G} hG hGne =>
     ⟨wPhaseOf_gt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_lo,
       wPhaseOf_lt_of_intervalProp C σ hGne W (by linarith) hG hW_ne₂ hpert₂_hi⟩
   have hW_ne_big :
       ∀ {G : C}, σ.slicing.intervalProp C a b₂ G → ¬IsZero G →
-        W (K₀.of C G) ≠ 0 := fun {_} hG hGne =>
+        W (cl C v G) ≠ 0 := fun {_} hG hGne =>
     σ.W_ne_zero_of_intervalProp C W hthin₂' hsmall₂ hGne hG
   refine semistable_of_target_envelope_triangleTest
     (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hSS hab₂ hEI₂ hε₀ henv_lo henv_hi₂
@@ -559,11 +560,11 @@ theorem semistable_of_upper_inclusion
     have hK₁ : σ.slicing.intervalProp C a b₁ K :=
       σ.slicing.first_intervalProp_of_triangle C hab₁ hSS.intervalProp hQ_le hK_gt hT
     have hK_phase₁ :
-        wPhaseOf (W (K₀.of C K)) ((a + b₁) / 2) ≤ ψ :=
+        wPhaseOf (W (cl C v K)) ((a + b₁) / 2) ≤ ψ :=
       hSS.le_of_distTriang hT hK₁ hQ₁ hKne
     have hK_eq :
-        wPhaseOf (W (K₀.of C K)) ((a + b₁) / 2) =
-          wPhaseOf (W (K₀.of C K)) ((a + b₂) / 2) :=
+        wPhaseOf (W (cl C v K)) ((a + b₁) / 2) =
+          wPhaseOf (W (cl C v K)) ((a + b₂) / 2) :=
       wPhaseOf_eq_of_intervalProp_upper_inclusion
         (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hb hK₁ hKne
         hε₀ hε₀2 hthin₂ hsin
@@ -664,20 +665,20 @@ theorem semistable_of_upper_inclusion
       σ.slicing.first_intervalProp_of_triangle C hab₁ hSS.intervalProp hY_le hPB_gt
         (by simpa [SR, pE] using hTR)
     have hPB_phase₁ :
-        wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₁) / 2) ≤ ψ :=
+        wPhaseOf (W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₁) / 2) ≤ ψ :=
       hSS.le_of_distTriang (by simpa [SR, pE] using hTR) hPB₁ hY₁ hPB_ne
     have hPB_eq :
-        wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₁) / 2) =
-          wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₂) / 2) :=
+        wPhaseOf (W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₁) / 2) =
+          wPhaseOf (W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₂) / 2) :=
       wPhaseOf_eq_of_intervalProp_upper_inclusion
         (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hb hPB₁ hPB_ne
         hε₀ hε₀2 hthin₂ hsin
     have hPB_phase_le :
-        wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₂) / 2) ≤ ψ := by
+        wPhaseOf (W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₂) / 2) ≤ ψ := by
       rw [← hPB_eq]
       exact hPB_phase₁
     have hX_phase_gt :
-        ψ < wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) :=
+        ψ < wPhaseOf (W (cl C v X)) ((a + b₂) / 2) :=
       wPhaseOf_gt_of_upper_boundary_triangle
         (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hab₂ hb hQI hX_ge hY₁ hX_zero
         hε₀ hε₀2 henv_lo henv_hi hthin₂ hsin hTQ
@@ -686,45 +687,45 @@ theorem semistable_of_upper_inclusion
         (PB : σ.slicing.IntervalCat C a b₂).property) hPB_ne
     have hK_window := hWindow₂ hKI hKne
     have hX_window := hWindow₂ hX₂ hX_zero
-    let ψPB : ℝ := wPhaseOf (W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₂) / 2)
+    let ψPB : ℝ := wPhaseOf (W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj)) ((a + b₂) / 2)
     have hBXW :
-        W (K₀.of C (Subobject.underlying.obj BX).obj) = W (K₀.of C X) := by
+        W (cl C v (Subobject.underlying.obj BX).obj) = W (cl C v X) := by
       simpa [BX, XI₂] using
         congrArg W
-          (K₀.of_iso C (((σ.slicing.intervalProp C a b₂).ι).mapIso (Subobject.underlyingIso xQ)))
+          (cl_iso C v (((σ.slicing.intervalProp C a b₂).ι).mapIso (Subobject.underlyingIso xQ)))
     have hX_phase_gt_pb :
-        ψPB < wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) := by
+        ψPB < wPhaseOf (W (cl C v X)) ((a + b₂) / 2) := by
       dsimp [ψPB]
       linarith
     have hX_range_pb :
-        wPhaseOf (W (K₀.of C X)) ((a + b₂) / 2) ∈ Set.Ioo (ψPB - 1) (ψPB + 1) := by
+        wPhaseOf (W (cl C v X)) ((a + b₂) / 2) ∈ Set.Ioo (ψPB - 1) (ψPB + 1) := by
       constructor <;> dsimp [ψPB] <;> linarith [hX_window.1, hX_window.2, hPB_window.1,
         hPB_window.2, hthin₂]
     have hK_range_pb :
-        wPhaseOf (W (K₀.of C K)) ((a + b₂) / 2) ∈ Set.Ioo (ψPB - 1) (ψPB + 1) := by
+        wPhaseOf (W (cl C v K)) ((a + b₂) / 2) ∈ Set.Ioo (ψPB - 1) (ψPB + 1) := by
       constructor <;> dsimp [ψPB] <;> linarith [hK_window.1, hK_window.2, hPB_window.1,
         hPB_window.2, hthin₂]
     let ssf₂ := σ.skewedStabilityFunction_of_near C W hW hab₂
     have hsumL :
-        W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj) =
-          W (K₀.of C (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
-            W (K₀.of C (XI₂ : σ.slicing.IntervalCat C a b₂).obj) := by
+        W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj) =
+          W (cl C v (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
+            W (cl C v (XI₂ : σ.slicing.IntervalCat C a b₂).obj) := by
       have hsumL' :
-          W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj) =
-            W (K₀.of C (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
-              W (K₀.of C (Subobject.underlying.obj BX).obj) := by
-        simpa [StabilityCondition.skewedStabilityFunction_of_near, SL, PB, KI₂, map_add] using
+          W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj) =
+            W (cl C v (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
+              W (cl C v (Subobject.underlying.obj BX).obj) := by
+        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, SL, PB, KI₂, map_add] using
           ssf₂.strict_additive (C := C) (s := σ.slicing) (a := a) (b := b₂) hLeft
       calc
-        W (K₀.of C (PB : σ.slicing.IntervalCat C a b₂).obj) =
-            W (K₀.of C (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
-              W (K₀.of C (Subobject.underlying.obj BX).obj) := hsumL'
-        _ = W (K₀.of C (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
-              W (K₀.of C (XI₂ : σ.slicing.IntervalCat C a b₂).obj) := by
+        W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj) =
+            W (cl C v (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
+              W (cl C v (Subobject.underlying.obj BX).obj) := hsumL'
+        _ = W (cl C v (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
+              W (cl C v (XI₂ : σ.slicing.IntervalCat C a b₂).obj) := by
             rw [hBXW]
-    have hX_Wne : W (K₀.of C X) ≠ 0 := hW_ne_big hX₂ hX_zero
+    have hX_Wne : W (cl C v X) ≠ 0 := hW_ne_big hX₂ hX_zero
     have hK_phase_lt_pb :
-        wPhaseOf (W (K₀.of C K)) ((a + b₂) / 2) < ψPB := by
+        wPhaseOf (W (cl C v K)) ((a + b₂) / 2) < ψPB := by
       dsimp [ψPB]
       exact wPhaseOf_seesaw_dual
         (by simpa [KI₂, XI₂, add_comm] using hsumL.symm)

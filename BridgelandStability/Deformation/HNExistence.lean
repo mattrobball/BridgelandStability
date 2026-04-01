@@ -26,12 +26,13 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Intermediate lemmas (Bridgeland §7, p.23–24) -/
 
@@ -43,7 +44,7 @@ filtration whose factors are `ssf.Semistable` in `P((a,b))` with phases in `(a+�
 subobject lattice, propagating phase bounds via Lemma 7.3 (phase confinement). -/
 theorem interior_has_enveloped_HN_ssf
     [IsTriangulated C]
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -73,30 +74,30 @@ theorem interior_has_enveloped_HN_ssf
     stabSeminorm_lt_cos_of_hsin_hthin (C := C) (σ := σ) (W := W) hab hε hthin hsin
   -- W ≠ 0 for nonzero interval objects
   have hW_ne : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (K₀.of C F) ≠ 0 := fun hF hFne =>
+      ssf.W (cl C v F) ≠ 0 := fun hF hFne =>
     σ.W_ne_zero_of_intervalProp C W hthin' hsmall hFne hF
   -- Perturbation bounds for global window (stated in terms of W and (a+b)/2 directly)
   have hW_ne_sem : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b → W (K₀.of C F) ≠ 0 := fun F φ hP hFne _ _ =>
+      a < φ → φ < b → W (cl C v F) ≠ 0 := fun F φ hP hFne _ _ =>
     σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   have hpert_lo : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b →
-      a - ε < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
-      wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < a - ε + 1 := by
+      a - ε < wPhaseOf (W (cl C v F)) ((a + b) / 2) ∧
+      wPhaseOf (W (cl C v F)) ((a + b) / 2) < a - ε + 1 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
     exact ⟨by linarith, by linarith⟩
   have hpert_hi : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b →
-      b + ε - 1 < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
-      wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε := by
+      b + ε - 1 < wPhaseOf (W (cl C v F)) ((a + b) / 2) ∧
+      wPhaseOf (W (cl C v F)) ((a + b) / 2) < b + ε := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb
     exact ⟨by linarith, by linarith⟩
   -- Global window: L = a - ε, U = b + ε
   have hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      a - ε < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
-        wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < b + ε := fun hF hFne =>
+      a - ε < wPhaseOf (W (cl C v F)) ((a + b) / 2) ∧
+        wPhaseOf (W (cl C v F)) ((a + b) / 2) < b + ε := fun hF hFne =>
     ⟨wPhaseOf_gt_of_intervalProp C σ hFne W
         (by linarith [hab]) hF hW_ne_sem hpert_lo,
       wPhaseOf_lt_of_intervalProp C σ hFne W
@@ -115,7 +116,7 @@ theorem interior_has_enveloped_HN_ssf
       (L := a - ε) (U := b + ε) hWindow hWidth
       (a + ε) (le_refl _) XI hXI_ne
       (fun {B} q hq hBne ↦ by
-        simpa [ssf, StabilityCondition.skewedStabilityFunction_of_near] using
+        simpa [ssf, StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using
           wPhaseOf_gt_of_strictQuotient_of_inner_strip
             (C := C) (σ := σ) (W := W) (hW := hW) hε hε2 hthin hsin
             (X := XI) hInt q hq hBne)
@@ -263,7 +264,7 @@ The phase bounds are `(a+ε, b−ε)` (open, matching the paper), since each fac
 the enveloping interval. -/
 theorem interior_has_enveloped_HN
     [IsTriangulated C]
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -310,7 +311,7 @@ Two parameters: `ε₀` (local finiteness, < 1/10) and `ε` (perturbation, `ε <
 `ThinFiniteLengthInInterval` is derived from `WideSectorFiniteLength` via `of_wide`. -/
 theorem sigmaSemistable_hasDeformedHN
     [IsTriangulated C]
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))

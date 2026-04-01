@@ -26,29 +26,32 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Topology
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
-/-- A chosen representative of a connected component of `StabilityCondition C`. -/
-def componentRep (cc : ConnectedComponents (StabilityCondition C)) : StabilityCondition C :=
+/-- A chosen representative of a connected component of `StabilityCondition.WithClassMap C v`. -/
+def componentRep (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) : StabilityCondition.WithClassMap C v :=
   Classical.choose cc.exists_rep
 
-@[simp] theorem mk_componentRep (cc : ConnectedComponents (StabilityCondition C)) :
+@[simp] theorem mk_componentRep (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     ConnectedComponents.mk (componentRep C cc) = cc :=
   Classical.choose_spec cc.exists_rep
 
+variable [Fact (Function.Surjective v)]
+
 /-- The component of stability conditions with connected-component label `cc`. -/
-abbrev componentStabilityCondition (cc : ConnectedComponents (StabilityCondition C)) :=
-  {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
+abbrev componentStabilityCondition (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :=
+  {σ : StabilityCondition.WithClassMap C v // ConnectedComponents.mk σ = cc}
 
 /-- Bridgeland's `V(Σ)`, implemented using a chosen representative of the component. -/
-def componentSeminormSubgroup (cc : ConnectedComponents (StabilityCondition C)) :
-    Submodule ℂ (K₀ C →+ ℂ) where
+def componentSeminormSubgroup (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
+    Submodule ℂ (Λ →+ ℂ) where
   carrier := finiteSeminormSubgroup C (componentRep C cc)
   zero_mem' :=
     (finiteSeminormSubgroup C (componentRep C cc)).zero_mem
@@ -61,68 +64,68 @@ def componentSeminormSubgroup (cc : ConnectedComponents (StabilityCondition C)) 
 
 /-- The Bridgeland norm on `V(Σ)` attached to a chosen representative of the component. -/
 noncomputable instance componentNorm
-    (cc : ConnectedComponents (StabilityCondition C)) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     Norm (componentSeminormSubgroup C cc) where
-  norm U := (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal
+  norm U := (stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ)).toReal
 
 /-- The restricted Bridgeland seminorm is a genuine additive norm on `V(Σ)`. -/
 noncomputable def componentAddGroupNorm
-    (cc : ConnectedComponents (StabilityCondition C)) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     AddGroupNorm (componentSeminormSubgroup C cc) where
   toFun U := ‖U‖
   map_zero' := by
-    change (stabSeminorm C (componentRep C cc) (0 : K₀ C →+ ℂ)).toReal = 0
+    change (stabSeminorm C (componentRep C cc) (0 : Λ →+ ℂ)).toReal = 0
     rw [stabSeminorm_zero, ENNReal.toReal_zero]
   add_le' U V := by
     change (stabSeminorm C (componentRep C cc) (((U + V : componentSeminormSubgroup C cc) :
-      K₀ C →+ ℂ))).toReal ≤
-      (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal +
-        (stabSeminorm C (componentRep C cc) (V : K₀ C →+ ℂ)).toReal
-    rw [show (((U + V : componentSeminormSubgroup C cc) : K₀ C →+ ℂ)) =
-      (U : K₀ C →+ ℂ) + (V : K₀ C →+ ℂ) by rfl]
-    have hle := stabSeminorm_add_le C (componentRep C cc) (U : K₀ C →+ ℂ) (V : K₀ C →+ ℂ)
+      Λ →+ ℂ))).toReal ≤
+      (stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ)).toReal +
+        (stabSeminorm C (componentRep C cc) (V : Λ →+ ℂ)).toReal
+    rw [show (((U + V : componentSeminormSubgroup C cc) : Λ →+ ℂ)) =
+      (U : Λ →+ ℂ) + (V : Λ →+ ℂ) by rfl]
+    have hle := stabSeminorm_add_le C (componentRep C cc) (U : Λ →+ ℂ) (V : Λ →+ ℂ)
     have hle' :
         stabSeminorm C (componentRep C cc) (((U + V : componentSeminormSubgroup C cc) :
-          K₀ C →+ ℂ)) ≤
-          stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ) +
-            stabSeminorm C (componentRep C cc) (V : K₀ C →+ ℂ) := by
+          Λ →+ ℂ)) ≤
+          stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ) +
+            stabSeminorm C (componentRep C cc) (V : Λ →+ ℂ) := by
       simpa using hle
     have htoReal :
         (stabSeminorm C (componentRep C cc) (((U + V : componentSeminormSubgroup C cc) :
-          K₀ C →+ ℂ))).toReal ≤
-          (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ) +
-            stabSeminorm C (componentRep C cc) (V : K₀ C →+ ℂ)).toReal := by
+          Λ →+ ℂ))).toReal ≤
+          (stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ) +
+            stabSeminorm C (componentRep C cc) (V : Λ →+ ℂ)).toReal := by
       rw [ENNReal.toReal_le_toReal (ne_top_of_lt (U + V).2)
         (ENNReal.add_ne_top.mpr ⟨ne_top_of_lt U.2, ne_top_of_lt V.2⟩)]
       exact hle'
     refine htoReal.trans_eq ?_
     exact ENNReal.toReal_add (ne_top_of_lt U.2) (ne_top_of_lt V.2)
   neg' U := by
-    change (stabSeminorm C (componentRep C cc) (-(U : K₀ C →+ ℂ))).toReal =
-      (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal
+    change (stabSeminorm C (componentRep C cc) (-(U : Λ →+ ℂ))).toReal =
+      (stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ)).toReal
     rw [stabSeminorm_neg]
   eq_zero_of_map_eq_zero' U hU := by
     apply Subtype.ext
-    change (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal = 0 at hU
-    exact eq_zero_of_stabSeminorm_toReal_eq_zero C (componentRep C cc) U.2 hU
+    change (stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ)).toReal = 0 at hU
+    exact eq_zero_of_stabSeminorm_toReal_eq_zero C (componentRep C cc) Fact.out U.2 hU
 
 noncomputable instance componentNormedAddCommGroup
-    (cc : ConnectedComponents (StabilityCondition C)) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     NormedAddCommGroup (componentSeminormSubgroup C cc) :=
   AddGroupNorm.toNormedAddCommGroup (componentAddGroupNorm C cc)
 
 noncomputable instance componentNormedSpace
-    (cc : ConnectedComponents (StabilityCondition C)) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     NormedSpace ℂ (componentSeminormSubgroup C cc) :=
   NormedSpace.ofCore
     { norm_nonneg := fun U ↦ ENNReal.toReal_nonneg
       norm_smul := by
         intro a U
         change (stabSeminorm C (componentRep C cc) (((a • U : componentSeminormSubgroup C cc) :
-          K₀ C →+ ℂ))).toReal =
-            ‖a‖ * (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal
-        rw [show (((a • U : componentSeminormSubgroup C cc) : K₀ C →+ ℂ)) =
-            a • (U : K₀ C →+ ℂ) by rfl]
+          Λ →+ ℂ))).toReal =
+            ‖a‖ * (stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ)).toReal
+        rw [show (((a • U : componentSeminormSubgroup C cc) : Λ →+ ℂ)) =
+            a • (U : Λ →+ ℂ) by rfl]
         rw [stabSeminorm_smul_complex, ENNReal.toReal_mul, ENNReal.toReal_ofReal (norm_nonneg _)]
       norm_triangle := fun U V =>
         (componentAddGroupNorm C cc).add_le' U V
@@ -131,46 +134,46 @@ noncomputable instance componentNormedSpace
         constructor
         · intro hU
           apply Subtype.ext
-          change (stabSeminorm C (componentRep C cc) (U : K₀ C →+ ℂ)).toReal = 0 at hU
-          exact eq_zero_of_stabSeminorm_toReal_eq_zero C (componentRep C cc) U.2 hU
+          change (stabSeminorm C (componentRep C cc) (U : Λ →+ ℂ)).toReal = 0 at hU
+          exact eq_zero_of_stabSeminorm_toReal_eq_zero C (componentRep C cc) Fact.out U.2 hU
         · intro hU
           subst hU
-          change (stabSeminorm C (componentRep C cc) (0 : K₀ C →+ ℂ)).toReal = 0
+          change (stabSeminorm C (componentRep C cc) (0 : Λ →+ ℂ)).toReal = 0
           rw [stabSeminorm_zero, ENNReal.toReal_zero] }
 
 /-- The seminorm balls in `V(Σ)` coming from the representative `σ₀ ∈ Σ`. -/
-def componentSeminormBall (cc : ConnectedComponents (StabilityCondition C))
+def componentSeminormBall (cc : ConnectedComponents (StabilityCondition.WithClassMap C v))
     (W : componentSeminormSubgroup C cc) (r : ℝ) :
     Set (componentSeminormSubgroup C cc) :=
   {F | stabSeminorm C (componentRep C cc) (↑F - ↑W) < ENNReal.ofReal r}
 
 /-- The old seminorm balls are exactly the metric balls for the induced norm on `V(Σ)`. -/
-theorem componentSeminormBall_eq_ball (cc : ConnectedComponents (StabilityCondition C))
+theorem componentSeminormBall_eq_ball (cc : ConnectedComponents (StabilityCondition.WithClassMap C v))
     (W : componentSeminormSubgroup C cc) {r : ℝ} (hr : 0 < r) :
     componentSeminormBall C cc W r = Metric.ball W r := by
   ext F
   rw [componentSeminormBall, Metric.mem_ball, dist_eq_norm]
   change stabSeminorm C (componentRep C cc) (↑F - ↑W) < ENNReal.ofReal r ↔
     (stabSeminorm C (componentRep C cc) (((F - W : componentSeminormSubgroup C cc) :
-      K₀ C →+ ℂ))).toReal < r
-  rw [show (((F - W : componentSeminormSubgroup C cc) : K₀ C →+ ℂ)) = ↑F - ↑W by rfl]
+      Λ →+ ℂ))).toReal < r
+  rw [show (((F - W : componentSeminormSubgroup C cc) : Λ →+ ℂ)) = ↑F - ↑W by rfl]
   have hfin : stabSeminorm C (componentRep C cc) (↑F - ↑W) ≠ ⊤ := ne_top_of_lt (F - W).2
   rw [← ENNReal.ofReal_lt_ofReal_iff hr, ENNReal.ofReal_toReal hfin]
 
 /-- The basis of seminorm balls defining the topology on `V(Σ)`. -/
-def componentSeminormBasis (cc : ConnectedComponents (StabilityCondition C)) :
+def componentSeminormBasis (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     Set (Set (componentSeminormSubgroup C cc)) :=
   {S | ∃ (W : componentSeminormSubgroup C cc) (r : ℝ), 0 < r ∧
     S = componentSeminormBall C cc W r}
 
 /-- The linear topology on `V(Σ)` generated by seminorm balls for one representative. -/
-abbrev componentSeminormTopology (cc : ConnectedComponents (StabilityCondition C)) :
+abbrev componentSeminormTopology (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     TopologicalSpace (componentSeminormSubgroup C cc) :=
   TopologicalSpace.generateFrom (componentSeminormBasis C cc)
 
 /-- The old seminorm-ball basis is a genuine topological basis for the norm topology on `V(Σ)`. -/
 theorem isTopologicalBasis_componentSeminormBasis
-    (cc : ConnectedComponents (StabilityCondition C)) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     @TopologicalSpace.IsTopologicalBasis (componentSeminormSubgroup C cc)
       (inferInstance : TopologicalSpace (componentSeminormSubgroup C cc))
       (componentSeminormBasis C cc) := by
@@ -189,20 +192,21 @@ theorem isTopologicalBasis_componentSeminormBasis
 /-- The ad hoc generated topology on `V(Σ)` agrees with the topology induced by the Bridgeland
 norm defined above. -/
 theorem componentSeminormTopology_eq_normTopology
-    (cc : ConnectedComponents (StabilityCondition C)) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     componentSeminormTopology C cc =
       (inferInstance : TopologicalSpace (componentSeminormSubgroup C cc)) := by
   simpa [componentSeminormTopology] using
     (isTopologicalBasis_componentSeminormBasis C cc).eq_generateFrom.symm
 
+omit [Fact (Function.Surjective v)] in
 /-- Any element of the chosen `V(Σ)` has finite Bridgeland seminorm with respect to any
 stability condition in the same connected component. -/
 theorem componentSeminorm_lt_top_of_mem_component
-    (cc : ConnectedComponents (StabilityCondition C))
-    (σ : StabilityCondition C) (hσ : ConnectedComponents.mk σ = cc)
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v))
+    (σ : StabilityCondition.WithClassMap C v) (hσ : ConnectedComponents.mk σ = cc)
     (U : componentSeminormSubgroup C cc) :
-    stabSeminorm C σ (U : K₀ C →+ ℂ) < ⊤ := by
-  change (U : K₀ C →+ ℂ) ∈ finiteSeminormSubgroup C σ
+    stabSeminorm C σ (U : Λ →+ ℂ) < ⊤ := by
+  change (U : Λ →+ ℂ) ∈ finiteSeminormSubgroup C σ
   rw [finiteSeminormSubgroup_eq_of_connected C σ (componentRep C cc) (by
     rw [hσ, mk_componentRep C cc])]
   exact U.2
@@ -211,12 +215,12 @@ theorem componentSeminorm_lt_top_of_mem_component
 representative `σ ∈ Σ`. This is the formal version of Bridgeland's statement that the norms
 `‖·‖_σ` on a connected component are equivalent. -/
 theorem componentNorm_equivalent_of_mem_component
-    (cc : ConnectedComponents (StabilityCondition C))
-    (σ : StabilityCondition C) (hσ : ConnectedComponents.mk σ = cc) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v))
+    (σ : StabilityCondition.WithClassMap C v) (hσ : ConnectedComponents.mk σ = cc) :
     ∃ K L : ℝ, 0 < K ∧ 0 < L ∧
       ∀ U : componentSeminormSubgroup C cc,
-        ‖U‖ ≤ K * (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal ∧
-        (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal ≤ L * ‖U‖ := by
+        ‖U‖ ≤ K * (stabSeminorm C σ (U : Λ →+ ℂ)).toReal ∧
+        (stabSeminorm C σ (U : Λ →+ ℂ)).toReal ≤ L * ‖U‖ := by
   let σ₀ := componentRep C cc
   have hσ₀σ : ConnectedComponents.mk σ₀ = ConnectedComponents.mk σ := by
     rw [show σ₀ = componentRep C cc by rfl, mk_componentRep C cc, hσ]
@@ -224,37 +228,38 @@ theorem componentNorm_equivalent_of_mem_component
   obtain ⟨B, hB, hdomB⟩ := stabSeminorm_dominated_of_connected C σ σ₀ hσ₀σ.symm
   refine ⟨A.toReal + 1, B.toReal + 1, by positivity, by positivity, ?_⟩
   intro U
-  have hUσ : stabSeminorm C σ (U : K₀ C →+ ℂ) < ⊤ :=
+  have hUσ : stabSeminorm C σ (U : Λ →+ ℂ) < ⊤ :=
     componentSeminorm_lt_top_of_mem_component C cc σ hσ U
   constructor
   · have hleA :
-        ‖U‖ ≤ A.toReal * (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal := by
-      change (stabSeminorm C σ₀ (U : K₀ C →+ ℂ)).toReal ≤
-        A.toReal * (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal
+        ‖U‖ ≤ A.toReal * (stabSeminorm C σ (U : Λ →+ ℂ)).toReal := by
+      change (stabSeminorm C σ₀ (U : Λ →+ ℂ)).toReal ≤
+        A.toReal * (stabSeminorm C σ (U : Λ →+ ℂ)).toReal
       have hleA' :
-          (stabSeminorm C σ₀ (U : K₀ C →+ ℂ)).toReal ≤
-            (A * stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal :=
+          (stabSeminorm C σ₀ (U : Λ →+ ℂ)).toReal ≤
+            (A * stabSeminorm C σ (U : Λ →+ ℂ)).toReal :=
         (ENNReal.toReal_le_toReal (ne_top_of_lt U.2)
           (ENNReal.mul_ne_top hA (ne_top_of_lt hUσ))).2 (hdomA _)
       simpa [ENNReal.toReal_mul] using hleA'
-    have hσ_nonneg : 0 ≤ (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal := ENNReal.toReal_nonneg
+    have hσ_nonneg : 0 ≤ (stabSeminorm C σ (U : Λ →+ ℂ)).toReal := ENNReal.toReal_nonneg
     nlinarith [hleA]
   · have hleB :
-        (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal ≤ B.toReal * ‖U‖ := by
-      change (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal ≤
-        B.toReal * (stabSeminorm C σ₀ (U : K₀ C →+ ℂ)).toReal
+        (stabSeminorm C σ (U : Λ →+ ℂ)).toReal ≤ B.toReal * ‖U‖ := by
+      change (stabSeminorm C σ (U : Λ →+ ℂ)).toReal ≤
+        B.toReal * (stabSeminorm C σ₀ (U : Λ →+ ℂ)).toReal
       have hleB' :
-          (stabSeminorm C σ (U : K₀ C →+ ℂ)).toReal ≤
-            (B * stabSeminorm C σ₀ (U : K₀ C →+ ℂ)).toReal :=
+          (stabSeminorm C σ (U : Λ →+ ℂ)).toReal ≤
+            (B * stabSeminorm C σ₀ (U : Λ →+ ℂ)).toReal :=
         (ENNReal.toReal_le_toReal (ne_top_of_lt hUσ)
           (ENNReal.mul_ne_top hB (ne_top_of_lt U.2))).2 (hdomB _)
       simpa [ENNReal.toReal_mul] using hleB'
     have hrep_nonneg : 0 ≤ ‖U‖ := norm_nonneg _
     nlinarith [hleB]
 
+omit [Fact (Function.Surjective v)] in
 /-- For `σ ∈ Σ`, its central charge lies in `V(Σ)`. -/
-theorem componentZ_mem (cc : ConnectedComponents (StabilityCondition C))
-    (σ : StabilityCondition C) (hσ : ConnectedComponents.mk σ = cc) :
+theorem componentZ_mem (cc : ConnectedComponents (StabilityCondition.WithClassMap C v))
+    (σ : StabilityCondition.WithClassMap C v) (hσ : ConnectedComponents.mk σ = cc) :
     σ.Z ∈ componentSeminormSubgroup C cc := by
   change σ.Z ∈ finiteSeminormSubgroup C (componentRep C cc)
   rw [finiteSeminormSubgroup_eq_of_connected C (componentRep C cc) σ (by
@@ -262,7 +267,7 @@ theorem componentZ_mem (cc : ConnectedComponents (StabilityCondition C))
   exact Z_mem_finiteSeminormSubgroup C σ
 
 /-- The central charge map restricted to a connected component and landing in `V(Σ)`. -/
-def componentZMap (cc : ConnectedComponents (StabilityCondition C)) :
+def componentZMap (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     componentStabilityCondition C cc → componentSeminormSubgroup C cc :=
   fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, componentZ_mem C cc σ hσ⟩
 
@@ -271,15 +276,15 @@ def componentZMap (cc : ConnectedComponents (StabilityCondition C)) :
 /-- A reusable non-existential package for the current formalization of Bridgeland's
 Theorem 1.2 on a fixed connected component. -/
 structure ComponentTopologicalLinearLocalModel
-    (cc : ConnectedComponents (StabilityCondition C)) where
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) where
   /-- The chosen complex-linear charge space `V(Σ)` for this connected component. -/
-  V : Submodule ℂ (K₀ C →+ ℂ)
+  V : Submodule ℂ (Λ →+ ℂ)
   instNormedAddCommGroup : NormedAddCommGroup V
   instNormedSpace : NormedSpace ℂ V
-  mem_charge : ∀ σ : StabilityCondition C, ConnectedComponents.mk σ = cc → σ.Z ∈ V
+  mem_charge : ∀ σ : StabilityCondition.WithClassMap C v, ConnectedComponents.mk σ = cc → σ.Z ∈ V
   isLocalHomeomorph_chargeMap :
     @IsLocalHomeomorph
-      {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
+      {σ : StabilityCondition.WithClassMap C v // ConnectedComponents.mk σ = cc}
       V inferInstance inferInstance
       (fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, mem_charge σ hσ⟩)
 
@@ -288,7 +293,7 @@ attribute [instance] ComponentTopologicalLinearLocalModel.instNormedSpace
 
 namespace ComponentTopologicalLinearLocalModel
 
-variable {cc : ConnectedComponents (StabilityCondition C)}
+variable {cc : ConnectedComponents (StabilityCondition.WithClassMap C v)}
 
 /-- The restricted central charge map attached to a component local model. -/
 def chargeMap (M : ComponentTopologicalLinearLocalModel C cc) :
@@ -302,7 +307,7 @@ end ComponentTopologicalLinearLocalModel
 /-- The canonical componentwise local linear model used to state Bridgeland's
 Theorem 1.2 in terms of an explicit normed complex vector space `V(Σ)`. -/
 noncomputable def componentTopologicalLinearLocalModel
-    (cc : ConnectedComponents (StabilityCondition C)) :
+    (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     ComponentTopologicalLinearLocalModel C cc := by
   let σ₀ := componentRep C cc
   let V := componentSeminormSubgroup C cc
@@ -413,14 +418,14 @@ noncomputable def componentTopologicalLinearLocalModel
               stabSeminorm C σ₀ (τ''.Z - τ'.Z) + stabSeminorm C σ₀ (τ'.Z - ↑W) := by
             apply iSup_le; intro E; apply iSup_le; intro φ
             apply iSup_le; intro hP; apply iSup_le; intro hE
-            calc ENNReal.ofReal (‖((τ''.Z - τ'.Z) + (τ'.Z - ↑W)) (K₀.of C E)‖ /
-                    ‖σ₀.Z (K₀.of C E)‖)
-                ≤ ENNReal.ofReal (‖(τ''.Z - τ'.Z) (K₀.of C E)‖ / ‖σ₀.Z (K₀.of C E)‖ +
-                    ‖(τ'.Z - ↑W) (K₀.of C E)‖ / ‖σ₀.Z (K₀.of C E)‖) := by
+            calc ENNReal.ofReal (‖((τ''.Z - τ'.Z) + (τ'.Z - ↑W)) (cl C v E)‖ /
+                    ‖σ₀.Z (cl C v E)‖)
+                ≤ ENNReal.ofReal (‖(τ''.Z - τ'.Z) (cl C v E)‖ / ‖σ₀.Z (cl C v E)‖ +
+                    ‖(τ'.Z - ↑W) (cl C v E)‖ / ‖σ₀.Z (cl C v E)‖) := by
                   apply ENNReal.ofReal_le_ofReal; rw [AddMonoidHom.add_apply, ← add_div]
                   exact div_le_div_of_nonneg_right (norm_add_le _ _) (norm_nonneg _)
-              _ = ENNReal.ofReal (‖(τ''.Z - τ'.Z) (K₀.of C E)‖ / ‖σ₀.Z (K₀.of C E)‖) +
-                  ENNReal.ofReal (‖(τ'.Z - ↑W) (K₀.of C E)‖ / ‖σ₀.Z (K₀.of C E)‖) :=
+              _ = ENNReal.ofReal (‖(τ''.Z - τ'.Z) (cl C v E)‖ / ‖σ₀.Z (cl C v E)‖) +
+                  ENNReal.ofReal (‖(τ'.Z - ↑W) (cl C v E)‖ / ‖σ₀.Z (cl C v E)‖) :=
                 ENNReal.ofReal_add (div_nonneg (norm_nonneg _) (norm_nonneg _))
                   (div_nonneg (norm_nonneg _) (norm_nonneg _))
               _ ≤ stabSeminorm C σ₀ (τ''.Z - τ'.Z) + stabSeminorm C σ₀ (τ'.Z - ↑W) :=
@@ -433,7 +438,7 @@ noncomputable def componentTopologicalLinearLocalModel
           have hbound : stabSeminorm C σ₀ (τ''.Z - ↑W) ≤
               K * ENNReal.ofReal (Real.sin (Real.pi * δ)) +
                 stabSeminorm C σ₀ (τ'.Z - ↑W) := by
-            have hdecomp : (τ''.Z - ↑W : K₀ C →+ ℂ) = (τ''.Z - τ'.Z) + (τ'.Z - ↑W) := by
+            have hdecomp : (τ''.Z - ↑W : Λ →+ ℂ) = (τ''.Z - τ'.Z) + (τ'.Z - ↑W) := by
               ext; simp [AddMonoidHom.sub_apply, sub_add_sub_cancel]
             calc stabSeminorm C σ₀ (τ''.Z - ↑W)
                 = stabSeminorm C σ₀ ((τ''.Z - τ'.Z) + (τ'.Z - ↑W)) := by rw [hdecomp]
@@ -470,7 +475,7 @@ noncomputable def componentTopologicalLinearLocalModel
                   rw [ENNReal.ofReal_lt_ofReal_iff one_pos]
                   dsimp [ε]; linarith
           exact Subtype.ext (Subtype.ext
-            (StabilityCondition.eq_of_same_Z_near C τ₁ τ₂ hZval hd))
+            (StabilityCondition.WithClassMap.eq_of_same_Z_near C τ₁ τ₂ hZval hd))
         -- Open map (Theorem 7.1 + Lemma 6.2). With seminorm topology: no far-fiber issues.
         -- For τ ∈ T ⊂ U: Z(T) ⊃ {‖·-Z(τ)‖_τ < sin(πδ)} by Thm 7.1.
         -- {‖·‖_{σ₀} < r₀} ⊂ {‖·‖_τ < sin(πδ)} by reverse comparison.
@@ -636,14 +641,8 @@ noncomputable def componentTopologicalLinearLocalModel
     change @IsLocalHomeomorph comp V inferInstance inferInstance Zmap
     exact (componentSeminormTopology_eq_normTopology C cc) ▸ hLocal
 
-theorem StabilityCondition.centralChargeIsLocalHomeomorphOnConnectedComponents :
-    StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents C := by
-  intro cc
-  let cc' : ConnectedComponents (StabilityCondition C) := cc
-  let M := componentTopologicalLinearLocalModel C cc'
-  refine ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace, ?_, ?_⟩
-  · intro σ hσ
-    exact M.mem_charge σ (by simpa [cc'] using hσ)
-  · simpa [cc', StabilityCondition.WithClassMap.Component] using M.isLocalHomeomorph_chargeMap
+-- Deleted: centralChargeIsLocalHomeomorphOnConnectedComponents
+-- was a v=id wrapper around the generic componentTopologicalLinearLocalModel.
+-- The generic version (componentTopologicalLinearLocalModel) is the canonical statement.
 
 end CategoryTheory.Triangulated

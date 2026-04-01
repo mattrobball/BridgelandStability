@@ -25,13 +25,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### P(s) ⊂ Q(>t) and P(s) ⊂ Q(<t) -/
 
@@ -40,7 +41,7 @@ phase `s ≥ t + ε` lies in `Q(>t)`: get Q-HN via `sigmaSemistable_hasDeformedH
 split at `t`, then show the Q(≤t) part vanishes by the phiMinus/phiPlus squeeze
 (Lemma 3.4 gives σ.φ⁻ ≥ s, phase confinement gives σ.φ⁺ ≤ t+ε, and s ≥ t+ε). -/
 theorem P_in_deformedGtPred
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
@@ -170,7 +171,7 @@ theorem P_in_deformedGtPred
 
 /-- **P(s) ⊂ Q(<t) for s ≤ t − ε** (Bridgeland p.24 ¶3, dual). -/
 theorem P_in_deformedLtPred
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
@@ -396,7 +397,7 @@ truncation triangle for any t. Obtains a Q-HN filtration from
 `sigmaSemistable_hasDeformedHN` and splits it at t via
 `exists_deformedGt_deformedLe_triangle_of_hn`. -/
 theorem sigmaSemistable_deformedGtLe_triangle
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
@@ -423,7 +424,7 @@ a truncation X_M → MID → Y_M. Two octahedrals combine:
   (1) X_M + LOW → V ∈ Q(≤t) (extension of Y_M and LOW), and
   (2) HIGH + X_M → Z ∈ Q(>t) (extension of HIGH and X_M). -/
 theorem deformedGtLe_triangle
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))

@@ -27,13 +27,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### P(φ) closure under K₀ decomposition in the heart
 
@@ -49,11 +50,11 @@ factor of phase `ψ ∈ (a, b)` with `ψ ≤ φ` and `ψ > φ - 1` has non-posit
 `Im(Z(F) · exp(-iπφ))`, and E ∈ P((a, b))` with phases ≤ φ and > φ-1, then
 `Im(Z(E) · exp(-iπφ)) ≤ 0`. -/
 theorem im_Z_nonpos_of_heart_phases
-    (σ : StabilityCondition C) {φ : ℝ}
+    (σ : StabilityCondition.WithClassMap C v) {φ : ℝ}
     {E : C} (hE : ¬IsZero E)
     (hle : σ.slicing.phiPlus C E hE ≤ φ)
     (hgt : φ - 1 < σ.slicing.phiMinus C E hE) :
-    (σ.Z (K₀.of C E) *
+    (σ.Z (cl C v E) *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im ≤ 0 := by
   -- Get HN filtration with nonzero first and last factors
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
@@ -70,20 +71,20 @@ theorem im_Z_nonpos_of_heart_phases
           _ ≤ φ := hle⟩
   -- K₀ decomposition: Z(E) = Σ Z(factors)
   set P := F.toPostnikovTower
-  rw [show σ.Z (K₀.of C E) = ∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i)) from by
-    rw [K₀.of_postnikovTower_eq_sum C P, map_sum]]
+  rw [show σ.Z (cl C v E) = ∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) from by
+    rw [cl_postnikovTower_eq_sum C v P, map_sum]]
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i)) * rot).im =
-      ∑ i : Fin F.n, (σ.Z (K₀.of C (P.factor i)) * rot).im from
+  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) * rot).im =
+      ∑ i : Fin F.n, (σ.Z (cl C v (P.factor i)) * rot).im from
     map_sum Complex.imAddGroupHom _ _]
   -- Each term ≤ 0
   apply Finset.sum_nonpos
   intro i _
   by_cases hi : IsZero (P.factor i)
-  · simp [K₀.of_isZero C hi]
+  · simp [cl_isZero (C := C) (v := v) hi]
   · -- Nonzero factor: Z(factor) = m · exp(iπ · F.φ i) with m > 0
     obtain ⟨m, hm, hval⟩ :=
-      stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
+      σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
     rw [hval, im_ofReal_mul_exp_mul_exp_neg]
     exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hm)
       (Real.sin_nonpos_of_nonpos_of_neg_pi_le
@@ -98,11 +99,11 @@ The proof uses K₀ decomposition: each HN factor of `X` contributes
 contribution is `0`. For nonzero factors, `sin(π(ψ-φ)) = 0` with `ψ ∈ (φ-1, φ]`
 forces `ψ = φ`. By strict anti of HN phases, `X` has exactly one factor. -/
 theorem P_phi_of_im_zero_heart
-    (σ : StabilityCondition C) {φ : ℝ}
+    (σ : StabilityCondition.WithClassMap C v) {φ : ℝ}
     {X : C} (hXne : ¬IsZero X)
     (hX_le : σ.slicing.phiPlus C X hXne ≤ φ)
     (hX_gt : φ - 1 < σ.slicing.phiMinus C X hXne)
-    (him_zero : (σ.Z (K₀.of C X) *
+    (him_zero : (σ.Z (cl C v X) *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im = 0) :
     σ.slicing.P φ X := by
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
@@ -119,18 +120,18 @@ theorem P_phi_of_im_zero_heart
             (σ.slicing.phiPlus_eq C X hXne F hn hfirst).symm
           _ ≤ φ := hX_le⟩
   -- K₀ decomposition: Z(X) = Σ Z(factor_i)
-  have hZX : σ.Z (K₀.of C X) =
+  have hZX : σ.Z (cl C v X) =
       ∑ i : Fin F.n,
-        σ.Z (K₀.of C (F.toPostnikovTower.factor i)) := by
-    rw [K₀.of_postnikovTower_eq_sum C F.toPostnikovTower, map_sum]
+        σ.Z (cl C v (F.toPostnikovTower.factor i)) := by
+    rw [cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
   -- Each Im term ≤ 0
   have hterms : ∀ i ∈ Finset.univ,
-      (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im ≤ 0 := by
+      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im ≤ 0 := by
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
-    · simp [K₀.of_isZero C hi]
+    · simp [cl_isZero (C := C) (v := v) hi]
     · obtain ⟨mi, hmi, hvali⟩ :=
-        stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+        σ.compat (F.φ i) _ (F.semistable i) hi
       rw [hvali, im_ofReal_mul_exp_mul_exp_neg]
       exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hmi)
         (Real.sin_nonpos_of_nonpos_of_neg_pi_le
@@ -138,16 +139,16 @@ theorem P_phi_of_im_zero_heart
           (by nlinarith [Real.pi_pos, (hphases i).1]))
   -- Sum = 0
   have hsum : ∑ i ∈ Finset.univ,
-      (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im = 0 := by
-    have : (σ.Z (K₀.of C X) * rot).im =
+      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 := by
+    have : (σ.Z (cl C v X) * rot).im =
         ∑ i : Fin F.n,
-          (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im := by
+          (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im := by
       rw [hZX, Finset.sum_mul]
       exact map_sum Complex.imAddGroupHom _ _
     linarith
   -- Each term = 0
   have hterm_zero : ∀ i ∈ Finset.univ,
-      (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im = 0 :=
+      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 :=
     (Finset.sum_eq_zero_iff_of_nonpos hterms).mp hsum
   -- Nonzero factors have phase = φ
   have factor_eq : ∀ i : Fin F.n,
@@ -155,7 +156,7 @@ theorem P_phi_of_im_zero_heart
     intro i hi
     have him := hterm_zero i (Finset.mem_univ _)
     obtain ⟨mi, hmi, hvali⟩ :=
-      stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+      σ.compat (F.φ i) _ (F.semistable i) hi
     rw [hvali, im_ofReal_mul_exp_mul_exp_neg] at him
     have hsin_zero : Real.sin (Real.pi * (F.φ i - φ)) = 0 := by
       rcases mul_eq_zero.mp him with h | h
@@ -198,7 +199,7 @@ all σ-phases in `(φ-1, φ]` (both in the heart), then both `K ∈ P(φ)` and
 
 This is the key step in **Bridgeland's Lemma 5.2** (each P(φ) is abelian). -/
 theorem P_phi_of_heart_triangle
-    (σ : StabilityCondition C) {φ : ℝ}
+    (σ : StabilityCondition.WithClassMap C v) {φ : ℝ}
     {K E Q : C} {f₁ : K ⟶ E} {f₂ : E ⟶ Q} {f₃ : Q ⟶ K⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C)
     (hPφ : σ.slicing.P φ E) (hE : ¬IsZero E)
@@ -210,14 +211,14 @@ theorem P_phi_of_heart_triangle
     (hQ_gt : φ - 1 < σ.slicing.phiMinus C Q hQne) :
     σ.slicing.P φ K ∧ σ.slicing.P φ Q := by
   -- K₀ additivity: Z(E) = Z(K) + Z(Q)
-  have hZsum : σ.Z (K₀.of C E) = σ.Z (K₀.of C K) + σ.Z (K₀.of C Q) := by
-    have h := K₀.of_triangle C (Triangle.mk f₁ f₂ f₃) hT
+  have hZsum : σ.Z (cl C v E) = σ.Z (cl C v K) + σ.Z (cl C v Q) := by
+    have h := cl_triangle C v (Triangle.mk f₁ f₂ f₃) hT
     simp only [Pretriangulated.Triangle.mk] at h
     rw [h, map_add]
   -- Im(Z(E) · exp(-iπφ)) = 0
-  obtain ⟨mE, hmE, hvE⟩ := stabilityCondition_compat_apply (C := C) σ φ E hPφ hE
+  obtain ⟨mE, hmE, hvE⟩ := σ.compat φ E hPφ hE
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  have him_E : (σ.Z (K₀.of C E) * rot).im = 0 := by
+  have him_E : (σ.Z (cl C v E) * rot).im = 0 := by
     rw [hvE, mul_assoc, ← Complex.exp_add]
     have : ↑(Real.pi * φ) * Complex.I + -(↑(Real.pi * φ) * Complex.I) = 0 := by ring
     rw [this, Complex.exp_zero, mul_one, Complex.ofReal_im]
@@ -225,13 +226,13 @@ theorem P_phi_of_heart_triangle
   have him_K := im_Z_nonpos_of_heart_phases C σ hKne hK_le hK_gt
   have him_Q := im_Z_nonpos_of_heart_phases C σ hQne hQ_le hQ_gt
   -- Sum = 0 forces both = 0
-  have : (σ.Z (K₀.of C K) * rot).im + (σ.Z (K₀.of C Q) * rot).im = 0 := by
-    have : (σ.Z (K₀.of C E) * rot).im =
-        (σ.Z (K₀.of C K) * rot).im + (σ.Z (K₀.of C Q) * rot).im := by
+  have : (σ.Z (cl C v K) * rot).im + (σ.Z (cl C v Q) * rot).im = 0 := by
+    have : (σ.Z (cl C v E) * rot).im =
+        (σ.Z (cl C v K) * rot).im + (σ.Z (cl C v Q) * rot).im := by
       rw [hZsum, add_mul, Complex.add_im]
     linarith
-  have him_K_zero : (σ.Z (K₀.of C K) * rot).im = 0 := by linarith
-  have him_Q_zero : (σ.Z (K₀.of C Q) * rot).im = 0 := by linarith
+  have him_K_zero : (σ.Z (cl C v K) * rot).im = 0 := by linarith
+  have him_Q_zero : (σ.Z (cl C v Q) * rot).im = 0 := by linarith
   exact ⟨P_phi_of_im_zero_heart C σ hKne hK_le hK_gt him_K_zero,
     P_phi_of_im_zero_heart C σ hQne hQ_le hQ_gt him_Q_zero⟩
 
@@ -239,11 +240,11 @@ theorem P_phi_of_heart_triangle
 `[φ, φ + 1)` (i.e., `φ ≤ phiMinus` and `phiPlus < φ + 1`), then
 `Im(Z(X) · exp(-iπφ)) ≥ 0`. Symmetric to `im_Z_nonpos_of_heart_phases`. -/
 theorem im_Z_nonneg_of_phases_above
-    (σ : StabilityCondition C) {φ : ℝ}
+    (σ : StabilityCondition.WithClassMap C v) {φ : ℝ}
     {E : C} (hE : ¬IsZero E)
     (hge : φ ≤ σ.slicing.phiMinus C E hE)
     (hlt : σ.slicing.phiPlus C E hE < φ + 1) :
-    0 ≤ (σ.Z (K₀.of C E) *
+    0 ≤ (σ.Z (cl C v E) *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
   have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := fun i =>
@@ -257,18 +258,18 @@ theorem im_Z_nonneg_of_phases_above
             (σ.slicing.phiPlus_eq C E hE F hn hfirst).symm
           _ < φ + 1 := hlt⟩
   set P := F.toPostnikovTower
-  rw [show σ.Z (K₀.of C E) = ∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i)) from by
-    rw [K₀.of_postnikovTower_eq_sum C P, map_sum]]
+  rw [show σ.Z (cl C v E) = ∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) from by
+    rw [cl_postnikovTower_eq_sum C v P, map_sum]]
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.Z (K₀.of C (P.factor i)) * rot).im =
-      ∑ i : Fin F.n, (σ.Z (K₀.of C (P.factor i)) * rot).im from
+  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) * rot).im =
+      ∑ i : Fin F.n, (σ.Z (cl C v (P.factor i)) * rot).im from
     map_sum Complex.imAddGroupHom _ _]
   apply Finset.sum_nonneg
   intro i _
   by_cases hi : IsZero (P.factor i)
-  · simp [K₀.of_isZero C hi]
+  · simp [cl_isZero (C := C) (v := v) hi]
   · obtain ⟨m, hm, hval⟩ :=
-      stabilityCondition_compat_apply (C := C) σ (F.φ i) (P.factor i) (F.semistable i) hi
+      σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
     rw [hval, im_ofReal_mul_exp_mul_exp_neg]
     exact mul_nonneg (le_of_lt hm)
       (Real.sin_nonneg_of_nonneg_of_le_pi
@@ -279,11 +280,11 @@ theorem im_Z_nonneg_of_phases_above
 all σ-phases in `[φ, φ + 1)` and `Im(Z(X) · exp(-iπφ)) = 0`, then `X ∈ P(φ)`.
 Symmetric to `P_phi_of_im_zero_heart`. -/
 theorem P_phi_of_im_zero_above
-    (σ : StabilityCondition C) {φ : ℝ}
+    (σ : StabilityCondition.WithClassMap C v) {φ : ℝ}
     {X : C} (hXne : ¬IsZero X)
     (hX_ge : φ ≤ σ.slicing.phiMinus C X hXne)
     (hX_lt : σ.slicing.phiPlus C X hXne < φ + 1)
-    (him_zero : (σ.Z (K₀.of C X) *
+    (him_zero : (σ.Z (cl C v X) *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im = 0) :
     σ.slicing.P φ X := by
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
@@ -298,38 +299,38 @@ theorem P_phi_of_im_zero_above
           _ = σ.slicing.phiPlus C X hXne :=
             (σ.slicing.phiPlus_eq C X hXne F hn hfirst).symm
           _ < φ + 1 := hX_lt⟩
-  have hZX : σ.Z (K₀.of C X) =
-      ∑ i : Fin F.n, σ.Z (K₀.of C (F.toPostnikovTower.factor i)) := by
-    rw [K₀.of_postnikovTower_eq_sum C F.toPostnikovTower, map_sum]
+  have hZX : σ.Z (cl C v X) =
+      ∑ i : Fin F.n, σ.Z (cl C v (F.toPostnikovTower.factor i)) := by
+    rw [cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
   have hterms : ∀ i ∈ Finset.univ,
-      0 ≤ (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im := by
+      0 ≤ (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im := by
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
-    · simp [K₀.of_isZero C hi]
+    · simp [cl_isZero (C := C) (v := v) hi]
     · obtain ⟨mi, hmi, hvali⟩ :=
-        stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+        σ.compat (F.φ i) _ (F.semistable i) hi
       rw [hvali, im_ofReal_mul_exp_mul_exp_neg]
       exact mul_nonneg (le_of_lt hmi)
         (Real.sin_nonneg_of_nonneg_of_le_pi
           (by nlinarith [Real.pi_pos, (hphases i).1])
           (by nlinarith [Real.pi_pos, (hphases i).2]))
   have hsum : ∑ i ∈ Finset.univ,
-      (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im = 0 := by
-    have : (σ.Z (K₀.of C X) * rot).im =
+      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 := by
+    have : (σ.Z (cl C v X) * rot).im =
         ∑ i : Fin F.n,
-          (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im := by
+          (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im := by
       rw [hZX, Finset.sum_mul]
       exact map_sum Complex.imAddGroupHom _ _
     linarith
   have hterm_zero : ∀ i ∈ Finset.univ,
-      (σ.Z (K₀.of C (F.toPostnikovTower.factor i)) * rot).im = 0 :=
+      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 :=
     (Finset.sum_eq_zero_iff_of_nonneg hterms).mp hsum
   have factor_eq : ∀ i : Fin F.n,
       ¬IsZero (F.toPostnikovTower.factor i) → F.φ i = φ := by
     intro i hi
     have him := hterm_zero i (Finset.mem_univ _)
     obtain ⟨mi, hmi, hvali⟩ :=
-      stabilityCondition_compat_apply (C := C) σ (F.φ i) _ (F.semistable i) hi
+      σ.compat (F.φ i) _ (F.semistable i) hi
     rw [hvali, im_ofReal_mul_exp_mul_exp_neg] at him
     have hsin_zero : Real.sin (Real.pi * (F.φ i - φ)) = 0 := by
       rcases mul_eq_zero.mp him with h | h
@@ -373,16 +374,16 @@ The proof uses:
    with a Z-ray argument promoting heart membership to P(φ) membership -/
 
 /-- P(φ) is closed under biproducts for a stability condition. -/
-lemma StabilityCondition.P_phi_biprod
-    (σ : StabilityCondition C) {φ : ℝ} {X Y : C}
+lemma StabilityCondition.WithClassMap.P_phi_biprod
+    (σ : StabilityCondition.WithClassMap C v) {φ : ℝ} {X Y : C}
     (hX : σ.slicing.P φ X) (hY : σ.slicing.P φ Y) :
     σ.slicing.P φ (X ⊞ Y) :=
   σ.slicing.semistable_of_triangle C φ hX hY
     (binaryBiproductTriangle_distinguished X Y)
 
 /-- P(φ) is closed under binary products for a stability condition. -/
-instance StabilityCondition.P_phi_closedUnderBinaryProducts
-    (σ : StabilityCondition C) (φ : ℝ) :
+instance StabilityCondition.WithClassMap.P_phi_closedUnderBinaryProducts
+    (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     (σ.slicing.P φ).IsClosedUnderBinaryProducts :=
   ObjectProperty.IsClosedUnderLimitsOfShape.mk' (by
     rintro _ ⟨F, hF⟩
@@ -394,22 +395,22 @@ instance StabilityCondition.P_phi_closedUnderBinaryProducts
       (σ.P_phi_biprod C (hF ⟨WalkingPair.left⟩) (hF ⟨WalkingPair.right⟩)))
 
 /-- P(φ) is closed under finite products for a stability condition. -/
-instance StabilityCondition.P_phi_closedUnderFiniteProducts
-    (σ : StabilityCondition C) (φ : ℝ) :
+instance StabilityCondition.WithClassMap.P_phi_closedUnderFiniteProducts
+    (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     (σ.slicing.P φ).IsClosedUnderFiniteProducts :=
   ObjectProperty.IsClosedUnderFiniteProducts.mk'
 
 /-- P(φ) has finite products for a stability condition. -/
 noncomputable instance StabilityCondition.P_phi_hasFiniteProducts
-    (σ : StabilityCondition C) (φ : ℝ) :
+    (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     HasFiniteProducts (σ.slicing.P φ).FullSubcategory :=
   hasFiniteProducts_of_has_binary_and_terminal
 
 /-- **No negative Hom spaces in P(φ).** For `X, Y ∈ P(φ)`, every morphism
 `ι X ⟶ (ι Y)⟦n⟧` is zero when `n < 0`. Y⟦n⟧ ∈ P(φ+n)` by the shift axiom,
 and since `n < 0` we have `φ > φ + n`, so hom-vanishing applies. -/
-theorem StabilityCondition.P_phi_hom_vanishing
-    (σ : StabilityCondition C) (φ : ℝ) :
+theorem StabilityCondition.WithClassMap.P_phi_hom_vanishing
+    (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     ∀ ⦃X Y : (σ.slicing.P φ).FullSubcategory⦄ ⦃n : ℤ⦄
       (f : (σ.slicing.P φ).ι.obj X ⟶ ((σ.slicing.P φ).ι.obj Y)⟦n⟧),
       n < 0 → f = 0 := fun X Y n f hn =>
@@ -430,7 +431,7 @@ From the original triangle, `Im(Z(X₃)·rot) = 0`. From the truncation triangle
 gives `Im(Z(L)·rot) ≥ 0`. Both must vanish, and `P_phi_of_im_zero_heart`
 promotes to `Q ∈ P(φ)` and `L ∈ P(φ+1)`. -/
 theorem P_phi_of_truncation_of_P_phi_cone
-    (σ : StabilityCondition C) (φ : ℝ)
+    (σ : StabilityCondition.WithClassMap C v) (φ : ℝ)
     {A B X₃ : C} (hA : σ.slicing.P φ A) (hB : σ.slicing.P φ B)
     {f₁ : A ⟶ B} {f₂ : B ⟶ X₃} {f₃ : X₃ ⟶ A⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C) :
@@ -581,15 +582,15 @@ theorem P_phi_of_truncation_of_P_phi_cone
     AbelianSubcategory.exists_distinguished_triangle_of_epi
       (TStructure.heart_hι t) (TStructure.heart_admissible t) g_H
   -- K₀ conversions via eqToIso
-  have hK₀_B : K₀.of C (ι.obj B_H) = K₀.of C B :=
-    K₀.of_iso C (eqToIso (hι_simp B_H))
-  have hK₀_I : K₀.of C (ι.obj I_H) = K₀.of C I_H.obj :=
-    K₀.of_iso C (eqToIso (hι_simp I_H))
-  have hK₀_Q : K₀.of C (ι.obj Q_H) = K₀.of C ((t.truncGE 0).obj X₃) :=
-    K₀.of_iso C (eqToIso (hι_simp Q_H))
-  have hK₀_heart : K₀.of C B =
-      K₀.of C I_H.obj + K₀.of C ((t.truncGE 0).obj X₃) := by
-    have h := K₀.of_triangle C _ hT_heart
+  have hK₀_B : cl C v (ι.obj B_H) = cl C v B :=
+    cl_iso C v (eqToIso (hι_simp B_H))
+  have hK₀_I : cl C v (ι.obj I_H) = cl C v I_H.obj :=
+    cl_iso C v (eqToIso (hι_simp I_H))
+  have hK₀_Q : cl C v (ι.obj Q_H) = cl C v ((t.truncGE 0).obj X₃) :=
+    cl_iso C v (eqToIso (hι_simp Q_H))
+  have hK₀_heart : cl C v B =
+      cl C v I_H.obj + cl C v ((t.truncGE 0).obj X₃) := by
+    have h := cl_triangle C v _ hT_heart
     dsimp only [Triangle.mk] at h; rwa [hK₀_B, hK₀_I, hK₀_Q] at h
   -- I_H phase bounds
   haveI hI_le : t.IsLE I_H.obj 0 :=
@@ -612,29 +613,29 @@ theorem P_phi_of_truncation_of_P_phi_cone
   -- === K₀ + Im(Z·rot) ===
   -- P(φ) objects lie on the real axis after rotation by exp(-iπφ)
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  have him_ray : ∀ {E : C}, s.P φ E → (σ.Z (K₀.of C E) * rot).im = 0 := by
+  have him_ray : ∀ {E : C}, s.P φ E → (σ.Z (cl C v E) * rot).im = 0 := by
     intro E hPφ
     by_cases hne : IsZero E
-    · simp [K₀.of_isZero C hne]
-    · obtain ⟨m, _, hv⟩ := stabilityCondition_compat_apply (C := C) σ φ E hPφ hne
+    · simp [cl_isZero (C := C) (v := v) hne]
+    · obtain ⟨m, _, hv⟩ := σ.compat φ E hPφ hne
       rw [hv, mul_assoc, ← Complex.exp_add,
         show ↑(Real.pi * φ) * Complex.I + -(↑(Real.pi * φ) * Complex.I) = 0 from
           by ring,
         Complex.exp_zero, mul_one, Complex.ofReal_im]
   -- K₀ on truncation triangle: Z(X₃) = Z(L) + Z(Q)
-  have hZtrunc : σ.Z (K₀.of C X₃) =
-      σ.Z (K₀.of C ((t.truncLT 0).obj X₃)) +
-      σ.Z (K₀.of C ((t.truncGE 0).obj X₃)) := by
-    have h := K₀.of_triangle C _ htrunc
+  have hZtrunc : σ.Z (cl C v X₃) =
+      σ.Z (cl C v ((t.truncLT 0).obj X₃)) +
+      σ.Z (cl C v ((t.truncGE 0).obj X₃)) := by
+    have h := cl_triangle C v _ htrunc
     dsimp [TStructure.triangleLTGE] at h; rw [h, map_add]
   -- K₀ on original triangle: Im(Z(X₃)·rot) = 0 since A, B ∈ P(φ)
-  have hZX₃_im : (σ.Z (K₀.of C X₃) * rot).im = 0 := by
-    have hZorig : σ.Z (K₀.of C B) =
-        σ.Z (K₀.of C A) + σ.Z (K₀.of C X₃) := by
-      have h := K₀.of_triangle C _ hT
+  have hZX₃_im : (σ.Z (cl C v X₃) * rot).im = 0 := by
+    have hZorig : σ.Z (cl C v B) =
+        σ.Z (cl C v A) + σ.Z (cl C v X₃) := by
+      have h := cl_triangle C v _ hT
       dsimp [Triangle.mk] at h; rw [h, map_add]
-    have : (σ.Z (K₀.of C A) * rot).im + (σ.Z (K₀.of C X₃) * rot).im =
-        (σ.Z (K₀.of C B) * rot).im := by
+    have : (σ.Z (cl C v A) * rot).im + (σ.Z (cl C v X₃) * rot).im =
+        (σ.Z (cl C v B) * rot).im := by
       rw [← Complex.add_im, ← add_mul, hZorig]
     linarith [him_ray hA, him_ray hB]
   -- Q ∈ P(φ) via K₀ on heart triangle
@@ -657,11 +658,11 @@ theorem P_phi_of_truncation_of_P_phi_cone
         have him_Q := im_Z_nonpos_of_heart_phases C σ hQne
           (s.phiPlus_le_of_leProp C hQne hQ_sle)
           (s.phiMinus_gt_of_gtProp C hQne hQ_sgt)
-        have him_sum_heart : (σ.Z (K₀.of C I_H.obj) * rot).im +
-            (σ.Z (K₀.of C ((t.truncGE 0).obj X₃)) * rot).im = 0 := by
-          have h : σ.Z (K₀.of C I_H.obj) * rot +
-              σ.Z (K₀.of C ((t.truncGE 0).obj X₃)) * rot =
-              σ.Z (K₀.of C B) * rot := by
+        have him_sum_heart : (σ.Z (cl C v I_H.obj) * rot).im +
+            (σ.Z (cl C v ((t.truncGE 0).obj X₃)) * rot).im = 0 := by
+          have h : σ.Z (cl C v I_H.obj) * rot +
+              σ.Z (cl C v ((t.truncGE 0).obj X₃)) * rot =
+              σ.Z (cl C v B) * rot := by
             rw [← add_mul, ← map_add, ← hK₀_heart]
           have him := congr_arg Complex.im h
           simp only [Complex.add_im] at him
@@ -670,10 +671,10 @@ theorem P_phi_of_truncation_of_P_phi_cone
           (s.phiPlus_le_of_leProp C hQne hQ_sle)
           (s.phiMinus_gt_of_gtProp C hQne hQ_sgt) (by linarith)
   -- Im(Z(L)·rot) = 0 from truncation K₀ + hZX₃_im + him_ray hQ_Pφ
-  have hL_im0 : (σ.Z (K₀.of C ((t.truncLT 0).obj X₃)) * rot).im = 0 := by
-    have : (σ.Z (K₀.of C ((t.truncLT 0).obj X₃)) * rot).im +
-        (σ.Z (K₀.of C ((t.truncGE 0).obj X₃)) * rot).im =
-        (σ.Z (K₀.of C X₃) * rot).im := by
+  have hL_im0 : (σ.Z (cl C v ((t.truncLT 0).obj X₃)) * rot).im = 0 := by
+    have : (σ.Z (cl C v ((t.truncLT 0).obj X₃)) * rot).im +
+        (σ.Z (cl C v ((t.truncGE 0).obj X₃)) * rot).im =
+        (σ.Z (cl C v X₃) * rot).im := by
       rw [← Complex.add_im, ← add_mul, ← hZtrunc]
     linarith [him_ray hQ_Pφ]
   -- L ∈ P(φ+1) via P_phi_of_im_zero_heart at phase φ+1
@@ -704,8 +705,8 @@ there exist `K, Q ∈ P(φ)` and a distinguished triangle `(ι K)⟦1⟧ → X�
 The proof uses the truncation from the t-structure `(s.phaseShift(φ-1)).toTStructure`
 to decompose X₃, then promotes the truncation pieces from heart `P((φ-1, φ])`
 to `P(φ)` via `P_phi_of_truncation_of_P_phi_cone` (the epi approach). -/
-theorem StabilityCondition.P_phi_admissible
-    (σ : StabilityCondition C) (φ : ℝ) :
+theorem StabilityCondition.WithClassMap.P_phi_admissible
+    (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     let _t : TStructure C :=
       @Slicing.toTStructure C _ _ _ _ _ _ ‹IsTriangulated C› (σ.slicing.phaseShift C (φ - 1))
     AbelianSubcategory.admissibleMorphism (σ.slicing.P φ).ι = ⊤ := by
@@ -801,8 +802,8 @@ variable [IsTriangulated C] in
 /-- **P(φ) is abelian** (**Bridgeland's Lemma 5.2**). Each slicing slice `P(φ)` of a
 stability condition is an abelian category. -/
 @[reducible]
-noncomputable def StabilityCondition.P_phi_abelian
-    (σ : StabilityCondition C) (φ : ℝ) :
+noncomputable def StabilityCondition.WithClassMap.P_phi_abelian
+    (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     Abelian (σ.slicing.P φ).FullSubcategory :=
   AbelianSubcategory.abelian (σ.slicing.P φ).ι
     (σ.P_phi_hom_vanishing C φ) (σ.P_phi_admissible C φ)

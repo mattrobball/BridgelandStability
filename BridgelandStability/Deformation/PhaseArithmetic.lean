@@ -28,50 +28,51 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Phase perturbation bound -/
 
 /-- **Coarse phase perturbation bound**. If `E` is σ-semistable of phase `φ ∈ (α-1, α+1]`,
 then `wPhaseOf(Z(E), α) = φ`. This is the inverse direction of `wPhaseOf_of_exp`. -/
-theorem wPhaseOf_Z_eq (σ : StabilityCondition C) {E : C} {φ : ℝ}
+theorem wPhaseOf_Z_eq (σ : StabilityCondition.WithClassMap C v) {E : C} {φ : ℝ}
     (hP : σ.slicing.P φ E) (hE : ¬IsZero E) {α : ℝ}
     (hφ : φ ∈ Set.Ioc (α - 1) (α + 1)) :
-    wPhaseOf (σ.Z (K₀.of C E)) α = φ := by
-  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E hP hE
+    wPhaseOf (σ.Z (cl C v E)) α = φ := by
+  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
   rw [hmZ]; exact wPhaseOf_of_exp hm hφ
 
 /-- **Phase perturbation for σ-semistable objects**. If `E` is σ-semistable of phase `φ`
 with `φ ∈ (α - 1/2, α + 1/2)`, and `‖(W-Z)(E)‖ / ‖Z(E)‖ < sin(πε)` with `0 < ε ≤ 1/2`,
 then `|wPhaseOf(W(E), α) - φ| < ε`. This is the key quantitative bound for the
 deformation theorem. -/
-theorem wPhaseOf_perturbation (σ : StabilityCondition C)
+theorem wPhaseOf_perturbation (σ : StabilityCondition.WithClassMap C v)
     {E : C} {φ : ℝ} (hP : σ.slicing.P φ E) (hE : ¬IsZero E)
-    (W : K₀ C →+ ℂ) {α ε : ℝ}
+    (W : Λ →+ ℂ) {α ε : ℝ}
     (hφα : φ ∈ Set.Ioo (α - 1 / 2) (α + 1 / 2))
     (hε : 0 < ε) (hε2 : ε ≤ 1 / 2)
-    (hbd : ‖(W - σ.Z) (K₀.of C E)‖ <
-      Real.sin (Real.pi * ε) * ‖σ.Z (K₀.of C E)‖) :
-    |wPhaseOf (W (K₀.of C E)) α - φ| < ε := by
+    (hbd : ‖(W - σ.Z) (cl C v E)‖ <
+      Real.sin (Real.pi * ε) * ‖σ.Z (cl C v E)‖) :
+    |wPhaseOf (W (cl C v E)) α - φ| < ε := by
   -- Z(E) = m · exp(iπφ) with m > 0
-  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ E hP hE
+  obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
   -- Set u = (W-Z)(E) / Z(E)
-  set δ := (W - σ.Z) (K₀.of C E)
-  have hWZ : δ = W (K₀.of C E) - σ.Z (K₀.of C E) := AddMonoidHom.sub_apply W σ.Z _
-  have hZ_norm : ‖σ.Z (K₀.of C E)‖ = m := by
+  set δ := (W - σ.Z) (cl C v E)
+  have hWZ : δ = W (cl C v E) - σ.Z (cl C v E) := AddMonoidHom.sub_apply W σ.Z _
+  have hZ_norm : ‖σ.Z (cl C v E)‖ = m := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs,
       abs_of_pos hm, Complex.norm_exp_ofReal_mul_I, mul_one]
   -- W(E) = Z(E) + δ = m · exp(iπφ) · (1 + δ/(m · exp(iπφ)))
   set u := δ / (↑m * Complex.exp (↑(Real.pi * φ) * Complex.I))
   have hZ_ne : (↑m : ℂ) * Complex.exp (↑(Real.pi * φ) * Complex.I) ≠ 0 :=
     mul_ne_zero (by exact_mod_cast hm.ne') (Complex.exp_ne_zero _)
-  have hW_eq : W (K₀.of C E) =
+  have hW_eq : W (cl C v E) =
       ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) * ((1 : ℂ) + u) := by
     rw [show u = δ / (↑m * Complex.exp (↑(Real.pi * φ) * Complex.I)) from rfl]
     rw [mul_add, mul_one, mul_div_cancel₀ _ hZ_ne]
@@ -89,15 +90,15 @@ theorem wPhaseOf_perturbation (σ : StabilityCondition C)
 then for every nonzero `σ`-semistable object `F` with phase `φ ∈ (a, b)`, the W-phase
 lies within `ε₀` of `φ`. This bridges the global stabSeminorm bound to the pointwise
 hperturb condition needed by phase confinement. -/
-theorem hperturb_of_stabSeminorm (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
+theorem hperturb_of_stabSeminorm (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hthin : b - a < 1)
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
     ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F → a < φ → φ < b →
-      φ - ε₀ < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
-      wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < φ + ε₀ := by
+      φ - ε₀ < wPhaseOf (W (cl C v F)) ((a + b) / 2) ∧
+      wPhaseOf (W (cl C v F)) ((a + b) / 2) < φ + ε₀ := by
   intro F φ hP hFne haφ hφb
   have hfin : stabSeminorm C σ (W - σ.Z) ≠ ⊤ := ne_top_of_lt hW
   set M := (stabSeminorm C σ (W - σ.Z)).toReal
@@ -117,13 +118,13 @@ theorem hperturb_of_stabSeminorm (σ : StabilityCondition C)
   -- ‖(W-Z)(F)‖ ≤ M * ‖Z(F)‖
   have hbd := stabSeminorm_bound_real C σ (W - σ.Z) hfin hP hFne
   -- Z(F) ≠ 0 (from compatibility)
-  obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ F hP hFne
-  have hZ_pos : (0 : ℝ) < ‖σ.Z (K₀.of C F)‖ := by
+  obtain ⟨m, hm, hmZ⟩ := σ.compat φ F hP hFne
+  have hZ_pos : (0 : ℝ) < ‖σ.Z (cl C v F)‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
       Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   -- ‖(W-Z)(F)‖ < sin(πε₀) * ‖Z(F)‖
-  have hbd_strict : ‖(W - σ.Z) (K₀.of C F)‖ <
-      Real.sin (Real.pi * ε₀) * ‖σ.Z (K₀.of C F)‖ :=
+  have hbd_strict : ‖(W - σ.Z) (cl C v F)‖ <
+      Real.sin (Real.pi * ε₀) * ‖σ.Z (cl C v F)‖ :=
     lt_of_le_of_lt hbd (by nlinarith)
   -- φ ∈ ((a+b)/2 - 1/2, (a+b)/2 + 1/2) since b - a < 1
   have hφα : φ ∈ Set.Ioo ((a + b) / 2 - 1 / 2) ((a + b) / 2 + 1 / 2) :=
@@ -497,15 +498,15 @@ one factor giving strict positivity, then `Im(W(E) · exp(-iπψ)) > 0`.
 The proof decomposes `W([E]) = ∑ W([Fⱼ])` via K₀ additivity and extracts Im through
 the sum using the additivity of the imaginary part. -/
 theorem im_W_pos_of_intervalProp
-    (σ : StabilityCondition C)
+    (σ : StabilityCondition.WithClassMap C v)
     {E : C} (hE : ¬IsZero E)
-    (W : K₀ C →+ ℂ) {ψ : ℝ}
+    (W : Λ →+ ℂ) {ψ : ℝ}
     {a b : ℝ} (hI : σ.slicing.intervalProp C a b E)
     (him_pos : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        0 < (W (K₀.of C F) *
+        0 < (W (cl C v F) *
           Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im) :
-    0 < (W (K₀.of C E) *
+    0 < (W (cl C v E) *
       Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im := by
   -- Get HN filtration with nonzero first and last factors
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
@@ -524,25 +525,25 @@ theorem im_W_pos_of_intervalProp
             _ < b := σ.slicing.phiPlus_lt_of_intervalProp C hE hI⟩
   -- K₀ decomposition: W(E) = Σ W(Fⱼ)
   set P := F.toPostnikovTower
-  have hWE : W (K₀.of C E) =
-      ∑ i : Fin F.n, W (K₀.of C (P.factor i)) := by
-    rw [K₀.of_postnikovTower_eq_sum C P, map_sum]
+  have hWE : W (cl C v E) =
+      ∑ i : Fin F.n, W (cl C v (P.factor i)) := by
+    rw [cl_postnikovTower_eq_sum C v P, map_sum]
   -- Im(W(E) · rot) = Σ Im(W(Fⱼ) · rot)
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   rw [hWE, Finset.sum_mul]
-  rw [show (∑ i : Fin F.n, W (K₀.of C (P.factor i)) * rot).im =
-      ∑ i : Fin F.n, (W (K₀.of C (P.factor i)) * rot).im from
+  rw [show (∑ i : Fin F.n, W (cl C v (P.factor i)) * rot).im =
+      ∑ i : Fin F.n, (W (cl C v (P.factor i)) * rot).im from
     map_sum Complex.imAddGroupHom _ _]
   -- Each term ≥ 0, first term > 0
   apply lt_of_lt_of_le _ (Finset.single_le_sum
-    (f := fun i ↦ (W (K₀.of C (P.factor i)) * rot).im)
+    (f := fun i ↦ (W (cl C v (P.factor i)) * rot).im)
     (fun i _ ↦ ?_) (Finset.mem_univ ⟨0, hn⟩))
   · -- First factor contributes Im > 0
     exact him_pos _ _ (F.semistable ⟨0, hn⟩) hfirst
       (hphases ⟨0, hn⟩).1 (hphases ⟨0, hn⟩).2
   · -- Each factor contributes Im ≥ 0
     by_cases hi : IsZero (P.factor i)
-    · simp [K₀.of_isZero C hi]
+    · simp [cl_isZero (C := C) (v := v) hi]
     · exact le_of_lt (him_pos _ _ (F.semistable i) hi
         (hphases i).1 (hphases i).2)
 
@@ -550,15 +551,15 @@ theorem im_W_pos_of_intervalProp
 nonzero σ-semistable factor has `Im(W(Fⱼ) · exp(-iπψ)) ≤ 0`, with at least one giving
 strict negativity, then `Im(W(E) · exp(-iπψ)) < 0`. -/
 theorem im_W_neg_of_intervalProp
-    (σ : StabilityCondition C)
+    (σ : StabilityCondition.WithClassMap C v)
     {E : C} (hE : ¬IsZero E)
-    (W : K₀ C →+ ℂ) {ψ : ℝ}
+    (W : Λ →+ ℂ) {ψ : ℝ}
     {a b : ℝ} (hI : σ.slicing.intervalProp C a b E)
     (him_neg : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        (W (K₀.of C F) *
+        (W (cl C v F) *
           Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im < 0) :
-    (W (K₀.of C E) *
+    (W (cl C v E) *
       Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im < 0 := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
   have hphases : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b := fun i =>
@@ -574,28 +575,28 @@ theorem im_W_neg_of_intervalProp
               (σ.slicing.phiPlus_eq C E hE F hn hfirst).symm
             _ < b := σ.slicing.phiPlus_lt_of_intervalProp C hE hI⟩
   set P := F.toPostnikovTower
-  have hWE : W (K₀.of C E) =
-      ∑ i : Fin F.n, W (K₀.of C (P.factor i)) := by
-    rw [K₀.of_postnikovTower_eq_sum C P, map_sum]
+  have hWE : W (cl C v E) =
+      ∑ i : Fin F.n, W (cl C v (P.factor i)) := by
+    rw [cl_postnikovTower_eq_sum C v P, map_sum]
   set rot := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
   rw [hWE, Finset.sum_mul]
-  rw [show (∑ i : Fin F.n, W (K₀.of C (P.factor i)) * rot).im =
-      ∑ i : Fin F.n, (W (K₀.of C (P.factor i)) * rot).im from
+  rw [show (∑ i : Fin F.n, W (cl C v (P.factor i)) * rot).im =
+      ∑ i : Fin F.n, (W (cl C v (P.factor i)) * rot).im from
     map_sum Complex.imAddGroupHom _ _]
   -- Negate: show Σ (-Im) > 0, then Σ Im < 0
   suffices h : 0 < ∑ i : Fin F.n,
-      -(W (K₀.of C (P.factor i)) * rot).im by
+      -(W (cl C v (P.factor i)) * rot).im by
     linarith [Finset.sum_neg_distrib (G := ℝ) (s := Finset.univ)
-      (f := fun i ↦ (W (K₀.of C (P.factor i)) * rot).im)]
+      (f := fun i ↦ (W (cl C v (P.factor i)) * rot).im)]
   apply lt_of_lt_of_le _ (Finset.single_le_sum
-    (f := fun i ↦ -(W (K₀.of C (P.factor i)) * rot).im)
+    (f := fun i ↦ -(W (cl C v (P.factor i)) * rot).im)
     (fun i _ ↦ ?_) (Finset.mem_univ ⟨0, hn⟩))
   · -- First factor: -Im > 0
     exact neg_pos.mpr (him_neg _ _ (F.semistable ⟨0, hn⟩) hfirst
       (hphases ⟨0, hn⟩).1 (hphases ⟨0, hn⟩).2)
   · -- Each factor: -Im ≥ 0
     by_cases hi : IsZero (P.factor i)
-    · simp [K₀.of_isZero C hi]
+    · simp [cl_isZero (C := C) (v := v) hi]
     · exact le_of_lt (neg_pos.mpr (him_neg _ _ (F.semistable i) hi
         (hphases i).1 (hphases i).2))
 
@@ -610,30 +611,30 @@ This is part (b) of **Bridgeland's Lemma 7.3** (lower bound). The proof uses the
 K₀ decomposition to show `Im(W(E) · exp(-iπ(a-ε))) > 0`, then converts to a phase
 bound via the sin/Im relationship. -/
 theorem wPhaseOf_gt_of_intervalProp
-    (σ : StabilityCondition C)
+    (σ : StabilityCondition.WithClassMap C v)
     {E : C} (hE : ¬IsZero E)
-    (W : K₀ C →+ ℂ) {α : ℝ}
+    (W : Λ →+ ℂ) {α : ℝ}
     {a b ε : ℝ}
     (hα_ge : a - ε ≤ α)
     (hI : σ.slicing.intervalProp C a b E)
     (hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a < φ → φ < b → W (K₀.of C F) ≠ 0)
+        a < φ → φ < b → W (cl C v F) ≠ 0)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        a - ε < wPhaseOf (W (K₀.of C F)) α ∧
-        wPhaseOf (W (K₀.of C F)) α < a - ε + 1) :
-    a - ε < wPhaseOf (W (K₀.of C E)) α := by
+        a - ε < wPhaseOf (W (cl C v F)) α ∧
+        wPhaseOf (W (cl C v F)) α < a - ε + 1) :
+    a - ε < wPhaseOf (W (cl C v E)) α := by
   -- Each nonzero factor has Im > 0 after rotation by a - ε
   have him : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b →
-      0 < (W (K₀.of C F) *
+      0 < (W (cl C v F) *
         Complex.exp (-(↑(Real.pi * (a - ε)) * Complex.I))).im := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
     have hWne := hW_ne F φ hP hFne haφ hφb
     -- W(F) = ‖W(F)‖ · exp(iπ · wPhaseOf(W(F), α))
-    set θ := wPhaseOf (W (K₀.of C F)) α
-    have hm : (0 : ℝ) < ‖W (K₀.of C F)‖ := norm_pos_iff.mpr hWne
+    set θ := wPhaseOf (W (cl C v F)) α
+    have hm : (0 : ℝ) < ‖W (cl C v F)‖ := norm_pos_iff.mpr hWne
     exact im_pos_of_phase_above hm (wPhaseOf_compat _ _) hlo hhi
   -- By K₀ decomposition: Im(W(E) · rot) > 0
   have him_pos := im_W_pos_of_intervalProp C σ hE W hI him
@@ -643,61 +644,61 @@ theorem wPhaseOf_gt_of_intervalProp
   -- If ψ ≤ a - ε, then ψ - (a-ε) ≤ 0, and we need to check sin ≤ 0
   by_contra h
   push Not at h -- h : wPhaseOf(W(E), α) ≤ a - ε
-  set ψ := wPhaseOf (W (K₀.of C E)) α
-  have hw := wPhaseOf_compat (W (K₀.of C E)) α
+  set ψ := wPhaseOf (W (cl C v E)) α
+  have hw := wPhaseOf_compat (W (cl C v E)) α
   rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_pos
   -- ψ - (a - ε) ∈ (-1, 0] (from ψ > α - 1 and ψ ≤ a - ε)
-  have hψ_range := wPhaseOf_mem_Ioc (W (K₀.of C E)) α
+  have hψ_range := wPhaseOf_mem_Ioc (W (cl C v E)) α
   have hψ_lo : α - 1 < ψ := hψ_range.1
   -- sin(π(ψ - (a-ε))) ≤ 0 on (-1, 0] (since π(-1, 0] = (-π, 0])
   have hsin : Real.sin (Real.pi * (ψ - (a - ε))) ≤ 0 :=
     Real.sin_nonpos_of_nonpos_of_neg_pi_le
       (by nlinarith [Real.pi_pos])
       (by nlinarith [Real.pi_pos, hψ_lo])
-  linarith [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg (W (K₀.of C E))) hsin]
+  linarith [mul_nonpos_of_nonneg_of_nonpos (norm_nonneg (W (cl C v E))) hsin]
 
 /-- **W-phase upper bound for interval objects.** If `E ∈ P((a, b))` is nonzero, and
 every nonzero σ-semistable object of phase `φ ∈ (a, b)` has W-phase in
 `(b + ε - 1, b + ε)` (so `Im(W(F) · exp(-iπ(b+ε))) < 0`), then
 `wPhaseOf(W(E), α) < b + ε`. -/
 theorem wPhaseOf_lt_of_intervalProp
-    (σ : StabilityCondition C)
+    (σ : StabilityCondition.WithClassMap C v)
     {E : C} (hE : ¬IsZero E)
-    (W : K₀ C →+ ℂ) {α : ℝ}
+    (W : Λ →+ ℂ) {α : ℝ}
     {a b ε : ℝ}
     (hα_le : α ≤ b + ε)
     (hI : σ.slicing.intervalProp C a b E)
     (hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-        a < φ → φ < b → W (K₀.of C F) ≠ 0)
+        a < φ → φ < b → W (cl C v F) ≠ 0)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        b + ε - 1 < wPhaseOf (W (K₀.of C F)) α ∧
-        wPhaseOf (W (K₀.of C F)) α < b + ε) :
-    wPhaseOf (W (K₀.of C E)) α < b + ε := by
+        b + ε - 1 < wPhaseOf (W (cl C v F)) α ∧
+        wPhaseOf (W (cl C v F)) α < b + ε) :
+    wPhaseOf (W (cl C v E)) α < b + ε := by
   -- Each nonzero factor has Im < 0 after rotation by b + ε
   have him : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b →
-      (W (K₀.of C F) *
+      (W (cl C v F) *
         Complex.exp (-(↑(Real.pi * (b + ε)) * Complex.I))).im < 0 := by
     intro F φ hP hFne haφ hφb
     obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
     have hWne := hW_ne F φ hP hFne haφ hφb
-    set θ := wPhaseOf (W (K₀.of C F)) α
-    have hm : (0 : ℝ) < ‖W (K₀.of C F)‖ := norm_pos_iff.mpr hWne
+    set θ := wPhaseOf (W (cl C v F)) α
+    have hm : (0 : ℝ) < ‖W (cl C v F)‖ := norm_pos_iff.mpr hWne
     exact im_neg_of_phase_below hm (wPhaseOf_compat _ _) hlo hhi
   have him_neg := im_W_neg_of_intervalProp C σ hE W hI him
   by_contra h
   push Not at h -- h : b + ε ≤ wPhaseOf(W(E), α)
-  set ψ := wPhaseOf (W (K₀.of C E)) α
-  have hw := wPhaseOf_compat (W (K₀.of C E)) α
+  set ψ := wPhaseOf (W (cl C v E)) α
+  have hw := wPhaseOf_compat (W (cl C v E)) α
   rw [hw, im_ofReal_mul_exp_mul_exp_neg] at him_neg
   -- ψ - (b + ε) ∈ [0, 1) (from ψ ≥ b + ε and ψ ≤ α + 1)
-  have hψ_range := wPhaseOf_mem_Ioc (W (K₀.of C E)) α
+  have hψ_range := wPhaseOf_mem_Ioc (W (cl C v E)) α
   have hψ_hi : ψ ≤ α + 1 := hψ_range.2
   have hsin : 0 ≤ Real.sin (Real.pi * (ψ - (b + ε))) :=
     Real.sin_nonneg_of_nonneg_of_le_pi
       (by nlinarith [Real.pi_pos])
       (by nlinarith [Real.pi_pos, hψ_hi])
-  linarith [mul_nonneg (norm_nonneg (W (K₀.of C E))) hsin]
+  linarith [mul_nonneg (norm_nonneg (W (cl C v E))) hsin]
 
 end CategoryTheory.Triangulated

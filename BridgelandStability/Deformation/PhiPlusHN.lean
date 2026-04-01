@@ -22,12 +22,13 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 variable [IsTriangulated C] in
 /-- **W-phase upper bound from φ⁺ bound.** If `E ∈ P((a, b))` with `φ⁺(E) < b - 4ε`
@@ -37,7 +38,7 @@ Proof: `φ⁺(E) < b - 4ε` and `φ⁻(E) > a` give `E ∈ P((a, b-4ε))`.
 Apply `wPhaseOf_lt_of_intervalProp` with interval `(a, b-4ε)` and perturbation `ε`.
 The `hα_le` condition `(a+b)/2 ≤ (b-4ε) + ε = b-3ε` follows from `6ε ≤ b-a`. -/
 theorem wPhaseOf_lt_of_phiPlus_lt
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4)
@@ -47,7 +48,7 @@ theorem wPhaseOf_lt_of_phiPlus_lt
     {E : C} (hE : ¬IsZero E)
     (hI : σ.slicing.intervalProp C a b E)
     (hphiPlus : σ.slicing.phiPlus C E hE < b - 4 * ε) :
-    wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (K₀.of C E))
+    wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v E))
       ((σ.skewedStabilityFunction_of_near C W hW hab).α) < b - 3 * ε := by
   -- E ∈ P((a, b-4ε)) from intrinsic phases
   have hab4 : a < b - 4 * ε := by linarith
@@ -61,14 +62,14 @@ theorem wPhaseOf_lt_of_phiPlus_lt
   have hα_le : (a + b) / 2 ≤ (b - 4 * ε) + ε := by linarith
   -- W-nonzero for factors in P((a, b-4ε)) ⊂ P((a, b))
   have hW_ne : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
-      a < φ → φ < b - 4 * ε → W (K₀.of C F) ≠ 0 :=
+      a < φ → φ < b - 4 * ε → W (cl C v F) ≠ 0 :=
     fun F φ hP hFne _ _ => σ.W_ne_zero_of_seminorm_lt_one C W hW hP hFne
   -- Perturbation at α = (a+b)/2 in the format for wPhaseOf_lt_of_intervalProp
   -- Factors at φ ∈ (a, b-4ε) ⊂ (a, b) get bounds at α = (a+b)/2 from hpert
   have hperturb_fmt : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
       a < φ → φ < b - 4 * ε →
-      (b - 4 * ε) + ε - 1 < wPhaseOf (W (K₀.of C F)) ((a + b) / 2) ∧
-      wPhaseOf (W (K₀.of C F)) ((a + b) / 2) < (b - 4 * ε) + ε := by
+      (b - 4 * ε) + ε - 1 < wPhaseOf (W (cl C v F)) ((a + b) / 2) ∧
+      wPhaseOf (W (cl C v F)) ((a + b) / 2) < (b - 4 * ε) + ε := by
     intro F φ hP hFne haφ hφb
     have hφb_orig : φ < b := by linarith
     obtain ⟨hlo, hhi⟩ := hpert F φ hP hFne haφ hφb_orig
@@ -83,7 +84,7 @@ theorem wPhaseOf_lt_of_phiPlus_lt
   have h := wPhaseOf_lt_of_intervalProp C σ hE W (α := (a + b) / 2)
     hα_le hI_narrow hW_ne hperturb_fmt
   -- ssf.W = W and ssf.α = (a+b)/2 by definition of skewedStabilityFunction_of_near
-  simp only [StabilityCondition.skewedStabilityFunction_of_near]
+  simp only [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near]
   linarith
 
 /-! ### HN existence with φ⁺ reduction -/
@@ -100,7 +101,7 @@ At each step of the HN recursion:
 2. Extract kernel, lift to smaller strict subobject
 3. Recurse with the MDQ phase as new lower bound -/
 theorem hn_exists_with_phiPlus_reduction
-    (σ : StabilityCondition C) (W : K₀ C →+ ℂ)
+    (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b)
     [Fact (a < b)] [Fact (b - a ≤ 1)]
@@ -109,19 +110,19 @@ theorem hn_exists_with_phiPlus_reduction
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (hFL : ThinFiniteLengthInInterval (C := C) σ a b)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      (σ.skewedStabilityFunction_of_near C W hW hab).W (K₀.of C F) ≠ 0)
+      (σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v F) ≠ 0)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (K₀.of C F))
+      L < wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v F))
         (σ.skewedStabilityFunction_of_near C W hW hab).α ∧
-        wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (K₀.of C F))
+        wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v F))
           (σ.skewedStabilityFunction_of_near C W hW hab).α < U)
     (hWidth : U - L < 1)
     (t : ℝ) (ht : a + ε ≤ t)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X)
     (hquot : ∀ {B : σ.slicing.IntervalCat C a b} (q : X ⟶ B),
       IsStrictEpi q → ¬IsZero B.obj →
-        t < wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (K₀.of C B.obj))
+        t < wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v B.obj))
           (σ.skewedStabilityFunction_of_near C W hW hab).α)
     -- Window-interval compatibility
     (hL_a : a ≤ L + ε)
@@ -147,7 +148,7 @@ theorem hn_exists_with_phiPlus_reduction
         ∀ t : ℝ, a + ε ≤ t →
           (∀ A : Subobject (S.1 : σ.slicing.IntervalCat C a b), A ≠ ⊤ →
             IsStrictMono A.arrow →
-            t < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α) →
+            t < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α) →
           (∀ (hYne : ¬IsZero (S.1 : σ.slicing.IntervalCat C a b).obj),
             σ.slicing.phiPlus C (S.1 : σ.slicing.IntervalCat C a b).obj hYne <
               b - 4 * ε) →
@@ -162,7 +163,7 @@ theorem hn_exists_with_phiPlus_reduction
     have hS_obj : ¬IsZero Y.obj := fun hZ =>
       hS (Slicing.IntervalCat.isZero_of_obj_isZero
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-    let ψY : ℝ := wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α
+    let ψY : ℝ := wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α
     by_cases hss : ssf.Semistable C Y.obj ψY
     · -- SEMISTABLE CASE: single-factor HN filtration (verbatim from Lemma77)
       let Gsingle : HNFiltration C Psem Y.obj := HNFiltration.single C Y.obj ψY hss
@@ -175,17 +176,17 @@ theorem hn_exists_with_phiPlus_reduction
         intervalSubobject_bot_arrow_strictMono
           (C := C) (s := σ.slicing) (a := a) (b := b)
       have hbot_gt :
-          t < wPhaseOf (ssf.W (K₀.of C (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α :=
+          t < wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α :=
         hquot ⊥ hbot_ne_top hbot_strict
       have hbot_eq :
-          wPhaseOf (ssf.W (K₀.of C (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α = ψY := by
+          wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α = ψY := by
         let eI : cokernel ((⊥ : Subobject Y).arrow) ≅ Y := by
           rw [show ((⊥ : Subobject Y).arrow) = 0 by simp [Subobject.bot_arrow]]
           exact cokernelZeroIsoTarget
         let eC : (cokernel ((⊥ : Subobject Y).arrow)).obj ≅ Y.obj :=
           (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
         simpa [ψY] using
-          congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC)
+          congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
       have hψY_hi : ψY < U := (hWindow Y.property hS_obj).2
       have hsingle_n : Gsingle.n = 1 := by
         simp [Gsingle, HNFiltration.single]
@@ -201,7 +202,7 @@ theorem hn_exists_with_phiPlus_reduction
       letI : IsStrictArtinianObject Y := (hFL Y).1
       letI : IsStrictNoetherianObject Y := (hFL Y).2
       -- Derive ψ(Y) < b - 3ε from φ⁺(Y) < b - 4ε
-      have hψ_Y_upper : wPhaseOf (ssf.W (K₀.of C Y.obj)) ssf.α < b - 3 * ε :=
+      have hψ_Y_upper : wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α < b - 3 * ε :=
         wPhaseOf_lt_of_phiPlus_lt C σ W hW hab hε hε2 hthin hsin h_wide hS_obj
           Y.property (hphiPlus_Y hS_obj)
       -- Derive ψ(Y) > t from quotient bound applied to ⊥
@@ -217,15 +218,15 @@ theorem hn_exists_with_phiPlus_reduction
           rw [show ((⊥ : Subobject Y).arrow) = 0 by simp [Subobject.bot_arrow]]
           exact cokernelZeroIsoTarget
         let eC := (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
-        have hbot_eq : wPhaseOf (ssf.W (K₀.of C (cokernel ((⊥ : Subobject Y).arrow)).obj))
+        have hbot_eq : wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj))
             ssf.α = ψY := by
-          simpa [ψY] using congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC)
+          simpa [ψY] using congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
         linarith
       -- Construct hQuotLo_ss from hquot (weaken: all quotients → semistable quotients)
       have hQuotLo_ss : ∀ {B' : σ.slicing.IntervalCat C a b} (q' : Y ⟶ B'),
           IsStrictEpi q' → ¬IsZero B'.obj →
-          ssf.Semistable C B'.obj (wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α) →
-          t < wPhaseOf (ssf.W (K₀.of C B'.obj)) ssf.α := by
+          ssf.Semistable C B'.obj (wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α) →
+          t < wPhaseOf (ssf.W (cl C v B'.obj)) ssf.α := by
         intro B' q' hq' hB'_ne _hB'_ss
         -- kernel(q') is a strict subobject with cokernel ≅ B'
         let K' : Subobject Y := kernelSubobject q'
@@ -270,10 +271,10 @@ theorem hn_exists_with_phiPlus_reduction
         intervalSubobject_not_isZero_of_ne_bot
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) hT_ne_bot
       -- Phase bounds on B (verbatim from Lemma77:157-166)
-      let ψB : ℝ := wPhaseOf (ssf.W (K₀.of C B.obj)) ssf.α
+      let ψB : ℝ := wPhaseOf (ssf.W (cl C v B.obj)) ssf.α
       have hψB_gt : t < ψB := by
         have hgtK :
-            t < wPhaseOf (ssf.W (K₀.of C (cokernel K.arrow).obj)) ssf.α :=
+            t < wPhaseOf (ssf.W (cl C v (cokernel K.arrow).obj)) ssf.α :=
           hquot K hK_ne_top hK_strict
         simpa [ψB] using hgtK.trans_eq
           (wPhaseOf_cokernel_kernelSubobject_eq
@@ -284,7 +285,7 @@ theorem hn_exists_with_phiPlus_reduction
       have hquot_T :
           ∀ A : Subobject (T : σ.slicing.IntervalCat C a b), A ≠ ⊤ →
             IsStrictMono A.arrow →
-            ψB < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α := by
+            ψB < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
         intro A hA_top hA_strict
         let eK : (T : σ.slicing.IntervalCat C a b) ≅ (K : σ.slicing.IntervalCat C a b) := by
           dsimp [T, intervalLiftSub]
@@ -311,8 +312,8 @@ theorem hn_exists_with_phiPlus_reduction
             (intervalSubobject_arrow_strictMono_of_strictMono
               (C := C) (s := σ.slicing) (a := a) (b := b) (A.arrow ≫ eK.hom) hcomp)
         have hphase_A :
-            wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α =
-              wPhaseOf (ssf.W (K₀.of C (cokernel A'.arrow).obj)) ssf.α := by
+            wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α =
+              wPhaseOf (ssf.W (cl C v (cokernel A'.arrow).obj)) ssf.α := by
           let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
             (Subobject.mapMonoIso eK.hom A).symm
           have hw : A.arrow ≫ eK.hom = eA.hom ≫ A'.arrow := by
@@ -321,9 +322,9 @@ theorem hn_exists_with_phiPlus_reduction
             cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA eK hw
           let eC' :=
             (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eC
-          simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC')
+          simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC')
         have hgtA' :
-            ψB < wPhaseOf (ssf.W (K₀.of C (cokernel A'.arrow).obj)) ssf.α := by
+            ψB < wPhaseOf (ssf.W (cl C v (cokernel A'.arrow).obj)) ssf.α := by
           simpa [ψB] using
             (IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
               (C := C) (σ := σ) (a := a) (b := b) hFL hW_interval hWindow hWidth
@@ -415,7 +416,7 @@ theorem hn_exists_with_phiPlus_reduction
   have hS0_quot :
       ∀ A : Subobject (S0.1 : σ.slicing.IntervalCat C a b), A ≠ ⊤ →
         IsStrictMono A.arrow →
-        t < wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α := by
+        t < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
     intro A hA_top hA_strict
     let e0 : (S0.1 : σ.slicing.IntervalCat C a b) ≅ X :=
       asIso S0.1.arrow
@@ -441,8 +442,8 @@ theorem hn_exists_with_phiPlus_reduction
         (intervalSubobject_arrow_strictMono_of_strictMono
           (C := C) (s := σ.slicing) (a := a) (b := b) (A.arrow ≫ e0.hom) hcomp)
     have hphase_A :
-        wPhaseOf (ssf.W (K₀.of C (cokernel A.arrow).obj)) ssf.α =
-          wPhaseOf (ssf.W (K₀.of C (cokernel A'.arrow).obj)) ssf.α := by
+        wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α =
+          wPhaseOf (ssf.W (cl C v (cokernel A'.arrow).obj)) ssf.α := by
       let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
         (Subobject.mapMonoIso e0.hom A).symm
       have hw : A.arrow ≫ e0.hom = eA.hom ≫ A'.arrow := by
@@ -451,7 +452,7 @@ theorem hn_exists_with_phiPlus_reduction
         cokernel.mapIso (f := A.arrow) (f' := A'.arrow) eA e0 hw
       let eC' :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eC
-      simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (K₀.of_iso C eC')
+      simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC')
     rw [hphase_A]
     -- Convert: apply hquot to cokernel.π A'.arrow (a strict epi from X)
     have hA'_nonzero : ¬IsZero (cokernel A'.arrow).obj := fun hZ =>
