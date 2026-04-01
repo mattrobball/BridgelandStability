@@ -503,13 +503,13 @@ structure SkewedStabilityFunction.Semistable {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) (E : C) (ψ : ℝ) : Prop where
   intervalProp : s.intervalProp C a b E
   nonzero : ¬IsZero E
-  wNe : ssf.W (cl C v E) ≠ 0
-  phase_eq : wPhaseOf (ssf.W (cl C v E)) ssf.α = ψ
+  wNe : ssf.wNe E
+  phase_eq : ssf.wPhase E = ψ
   le_of_distTriang : ∀ ⦃K Q : C⦄ ⦃f₁ : K ⟶ E⦄ ⦃f₂ : E ⟶ Q⦄ ⦃f₃ : Q ⟶ K⟦(1 : ℤ)⟧⦄,
     Triangle.mk f₁ f₂ f₃ ∈ distTriang C →
     s.intervalProp C a b K → s.intervalProp C a b Q →
     ¬IsZero K →
-    wPhaseOf (ssf.W (cl C v K)) ssf.α ≤ ψ
+    ssf.wPhase K ≤ ψ
 
 /-- **α-independence of wPhaseOf.** For a nonzero complex number `w`, if
 `wPhaseOf w α₁ ∈ (α₂ - 1, α₂ + 1]`, then `wPhaseOf w α₁ = wPhaseOf w α₂`.

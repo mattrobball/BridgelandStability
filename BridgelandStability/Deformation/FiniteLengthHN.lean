@@ -47,35 +47,35 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hFiniteLength : ThinFiniteLengthInInterval (C := C) σ a b)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (_hE : ssf.Semistable C E.obj
-          (wPhaseOf (ssf.W (cl C v E.obj)) ssf.α))
+          (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
-          (wPhaseOf (ssf.W (cl C v F.obj)) ssf.α)),
-        wPhaseOf (ssf.W (cl C v F.obj)) ssf.α <
-          wPhaseOf (ssf.W (cl C v E.obj)) ssf.α →
-        wPhaseOf (ssf.W (cl C v E.obj)) ssf.α < U_hom →
+          (ssf.wPhase F.obj)),
+        ssf.wPhase F.obj <
+          ssf.wPhase E.obj →
+        ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
       {A : Subobject Y}
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
-        (wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+        (ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj))
       (_ : IsStrictMono A.arrow)
-      (_ : wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α <
-        wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
-      wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
+      (_ : ssf.wPhase Y.obj <
+        ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj),
+      ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj < U_hom)
     (t : ℝ)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X) :
     (∀ A : Subobject X, A ≠ ⊤ → IsStrictMono A.arrow →
-      t < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α) →
+      t < ssf.wPhase (cokernel A.arrow).obj) →
     let Psem : ℝ → ObjectProperty C := fun ψ E => ssf.Semistable C E ψ
     ∃ G : HNFiltration C Psem X.obj,
       ∀ j, t < G.φ j ∧ G.φ j < U := by
@@ -89,7 +89,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         ∀ t : ℝ,
           (∀ A : Subobject (S.1 : σ.slicing.IntervalCat C a b), A ≠ ⊤ →
             IsStrictMono A.arrow →
-            t < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α) →
+            t < ssf.wPhase (cokernel A.arrow).obj) →
           ∃ G : HNFiltration C Psem (S.1 : σ.slicing.IntervalCat C a b).obj,
             ∀ j, t < G.φ j ∧ G.φ j < U
   have h :
@@ -102,7 +102,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
     have hS_obj : ¬IsZero Y.obj := fun hZ =>
       hS (Slicing.IntervalCat.isZero_of_obj_isZero
         (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-    let ψY : ℝ := wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α
+    let ψY : ℝ := ssf.wPhase Y.obj
     by_cases hss : ssf.Semistable C Y.obj ψY
     · let Gsingle : HNFiltration C Psem Y.obj := HNFiltration.single C Y.obj ψY hss
       refine ⟨Gsingle, ?_⟩
@@ -114,10 +114,10 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         intervalSubobject_bot_arrow_strictMono
           (C := C) (s := σ.slicing) (a := a) (b := b)
       have hbot_gt :
-          t < wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α :=
+          t < ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj :=
         hquot ⊥ hbot_ne_top hbot_strict
       have hbot_eq :
-          wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α = ψY := by
+          ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj = ψY := by
         let eI : cokernel ((⊥ : Subobject Y).arrow) ≅ Y := by
           rw [show ((⊥ : Subobject Y).arrow) = 0 by simp [Subobject.bot_arrow]]
           exact cokernelZeroIsoTarget
@@ -165,10 +165,10 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       have hT_ne : ¬IsZero (T : σ.slicing.IntervalCat C a b) :=
         intervalSubobject_not_isZero_of_ne_bot
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) hT_ne_bot
-      let ψB : ℝ := wPhaseOf (ssf.W (cl C v B.obj)) ssf.α
+      let ψB : ℝ := ssf.wPhase B.obj
       have hψB_gt : t < ψB := by
         have hgtK :
-            t < wPhaseOf (ssf.W (cl C v (cokernel K.arrow).obj)) ssf.α :=
+            t < ssf.wPhase (cokernel K.arrow).obj :=
           hquot K hK_ne_top hK_strict
         simpa [ψB] using hgtK.trans_eq
           (wPhaseOf_cokernel_kernelSubobject_eq
@@ -178,7 +178,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       have hquot_T :
           ∀ A : Subobject (T : σ.slicing.IntervalCat C a b), A ≠ ⊤ →
             IsStrictMono A.arrow →
-            ψB < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
+            ψB < ssf.wPhase (cokernel A.arrow).obj := by
         intro A hA_top hA_strict
         let eK : (T : σ.slicing.IntervalCat C a b) ≅ (K : σ.slicing.IntervalCat C a b) := by
           dsimp [T, intervalLiftSub]
@@ -205,8 +205,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
             (intervalSubobject_arrow_strictMono_of_strictMono
               (C := C) (s := σ.slicing) (a := a) (b := b) (A.arrow ≫ eK.hom) hcomp)
         have hphase_A :
-            wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α =
-              wPhaseOf (ssf.W (cl C v (cokernel A'.arrow).obj)) ssf.α := by
+            ssf.wPhase (cokernel A.arrow).obj =
+              ssf.wPhase (cokernel A'.arrow).obj := by
           let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
             (Subobject.mapMonoIso eK.hom A).symm
           have hw : A.arrow ≫ eK.hom = eA.hom ≫ A'.arrow := by
@@ -217,7 +217,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
             (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eC
           simpa using congrArg (fun x ↦ wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC')
         have hgtA' :
-            ψB < wPhaseOf (ssf.W (cl C v (cokernel A'.arrow).obj)) ssf.α := by
+            ψB < ssf.wPhase (cokernel A'.arrow).obj := by
           simpa [ψB] using
             (IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
               (C := C) (σ := σ) (a := a) (b := b) hFiniteLength hW_interval hWindow hWidth
@@ -265,7 +265,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
   have hS0_quot :
       ∀ A : Subobject (S0.1 : σ.slicing.IntervalCat C a b), A ≠ ⊤ →
         IsStrictMono A.arrow →
-        t < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
+        t < ssf.wPhase (cokernel A.arrow).obj := by
     intro A hA_top hA_strict
     let e0 : (S0.1 : σ.slicing.IntervalCat C a b) ≅ X :=
       asIso S0.1.arrow
@@ -291,8 +291,8 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
         (intervalSubobject_arrow_strictMono_of_strictMono
           (C := C) (s := σ.slicing) (a := a) (b := b) (A.arrow ≫ e0.hom) hcomp)
     have hphase_A :
-        wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α =
-          wPhaseOf (ssf.W (cl C v (cokernel A'.arrow).obj)) ssf.α := by
+        ssf.wPhase (cokernel A.arrow).obj =
+          ssf.wPhase (cokernel A'.arrow).obj := by
       let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
         (Subobject.mapMonoIso e0.hom A).symm
       have hw : A.arrow ≫ e0.hom = eA.hom ≫ A'.arrow := by
@@ -317,38 +317,38 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hFiniteLength : ThinFiniteLengthInInterval (C := C) σ a b)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (_hE : ssf.Semistable C E.obj
-          (wPhaseOf (ssf.W (cl C v E.obj)) ssf.α))
+          (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
-          (wPhaseOf (ssf.W (cl C v F.obj)) ssf.α)),
-        wPhaseOf (ssf.W (cl C v F.obj)) ssf.α <
-          wPhaseOf (ssf.W (cl C v E.obj)) ssf.α →
-        wPhaseOf (ssf.W (cl C v E.obj)) ssf.α < U_hom →
+          (ssf.wPhase F.obj)),
+        ssf.wPhase F.obj <
+          ssf.wPhase E.obj →
+        ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
       {A : Subobject Y}
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
-        (wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+        (ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj))
       (_ : IsStrictMono A.arrow)
-      (_ : wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α <
-        wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
-      wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
+      (_ : ssf.wPhase Y.obj <
+        ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj),
+      ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj < U_hom)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X) :
     let Psem : ℝ → ObjectProperty C := fun ψ E => ssf.Semistable C E ψ
     ∃ G : HNFiltration C Psem X.obj,
       ∀ j, L < G.φ j ∧ G.φ j < U := by
   have hL :
       ∀ A : Subobject X, A ≠ ⊤ → IsStrictMono A.arrow →
-        L < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
+        L < ssf.wPhase (cokernel A.arrow).obj := by
     intro A hA_top hA_strict
     have hcokA_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
       (interval_cokernel_nonzero_of_ne_top
@@ -371,42 +371,42 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hFiniteLength : ThinFiniteLengthInInterval (C := C) σ a b)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
         (_hE : ssf.Semistable C E.obj
-          (wPhaseOf (ssf.W (cl C v E.obj)) ssf.α))
+          (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
-          (wPhaseOf (ssf.W (cl C v F.obj)) ssf.α)),
-        wPhaseOf (ssf.W (cl C v F.obj)) ssf.α <
-          wPhaseOf (ssf.W (cl C v E.obj)) ssf.α →
-        wPhaseOf (ssf.W (cl C v E.obj)) ssf.α < U_hom →
+          (ssf.wPhase F.obj)),
+        ssf.wPhase F.obj <
+          ssf.wPhase E.obj →
+        ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
       {A : Subobject Y}
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
-        (wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α))
+        (ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj))
       (_ : IsStrictMono A.arrow)
-      (_ : wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α <
-        wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α),
-      wPhaseOf (ssf.W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ssf.α < U_hom)
+      (_ : ssf.wPhase Y.obj <
+        ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj),
+      ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj < U_hom)
     (t : ℝ)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X)
     (hquot :
       ∀ {B : σ.slicing.IntervalCat C a b} (q : X ⟶ B), IsStrictEpi q → ¬IsZero B.obj →
-        t < wPhaseOf (ssf.W (cl C v B.obj)) ssf.α) :
+        t < ssf.wPhase B.obj) :
     let Psem : ℝ → ObjectProperty C := fun ψ E => ssf.Semistable C E ψ
     ∃ G : HNFiltration C Psem X.obj,
       ∀ j, t < G.φ j ∧ G.φ j < U := by
   have hquot' :
       ∀ A : Subobject X, A ≠ ⊤ → IsStrictMono A.arrow →
-        t < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
+        t < ssf.wPhase (cokernel A.arrow).obj := by
     intro A hA_top hA_strict
     have hcokA_ne : ¬IsZero (cokernel A.arrow).obj := fun hZ =>
       (interval_cokernel_nonzero_of_ne_top

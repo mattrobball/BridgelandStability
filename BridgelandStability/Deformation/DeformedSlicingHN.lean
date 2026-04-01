@@ -58,8 +58,8 @@ theorem deformedPred_shift_one
           simp only [HNFiltration.shiftHN, Int.cast_one]
           constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
     · -- W(cl C v (X⟦1⟧)) ≠ 0
-      rw [cl_shift_one, map_neg]
-      exact neg_ne_zero.mpr hSS.wNe
+      simpa [SkewedStabilityFunction.wNe, cl_shift_one, map_neg] using
+        neg_ne_zero.mpr hSS.wNe
     · -- wPhaseOf = φ + 1
       change wPhaseOf (W (cl C v (X⟦(1 : ℤ)⟧))) ((a + 1 + (b + 1)) / 2) = φ + 1
       rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]
@@ -143,7 +143,7 @@ theorem deformedPred_of_shift_one
       change wPhaseOf (W (cl C v X)) ((a - 1 + (b - 1)) / 2) = φ
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
       have hphase : wPhaseOf (-W (cl C v X)) ((a + b) / 2) = φ + 1 := by
-        have := hSS.phase_eq; rwa [cl_shift_one, map_neg] at this
+        simpa [SkewedStabilityFunction.wPhase, cl_shift_one, map_neg] using hSS.phase_eq
       have hWne : W (cl C v X) ≠ 0 := by
         intro hw; apply hSS.wNe; rw [cl_shift_one, map_neg, neg_eq_zero]; exact hw
       have key := wPhaseOf_neg hWne ((a + b) / 2 - 1)

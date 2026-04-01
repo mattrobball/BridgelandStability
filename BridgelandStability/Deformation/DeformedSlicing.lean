@@ -65,9 +65,12 @@ def StabilityCondition.WithClassMap.deformedSlicing (σ : StabilityCondition.Wit
         · exact absurd hZ' hSS.nonzero
         · exact Or.inr ⟨F.ofIso C e, hF⟩
       · -- W(cl C v E') ≠ 0
-        rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]; exact hSS.wNe
+        change (σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v E') ≠ 0
+        simpa [← cl_iso C v e] using hSS.wNe
       · -- wPhaseOf = φ
-        rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]; exact hSS.phase_eq
+        change wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v E'))
+            (σ.skewedStabilityFunction_of_near C W hW hab).α = φ
+        simpa [SkewedStabilityFunction.wPhase, ← cl_iso C v e] using hSS.phase_eq
       · -- semistability: compose triangle with iso
         have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
           isomorphic_distinguished _ hT _

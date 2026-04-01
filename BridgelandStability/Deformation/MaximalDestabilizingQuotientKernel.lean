@@ -48,10 +48,10 @@ structure IsStrictMDQKernel
   strict : IsStrictMono M.arrow
   semistable :
     ssf.Semistable C (cokernel M.arrow).obj
-      (wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α)
+      (ssf.wPhase (cokernel M.arrow).obj)
   minimal : ∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →
-    wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α ≤
-      wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α
+    ssf.wPhase (cokernel M.arrow).obj ≤
+      ssf.wPhase (cokernel B.arrow).obj
 
 /-- A proper strict kernel with semistable quotient of minimal quotient phase packages into the
 strict-kernel mdq object used in the faithful Node 7.7 refactor. -/
@@ -63,10 +63,10 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel
     (hM_ne_top : M ≠ ⊤) (hM_strict : IsStrictMono M.arrow)
     (hM_ss :
       ssf.Semistable C (cokernel M.arrow).obj
-        (wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α))
+        (ssf.wPhase (cokernel M.arrow).obj))
     (hM_min : ∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →
-      wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α ≤
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α) :
+      ssf.wPhase (cokernel M.arrow).obj ≤
+        ssf.wPhase (cokernel B.arrow).obj) :
     IsStrictMDQKernel (C := C) σ ssf M :=
   ⟨hM_ne_top, hM_strict, hM_ss, hM_min⟩
 
@@ -78,17 +78,17 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
     (hFinSub : ∀ Y : σ.slicing.IntervalCat C a b, Finite (Subobject Y))
     (hM_ne_top : M ≠ ⊤) (hM_strict : IsStrictMono M.arrow)
     (hM_min : ∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →
-      wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α ≤
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α)
+      ssf.wPhase (cokernel M.arrow).obj ≤
+        ssf.wPhase (cokernel B.arrow).obj)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1) :
     ssf.Semistable C (cokernel M.arrow).obj
-      (wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α) := by
+      (ssf.wPhase (cokernel M.arrow).obj) := by
   let Y : σ.slicing.IntervalCat C a b := cokernel M.arrow
   have hY_ne : ¬IsZero Y :=
     interval_cokernel_nonzero_of_ne_top
@@ -96,7 +96,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
   have hY_obj_ne : ¬IsZero Y.obj := fun hZ =>
     hY_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-  let ψY : ℝ := wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α
+  let ψY : ℝ := ssf.wPhase Y.obj
   have hY_window : L < ψY ∧ ψY < U := by
     simpa [Y, ψY] using hWindow Y.property hY_obj_ne
   by_contra hns
@@ -108,7 +108,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
     ssf.maxPhase_strictSubobject_ne_top_of_not_semistable
       (C := C) (σ := σ) (a := a) (b := b) (X := Y) hns hB_ne hB_strict hB_max hW_interval
   have hB_phase_gt :
-      ψY < wPhaseOf (ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj)) ssf.α := by
+      ψY < ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj := by
     simpa [Y, ψY] using
       ssf.phase_gt_of_maxPhase_strictSubobject_of_not_semistable
         (C := C) (σ := σ) (a := a) (b := b) (X := Y) (M := B)
@@ -132,25 +132,25 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
         Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ
   have hB_window :
-      L < wPhaseOf (ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj)) ssf.α < U :=
+      L < ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ∧
+        ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj < U :=
     hWindow (B : σ.slicing.IntervalCat C a b).property hB_obj_ne
   have hcokB_window :
-      L < wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α < U :=
+      L < ssf.wPhase (cokernel B.arrow).obj ∧
+        ssf.wPhase (cokernel B.arrow).obj < U :=
     hWindow (cokernel B.arrow).property hcokB_obj_ne
   have hUpper : U < ψY + 1 := by
     linarith
   have hLower : ψY - 1 < L := by
     linarith
   have hB_range :
-      wPhaseOf (ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∈
+      ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
     constructor <;> linarith
   have hcokB_range :
-      wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α ∈ Set.Ioo (ψY - 1) (ψY + 1) := by
+      ssf.wPhase (cokernel B.arrow).obj ∈ Set.Ioo (ψY - 1) (ψY + 1) := by
     constructor <;> linarith
-  have hB_Wne : ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj) ≠ 0 :=
+  have hB_Wne : ssf.wNe (B : σ.slicing.IntervalCat C a b).obj :=
     hW_interval (B : σ.slicing.IntervalCat C a b).property hB_obj_ne
   have haddY :
       ssf.W (cl C v Y.obj) =
@@ -160,16 +160,22 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
       (interval_K0_of_strictMono
         (C := C) (s := σ.slicing) (a := a) (b := b) B.arrow hB_strict)
   have hcokB_phase_lt :
-      wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α < ψY :=
+      ssf.wPhase (cokernel B.arrow).obj < ψY :=
     wPhaseOf_seesaw_dual haddY.symm rfl hB_phase_gt hB_Wne hB_range hcokB_range
+  have hpb_phase_eq :
+      ssf.wPhase (cokernel pbB.arrow).obj =
+        ssf.wPhase (cokernel B.arrow).obj := by
+    simpa [SkewedStabilityFunction.wPhase] using
+      congrArg (fun z ↦ wPhaseOf z ssf.α)
+        (ssf.Wobj_cokernel_pullback_eq
+        (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
+        (B := B) hB_strict)
   have hpb_phase_lt :
-      wPhaseOf (ssf.W (cl C v (cokernel pbB.arrow).obj)) ssf.α < ψY := by
-    rw [ssf.Wobj_cokernel_pullback_eq
-      (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
-      (B := B) hB_strict]
+      ssf.wPhase (cokernel pbB.arrow).obj < ψY := by
+    rw [hpb_phase_eq]
     exact hcokB_phase_lt
   have hpb_phase_ge :
-      ψY ≤ wPhaseOf (ssf.W (cl C v (cokernel pbB.arrow).obj)) ssf.α :=
+      ψY ≤ ssf.wPhase (cokernel pbB.arrow).obj :=
     hM_min pbB hpb_ne_top hpb_strict
   linarith
 
@@ -187,18 +193,18 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
     {X : σ.slicing.IntervalCat C a b} {M : Subobject X}
     (hM_ne_top : M ≠ ⊤) (hM_strict : IsStrictMono M.arrow)
     (hM_min : ∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →
-      wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α ≤
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α)
+      ssf.wPhase (cokernel M.arrow).obj ≤
+        ssf.wPhase (cokernel B.arrow).obj)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1)
     [IsStrictArtinianObject (cokernel M.arrow)] :
     ssf.Semistable C (cokernel M.arrow).obj
-      (wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α) := by
+      (ssf.wPhase (cokernel M.arrow).obj) := by
   let Y : σ.slicing.IntervalCat C a b := cokernel M.arrow
   have hY_ne : ¬IsZero Y :=
     interval_cokernel_nonzero_of_ne_top
@@ -206,7 +212,7 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
   have hY_obj_ne : ¬IsZero Y.obj := fun hZ =>
     hY_ne (Slicing.IntervalCat.isZero_of_obj_isZero
       (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
-  let ψY : ℝ := wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α
+  let ψY : ℝ := ssf.wPhase Y.obj
   have hY_window : L < ψY ∧ ψY < U := by
     simpa [Y, ψY] using hWindow Y.property hY_obj_ne
   by_contra hns
@@ -232,25 +238,25 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
         Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ
   have hB_window :
-      L < wPhaseOf (ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj)) ssf.α < U :=
+      L < ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ∧
+        ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj < U :=
     hWindow (B : σ.slicing.IntervalCat C a b).property hB_obj_ne
   have hcokB_window :
-      L < wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α < U :=
+      L < ssf.wPhase (cokernel B.arrow).obj ∧
+        ssf.wPhase (cokernel B.arrow).obj < U :=
     hWindow (cokernel B.arrow).property hcokB_obj_ne
   have hUpper : U < ψY + 1 := by
     linarith
   have hLower : ψY - 1 < L := by
     linarith
   have hB_range :
-      wPhaseOf (ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj)) ssf.α ∈
+      ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ∈
         Set.Ioo (ψY - 1) (ψY + 1) := by
     constructor <;> linarith
   have hcokB_range :
-      wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α ∈ Set.Ioo (ψY - 1) (ψY + 1) := by
+      ssf.wPhase (cokernel B.arrow).obj ∈ Set.Ioo (ψY - 1) (ψY + 1) := by
     constructor <;> linarith
-  have hB_Wne : ssf.W (cl C v (B : σ.slicing.IntervalCat C a b).obj) ≠ 0 :=
+  have hB_Wne : ssf.wNe (B : σ.slicing.IntervalCat C a b).obj :=
     hW_interval (B : σ.slicing.IntervalCat C a b).property hB_obj_ne
   have haddY :
       ssf.W (cl C v Y.obj) =
@@ -260,16 +266,22 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
       (interval_K0_of_strictMono
         (C := C) (s := σ.slicing) (a := a) (b := b) B.arrow hB_strict)
   have hcokB_phase_lt :
-      wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α < ψY :=
+      ssf.wPhase (cokernel B.arrow).obj < ψY :=
     wPhaseOf_seesaw_dual haddY.symm rfl hB_phase_gt hB_Wne hB_range hcokB_range
+  have hpb_phase_eq :
+      ssf.wPhase (cokernel pbB.arrow).obj =
+        ssf.wPhase (cokernel B.arrow).obj := by
+    simpa [SkewedStabilityFunction.wPhase] using
+      congrArg (fun z ↦ wPhaseOf z ssf.α)
+        (ssf.Wobj_cokernel_pullback_eq
+        (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
+        (B := B) hB_strict)
   have hpb_phase_lt :
-      wPhaseOf (ssf.W (cl C v (cokernel pbB.arrow).obj)) ssf.α < ψY := by
-    rw [ssf.Wobj_cokernel_pullback_eq
-      (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
-      (B := B) hB_strict]
+      ssf.wPhase (cokernel pbB.arrow).obj < ψY := by
+    rw [hpb_phase_eq]
     exact hcokB_phase_lt
   have hpb_phase_ge :
-      ψY ≤ wPhaseOf (ssf.W (cl C v (cokernel pbB.arrow).obj)) ssf.α :=
+      ψY ≤ ssf.wPhase (cokernel pbB.arrow).obj :=
     hM_min pbB hpb_ne_top hpb_strict
   linarith
 
@@ -284,14 +296,14 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_st
     {X : σ.slicing.IntervalCat C a b} {M : Subobject X}
     (hM_ne_top : M ≠ ⊤) (hM_strict : IsStrictMono M.arrow)
     (hM_min : ∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →
-      wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α ≤
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α)
+      ssf.wPhase (cokernel M.arrow).obj ≤
+        ssf.wPhase (cokernel B.arrow).obj)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1)
     [IsStrictArtinianObject (cokernel M.arrow)] :
     IsStrictMDQKernel (C := C) σ ssf M := by
@@ -311,19 +323,19 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
     {X : σ.slicing.IntervalCat C a b} {M : Subobject X}
     (hM_ne_top : M ≠ ⊤) (hM_strict : IsStrictMono M.arrow)
     (hM_lt : ∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow → B < M →
-      wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α <
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α)
+      ssf.wPhase (cokernel M.arrow).obj <
+        ssf.wPhase (cokernel B.arrow).obj)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {A : Subobject (M : σ.slicing.IntervalCat C a b)} (hA_top : A ≠ ⊤)
     (hA_strict : IsStrictMono A.arrow) :
-    wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α <
-      wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
+    ssf.wPhase (cokernel M.arrow).obj <
+      ssf.wPhase (cokernel A.arrow).obj := by
   let liftA := intervalLiftSub (C := C) (X := X) M A
   have hLift_strict : IsStrictMono liftA.arrow := by
     simpa [liftA, intervalLiftSub] using
@@ -334,8 +346,8 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
   have hLift_lt : liftA < M :=
     intervalLiftSub_lt (C := C) (X := X) M hA_top
   have hLift_ne_top : liftA ≠ ⊤ := ne_top_of_lt hLift_lt
-  let ψM : ℝ := wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α
-  let ψLift : ℝ := wPhaseOf (ssf.W (cl C v (cokernel liftA.arrow).obj)) ssf.α
+  let ψM : ℝ := ssf.wPhase (cokernel M.arrow).obj
+  let ψLift : ℝ := ssf.wPhase (cokernel liftA.arrow).obj
   have hLift_phase_gt : ψM < ψLift := by
     simpa [ψM, ψLift] using hM_lt liftA hLift_ne_top hLift_strict hLift_lt
   have hcokM_ne : ¬IsZero (cokernel M.arrow) :=
@@ -361,8 +373,8 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
   have hM_window : L < ψM ∧ ψM < U := by
     simpa [ψM] using hWindow (cokernel M.arrow).property hcokM_obj_ne
   have hA_window :
-      L < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α < U :=
+      L < ssf.wPhase (cokernel A.arrow).obj ∧
+        ssf.wPhase (cokernel A.arrow).obj < U :=
     hWindow (cokernel A.arrow).property hcokA_obj_ne
   have hUpper : U < ψLift + 1 := by
     linarith
@@ -371,10 +383,10 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
   have hM_range : ψM ∈ Set.Ioo (ψLift - 1) (ψLift + 1) := by
     constructor <;> linarith
   have hA_range :
-      wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α ∈
+      ssf.wPhase (cokernel A.arrow).obj ∈
         Set.Ioo (ψLift - 1) (ψLift + 1) := by
     constructor <;> linarith
-  have hM_Wne : ssf.W (cl C v (cokernel M.arrow).obj) ≠ 0 :=
+  have hM_Wne : ssf.wNe (cokernel M.arrow).obj :=
     hW_interval (cokernel M.arrow).property hcokM_obj_ne
   have hsum :
       ssf.W (cl C v (cokernel liftA.arrow).obj) =
@@ -384,7 +396,7 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
       ssf.Wobj_liftSub_cokernel_eq_add
         (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict hA_strict
   have hA_phase_gt_lift :
-      ψLift < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α :=
+      ψLift < ssf.wPhase (cokernel A.arrow).obj :=
     wPhaseOf_seesaw_strict hsum.symm rfl hLift_phase_gt hM_Wne hM_range hA_range
   linarith
 
@@ -405,14 +417,14 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_fi
     {X : σ.slicing.IntervalCat C a b} {M : Subobject X}
     (hM_ne_top : M ≠ ⊤) (hM_strict : IsStrictMono M.arrow)
     (hM_min : ∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →
-      wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α ≤
-        wPhaseOf (ssf.W (cl C v (cokernel B.arrow).obj)) ssf.α)
+      ssf.wPhase (cokernel M.arrow).obj ≤
+        ssf.wPhase (cokernel B.arrow).obj)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1) :
     IsStrictMDQKernel (C := C) σ ssf M := by
   letI : IsStrictArtinianObject (cokernel M.arrow) :=
@@ -435,11 +447,11 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hFinSub : ∀ Y : σ.slicing.IntervalCat C a b, Finite (Subobject Y))
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0)
+      ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf (ssf.W (cl C v F)) ssf.α ∧
-        wPhaseOf (ssf.W (cl C v F)) ssf.α < U)
+      L < ssf.wPhase F ∧
+        ssf.wPhase F < U)
     (hWidth : U - L < 1)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X) :
     let Psem : ℝ → ObjectProperty C := fun ψ E => ssf.Semistable C E ψ
@@ -451,11 +463,11 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
         Nat.card (Subobject Y) ≤ k →
         ∀ (t : ℝ),
           (∀ A : Subobject Y, A ≠ ⊤ → IsStrictMono A.arrow →
-            t < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α) →
+            t < ssf.wPhase (cokernel A.arrow).obj) →
           ∃ G : HNFiltration C Psem Y.obj,
             ∀ j, t < G.φ j ∧ G.φ j < U by
     have hL : ∀ A : Subobject X, A ≠ ⊤ → IsStrictMono A.arrow →
-        L < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
+        L < ssf.wPhase (cokernel A.arrow).obj := by
       intro A hA_top hA_strict
       have hcokA_ne : ¬IsZero (cokernel A.arrow) :=
         interval_cokernel_nonzero_of_ne_top
@@ -477,7 +489,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
       lia
   | succ k ih =>
       intro Y hY hcard t hquot
-      let ψY : ℝ := wPhaseOf (ssf.W (cl C v Y.obj)) ssf.α
+      let ψY : ℝ := ssf.wPhase Y.obj
       have hY_obj_ne : ¬IsZero Y.obj := fun hZ =>
         hY (Slicing.IntervalCat.isZero_of_obj_isZero
           (C := C) (s := σ.slicing) (a := a) (b := b) hZ)
@@ -491,7 +503,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
           intervalSubobject_bot_arrow_strictMono
             (C := C) (s := σ.slicing) (a := a) (b := b)
         have hbot_phase_gt :
-            t < wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α :=
+            t < ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj :=
           hquot ⊥ hbot_ne_top hbot_strict
         have hbot_zero :
             ((⊥ : Subobject Y).arrow) =
@@ -503,7 +515,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
         let eC : (cokernel ((⊥ : Subobject Y).arrow)).obj ≅ Y.obj :=
           (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
         have hbot_phase_eq :
-            wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α = ψY := by
+            ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj = ψY := by
           simpa [ψY] using
             congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
         have hψY_hi : ψY < U := (hWindow Y.property hY_obj_ne).2
@@ -514,16 +526,14 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
           Fin.ext hj0
         subst j
         have hbot_phase_gt_zero :
-            t < wPhaseOf
-              (ssf.W (cl C v
-                (cokernel
-                  (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y)).obj)) ssf.α := by
+            t < ssf.wPhase
+              (cokernel
+                (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y)).obj := by
           simpa [hbot_zero] using hbot_phase_gt
         have hbot_phase_eq_zero :
-            wPhaseOf (ssf.W (cl C v
-                (cokernel
-                  (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y)).obj))
-              ssf.α = ψY := by
+            ssf.wPhase
+              (cokernel
+                (0 : ((⊥ : Subobject Y) : σ.slicing.IntervalCat C a b) ⟶ Y)).obj = ψY := by
           simpa [hbot_zero] using hbot_phase_eq
         have hψY_gt : t < ψY := by
           exact hbot_phase_eq_zero ▸ hbot_phase_gt_zero
@@ -535,7 +545,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
         · subst hM_bot
           have hss_bot :
               ssf.Semistable C (cokernel ((⊥ : Subobject Y).arrow)).obj
-                (wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α) :=
+                (ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj) :=
             ssf.semistable_cokernel_of_minPhase_strictKernel_of_minimal
               (C := C) (σ := σ) (a := a) (b := b) hFinSub hM_top hM_strict hM_min
               hW_interval hWindow hWidth
@@ -545,7 +555,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
           let eC : (cokernel ((⊥ : Subobject Y).arrow)).obj ≅ Y.obj :=
             (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eI
           have hphase_bot :
-              wPhaseOf (ssf.W (cl C v (cokernel ((⊥ : Subobject Y).arrow)).obj)) ssf.α = ψY := by
+              ssf.wPhase (cokernel ((⊥ : Subobject Y).arrow)).obj = ψY := by
             simpa [ψY] using
               congrArg (fun x => wPhaseOf (ssf.W x) ssf.α) (cl_iso C v eC)
           have hssY : ssf.Semistable C Y.obj ψY := by
@@ -561,7 +571,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
                 Nat.card (Subobject Y) :=
             interval_card_subobject_lt_of_ne_top
               (C := C) (s := σ.slicing) (a := a) (b := b) hM_top
-          let ψQ : ℝ := wPhaseOf (ssf.W (cl C v (cokernel M.arrow).obj)) ssf.α
+          let ψQ : ℝ := ssf.wPhase (cokernel M.arrow).obj
           have hψQ_gt : t < ψQ := by
             simpa [ψQ] using hquot M hM_top hM_strict
           have hψQ_ss :
@@ -579,7 +589,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
             simpa [ψQ] using (hWindow (cokernel M.arrow).property hcokM_obj_ne).2
           have hquot_M :
               ∀ A : Subobject (M : σ.slicing.IntervalCat C a b), A ≠ ⊤ → IsStrictMono A.arrow →
-                ψQ < wPhaseOf (ssf.W (cl C v (cokernel A.arrow).obj)) ssf.α := by
+                ψQ < ssf.wPhase (cokernel A.arrow).obj := by
             intro A hA_top hA_strict
             simpa [ψQ] using
               (ssf.phase_lt_of_strictQuotient_of_minPhase_strictKernel
@@ -663,13 +673,10 @@ theorem wPhaseOf_cokernel_mapMono_eq
     {ssf : SkewedStabilityFunction C v s a b}
     [HasCokernels (s.IntervalCat C a b)]
     {X Y : s.IntervalCat C a b} (f : X ⟶ Y) [Mono f] {S T : Subobject X} (h : S ≤ T) :
-    wPhaseOf
-        (ssf.W
-          (cl C v
-            (cokernel (Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
-              ((Subobject.map f).monotone h))).obj)) ssf.α =
-      wPhaseOf
-        (ssf.W (cl C v (cokernel (Subobject.ofLE S T h)).obj)) ssf.α := by
+    ssf.wPhase
+        (cokernel (Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
+          ((Subobject.map f).monotone h))).obj =
+      ssf.wPhase (cokernel (Subobject.ofLE S T h)).obj := by
   let eC :=
     (Slicing.IntervalCat.ι (C := C) (s := s) a b).mapIso
       (Subobject.cokernelMapMonoIso f h)
@@ -702,8 +709,8 @@ theorem wPhaseOf_cokernel_kernelSubobject_eq
     {s : Slicing C} {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
     {ssf : SkewedStabilityFunction C v s a b}
     {E B : s.IntervalCat C a b} (q : E ⟶ B) (hq : IsStrictEpi q) :
-    wPhaseOf (ssf.W (cl C v (cokernel (kernelSubobject q).arrow).obj)) ssf.α =
-      wPhaseOf (ssf.W (cl C v B.obj)) ssf.α := by
+    ssf.wPhase (cokernel (kernelSubobject q).arrow).obj =
+      ssf.wPhase B.obj := by
   have hK_strict : IsStrictMono (kernelSubobject q).arrow := by
     simpa using
       (intervalSubobject_arrow_strictMono_of_strictMono
