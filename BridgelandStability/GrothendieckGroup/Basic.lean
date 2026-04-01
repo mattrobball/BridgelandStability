@@ -44,7 +44,7 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
@@ -211,4 +211,39 @@ theorem K₀.of_postnikovTower_eq_sum {E : C} (P : PostnikovTower C E) :
     exact (K₀.of_iso C (Classical.choice P.top_iso)).symm]
   exact K₀.of_chain_eq_partial_sum C P P.n le_rfl
 
+/-! ### Class map to a target lattice -/
+
+section ClassMap
+
+variable {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
+
+/-- The class of an object `E` in the target lattice `Λ`, via the class map
+`v : K₀(C) → Λ`. This is `v([E])` in the notation of Bridgeland, BMS16, etc.
+
+At `v = id`: `cl v E = K₀.of C E` definitionally. -/
+abbrev cl (E : C) : Λ := v (K₀.of C E)
+
+@[simp] lemma cl_isZero {E : C} (hE : IsZero E) : cl C v E = 0 := by
+  simp [cl, K₀.of_isZero C hE, map_zero]
+
+lemma cl_triangle (T : Pretriangulated.Triangle C) (hT : T ∈ distTriang C) :
+    cl C v T.obj₂ = cl C v T.obj₁ + cl C v T.obj₃ := by
+  simp [cl, K₀.of_triangle C T hT, map_add]
+
+lemma cl_iso {X Y : C} (e : X ≅ Y) : cl C v X = cl C v Y := by
+  simp [cl, K₀.of_iso C e]
+
+@[simp] lemma cl_shift_one (E : C) : cl C v (E⟦(1 : ℤ)⟧) = -cl C v E := by
+  simp [cl]
+
+@[simp] lemma cl_shift_neg_one (E : C) : cl C v (E⟦(-1 : ℤ)⟧) = -cl C v E := by
+  simp [cl]
+
+theorem cl_postnikovTower_eq_sum {E : C} (P : PostnikovTower C E) :
+    cl C v E = ∑ i : Fin P.n, cl C v (P.factor i) := by
+  simp [cl, K₀.of_postnikovTower_eq_sum C P, map_sum]
+
+end ClassMap
+
 end CategoryTheory.Triangulated
+
