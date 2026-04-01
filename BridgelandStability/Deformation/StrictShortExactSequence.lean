@@ -843,12 +843,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
     haveI : IsIso p := IsStrictEpi.isIso hp
     let eC : X.obj ≅ Y.obj :=
       ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso (asIso p))
-    have hEq : ssf.wPhase X.obj = ssf.wPhase Y.obj := by
-      exact ssf.wPhase_iso eC
-    calc
-      ψ = ssf.wPhase X.obj := hX.phase_eq.symm
-      _ = ssf.wPhase Y.obj := hEq
-      _ ≤ ssf.wPhase Y.obj := le_rfl
+    exact (hX.phase_eq.symm.trans (ssf.wPhase_iso eC)).le
   · have hK : ¬IsZero (kernel p).obj := hKz
     let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
       ShortComplex.mk (kernel.ι p) p (kernel.condition p)

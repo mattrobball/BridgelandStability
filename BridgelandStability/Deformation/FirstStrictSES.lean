@@ -153,8 +153,7 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
       let eC : (B : σ.slicing.IntervalCat C a b).obj ≅ KI.obj :=
         (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso
           (Subobject.underlyingIso iKX)
-      simpa [phaseObj] using congrArg (fun x => wPhaseOf (ssf.W x) ssf.α)
-        (cl_iso C v eC).symm
+      simpa [phaseObj] using ssf.wPhase_iso eC.symm
     exact hIsoK.trans_le hPhaseSub
   simpa [phaseObj, KI] using hPhaseB.trans hle
 

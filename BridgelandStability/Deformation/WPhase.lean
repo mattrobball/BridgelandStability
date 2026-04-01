@@ -223,7 +223,7 @@ theorem StabilityCondition.WithClassMap.W_ne_zero_of_intervalProp (σ : Stabilit
 section
 
 omit [IsTriangulated C]
-variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} {s : Slicing C} {a b : ℝ}
 
 /-! ### W-phase definition -/
 
@@ -364,8 +364,6 @@ construction. -/
 noncomputable abbrev SkewedStabilityFunction.wPhase
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) (E : C) : ℝ :=
   wPhaseOf (ssf.W (cl C v E)) ssf.α
 
@@ -374,8 +372,6 @@ that ensures the W-phase is well-defined. -/
 abbrev SkewedStabilityFunction.wNe
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) (E : C) : Prop :=
   ssf.W (cl C v E) ≠ 0
 
@@ -383,8 +379,6 @@ abbrev SkewedStabilityFunction.wNe
 theorem SkewedStabilityFunction.wPhase_congr
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) {E E' : C}
     (h : ssf.W (cl C v E) = ssf.W (cl C v E')) :
     ssf.wPhase E = ssf.wPhase E' := by
@@ -394,8 +388,6 @@ theorem SkewedStabilityFunction.wPhase_congr
 theorem SkewedStabilityFunction.wPhase_iso
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) {E E' : C} (e : E ≅ E') :
     ssf.wPhase E = ssf.wPhase E' :=
   ssf.wPhase_congr (congrArg ssf.W (cl_iso C v e))
@@ -404,8 +396,6 @@ theorem SkewedStabilityFunction.wPhase_iso
 theorem SkewedStabilityFunction.wPhase_mem_Ioc
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) (E : C) :
     ssf.wPhase E ∈ Set.Ioc (ssf.α - 1) (ssf.α + 1) := by
   simpa [SkewedStabilityFunction.wPhase] using
@@ -415,8 +405,6 @@ theorem SkewedStabilityFunction.wPhase_mem_Ioc
 theorem SkewedStabilityFunction.wPhase_compat
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) (E : C) :
     ssf.W (cl C v E) = ↑‖ssf.W (cl C v E)‖ *
       Complex.exp (↑(Real.pi * ssf.wPhase E) * Complex.I) := by
@@ -428,8 +416,6 @@ shifted by `1`. -/
 theorem SkewedStabilityFunction.wPhase_neg
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) {E : C}
     (hE : ssf.wNe E) :
     wPhaseOf (ssf.W (cl C v (E⟦(1 : ℤ)⟧))) (ssf.α + 1) = ssf.wPhase E + 1 := by
@@ -441,8 +427,6 @@ contains it. -/
 theorem SkewedStabilityFunction.wPhase_indep
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) {E : C}
     (hE : ssf.wNe E) (α' : ℝ)
     (h : ssf.wPhase E ∈ Set.Ioc (α' - 1) (α' + 1)) :
@@ -459,8 +443,6 @@ theorem SkewedStabilityFunction.wPhase_indep
 theorem SkewedStabilityFunction.wPhase_seesaw
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b)
     {E E₁ E₂ : C} {ψ : ℝ}
     (hsum : ssf.W (cl C v E₁) + ssf.W (cl C v E₂) = ssf.W (cl C v E))
