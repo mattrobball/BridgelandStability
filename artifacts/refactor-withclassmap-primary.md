@@ -127,18 +127,27 @@ All declarations in `Deformation.lean`, `Topology.lean`, and
 `LocalHomeomorphism.lean` currently take `σ : StabilityCondition C`
 (= `WithClassMap C id`) and `U : K₀ C →+ ℂ` (= `Λ →+ ℂ` at `v = id`).
 
-**Prediction: changing these signatures to `σ : WithClassMap C v` and
-`U : Λ →+ ℂ` requires ZERO proof changes.**
+**Original prediction:** changing these signatures requires ZERO proof changes.
 
-Justification: every proof manipulates `σ.Z`, `σ.slicing`, `stabSeminorm`,
-`basisNhd`, `slicingDist` — all now at the `v` level. No proof inspects
-the identity of `v`. No proof constructs a `K₀.of C E` and applies `σ.Z`
-to it directly — they all go through the compatibility condition
-`σ.compat φ E hP hNZ`, which gives `σ.Z(v(K₀.of C E)) = m · exp(iπφ)`.
+**What actually happened:** The signature changes are mechanical, but ~75
+proof-internal occurrences of `σ.Z (K₀.of C E)` need updating (the charge
+applied to a K₀-class). At general `v`, this is `σ.Z (v (K₀.of C E))`.
+Additionally, `K₀.of_triangle + map_add` chains need doubling for the
+K₀ → Λ → ℂ composition.
 
-If a proof DOES break, that means it secretly depends on `v = id` in a
-way we need to understand. That's valuable information, not a problem to
-patch.
+**Revised approach: introduce `cl` first.** Rather than mechanically inserting
+`v` into 1000+ locations (which makes the code MORE verbose), define
+`cl v E := v (K₀.of C E)` ("the class of E in Λ") with a matching API
+(`cl_triangle`, `cl_isZero`, `cl_postnikovTower_eq_sum`, etc.) in
+`GrothendieckGroup/Basic.lean`. Then the proof changes become SHORTER:
+`σ.Z (K₀.of C E)` → `σ.Z (cl v E)`, and the double-map chains become
+single lemma applications.
+
+See `artifacts/potential-abstractions-diary.md` Entry 3 for full design.
+
+The prediction was partially wrong: proofs DO access `σ.Z` at the K₀ level
+directly (not just through `σ.compat`). But the fix is an abstraction (`cl`),
+not a mechanical patch.
 
 ### Specific declarations
 
