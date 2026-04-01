@@ -25,17 +25,18 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject Topology
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-- Every stability condition admits a small Bridgeland basis neighbourhood contained in its
 topological connected component. This is the local connectedness input actually needed later. -/
-theorem exists_basisNhd_subset_connectedComponent (σ : StabilityCondition C) :
+theorem exists_basisNhd_subset_connectedComponent (σ : StabilityCondition.WithClassMap C v) :
     ∃ ε : ℝ, 0 < ε ∧ ε < 1 / 8 ∧
       basisNhd C σ ε ⊆ {τ | ConnectedComponents.mk τ = ConnectedComponents.mk σ} := by
   obtain ⟨ε₀, hε₀, hε₀10, hWide⟩ := σ.exists_epsilon0_tenth C
@@ -54,7 +55,7 @@ theorem exists_basisNhd_subset_connectedComponent (σ : StabilityCondition C) :
 
 /-- Connected components in `StabilityCondition C` are open, because small Bridgeland basis
 neighbourhoods stay inside the connected component of their centre. -/
-theorem stabilityCondition_isOpen_connectedComponent (σ : StabilityCondition C) :
+theorem stabilityCondition_isOpen_connectedComponent (σ : StabilityCondition.WithClassMap C v) :
     IsOpen (connectedComponent σ) := by
   rw [isOpen_iff_mem_nhds]
   intro x hx
@@ -66,19 +67,19 @@ theorem stabilityCondition_isOpen_connectedComponent (σ : StabilityCondition C)
       ConnectedComponents.coe_eq_coe'.2 hx
     exact ConnectedComponents.coe_eq_coe'.1 (hyx.trans hxσ)
   · change TopologicalSpace.GenerateOpen
-        { U | ∃ (σ : StabilityCondition C) (ε : ℝ),
+        { U | ∃ (σ : StabilityCondition.WithClassMap C v) (ε : ℝ),
             0 < ε ∧ ε < 1 / 8 ∧ U = basisNhd C σ ε }
         (basisNhd C x ε)
     exact TopologicalSpace.GenerateOpen.basic _ ⟨x, ε, hε, hε8, rfl⟩
 
 /-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination). -/
-theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
+theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition.WithClassMap C v)
     (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
     ∃ K : ENNReal, K ≠ ⊤ ∧
-      ∀ (f : K₀ C →+ ℂ), stabSeminorm C σ f ≤ K * stabSeminorm C τ f := by
-  let P : StabilityCondition C → StabilityCondition C → Prop := fun ρ₁ ρ₂ =>
+      ∀ (f : Λ →+ ℂ), stabSeminorm C σ f ≤ K * stabSeminorm C τ f := by
+  let P : StabilityCondition.WithClassMap C v → StabilityCondition.WithClassMap C v → Prop := fun ρ₁ ρ₂ =>
     ∃ K : ENNReal, K ≠ ⊤ ∧
-      ∀ f : K₀ C →+ ℂ, stabSeminorm C ρ₁ f ≤ K * stabSeminorm C ρ₂ f
+      ∀ f : Λ →+ ℂ, stabSeminorm C ρ₁ f ≤ K * stabSeminorm C ρ₂ f
   have hs : _root_.IsPreconnected (connectedComponent σ) := isPreconnected_connectedComponent
   have hlocal :
       ∀ x ∈ connectedComponent σ, ∀ᶠ y in 𝓝[connectedComponent σ] x, P x y ∧ P y x := by
@@ -97,7 +98,7 @@ theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
     have hU_mem : basisNhd C x δ ∈ 𝓝 x := by
       apply IsOpen.mem_nhds
       · change TopologicalSpace.GenerateOpen
-            { U | ∃ (σ : StabilityCondition C) (ε : ℝ),
+            { U | ∃ (σ : StabilityCondition.WithClassMap C v) (ε : ℝ),
                 0 < ε ∧ ε < 1 / 8 ∧ U = basisNhd C σ ε }
             (basisNhd C x δ)
         exact TopologicalSpace.GenerateOpen.basic _ ⟨x, δ, hδ, hδ8, rfl⟩
@@ -129,7 +130,7 @@ theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition C)
   exact _root_.IsPreconnected.induction₂' hs P hlocal htrans mem_connectedComponent hτ
 
 /-- **Lemma 6.2**: On a connected component, the finite-seminorm subgroups agree. -/
-theorem finiteSeminormSubgroup_eq_of_connected (σ τ : StabilityCondition C)
+theorem finiteSeminormSubgroup_eq_of_connected (σ τ : StabilityCondition.WithClassMap C v)
     (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
     finiteSeminormSubgroup C σ = finiteSeminormSubgroup C τ := by
   ext f
@@ -145,12 +146,12 @@ theorem finiteSeminormSubgroup_eq_of_connected (σ τ : StabilityCondition C)
       (ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hK₁) hf)
 
 /-- The generating family of Bridgeland basis neighborhoods on `Stab(D)`. -/
-def basisNhdFamily : Set (Set (StabilityCondition C)) :=
-  {U | ∃ (σ : StabilityCondition C) (ε : ℝ), 0 < ε ∧ ε < 1 / 8 ∧ U = basisNhd C σ ε}
+def basisNhdFamily : Set (Set (StabilityCondition.WithClassMap C v)) :=
+  {U | ∃ (σ : StabilityCondition.WithClassMap C v) (ε : ℝ), 0 < ε ∧ ε < 1 / 8 ∧ U = basisNhd C σ ε}
 
 /-- Every open neighborhood of `σ` contains a centered Bridgeland basis neighborhood. -/
-theorem exists_basisNhd_subset_of_mem_open (σ : StabilityCondition C)
-    {s : Set (StabilityCondition C)} (hs : IsOpen s) (hσ : σ ∈ s) :
+theorem exists_basisNhd_subset_of_mem_open (σ : StabilityCondition.WithClassMap C v)
+    {s : Set (StabilityCondition.WithClassMap C v)} (hs : IsOpen s) (hσ : σ ∈ s) :
     ∃ ε : ℝ, 0 < ε ∧ ε < 1 / 8 ∧ basisNhd C σ ε ⊆ s := by
   change TopologicalSpace.GenerateOpen (basisNhdFamily C) s at hs
   induction hs generalizing σ with
@@ -178,8 +179,8 @@ theorem exists_basisNhd_subset_of_mem_open (σ : StabilityCondition C)
       exact Set.mem_sUnion.mpr ⟨t, htS, hx⟩
 
 /-- The Bridgeland neighborhoods form a topological basis for `Stab(D)`. -/
-theorem isTopologicalBasis_basisNhd :
-    TopologicalSpace.IsTopologicalBasis (basisNhdFamily C) := by
+theorem isTopologicalBasis_basisNhd (v : K₀ C →+ Λ) :
+    TopologicalSpace.IsTopologicalBasis (basisNhdFamily (v := v) C) := by
   refine TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds ?_ ?_
   · intro U hU
     rcases hU with ⟨σ, ε, hε, hε8, rfl⟩
@@ -190,10 +191,10 @@ theorem isTopologicalBasis_basisNhd :
     refine ⟨basisNhd C σ ε, ⟨σ, ε, hε, hε8, rfl⟩, basisNhd_self C σ hε hε8, hsub⟩
 
 /-- Neighborhood-form extraction of a centered Bridgeland basis neighborhood. -/
-theorem exists_basisNhd_subset_of_mem_nhds (σ : StabilityCondition C)
-    {s : Set (StabilityCondition C)} (hs : s ∈ 𝓝 σ) :
+theorem exists_basisNhd_subset_of_mem_nhds (σ : StabilityCondition.WithClassMap C v)
+    {s : Set (StabilityCondition.WithClassMap C v)} (hs : s ∈ 𝓝 σ) :
     ∃ ε : ℝ, 0 < ε ∧ ε < 1 / 8 ∧ basisNhd C σ ε ⊆ s := by
-  rcases (isTopologicalBasis_basisNhd C).mem_nhds_iff.mp hs with ⟨t, ht, hσt, hts⟩
+  rcases (isTopologicalBasis_basisNhd C v).mem_nhds_iff.mp hs with ⟨t, ht, hσt, hts⟩
   rcases ht with ⟨τ, ε, hε, hε8, rfl⟩
   rcases exists_basisNhd_subset_basisNhd C τ σ hε hε8 hσt with ⟨δ, hδ, hδ8, hsub⟩
   exact ⟨δ, hδ, hδ8, hsub.trans hts⟩
@@ -202,19 +203,25 @@ section
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
-/-- An additive homomorphism out of `K₀ C` is zero if it vanishes on all object classes. -/
-theorem K₀_hom_eq_zero_of_vanishes_on_of (U : K₀ C →+ ℂ)
-    (hU : ∀ E : C, U (K₀.of C E) = 0) :
+/-- An additive homomorphism on `Λ` is zero if it vanishes on all class images and `v` is
+surjective. The surjectivity ensures `cl C v` generates all of `Λ`. -/
+theorem eq_zero_of_vanishes_on_cl (U : Λ →+ ℂ)
+    (hv : Function.Surjective v)
+    (hU : ∀ E : C, U (cl C v E) = 0) :
     U = 0 := by
-  apply K₀.hom_ext; intro E
-  exact hU E
+  have hcomp : U.comp v = 0 := K₀.hom_ext (C := C) (fun E => hU E)
+  ext x; obtain ⟨y, rfl⟩ := hv x
+  exact DFunLike.congr_fun hcomp y
 
 end
 
-/-- If the Bridgeland seminorm of `U` is finite and equal to zero, then `U = 0`. -/
-theorem eq_zero_of_stabSeminorm_toReal_eq_zero (σ : StabilityCondition C)
-    {U : K₀ C →+ ℂ} (hfin : stabSeminorm C σ U < ⊤)
+/-- If the Bridgeland seminorm of `U` is finite and equal to zero, then `U = 0`.
+Requires surjectivity of `v` so that vanishing on `cl C v` implies vanishing on all of `Λ`. -/
+theorem eq_zero_of_stabSeminorm_toReal_eq_zero (σ : StabilityCondition.WithClassMap C v)
+    (hv : Function.Surjective v)
+    {U : Λ →+ ℂ} (hfin : stabSeminorm C σ U < ⊤)
     (hzero : (stabSeminorm C σ U).toReal = 0) :
     U = 0 := by
   have hU_ne_top : stabSeminorm C σ U ≠ ⊤ := ne_top_of_lt hfin
@@ -222,42 +229,42 @@ theorem eq_zero_of_stabSeminorm_toReal_eq_zero (σ : StabilityCondition C)
     rcases (ENNReal.toReal_eq_zero_iff _).mp hzero with h | h
     · exact h
     · exact (hU_ne_top h).elim
-  have hvanish : ∀ E : C, U (K₀.of C E) = 0 := by
+  have hvanish : ∀ E : C, U (cl C v E) = 0 := by
     intro E
     by_cases hE : IsZero E
-    · rw [K₀.of_isZero C hE, map_zero]
+    · rw [cl_isZero (C := C) (v := v) hE, map_zero]
     · obtain ⟨F, hn, _, _⟩ := σ.slicing.exists_HN_intrinsic_width C hE
       have hfactor :
-          ∀ i : Fin F.n, U (K₀.of C (F.toPostnikovTower.factor i)) = 0 := by
+          ∀ i : Fin F.n, U (cl C v (F.toPostnikovTower.factor i)) = 0 := by
         intro i
         by_cases hi : IsZero (F.toPostnikovTower.factor i)
-        · rw [K₀.of_isZero C hi, map_zero]
+        · rw [cl_isZero (C := C) (v := v) hi, map_zero]
         · have hbound :=
             stabSeminorm_bound_real C σ U hU_ne_top (F.semistable i) hi
           rw [hseminorm_zero, ENNReal.toReal_zero, zero_mul] at hbound
           exact norm_eq_zero.mp <| le_antisymm hbound (norm_nonneg _)
-      rw [K₀.of_postnikovTower_eq_sum, map_sum]
+      rw [cl_postnikovTower_eq_sum C v, map_sum]
       calc
-        ∑ i : Fin F.n, U (K₀.of C (F.toPostnikovTower.factor i))
+        ∑ i : Fin F.n, U (cl C v (F.toPostnikovTower.factor i))
           = ∑ i : Fin F.n, 0 := by
               refine Finset.sum_congr rfl ?_
               intro i hi
               exact hfactor i
         _ = 0 := by simp
-  exact K₀_hom_eq_zero_of_vanishes_on_of C U hvanish
+  exact eq_zero_of_vanishes_on_cl C U hv hvanish
 
 /-- Z(σ) has finite σ-seminorm: ‖Z(σ)‖_σ ≤ 1, hence Z(σ) ∈ V(σ). -/
-theorem Z_mem_finiteSeminormSubgroup (σ : StabilityCondition C) :
+theorem Z_mem_finiteSeminormSubgroup (σ : StabilityCondition.WithClassMap C v) :
     σ.Z ∈ finiteSeminormSubgroup C σ := by
   show stabSeminorm C σ σ.Z < ⊤
   calc stabSeminorm C σ σ.Z
       = ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
-          ENNReal.ofReal (‖σ.Z (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) := rfl
+          ENNReal.ofReal (‖σ.Z (cl C v E)‖ / ‖σ.Z (cl C v E)‖) := rfl
     _ ≤ 1 := by
         apply iSup_le; intro E; apply iSup_le; intro φ
         apply iSup_le; intro _; apply iSup_le; intro _
         rw [ENNReal.ofReal_le_one]
-        by_cases h : ‖σ.Z (K₀.of C E)‖ = 0
+        by_cases h : ‖σ.Z (cl C v E)‖ = 0
         · simp [h]
         · rw [div_le_one (lt_of_le_of_ne (norm_nonneg _) (Ne.symm h))]
     _ < ⊤ := ENNReal.one_lt_top
