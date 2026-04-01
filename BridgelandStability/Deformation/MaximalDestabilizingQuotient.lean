@@ -104,8 +104,7 @@ theorem SkewedStabilityFunction.exists_semistable_strictQuotient_le_phase_of_fin
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X) :
     ∃ M : Subobject X, M ≠ ⊤ ∧ IsStrictMono M.arrow ∧
@@ -233,8 +232,7 @@ theorem IsStrictMDQ.id_of_semistable
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {X : σ.slicing.IntervalCat C a b}
     (hss : ssf.Semistable C X.obj
@@ -344,8 +342,7 @@ theorem IsStrictMDQ.phase_le_of_strictQuotient
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {X B Q : σ.slicing.IntervalCat C a b} {q : X ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q)
@@ -381,8 +378,7 @@ theorem IsStrictMDQ.isSemistable_of_strictQuotient_phase_eq
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {X B Q : σ.slicing.IntervalCat C a b} {q : X ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q)
@@ -436,8 +432,7 @@ theorem IsStrictMDQ.factor_of_phase_eq_of_strictQuotient
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {X B Q : σ.slicing.IntervalCat C a b} {q : X ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q)
@@ -466,8 +461,7 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
@@ -476,8 +470,7 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
           (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
           (ssf.wPhase F.obj)),
-        ssf.wPhase F.obj <
-          ssf.wPhase E.obj →
+        ssf.wPhase F.obj < ssf.wPhase E.obj →
         ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     {X : σ.slicing.IntervalCat C a b} {A : Subobject X}
@@ -588,8 +581,7 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
@@ -598,8 +590,7 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
           (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
           (ssf.wPhase F.obj)),
-        ssf.wPhase F.obj <
-          ssf.wPhase E.obj →
+        ssf.wPhase F.obj < ssf.wPhase E.obj →
         ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
@@ -826,8 +817,7 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {X B : σ.slicing.IntervalCat C a b} {q : X ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q)

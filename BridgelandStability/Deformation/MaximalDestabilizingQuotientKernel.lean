@@ -84,8 +84,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1) :
     ssf.Semistable C (cokernel M.arrow).obj
       (ssf.wPhase (cokernel M.arrow).obj) := by
@@ -197,8 +196,7 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     [IsStrictArtinianObject (cokernel M.arrow)] :
     ssf.Semistable C (cokernel M.arrow).obj
@@ -298,8 +296,7 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_st
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     [IsStrictArtinianObject (cokernel M.arrow)] :
     IsStrictMDQKernel (C := C) σ ssf M := by
@@ -325,8 +322,7 @@ theorem SkewedStabilityFunction.phase_lt_of_strictQuotient_of_minPhase_strictKer
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {A : Subobject (M : σ.slicing.IntervalCat C a b)} (hA_top : A ≠ ⊤)
     (hA_strict : IsStrictMono A.arrow) :
@@ -419,8 +415,7 @@ theorem SkewedStabilityFunction.isStrictMDQKernel_of_minPhase_strictKernel_of_fi
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1) :
     IsStrictMDQKernel (C := C) σ ssf M := by
   letI : IsStrictArtinianObject (cokernel M.arrow) :=
@@ -446,8 +441,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_finiteSubobjects
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X) :
     let Psem : ℝ → ObjectProperty C := fun ψ E => ssf.Semistable C E ψ

@@ -396,8 +396,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1) :
     ssf.Semistable C (cokernel M.arrow).obj
       (ssf.wPhase (cokernel M.arrow).obj) := by
@@ -837,8 +836,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient_of_window
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     (p : X ⟶ Y) (hp : IsStrictEpi p)
     (hY : ¬IsZero Y.obj) :
@@ -918,8 +916,7 @@ theorem SkewedStabilityFunction.phase_cokernel_lt_of_phase_gt_strictSubobject
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1) :
     ssf.wPhase (cokernel A.arrow).obj <
       ssf.wPhase Y.obj := by

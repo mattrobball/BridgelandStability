@@ -50,8 +50,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
@@ -60,8 +59,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
           (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
           (ssf.wPhase F.obj)),
-        ssf.wPhase F.obj <
-          ssf.wPhase E.obj →
+        ssf.wPhase F.obj < ssf.wPhase E.obj →
         ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
@@ -319,8 +317,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
@@ -329,8 +326,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
           (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
           (ssf.wPhase F.obj)),
-        ssf.wPhase F.obj <
-          ssf.wPhase E.obj →
+        ssf.wPhase F.obj < ssf.wPhase E.obj →
         ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
@@ -373,8 +369,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {U_hom : ℝ}
     (hHom :
@@ -383,8 +378,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
           (ssf.wPhase E.obj))
         (_hF : ssf.Semistable C F.obj
           (ssf.wPhase F.obj)),
-        ssf.wPhase F.obj <
-          ssf.wPhase E.obj →
+        ssf.wPhase F.obj < ssf.wPhase E.obj →
         ssf.wPhase E.obj < U_hom →
         ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)

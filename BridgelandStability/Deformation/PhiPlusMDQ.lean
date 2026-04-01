@@ -90,8 +90,7 @@ theorem exists_strictMDQ_with_quotient_bound
       ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < ssf.wPhase F ∧
-        ssf.wPhase F < U)
+      L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     -- Perturbation data (replaces hHom)
     (W : Λ →+ ℂ) (hW_stab : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
