@@ -155,9 +155,7 @@ theorem exists_strictMDQ_with_quotient_bound
         ((σ.slicing.intervalProp C a b).ι).mapIso e0
       have : ssf.W (cl C v (cokernel S0.1.arrow).obj) = ssf.W (cl C v X.obj) := by
         congr 1; exact cl_iso C v hiso
-      have hEq : ssf.wPhase (cokernel S0.1.arrow).obj = ssf.wPhase X.obj := by
-        exact ssf.wPhase_congr this
-      rw [hEq]
+      rw [ssf.wPhase_congr this]
       exact hψ_X_upper
     obtain ⟨B, q, hq⟩ := h S0 hS0_ne hψ_S0 hQLo0
     let e0 : cokernel S0.1.arrow ≅ X := by
