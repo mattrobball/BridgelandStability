@@ -379,6 +379,114 @@ abbrev SkewedStabilityFunction.wNe
     (ssf : SkewedStabilityFunction C v s a b) (E : C) : Prop :=
   ssf.W (cl C v E) ≠ 0
 
+/-- The W-phase of an object lies in `(α - 1, α + 1]`. -/
+theorem SkewedStabilityFunction.wPhase_mem_Ioc
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
+    ssf.wPhase E ∈ Set.Ioc (ssf.α - 1) (ssf.α + 1) := by
+  simpa [SkewedStabilityFunction.wPhase] using
+    (wPhaseOf_mem_Ioc (ssf.W (cl C v E)) ssf.α)
+
+/-- The W-value of an object satisfies the polar decomposition determined by its W-phase. -/
+theorem SkewedStabilityFunction.wPhase_compat
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
+    ssf.W (cl C v E) = ↑‖ssf.W (cl C v E)‖ *
+      Complex.exp (↑(Real.pi * ssf.wPhase E) * Complex.I) := by
+  simpa [SkewedStabilityFunction.wPhase] using
+    (wPhaseOf_compat (ssf.W (cl C v E)) ssf.α)
+
+/-- Shifting an object by `[1]` shifts its W-phase by `1` when the branch parameter is also
+shifted by `1`. -/
+theorem SkewedStabilityFunction.wPhase_neg
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) {E : C}
+    (hE : ssf.wNe E) :
+    wPhaseOf (ssf.W (cl C v (E⟦(1 : ℤ)⟧))) (ssf.α + 1) = ssf.wPhase E + 1 := by
+  simpa [SkewedStabilityFunction.wPhase, cl_shift_one, map_neg] using
+    (wPhaseOf_neg (w := ssf.W (cl C v E)) hE ssf.α)
+
+/-- The W-phase is independent of the branch parameter once the chosen branch window
+contains it. -/
+theorem SkewedStabilityFunction.wPhase_indep
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) {E : C}
+    (hE : ssf.wNe E) (α' : ℝ)
+    (h : ssf.wPhase E ∈ Set.Ioc (α' - 1) (α' + 1)) :
+    ssf.wPhase E = wPhaseOf (ssf.W (cl C v E)) α' := by
+  have hm : (0 : ℝ) < ‖ssf.W (cl C v E)‖ := norm_pos_iff.mpr hE
+  have hphase :
+      wPhaseOf (↑‖ssf.W (cl C v E)‖ *
+        Complex.exp (↑(Real.pi * ssf.wPhase E) * Complex.I)) α' = ssf.wPhase E :=
+    wPhaseOf_of_exp hm h
+  rw [← ssf.wPhase_compat E] at hphase
+  exact hphase.symm
+
+/-- Phase seesaw for object charges. -/
+theorem SkewedStabilityFunction.wPhase_seesaw
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b)
+    {E E₁ E₂ : C} {ψ : ℝ}
+    (hsum : ssf.W (cl C v E₁) + ssf.W (cl C v E₂) = ssf.W (cl C v E))
+    (hψ : ssf.wPhase E = ψ)
+    (hE₁_range : ssf.wPhase E₁ ∈ Set.Ioc (ψ - 1) ψ)
+    (hE₂_ne : ssf.wNe E₂)
+    (hE₂_range : ssf.wPhase E₂ ∈ Set.Ioo (ψ - 1) (ψ + 1)) :
+    ψ ≤ ssf.wPhase E₂ := by
+  by_contra hlt
+  push Not at hlt
+  let rot : ℂ := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
+  have him (F : C) :
+      (ssf.W (cl C v F) * rot).im =
+        ‖ssf.W (cl C v F)‖ * Real.sin (Real.pi * (ssf.wPhase F - ψ)) := by
+    calc
+      (ssf.W (cl C v F) * rot).im
+          = ((↑‖ssf.W (cl C v F)‖ *
+              Complex.exp (↑(Real.pi * ssf.wPhase F) * Complex.I)) * rot).im := by
+              exact congrArg (fun z : ℂ => (z * rot).im) (ssf.wPhase_compat F)
+      _ = (↑‖ssf.W (cl C v F)‖ *
+            Complex.exp (↑(Real.pi * ssf.wPhase F) * Complex.I) *
+            Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im := by
+              dsimp [rot]
+      _ = ‖ssf.W (cl C v F)‖ * Real.sin (Real.pi * (ssf.wPhase F - ψ)) := by
+              simpa using
+                (im_ofReal_mul_exp_mul_exp_neg ‖ssf.W (cl C v F)‖ (ssf.wPhase F) ψ)
+  have hE_im : (ssf.W (cl C v E) * rot).im = 0 := by
+    rw [him, hψ, sub_self, mul_zero]
+    simp
+  have hE₁_im : (ssf.W (cl C v E₁) * rot).im ≤ 0 := by
+    rw [him]
+    exact mul_nonpos_of_nonneg_of_nonpos (norm_nonneg _)
+      (Real.sin_nonpos_of_nonpos_of_neg_pi_le
+        (by nlinarith [Real.pi_pos, hE₁_range.2])
+        (by nlinarith [Real.pi_pos, hE₁_range.1]))
+  have hE₂_im : (ssf.W (cl C v E₂) * rot).im < 0 := by
+    rw [him]
+    exact mul_neg_of_pos_of_neg (norm_pos_iff.mpr hE₂_ne)
+      (Real.sin_neg_of_neg_of_neg_pi_lt
+        (by nlinarith [Real.pi_pos, hlt])
+        (by nlinarith [Real.pi_pos, hE₂_range.1]))
+  have hsum_im :
+      (ssf.W (cl C v E) * rot).im =
+        (ssf.W (cl C v E₁) * rot).im + (ssf.W (cl C v E₂) * rot).im := by
+    rw [← hsum, add_mul, Complex.add_im]
+  linarith
+
 /-! ### W-semistability in interval categories -/
 
 /-- **W-semistability**. An object `E` in `P((a, b))` is *W-semistable* of W-phase `ψ` if:
