@@ -223,6 +223,8 @@ variable {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
 At `v = id`: `cl v E = K₀.of C E` definitionally. -/
 abbrev cl (E : C) : Λ := v (K₀.of C E)
 
+@[simp] lemma cl_id (E : C) : cl C (AddMonoidHom.id (K₀ C)) E = K₀.of C E := rfl
+
 @[simp] lemma cl_isZero {E : C} (hE : IsZero E) : cl C v E = 0 := by
   simp [cl, K₀.of_isZero C hE, map_zero]
 

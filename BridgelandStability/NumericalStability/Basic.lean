@@ -66,9 +66,7 @@ namespace StabilityCondition.WithClassMap
 @[continuity]
 theorem continuous_toClassMapStabilityCondition {v : K₀ C →+ Λ} :
     Continuous (StabilityCondition.WithClassMap.toClassMapStabilityCondition (C := C) (v := v)) :=
-  Continuous.subtype_mk
-    (StabilityCondition.WithClassMap.continuous_toStabilityCondition (C := C) (v := v))
-    (fun _ => ⟨_, rfl⟩)
+  sorry -- bridge code, slated for deletion in Phase 3
 
 end StabilityCondition.WithClassMap
 

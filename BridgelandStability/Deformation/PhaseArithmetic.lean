@@ -116,6 +116,7 @@ theorem hperturb_of_stabSeminorm (σ : StabilityCondition C)
       (ENNReal.ofReal_ne_top)).mpr hsin
   -- ‖(W-Z)(F)‖ ≤ M * ‖Z(F)‖
   have hbd := stabSeminorm_bound_real C σ (W - σ.Z) hfin hP hFne
+  simp only [cl_id] at hbd
   -- Z(F) ≠ 0 (from compatibility)
   obtain ⟨m, hm, hmZ⟩ := stabilityCondition_compat_apply (C := C) σ φ F hP hFne
   have hZ_pos : (0 : ℝ) < ‖σ.Z (K₀.of C F)‖ := by

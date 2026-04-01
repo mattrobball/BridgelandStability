@@ -636,14 +636,8 @@ noncomputable def componentTopologicalLinearLocalModel
     change @IsLocalHomeomorph comp V inferInstance inferInstance Zmap
     exact (componentSeminormTopology_eq_normTopology C cc) ▸ hLocal
 
-theorem StabilityCondition.centralChargeIsLocalHomeomorphOnConnectedComponents :
-    StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents C := by
-  intro cc
-  let cc' : ConnectedComponents (StabilityCondition C) := cc
-  let M := componentTopologicalLinearLocalModel C cc'
-  refine ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace, ?_, ?_⟩
-  · intro σ hσ
-    exact M.mem_charge σ (by simpa [cc'] using hσ)
-  · simpa [cc', StabilityCondition.WithClassMap.Component] using M.isLocalHomeomorph_chargeMap
+-- Deleted: centralChargeIsLocalHomeomorphOnConnectedComponents
+-- was a v=id wrapper around the generic componentTopologicalLinearLocalModel.
+-- The generic version (componentTopologicalLinearLocalModel) is the canonical statement.
 
 end CategoryTheory.Triangulated

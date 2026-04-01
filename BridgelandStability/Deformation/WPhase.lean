@@ -55,6 +55,7 @@ theorem StabilityCondition.W_ne_zero_of_seminorm_lt_one (σ : StabilityCondition
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   -- ‖(W - Z)([E])‖ ≤ M · ‖Z([E])‖
   have hbd := stabSeminorm_bound_real C σ (W - σ.Z) hfin hP hE
+  simp only [cl_id] at hbd
   -- If W([E]) = 0, then (W - Z)([E]) = -Z([E]), so ‖(W-Z)([E])‖ = ‖Z([E])‖
   -- But ‖(W-Z)([E])‖ ≤ M · ‖Z([E])‖ with M < 1, contradicting ‖Z([E])‖ > 0
   intro hw0
