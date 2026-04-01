@@ -553,8 +553,7 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       ssf.wNe F)
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj)) :
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj)) :
     ∃ B : Subobject X, B ≠ ⊥ ∧ B ≠ ⊤ ∧ IsStrictMono B.arrow ∧
       ssf.wPhase X.obj <
         ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj := by
@@ -696,8 +695,7 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       ssf.wNe F)
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj))
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     [Finite (Subobject X)] :
     ∃ M : Subobject X, M ≠ ⊤ ∧ IsStrictMono M.arrow ∧
       (∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →
@@ -805,8 +803,7 @@ theorem SkewedStabilityFunction.exists_minPhase_minimal_strictKernel
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       ssf.wNe F)
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj))
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     [Finite (Subobject X)] :
     ∃ M : Subobject X, M ≠ ⊤ ∧ IsStrictMono M.arrow ∧
       (∀ B : Subobject X, B ≠ ⊤ → IsStrictMono B.arrow →

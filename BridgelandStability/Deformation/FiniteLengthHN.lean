@@ -55,13 +55,10 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (_hE : ssf.Semistable C E.obj
-          (ssf.wPhase E.obj))
-        (_hF : ssf.Semistable C F.obj
-          (ssf.wPhase F.obj)),
+        (_hE : ssf.Semistable C E.obj (ssf.wPhase E.obj))
+        (_hF : ssf.Semistable C F.obj (ssf.wPhase F.obj)),
         ssf.wPhase F.obj < ssf.wPhase E.obj →
-        ssf.wPhase E.obj < U_hom →
-        ∀ f : E ⟶ F, f = 0)
+        ssf.wPhase E.obj < U_hom → ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
       {A : Subobject Y}
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
@@ -319,13 +316,10 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (_hE : ssf.Semistable C E.obj
-          (ssf.wPhase E.obj))
-        (_hF : ssf.Semistable C F.obj
-          (ssf.wPhase F.obj)),
+        (_hE : ssf.Semistable C E.obj (ssf.wPhase E.obj))
+        (_hF : ssf.Semistable C F.obj (ssf.wPhase F.obj)),
         ssf.wPhase F.obj < ssf.wPhase E.obj →
-        ssf.wPhase E.obj < U_hom →
-        ∀ f : E ⟶ F, f = 0)
+        ssf.wPhase E.obj < U_hom → ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
       {A : Subobject Y}
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
@@ -370,13 +364,10 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_strictQuotientLowe
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (_hE : ssf.Semistable C E.obj
-          (ssf.wPhase E.obj))
-        (_hF : ssf.Semistable C F.obj
-          (ssf.wPhase F.obj)),
+        (_hE : ssf.Semistable C E.obj (ssf.wPhase E.obj))
+        (_hF : ssf.Semistable C F.obj (ssf.wPhase F.obj)),
         ssf.wPhase F.obj < ssf.wPhase E.obj →
-        ssf.wPhase E.obj < U_hom →
-        ∀ f : E ⟶ F, f = 0)
+        ssf.wPhase E.obj < U_hom → ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
       {A : Subobject Y}
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj

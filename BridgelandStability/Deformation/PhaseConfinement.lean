@@ -42,13 +42,11 @@ theorem perturb_gt_of_perturb
     {ssf : SkewedStabilityFunction C v σ.slicing a b} {ε₀ : ℝ}
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase F ∧
-        ssf.wPhase F < φ + ε₀)
+        φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀)
     (hthin : b - a + 2 * ε₀ < 1)
     (F : C) (φ : ℝ) (hP : (σ.slicing.P φ) F) (hFne : ¬IsZero F)
     (haφ : a < φ) (hφb : φ < b) :
-    a - ε₀ < ssf.wPhase F ∧
-    ssf.wPhase F < a - ε₀ + 1 := by
+    a - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < a - ε₀ + 1 := by
   obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
   exact ⟨by linarith, by linarith⟩
 
@@ -59,13 +57,11 @@ theorem perturb_lt_of_perturb
     {ssf : SkewedStabilityFunction C v σ.slicing a b} {ε₀ : ℝ}
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase F ∧
-        ssf.wPhase F < φ + ε₀)
+        φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀)
     (hthin : b - a + 2 * ε₀ < 1)
     (F : C) (φ : ℝ) (hP : (σ.slicing.P φ) F) (hFne : ¬IsZero F)
     (haφ : a < φ) (hφb : φ < b) :
-    b + ε₀ - 1 < ssf.wPhase F ∧
-    ssf.wPhase F < b + ε₀ := by
+    b + ε₀ - 1 < ssf.wPhase F ∧ ssf.wPhase F < b + ε₀ := by
   obtain ⟨hlo, hhi⟩ := hperturb F φ hP hFne haφ hφb
   exact ⟨by linarith, by linarith⟩
 
@@ -85,8 +81,7 @@ theorem phiPlus_lt_of_wSemistable
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase F ∧
-        ssf.wPhase F < φ + ε₀) :
+        φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀) :
     σ.slicing.phiPlus C E hSS.nonzero < ψ + ε₀ := by
   obtain ⟨hI, hE, _, hψ, hsemistable⟩ := hSS
   -- W nonvanishing and reformulated perturbation bounds
@@ -302,8 +297,7 @@ theorem phiMinus_gt_of_wSemistable
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase F ∧
-        ssf.wPhase F < φ + ε₀) :
+        φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀) :
     ψ - ε₀ < σ.slicing.phiMinus C E hSS.nonzero := by
   obtain ⟨hI, hE, _, hψ, hsemistable⟩ := hSS
   -- W nonvanishing and reformulated perturbation bounds
@@ -643,8 +637,7 @@ theorem phase_confinement_of_wSemistable
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase F ∧
-        ssf.wPhase F < φ + ε₀) :
+        φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀) :
     ψ - ε₀ < σ.slicing.phiMinus C E hSS.nonzero ∧
     σ.slicing.phiPlus C E hSS.nonzero < ψ + ε₀ :=
   ⟨phiMinus_gt_of_wSemistable C σ hSS hε₀ hthin hperturb,
@@ -664,8 +657,7 @@ theorem hom_eq_zero_of_wSemistable_gap
     {ε₀ : ℝ} (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
     (hperturb : ∀ (G : C) (φ : ℝ), (σ.slicing.P φ) G → ¬IsZero G →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase G ∧
-        ssf.wPhase G < φ + ε₀)
+        φ - ε₀ < ssf.wPhase G ∧ ssf.wPhase G < φ + ε₀)
     (hgap : ψ₁ > ψ₂ + 2 * ε₀)
     (f : E ⟶ F) : f = 0 := by
   -- Phase confinement: intrinsic phases are within ε₀ of W-phases
@@ -702,8 +694,7 @@ theorem SkewedStabilityFunction.phase_le_of_triangle_quotient
       ssf.wNe F)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase F ∧
-        ssf.wPhase F < φ + ε₀)
+        φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀)
     (hT : Triangle.mk f₁ f₂ f₃ ∈ distTriang C)
     (hKI : σ.slicing.intervalProp C a b K)
     (hYI : σ.slicing.intervalProp C a b Y)
@@ -781,8 +772,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
       ssf.wNe F)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
-        φ - ε₀ < ssf.wPhase F ∧
-        ssf.wPhase F < φ + ε₀)
+        φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀)
     (p : X ⟶ Y) (hp : IsStrictEpi p)
     (hY : ¬IsZero Y.obj) :
     ψ ≤ ssf.wPhase Y.obj := by

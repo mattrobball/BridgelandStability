@@ -48,8 +48,7 @@ theorem exists_first_strictShortExact_of_not_semistable_of_finite_leftHeartSubob
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X)
     (hX_left : Finite (Subobject ((Slicing.IntervalCat.toLeftHeart
       (C := C) (s := σ.slicing) a b (Fact.out : b - a ≤ 1)).obj X)))
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj))
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       ssf.wNe F) :
     ∃ M : Subobject X,

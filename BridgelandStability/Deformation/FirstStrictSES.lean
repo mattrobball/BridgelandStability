@@ -63,8 +63,7 @@ theorem SkewedStabilityFunction.maxPhase_strictSubobject_ne_top_of_not_semistabl
     {ssf : SkewedStabilityFunction C v σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : σ.slicing.IntervalCat C a b} {M : Subobject X}
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj))
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     (hM_ne : M ≠ ⊥) (hM_strict : IsStrictMono M.arrow)
     (hM_max : ∀ B : Subobject X, B ≠ ⊥ → IsStrictMono B.arrow →
       ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ≤
@@ -102,8 +101,7 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : σ.slicing.IntervalCat C a b} {M : Subobject X}
     (hX : ¬IsZero X)
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj))
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     (hM_max : ∀ B : Subobject X, B ≠ ⊥ → IsStrictMono B.arrow →
       ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ≤
         ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj)
@@ -174,8 +172,7 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
     {ssf : SkewedStabilityFunction C v σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : σ.slicing.IntervalCat C a b} [IsStrictArtinianObject X] (hX : ¬IsZero X)
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj))
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       ssf.wNe F) :
     ∃ M : Subobject X,
@@ -304,8 +301,7 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X)
     (hT_fin : Set.Finite {M : Subobject X | M ≠ ⊥ ∧ IsStrictMono M.arrow})
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj))
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       ssf.wNe F) :
     ∃ M : Subobject X,

@@ -235,8 +235,7 @@ theorem IsStrictMDQ.id_of_semistable
       L < ssf.wPhase F ∧ ssf.wPhase F < U)
     (hWidth : U - L < 1)
     {X : σ.slicing.IntervalCat C a b}
-    (hss : ssf.Semistable C X.obj
-      (ssf.wPhase X.obj)) :
+    (hss : ssf.Semistable C X.obj (ssf.wPhase X.obj)) :
     IsStrictMDQ (C := C) σ ssf (𝟙 X) where
   strictEpi := by
     simpa using (isStrictEpi_of_isIso (f := 𝟙 X))
@@ -466,13 +465,10 @@ theorem IsStrictMDQ.comp_of_destabilizing_semistable_subobject
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (_hE : ssf.Semistable C E.obj
-          (ssf.wPhase E.obj))
-        (_hF : ssf.Semistable C F.obj
-          (ssf.wPhase F.obj)),
+        (_hE : ssf.Semistable C E.obj (ssf.wPhase E.obj))
+        (_hF : ssf.Semistable C F.obj (ssf.wPhase F.obj)),
         ssf.wPhase F.obj < ssf.wPhase E.obj →
-        ssf.wPhase E.obj < U_hom →
-        ∀ f : E ⟶ F, f = 0)
+        ssf.wPhase E.obj < U_hom → ∀ f : E ⟶ F, f = 0)
     {X : σ.slicing.IntervalCat C a b} {A : Subobject X}
     (hA_ss :
       ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
@@ -586,13 +582,10 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
     {U_hom : ℝ}
     (hHom :
       ∀ {E F : σ.slicing.IntervalCat C a b}
-        (_hE : ssf.Semistable C E.obj
-          (ssf.wPhase E.obj))
-        (_hF : ssf.Semistable C F.obj
-          (ssf.wPhase F.obj)),
+        (_hE : ssf.Semistable C E.obj (ssf.wPhase E.obj))
+        (_hF : ssf.Semistable C F.obj (ssf.wPhase F.obj)),
         ssf.wPhase F.obj < ssf.wPhase E.obj →
-        ssf.wPhase E.obj < U_hom →
-        ∀ f : E ⟶ F, f = 0)
+        ssf.wPhase E.obj < U_hom → ∀ f : E ⟶ F, f = 0)
     (hDestabBound : ∀ {Y : σ.slicing.IntervalCat C a b} (_ : ¬IsZero Y)
       {A : Subobject Y}
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
@@ -784,8 +777,7 @@ theorem IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X B : σ.slicing.IntervalCat C a b} {q : X ⟶ B}
     (hq : IsStrictMDQ (C := C) σ ssf q)
-    (hns : ¬ ssf.Semistable C X.obj
-      (ssf.wPhase X.obj)) :
+    (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj)) :
     kernelSubobject q ≠ ⊥ := by
   intro hK
   have hker_zero : IsZero (kernelSubobject q : σ.slicing.IntervalCat C a b) :=
