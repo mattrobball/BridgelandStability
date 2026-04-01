@@ -40,10 +40,8 @@ theorem SkewedStabilityFunction.semistable_of_iso
     ssf.Semistable C E' ψ where
   intervalProp := (s.intervalProp C a b).prop_of_iso e h.intervalProp
   nonzero hE' := h.nonzero ((Iso.isZero_iff e).mpr hE')
-  wNe := by
-    simpa [SkewedStabilityFunction.wNe, ← cl_iso C v e] using h.wNe
-  phase_eq := by
-    simpa [SkewedStabilityFunction.wPhase, ← cl_iso C v e] using h.phase_eq
+  wNe := by simp_rw [SkewedStabilityFunction.wNe_def, ← cl_iso C v e]; exact h.wNe
+  phase_eq := by simp_rw [SkewedStabilityFunction.wPhase_def, ← cl_iso C v e]; exact h.phase_eq
   le_of_distTriang := by
     intro K Q f₁ f₂ f₃ hT hK hQ hKne
     have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=

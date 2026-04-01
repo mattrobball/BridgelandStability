@@ -58,8 +58,8 @@ theorem deformedPred_shift_one
           simp only [HNFiltration.shiftHN, Int.cast_one]
           constructor <;> [linarith [(hF i).1]; linarith [(hF i).2]]⟩
     · -- W(cl C v (X⟦1⟧)) ≠ 0
-      simpa [SkewedStabilityFunction.wNe, cl_shift_one, map_neg] using
-        neg_ne_zero.mpr hSS.wNe
+      simp_rw [SkewedStabilityFunction.wNe_def, cl_shift_one, map_neg]
+      exact neg_ne_zero.mpr hSS.wNe
     · -- wPhaseOf = φ + 1
       change wPhaseOf (W (cl C v (X⟦(1 : ℤ)⟧))) ((a + 1 + (b + 1)) / 2) = φ + 1
       rw [show (a + 1 + (b + 1)) / 2 = (a + b) / 2 + 1 from by ring]

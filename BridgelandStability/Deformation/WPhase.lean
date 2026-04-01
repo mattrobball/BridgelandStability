@@ -379,6 +379,22 @@ abbrev SkewedStabilityFunction.wNe
     (ssf : SkewedStabilityFunction C v s a b) (E : C) : Prop :=
   ssf.W (cl C v E) ≠ 0
 
+@[simp] theorem SkewedStabilityFunction.wPhase_def
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
+    ssf.wPhase E = wPhaseOf (ssf.W (cl C v E)) ssf.α := rfl
+
+theorem SkewedStabilityFunction.wNe_def
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
+    ssf.wNe E = (ssf.W (cl C v E) ≠ 0) := rfl
+
 /-- Equal charges give equal W-phases. -/
 theorem SkewedStabilityFunction.wPhase_congr
     {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
@@ -399,61 +415,6 @@ theorem SkewedStabilityFunction.wPhase_iso
     (ssf : SkewedStabilityFunction C v s a b) {E E' : C} (e : E ≅ E') :
     ssf.wPhase E = ssf.wPhase E' :=
   ssf.wPhase_congr (congrArg ssf.W (cl_iso C v e))
-
-/-- The W-phase of an object lies in `(α - 1, α + 1]`. -/
-theorem SkewedStabilityFunction.wPhase_mem_Ioc
-    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
-    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
-    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
-    ssf.wPhase E ∈ Set.Ioc (ssf.α - 1) (ssf.α + 1) := by
-  simpa [SkewedStabilityFunction.wPhase] using
-    (wPhaseOf_mem_Ioc (ssf.W (cl C v E)) ssf.α)
-
-/-- The W-value of an object satisfies the polar decomposition determined by its W-phase. -/
-theorem SkewedStabilityFunction.wPhase_compat
-    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
-    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
-    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
-    ssf.W (cl C v E) = ↑‖ssf.W (cl C v E)‖ *
-      Complex.exp (↑(Real.pi * ssf.wPhase E) * Complex.I) := by
-  simpa [SkewedStabilityFunction.wPhase] using
-    (wPhaseOf_compat (ssf.W (cl C v E)) ssf.α)
-
-/-- Shifting an object by `[1]` shifts its W-phase by `1` when the branch parameter is also
-shifted by `1`. -/
-theorem SkewedStabilityFunction.wPhase_neg
-    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
-    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
-    (ssf : SkewedStabilityFunction C v s a b) {E : C}
-    (hE : ssf.wNe E) :
-    wPhaseOf (ssf.W (cl C v (E⟦(1 : ℤ)⟧))) (ssf.α + 1) = ssf.wPhase E + 1 := by
-  simpa [SkewedStabilityFunction.wPhase, cl_shift_one, map_neg] using
-    (wPhaseOf_neg (w := ssf.W (cl C v E)) hE ssf.α)
-
-/-- The W-phase is independent of the branch parameter once the chosen branch window
-contains it. -/
-theorem SkewedStabilityFunction.wPhase_indep
-    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
-    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-    {s : Slicing C} {a b : ℝ}
-    (ssf : SkewedStabilityFunction C v s a b) {E : C}
-    (hE : ssf.wNe E) (α' : ℝ)
-    (h : ssf.wPhase E ∈ Set.Ioc (α' - 1) (α' + 1)) :
-    ssf.wPhase E = wPhaseOf (ssf.W (cl C v E)) α' := by
-  have hm : (0 : ℝ) < ‖ssf.W (cl C v E)‖ := norm_pos_iff.mpr hE
-  have hphase :
-      wPhaseOf (↑‖ssf.W (cl C v E)‖ *
-        Complex.exp (↑(Real.pi * ssf.wPhase E) * Complex.I)) α' = ssf.wPhase E :=
-    wPhaseOf_of_exp hm h
-  rw [← ssf.wPhase_compat E] at hphase
-  exact hphase.symm
 
 /-- Phase seesaw for object charges. -/
 theorem SkewedStabilityFunction.wPhase_seesaw
@@ -479,7 +440,7 @@ theorem SkewedStabilityFunction.wPhase_seesaw
       (ssf.W (cl C v F) * rot).im
           = ((↑‖ssf.W (cl C v F)‖ *
               Complex.exp (↑(Real.pi * ssf.wPhase F) * Complex.I)) * rot).im := by
-              exact congrArg (fun z : ℂ => (z * rot).im) (ssf.wPhase_compat F)
+              exact congrArg (fun z : ℂ => (z * rot).im) (wPhaseOf_compat (ssf.W (cl C v F)) ssf.α)
       _ = (↑‖ssf.W (cl C v F)‖ *
             Complex.exp (↑(Real.pi * ssf.wPhase F) * Complex.I) *
             Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im := by
