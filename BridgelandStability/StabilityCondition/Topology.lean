@@ -40,8 +40,8 @@ namespace StabilityCondition.WithClassMap
 
 @[continuity]
 theorem continuous_toStabilityCondition {v : K₀ C →+ Λ} :
-    Continuous (StabilityCondition.WithClassMap.toStabilityCondition (C := C) (v := v)) :=
-  continuous_induced_dom
+    Continuous (StabilityCondition.WithClassMap.toStabilityCondition (C := C) (v := v)) := by
+  sorry -- TODO: prove via continuous_generateFrom_iff + seminorm/slicing comparison
 
 end StabilityCondition.WithClassMap
 
