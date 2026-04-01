@@ -74,7 +74,7 @@ theorem interior_has_enveloped_HN_ssf
     stabSeminorm_lt_cos_of_hsin_hthin (C := C) (σ := σ) (W := W) hab hε hthin hsin
   -- W ≠ 0 for nonzero interval objects
   have hW_ne : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0 := fun hF hFne =>
+      ssf.wNe F := fun hF hFne =>
     σ.W_ne_zero_of_intervalProp C W hthin' hsmall hFne hF
   -- Perturbation bounds for global window (stated in terms of W and (a+b)/2 directly)
   have hW_ne_sem : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →

@@ -58,22 +58,8 @@ def StabilityCondition.WithClassMap.deformedSlicing (σ : StabilityCondition.Wit
   closedUnderIso := fun φ ↦ ⟨fun {E E'} e h ↦ by
     rcases h with hZ | ⟨a, b, hab, hthin, henv_lo, henv_hi, hSS⟩
     · exact Or.inl ((Iso.isZero_iff e).mp hZ)
-    · refine Or.inr ⟨a, b, hab, hthin, henv_lo, henv_hi, ?_, fun h ↦ hSS.nonzero
-        ((Iso.isZero_iff e).mpr h), ?_, ?_, fun K Q f₁ f₂ f₃ hT hK hQ hKne ↦ ?_⟩
-      · -- intervalProp: transport via HNFiltration.ofIso
-        rcases hSS.intervalProp with hZ' | ⟨F, hF⟩
-        · exact absurd hZ' hSS.nonzero
-        · exact Or.inr ⟨F.ofIso C e, hF⟩
-      · -- W(cl C v E') ≠ 0
-        rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]; exact hSS.wNe
-      · -- wPhaseOf = φ
-        rw [show cl C v E' = cl C v E from (cl_iso C v e).symm]; exact hSS.phase_eq
-      · -- semistability: compose triangle with iso
-        have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
-          isomorphic_distinguished _ hT _
-            (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
-              (by simp) (by simp) (by simp))
-        exact hSS.le_of_distTriang hT' hK hQ hKne⟩
+    · exact Or.inr ⟨a, b, hab, hthin, henv_lo, henv_hi,
+        SkewedStabilityFunction.semistable_of_iso (C := C) e hSS⟩⟩
   zero_mem ψ := σ.deformedPred_zero C W hW ε ψ (isZero_zero C)
   shift_iff := fun φ X ↦ by
     constructor

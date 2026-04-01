@@ -356,6 +356,119 @@ theorem wPhaseOf_add_two {w : ℂ} (hw : w ≠ 0) (α : ℝ) :
   rw [neg_neg, show (α + 1 : ℝ) + 1 = α + 2 from by ring] at h2
   linarith
 
+/-! ### W-phase and nonvanishing -/
+
+/-- The W-phase of an object `E`, i.e. `wPhaseOf(W(v[E]), α)`. This is the
+phase function on the interval category used throughout the deformation
+construction. -/
+noncomputable abbrev SkewedStabilityFunction.wPhase
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) : ℝ :=
+  wPhaseOf (ssf.W (cl C v E)) ssf.α
+
+/-- The charge `W(v[E])` is nonzero. This is the nonvanishing condition
+that ensures the W-phase is well-defined. -/
+abbrev SkewedStabilityFunction.wNe
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) : Prop :=
+  ssf.W (cl C v E) ≠ 0
+
+@[simp] theorem SkewedStabilityFunction.wPhase_def
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
+    ssf.wPhase E = wPhaseOf (ssf.W (cl C v E)) ssf.α := rfl
+
+theorem SkewedStabilityFunction.wNe_def
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) (E : C) :
+    ssf.wNe E = (ssf.W (cl C v E) ≠ 0) := rfl
+
+/-- Equal charges give equal W-phases. -/
+theorem SkewedStabilityFunction.wPhase_congr
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) {E E' : C}
+    (h : ssf.W (cl C v E) = ssf.W (cl C v E')) :
+    ssf.wPhase E = ssf.wPhase E' := by
+  simp only [SkewedStabilityFunction.wPhase, h]
+
+/-- Isomorphic objects have the same W-phase. -/
+theorem SkewedStabilityFunction.wPhase_iso
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b) {E E' : C} (e : E ≅ E') :
+    ssf.wPhase E = ssf.wPhase E' :=
+  ssf.wPhase_congr (congrArg ssf.W (cl_iso C v e))
+
+/-- Phase seesaw for object charges. -/
+theorem SkewedStabilityFunction.wPhase_seesaw
+    {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+    [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+    {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
+    {s : Slicing C} {a b : ℝ}
+    (ssf : SkewedStabilityFunction C v s a b)
+    {E E₁ E₂ : C} {ψ : ℝ}
+    (hsum : ssf.W (cl C v E₁) + ssf.W (cl C v E₂) = ssf.W (cl C v E))
+    (hψ : ssf.wPhase E = ψ)
+    (hE₁_range : ssf.wPhase E₁ ∈ Set.Ioc (ψ - 1) ψ)
+    (hE₂_ne : ssf.wNe E₂)
+    (hE₂_range : ssf.wPhase E₂ ∈ Set.Ioo (ψ - 1) (ψ + 1)) :
+    ψ ≤ ssf.wPhase E₂ := by
+  by_contra hlt
+  push Not at hlt
+  let rot : ℂ := Complex.exp (-(↑(Real.pi * ψ) * Complex.I))
+  have him (F : C) :
+      (ssf.W (cl C v F) * rot).im =
+        ‖ssf.W (cl C v F)‖ * Real.sin (Real.pi * (ssf.wPhase F - ψ)) := by
+    calc
+      (ssf.W (cl C v F) * rot).im
+          = ((↑‖ssf.W (cl C v F)‖ *
+              Complex.exp (↑(Real.pi * ssf.wPhase F) * Complex.I)) * rot).im := by
+              exact congrArg (fun z : ℂ => (z * rot).im) (wPhaseOf_compat (ssf.W (cl C v F)) ssf.α)
+      _ = (↑‖ssf.W (cl C v F)‖ *
+            Complex.exp (↑(Real.pi * ssf.wPhase F) * Complex.I) *
+            Complex.exp (-(↑(Real.pi * ψ) * Complex.I))).im := by
+              dsimp [rot]
+      _ = ‖ssf.W (cl C v F)‖ * Real.sin (Real.pi * (ssf.wPhase F - ψ)) := by
+              simpa using
+                (im_ofReal_mul_exp_mul_exp_neg ‖ssf.W (cl C v F)‖ (ssf.wPhase F) ψ)
+  have hE_im : (ssf.W (cl C v E) * rot).im = 0 := by
+    rw [him, hψ, sub_self, mul_zero]
+    simp
+  have hE₁_im : (ssf.W (cl C v E₁) * rot).im ≤ 0 := by
+    rw [him]
+    exact mul_nonpos_of_nonneg_of_nonpos (norm_nonneg _)
+      (Real.sin_nonpos_of_nonpos_of_neg_pi_le
+        (by nlinarith [Real.pi_pos, hE₁_range.2])
+        (by nlinarith [Real.pi_pos, hE₁_range.1]))
+  have hE₂_im : (ssf.W (cl C v E₂) * rot).im < 0 := by
+    rw [him]
+    exact mul_neg_of_pos_of_neg (norm_pos_iff.mpr hE₂_ne)
+      (Real.sin_neg_of_neg_of_neg_pi_lt
+        (by nlinarith [Real.pi_pos, hlt])
+        (by nlinarith [Real.pi_pos, hE₂_range.1]))
+  have hsum_im :
+      (ssf.W (cl C v E) * rot).im =
+        (ssf.W (cl C v E₁) * rot).im + (ssf.W (cl C v E₂) * rot).im := by
+    rw [← hsum, add_mul, Complex.add_im]
+  linarith
+
 /-! ### W-semistability in interval categories -/
 
 /-- **W-semistability**. An object `E` in `P((a, b))` is *W-semistable* of W-phase `ψ` if:
@@ -372,13 +485,13 @@ structure SkewedStabilityFunction.Semistable {s : Slicing C} {a b : ℝ}
     (ssf : SkewedStabilityFunction C v s a b) (E : C) (ψ : ℝ) : Prop where
   intervalProp : s.intervalProp C a b E
   nonzero : ¬IsZero E
-  wNe : ssf.W (cl C v E) ≠ 0
-  phase_eq : wPhaseOf (ssf.W (cl C v E)) ssf.α = ψ
+  wNe : ssf.wNe E
+  phase_eq : ssf.wPhase E = ψ
   le_of_distTriang : ∀ ⦃K Q : C⦄ ⦃f₁ : K ⟶ E⦄ ⦃f₂ : E ⟶ Q⦄ ⦃f₃ : Q ⟶ K⟦(1 : ℤ)⟧⦄,
     Triangle.mk f₁ f₂ f₃ ∈ distTriang C →
     s.intervalProp C a b K → s.intervalProp C a b Q →
     ¬IsZero K →
-    wPhaseOf (ssf.W (cl C v K)) ssf.α ≤ ψ
+    ssf.wPhase K ≤ ψ
 
 /-- **α-independence of wPhaseOf.** For a nonzero complex number `w`, if
 `wPhaseOf w α₁ ∈ (α₂ - 1, α₂ + 1]`, then `wPhaseOf w α₁ = wPhaseOf w α₂`.
