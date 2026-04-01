@@ -162,8 +162,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel_of_
       ssf.wPhase (cokernel B.arrow).obj < ψY :=
     wPhaseOf_seesaw_dual haddY.symm rfl hB_phase_gt hB_Wne hB_range hcokB_range
   have hpb_phase_eq :
-      ssf.wPhase (cokernel pbB.arrow).obj =
-        ssf.wPhase (cokernel B.arrow).obj := by
+      ssf.wPhase (cokernel pbB.arrow).obj = ssf.wPhase (cokernel B.arrow).obj := by
     exact ssf.wPhase_congr (ssf.Wobj_cokernel_pullback_eq
         (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
         (B := B) hB_strict)
@@ -265,8 +264,7 @@ theorem semistable_cokernel_of_minPhase_strictKernel_of_minimal_of_strictArtinia
       ssf.wPhase (cokernel B.arrow).obj < ψY :=
     wPhaseOf_seesaw_dual haddY.symm rfl hB_phase_gt hB_Wne hB_range hcokB_range
   have hpb_phase_eq :
-      ssf.wPhase (cokernel pbB.arrow).obj =
-        ssf.wPhase (cokernel B.arrow).obj := by
+      ssf.wPhase (cokernel pbB.arrow).obj = ssf.wPhase (cokernel B.arrow).obj := by
     exact ssf.wPhase_congr (ssf.Wobj_cokernel_pullback_eq
         (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
         (B := B) hB_strict)
@@ -697,8 +695,7 @@ theorem wPhaseOf_cokernel_kernelSubobject_eq
     {s : Slicing C} {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
     {ssf : SkewedStabilityFunction C v s a b}
     {E B : s.IntervalCat C a b} (q : E ⟶ B) (hq : IsStrictEpi q) :
-    ssf.wPhase (cokernel (kernelSubobject q).arrow).obj =
-      ssf.wPhase B.obj := by
+    ssf.wPhase (cokernel (kernelSubobject q).arrow).obj = ssf.wPhase B.obj := by
   have hK_strict : IsStrictMono (kernelSubobject q).arrow := by
     simpa using
       (intervalSubobject_arrow_strictMono_of_strictMono

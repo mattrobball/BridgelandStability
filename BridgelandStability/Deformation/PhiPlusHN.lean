@@ -310,8 +310,7 @@ theorem hn_exists_with_phiPlus_reduction
             (intervalSubobject_arrow_strictMono_of_strictMono
               (C := C) (s := σ.slicing) (a := a) (b := b) (A.arrow ≫ eK.hom) hcomp)
         have hphase_A :
-            ssf.wPhase (cokernel A.arrow).obj =
-              ssf.wPhase (cokernel A'.arrow).obj := by
+            ssf.wPhase (cokernel A.arrow).obj = ssf.wPhase (cokernel A'.arrow).obj := by
           let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
             (Subobject.mapMonoIso eK.hom A).symm
           have hw : A.arrow ≫ eK.hom = eA.hom ≫ A'.arrow := by
@@ -440,8 +439,7 @@ theorem hn_exists_with_phiPlus_reduction
         (intervalSubobject_arrow_strictMono_of_strictMono
           (C := C) (s := σ.slicing) (a := a) (b := b) (A.arrow ≫ e0.hom) hcomp)
     have hphase_A :
-        ssf.wPhase (cokernel A.arrow).obj =
-          ssf.wPhase (cokernel A'.arrow).obj := by
+        ssf.wPhase (cokernel A.arrow).obj = ssf.wPhase (cokernel A'.arrow).obj := by
       let eA : (A : σ.slicing.IntervalCat C a b) ≅ (A' : σ.slicing.IntervalCat C a b) :=
         (Subobject.mapMonoIso e0.hom A).symm
       have hw : A.arrow ≫ e0.hom = eA.hom ≫ A'.arrow := by

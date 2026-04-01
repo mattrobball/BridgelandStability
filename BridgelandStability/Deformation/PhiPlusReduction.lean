@@ -221,8 +221,7 @@ theorem comp_of_destabilizing_with_quotient_bound
       le_of_lt (lt_of_le_of_lt ht_lo (lt_trans hψ_X_lo hA_phase))
     -- Helper: prove A.arrow ≫ q' = 0 via deformedPred
     have hvanish : ∀ (hB'_lt_A :
-        ssf.wPhase B'.obj <
-          ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj),
+        ssf.wPhase B'.obj < ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj),
         A.arrow ≫ q' = 0 := by
       intro hB'_lt_A
       subst hssf

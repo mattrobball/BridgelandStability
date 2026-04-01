@@ -446,8 +446,7 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
   have hcokB_phase_gt :
       ψY < ssf.wPhase (cokernel B.arrow).obj := by
     have hEq :
-        ssf.wPhase (cokernel pbB.arrow).obj =
-          ssf.wPhase (cokernel B.arrow).obj := by
+        ssf.wPhase (cokernel pbB.arrow).obj = ssf.wPhase (cokernel B.arrow).obj := by
       exact ssf.wPhase_congr (ssf.Wobj_cokernel_pullback_eq
           (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) M hM_strict
           (B := B) hB_strict)

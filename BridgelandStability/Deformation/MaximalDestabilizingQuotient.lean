@@ -598,8 +598,7 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
       (_ : ssf.Semistable C (A : σ.slicing.IntervalCat C a b).obj
         (ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj))
       (_ : IsStrictMono A.arrow)
-      (_ : ssf.wPhase Y.obj <
-        ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj),
+      (_ : ssf.wPhase Y.obj < ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj),
       ssf.wPhase (A : σ.slicing.IntervalCat C a b).obj < U_hom)
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X) :
     ∃ (B : σ.slicing.IntervalCat C a b) (q : X ⟶ B), IsStrictMDQ (C := C) σ ssf q := by
@@ -800,8 +799,7 @@ theorem IsStrictMDQ.kernelSubobject_ne_bot_of_not_semistable
   have hssX : ssf.Semistable C X.obj
       (ssf.wPhase X.obj) := by
     have hphase :
-        ssf.wPhase B.obj =
-          ssf.wPhase X.obj := by
+        ssf.wPhase B.obj = ssf.wPhase X.obj := by
       exact ssf.wPhase_iso eX.symm
     exact hphase ▸
       (ssf.semistable_of_iso

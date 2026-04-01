@@ -234,8 +234,7 @@ theorem exists_strictMDQ_with_quotient_bound
             have : ssf.W (cl C v (cokernel Tsub.arrow).obj) =
                 ssf.W (cl C v (cokernel A.arrow).obj) := by
               congr 1; exact cl_iso C v hiso_T
-            have hEq : ssf.wPhase (cokernel Tsub.arrow).obj =
-                ssf.wPhase (cokernel A.arrow).obj := by
+            have hEq : ssf.wPhase (cokernel Tsub.arrow).obj = ssf.wPhase (cokernel A.arrow).obj := by
               exact ssf.wPhase_congr this
             rw [hEq]
             linarith
@@ -519,8 +518,7 @@ theorem exists_strictMDQ_with_quotient_bound
               have : ssf.W (cl C v (cokernel Tsub.arrow).obj) =
                   ssf.W (cl C v (cokernel Ahi.arrow).obj) := by
                 congr 1; exact cl_iso C v hiso_T
-              have hEq : ssf.wPhase (cokernel Tsub.arrow).obj =
-                  ssf.wPhase (cokernel Ahi.arrow).obj := by
+              have hEq : ssf.wPhase (cokernel Tsub.arrow).obj = ssf.wPhase (cokernel Ahi.arrow).obj := by
                 exact ssf.wPhase_congr this
               rw [hEq]
               linarith
