@@ -322,14 +322,20 @@ issue only matters at the generality level.
   detects the image of `precomposeClassMap`
 - The norm on `V(Σ)` requires surjectivity to be a norm (vs seminorm)
 
-**Decision:** Keep ConnectedComponent.lean and LocalHomeomorphism.lean at v=id for now.
-The manifold theorem adds surjectivity when it specializes to `numericalQuotientMap`.
-The bridge code in NumericalStabilityManifold.lean remains necessary for this reason —
-it's not just boilerplate, it handles the surjectivity-dependent restriction.
+**Initial decision:** Defer — keep at v=id.
 
-Generalizing these files requires threading `(hv : Function.Surjective v)` through
-~15 declarations. This is correct but changes the API surface. Defer to a
-future pass focused specifically on the norm tower.
+**Correction (same session):** The user pointed out that surjectivity is ALWAYS
+present at every call site (`id` is surjective; `numericalQuotientMap` is surjective).
+The "barrier" was an illusion — it's just an extra hypothesis, not an obstruction.
+
+**Revised decision:** Generalize with `[Fact (Function.Surjective v)]`. The `Fact`
+wrapper makes surjectivity available to typeclass synthesis (needed for the norm
+instances). At `v = id`, `Fact.mk Function.surjective_id` provides it. At
+`v = numericalQuotientMap`, the quotient surjectivity provides it.
+
+**Lesson:** When a generalization seems blocked by a hypothesis, check whether
+the hypothesis is always available at the call sites. If it is, the
+"barrier" is just an API surface question, not a mathematical one.
 
 ## Overall status
 
@@ -341,3 +347,5 @@ future pass focused specifically on the norm tower.
 - Entry 3 (`cl`): DONE — implemented, earning its keep across Deformation/
 - Entry 4 (`SkewedStabilityFunction` at Λ): DONE — matches source math
 - Entry 5 (`cl_id`): DONE — permanent v=id normalization
+- Entry 6 (surjectivity for norm tower): DONE — `[Fact (Function.Surjective v)]`
+  carries surjectivity through instances. Initial "barrier" was illusory.
