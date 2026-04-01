@@ -67,22 +67,8 @@ lemma StabilityCondition.WithClassMap.deformedPred_closedUnderIso (σ : Stabilit
   intro E E' e h
   rcases h with hZ | ⟨a, b, hab, hthin, henv_lo, henv_hi, hSS⟩
   · exact Or.inl ((Iso.isZero_iff e).mp hZ)
-  · refine Or.inr ⟨a, b, hab, hthin, henv_lo, henv_hi, ?_, ?_, ?_, ?_,
-      fun K Q f₁ f₂ f₃ hT hK hQ hKne ↦ ?_⟩
-    · rcases hSS.intervalProp with hZ' | ⟨F, hF⟩
-      · exact absurd hZ' hSS.nonzero
-      · exact Or.inr ⟨F.ofIso C e, hF⟩
-    · exact fun hE' ↦ hSS.nonzero ((Iso.isZero_iff e.symm).mp hE')
-    · change (σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v E') ≠ 0
-      simpa [(cl_iso C v e).symm] using hSS.wNe
-    · change wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v E'))
-          (σ.skewedStabilityFunction_of_near C W hW hab).α = ψ
-      simpa [SkewedStabilityFunction.wPhase, (cl_iso C v e).symm] using hSS.phase_eq
-    · have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
-        isomorphic_distinguished _ hT _
-          (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
-            (by simp) (by simp) (by simp))
-      exact hSS.le_of_distTriang hT' hK hQ hKne
+  · exact Or.inr ⟨a, b, hab, hthin, henv_lo, henv_hi,
+      SkewedStabilityFunction.semistable_of_iso (C := C) e hSS⟩
 
 theorem mem_phaseShiftHeart_of_phaseBounds_smallGap
     (s : Slicing C) {E : C} (hE : ¬IsZero E) {t : ℝ}
