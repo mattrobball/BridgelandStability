@@ -33,7 +33,7 @@ namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
-variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} [Fact (Function.Surjective v)]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-- A chosen representative of a connected component of `StabilityCondition.WithClassMap C v`. -/
 def componentRep (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) : StabilityCondition.WithClassMap C v :=
@@ -42,6 +42,8 @@ def componentRep (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)
 @[simp] theorem mk_componentRep (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :
     ConnectedComponents.mk (componentRep C cc) = cc :=
   Classical.choose_spec cc.exists_rep
+
+variable [Fact (Function.Surjective v)]
 
 /-- The component of stability conditions with connected-component label `cc`. -/
 abbrev componentStabilityCondition (cc : ConnectedComponents (StabilityCondition.WithClassMap C v)) :=
@@ -196,6 +198,7 @@ theorem componentSeminormTopology_eq_normTopology
   simpa [componentSeminormTopology] using
     (isTopologicalBasis_componentSeminormBasis C cc).eq_generateFrom.symm
 
+omit [Fact (Function.Surjective v)] in
 /-- Any element of the chosen `V(Σ)` has finite Bridgeland seminorm with respect to any
 stability condition in the same connected component. -/
 theorem componentSeminorm_lt_top_of_mem_component
@@ -253,6 +256,7 @@ theorem componentNorm_equivalent_of_mem_component
     have hrep_nonneg : 0 ≤ ‖U‖ := norm_nonneg _
     nlinarith [hleB]
 
+omit [Fact (Function.Surjective v)] in
 /-- For `σ ∈ Σ`, its central charge lies in `V(Σ)`. -/
 theorem componentZ_mem (cc : ConnectedComponents (StabilityCondition.WithClassMap C v))
     (σ : StabilityCondition.WithClassMap C v) (hσ : ConnectedComponents.mk σ = cc) :

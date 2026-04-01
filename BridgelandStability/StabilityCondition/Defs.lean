@@ -67,16 +67,6 @@ structure WithClassMap (v : K₀ C →+ Λ) where
     ∃ (m : ℝ), 0 < m ∧
       Z (v (K₀.of C E)) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I)
 
-/-- Forget a class-map prestability condition to the identity class map on `K₀(C)`. -/
-def WithClassMap.toPreStabilityCondition {v : K₀ C →+ Λ}
-    (σ : WithClassMap C v) :
-    WithClassMap C (AddMonoidHom.id (K₀ C)) where
-  slicing := σ.slicing
-  Z := σ.Z.comp v
-  compat := by
-    intro φ E hE hNZ
-    simpa [AddMonoidHom.comp_apply] using σ.compat φ E hE hNZ
-
 end PreStabilityCondition
 
 /-- A Bridgeland prestability condition on `C`, viewed as the specialization of
@@ -92,13 +82,6 @@ structure WithClassMap (v : K₀ C →+ Λ)
     extends PreStabilityCondition.WithClassMap C v where
   /-- The slicing is locally finite. -/
   locallyFinite : slicing.IsLocallyFinite C
-
-/-- Forget a class-map stability condition to the identity class map on `K₀(C)`. -/
-def WithClassMap.toStabilityCondition {v : K₀ C →+ Λ}
-    (σ : WithClassMap C v) :
-    WithClassMap C (AddMonoidHom.id (K₀ C)) where
-  toWithClassMap := σ.toWithClassMap.toPreStabilityCondition
-  locallyFinite := σ.locallyFinite
 
 end StabilityCondition
 
