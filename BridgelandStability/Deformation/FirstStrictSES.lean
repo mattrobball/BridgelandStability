@@ -66,10 +66,8 @@ theorem SkewedStabilityFunction.maxPhase_strictSubobject_ne_top_of_not_semistabl
     (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     (hM_ne : M ≠ ⊥) (hM_strict : IsStrictMono M.arrow)
     (hM_max : ∀ B : Subobject X, B ≠ ⊥ → IsStrictMono B.arrow →
-      ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ≤
-        ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj)
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.wNe F) :
+      ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ≤ ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj)
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F → ssf.wNe F) :
     M ≠ ⊤ := by
   intro hM_top
   apply hns
@@ -103,12 +101,9 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
     (hX : ¬IsZero X)
     (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
     (hM_max : ∀ B : Subobject X, B ≠ ⊥ → IsStrictMono B.arrow →
-      ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ≤
-        ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj)
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.wNe F) :
-    ssf.wPhase X.obj <
-      ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj := by
+      ssf.wPhase (B : σ.slicing.IntervalCat C a b).obj ≤ ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj)
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F → ssf.wNe F) :
+    ssf.wPhase X.obj < ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj := by
   let phaseObj : σ.slicing.IntervalCat C a b → ℝ := fun Y ↦
     ssf.wPhase Y.obj
   have hX_obj : ¬IsZero X.obj := fun hZ =>
@@ -173,16 +168,14 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : σ.slicing.IntervalCat C a b} [IsStrictArtinianObject X] (hX : ¬IsZero X)
     (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.wNe F) :
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F → ssf.wNe F) :
     ∃ M : Subobject X,
       M ≠ ⊥ ∧
       M ≠ ⊤ ∧
       IsStrictMono M.arrow ∧
       ssf.Semistable C (M : σ.slicing.IntervalCat C a b).obj
         (ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj) ∧
-      ssf.wPhase X.obj <
-        ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj ∧
+      ssf.wPhase X.obj < ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj ∧
       StrictShortExact
         (ShortComplex.mk M.arrow (cokernel.π M.arrow) (cokernel.condition M.arrow)) := by
   let phaseSub : StrictSubobject X → ℝ := fun B ↦
@@ -302,16 +295,14 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable
     {X : σ.slicing.IntervalCat C a b} (hX : ¬IsZero X)
     (hT_fin : Set.Finite {M : Subobject X | M ≠ ⊥ ∧ IsStrictMono M.arrow})
     (hns : ¬ ssf.Semistable C X.obj (ssf.wPhase X.obj))
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.wNe F) :
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F → ssf.wNe F) :
     ∃ M : Subobject X,
       M ≠ ⊥ ∧
       M ≠ ⊤ ∧
       IsStrictMono M.arrow ∧
       ssf.Semistable C (M : σ.slicing.IntervalCat C a b).obj
         (ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj) ∧
-      ssf.wPhase X.obj <
-      ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj ∧
+      ssf.wPhase X.obj < ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj ∧
       StrictShortExact
         (ShortComplex.mk M.arrow (cokernel.π M.arrow) (cokernel.condition M.arrow)) := by
   obtain ⟨M, hM_ne, hM_strict, hM_max, _⟩ :=
@@ -326,8 +317,7 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable
     ssf.semistable_of_maxPhase_strictSubobject
       (C := C) (σ := σ) (a := a) (b := b) hM_ne hM_strict hM_max hW_interval
   have hphase_gt :
-      ssf.wPhase X.obj <
-        ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj :=
+      ssf.wPhase X.obj < ssf.wPhase (M : σ.slicing.IntervalCat C a b).obj :=
     ssf.phase_gt_of_maxPhase_strictSubobject_of_not_semistable
       (C := C) (σ := σ) (a := a) (b := b) (X := X) hX hns hM_max hW_interval
   have hS : StrictShortExact

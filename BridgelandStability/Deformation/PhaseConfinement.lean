@@ -690,8 +690,7 @@ theorem SkewedStabilityFunction.phase_le_of_triangle_quotient
     {X K Y : C} {f₁ : K ⟶ X} {f₂ : X ⟶ Y} {f₃ : Y ⟶ K⟦(1 : ℤ)⟧} {ψ ε₀ : ℝ}
     (hX : ssf.Semistable C X ψ)
     (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.wNe F)
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F → ssf.wNe F)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
         φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀)
@@ -768,8 +767,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
     {X Y : σ.slicing.IntervalCat C a b} {ψ ε₀ : ℝ}
     (hX : ssf.Semistable C X.obj ψ)
     (hε₀ : 0 < ε₀) (hthin : b - a + 2 * ε₀ < 1)
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.wNe F)
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F → ssf.wNe F)
     (hperturb : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →
         a < φ → φ < b →
         φ - ε₀ < ssf.wPhase F ∧ ssf.wPhase F < φ + ε₀)

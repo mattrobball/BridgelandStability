@@ -86,8 +86,7 @@ theorem exists_strictMDQ_with_quotient_bound
     {ssf : SkewedStabilityFunction C v σ.slicing a b}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     (hFiniteLength : ThinFiniteLengthInInterval (C := C) σ a b)
-    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.wNe F)
+    (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F → ssf.wNe F)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
       L < ssf.wPhase F ∧ ssf.wPhase F < U)
@@ -258,8 +257,7 @@ theorem exists_strictMDQ_with_quotient_bound
                   (C := C) (s := σ.slicing) (a := a) (b := b) hZ).isoZero
               exact hqA.nonzero (((σ.slicing.intervalProp C a b).ι).map_isZero
                 (IsZero.of_epi_eq_zero qA hzero))
-            have hB_le_cok : ssf.wPhase B.obj ≤
-                ssf.wPhase (cokernel A.arrow).obj :=
+            have hB_le_cok : ssf.wPhase B.obj ≤ ssf.wPhase (cokernel A.arrow).obj :=
               IsStrictMDQ.phase_le_of_strictQuotient
                 (C := C) (σ := σ) (a := a) (b := b) hFiniteLength hW_interval hWindow hWidth
                 hqA (𝟙 (cokernel A.arrow)) (isStrictEpi_of_isIso (f := 𝟙 _)) hcokA_obj_ne
@@ -539,8 +537,7 @@ theorem exists_strictMDQ_with_quotient_bound
               exact hqAhi.nonzero (((σ.slicing.intervalProp C a b).ι).map_isZero
                 (IsZero.of_epi_eq_zero qAhi hzero))
             have hB_le_cokAhi :
-                ssf.wPhase B.obj ≤
-                  ssf.wPhase (cokernel Ahi.arrow).obj :=
+                ssf.wPhase B.obj ≤ ssf.wPhase (cokernel Ahi.arrow).obj :=
               IsStrictMDQ.phase_le_of_strictQuotient
                 (C := C) (σ := σ) (a := a) (b := b)
                 hFiniteLength hW_interval hWindow hWidth
@@ -562,8 +559,7 @@ theorem exists_strictMDQ_with_quotient_bound
                 (q' : QS ⟶ B'),
                 ssf.Semistable C B'.obj
                   (ssf.wPhase B'.obj) →
-                ssf.wPhase B'.obj ≤
-                  ssf.wPhase B.obj →
+                ssf.wPhase B'.obj ≤ ssf.wPhase B.obj →
                 Ahi.arrow ≫ q' = 0 := by
               intro B' q' hB'_ss hle
               have hψ_B'_lt : ssf.wPhase B'.obj < ψQS :=
@@ -585,8 +581,7 @@ theorem exists_strictMDQ_with_quotient_bound
               minimal := by
                 intro B' q' hq' hB'_nz hB'_ss
                 by_cases hle :
-                    ssf.wPhase B.obj ≤
-                      ssf.wPhase B'.obj
+                    ssf.wPhase B.obj ≤ ssf.wPhase B'.obj
                 · refine ⟨hle, ?_⟩
                   intro hEq
                   have hzero := hvanish_helper q' hB'_ss (by rw [hEq])
@@ -603,8 +598,7 @@ theorem exists_strictMDQ_with_quotient_bound
                       symm; exact cokernel.π_desc Ahi.arrow q' hzero
                     rw [h1, ht]; simp only [Category.assoc]⟩
                 · have hlt :
-                      ssf.wPhase B'.obj <
-                        ssf.wPhase B.obj :=
+                      ssf.wPhase B'.obj < ssf.wPhase B.obj :=
                     lt_of_not_ge hle
                   have hzero := hvanish_helper q' hB'_ss (le_of_lt hlt)
                   let q'' : cokernel Ahi.arrow ⟶ B' :=
@@ -615,8 +609,7 @@ theorem exists_strictMDQ_with_quotient_bound
                       (cokernel.π Ahi.arrow) q'' <| by
                         simpa [q''] using hq'
                   have hmin :
-                      ssf.wPhase B.obj ≤
-                        ssf.wPhase B'.obj :=
+                      ssf.wPhase B.obj ≤ ssf.wPhase B'.obj :=
                     (hqAhi.minimal q'' hq'' hB'_nz hB'_ss).1
                   exact False.elim ((not_lt_of_ge hmin) hlt)
             }⟩
