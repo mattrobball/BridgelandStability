@@ -248,6 +248,57 @@ Deformation/ generalization.** Build the API. Then return to the proofs
 with the new tool. This replaces the mechanical `v` insertion approach
 (Entry 1A / Entry 2) with a cleaner abstraction.
 
+---
+
+## Entry 4: `SkewedStabilityFunction` at the Λ level (2026-04-01)
+
+**Trigger:** Generalizing Deformation/ to `WithClassMap C v` created a type
+conflict at the `SkewedStabilityFunction` boundary. The SSF stored
+`W : K₀ C →+ ℂ`, but the generalized seminorm/charge code operates at
+`W : Λ →+ ℂ`. Callers of `wPhaseOf_gt/lt_of_intervalProp` had `ssf.W : K₀ C →+ ℂ`
+where `Λ →+ ℂ` was expected.
+
+**The question:** Should `SkewedStabilityFunction` store `W : Λ →+ ℂ` or
+`W : K₀ C →+ ℂ`?
+
+**Resolution from the source math:** Bridgeland's deformation theorem
+(Section 7) starts with `W : Λ → ℂ` — a charge on the lattice. The W-phase
+of an object `E` is `arg(W(v[E]))/π = arg(W(cl v E))/π`. The stability
+function on the interval category is `W ∘ v : K₀(C) → ℂ`, derived from `W`.
+
+The SSF is the derived stability function from the charge `W`. Storing
+`W : Λ →+ ℂ` is correct — it's the charge, and `W(cl v E)` is how the
+math evaluates it. The K₀-level map `W ∘ v` is a consequence, not the
+primary data.
+
+**Decision:** Generalize `SkewedStabilityFunction` (in `IntervalCategory/FiniteLength.lean`)
+to store `W : Λ →+ ℂ` and parameterize by `v`. All internal uses of
+`ssf.W (K₀.of C E)` become `ssf.W (cl C v E)`.
+
+**What changed:**
+- `SkewedStabilityFunction` gains `v` parameter, `W` field becomes `Λ →+ ℂ`
+- `strict_additive` proof needs `simp only [cl, ...]` instead of `rw [K0_of_strictShortExact, map_add]`
+  (K₀ lemma result at K₀ level, goal at Λ level — `cl` bridges the gap)
+- `skewedStabilityFunction_of_near` passes `W` directly (was `W.comp v`)
+- ~664 `ssf.W (K₀.of C E)` → `ssf.W (cl C v E)` in Deformation/
+
+---
+
+## Entry 5: `cl_id` simp lemma for v=id normalization (2026-04-01)
+
+**Trigger:** After generalizing `Seminorm.lean`, downstream v=id code
+(WPhase.lean, PhaseArithmetic.lean) saw `cl C (AddMonoidHom.id (K₀ C)) E`
+in hypotheses from `stabSeminorm_bound_real`, but proofs expected `K₀.of C E`.
+`rw` couldn't match because `AddMonoidHom.id` is a `def` and doesn't reduce.
+
+**Resolution:** Added `@[simp] lemma cl_id : cl C (AddMonoidHom.id (K₀ C)) E = K₀.of C E := rfl`
+in `GrothendieckGroup/Basic.lean`. Temporary `simp only [cl_id] at hbd`
+fixes in WPhase and PhaseArithmetic. These were removed when those files
+were generalized to general `v` (the `cl_id` pattern only arises at v=id).
+
+**Decision:** `cl_id` is the permanent solution for v=id normalization.
+The temporary call-site patches were correctly removed during generalization.
+
 ## Overall status
 
 - Entry 1A (mechanical `v` insertion): SUPERSEDED by Entry 3
@@ -255,4 +306,6 @@ with the new tool. This replaces the mechanical `v` insertion approach
 - Entry 1C (rotatedIm, chargeNorm, chargeOf_eq_sum_factors): DEFERRED —
   C3 (sum over factors) is partially absorbed by `cl_postnikovTower_eq_sum`
 - Entry 2 (K₀→Λ additivity chain): RESOLVED by Entry 3
-- Entry 3 (`cl`): ACTIVE — implement next
+- Entry 3 (`cl`): DONE — implemented, earning its keep across Deformation/
+- Entry 4 (`SkewedStabilityFunction` at Λ): DONE — matches source math
+- Entry 5 (`cl_id`): DONE — permanent v=id normalization
