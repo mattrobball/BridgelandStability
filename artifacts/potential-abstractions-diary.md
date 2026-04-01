@@ -299,6 +299,38 @@ were generalized to general `v` (the `cl_id` pattern only arises at v=id).
 **Decision:** `cl_id` is the permanent solution for v=id normalization.
 The temporary call-site patches were correctly removed during generalization.
 
+---
+
+## Entry 6: Surjectivity barrier for ConnectedComponent/LocalHomeomorphism (2026-04-01)
+
+**Trigger:** Attempting to generalize ConnectedComponent.lean to `WithClassMap C v`.
+The theorem `eq_zero_of_stabSeminorm_toReal_eq_zero` claims `‖U‖_σ = 0 ⟹ U = 0`
+for `U : Λ →+ ℂ`. At general `v`, the seminorm only tests `U` on `im(v)` —
+we get `U ∘ v = 0` but not `U = 0` unless `v` is surjective.
+
+**Mathematical analysis:** The seminorm `‖U‖_σ = sup |U(cl v E)| / |Z(cl v E)|`
+over semistable `E`. If this is zero, `U(v(K₀.of C E)) = 0` for all semistable `E`.
+By K₀ generation, `U ∘ v = 0`. This only implies `U = 0` if `v` is surjective.
+
+In the literature, the manifold theorem assumes finite-rank `Λ` and `v` is always
+surjective (e.g., `numericalQuotientMap k C` is surjective by definition). So the
+issue only matters at the generality level.
+
+**Affected theorems:**
+- `eq_zero_of_stabSeminorm_toReal_eq_zero`: needs `Surjective v` or conclusion `U.comp v = 0`
+- `finiteSeminormSubgroup` is a subgroup of `Hom(Λ, ℂ)` — at general `v`, only
+  detects the image of `precomposeClassMap`
+- The norm on `V(Σ)` requires surjectivity to be a norm (vs seminorm)
+
+**Decision:** Keep ConnectedComponent.lean and LocalHomeomorphism.lean at v=id for now.
+The manifold theorem adds surjectivity when it specializes to `numericalQuotientMap`.
+The bridge code in NumericalStabilityManifold.lean remains necessary for this reason —
+it's not just boilerplate, it handles the surjectivity-dependent restriction.
+
+Generalizing these files requires threading `(hv : Function.Surjective v)` through
+~15 declarations. This is correct but changes the API surface. Defer to a
+future pass focused specifically on the norm tower.
+
 ## Overall status
 
 - Entry 1A (mechanical `v` insertion): SUPERSEDED by Entry 3

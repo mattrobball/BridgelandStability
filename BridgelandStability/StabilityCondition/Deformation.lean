@@ -32,29 +32,30 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Topology
 open scoped ZeroObject
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory.Triangulated
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-- A small deformation of the central charge lifts directly to a point of `basisNhd C σ ε`.
 
 This is the form used in the topology arguments for Theorem 1.2: it gives both the
 prescribed central charge and the exact `basisNhd` control, so no radius enlargement
 is needed after applying the deformation theorem. -/
-theorem StabilityCondition.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin
-    (σ : StabilityCondition C)
-    (W : K₀ C →+ ℂ)
+theorem StabilityCondition.WithClassMap.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin
+    (σ : StabilityCondition.WithClassMap C v)
+    (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     (ε₀ : ℝ) (hε₀ : 0 < ε₀)
     (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
     (ε : ℝ) (hε : 0 < ε) (hεε₀ : ε < ε₀)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε))) :
-    ∃ τ : StabilityCondition C, τ.Z = W ∧ τ ∈ basisNhd C σ ε := by
+    ∃ τ : StabilityCondition.WithClassMap C v, τ.Z = W ∧ τ ∈ basisNhd C σ ε := by
   obtain ⟨τ, hτZ, hτd⟩ :=
     σ.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin C W hW ε₀ hε₀ hε₀10
       hWide ε hε hεε₀ hsin
@@ -64,7 +65,7 @@ theorem StabilityCondition.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin
   · simpa using hτd
 
 /-- Wide-sector finite length is monotone under shrinking `ε₀`. -/
-theorem wideSectorFiniteLength_mono (σ : StabilityCondition C)
+theorem wideSectorFiniteLength_mono (σ : StabilityCondition.WithClassMap C v)
     {ε₀ ε₁ : ℝ} (hε₀ : 0 < ε₀) (hε₀8 : ε₀ < 1 / 8)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ hε₀8)
     (hε₁ : 0 < ε₁) (hε₁8 : ε₁ < 1 / 8) (hε₁ε₀ : ε₁ ≤ ε₀) :
@@ -109,7 +110,7 @@ theorem wideSectorFiniteLength_mono (σ : StabilityCondition C)
 
 /-- A local `ε₀ < 1 / 10` witness for Theorem 7.1, obtained by shrinking the standard
 `exists_epsilon0` witness. -/
-theorem StabilityCondition.exists_epsilon0_tenth (σ : StabilityCondition C) :
+theorem StabilityCondition.WithClassMap.exists_epsilon0_tenth (σ : StabilityCondition.WithClassMap C v) :
     ∃ ε₀ : ℝ, ∃ hε₀ : 0 < ε₀, ∃ hε₀10 : ε₀ < 1 / 10,
       WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]) := by
   obtain ⟨ε₁, hε₁, hε₁8, hWide₁⟩ := σ.exists_epsilon0 C
@@ -118,31 +119,31 @@ theorem StabilityCondition.exists_epsilon0_tenth (σ : StabilityCondition C) :
     (by positivity) (by linarith) (by linarith)
 
 /-- The affine interpolation between the central charges of `σ` and `τ`. -/
-def linearInterpolationZ (σ τ : StabilityCondition C) (t : ℝ) : K₀ C →+ ℂ :=
+def linearInterpolationZ (σ τ : StabilityCondition.WithClassMap C v) (t : ℝ) : Λ →+ ℂ :=
   σ.Z + t • (τ.Z - σ.Z)
 
-@[simp] theorem linearInterpolationZ_zero (σ τ : StabilityCondition C) :
+@[simp] theorem linearInterpolationZ_zero (σ τ : StabilityCondition.WithClassMap C v) :
     linearInterpolationZ C σ τ 0 = σ.Z := by
   simp [linearInterpolationZ]
 
-@[simp] theorem linearInterpolationZ_one (σ τ : StabilityCondition C) :
+@[simp] theorem linearInterpolationZ_one (σ τ : StabilityCondition.WithClassMap C v) :
     linearInterpolationZ C σ τ 1 = τ.Z := by
   ext x
   simp [linearInterpolationZ]
 
-theorem linearInterpolationZ_sub (σ τ : StabilityCondition C) (t : ℝ) :
+theorem linearInterpolationZ_sub (σ τ : StabilityCondition.WithClassMap C v) (t : ℝ) :
     linearInterpolationZ C σ τ t - σ.Z = t • (τ.Z - σ.Z) := by
   ext x
   simp [linearInterpolationZ]
 
-theorem linearInterpolationZ_sub_sub (σ τ : StabilityCondition C) (s t : ℝ) :
+theorem linearInterpolationZ_sub_sub (σ τ : StabilityCondition.WithClassMap C v) (s t : ℝ) :
     linearInterpolationZ C σ τ t - linearInterpolationZ C σ τ s =
       (t - s) • (τ.Z - σ.Z) := by
   ext x
   simp [linearInterpolationZ, smul_sub]
   module
 
-theorem stabSeminorm_smul (σ : StabilityCondition C) (U : K₀ C →+ ℂ) (t : ℝ) :
+theorem stabSeminorm_smul (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ) (t : ℝ) :
     stabSeminorm C σ (t • U) = ENNReal.ofReal |t| * stabSeminorm C σ U := by
   unfold stabSeminorm
   rw [ENNReal.mul_iSup]
@@ -163,7 +164,7 @@ theorem stabSeminorm_smul (σ : StabilityCondition C) (U : K₀ C →+ ℂ) (t :
   rw [div_eq_mul_inv, ENNReal.ofReal_mul (by positivity)]
   simp [mul_assoc]
 
-theorem stabSeminorm_smul_complex (σ : StabilityCondition C) (U : K₀ C →+ ℂ) (t : ℂ) :
+theorem stabSeminorm_smul_complex (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ) (t : ℂ) :
     stabSeminorm C σ (t • U) = ENNReal.ofReal ‖t‖ * stabSeminorm C σ U := by
   unfold stabSeminorm
   rw [ENNReal.mul_iSup]
@@ -184,7 +185,7 @@ theorem stabSeminorm_smul_complex (σ : StabilityCondition C) (U : K₀ C →+ �
   rw [div_eq_mul_inv, ENNReal.ofReal_mul (by positivity)]
   simp [mul_assoc]
 
-theorem stabSeminorm_add_le (σ : StabilityCondition C) (U V : K₀ C →+ ℂ) :
+theorem stabSeminorm_add_le (σ : StabilityCondition.WithClassMap C v) (U V : Λ →+ ℂ) :
     stabSeminorm C σ (U + V) ≤ stabSeminorm C σ U + stabSeminorm C σ V := by
   apply iSup_le
   intro E
@@ -194,14 +195,14 @@ theorem stabSeminorm_add_le (σ : StabilityCondition C) (U V : K₀ C →+ ℂ) 
   intro hP
   apply iSup_le
   intro hE
-  calc ENNReal.ofReal (‖(U + V) (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖)
-      ≤ ENNReal.ofReal (‖U (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖ +
-          ‖V (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) := by
+  calc ENNReal.ofReal (‖(U + V) (cl C v E)‖ / ‖σ.Z (cl C v E)‖)
+      ≤ ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.Z (cl C v E)‖ +
+          ‖V (cl C v E)‖ / ‖σ.Z (cl C v E)‖) := by
         apply ENNReal.ofReal_le_ofReal
         rw [AddMonoidHom.add_apply, ← add_div]
         exact div_le_div_of_nonneg_right (norm_add_le _ _) (norm_nonneg _)
-    _ = ENNReal.ofReal (‖U (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) +
-        ENNReal.ofReal (‖V (K₀.of C E)‖ / ‖σ.Z (K₀.of C E)‖) :=
+    _ = ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.Z (cl C v E)‖) +
+        ENNReal.ofReal (‖V (cl C v E)‖ / ‖σ.Z (cl C v E)‖) :=
         ENNReal.ofReal_add (div_nonneg (norm_nonneg _) (norm_nonneg _))
           (div_nonneg (norm_nonneg _) (norm_nonneg _))
     _ ≤ stabSeminorm C σ U + stabSeminorm C σ V :=
@@ -209,16 +210,16 @@ theorem stabSeminorm_add_le (σ : StabilityCondition C) (U V : K₀ C →+ ℂ) 
           (le_iSup_of_le E (le_iSup_of_le φ (le_iSup_of_le hP (le_iSup_of_le hE le_rfl))))
           (le_iSup_of_le E (le_iSup_of_le φ (le_iSup_of_le hP (le_iSup_of_le hE le_rfl))))
 
-theorem stabSeminorm_neg (σ : StabilityCondition C) (U : K₀ C →+ ℂ) :
+theorem stabSeminorm_neg (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ) :
     stabSeminorm C σ (-U) = stabSeminorm C σ U := by
   simp [stabSeminorm, AddMonoidHom.neg_apply, norm_neg]
 
 /-- A local form of Bridgeland's Lemma 6.2: on a single basis neighborhood, the
 center seminorm is dominated by the nearby seminorm with a finite constant. -/
-theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
+theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition.WithClassMap C v)
     {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
     ∃ K : ENNReal, K ≠ ⊤ ∧
-      ∀ (U : K₀ C →+ ℂ), stabSeminorm C σ U ≤ K * stabSeminorm C τ U := by
+      ∀ (U : Λ →+ ℂ), stabSeminorm C σ U ≤ K * stabSeminorm C τ U := by
   rcases hτ with ⟨hZnorm, hd⟩
   have hε2 : ε < 1 / 2 := by linarith
   have hsin_lt_cos : Real.sin (Real.pi * ε) < Real.cos (Real.pi * ε) := by
@@ -334,10 +335,10 @@ theorem stabSeminorm_dominated_of_basisNhd (σ τ : StabilityCondition C)
           simp [one_div, mul_comm]
 
 /-- Local forward domination inside a Bridgeland basis neighborhood. -/
-theorem stabSeminorm_center_dominates_of_basisNhd (σ τ : StabilityCondition C)
+theorem stabSeminorm_center_dominates_of_basisNhd (σ τ : StabilityCondition.WithClassMap C v)
     {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
     ∃ K : ENNReal, K ≠ ⊤ ∧
-      ∀ (U : K₀ C →+ ℂ), stabSeminorm C τ U ≤ K * stabSeminorm C σ U := by
+      ∀ (U : Λ →+ ℂ), stabSeminorm C τ U ≤ K * stabSeminorm C σ U := by
   rcases hτ with ⟨hZnorm, hd⟩
   have hε2 : ε < 1 / 2 := by linarith
   have hsin_lt_cos : Real.sin (Real.pi * ε) < Real.cos (Real.pi * ε) := by
@@ -386,7 +387,7 @@ theorem stabSeminorm_center_dominates_of_basisNhd (σ τ : StabilityCondition C)
           simp [one_div, mul_comm]
 
 /-- A basis neighborhood contains its center. -/
-theorem basisNhd_self (σ : StabilityCondition C) {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
+theorem basisNhd_self (σ : StabilityCondition.WithClassMap C v) {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) :
     σ ∈ basisNhd C σ ε := by
   constructor
   · rw [sub_self, stabSeminorm_zero]
@@ -399,7 +400,7 @@ theorem basisNhd_self (σ : StabilityCondition C) {ε : ℝ} (hε : 0 < ε) (hε
     exact ENNReal.ofReal_pos.mpr hε
 
 /-- Shrinking the radius at a fixed center shrinks the Bridgeland basis neighborhood. -/
-theorem basisNhd_mono (σ : StabilityCondition C) {δ ε : ℝ}
+theorem basisNhd_mono (σ : StabilityCondition.WithClassMap C v) {δ ε : ℝ}
     (hδ : 0 < δ) (hδε : δ ≤ ε) (hε8 : ε < 1 / 8) :
     basisNhd C σ δ ⊆ basisNhd C σ ε := by
   intro τ hτ
@@ -417,7 +418,7 @@ theorem basisNhd_mono (σ : StabilityCondition C) {δ ε : ℝ}
 
 This is the local basis-refinement step used later in the local homeomorphism proof.
 It only needs seminorm domination for nearby stability conditions. -/
-theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ}
+theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition.WithClassMap C v) {ε : ℝ}
     (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε) :
     ∃ δ : ℝ, 0 < δ ∧ δ < 1 / 8 ∧ basisNhd C τ δ ⊆ basisNhd C σ ε := by
   rcases hτ with ⟨hτZ, hτd⟩
@@ -486,7 +487,7 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ
     have hbound : stabSeminorm C σ (τ'.Z - σ.Z) ≤
         K * ENNReal.ofReal (Real.sin (Real.pi * δ)) +
           stabSeminorm C σ (τ.Z - σ.Z) := by
-      have hdecomp : (τ'.Z - σ.Z : K₀ C →+ ℂ) = (τ'.Z - τ.Z) + (τ.Z - σ.Z) := by
+      have hdecomp : (τ'.Z - σ.Z : Λ →+ ℂ) = (τ'.Z - τ.Z) + (τ.Z - σ.Z) := by
         ext
         simp [AddMonoidHom.sub_apply, sub_add_sub_cancel]
       calc stabSeminorm C σ (τ'.Z - σ.Z)
@@ -525,7 +526,7 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition C) {ε : ℝ
           linarith
 
 /-- Two stability conditions with same Z and d < 1 are equal (Lemma 6.4). -/
-theorem StabilityCondition.eq_of_same_Z_near (σ τ : StabilityCondition C)
+theorem StabilityCondition.WithClassMap.eq_of_same_Z_near (σ τ : StabilityCondition.WithClassMap C v)
     (hZ : σ.Z = τ.Z)
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal 1) :
     σ = τ := by
@@ -537,13 +538,13 @@ theorem StabilityCondition.eq_of_same_Z_near (σ τ : StabilityCondition C)
 
 /-- Two stability conditions lying in the same Bridgeland basis neighborhood of `σ`
 and with the same central charge are equal. -/
-theorem StabilityCondition.eq_of_same_Z_of_mem_basisNhd (σ : StabilityCondition C)
+theorem StabilityCondition.WithClassMap.eq_of_same_Z_of_mem_basisNhd (σ : StabilityCondition.WithClassMap C v)
     {ε : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8)
-    {τ₁ τ₂ : StabilityCondition C}
+    {τ₁ τ₂ : StabilityCondition.WithClassMap C v}
     (hτ₁ : τ₁ ∈ basisNhd C σ ε) (hτ₂ : τ₂ ∈ basisNhd C σ ε)
     (hZ : τ₁.Z = τ₂.Z) :
     τ₁ = τ₂ := by
-  apply StabilityCondition.eq_of_same_Z_near C τ₁ τ₂ hZ
+  apply StabilityCondition.WithClassMap.eq_of_same_Z_near C τ₁ τ₂ hZ
   have hdist :
       slicingDist C τ₁.slicing τ₂.slicing < ENNReal.ofReal (ε + ε) := by
     calc
@@ -580,7 +581,7 @@ private lemma sin_pi_mul_lt_one {δ : ℝ} (hδ : 0 < δ) (hδ8 : δ < 1 / 8) :
 /-- A small Bridgeland basis neighborhood, with radius below the local Theorem 7.1 witness,
 lies in the connected component of its center. This is the direct straight-line interpolation
 argument from Bridgeland §7. -/
-theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
+theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition.WithClassMap C v)
     {ε₀ ε : ℝ} (hε₀ : 0 < ε₀) (hε₀10 : ε₀ < 1 / 10)
     (hWide : WideSectorFiniteLength (C := C) σ ε₀ hε₀ (by linarith [hε₀10]))
     (hε : 0 < ε) (hεε₀ : ε < ε₀) :
@@ -588,7 +589,7 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
   have hε8 : ε < 1 / 8 := by linarith
   intro τ hτ
   rcases hτ with ⟨hτZ, hτd⟩
-  let W : unitInterval → K₀ C →+ ℂ := fun t => linearInterpolationZ C σ τ t
+  let W : unitInterval → Λ →+ ℂ := fun t => linearInterpolationZ C σ τ t
   have hτfin : stabSeminorm C σ (τ.Z - σ.Z) ≠ ⊤ := ne_top_of_lt hτZ
   have hWt :
       ∀ t : unitInterval,
@@ -614,16 +615,16 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       ∀ t : unitInterval, stabSeminorm C σ (W t - σ.Z) < ENNReal.ofReal 1 := fun t =>
     lt_trans (hWt t) ((ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 hsinε_lt_one)
   have hγ_exists :
-      ∀ t : unitInterval, ∃ ρ : StabilityCondition C, ρ.Z = W t ∧ ρ ∈ basisNhd C σ ε := fun t =>
+      ∀ t : unitInterval, ∃ ρ : StabilityCondition.WithClassMap C v, ρ.Z = W t ∧ ρ ∈ basisNhd C σ ε := fun t =>
     σ.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W t) (hW1 t)
       ε₀ hε₀ hε₀10 hWide ε hε hεε₀ (hWt t)
-  let γ : unitInterval → StabilityCondition C := fun t => Classical.choose (hγ_exists t)
+  let γ : unitInterval → StabilityCondition.WithClassMap C v := fun t => Classical.choose (hγ_exists t)
   have hγZ : ∀ t : unitInterval, (γ t).Z = W t := fun t =>
     (Classical.choose_spec (hγ_exists t)).1
   have hγmem : ∀ t : unitInterval, γ t ∈ basisNhd C σ ε := fun t =>
     (Classical.choose_spec (hγ_exists t)).2
   have hγ0 : γ 0 = σ := by
-    apply StabilityCondition.eq_of_same_Z_near C (γ 0) σ
+    apply StabilityCondition.WithClassMap.eq_of_same_Z_near C (γ 0) σ
     · simpa [γ, W] using hγZ 0
     · have h0 : slicingDist C σ.slicing (γ 0).slicing < ENNReal.ofReal ε := (hγmem 0).2
       have h0' : slicingDist C (γ 0).slicing σ.slicing < ENNReal.ofReal ε := by
@@ -631,7 +632,7 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
       exact lt_trans h0' <|
         (ENNReal.ofReal_lt_ofReal_iff zero_lt_one).2 (by linarith)
   have hγ1 : γ 1 = τ := by
-    apply StabilityCondition.eq_of_same_Z_near C (γ 1) τ
+    apply StabilityCondition.WithClassMap.eq_of_same_Z_near C (γ 1) τ
     · simpa [γ, W] using (hγZ 1).trans (linearInterpolationZ_one C σ τ)
     · have hsum :
           slicingDist C (γ 1).slicing τ.slicing < ENNReal.ofReal (ε + ε) := by
@@ -727,7 +728,7 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
         ρ₀.exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin C (W s) hWclose1
           ε₁ hε₁ hε₁10 hWide₁ δ hδ hδ_lt_ε₁ hWclose
       have hγs_eq_ρ : γ s = ρ := by
-        apply StabilityCondition.eq_of_same_Z_near C (γ s) ρ
+        apply StabilityCondition.WithClassMap.eq_of_same_Z_near C (γ s) ρ
         · rw [hγZ s, hρZ]
         · have hdist₁ :
               slicingDist C (γ s).slicing ρ₀.slicing < ENNReal.ofReal (ε + ε) := by
@@ -765,13 +766,13 @@ theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition C)
 /-- Local continuation along the straight-line charge interpolation inside a fixed basis
 neighborhood. Starting from any lifted point `ρ₀` over time `t`, nearby times also admit lifts
 inside the same ambient basis neighborhood and in the same connected component as `ρ₀`. -/
-theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCondition C)
+theorem exists_local_lift_sameComponent_in_basisNhd (σ τ ρ₀ : StabilityCondition.WithClassMap C v)
     {ε t : ℝ} (hε : 0 < ε) (hε8 : ε < 1 / 8) (hτ : τ ∈ basisNhd C σ ε)
     (hρ₀mem : ρ₀ ∈ basisNhd C σ ε)
     (hρ₀Z : ρ₀.Z = linearInterpolationZ C σ τ t) :
     ∃ η : ℝ, 0 < η ∧
       ∀ ⦃s : ℝ⦄, |s - t| < η →
-        ∃ ρ : StabilityCondition C,
+        ∃ ρ : StabilityCondition.WithClassMap C v,
           ρ.Z = linearInterpolationZ C σ τ s ∧
           ρ ∈ basisNhd C σ ε ∧
           ConnectedComponents.mk ρ = ConnectedComponents.mk ρ₀ := by
