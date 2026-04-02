@@ -30,6 +30,7 @@ open scoped ZeroObject ENNReal Topology
 universe v u u'
 
 namespace CategoryTheory.Triangulated
+open PreStabilityCondition.WithClassMap (charge_congr charge_def)
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
@@ -69,13 +70,9 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_below
       φ - 1 < F.φ i) : False := by
   -- Get the central charge ray from τ-semistability
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
-  have hcharge_eq : τ.charge E = σ.charge E := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, hZ]
-  rw [hcharge_eq] at hmZ
+  rw [(charge_congr hZ E).symm] at hmZ
   -- K₀ additivity: Z(E) = Σ Z(factor i)
-  have hK₀ : σ.charge E =
-      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  have hK₀ := σ.charge_postnikovTower_eq_sum F.toPostnikovTower
   -- Define the divided term: w i = Z(factor i) * exp(-iπφ)
   set w : Fin F.n → ℂ := fun i ↦
     σ.charge (F.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
@@ -100,9 +97,8 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_below
   -- For zero factor i: w i = 0
   have hw_zero : ∀ i : Fin F.n, IsZero (F.toPostnikovTower.factor i) →
       w i = 0 := by
-    intro i hi
-    change σ.charge _ * _ = 0
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
+    intro i hi; show σ.charge _ * _ = 0
+    simp [σ.charge_isZero hi]
   -- At least one nonzero factor exists (otherwise Z(E) = 0, contradicting m > 0)
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) := by
     by_contra hall; push Not at hall
@@ -141,12 +137,8 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_above
     (hlt : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       F.φ i < φ + 1) : False := by
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
-  have hcharge_eq : τ.charge E = σ.charge E := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, hZ]
-  rw [hcharge_eq] at hmZ
-  have hK₀ : σ.charge E =
-      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  rw [(charge_congr hZ E).symm] at hmZ
+  have hK₀ := σ.charge_postnikovTower_eq_sum F.toPostnikovTower
   set w : Fin F.n → ℂ := fun i ↦
     σ.charge (F.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hsum : (m : ℂ) = ∑ i : Fin F.n, w i := by
@@ -168,9 +160,8 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_above
         (by nlinarith [hlt i hi, Real.pi_pos]))
   have hw_zero : ∀ i : Fin F.n, IsZero (F.toPostnikovTower.factor i) →
       w i = 0 := by
-    intro i hi
-    change σ.charge _ * _ = 0
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
+    intro i hi; show σ.charge _ * _ = 0
+    simp [σ.charge_isZero hi]
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) := by
     by_contra hall; push Not at hall
     have : (m : ℂ) = 0 := by
@@ -269,9 +260,7 @@ theorem StabilityCondition.WithClassMap.false_of_gt_and_le_phases
     (hτle : ∀ i : Fin Fτ.n, Fτ.φ i ≤ φ)
     (hτgt : ∀ i : Fin Fτ.n, φ - 1 < Fτ.φ i) : False := by
   -- σ-decomposition: Im(Z(X)/exp(iπφ)) > 0
-  have hK₀σ : σ.charge X =
-      ∑ i : Fin Fσ.n, σ.charge (Fσ.toPostnikovTower.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v Fσ.toPostnikovTower, map_sum]
+  have hK₀σ := σ.charge_postnikovTower_eq_sum Fσ.toPostnikovTower
   set wσ : Fin Fσ.n → ℂ := fun i ↦
     σ.charge (Fσ.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hσ_pos : ∀ i : Fin Fσ.n, ¬IsZero (Fσ.toPostnikovTower.factor i) →
@@ -285,8 +274,8 @@ theorem StabilityCondition.WithClassMap.false_of_gt_and_le_phases
         (by nlinarith [hσlt i, Real.pi_pos]))
   have hσ_zero : ∀ i : Fin Fσ.n, IsZero (Fσ.toPostnikovTower.factor i) →
       wσ i = 0 := by
-    intro i hi; change σ.charge _ * _ = 0
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
+    intro i hi; show σ.charge _ * _ = 0
+    simp [σ.charge_isZero hi]
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin Fσ.n, ¬IsZero (Fσ.toPostnikovTower.factor i) := by
     by_contra hall; push Not at hall
     -- All factors are zero → each chain object is zero by induction → E is zero
@@ -326,16 +315,14 @@ theorem StabilityCondition.WithClassMap.false_of_gt_and_le_phases
           Finset.sum_lt_sum (fun i _ ↦ hge i)
             ⟨i₀, Finset.mem_univ _, hσ_pos i₀ hi₀⟩
   -- τ-decomposition: Im(Z(X)/exp(iπφ)) ≤ 0
-  have hK₀τ : τ.charge X =
-      ∑ i : Fin Fτ.n, τ.charge (Fτ.toPostnikovTower.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v Fτ.toPostnikovTower, map_sum]
+  have hK₀τ := τ.charge_postnikovTower_eq_sum Fτ.toPostnikovTower
   set wτ : Fin Fτ.n → ℂ := fun i ↦
     τ.charge (Fτ.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hτ_le : ∀ i : Fin Fτ.n, (wτ i).im ≤ 0 := by
     intro i
     by_cases hi : IsZero (Fτ.toPostnikovTower.factor i)
-    · change (τ.charge _ * _).im ≤ 0
-      simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]; exact le_rfl
+    · show (τ.charge _ * _).im ≤ 0
+      simp [τ.charge_isZero hi]
     · obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C τ hi (Fτ.semistable i)
       change (τ.charge _ * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
       rw [hbim]; exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hb)
@@ -354,7 +341,7 @@ theorem StabilityCondition.WithClassMap.false_of_gt_and_le_phases
   have hτ_sum : τ.charge X * exp (-(↑(Real.pi * φ) * I)) =
       ∑ i : Fin Fτ.n, wτ i := by rw [hK₀τ, Finset.sum_mul]
   have : (∑ i : Fin Fσ.n, wσ i).im = (∑ i : Fin Fτ.n, wτ i).im := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, ← hσ_sum, ← hτ_sum, hZ]
+    rw [← hσ_sum, ← hτ_sum, charge_congr hZ]
   linarith
 
 /-- **One-sided phase impossibility** (below with equality). If `σ` and `τ` have the same
@@ -371,12 +358,8 @@ theorem StabilityCondition.WithClassMap.false_of_hn_phases_le_with_lt
     (hstrict : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) ∧ F.φ i < φ) :
     False := by
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
-  have hcharge_eq : τ.charge E = σ.charge E := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, hZ]
-  rw [hcharge_eq] at hmZ
-  have hK₀ : σ.charge E =
-      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  rw [(charge_congr hZ E).symm] at hmZ
+  have hK₀ := σ.charge_postnikovTower_eq_sum F.toPostnikovTower
   set w : Fin F.n → ℂ := fun i ↦
     σ.charge (F.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hsum : (m : ℂ) = ∑ i : Fin F.n, w i := by
@@ -389,8 +372,8 @@ theorem StabilityCondition.WithClassMap.false_of_hn_phases_le_with_lt
   have hw_le : ∀ i : Fin F.n, (w i).im ≤ 0 := by
     intro i
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
-    · change (σ.charge _ * _).im ≤ 0
-      simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]; exact le_rfl
+    · show (σ.charge _ * _).im ≤ 0
+      simp [σ.charge_isZero hi]
     · obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (F.semistable i)
       change (σ.charge _ * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
       rw [hbim]; exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hb)

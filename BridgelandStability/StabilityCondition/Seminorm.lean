@@ -29,6 +29,7 @@ open scoped ZeroObject ENNReal
 universe v u u'
 
 namespace CategoryTheory.Triangulated
+open PreStabilityCondition.WithClassMap (charge_congr charge_def)
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
@@ -237,9 +238,7 @@ theorem sector_bound (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ
   -- U and Z decompose over factors
   have hUE : U (cl C v E) = ∑ i : Fin F.n, U (cl C v (P.factor i)) := by
     rw [cl_postnikovTower_eq_sum C v P, map_sum]
-  have hZE : σ.charge E = ∑ i : Fin F.n, σ.charge (P.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def,
-      cl_postnikovTower_eq_sum C v P, map_sum]; rfl
+  have hZE := σ.charge_postnikovTower_eq_sum P
   -- Seminorm bound on each factor
   have hMi : ∀ i : Fin F.n,
       ‖U (cl C v (P.factor i))‖ ≤ M * ‖σ.charge (P.factor i)‖ := by
@@ -253,7 +252,7 @@ theorem sector_bound (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ
       ↑(‖σ.charge (P.factor i)‖) * exp (↑(Real.pi * F.φ i) * I) := by
     intro i
     by_cases hi : IsZero (P.factor i)
-    · simp [cl_isZero (C := C) (v := v) hi]
+    · simp [σ.charge_isZero hi]
     · obtain ⟨m, hm, hmZ⟩ :=
         σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
       rw [hmZ]; congr 1
@@ -367,7 +366,7 @@ lemma stabSeminorm_bound_real (σ : StabilityCondition.WithClassMap C v) (U : Λ
     ‖U (cl C v A)‖ ≤ (stabSeminorm C σ U).toReal * ‖σ.charge A‖ := by
   obtain ⟨m, hm, hmZ⟩ := σ.compat ψ A hP hA
   have hZ_pos : (0 : ℝ) < ‖σ.charge A‖ := by
-    simp [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
+    rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   have h1 : ENNReal.ofReal (‖U (cl C v A)‖ / ‖σ.charge A‖) ≤
       stabSeminorm C σ U :=
@@ -416,9 +415,9 @@ theorem stabSeminorm_lt_top_of_same_Z (σ τ : StabilityCondition.WithClassMap C
   -- Goal: ‖U(E)‖ / ‖τ.Z(E)‖ ≤ M / cos(πε)
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hP hE
   have hZ_pos : (0 : ℝ) < ‖τ.charge E‖ := by
-    simp [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
+    rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
-  -- Sector bound: ‖U(E)‖ ≤ (M / cos(πε)) * ‖τ.Z(E)‖
+  -- Sector bound: ‖U(E)‖ ≤ (M / cos(πε)) * ‖τ.charge E‖
   have hbounds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hP hd
   have hwidth : σ.slicing.phiPlus C E hE - σ.slicing.phiMinus C E hE ≤ 2 * ε := by
     have := hbounds.1; have := hbounds.2; rw [Set.mem_Ioo] at *; linarith
@@ -426,7 +425,7 @@ theorem stabSeminorm_lt_top_of_same_Z (σ τ : StabilityCondition.WithClassMap C
   have hcos_eq : Real.pi * (2 * ε) / 2 = Real.pi * ε := by ring
   have hsector := sector_bound' C σ U hE (by linarith : (0 : ℝ) ≤ 2 * ε) h2ε hwidth hM0
     hM_bound
-  simp only [PreStabilityCondition.WithClassMap.charge_def, hcos_eq, hZ] at hsector
+  rw [hcos_eq, charge_congr hZ E] at hsector
   calc ‖U (cl C v E)‖ / ‖τ.charge E‖
       ≤ M / Real.cos (Real.pi * ε) * ‖τ.charge E‖ / ‖τ.charge E‖ :=
         div_le_div_of_nonneg_right hsector (le_of_lt hZ_pos)
@@ -491,7 +490,7 @@ theorem stabSeminorm_le_of_near (σ τ : StabilityCondition.WithClassMap C v)
   apply ENNReal.ofReal_le_ofReal
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hP hE
   have hZτ_pos : (0 : ℝ) < ‖τ.charge E‖ := by
-    simp [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
+    rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   have hbounds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hP hd
   have hwidth : σ.slicing.phiPlus C E hE - σ.slicing.phiMinus C E hE ≤ 2 * ε := by

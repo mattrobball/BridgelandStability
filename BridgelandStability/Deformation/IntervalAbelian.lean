@@ -30,6 +30,7 @@ open scoped ZeroObject
 universe v u u'
 
 namespace CategoryTheory.Triangulated
+open PreStabilityCondition.WithClassMap (charge_def)
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
@@ -71,8 +72,7 @@ theorem im_Z_nonpos_of_heart_phases
           _ ≤ φ := hle⟩
   -- K₀ decomposition: Z(E) = Σ Z(factors)
   set P := F.toPostnikovTower
-  rw [show σ.charge E = ∑ i : Fin F.n, σ.charge (P.factor i) from by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v P, map_sum]; rfl]
+  rw [σ.charge_postnikovTower_eq_sum P]
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
   rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.charge (P.factor i) * rot).im =
       ∑ i : Fin F.n, (σ.charge (P.factor i) * rot).im from
@@ -81,7 +81,7 @@ theorem im_Z_nonpos_of_heart_phases
   apply Finset.sum_nonpos
   intro i _
   by_cases hi : IsZero (P.factor i)
-  · simp [cl_isZero (C := C) (v := v) hi]
+  · simp [σ.charge_isZero hi]
   · -- Nonzero factor: Z(factor) = m · exp(iπ · F.φ i) with m > 0
     obtain ⟨m, hm, hval⟩ :=
       σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
@@ -120,16 +120,13 @@ theorem P_phi_of_im_zero_heart
             (σ.slicing.phiPlus_eq C X hXne F hn hfirst).symm
           _ ≤ φ := hX_le⟩
   -- K₀ decomposition: Z(X) = Σ Z(factor_i)
-  have hZX : σ.charge X =
-      ∑ i : Fin F.n,
-        σ.charge (F.toPostnikovTower.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  have hZX := σ.charge_postnikovTower_eq_sum F.toPostnikovTower
   -- Each Im term ≤ 0
   have hterms : ∀ i ∈ Finset.univ,
       (σ.charge (F.toPostnikovTower.factor i) * rot).im ≤ 0 := by
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
-    · simp [cl_isZero (C := C) (v := v) hi]
+    · simp [σ.charge_isZero hi]
     · obtain ⟨mi, hmi, hvali⟩ :=
         σ.compat (F.φ i) _ (F.semistable i) hi
       rw [hvali, im_ofReal_mul_exp_mul_exp_neg]
@@ -214,7 +211,7 @@ theorem P_phi_of_heart_triangle
   have hZsum : σ.charge E = σ.charge K + σ.charge Q := by
     have h := cl_triangle C v (Triangle.mk f₁ f₂ f₃) hT
     simp only [Pretriangulated.Triangle.mk] at h
-    simp only [PreStabilityCondition.WithClassMap.charge_def, h, map_add]
+    simp only [charge_def, h, map_add]
   -- Im(Z(E) · exp(-iπφ)) = 0
   obtain ⟨mE, hmE, hvE⟩ := σ.compat φ E hPφ hE
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
@@ -258,8 +255,7 @@ theorem im_Z_nonneg_of_phases_above
             (σ.slicing.phiPlus_eq C E hE F hn hfirst).symm
           _ < φ + 1 := hlt⟩
   set P := F.toPostnikovTower
-  rw [show σ.charge E = ∑ i : Fin F.n, σ.charge (P.factor i) from by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v P, map_sum]; rfl]
+  rw [σ.charge_postnikovTower_eq_sum P]
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
   rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.charge (P.factor i) * rot).im =
       ∑ i : Fin F.n, (σ.charge (P.factor i) * rot).im from
@@ -267,7 +263,7 @@ theorem im_Z_nonneg_of_phases_above
   apply Finset.sum_nonneg
   intro i _
   by_cases hi : IsZero (P.factor i)
-  · simp [cl_isZero (C := C) (v := v) hi]
+  · simp [σ.charge_isZero hi]
   · obtain ⟨m, hm, hval⟩ :=
       σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
     rw [hval, im_ofReal_mul_exp_mul_exp_neg]
@@ -299,14 +295,12 @@ theorem P_phi_of_im_zero_above
           _ = σ.slicing.phiPlus C X hXne :=
             (σ.slicing.phiPlus_eq C X hXne F hn hfirst).symm
           _ < φ + 1 := hX_lt⟩
-  have hZX : σ.charge X =
-      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  have hZX := σ.charge_postnikovTower_eq_sum F.toPostnikovTower
   have hterms : ∀ i ∈ Finset.univ,
       0 ≤ (σ.charge (F.toPostnikovTower.factor i) * rot).im := by
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
-    · simp [cl_isZero (C := C) (v := v) hi]
+    · simp [σ.charge_isZero hi]
     · obtain ⟨mi, hmi, hvali⟩ :=
         σ.compat (F.φ i) _ (F.semistable i) hi
       rw [hvali, im_ofReal_mul_exp_mul_exp_neg]
@@ -627,13 +621,15 @@ theorem P_phi_of_truncation_of_P_phi_cone
       σ.charge ((t.truncLT 0).obj X₃) +
       σ.charge ((t.truncGE 0).obj X₃) := by
     have h := cl_triangle C v _ htrunc
-    dsimp [TStructure.triangleLTGE] at h; simp only [PreStabilityCondition.WithClassMap.charge_def, h, map_add]
+    dsimp [TStructure.triangleLTGE] at h
+    simp only [charge_def, h, map_add]
   -- K₀ on original triangle: Im(Z(X₃)·rot) = 0 since A, B ∈ P(φ)
   have hZX₃_im : (σ.charge X₃ * rot).im = 0 := by
     have hZorig : σ.charge B =
         σ.charge A + σ.charge X₃ := by
       have h := cl_triangle C v _ hT
-      dsimp [Triangle.mk] at h; simp only [PreStabilityCondition.WithClassMap.charge_def, h, map_add]
+      dsimp [Triangle.mk] at h
+      simp only [charge_def, h, map_add]
     have : (σ.charge A * rot).im + (σ.charge X₃ * rot).im =
         (σ.charge B * rot).im := by
       rw [← Complex.add_im, ← add_mul, hZorig]

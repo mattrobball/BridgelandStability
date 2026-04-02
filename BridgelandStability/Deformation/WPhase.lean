@@ -104,17 +104,14 @@ theorem StabilityCondition.WithClassMap.norm_Z_pos_of_intervalProp (σ : Stabili
         _ < b := σ.slicing.phiPlus_lt_of_intervalProp C hE hI
   set P := F.toPostnikovTower
   -- K₀ decomposition: Z(E) = Σ Z(Fᵢ) = Σ ‖Z(Fᵢ)‖ * exp(iπφᵢ)
-  have hZE : σ.charge E =
-      ∑ i : Fin F.n, σ.charge (P.factor i) := by
-    simp only [PreStabilityCondition.WithClassMap.charge_def,
-      cl_postnikovTower_eq_sum C v P, map_sum]; rfl
+  have hZE := σ.charge_postnikovTower_eq_sum P
   have hZi : ∀ i : Fin F.n,
       σ.charge (P.factor i) =
       ↑(‖σ.charge (P.factor i)‖) *
         Complex.exp (↑(Real.pi * F.φ i) * Complex.I) := by
     intro i
     by_cases hi : IsZero (P.factor i)
-    · simp [cl_isZero (C := C) (v := v) hi]
+    · simp [σ.charge_isZero hi]
     · obtain ⟨m, hm, hmZ⟩ :=
         σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
       rw [hmZ]; congr 1

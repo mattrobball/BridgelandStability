@@ -33,6 +33,7 @@ open scoped ENNReal
 universe v u u'
 
 namespace CategoryTheory.Triangulated
+open PreStabilityCondition.WithClassMap (charge_congr charge_def)
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
@@ -95,7 +96,7 @@ theorem StabilityCondition.WithClassMap.phase_eq_of_same_Z (σ τ : StabilityCon
     (habs : |φ - ψ| < 2) : φ = ψ := by
   obtain ⟨m₁, hm₁, h₁⟩ := σ.compat φ E hσ hE
   obtain ⟨m₂, hm₂, h₂⟩ := τ.compat ψ E hτ hE
-  simp only [PreStabilityCondition.WithClassMap.charge_def, hZ] at h₁
+  rw [charge_congr hZ E] at h₁
   exact eq_of_pos_mul_exp_eq hm₁ hm₂ habs (h₁.symm.trans h₂)
 
 /-- A real multiple of `exp(iπψ)` cannot equal a sum of positive real multiples of

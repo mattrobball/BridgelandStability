@@ -89,6 +89,27 @@ theorem WithClassMap.compat {v : K₀ C →+ Λ} (σ : WithClassMap C v)
       σ.charge E = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) :=
   σ.compat' φ E hP hE
 
+omit [IsTriangulated C] in
+variable {C} in
+theorem WithClassMap.charge_isZero {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) {E : C} (hE : IsZero E) :
+    σ.charge E = 0 := by
+  simp [charge_def, cl_isZero (C := C) (v := v) hE]
+
+omit [IsTriangulated C] in
+variable {C} in
+theorem WithClassMap.charge_congr {v : K₀ C →+ Λ}
+    {σ τ : WithClassMap C v} (h : σ.Z = τ.Z) (E : C) :
+    σ.charge E = τ.charge E := by
+  simp only [charge_def, h]
+
+omit [IsTriangulated C] in
+variable {C} in
+theorem WithClassMap.charge_postnikovTower_eq_sum {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) {E : C} (P : PostnikovTower C E) :
+    σ.charge E = ∑ i : Fin P.n, σ.charge (P.factor i) := by
+  simp only [charge_def, cl_postnikovTower_eq_sum C v P, map_sum]
+
 end PreStabilityCondition
 
 /-- A Bridgeland prestability condition on `C`, viewed as the specialization of
@@ -155,7 +176,7 @@ When `v = id` (i.e., `Λ = K₀(D)`), this recovers Bridgeland's original semino
 def stabSeminorm {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v)
     (U : Λ →+ ℂ) : ℝ≥0∞ :=
   ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
-    ENNReal.ofReal (‖U (v (K₀.of C E))‖ / ‖σ.Z (v (K₀.of C E))‖)
+    ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖)
 
 /-! ### Topology on Stab(D) -/
 
