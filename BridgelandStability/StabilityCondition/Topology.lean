@@ -44,7 +44,7 @@ out the repeated "divide by exp, rewrite to sin" computation in the Lemma 6.4 pr
 theorem im_divided_of_semistable (σ : StabilityCondition.WithClassMap C v) {F : C} {ψ φ : ℝ}
     (hne : ¬IsZero F) (hss : (σ.slicing.P ψ) F) :
     ∃ b : ℝ, 0 < b ∧
-      (σ.Z (cl C v F) * exp (-(↑(Real.pi * φ) * I))).im =
+      (σ.charge F * exp (-(↑(Real.pi * φ) * I))).im =
         b * Real.sin (Real.pi * (ψ - φ)) := by
   obtain ⟨b, hb, hbZ⟩ := σ.compat ψ F hss hne
   exact ⟨b, hb, by rw [hbZ, im_ofReal_mul_exp_mul_exp_neg]⟩
@@ -69,17 +69,19 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_below
       φ - 1 < F.φ i) : False := by
   -- Get the central charge ray from τ-semistability
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
-  rw [← hZ] at hmZ
+  have hcharge_eq : τ.charge E = σ.charge E := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, hZ]
+  rw [hcharge_eq] at hmZ
   -- K₀ additivity: Z(E) = Σ Z(factor i)
-  have hK₀ : σ.Z (cl C v E) =
-      ∑ i : Fin F.n, σ.Z (cl C v (F.toPostnikovTower.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  have hK₀ : σ.charge E =
+      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
   -- Define the divided term: w i = Z(factor i) * exp(-iπφ)
   set w : Fin F.n → ℂ := fun i ↦
-    σ.Z (cl C v (F.toPostnikovTower.factor i)) * exp (-(↑(Real.pi * φ) * I))
+    σ.charge (F.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   -- Sum of divided terms equals m (real)
   have hsum : (m : ℂ) = ∑ i : Fin F.n, w i := by
-    have h1 : σ.Z (cl C v E) * exp (-(↑(Real.pi * φ) * I)) =
+    have h1 : σ.charge E * exp (-(↑(Real.pi * φ) * I)) =
         ∑ i : Fin F.n, w i := by
       rw [hK₀, Finset.sum_mul]
     rwa [hmZ, mul_assoc, ← exp_add,
@@ -90,7 +92,7 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_below
       (w i).im < 0 := by
     intro i hi
     obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (F.semistable i)
-    change (σ.Z (cl C v _) * exp (-(↑(Real.pi * φ) * I))).im < 0
+    change (σ.charge _ * exp (-(↑(Real.pi * φ) * I))).im < 0
     rw [hbim]; exact mul_neg_of_pos_of_neg hb
       (Real.sin_neg_of_neg_of_neg_pi_lt
         (by nlinarith [hlt i hi, Real.pi_pos])
@@ -99,8 +101,8 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_below
   have hw_zero : ∀ i : Fin F.n, IsZero (F.toPostnikovTower.factor i) →
       w i = 0 := by
     intro i hi
-    change σ.Z (cl C v _) * _ = 0
-    rw [cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
+    change σ.charge _ * _ = 0
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
   -- At least one nonzero factor exists (otherwise Z(E) = 0, contradicting m > 0)
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) := by
     by_contra hall; push Not at hall
@@ -139,14 +141,16 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_above
     (hlt : ∀ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) →
       F.φ i < φ + 1) : False := by
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
-  rw [← hZ] at hmZ
-  have hK₀ : σ.Z (cl C v E) =
-      ∑ i : Fin F.n, σ.Z (cl C v (F.toPostnikovTower.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  have hcharge_eq : τ.charge E = σ.charge E := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, hZ]
+  rw [hcharge_eq] at hmZ
+  have hK₀ : σ.charge E =
+      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
   set w : Fin F.n → ℂ := fun i ↦
-    σ.Z (cl C v (F.toPostnikovTower.factor i)) * exp (-(↑(Real.pi * φ) * I))
+    σ.charge (F.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hsum : (m : ℂ) = ∑ i : Fin F.n, w i := by
-    have h1 : σ.Z (cl C v E) * exp (-(↑(Real.pi * φ) * I)) =
+    have h1 : σ.charge E * exp (-(↑(Real.pi * φ) * I)) =
         ∑ i : Fin F.n, w i := by
       rw [hK₀, Finset.sum_mul]
     rwa [hmZ, mul_assoc, ← exp_add,
@@ -157,7 +161,7 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_above
       0 < (w i).im := by
     intro i hi
     obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (F.semistable i)
-    change 0 < (σ.Z (cl C v _) * exp (-(↑(Real.pi * φ) * I))).im
+    change 0 < (σ.charge _ * exp (-(↑(Real.pi * φ) * I))).im
     rw [hbim]; exact mul_pos hb
       (Real.sin_pos_of_pos_of_lt_pi
         (by nlinarith [hgt i hi, Real.pi_pos])
@@ -165,8 +169,8 @@ theorem StabilityCondition.WithClassMap.false_of_all_hn_phases_above
   have hw_zero : ∀ i : Fin F.n, IsZero (F.toPostnikovTower.factor i) →
       w i = 0 := by
     intro i hi
-    change σ.Z (cl C v _) * _ = 0
-    rw [cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
+    change σ.charge _ * _ = 0
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) := by
     by_contra hall; push Not at hall
     have : (m : ℂ) = 0 := by
@@ -265,24 +269,24 @@ theorem StabilityCondition.WithClassMap.false_of_gt_and_le_phases
     (hτle : ∀ i : Fin Fτ.n, Fτ.φ i ≤ φ)
     (hτgt : ∀ i : Fin Fτ.n, φ - 1 < Fτ.φ i) : False := by
   -- σ-decomposition: Im(Z(X)/exp(iπφ)) > 0
-  have hK₀σ : σ.Z (cl C v X) =
-      ∑ i : Fin Fσ.n, σ.Z (cl C v (Fσ.toPostnikovTower.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v Fσ.toPostnikovTower, map_sum]
+  have hK₀σ : σ.charge X =
+      ∑ i : Fin Fσ.n, σ.charge (Fσ.toPostnikovTower.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v Fσ.toPostnikovTower, map_sum]
   set wσ : Fin Fσ.n → ℂ := fun i ↦
-    σ.Z (cl C v (Fσ.toPostnikovTower.factor i)) * exp (-(↑(Real.pi * φ) * I))
+    σ.charge (Fσ.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hσ_pos : ∀ i : Fin Fσ.n, ¬IsZero (Fσ.toPostnikovTower.factor i) →
       0 < (wσ i).im := by
     intro i hi
     obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (Fσ.semistable i)
-    change 0 < (σ.Z (cl C v _) * exp (-(↑(Real.pi * φ) * I))).im
+    change 0 < (σ.charge _ * exp (-(↑(Real.pi * φ) * I))).im
     rw [hbim]; exact mul_pos hb
       (Real.sin_pos_of_pos_of_lt_pi
         (by nlinarith [hσgt i, Real.pi_pos])
         (by nlinarith [hσlt i, Real.pi_pos]))
   have hσ_zero : ∀ i : Fin Fσ.n, IsZero (Fσ.toPostnikovTower.factor i) →
       wσ i = 0 := by
-    intro i hi; change σ.Z (cl C v _) * _ = 0
-    rw [cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
+    intro i hi; change σ.charge _ * _ = 0
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]
   obtain ⟨i₀, hi₀⟩ : ∃ i : Fin Fσ.n, ¬IsZero (Fσ.toPostnikovTower.factor i) := by
     by_contra hall; push Not at hall
     -- All factors are zero → each chain object is zero by induction → E is zero
@@ -322,18 +326,18 @@ theorem StabilityCondition.WithClassMap.false_of_gt_and_le_phases
           Finset.sum_lt_sum (fun i _ ↦ hge i)
             ⟨i₀, Finset.mem_univ _, hσ_pos i₀ hi₀⟩
   -- τ-decomposition: Im(Z(X)/exp(iπφ)) ≤ 0
-  have hK₀τ : τ.Z (cl C v X) =
-      ∑ i : Fin Fτ.n, τ.Z (cl C v (Fτ.toPostnikovTower.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v Fτ.toPostnikovTower, map_sum]
+  have hK₀τ : τ.charge X =
+      ∑ i : Fin Fτ.n, τ.charge (Fτ.toPostnikovTower.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v Fτ.toPostnikovTower, map_sum]
   set wτ : Fin Fτ.n → ℂ := fun i ↦
-    τ.Z (cl C v (Fτ.toPostnikovTower.factor i)) * exp (-(↑(Real.pi * φ) * I))
+    τ.charge (Fτ.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hτ_le : ∀ i : Fin Fτ.n, (wτ i).im ≤ 0 := by
     intro i
     by_cases hi : IsZero (Fτ.toPostnikovTower.factor i)
-    · change (τ.Z (cl C v _) * _).im ≤ 0
-      rw [cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]; exact le_rfl
+    · change (τ.charge _ * _).im ≤ 0
+      simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]; exact le_rfl
     · obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C τ hi (Fτ.semistable i)
-      change (τ.Z (cl C v _) * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
+      change (τ.charge _ * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
       rw [hbim]; exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hb)
         (Real.sin_nonpos_of_nonpos_of_neg_pi_le
           (by nlinarith [hτle i, Real.pi_pos])
@@ -345,12 +349,12 @@ theorem StabilityCondition.WithClassMap.false_of_gt_and_le_phases
     rw [him_eq]
     exact Finset.sum_nonpos (fun i _ ↦ hτ_le i)
   -- Both sums equal Z(X) * exp(-iπφ), so their imaginary parts are equal
-  have hσ_sum : σ.Z (cl C v X) * exp (-(↑(Real.pi * φ) * I)) =
+  have hσ_sum : σ.charge X * exp (-(↑(Real.pi * φ) * I)) =
       ∑ i : Fin Fσ.n, wσ i := by rw [hK₀σ, Finset.sum_mul]
-  have hτ_sum : τ.Z (cl C v X) * exp (-(↑(Real.pi * φ) * I)) =
+  have hτ_sum : τ.charge X * exp (-(↑(Real.pi * φ) * I)) =
       ∑ i : Fin Fτ.n, wτ i := by rw [hK₀τ, Finset.sum_mul]
   have : (∑ i : Fin Fσ.n, wσ i).im = (∑ i : Fin Fτ.n, wτ i).im := by
-    rw [← hσ_sum, ← hτ_sum, hZ]
+    simp only [PreStabilityCondition.WithClassMap.charge_def, ← hσ_sum, ← hτ_sum, hZ]
   linarith
 
 /-- **One-sided phase impossibility** (below with equality). If `σ` and `τ` have the same
@@ -367,14 +371,16 @@ theorem StabilityCondition.WithClassMap.false_of_hn_phases_le_with_lt
     (hstrict : ∃ i : Fin F.n, ¬IsZero (F.toPostnikovTower.factor i) ∧ F.φ i < φ) :
     False := by
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hτ hE
-  rw [← hZ] at hmZ
-  have hK₀ : σ.Z (cl C v E) =
-      ∑ i : Fin F.n, σ.Z (cl C v (F.toPostnikovTower.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  have hcharge_eq : τ.charge E = σ.charge E := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, hZ]
+  rw [hcharge_eq] at hmZ
+  have hK₀ : σ.charge E =
+      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
   set w : Fin F.n → ℂ := fun i ↦
-    σ.Z (cl C v (F.toPostnikovTower.factor i)) * exp (-(↑(Real.pi * φ) * I))
+    σ.charge (F.toPostnikovTower.factor i) * exp (-(↑(Real.pi * φ) * I))
   have hsum : (m : ℂ) = ∑ i : Fin F.n, w i := by
-    have h1 : σ.Z (cl C v E) * exp (-(↑(Real.pi * φ) * I)) =
+    have h1 : σ.charge E * exp (-(↑(Real.pi * φ) * I)) =
         ∑ i : Fin F.n, w i := by rw [hK₀, Finset.sum_mul]
     rwa [hmZ, mul_assoc, ← exp_add,
       show ↑(Real.pi * φ) * I + -(↑(Real.pi * φ) * I) = 0 from by ring,
@@ -383,10 +389,10 @@ theorem StabilityCondition.WithClassMap.false_of_hn_phases_le_with_lt
   have hw_le : ∀ i : Fin F.n, (w i).im ≤ 0 := by
     intro i
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
-    · change (σ.Z (cl C v _) * _).im ≤ 0
-      rw [cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]; exact le_rfl
+    · change (σ.charge _ * _).im ≤ 0
+      simp only [PreStabilityCondition.WithClassMap.charge_def, cl_isZero (C := C) (v := v) hi, map_zero, zero_mul]; exact le_rfl
     · obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hi (F.semistable i)
-      change (σ.Z (cl C v _) * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
+      change (σ.charge _ * exp (-(↑(Real.pi * φ) * I))).im ≤ 0
       rw [hbim]; exact mul_nonpos_of_nonneg_of_nonpos (le_of_lt hb)
         (Real.sin_nonpos_of_nonpos_of_neg_pi_le
           (by nlinarith [hle i, Real.pi_pos])
@@ -395,7 +401,7 @@ theorem StabilityCondition.WithClassMap.false_of_hn_phases_le_with_lt
   obtain ⟨j₀, hj₀ne, hj₀lt⟩ := hstrict
   have hw_neg : (w j₀).im < 0 := by
     obtain ⟨b, hb, hbim⟩ := im_divided_of_semistable C σ hj₀ne (F.semistable j₀)
-    change (σ.Z (cl C v _) * exp (-(↑(Real.pi * φ) * I))).im < 0
+    change (σ.charge _ * exp (-(↑(Real.pi * φ) * I))).im < 0
     rw [hbim]; exact mul_neg_of_pos_of_neg hb
       (Real.sin_neg_of_neg_of_neg_pi_lt
         (by nlinarith [hj₀lt, Real.pi_pos])

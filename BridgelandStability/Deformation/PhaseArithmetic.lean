@@ -44,7 +44,7 @@ then `wPhaseOf(Z(E), α) = φ`. This is the inverse direction of `wPhaseOf_of_ex
 theorem wPhaseOf_Z_eq (σ : StabilityCondition.WithClassMap C v) {E : C} {φ : ℝ}
     (hP : σ.slicing.P φ E) (hE : ¬IsZero E) {α : ℝ}
     (hφ : φ ∈ Set.Ioc (α - 1) (α + 1)) :
-    wPhaseOf (σ.Z (cl C v E)) α = φ := by
+    wPhaseOf (σ.charge E) α = φ := by
   obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
   rw [hmZ]; exact wPhaseOf_of_exp hm hφ
 
@@ -58,14 +58,14 @@ theorem wPhaseOf_perturbation (σ : StabilityCondition.WithClassMap C v)
     (hφα : φ ∈ Set.Ioo (α - 1 / 2) (α + 1 / 2))
     (hε : 0 < ε) (hε2 : ε ≤ 1 / 2)
     (hbd : ‖(W - σ.Z) (cl C v E)‖ <
-      Real.sin (Real.pi * ε) * ‖σ.Z (cl C v E)‖) :
+      Real.sin (Real.pi * ε) * ‖σ.charge E‖) :
     |wPhaseOf (W (cl C v E)) α - φ| < ε := by
   -- Z(E) = m · exp(iπφ) with m > 0
   obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
   -- Set u = (W-Z)(E) / Z(E)
   set δ := (W - σ.Z) (cl C v E)
-  have hWZ : δ = W (cl C v E) - σ.Z (cl C v E) := AddMonoidHom.sub_apply W σ.Z _
-  have hZ_norm : ‖σ.Z (cl C v E)‖ = m := by
+  have hWZ : δ = W (cl C v E) - σ.charge E := AddMonoidHom.sub_apply W σ.Z _
+  have hZ_norm : ‖σ.charge E‖ = m := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs,
       abs_of_pos hm, Complex.norm_exp_ofReal_mul_I, mul_one]
   -- W(E) = Z(E) + δ = m · exp(iπφ) · (1 + δ/(m · exp(iπφ)))
@@ -119,12 +119,12 @@ theorem hperturb_of_stabSeminorm (σ : StabilityCondition.WithClassMap C v)
   have hbd := stabSeminorm_bound_real C σ (W - σ.Z) hfin hP hFne
   -- Z(F) ≠ 0 (from compatibility)
   obtain ⟨m, hm, hmZ⟩ := σ.compat φ F hP hFne
-  have hZ_pos : (0 : ℝ) < ‖σ.Z (cl C v F)‖ := by
+  have hZ_pos : (0 : ℝ) < ‖σ.charge F‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
       Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   -- ‖(W-Z)(F)‖ < sin(πε₀) * ‖Z(F)‖
   have hbd_strict : ‖(W - σ.Z) (cl C v F)‖ <
-      Real.sin (Real.pi * ε₀) * ‖σ.Z (cl C v F)‖ :=
+      Real.sin (Real.pi * ε₀) * ‖σ.charge F‖ :=
     lt_of_le_of_lt hbd (by nlinarith)
   -- φ ∈ ((a+b)/2 - 1/2, (a+b)/2 + 1/2) since b - a < 1
   have hφα : φ ∈ Set.Ioo ((a + b) / 2 - 1 / 2) ((a + b) / 2 + 1 / 2) :=

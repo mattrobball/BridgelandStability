@@ -259,12 +259,12 @@ theorem Z_mem_finiteSeminormSubgroup (σ : StabilityCondition.WithClassMap C v) 
   show stabSeminorm C σ σ.Z < ⊤
   calc stabSeminorm C σ σ.Z
       = ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
-          ENNReal.ofReal (‖σ.Z (cl C v E)‖ / ‖σ.Z (cl C v E)‖) := rfl
+          ENNReal.ofReal (‖σ.charge E‖ / ‖σ.charge E‖) := rfl
     _ ≤ 1 := by
         apply iSup_le; intro E; apply iSup_le; intro φ
         apply iSup_le; intro _; apply iSup_le; intro _
         rw [ENNReal.ofReal_le_one]
-        by_cases h : ‖σ.Z (cl C v E)‖ = 0
+        by_cases h : ‖σ.charge E‖ = 0
         · simp [h]
         · rw [div_le_one (lt_of_le_of_ne (norm_nonneg _) (Ne.symm h))]
     _ < ⊤ := ENNReal.one_lt_top

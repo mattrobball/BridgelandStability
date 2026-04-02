@@ -195,14 +195,14 @@ theorem stabSeminorm_add_le (σ : StabilityCondition.WithClassMap C v) (U V : Λ
   intro hP
   apply iSup_le
   intro hE
-  calc ENNReal.ofReal (‖(U + V) (cl C v E)‖ / ‖σ.Z (cl C v E)‖)
-      ≤ ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.Z (cl C v E)‖ +
-          ‖V (cl C v E)‖ / ‖σ.Z (cl C v E)‖) := by
+  calc ENNReal.ofReal (‖(U + V) (cl C v E)‖ / ‖σ.charge E‖)
+      ≤ ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖ +
+          ‖V (cl C v E)‖ / ‖σ.charge E‖) := by
         apply ENNReal.ofReal_le_ofReal
         rw [AddMonoidHom.add_apply, ← add_div]
         exact div_le_div_of_nonneg_right (norm_add_le _ _) (norm_nonneg _)
-    _ = ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.Z (cl C v E)‖) +
-        ENNReal.ofReal (‖V (cl C v E)‖ / ‖σ.Z (cl C v E)‖) :=
+    _ = ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖) +
+        ENNReal.ofReal (‖V (cl C v E)‖ / ‖σ.charge E‖) :=
         ENNReal.ofReal_add (div_nonneg (norm_nonneg _) (norm_nonneg _))
           (div_nonneg (norm_nonneg _) (norm_nonneg _))
     _ ≤ stabSeminorm C σ U + stabSeminorm C σ V :=

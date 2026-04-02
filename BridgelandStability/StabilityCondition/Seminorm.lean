@@ -190,15 +190,15 @@ def finiteSeminormSubgroup (σ : StabilityCondition.WithClassMap C v) : AddSubgr
     have hsub : stabSeminorm C σ (U + V) ≤ stabSeminorm C σ U + stabSeminorm C σ V := by
       apply iSup_le; intro E; apply iSup_le; intro φ
       apply iSup_le; intro hP; apply iSup_le; intro hE
-      calc ENNReal.ofReal (‖(U + V) (cl C v E)‖ / ‖σ.Z (cl C v E)‖)
-          ≤ ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.Z (cl C v E)‖ +
-              ‖V (cl C v E)‖ / ‖σ.Z (cl C v E)‖) := by
+      calc ENNReal.ofReal (‖(U + V) (cl C v E)‖ / ‖σ.charge E‖)
+          ≤ ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖ +
+              ‖V (cl C v E)‖ / ‖σ.charge E‖) := by
             apply ENNReal.ofReal_le_ofReal
             rw [AddMonoidHom.add_apply, ← add_div]
             exact div_le_div_of_nonneg_right
               (norm_add_le _ _) (norm_nonneg _)
-        _ = ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.Z (cl C v E)‖) +
-            ENNReal.ofReal (‖V (cl C v E)‖ / ‖σ.Z (cl C v E)‖) :=
+        _ = ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖) +
+            ENNReal.ofReal (‖V (cl C v E)‖ / ‖σ.charge E‖) :=
           ENNReal.ofReal_add (div_nonneg (norm_nonneg _) (norm_nonneg _))
             (div_nonneg (norm_nonneg _) (norm_nonneg _))
         _ ≤ stabSeminorm C σ U + stabSeminorm C σ V :=
@@ -229,27 +229,28 @@ theorem sector_bound (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ
     (hwidth : F.φ ⟨0, hn⟩ - F.φ ⟨F.n - 1, by lia⟩ ≤ η)
     {M : ℝ} (hM0 : 0 ≤ M)
     (hM : ∀ (A : C) (φ : ℝ), σ.slicing.P φ A → ¬IsZero A →
-      ‖U (cl C v A)‖ ≤ M * ‖σ.Z (cl C v A)‖) :
+      ‖U (cl C v A)‖ ≤ M * ‖σ.charge A‖) :
     ‖U (cl C v E)‖ ≤
-      M / Real.cos (Real.pi * η / 2) * ‖σ.Z (cl C v E)‖ := by
+      M / Real.cos (Real.pi * η / 2) * ‖σ.charge E‖ := by
   set P := F.toPostnikovTower
   -- K₀ decomposition
   -- U and Z decompose over factors
   have hUE : U (cl C v E) = ∑ i : Fin F.n, U (cl C v (P.factor i)) := by
     rw [cl_postnikovTower_eq_sum C v P, map_sum]
-  have hZE : σ.Z (cl C v E) = ∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v P, map_sum]
+  have hZE : σ.charge E = ∑ i : Fin F.n, σ.charge (P.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def,
+      cl_postnikovTower_eq_sum C v P, map_sum]; rfl
   -- Seminorm bound on each factor
   have hMi : ∀ i : Fin F.n,
-      ‖U (cl C v (P.factor i))‖ ≤ M * ‖σ.Z (cl C v (P.factor i))‖ := by
+      ‖U (cl C v (P.factor i))‖ ≤ M * ‖σ.charge (P.factor i)‖ := by
     intro i
     by_cases hi : IsZero (P.factor i)
     · simp [cl_isZero (C := C) (v := v) hi]
     · exact hM _ _ (F.semistable i) hi
   -- Z decomposition: Z(factor i) = ‖Z(factor i)‖ * exp(iπφᵢ)
   have hZi : ∀ i : Fin F.n,
-      σ.Z (cl C v (P.factor i)) =
-      ↑(‖σ.Z (cl C v (P.factor i))‖) * exp (↑(Real.pi * F.φ i) * I) := by
+      σ.charge (P.factor i) =
+      ↑(‖σ.charge (P.factor i)‖) * exp (↑(Real.pi * F.φ i) * I) := by
     intro i
     by_cases hi : IsZero (P.factor i)
     · simp [cl_isZero (C := C) (v := v) hi]
@@ -275,31 +276,31 @@ theorem sector_bound (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ
   -- Sector estimate: cos(πη/2) * ∑ ‖Z(fi)‖ ≤ ‖Z(E)‖
   have hcos_pos : 0 < Real.cos (w / 2) := by
     apply Real.cos_pos_of_mem_Ioo; constructor <;> [linarith; linarith]
-  have hsector : Real.cos (w / 2) * ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖ ≤
-      ‖σ.Z (cl C v E)‖ := by
-    calc Real.cos (w / 2) * ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖
+  have hsector : Real.cos (w / 2) * ∑ i : Fin F.n, ‖σ.charge (P.factor i)‖ ≤
+      ‖σ.charge E‖ := by
+    calc Real.cos (w / 2) * ∑ i : Fin F.n, ‖σ.charge (P.factor i)‖
         ≤ ‖∑ i : Fin F.n,
-            ↑(‖σ.Z (cl C v (P.factor i))‖) * exp (↑(Real.pi * F.φ i) * I)‖ :=
+            ↑(‖σ.charge (P.factor i)‖) * exp (↑(Real.pi * F.φ i) * I)‖ :=
           norm_sum_exp_ge_cos_mul_sum (fun i _ ↦ norm_nonneg _) hw0 hwπ (fun i _ ↦ hθ i)
-      _ = ‖∑ i : Fin F.n, σ.Z (cl C v (P.factor i))‖ := by
+      _ = ‖∑ i : Fin F.n, σ.charge (P.factor i)‖ := by
           congr 1; exact Finset.sum_congr rfl (fun i _ ↦ (hZi i).symm)
-      _ = ‖σ.Z (cl C v E)‖ := by rw [← hZE]
+      _ = ‖σ.charge E‖ := by rw [← hZE]
   -- Combine
-  have hsum_bound : ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖ ≤
-      ‖σ.Z (cl C v E)‖ / Real.cos (w / 2) := by
+  have hsum_bound : ∑ i : Fin F.n, ‖σ.charge (P.factor i)‖ ≤
+      ‖σ.charge E‖ / Real.cos (w / 2) := by
     rw [le_div_iff₀ hcos_pos, mul_comm]; exact hsector
   calc ‖U (cl C v E)‖
       = ‖∑ i : Fin F.n, U (cl C v (P.factor i))‖ := by rw [hUE]
     _ ≤ ∑ i : Fin F.n, ‖U (cl C v (P.factor i))‖ := norm_sum_le _ _
-    _ ≤ ∑ i : Fin F.n, M * ‖σ.Z (cl C v (P.factor i))‖ :=
+    _ ≤ ∑ i : Fin F.n, M * ‖σ.charge (P.factor i)‖ :=
         Finset.sum_le_sum (fun i _ ↦ hMi i)
-    _ = M * ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖ :=
+    _ = M * ∑ i : Fin F.n, ‖σ.charge (P.factor i)‖ :=
         (Finset.mul_sum _ _ _).symm
-    _ ≤ M * (‖σ.Z (cl C v E)‖ / Real.cos (w / 2)) :=
+    _ ≤ M * (‖σ.charge E‖ / Real.cos (w / 2)) :=
         mul_le_mul_of_nonneg_left hsum_bound hM0
-    _ = M / Real.cos (Real.pi * η / 2) * ‖σ.Z (cl C v E)‖ := by
-        change M * (‖σ.Z (cl C v E)‖ / Real.cos (Real.pi * η / 2)) =
-          M / Real.cos (Real.pi * η / 2) * ‖σ.Z (cl C v E)‖
+    _ = M / Real.cos (Real.pi * η / 2) * ‖σ.charge E‖ := by
+        change M * (‖σ.charge E‖ / Real.cos (Real.pi * η / 2)) =
+          M / Real.cos (Real.pi * η / 2) * ‖σ.charge E‖
         ring
 
 /-- Sector bound using intrinsic phase width `phiPlus - phiMinus`. -/
@@ -308,9 +309,9 @@ theorem sector_bound' (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ �
     (hwidth : σ.slicing.phiPlus C E hE - σ.slicing.phiMinus C E hE ≤ η)
     {M : ℝ} (hM0 : 0 ≤ M)
     (hM : ∀ (A : C) (φ : ℝ), σ.slicing.P φ A → ¬IsZero A →
-      ‖U (cl C v A)‖ ≤ M * ‖σ.Z (cl C v A)‖) :
+      ‖U (cl C v A)‖ ≤ M * ‖σ.charge A‖) :
     ‖U (cl C v E)‖ ≤
-      M / Real.cos (Real.pi * η / 2) * ‖σ.Z (cl C v E)‖ := by
+      M / Real.cos (Real.pi * η / 2) * ‖σ.charge E‖ := by
   obtain ⟨F, hn, hP, hM'⟩ := σ.slicing.exists_HN_intrinsic_width C hE
   exact sector_bound C σ U F hn hη hη1 (by rw [hP, hM']; exact hwidth) hM0 hM
 
@@ -324,9 +325,9 @@ theorem norm_Z_le_of_tau_semistable (σ τ : StabilityCondition.WithClassMap C v
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε)
     {M : ℝ} (hM0 : 0 ≤ M)
     (hM_bound : ∀ (A : C) (ψ : ℝ), σ.slicing.P ψ A → ¬IsZero A →
-      ‖(τ.Z - σ.Z) (cl C v A)‖ ≤ M * ‖σ.Z (cl C v A)‖) :
-    (1 - M / Real.cos (Real.pi * ε)) * ‖σ.Z (cl C v E)‖ ≤
-      ‖τ.Z (cl C v E)‖ := by
+      ‖(τ.Z - σ.Z) (cl C v A)‖ ≤ M * ‖σ.charge A‖) :
+    (1 - M / Real.cos (Real.pi * ε)) * ‖σ.charge E‖ ≤
+      ‖τ.charge E‖ := by
   -- The σ-HN width of E is < 2ε (since E is τ-semistable of phase φ and d < ε)
   have hbounds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hS hd
   have hwidth : σ.slicing.phiPlus C E hE - σ.slicing.phiMinus C E hE ≤ 2 * ε := by
@@ -343,17 +344,17 @@ theorem norm_Z_le_of_tau_semistable (σ τ : StabilityCondition.WithClassMap C v
   --            ≥ ‖Z([E])‖ - M/cos(πε) * ‖Z([E])‖
   --            = (1 - M/cos(πε)) * ‖Z([E])‖
   have hkey : ‖(τ.Z - σ.Z) (cl C v E)‖ ≤
-      M / Real.cos (Real.pi * ε) * ‖σ.Z (cl C v E)‖ := hsector
-  calc (1 - M / Real.cos (Real.pi * ε)) * ‖σ.Z (cl C v E)‖
-      = ‖σ.Z (cl C v E)‖ - M / Real.cos (Real.pi * ε) * ‖σ.Z (cl C v E)‖ := by ring
-    _ ≤ ‖σ.Z (cl C v E)‖ - ‖(τ.Z - σ.Z) (cl C v E)‖ := by linarith
-    _ ≤ ‖τ.Z (cl C v E)‖ := by
-        have : ‖σ.Z (cl C v E)‖ ≤ ‖τ.Z (cl C v E)‖ +
+      M / Real.cos (Real.pi * ε) * ‖σ.charge E‖ := hsector
+  calc (1 - M / Real.cos (Real.pi * ε)) * ‖σ.charge E‖
+      = ‖σ.charge E‖ - M / Real.cos (Real.pi * ε) * ‖σ.charge E‖ := by ring
+    _ ≤ ‖σ.charge E‖ - ‖(τ.Z - σ.Z) (cl C v E)‖ := by linarith
+    _ ≤ ‖τ.charge E‖ := by
+        have : ‖σ.charge E‖ ≤ ‖τ.charge E‖ +
           ‖(τ.Z - σ.Z) (cl C v E)‖ := by
-          calc ‖σ.Z (cl C v E)‖
-              = ‖τ.Z (cl C v E) - (τ.Z - σ.Z) (cl C v E)‖ := by
+          calc ‖σ.charge E‖
+              = ‖τ.charge E - (τ.Z - σ.Z) (cl C v E)‖ := by
                 congr 1; simp [AddMonoidHom.sub_apply]
-            _ ≤ ‖τ.Z (cl C v E)‖ + ‖(τ.Z - σ.Z) (cl C v E)‖ :=
+            _ ≤ ‖τ.charge E‖ + ‖(τ.Z - σ.Z) (cl C v E)‖ :=
                 norm_sub_le _ _
         linarith
 
@@ -363,24 +364,24 @@ theorem norm_Z_le_of_tau_semistable (σ τ : StabilityCondition.WithClassMap C v
 lemma stabSeminorm_bound_real (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ)
     (hfin : stabSeminorm C σ U ≠ ⊤)
     {A : C} {ψ : ℝ} (hP : σ.slicing.P ψ A) (hA : ¬IsZero A) :
-    ‖U (cl C v A)‖ ≤ (stabSeminorm C σ U).toReal * ‖σ.Z (cl C v A)‖ := by
+    ‖U (cl C v A)‖ ≤ (stabSeminorm C σ U).toReal * ‖σ.charge A‖ := by
   obtain ⟨m, hm, hmZ⟩ := σ.compat ψ A hP hA
-  have hZ_pos : (0 : ℝ) < ‖σ.Z (cl C v A)‖ := by
-    rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
+  have hZ_pos : (0 : ℝ) < ‖σ.charge A‖ := by
+    simp [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
-  have h1 : ENNReal.ofReal (‖U (cl C v A)‖ / ‖σ.Z (cl C v A)‖) ≤
+  have h1 : ENNReal.ofReal (‖U (cl C v A)‖ / ‖σ.charge A‖) ≤
       stabSeminorm C σ U :=
     le_iSup_of_le A (le_iSup_of_le ψ (le_iSup_of_le hP (le_iSup_of_le hA le_rfl)))
-  have hratio : ‖U (cl C v A)‖ / ‖σ.Z (cl C v A)‖ ≤
+  have hratio : ‖U (cl C v A)‖ / ‖σ.charge A‖ ≤
       (stabSeminorm C σ U).toReal := by
-    calc ‖U (cl C v A)‖ / ‖σ.Z (cl C v A)‖
-        = (ENNReal.ofReal (‖U (cl C v A)‖ / ‖σ.Z (cl C v A)‖)).toReal :=
+    calc ‖U (cl C v A)‖ / ‖σ.charge A‖
+        = (ENNReal.ofReal (‖U (cl C v A)‖ / ‖σ.charge A‖)).toReal :=
           (ENNReal.toReal_ofReal (div_nonneg (norm_nonneg _) (norm_nonneg _))).symm
       _ ≤ (stabSeminorm C σ U).toReal := ENNReal.toReal_mono hfin h1
   calc ‖U (cl C v A)‖
-      = ‖U (cl C v A)‖ / ‖σ.Z (cl C v A)‖ * ‖σ.Z (cl C v A)‖ := by
+      = ‖U (cl C v A)‖ / ‖σ.charge A‖ * ‖σ.charge A‖ := by
         rw [div_mul_cancel₀ _ (ne_of_gt hZ_pos)]
-    _ ≤ (stabSeminorm C σ U).toReal * ‖σ.Z (cl C v A)‖ :=
+    _ ≤ (stabSeminorm C σ U).toReal * ‖σ.charge A‖ :=
         mul_le_mul_of_nonneg_right hratio (le_of_lt hZ_pos)
 
 /-- **Seminorm comparison for same central charge** (**Lemma 6.2** consequence).
@@ -398,7 +399,7 @@ theorem stabSeminorm_lt_top_of_same_Z (σ τ : StabilityCondition.WithClassMap C
   have hM0 : 0 ≤ M := ENNReal.toReal_nonneg
   -- M bounds ‖U(A)‖ for each σ-semistable nonzero A
   have hM_bound : ∀ (A : C) (ψ : ℝ), σ.slicing.P ψ A → ¬IsZero A →
-      ‖U (cl C v A)‖ ≤ M * ‖σ.Z (cl C v A)‖ :=
+      ‖U (cl C v A)‖ ≤ M * ‖σ.charge A‖ :=
     fun A ψ hP hA ↦ stabSeminorm_bound_real C σ U hU_ne hP hA
   -- cos(πε) > 0 since ε < 1/2
   have hcos_pos : 0 < Real.cos (Real.pi * ε) := by
@@ -414,8 +415,8 @@ theorem stabSeminorm_lt_top_of_same_Z (σ τ : StabilityCondition.WithClassMap C
   apply ENNReal.ofReal_le_ofReal
   -- Goal: ‖U(E)‖ / ‖τ.Z(E)‖ ≤ M / cos(πε)
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hP hE
-  have hZ_pos : (0 : ℝ) < ‖τ.Z (cl C v E)‖ := by
-    rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
+  have hZ_pos : (0 : ℝ) < ‖τ.charge E‖ := by
+    simp [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   -- Sector bound: ‖U(E)‖ ≤ (M / cos(πε)) * ‖τ.Z(E)‖
   have hbounds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hP hd
@@ -425,9 +426,9 @@ theorem stabSeminorm_lt_top_of_same_Z (σ τ : StabilityCondition.WithClassMap C
   have hcos_eq : Real.pi * (2 * ε) / 2 = Real.pi * ε := by ring
   have hsector := sector_bound' C σ U hE (by linarith : (0 : ℝ) ≤ 2 * ε) h2ε hwidth hM0
     hM_bound
-  rw [hcos_eq, hZ] at hsector
-  calc ‖U (cl C v E)‖ / ‖τ.Z (cl C v E)‖
-      ≤ M / Real.cos (Real.pi * ε) * ‖τ.Z (cl C v E)‖ / ‖τ.Z (cl C v E)‖ :=
+  simp only [PreStabilityCondition.WithClassMap.charge_def, hcos_eq, hZ] at hsector
+  calc ‖U (cl C v E)‖ / ‖τ.charge E‖
+      ≤ M / Real.cos (Real.pi * ε) * ‖τ.charge E‖ / ‖τ.charge E‖ :=
         div_le_div_of_nonneg_right hsector (le_of_lt hZ_pos)
     _ = M / Real.cos (Real.pi * ε) :=
         mul_div_cancel_right₀ _ (ne_of_gt hZ_pos)
@@ -480,17 +481,17 @@ theorem stabSeminorm_le_of_near (σ τ : StabilityCondition.WithClassMap C v)
   set c := Real.cos (Real.pi * ε) with hc_def
   have hcMZ : 0 < c - M_Z := by linarith
   have hMU_bound : ∀ (A : C) (ψ : ℝ), σ.slicing.P ψ A → ¬IsZero A →
-      ‖U (cl C v A)‖ ≤ M_U * ‖σ.Z (cl C v A)‖ :=
+      ‖U (cl C v A)‖ ≤ M_U * ‖σ.charge A‖ :=
     fun A ψ hP hA ↦ stabSeminorm_bound_real C σ U hU hP hA
   have hMZ_bound : ∀ (A : C) (ψ : ℝ), σ.slicing.P ψ A → ¬IsZero A →
-      ‖(τ.Z - σ.Z) (cl C v A)‖ ≤ M_Z * ‖σ.Z (cl C v A)‖ :=
+      ‖(τ.Z - σ.Z) (cl C v A)‖ ≤ M_Z * ‖σ.charge A‖ :=
     fun A ψ hP hA ↦ stabSeminorm_bound_real C σ (τ.Z - σ.Z) hZdiff_ne hP hA
   apply iSup_le; intro E; apply iSup_le; intro φ
   apply iSup_le; intro hP; apply iSup_le; intro hE
   apply ENNReal.ofReal_le_ofReal
   obtain ⟨m, hm, hmZ⟩ := τ.compat φ E hP hE
-  have hZτ_pos : (0 : ℝ) < ‖τ.Z (cl C v E)‖ := by
-    rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
+  have hZτ_pos : (0 : ℝ) < ‖τ.charge E‖ := by
+    simp [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   have hbounds := intervalProp_of_semistable_slicingDist C σ.slicing τ.slicing hE hP hd
   have hwidth : σ.slicing.phiPlus C E hE - σ.slicing.phiMinus C E hE ≤ 2 * ε := by
@@ -501,18 +502,18 @@ theorem stabSeminorm_le_of_near (σ τ : StabilityCondition.WithClassMap C v)
     hMU_bound
   rw [hcos_eq] at hsector
   have hreverse := norm_Z_le_of_tau_semistable C σ τ hE hP hε hε1 hd hMZ0 hMZ_bound
-  have hσZ_le : ‖σ.Z (cl C v E)‖ ≤ c / (c - M_Z) * ‖τ.Z (cl C v E)‖ := by
+  have hσZ_le : ‖σ.charge E‖ ≤ c / (c - M_Z) * ‖τ.charge E‖ := by
     rw [div_mul_eq_mul_div, le_div_iff₀ hcMZ]
     have hmul := mul_le_mul_of_nonneg_left hreverse (le_of_lt hcos_pos)
-    have heq : c * ((1 - M_Z / c) * ‖σ.Z (cl C v E)‖) =
-        (c - M_Z) * ‖σ.Z (cl C v E)‖ := by
+    have heq : c * ((1 - M_Z / c) * ‖σ.charge E‖) =
+        (c - M_Z) * ‖σ.charge E‖ := by
       field_simp
     linarith
-  calc ‖U (cl C v E)‖ / ‖τ.Z (cl C v E)‖
-      ≤ (M_U / c * ‖σ.Z (cl C v E)‖) / ‖τ.Z (cl C v E)‖ :=
+  calc ‖U (cl C v E)‖ / ‖τ.charge E‖
+      ≤ (M_U / c * ‖σ.charge E‖) / ‖τ.charge E‖ :=
         div_le_div_of_nonneg_right hsector (le_of_lt hZτ_pos)
-    _ ≤ (M_U / c * (c / (c - M_Z) * ‖τ.Z (cl C v E)‖)) /
-          ‖τ.Z (cl C v E)‖ := by
+    _ ≤ (M_U / c * (c / (c - M_Z) * ‖τ.charge E‖)) /
+          ‖τ.charge E‖ := by
         apply div_le_div_of_nonneg_right _ (le_of_lt hZτ_pos)
         exact mul_le_mul_of_nonneg_left hσZ_le (div_nonneg hMU0 (le_of_lt hcos_pos))
     _ = M_U / (c - M_Z) := by

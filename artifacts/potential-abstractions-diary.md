@@ -384,3 +384,13 @@ must happen in the same commit. ~20 `rw` sites need `simp_rw [chargeOf_def, ...]
 **Lesson:** `abbrev` in Lean 4 is transparent for type checking but opaque for
 `rw`/`▸`/`simp only` subexpression matching. Any `abbrev` wrapping a composition
 needs a `_def` unfold lemma. This should be recorded as a project convention.
+
+**Correction (same session):** Most apparent `rw` failures were from incomplete
+substitution — goals still had the old form while hypotheses had the new.
+Once both sides use `σ.charge E`, `rw [hmZ]` works directly. The only genuine
+friction is `rw [hZ : σ.Z = τ.Z]` inside `σ.charge E` — rewriting a raw field
+inside the abbreviation. That's one site, fixed with `simp [hZ]`.
+
+**Final design:** `σ.charge E` (not standalone `chargeOf`). Structure field
+`compat'` (raw), theorem `compat` (returns `σ.charge E`). `@[simp] charge_def`
+for the rare case where `simp` needs to unfold. Full substitution is atomic.

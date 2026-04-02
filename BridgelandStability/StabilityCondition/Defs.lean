@@ -61,11 +61,33 @@ structure WithClassMap (v : K₀ C →+ Λ) where
   slicing : Slicing C
   /-- The central charge on the class lattice `Λ`. -/
   Z : Λ →+ ℂ
-  /-- Compatibility: for every nonzero semistable object `E` of phase `φ`, the
-  class-map central charge `Z(v([E]))` lies on the ray `ℝ₊ · exp(iπφ)` in `ℂ`. -/
-  compat : ∀ (φ : ℝ) (E : C), slicing.P φ E → ¬IsZero E →
+  /-- Compatibility (raw). Use `σ.compat` instead. -/
+  compat' : ∀ (φ : ℝ) (E : C), slicing.P φ E → ¬IsZero E →
     ∃ (m : ℝ), 0 < m ∧
       Z (v (K₀.of C E)) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I)
+
+omit [IsTriangulated C] in
+variable {C} in
+/-- The central charge evaluated at the class of `E`. This is `Z(v[E])`. -/
+noncomputable abbrev WithClassMap.charge {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) (E : C) : ℂ :=
+  σ.Z (cl C v E)
+
+omit [IsTriangulated C] in
+variable {C} in
+@[simp] theorem WithClassMap.charge_def {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) (E : C) :
+    σ.charge E = σ.Z (cl C v E) := rfl
+
+omit [IsTriangulated C] in
+variable {C} in
+/-- Compatibility: for nonzero semistable `E` of phase `φ`, `σ.charge E`
+lies on the ray `ℝ₊ · exp(iπφ)`. -/
+theorem WithClassMap.compat {v : K₀ C →+ Λ} (σ : WithClassMap C v)
+    (φ : ℝ) (E : C) (hP : σ.slicing.P φ E) (hE : ¬IsZero E) :
+    ∃ (m : ℝ), 0 < m ∧
+      σ.charge E = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) :=
+  σ.compat' φ E hP hE
 
 end PreStabilityCondition
 

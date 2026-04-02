@@ -54,7 +54,7 @@ theorem im_Z_nonpos_of_heart_phases
     {E : C} (hE : ¬IsZero E)
     (hle : σ.slicing.phiPlus C E hE ≤ φ)
     (hgt : φ - 1 < σ.slicing.phiMinus C E hE) :
-    (σ.Z (cl C v E) *
+    (σ.charge E *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im ≤ 0 := by
   -- Get HN filtration with nonzero first and last factors
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
@@ -71,11 +71,11 @@ theorem im_Z_nonpos_of_heart_phases
           _ ≤ φ := hle⟩
   -- K₀ decomposition: Z(E) = Σ Z(factors)
   set P := F.toPostnikovTower
-  rw [show σ.Z (cl C v E) = ∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) from by
-    rw [cl_postnikovTower_eq_sum C v P, map_sum]]
+  rw [show σ.charge E = ∑ i : Fin F.n, σ.charge (P.factor i) from by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v P, map_sum]; rfl]
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) * rot).im =
-      ∑ i : Fin F.n, (σ.Z (cl C v (P.factor i)) * rot).im from
+  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.charge (P.factor i) * rot).im =
+      ∑ i : Fin F.n, (σ.charge (P.factor i) * rot).im from
     map_sum Complex.imAddGroupHom _ _]
   -- Each term ≤ 0
   apply Finset.sum_nonpos
@@ -103,7 +103,7 @@ theorem P_phi_of_im_zero_heart
     {X : C} (hXne : ¬IsZero X)
     (hX_le : σ.slicing.phiPlus C X hXne ≤ φ)
     (hX_gt : φ - 1 < σ.slicing.phiMinus C X hXne)
-    (him_zero : (σ.Z (cl C v X) *
+    (him_zero : (σ.charge X *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im = 0) :
     σ.slicing.P φ X := by
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
@@ -120,13 +120,13 @@ theorem P_phi_of_im_zero_heart
             (σ.slicing.phiPlus_eq C X hXne F hn hfirst).symm
           _ ≤ φ := hX_le⟩
   -- K₀ decomposition: Z(X) = Σ Z(factor_i)
-  have hZX : σ.Z (cl C v X) =
+  have hZX : σ.charge X =
       ∑ i : Fin F.n,
-        σ.Z (cl C v (F.toPostnikovTower.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+        σ.charge (F.toPostnikovTower.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
   -- Each Im term ≤ 0
   have hterms : ∀ i ∈ Finset.univ,
-      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im ≤ 0 := by
+      (σ.charge (F.toPostnikovTower.factor i) * rot).im ≤ 0 := by
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · simp [cl_isZero (C := C) (v := v) hi]
@@ -139,16 +139,16 @@ theorem P_phi_of_im_zero_heart
           (by nlinarith [Real.pi_pos, (hphases i).1]))
   -- Sum = 0
   have hsum : ∑ i ∈ Finset.univ,
-      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 := by
-    have : (σ.Z (cl C v X) * rot).im =
+      (σ.charge (F.toPostnikovTower.factor i) * rot).im = 0 := by
+    have : (σ.charge X * rot).im =
         ∑ i : Fin F.n,
-          (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im := by
+          (σ.charge (F.toPostnikovTower.factor i) * rot).im := by
       rw [hZX, Finset.sum_mul]
       exact map_sum Complex.imAddGroupHom _ _
     linarith
   -- Each term = 0
   have hterm_zero : ∀ i ∈ Finset.univ,
-      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 :=
+      (σ.charge (F.toPostnikovTower.factor i) * rot).im = 0 :=
     (Finset.sum_eq_zero_iff_of_nonpos hterms).mp hsum
   -- Nonzero factors have phase = φ
   have factor_eq : ∀ i : Fin F.n,
@@ -211,14 +211,14 @@ theorem P_phi_of_heart_triangle
     (hQ_gt : φ - 1 < σ.slicing.phiMinus C Q hQne) :
     σ.slicing.P φ K ∧ σ.slicing.P φ Q := by
   -- K₀ additivity: Z(E) = Z(K) + Z(Q)
-  have hZsum : σ.Z (cl C v E) = σ.Z (cl C v K) + σ.Z (cl C v Q) := by
+  have hZsum : σ.charge E = σ.charge K + σ.charge Q := by
     have h := cl_triangle C v (Triangle.mk f₁ f₂ f₃) hT
     simp only [Pretriangulated.Triangle.mk] at h
-    rw [h, map_add]
+    simp only [PreStabilityCondition.WithClassMap.charge_def, h, map_add]
   -- Im(Z(E) · exp(-iπφ)) = 0
   obtain ⟨mE, hmE, hvE⟩ := σ.compat φ E hPφ hE
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  have him_E : (σ.Z (cl C v E) * rot).im = 0 := by
+  have him_E : (σ.charge E * rot).im = 0 := by
     rw [hvE, mul_assoc, ← Complex.exp_add]
     have : ↑(Real.pi * φ) * Complex.I + -(↑(Real.pi * φ) * Complex.I) = 0 := by ring
     rw [this, Complex.exp_zero, mul_one, Complex.ofReal_im]
@@ -226,13 +226,13 @@ theorem P_phi_of_heart_triangle
   have him_K := im_Z_nonpos_of_heart_phases C σ hKne hK_le hK_gt
   have him_Q := im_Z_nonpos_of_heart_phases C σ hQne hQ_le hQ_gt
   -- Sum = 0 forces both = 0
-  have : (σ.Z (cl C v K) * rot).im + (σ.Z (cl C v Q) * rot).im = 0 := by
-    have : (σ.Z (cl C v E) * rot).im =
-        (σ.Z (cl C v K) * rot).im + (σ.Z (cl C v Q) * rot).im := by
+  have : (σ.charge K * rot).im + (σ.charge Q * rot).im = 0 := by
+    have : (σ.charge E * rot).im =
+        (σ.charge K * rot).im + (σ.charge Q * rot).im := by
       rw [hZsum, add_mul, Complex.add_im]
     linarith
-  have him_K_zero : (σ.Z (cl C v K) * rot).im = 0 := by linarith
-  have him_Q_zero : (σ.Z (cl C v Q) * rot).im = 0 := by linarith
+  have him_K_zero : (σ.charge K * rot).im = 0 := by linarith
+  have him_Q_zero : (σ.charge Q * rot).im = 0 := by linarith
   exact ⟨P_phi_of_im_zero_heart C σ hKne hK_le hK_gt him_K_zero,
     P_phi_of_im_zero_heart C σ hQne hQ_le hQ_gt him_Q_zero⟩
 
@@ -244,7 +244,7 @@ theorem im_Z_nonneg_of_phases_above
     {E : C} (hE : ¬IsZero E)
     (hge : φ ≤ σ.slicing.phiMinus C E hE)
     (hlt : σ.slicing.phiPlus C E hE < φ + 1) :
-    0 ≤ (σ.Z (cl C v E) *
+    0 ≤ (σ.charge E *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
   have hphases : ∀ i : Fin F.n, φ ≤ F.φ i ∧ F.φ i < φ + 1 := fun i =>
@@ -258,11 +258,11 @@ theorem im_Z_nonneg_of_phases_above
             (σ.slicing.phiPlus_eq C E hE F hn hfirst).symm
           _ < φ + 1 := hlt⟩
   set P := F.toPostnikovTower
-  rw [show σ.Z (cl C v E) = ∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) from by
-    rw [cl_postnikovTower_eq_sum C v P, map_sum]]
+  rw [show σ.charge E = ∑ i : Fin F.n, σ.charge (P.factor i) from by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v P, map_sum]; rfl]
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) * rot).im =
-      ∑ i : Fin F.n, (σ.Z (cl C v (P.factor i)) * rot).im from
+  rw [Finset.sum_mul, show (∑ i : Fin F.n, σ.charge (P.factor i) * rot).im =
+      ∑ i : Fin F.n, (σ.charge (P.factor i) * rot).im from
     map_sum Complex.imAddGroupHom _ _]
   apply Finset.sum_nonneg
   intro i _
@@ -284,7 +284,7 @@ theorem P_phi_of_im_zero_above
     {X : C} (hXne : ¬IsZero X)
     (hX_ge : φ ≤ σ.slicing.phiMinus C X hXne)
     (hX_lt : σ.slicing.phiPlus C X hXne < φ + 1)
-    (him_zero : (σ.Z (cl C v X) *
+    (him_zero : (σ.charge X *
       Complex.exp (-(↑(Real.pi * φ) * Complex.I))).im = 0) :
     σ.slicing.P φ X := by
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
@@ -299,11 +299,11 @@ theorem P_phi_of_im_zero_above
           _ = σ.slicing.phiPlus C X hXne :=
             (σ.slicing.phiPlus_eq C X hXne F hn hfirst).symm
           _ < φ + 1 := hX_lt⟩
-  have hZX : σ.Z (cl C v X) =
-      ∑ i : Fin F.n, σ.Z (cl C v (F.toPostnikovTower.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
+  have hZX : σ.charge X =
+      ∑ i : Fin F.n, σ.charge (F.toPostnikovTower.factor i) := by
+    simp only [PreStabilityCondition.WithClassMap.charge_def, cl_postnikovTower_eq_sum C v F.toPostnikovTower, map_sum]
   have hterms : ∀ i ∈ Finset.univ,
-      0 ≤ (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im := by
+      0 ≤ (σ.charge (F.toPostnikovTower.factor i) * rot).im := by
     intro i _
     by_cases hi : IsZero (F.toPostnikovTower.factor i)
     · simp [cl_isZero (C := C) (v := v) hi]
@@ -315,15 +315,15 @@ theorem P_phi_of_im_zero_above
           (by nlinarith [Real.pi_pos, (hphases i).1])
           (by nlinarith [Real.pi_pos, (hphases i).2]))
   have hsum : ∑ i ∈ Finset.univ,
-      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 := by
-    have : (σ.Z (cl C v X) * rot).im =
+      (σ.charge (F.toPostnikovTower.factor i) * rot).im = 0 := by
+    have : (σ.charge X * rot).im =
         ∑ i : Fin F.n,
-          (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im := by
+          (σ.charge (F.toPostnikovTower.factor i) * rot).im := by
       rw [hZX, Finset.sum_mul]
       exact map_sum Complex.imAddGroupHom _ _
     linarith
   have hterm_zero : ∀ i ∈ Finset.univ,
-      (σ.Z (cl C v (F.toPostnikovTower.factor i)) * rot).im = 0 :=
+      (σ.charge (F.toPostnikovTower.factor i) * rot).im = 0 :=
     (Finset.sum_eq_zero_iff_of_nonneg hterms).mp hsum
   have factor_eq : ∀ i : Fin F.n,
       ¬IsZero (F.toPostnikovTower.factor i) → F.φ i = φ := by
@@ -613,7 +613,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
   -- === K₀ + Im(Z·rot) ===
   -- P(φ) objects lie on the real axis after rotation by exp(-iπφ)
   set rot := Complex.exp (-(↑(Real.pi * φ) * Complex.I))
-  have him_ray : ∀ {E : C}, s.P φ E → (σ.Z (cl C v E) * rot).im = 0 := by
+  have him_ray : ∀ {E : C}, s.P φ E → (σ.charge E * rot).im = 0 := by
     intro E hPφ
     by_cases hne : IsZero E
     · simp [cl_isZero (C := C) (v := v) hne]
@@ -623,19 +623,19 @@ theorem P_phi_of_truncation_of_P_phi_cone
           by ring,
         Complex.exp_zero, mul_one, Complex.ofReal_im]
   -- K₀ on truncation triangle: Z(X₃) = Z(L) + Z(Q)
-  have hZtrunc : σ.Z (cl C v X₃) =
-      σ.Z (cl C v ((t.truncLT 0).obj X₃)) +
-      σ.Z (cl C v ((t.truncGE 0).obj X₃)) := by
+  have hZtrunc : σ.charge X₃ =
+      σ.charge ((t.truncLT 0).obj X₃) +
+      σ.charge ((t.truncGE 0).obj X₃) := by
     have h := cl_triangle C v _ htrunc
-    dsimp [TStructure.triangleLTGE] at h; rw [h, map_add]
+    dsimp [TStructure.triangleLTGE] at h; simp only [PreStabilityCondition.WithClassMap.charge_def, h, map_add]
   -- K₀ on original triangle: Im(Z(X₃)·rot) = 0 since A, B ∈ P(φ)
-  have hZX₃_im : (σ.Z (cl C v X₃) * rot).im = 0 := by
-    have hZorig : σ.Z (cl C v B) =
-        σ.Z (cl C v A) + σ.Z (cl C v X₃) := by
+  have hZX₃_im : (σ.charge X₃ * rot).im = 0 := by
+    have hZorig : σ.charge B =
+        σ.charge A + σ.charge X₃ := by
       have h := cl_triangle C v _ hT
-      dsimp [Triangle.mk] at h; rw [h, map_add]
-    have : (σ.Z (cl C v A) * rot).im + (σ.Z (cl C v X₃) * rot).im =
-        (σ.Z (cl C v B) * rot).im := by
+      dsimp [Triangle.mk] at h; simp only [PreStabilityCondition.WithClassMap.charge_def, h, map_add]
+    have : (σ.charge A * rot).im + (σ.charge X₃ * rot).im =
+        (σ.charge B * rot).im := by
       rw [← Complex.add_im, ← add_mul, hZorig]
     linarith [him_ray hA, him_ray hB]
   -- Q ∈ P(φ) via K₀ on heart triangle
@@ -658,11 +658,11 @@ theorem P_phi_of_truncation_of_P_phi_cone
         have him_Q := im_Z_nonpos_of_heart_phases C σ hQne
           (s.phiPlus_le_of_leProp C hQne hQ_sle)
           (s.phiMinus_gt_of_gtProp C hQne hQ_sgt)
-        have him_sum_heart : (σ.Z (cl C v I_H.obj) * rot).im +
-            (σ.Z (cl C v ((t.truncGE 0).obj X₃)) * rot).im = 0 := by
-          have h : σ.Z (cl C v I_H.obj) * rot +
-              σ.Z (cl C v ((t.truncGE 0).obj X₃)) * rot =
-              σ.Z (cl C v B) * rot := by
+        have him_sum_heart : (σ.charge I_H.obj * rot).im +
+            (σ.charge ((t.truncGE 0).obj X₃) * rot).im = 0 := by
+          have h : σ.charge I_H.obj * rot +
+              σ.charge ((t.truncGE 0).obj X₃) * rot =
+              σ.charge B * rot := by
             rw [← add_mul, ← map_add, ← hK₀_heart]
           have him := congr_arg Complex.im h
           simp only [Complex.add_im] at him
@@ -671,10 +671,10 @@ theorem P_phi_of_truncation_of_P_phi_cone
           (s.phiPlus_le_of_leProp C hQne hQ_sle)
           (s.phiMinus_gt_of_gtProp C hQne hQ_sgt) (by linarith)
   -- Im(Z(L)·rot) = 0 from truncation K₀ + hZX₃_im + him_ray hQ_Pφ
-  have hL_im0 : (σ.Z (cl C v ((t.truncLT 0).obj X₃)) * rot).im = 0 := by
-    have : (σ.Z (cl C v ((t.truncLT 0).obj X₃)) * rot).im +
-        (σ.Z (cl C v ((t.truncGE 0).obj X₃)) * rot).im =
-        (σ.Z (cl C v X₃) * rot).im := by
+  have hL_im0 : (σ.charge ((t.truncLT 0).obj X₃) * rot).im = 0 := by
+    have : (σ.charge ((t.truncLT 0).obj X₃) * rot).im +
+        (σ.charge ((t.truncGE 0).obj X₃) * rot).im =
+        (σ.charge X₃ * rot).im := by
       rw [← Complex.add_im, ← add_mul, ← hZtrunc]
     linarith [him_ray hQ_Pφ]
   -- L ∈ P(φ+1) via P_phi_of_im_zero_heart at phase φ+1
