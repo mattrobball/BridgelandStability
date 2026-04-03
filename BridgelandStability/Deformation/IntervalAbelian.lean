@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityCondition.Basic
+public meta import Informal
 public import BridgelandStability.StabilityFunction.Uniqueness
 public import BridgelandStability.IntervalCategory.FiniteLength
 public import BridgelandStability.TStructure.HeartAbelian
@@ -801,7 +802,7 @@ theorem StabilityCondition.WithClassMap.P_phi_admissible
 variable [IsTriangulated C] in
 /-- **P(φ) is abelian** (**Bridgeland's Lemma 5.2**). Each slicing slice `P(φ)` of a
 stability condition is an abelian category. -/
-@[reducible]
+@[reducible, informal "Lemma 5.2"]
 noncomputable def StabilityCondition.WithClassMap.P_phi_abelian
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     Abelian (σ.slicing.P φ).FullSubcategory :=

@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityFunction.MDQ
+public meta import Informal
 
 @[expose] public section
 

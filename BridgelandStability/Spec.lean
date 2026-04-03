@@ -8,6 +8,7 @@ module
 public import BridgelandStability.EulerForm.Basic
 public import Mathlib.Geometry.Manifold.Complex
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public meta import Informal
 
 /-!
 # Comparator Challenge: Bridgeland Corollary 1.3
@@ -37,6 +38,7 @@ variable (k : Type w) [Field k]
 
 /-- **Corollary 1.3** (Bridgeland 2007). Each connected component of the space of
 numerical stability conditions is a finite-dimensional complex manifold. -/
+@[informal "Corollary 1.3" "complex manifold conclusion only"]
 theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
     [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k]

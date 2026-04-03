@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.Deformation.PhaseConfinement
+public meta import Informal
 
 /-!
 # Target Envelope and Seminorm Corollaries

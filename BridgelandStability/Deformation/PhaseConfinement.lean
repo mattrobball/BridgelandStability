@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.Deformation.PhaseArithmetic
+public meta import Informal
 
 /-!
 # Deformation of Stability Conditions — PhaseConfinement

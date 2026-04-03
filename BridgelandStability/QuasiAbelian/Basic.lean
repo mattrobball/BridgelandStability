@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import Mathlib.CategoryTheory.Abelian.Basic
+public meta import Informal
 public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
 public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
 public import Mathlib.CategoryTheory.Subobject.Basic
@@ -275,6 +276,7 @@ variable (C : Type u) [Category.{v} C] [Preadditive C]
 pushouts of strict monomorphisms are strict monomorphisms.
 
 This follows the definition from Schneiders (1999). -/
+@[informal "Definition 4.1"]
 class QuasiAbelian : Prop where
   /-- The pullback of a strict epimorphism along any morphism is a strict epimorphism. -/
   pullback_strictEpi : ∀ {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z),

@@ -526,6 +526,7 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition.WithClassMap
           linarith
 
 /-- Two stability conditions with same Z and d < 1 are equal (Lemma 6.4). -/
+@[informal "Lemma 6.4"]
 theorem StabilityCondition.WithClassMap.eq_of_same_Z_near (σ τ : StabilityCondition.WithClassMap C v)
     (hZ : σ.Z = τ.Z)
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal 1) :
