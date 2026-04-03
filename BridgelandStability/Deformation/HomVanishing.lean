@@ -8,6 +8,7 @@ module
 public import BridgelandStability.Deformation.StrictShortExactSequence
 public import BridgelandStability.Deformation.BoundaryTriangle
 public import BridgelandStability.TStructure.AbelianSubcategoryImageFactorisation
+public meta import Informal
 
 /-!
 # Deformation of Stability Conditions — HomVanishing

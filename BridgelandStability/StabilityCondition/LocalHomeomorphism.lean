@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityCondition.ConnectedComponent
+public meta import Informal
 
 /-!
 # Local Homeomorphism of the Central Charge
@@ -641,8 +642,16 @@ noncomputable def componentTopologicalLinearLocalModel
     change @IsLocalHomeomorph comp V inferInstance inferInstance Zmap
     exact (componentSeminormTopology_eq_normTopology C cc) ▸ hLocal
 
--- Deleted: centralChargeIsLocalHomeomorphOnConnectedComponents
--- was a v=id wrapper around the generic componentTopologicalLinearLocalModel.
--- The generic version (componentTopologicalLinearLocalModel) is the canonical statement.
+/-- **Bridgeland's Theorem 1.2.** For each connected component Σ of the stability space,
+there is a linear subspace V(Σ) ⊂ Hom(Λ, ℂ) with a normed topology and a local homeomorphism
+Z : Σ → V(Σ) mapping each stability condition to its central charge. -/
+@[informal "Theorem 1.2"]
+theorem centralChargeIsLocalHomeomorphOnConnectedComponents :
+    StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
+      (C := C) (v := v) :=
+  fun cc ↦
+    let M := componentTopologicalLinearLocalModel C cc
+    ⟨M.V, M.instNormedAddCommGroup, M.instNormedSpace,
+     M.mem_charge, M.isLocalHomeomorph_chargeMap⟩
 
 end CategoryTheory.Triangulated

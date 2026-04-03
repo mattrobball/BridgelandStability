@@ -74,7 +74,6 @@ on objects whose HN phases all lie in `(a, b)`. An object `E` belongs to `P((a, 
 it is zero or admits an HN filtration with all phases in `(a, b)`.
 
 This is **Bridgeland's Definition 4.1** specialized to open intervals. -/
-@[informal "Definition 4.1"]
 abbrev Slicing.IntervalCat (s : Slicing C) (a b : ℝ) :=
   (s.intervalProp C a b).FullSubcategory
 

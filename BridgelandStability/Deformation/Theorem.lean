@@ -236,7 +236,7 @@ condition `τ = (W, Q)` with `d(P, Q) < ε`.
 
 This is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict
 hypothesis `‖W - Z‖_σ < sin(πε)`. -/
-@[informal "Theorem 7.1"]
+@[informal "Theorem 7.1" "ε₀ and WideSectorFiniteLength (= ∀ t, P((t-4ε₀,t+4ε₀)) per-object strict finite length) taken as parameters; both follow from local finiteness for ε₀ < η/4"]
 theorem StabilityCondition.WithClassMap.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin
     (σ : StabilityCondition.WithClassMap C v)
     (W : Λ →+ ℂ)

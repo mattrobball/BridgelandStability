@@ -170,7 +170,7 @@ abbrev Component (v : K₀ C →+ Λ) (cc : StabilityCondition.WithClassMap.Comp
 /-- The local-homeomorphism package for connected components of `Stab_v(D)`, stated directly in
 terms of the class-map charge `Z : Λ →+ ℂ`. Specializing to `v = id` recovers Bridgeland's
 Theorem 1.2 proposition-object; specializing to the numerical quotient recovers Corollary 1.3. -/
-@[informal "Theorem 1.2"]
+@[informal "Theorem 1.2" "statement only; proof is componentTopologicalLinearLocalModel"]
 def CentralChargeIsLocalHomeomorphOnConnectedComponents {v : K₀ C →+ Λ} : Prop :=
   ∀ (cc : StabilityCondition.WithClassMap.ComponentIndex C v),
     ∃ (V : Submodule ℂ (Λ →+ ℂ))

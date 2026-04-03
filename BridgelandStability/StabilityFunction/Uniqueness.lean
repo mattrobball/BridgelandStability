@@ -470,7 +470,6 @@ destabilizing subobject (MDS), which is intrinsic to the object. The key step
 is the semistable descent lemma: any semistable subobject with phase `> φ(0)`
 must be zero (by hom-vanishing to each factor). This forces the MDS phase to
 equal `φ(0)`, and the MDS to equal `chain(1)`. We then quotient and induct. -/
-@[informal "Proposition 2.3"]
 theorem StabilityFunction.hn_unique (Z : StabilityFunction A) (E : A) (hE : ¬IsZero E)
     (hFinSub : ∀ (E : A), Finite (Subobject E))
     (F₁ F₂ : AbelianHNFiltration Z E) :
