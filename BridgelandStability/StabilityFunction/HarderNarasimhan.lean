@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityFunction.Basic
+public meta import Informal
 
 /-!
 # Harder-Narasimhan Filtrations for Stability Functions
@@ -68,6 +69,7 @@ structure AbelianHNFiltration (Z : StabilityFunction A) (E : A) where
 
 /-- A stability function has the Harder-Narasimhan property if every nonzero object
 admits a Harder-Narasimhan filtration (Bridgeland, Proposition 2.4). -/
+@[informal "Proposition 2.4"]
 def StabilityFunction.HasHNProperty (Z : StabilityFunction A) : Prop :=
   ∀ (E : A), ¬IsZero E → Nonempty (AbelianHNFiltration Z E)
 
@@ -471,6 +473,7 @@ The proof proceeds by induction on the cardinality of the subobject lattice.
 For a nonzero object `E`: if `E` is semistable, it is its own HN filtration;
 otherwise we find the MDS `M` (maximal phase, semistable), and recurse on the
 quotient `E/M`, which has strictly fewer subobjects. -/
+@[informal "Proposition 2.4"]
 theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
     (hFinSub : ∀ (E : A), Finite (Subobject E)) :
     Z.HasHNProperty := by

@@ -62,7 +62,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 /-- A Harder-Narasimhan (HN) filtration of an object `E` with respect to a phase
 predicate `P`. This extends a `PostnikovTower` with phase data: each factor is
 semistable with a given phase, and the phases are strictly decreasing. -/
-@[informal "Definition 5.7"]
+@[informal "Definition 3.3"]
 structure HNFiltration (P : ℝ → ObjectProperty C) (E : C) extends PostnikovTower C E where
   /-- The phases of the semistable factors, in strictly decreasing order. -/
   φ : Fin n → ℝ
@@ -200,6 +200,7 @@ def HNFiltration.phiMinus {P : ℝ → ObjectProperty C} {E : C}
 
 /-- The interval subcategory predicate `P((a,b))`: an object `E` belongs to the
 interval subcategory if it is zero or all phases in its HN filtration lie in `(a,b)`. -/
+@[informal "Definition 4.1"]
 def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
 
