@@ -7,6 +7,7 @@ module
 
 public import BridgelandStability.StabilityCondition.Seminorm
 public import BridgelandStability.StabilityCondition.Basic
+public meta import Informal
 
 /-!
 # Topology on Stab(D)

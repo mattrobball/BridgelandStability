@@ -8,6 +8,7 @@ module
 public import BridgelandStability.Deformation.TStructure
 public import BridgelandStability.Deformation.IntervalAbelian
 public import BridgelandStability.Deformation.PhiPlusHN
+public meta import Informal
 
 /-!
 # Deformation of Stability Conditions — Theorem71
@@ -38,10 +39,7 @@ variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-- **Lemma 7.7 interior HN** (ssf version, Bridgeland p.23). Every nonzero object in
 the interior `P((a+2ε, b−4ε))` of a thin finite-length interval `P((a,b))` has an HN
-filtration whose factors are `ssf.Semistable` in `P((a,b))` with phases in `(a+ε, b−ε)`.
-
-**Sorry**: Core of Lemma 7.7 — requires class G/H induction on the Noetherian strict
-subobject lattice, propagating phase bounds via Lemma 7.3 (phase confinement). -/
+filtration whose factors are `ssf.Semistable` in `P((a,b))` with phases in `(a+ε, b−ε)`. -/
 theorem interior_has_enveloped_HN_ssf
     [IsTriangulated C]
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
@@ -74,7 +72,7 @@ theorem interior_has_enveloped_HN_ssf
     stabSeminorm_lt_cos_of_hsin_hthin (C := C) (σ := σ) (W := W) hab hε hthin hsin
   -- W ≠ 0 for nonzero interval objects
   have hW_ne : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      ssf.W (cl C v F) ≠ 0 := fun hF hFne =>
+      ssf.wNe F := fun hF hFne =>
     σ.W_ne_zero_of_intervalProp C W hthin' hsmall hFne hF
   -- Perturbation bounds for global window (stated in terms of W and (a+b)/2 directly)
   have hW_ne_sem : ∀ (F : C) (φ : ℝ), (σ.slicing.P φ) F → ¬IsZero F →

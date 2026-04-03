@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.HeartEquivalence.Forward
+public meta import Informal
 
 /-!
 # Reverse Direction and Roundtrips
@@ -248,6 +249,7 @@ The key identification is that semistable objects of phase `φ ∈ (0, 1]` in th
 heart are exactly the objects of `P(φ)`, and the slicing's HN filtration of a
 heart object is exactly an HN filtration in the sense of
 `StabilityFunction`. -/
+@[informal "Proposition 5.3" "forward: stability condition → heart stability data"]
 def StabilityCondition.toHeartStabilityData
     (σ : StabilityCondition C) : HeartStabilityData C where
   t := σ.slicing.toTStructure
@@ -692,6 +694,7 @@ isomorphism, shift, and Hom-vanishing axioms of a Bridgeland slicing. The two
 remaining reverse-direction steps, not yet packaged here, are:
 1. constructing the ambient central charge `K₀ C →+ ℂ`;
 2. proving HN existence for the induced phase family. -/
+@[informal "Proposition 5.3" "reverse: partial, missing central charge construction + HN existence"]
 def HeartStabilityData.toPhasePackage
     (h : HeartStabilityData C) : PhasePackage C where
   heartData := h

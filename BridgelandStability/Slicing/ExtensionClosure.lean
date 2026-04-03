@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.Slicing.Phase
+public meta import Informal
 
 @[expose] public section
 
@@ -321,6 +322,7 @@ we have `φ⁺(A) ≤ φ⁺(E)`.
 
 The width condition `b ≤ a + 1` ensures `B⟦-1⟧` has all phases below any phase of `A`,
 so the factoring argument through `B⟦-1⟧` gives a contradiction. -/
+@[informal "Lemma 3.4" "φ⁺(A) ≤ φ⁺(E)"]
 theorem Slicing.phiPlus_triangle_le (s : Slicing C) {A E B : C}
     (hA : ¬IsZero A) (hE : ¬IsZero E)
     {a b : ℝ} (hab : b ≤ a + 1)
@@ -384,6 +386,7 @@ The proof uses the Yoneda exact sequence: if `φ⁻(E) > φ⁻(B)`, then maps `E
 vanish by hom-vanishing; by exactness, maps `B → B⁻` factor through `A⟦1⟧`, but
 A's shifted phases are too high, so all maps `A⟦1⟧ → B⁻` vanish too, giving
 `B⁻ = 0`, a contradiction. -/
+@[informal "Lemma 3.4" "φ⁻(E) ≤ φ⁻(B)"]
 theorem Slicing.phiMinus_triangle_le (s : Slicing C) {A E B : C}
     (hB : ¬IsZero B) (hE : ¬IsZero E)
     {a b : ℝ} (hab : b ≤ a + 1)

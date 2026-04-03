@@ -56,6 +56,7 @@ namespace PreStabilityCondition
 /-- A Bridgeland prestability condition with respect to a class map
 `v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient
 charge is recovered by precomposition with `v`. -/
+@[informal "Definition 5.1"]
 structure WithClassMap (v : K₀ C →+ Λ) where
   /-- The underlying slicing. -/
   slicing : Slicing C
@@ -121,6 +122,7 @@ namespace StabilityCondition
 
 /-- A Bridgeland stability condition with respect to a class map `v : K₀(C) → Λ`.
 This is the locally-finite refinement of `PreStabilityCondition.WithClassMap`. -/
+@[informal "Definition 5.7"]
 structure WithClassMap (v : K₀ C →+ Λ)
     extends PreStabilityCondition.WithClassMap C v where
   /-- The slicing is locally finite. -/
@@ -211,6 +213,7 @@ abbrev Component (v : K₀ C →+ Λ) (cc : StabilityCondition.WithClassMap.Comp
 /-- The local-homeomorphism package for connected components of `Stab_v(D)`, stated directly in
 terms of the class-map charge `Z : Λ →+ ℂ`. Specializing to `v = id` recovers Bridgeland's
 Theorem 1.2 proposition-object; specializing to the numerical quotient recovers Corollary 1.3. -/
+@[informal "Theorem 1.2" "statement only; proof is componentTopologicalLinearLocalModel"]
 def CentralChargeIsLocalHomeomorphOnConnectedComponents {v : K₀ C →+ Λ} : Prop :=
   ∀ (cc : StabilityCondition.WithClassMap.ComponentIndex C v),
     ∃ (V : Submodule ℂ (Λ →+ ℂ))

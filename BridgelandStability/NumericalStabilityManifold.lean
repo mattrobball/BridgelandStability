@@ -174,6 +174,7 @@ stability space `Stab_Λ(D)` is a complex manifold.
 The proof is direct: `ComponentTopologicalLinearLocalModel` gives a local homeomorphism
 `σ ↦ σ.Z` into `V(Σ) ⊆ Hom(Λ, ℂ)`. Since `Λ` has finite rank, `Hom(Λ, ℂ)` is
 finite-dimensional, hence so is `V(Σ)`. The generic manifold construction applies. -/
+@[informal "Corollary 1.3" "class-map generalization; manifold consequence only"]
 theorem StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent
     {Λ : Type u'} [AddCommGroup Λ] [AddGroup.FG Λ]
     {v : K₀ C →+ Λ} [Fact (Function.Surjective v)]
@@ -199,6 +200,7 @@ component of `Stab_N(D)` is a complex manifold of dimension `rk(N(D))`.
 
 This is a specialization of the generic class-map theorem to
 `v = numericalQuotientMap k C`, which is surjective by definition. -/
+@[informal "Corollary 1.3" "complex manifold conclusion only; local homeomorphism is in componentTopologicalLinearLocalModel"]
 theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
     (k : Type w) [Field k]
     [Linear k C] [IsFiniteType k C]

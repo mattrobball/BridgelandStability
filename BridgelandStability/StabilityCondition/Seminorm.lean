@@ -6,6 +6,7 @@ Authors: Formalization
 module
 
 public import BridgelandStability.StabilityCondition.Defs
+public meta import Informal
 
 /-!
 # Stability Seminorm
@@ -89,6 +90,7 @@ theorem slicingDist_triangle (s₁ s₂ s₃ : Slicing C) :
 /-- The Bridgeland generalized metric makes `Slicing C` a pseudo-extended-metric space.
 This is **not** the topology used on `StabilityCondition.WithClassMap C v` (which combines `slicingDist`
 with the seminorm `stabSeminorm`); it is the intrinsic metric on slicings alone. -/
+@[informal "Lemma 6.1" "pseudo-emetric (not generalized metric: missing separation); Lean uses sup of phase differences, paper uses inf of containment radii — equivalence not proved"]
 noncomputable instance : PseudoEMetricSpace (Slicing C) where
   edist := slicingDist C
   edist_self := slicingDist_self C
