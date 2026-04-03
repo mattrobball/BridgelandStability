@@ -244,7 +244,7 @@ theorem sector_bound (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ
       ‖U (cl C v (P.factor i))‖ ≤ M * ‖σ.charge (P.factor i)‖ := by
     intro i
     by_cases hi : IsZero (P.factor i)
-    · simp [cl_isZero (C := C) (v := v) hi]
+    · simp [σ.charge_isZero hi, cl_isZero (C := C) (v := v) hi]
     · exact hM _ _ (F.semistable i) hi
   -- Z decomposition: Z(factor i) = ‖Z(factor i)‖ * exp(iπφᵢ)
   have hZi : ∀ i : Fin F.n,

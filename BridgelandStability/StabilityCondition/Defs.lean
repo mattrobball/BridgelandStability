@@ -75,7 +75,7 @@ noncomputable abbrev WithClassMap.charge {v : K₀ C →+ Λ}
 
 omit [IsTriangulated C] in
 variable {C} in
-@[simp] theorem WithClassMap.charge_def {v : K₀ C →+ Λ}
+theorem WithClassMap.charge_def {v : K₀ C →+ Λ}
     (σ : WithClassMap C v) (E : C) :
     σ.charge E = σ.Z (cl C v E) := rfl
 

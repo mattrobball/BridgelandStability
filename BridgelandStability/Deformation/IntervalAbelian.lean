@@ -610,7 +610,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
   have him_ray : ∀ {E : C}, s.P φ E → (σ.charge E * rot).im = 0 := by
     intro E hPφ
     by_cases hne : IsZero E
-    · simp [cl_isZero (C := C) (v := v) hne]
+    · simp [σ.charge_isZero hne]
     · obtain ⟨m, _, hv⟩ := σ.compat φ E hPφ hne
       rw [hv, mul_assoc, ← Complex.exp_add,
         show ↑(Real.pi * φ) * Complex.I + -(↑(Real.pi * φ) * Complex.I) = 0 from
