@@ -11,6 +11,11 @@ name = "mathlib"
 scope = "leanprover-community"
 rev = "master"
 
+[[require]]
+name = "informal"
+git = "https://github.com/mattrobball/lean-informal"
+rev = "main"
+
 [[lean_lib]]
 name = "BridgelandStability"
 srcDir = "."
