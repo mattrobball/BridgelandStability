@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - "BridgelandStability/**/*.lean"
+      - "ExtractDecls.lean"
+      - "informalizations.json"
+      - "scripts/merge_prose.py"
+      - "scripts/find_missing_prose.py"
   workflow_dispatch:
 
 concurrency:
