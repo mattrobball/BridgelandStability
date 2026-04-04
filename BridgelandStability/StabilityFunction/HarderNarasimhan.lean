@@ -70,7 +70,7 @@ structure AbelianHNFiltration (Z : StabilityFunction A) (E : A) where
 
 /-- A stability function has the Harder-Narasimhan property if every nonzero object
 admits a Harder-Narasimhan filtration (Bridgeland, Proposition 2.4). -/
-@[informal "Definition 2.3" "HN property predicate"]
+@[informal "Definition 2.3" "HN property predicate for abelian categories"]
 def StabilityFunction.HasHNProperty (Z : StabilityFunction A) : Prop :=
   ∀ (E : A), ¬IsZero E → Nonempty (AbelianHNFiltration Z E)
 

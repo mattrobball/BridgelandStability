@@ -832,24 +832,26 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.IntervalAbelian",
     "docstring": "**From Im = 0 to P(φ) for objects with phases above φ.** If `X` is nonzero with\nall σ-phases in `[φ, φ + 1)` and `Im(Z(X) · exp(-iπφ)) = 0`, then `X ∈ P(φ)`.\nSymmetric to `P_phi_of_im_zero_heart`. ",
-    "contentHash": 367963771212280746,
+    "contentHash": 18408116314591830796,
     "paperRef": null,
     "paperComment": null,
     "prose": "",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.P_phi_of_im_zero_heart",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.IntervalAbelian",
     "docstring": "**From Im = 0 to P(φ).** If `X` is a nonzero object with all σ-phases in\n`(φ-1, φ]` (i.e., in the heart) and `Im(Z(X) · exp(-iπφ)) = 0`, then `X ∈ P(φ)`.\n\nThe proof uses K₀ decomposition: each HN factor of `X` contributes\n`≤ 0` to the sum (by `im_Z_nonpos_of_heart_phases`), and the sum is `0`, so each\ncontribution is `0`. For nonzero factors, `sin(π(ψ-φ)) = 0` with `ψ ∈ (φ-1, φ]`\nforces `ψ = φ`. By strict anti of HN phases, `X` has exactly one factor. ",
-    "contentHash": 5344102483072624527,
+    "contentHash": 1399890370668665290,
     "paperRef": null,
     "paperComment": null,
     "prose": "**From $\\operatorname{Im} = 0$ to $\\mathcal{P}(\\phi)$.** If $X$ is nonzero with all $\\sigma$-phases in $(\\phi - 1, \\phi]$ and $\\operatorname{Im}(Z(X) \\cdot e^{-i\\pi\\phi}) = 0$, then $X \\in \\mathcal{P}(\\phi)$.",
     "proofExposition": "Each HN factor contributes $\\le 0$ to the imaginary sum, and the total is $0$, so each contribution is $0$. For nonzero factors, $\\sin(\\pi(\\psi - \\phi)) = 0$ with $\\psi \\in (\\phi - 1, \\phi]$ forces $\\psi = \\phi$. Strict antitone of HN phases forces exactly one factor.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.P_phi_of_truncation_of_P_phi_cone",
@@ -952,24 +954,26 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.IntervalAbelian",
     "docstring": "**Im non-negativity for objects with phases above φ.** If `X` has all σ-phases in\n`[φ, φ + 1)` (i.e., `φ ≤ phiMinus` and `phiPlus < φ + 1`), then\n`Im(Z(X) · exp(-iπφ)) ≥ 0`. Symmetric to `im_Z_nonpos_of_heart_phases`. ",
-    "contentHash": 17230739510123379275,
+    "contentHash": 9050938119643709897,
     "paperRef": null,
     "paperComment": null,
     "prose": "",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.im_Z_nonpos_of_heart_phases",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.IntervalAbelian",
     "docstring": "**Im non-positivity for heart objects rotated by φ.** If each nonzero σ-semistable\nfactor of phase `ψ ∈ (a, b)` with `ψ ≤ φ` and `ψ > φ - 1` has non-positive\n`Im(Z(F) · exp(-iπφ))`, and E ∈ P((a, b))` with phases ≤ φ and > φ-1, then\n`Im(Z(E) · exp(-iπφ)) ≤ 0`. ",
-    "contentHash": 10888913885534901777,
+    "contentHash": 4574903000851906348,
     "paperRef": null,
     "paperComment": null,
     "prose": "**Im non-positivity for heart objects.** If $E$ is nonzero with $\\phi^+(E) \\le \\phi$ and $\\phi^-(E) > \\phi - 1$ (so all HN phases lie in $(\\phi - 1, \\phi]$), then $\\operatorname{Im}(Z(E) \\cdot e^{-i\\pi\\phi}) \\le 0$.",
     "proofExposition": "Decompose $Z(E) = \\sum Z(F_j)$ via $K_0$. Each factor $F_j$ has $Z(F_j) = m_j e^{i\\pi\\phi_j}$ with $\\phi_j \\in (\\phi - 1, \\phi]$, so $\\operatorname{Im}(Z(F_j) \\cdot e^{-i\\pi\\phi}) = m_j \\sin(\\pi(\\phi_j - \\phi)) \\le 0$ since $\\sin \\le 0$ on $(-\\pi, 0]$.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.SectorFiniteLength.of_wide",
@@ -1996,12 +2000,13 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.PhaseArithmetic",
     "docstring": "**Coarse phase perturbation bound**. If `E` is σ-semistable of phase `φ ∈ (α-1, α+1]`,\nthen `wPhaseOf(Z(E), α) = φ`. This is the inverse direction of `wPhaseOf_of_exp`. ",
-    "contentHash": 9897936113721443930,
+    "contentHash": 13510057294625667321,
     "paperRef": null,
     "paperComment": null,
     "prose": "**Coarse phase perturbation bound.** If $E$ is $\\sigma$-semistable of phase $\\phi \\in (\\alpha - 1, \\alpha + 1]$, then $\\operatorname{wPhaseOf}(Z(E), \\alpha) = \\phi$.",
     "proofExposition": "From compatibility, $Z(E) = m \\cdot e^{i\\pi\\phi}$ with $m > 0$. Apply `wPhaseOf_of_exp`.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.wPhaseOf_gt_of_im_pos",
@@ -2092,12 +2097,13 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.PhaseArithmetic",
     "docstring": "**Phase perturbation for σ-semistable objects**. If `E` is σ-semistable of phase `φ`\nwith `φ ∈ (α - 1/2, α + 1/2)`, and `‖(W-Z)(E)‖ / ‖Z(E)‖ < sin(πε)` with `0 < ε ≤ 1/2`,\nthen `|wPhaseOf(W(E), α) - φ| < ε`. This is the key quantitative bound for the\ndeformation theorem. ",
-    "contentHash": 16487528950939768671,
+    "contentHash": 1966238623514557394,
     "paperRef": null,
     "paperComment": null,
     "prose": "**Phase perturbation for $\\sigma$-semistable objects.** If $E$ is $\\sigma$-semistable of phase $\\phi \\in (\\alpha - 1/2, \\alpha + 1/2)$ and $\\|(W-Z)(E)\\| / \\|Z(E)\\| < \\sin(\\pi\\varepsilon)$ with $0 < \\varepsilon \\le 1/2$, then $|\\operatorname{wPhaseOf}(W(E), \\alpha) - \\phi| < \\varepsilon$.",
     "proofExposition": "Write $W(E) = Z(E) + \\delta = m \\cdot e^{i\\pi\\phi}(1 + u)$ where $u = \\delta / Z(E)$. The bound $\\|u\\| < \\sin(\\pi\\varepsilon)$ follows from the seminorm estimate. Apply `wPhaseOf_perturbation_generic`.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.wPhaseOf_seesaw",
@@ -3148,12 +3154,13 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.Deformation.Theorem",
     "docstring": "The canonical deformed stability condition attached to a nearby central charge `W`.\n\nThis packages the actual object constructed in the deformation proof, rather than\nhiding it behind an existential theorem statement. ",
-    "contentHash": 15691103848287115089,
+    "contentHash": 15042733671293621239,
     "paperRef": null,
     "paperComment": null,
     "prose": "The canonical deformed stability condition attached to a nearby central charge $W$. This packages the actual object constructed in the deformation proof as a `StabilityCondition.WithClassMap`, rather than hiding it behind an existential.",
     "proofExposition": null,
-    "termExposition": "Constructs the deformed slicing $Q$ via `deformedSlicing`, pairs it with $W$ as the central charge, verifies compatibility, then establishes local finite length by showing each deformed interval $Q((t - \\varepsilon_0, t + \\varepsilon_0))$ embeds into the $\\sigma$-interval $\\mathcal{P}((t - 2\\varepsilon_0, t + 2\\varepsilon_0))$ which has sector finite length."
+    "termExposition": "Constructs the deformed slicing $Q$ via `deformedSlicing`, pairs it with $W$ as the central charge, verifies compatibility, then establishes local finite length by showing each deformed interval $Q((t - \\varepsilon_0, t + \\varepsilon_0))$ embeds into the $\\sigma$-interval $\\mathcal{P}((t - 2\\varepsilon_0, t + 2\\varepsilon_0))$ which has sector finite length.",
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.deformed_Z",
@@ -3340,12 +3347,13 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.WPhase",
     "docstring": "**Z-nonvanishing for interval objects**. For a nonzero object `E` in a thin interval\n`P((a, b))` with `b - a < 1`, the central charge satisfies `‖Z([E])‖ > 0`. The proof\ndecomposes `E` via its HN filtration and applies the sector estimate\n`norm_sum_exp_ge_cos_mul_sum` to bound `‖Z(E)‖` from below. ",
-    "contentHash": 2749323787112686447,
+    "contentHash": 7170342324645906669,
     "paperRef": null,
     "paperComment": null,
     "prose": "**Z-nonvanishing for interval objects.** For a nonzero object $E \\in \\mathcal{P}((a, b))$ with $b - a < 1$, the central charge satisfies $\\|Z([E])\\| > 0$.",
     "proofExposition": "Decompose $E$ via its HN filtration and apply the sector estimate: $\\cos(\\pi(b-a)/2) \\cdot \\sum \\|Z(F_j)\\| \\le \\|Z(E)\\|$. Since $b - a < 1$, the cosine is positive, and at least one factor has $\\|Z(F_j)\\| > 0$.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.skewedStabilityFunction_of_near",
@@ -11368,12 +11376,13 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Basic",
     "docstring": "The ordinary compatibility statement for a prestability condition, with the\nidentity class map simplified away. ",
-    "contentHash": 8708779182532305443,
+    "contentHash": 15826686571603507548,
     "paperRef": null,
     "paperComment": null,
     "prose": "The compatibility condition for a prestability condition with class map $v$,\n  simplified: for every nonzero $\\mathcal{P}(\\phi)$-semistable object $E$,\n  $Z(\\operatorname{cl}_v(E)) = m \\cdot e^{i\\pi\\phi}$ for some $m > 0$.",
     "proofExposition": "Immediate simplification of the general compatibility statement.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.Z_mem_finiteSeminormSubgroup",
@@ -11776,12 +11785,85 @@
     "declKind": "structure",
     "moduleName": "BridgelandStability.StabilityCondition.Defs",
     "docstring": "A Bridgeland prestability condition with respect to a class map\n`v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient\ncharge is recovered by precomposition with `v`. ",
-    "contentHash": 10705465974947740942,
+    "contentHash": 1453295097521278947,
     "paperRef": "Definition 5.1",
     "paperComment": null,
     "prose": "A **Bridgeland prestability condition** on a triangulated category $\\mathcal{C}$\n  with respect to a class map $v \\colon K_0(\\mathcal{C}) \\to \\Lambda$ consists of a\n  slicing $\\mathcal{P}$ together with a group homomorphism $Z \\colon \\Lambda \\to\n  \\mathbb{C}$ (the **central charge**) such that for every nonzero\n  $\\mathcal{P}(\\phi)$-semistable object $E$, one has\n  $Z(v([E])) = m \\cdot e^{i\\pi\\phi}$ for some $m > 0$.\n  This is Definition 5.1 of Bridgeland (2007), lifted to an arbitrary class lattice.",
     "proofExposition": null,
-    "termExposition": "The structure packages the slicing, the central charge on $\\Lambda$, and the\n  compatibility proof that the image of each semistable class lies on the correct ray\n  in $\\mathbb{C}$."
+    "termExposition": "The structure packages the slicing, the central charge on $\\Lambda$, and the\n  compatibility proof that the image of each semistable class lies on the correct ray\n  in $\\mathbb{C}$.",
+    "needsReview": true
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge",
+    "declKind": "abbrev",
+    "moduleName": "BridgelandStability.StabilityCondition.Defs",
+    "docstring": "The central charge evaluated at the class of `E`. This is `Z(v[E])`. ",
+    "contentHash": 3261781603390453202,
+    "paperRef": null,
+    "paperComment": null,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge_congr",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.StabilityCondition.Defs",
+    "docstring": null,
+    "contentHash": 14216557587758649673,
+    "paperRef": null,
+    "paperComment": null,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge_def",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.StabilityCondition.Defs",
+    "docstring": null,
+    "contentHash": 10052247074734350987,
+    "paperRef": null,
+    "paperComment": null,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge_isZero",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.StabilityCondition.Defs",
+    "docstring": null,
+    "contentHash": 4368200418060827559,
+    "paperRef": null,
+    "paperComment": null,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge_postnikovTower_eq_sum",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.StabilityCondition.Defs",
+    "docstring": null,
+    "contentHash": 339759707041307858,
+    "paperRef": null,
+    "paperComment": null,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.compat",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.StabilityCondition.Defs",
+    "docstring": "Compatibility: for nonzero semistable `E` of phase `φ`, `σ.charge E`\nlies on the ray `ℝ₊ · exp(iπφ)`. ",
+    "contentHash": 8489315688924837523,
+    "paperRef": null,
+    "paperComment": null,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
   },
   {
     "declName": "CategoryTheory.Triangulated.StabilityCondition",
@@ -11896,12 +11978,13 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.StabilityCondition.Defs",
     "docstring": "The Bridgeland seminorm `‖U‖_σ` on `Hom(Λ, ℂ)`. For a class-map stability\ncondition `σ = (Z, P)` with class map `v : K₀(D) → Λ` and a group homomorphism\n`U : Λ → ℂ`, this is `sup { |U(v[E])| / |Z(v[E])| : E is σ-semistable and nonzero }`.\n\nWhen `v = id` (i.e., `Λ = K₀(D)`), this recovers Bridgeland's original seminorm. ",
-    "contentHash": 15597129750757282288,
+    "contentHash": 12379954766319111064,
     "paperRef": null,
     "paperComment": null,
     "prose": "The **Bridgeland seminorm** $\\|U\\|_\\sigma$ on $\\operatorname{Hom}(\\Lambda,\n  \\mathbb{C})$. For a stability condition $\\sigma = (Z, \\mathcal{P})$ with class map\n  $v$ and a group homomorphism $U \\colon \\Lambda \\to \\mathbb{C}$, this is\n  $\\|U\\|_\\sigma = \\sup \\{\\, |U(v[E])| / |Z(v[E])| : E \\text{ is }\n  \\sigma\\text{-semistable and nonzero}\\,\\}$.",
     "proofExposition": null,
-    "termExposition": "Defined as an $\\mathbb{R}_{\\geq 0}^{\\infty}$-valued supremum indexed over objects,\n  phases, semistability witnesses, and nonzero witnesses."
+    "termExposition": "Defined as an $\\mathbb{R}_{\\geq 0}^{\\infty}$-valued supremum indexed over objects,\n  phases, semistability witnesses, and nonzero witnesses.",
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.stabilityCondition_compat_apply",
@@ -12244,12 +12327,13 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Seminorm",
     "docstring": "**Node 6.2d**: For a `τ`-semistable nonzero object `E` of phase `φ` with\n`d(σ, τ) < ε < 1/2`, the `σ`-HN width of `E` is less than `2ε`, so the sector\nbound applies. Combined with the seminorm bound on `W - Z`, this controls\n`‖Z([E])‖` by `‖W([E])‖` (where `W = τ.Z` and `Z = σ.Z`). ",
-    "contentHash": 2672766873296918960,
+    "contentHash": 11519175265059013008,
     "paperRef": null,
     "paperComment": null,
     "prose": "For a $\\tau$-semistable nonzero object $E$ with $d(\\sigma, \\tau) < \\varepsilon\n  < 1/2$ and $\\|\\tau.Z - \\sigma.Z\\|_\\sigma \\leq M$, one has\n  $(1 - M/\\cos(\\pi\\varepsilon)) \\cdot \\|\\sigma.Z([E])\\| \\leq\n  \\|\\tau.Z([E])\\|$.\n\n  This controls $\\|Z([E])\\|$ by $\\|W([E])\\|$ via the reverse triangle inequality\n  and the sector bound.",
     "proofExposition": "The $\\sigma$-HN width of $E$ is less than $2\\varepsilon$ (from semistability and\n  the metric bound). Applies the sector bound with $\\eta = 2\\varepsilon$ and\n  $U = \\tau.Z - \\sigma.Z$, then uses the reverse triangle inequality.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.phiMinus_sub_lt_of_slicingDist",
@@ -12280,24 +12364,26 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Seminorm",
     "docstring": "**Sector bound (Lemma 6.2 core)**. For a stability condition `σ = (Z, P)` and a group\nhomomorphism `U : Λ →+ ℂ`, if every semistable factor satisfies\n`‖U([A])‖ ≤ M · ‖Z([A])‖`, then the bound extends to any object `E` with narrow HN width:\n`‖U([E])‖ ≤ (M / cos(πη/2)) · ‖Z([E])‖`, where `η` bounds the HN phase width.\n\nThe proof decomposes `E` via its HN filtration (a PostnikovTower with phase data),\napplies K₀ additivity, the pointwise seminorm bound on factors, and the\nsector estimate `norm_sum_exp_ge_cos_mul_sum`. ",
-    "contentHash": 10181308554067187126,
+    "contentHash": 11974991422696469260,
     "paperRef": null,
     "paperComment": null,
     "prose": "**Sector bound (Lemma 6.2 core)**. For a stability condition $\\sigma = (Z,\n  \\mathcal{P})$ and $U \\colon \\Lambda \\to \\mathbb{C}$, if\n  $\\|U([A])\\| \\leq M \\cdot \\|Z([A])\\|$ for every semistable factor $A$, then for\n  any object $E$ with HN phase width at most $\\eta < 1$,\n  $\\|U([E])\\| \\leq \\frac{M}{\\cos(\\pi\\eta/2)} \\cdot \\|Z([E])\\|$.\n\n  This is the quantitative heart of Bridgeland's seminorm comparison theory.",
     "proofExposition": "Decomposes $U([E]) = \\sum U([F_i])$ and $Z([E]) = \\sum Z([F_i])$ via the HN\n  filtration and $K_0$ additivity. Bounds $\\sum \\|U([F_i])\\| \\leq M \\sum\n  \\|Z([F_i])\\|$ pointwise, then applies the sector estimate\n  $\\cos(\\pi\\eta/2) \\cdot \\sum \\|Z([F_i])\\| \\leq \\|Z([E])\\|$.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.sector_bound'",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Seminorm",
     "docstring": "Sector bound using intrinsic phase width `phiPlus - phiMinus`. ",
-    "contentHash": 8165859034129951421,
+    "contentHash": 131970755979498578,
     "paperRef": null,
     "paperComment": null,
     "prose": "Variant of the sector bound using the intrinsic phase width\n  $\\phi^+(E) - \\phi^-(E) \\leq \\eta$.",
     "proofExposition": "Reduces to `sector_bound` by extracting the canonical HN filtration and its\n  intrinsic width.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.slicingDist_le_of_phase_bounds",
@@ -12352,12 +12438,13 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Seminorm",
     "docstring": "For σ-semistable nonzero `A`, the ratio `‖U(A)‖/‖Z(A)‖` is bounded by the seminorm. ",
-    "contentHash": 8213678940283500171,
+    "contentHash": 17825740092332418044,
     "paperRef": null,
     "paperComment": null,
     "prose": "For $\\sigma$-semistable nonzero $A$ of phase $\\psi$, the ratio $\\|U([A])\\| /\n  \\|Z([A])\\|$ is bounded by the toReal of the Bridgeland seminorm\n  $\\|U\\|_\\sigma$.",
     "proofExposition": "The ratio is one term in the supremum defining $\\|U\\|_\\sigma$, so it is at most\n  the supremum. Converts via `ENNReal.toReal_mono` and clears the division.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.stabSeminorm_le_of_near",
@@ -12520,12 +12607,13 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Topology",
     "docstring": "For a σ-semistable nonzero object of phase `ψ`, the imaginary part of\n`Z(F) · exp(-iπφ)` equals `b · sin(π(ψ - φ))` for some `b > 0`. This factors\nout the repeated \"divide by exp, rewrite to sin\" computation in the Lemma 6.4 proofs. ",
-    "contentHash": 15610546092921165139,
+    "contentHash": 1879481675737738532,
     "paperRef": null,
     "paperComment": null,
     "prose": "For a $\\sigma$-semistable nonzero object $F$ of phase $\\psi$, the imaginary part\n  of $Z(F) \\cdot e^{-i\\pi\\phi}$ equals $b \\cdot \\sin(\\pi(\\psi - \\phi))$ for some\n  $b > 0$. This factors out the repeated divide-by-exponential-and-rewrite-to-sine\n  computation used throughout the Lemma 6.4 proofs.",
     "proofExposition": "Obtains the ray decomposition $Z([F]) = b \\cdot e^{i\\pi\\psi}$ from compatibility,\n  then applies `im_ofReal_mul_exp_mul_exp_neg`.",
-    "termExposition": null
+    "termExposition": null,
+    "needsReview": true
   },
   {
     "declName": "CategoryTheory.Triangulated.phiPlus_le_of_leProp",
@@ -12930,7 +13018,7 @@
     "docstring": "A stability function has the Harder-Narasimhan property if every nonzero object\nadmits a Harder-Narasimhan filtration (Bridgeland, Proposition 2.4). ",
     "contentHash": 7547426682626960303,
     "paperRef": "Definition 2.3",
-    "paperComment": "HN property predicate",
+    "paperComment": "HN property predicate for abelian categories",
     "prose": "A stability function $Z$ has the **Harder--Narasimhan property** if every nonzero\n  object admits an HN filtration (Bridgeland, Proposition 2.4).",
     "proofExposition": null,
     "termExposition": "Defined as the universal statement: for all nonzero $E$, the type\n  `AbelianHNFiltration Z E` is nonempty."

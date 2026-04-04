@@ -47,7 +47,11 @@ jobs:
               if ce is None:
                   changes.append(f"**REMOVED**: `{name}` ← {me['paperRef']}")
               elif ce.get("contentHash") != me.get("contentHash"):
-                  changes.append(f"**CHANGED**: `{name}` ← {me['paperRef']}")
+                  changes.append(f"**DECLARATION CHANGED**: `{name}` ← {me['paperRef']}")
+              elif ce.get("paperRef") != me.get("paperRef"):
+                  changes.append(f"**TAG CHANGED**: `{name}` ← {me['paperRef']} → {ce['paperRef']}")
+              elif ce.get("paperComment") != me.get("paperComment"):
+                  changes.append(f"**COMMENT CHANGED**: `{name}` ← {me['paperRef']}")
 
           for name, ce in cur_tagged.items():
               if name not in main_tagged:
