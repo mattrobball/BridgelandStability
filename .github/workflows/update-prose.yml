@@ -114,6 +114,6 @@ jobs:
             After updating, commit changes to a new branch and open a PR.
           claude_args: >-
             --allowedTools
-            "Bash(python3:*),Bash(git:*),Edit,Write,Read,Glob,Grep"
+            "Bash(python3:*),Bash(git:*),Bash(gh:*),Edit,Write,Read,Glob,Grep"
             --model claude-sonnet-4-6
-            --max-turns 100
+            --max-turns 200
