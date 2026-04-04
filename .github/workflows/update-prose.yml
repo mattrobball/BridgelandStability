@@ -1,0 +1,115 @@
+name: Update Informal Prose
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "BridgelandStability/**/*.lean"
+  workflow_dispatch:
+
+concurrency:
+  group: update-prose
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  extract:
+    name: Extract & Merge Declarations
+    runs-on: ubuntu-latest
+    outputs:
+      has-gaps: ${{ steps.gaps.outputs.has_gaps }}
+      gap-summary: ${{ steps.gaps.outputs.summary }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Build project and extract declarations
+        run: |
+          lake build BridgelandStability
+          lake build extractDecls
+
+      - name: Merge with existing prose
+        run: |
+          python3 scripts/merge_prose.py \
+            --extracted extracted.json \
+            --existing informalizations.json
+
+      - name: Check for gaps
+        id: gaps
+        run: |
+          output=$(python3 scripts/find_missing_prose.py informalizations.json)
+          empty=$(echo "$output" | grep -c "Empty prose" || true)
+          review=$(echo "$output" | grep -c "Needs review" || true)
+          if [ "$empty" != "0" ] || [ "$review" != "0" ]; then
+            echo "has_gaps=true" >> "$GITHUB_OUTPUT"
+            echo "summary<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$output" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_gaps=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload extraction artifacts
+        if: steps.gaps.outputs.has_gaps == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: extraction
+          path: |
+            extracted.json
+            informalizations.json
+
+  fill-prose:
+    name: Fill Missing Prose
+    needs: extract
+    if: needs.extract.outputs.has-gaps == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download extraction artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: extraction
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.CLAUDE_PAT }}
+          prompt: |
+            You are updating the informal prose database for the BridgelandStability
+            Lean 4 formalization. The file `informalizations.json` has entries that
+            need prose written or reviewed.
+
+            Run `python3 scripts/find_missing_prose.py informalizations.json` to see
+            what needs work.
+
+            For each entry needing prose:
+            1. Read the declaration source using the `sourceFile` and `startLine`/`endLine`
+               fields in `informalizations.json` to understand what the declaration does
+            2. Write mathematician-facing prose (LaTeX via $..$ for math)
+            3. For theorems: write a `proofExposition` describing the proof strategy
+            4. For defs/structures: write a `termExposition` describing the construction
+            5. Update the entry in `informalizations.json`
+
+            The prose should describe the mathematical content, not the Lean encoding.
+            Use notation consistent with Bridgeland's paper (math/0212237v3).
+
+            After updating, commit changes to a new branch and open a PR.
+          claude_args: >-
+            --allowedTools
+            "Bash(python3:*),Bash(git:*),Edit,Write,Read,Glob,Grep"
+            --model claude-sonnet-4-6
+            --max-turns 100
