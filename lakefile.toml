@@ -19,3 +19,7 @@ rev = "main"
 [[lean_lib]]
 name = "BridgelandStability"
 srcDir = "."
+
+[[lean_exe]]
+name = "extractDecls"
+root = "ExtractDecls"
