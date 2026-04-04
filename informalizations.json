@@ -9880,7 +9880,7 @@
     "declKind": "structure",
     "moduleName": "BridgelandStability.Slicing.Defs",
     "docstring": "A Harder-Narasimhan (HN) filtration of an object `E` with respect to a phase\npredicate `P`. This extends a `PostnikovTower` with phase data: each factor is\nsemistable with a given phase, and the phases are strictly decreasing. ",
-    "contentHash": 4153969126789644085,
+    "contentHash": 4153969126789644086,
     "paperRef": "Definition 3.3",
     "paperComment": "axiom (c): HN decomposition data for triangulated categories",
     "prose": "A **Harder–Narasimhan filtration** of an object $E$ in a triangulated category\n  equipped with a slicing $\\mathcal{P}$ is a sequence of distinguished triangles\n  $0 = E_0 \\to E_1 \\to \\cdots \\to E_n = E$ such that each successive quotient\n  $A_i = E_i / E_{i-1}$ lies in $\\mathcal{P}(\\phi_i)$ for a strictly decreasing\n  sequence of phases $\\phi_1 > \\phi_2 > \\cdots > \\phi_n$.",
