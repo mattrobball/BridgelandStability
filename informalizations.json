@@ -67,8 +67,8 @@
     "contentHash": 9397357168676505611,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given a distinguished triangle $X \\to K \\to Y \\to X[1]$ where $K \\in \\mathcal{P}((a_2, b))$, $X \\in \\mathcal{P}((a_1, b))$, and $Y \\in \\mathcal{P}(\\le a_1)$ with $a_2 \\le a_1 < b$, the cofiber $Y$ lies in $\\mathcal{P}((a_2, b))$.",
+    "proofExposition": "If $Y$ is zero the result is immediate. Otherwise bound $\\phi^+(Y) \\le a_1 < b$ from the $\\le a_1$ hypothesis, and bound $\\phi^-(Y) > a_2$ by applying the phase-of-triangle lemma using the $\\ge a_1$ property of $X$ (deduced from $X \\in \\mathcal{P}((a_1,b))$) and the lower bound on $K$'s phases. Combine via `intervalProp_of_intrinsic_phases`.",
     "termExposition": null
   },
   {
@@ -139,8 +139,8 @@
     "contentHash": 10148643070638607466,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Let $X \\to Q \\to Y \\to X[1]$ be a distinguished triangle with $Q \\in \\mathcal{P}((\\psi - \\varepsilon_0, \\phi + \\varepsilon_0))$, $X \\in \\mathcal{P}(\\ge \\psi + \\varepsilon_0)$, and $Y \\in \\mathcal{P}(\\phi)$ semistable. Assuming $\\phi - \\varepsilon_0 < \\psi \\le \\phi$ and seminorm conditions, the $W$-phase of $X$ satisfies $\\psi < \\mathrm{wPhaseOf}(W([X]), \\tfrac{(\\psi-\\varepsilon_0)+(\\phi+\\varepsilon_0)}{2})$.",
+    "proofExposition": "Replace $Y \\in \\mathcal{P}(\\phi)$ by $Y \\in \\mathcal{P}((\\psi-\\varepsilon_0, \\psi+\\varepsilon_0))$ using `intervalProp_of_semistable`, then invoke `wPhaseOf_gt_of_upper_source_boundary_target`.",
     "termExposition": null
   },
   {
@@ -151,8 +151,8 @@
     "contentHash": 15123125877392734740,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Let $X \\to Q \\to Y \\to X[1]$ be a distinguished triangle with $Q \\in \\mathcal{P}((\\psi-\\varepsilon_0, \\phi+\\varepsilon_0))$, $X \\in \\mathcal{P}(\\ge \\psi+\\varepsilon_0)$, and $Y \\in \\mathcal{P}((\\psi-\\varepsilon_0, \\psi+\\varepsilon_0))$. Under thinness and seminorm conditions, $\\psi < \\mathrm{wPhaseOf}(W([X]), \\tfrac{(\\psi-\\varepsilon_0)+(\\phi+\\varepsilon_0)}{2})$.",
+    "proofExposition": "The thinness condition $\\varepsilon_0 < 1/8$ ensures the combined window fits within a unit interval. The result reduces to `wPhaseOf_gt_of_upper_boundary_triangle` with $a = \\psi - \\varepsilon_0$, $b_1 = \\psi + \\varepsilon_0$, $b_2 = \\phi + \\varepsilon_0$.",
     "termExposition": null
   },
   {
@@ -163,8 +163,8 @@
     "contentHash": 18158955890720290985,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E \\in \\mathcal{P}((a, b))$ is nonzero, $E \\in \\mathcal{P}(\\le \\psi - \\varepsilon_0)$, and the interval and seminorm conditions are satisfied, then $\\mathrm{wPhaseOf}(W([E]), \\tfrac{a+b}{2}) < \\psi$.",
+    "proofExposition": "Decompose $E$ via its HN filtration; all HN phases lie in $(a, \\psi - \\varepsilon_0]$. The perturbation bounds confine each factor's $W$-phase near its $\\sigma$-phase. The imaginary part $\\mathrm{Im}(W([E]) \\cdot e^{-i\\pi\\psi})$ is then negative (each factor contributes a negative imaginary part), and `wPhaseOf_lt_of_im_neg` converts this to the phase bound.",
     "termExposition": null
   },
   {
@@ -175,8 +175,8 @@
     "contentHash": 1979075913124559138,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given a distinguished triangle $X \\to K \\to Y \\to X[1]$ with $K \\in \\mathcal{P}((a_2, b))$, $X \\in \\mathcal{P}((a_1, b))$, and $Y \\in \\mathcal{P}(\\le a_1)$ with $a_2 \\le a_1$, and under seminorm conditions, $\\mathrm{wPhaseOf}(W([Y]), \\tfrac{a_2+b}{2}) < \\psi$.",
+    "proofExposition": "First apply `intervalProp_of_lower_boundary_triangle` to place $Y \\in \\mathcal{P}((a_2, b))$. Then strengthen the $\\le a_1$ bound to $\\le \\psi - \\varepsilon_0$ using monotonicity, and apply `wPhaseOf_lt_of_leProp_source`.",
     "termExposition": null
   },
   {
@@ -187,8 +187,8 @@
     "contentHash": 13924463596153505369,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Let $X \\to K \\to Y \\to X[1]$ be a distinguished triangle with $K \\in \\mathcal{P}((\\phi-\\varepsilon_0, \\psi+\\varepsilon_0))$, $X \\in \\mathcal{P}(\\phi)$ semistable, $Y \\in \\mathcal{P}(\\le \\psi-\\varepsilon_0)$, and $\\phi \\le \\psi < \\phi + \\varepsilon_0$. Under seminorm conditions, $\\mathrm{wPhaseOf}(W([Y]), \\tfrac{(\\phi-\\varepsilon_0)+(\\psi+\\varepsilon_0)}{2}) < \\psi$.",
+    "proofExposition": "Replace $X \\in \\mathcal{P}(\\phi)$ by $X \\in \\mathcal{P}((\\psi-\\varepsilon_0, \\psi+\\varepsilon_0))$ via `intervalProp_of_semistable`, then invoke `wPhaseOf_lt_of_lower_source_boundary_target`.",
     "termExposition": null
   },
   {
@@ -199,8 +199,8 @@
     "contentHash": 12152324229214651889,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Let $X \\to K \\to Y \\to X[1]$ be a distinguished triangle with $K \\in \\mathcal{P}((\\phi-\\varepsilon_0, \\psi+\\varepsilon_0))$, $X \\in \\mathcal{P}((\\psi-\\varepsilon_0, \\psi+\\varepsilon_0))$, $Y \\in \\mathcal{P}(\\le \\psi-\\varepsilon_0)$, and $\\phi \\le \\psi < \\phi + \\varepsilon_0$. Under seminorm conditions, $\\mathrm{wPhaseOf}(W([Y]), \\tfrac{(\\phi-\\varepsilon_0)+(\\psi+\\varepsilon_0)}{2}) < \\psi$.",
+    "proofExposition": "The thinness bound $\\varepsilon_0 < 1/8$ ensures the window $(\\phi-\\varepsilon_0, \\psi+\\varepsilon_0)$ is thin enough. Apply `wPhaseOf_lt_of_lower_boundary_triangle` with $a_1 = \\psi - \\varepsilon_0$, $a_2 = \\phi - \\varepsilon_0$, $b = \\psi + \\varepsilon_0$.",
     "termExposition": null
   },
   {
@@ -475,8 +475,8 @@
     "contentHash": 4810804027685208363,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Extension-closure of $\\mathcal{P}(> t)$: if every factor of a Postnikov tower lies in $\\mathcal{P}(> t)$, then the total object also lies in $\\mathcal{P}(> t)$.",
+    "proofExposition": "Induction on the tower length: the base object is zero (in $\\mathcal{P}(> t)$ trivially), and each extension step uses `gtProp_of_triangle` to propagate the bound through distinguished triangles.",
     "termExposition": null
   },
   {
@@ -487,8 +487,8 @@
     "contentHash": 7954962832479635887,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "All intermediate chain objects of a Postnikov tower lie in $\\mathcal{P}((a, b))$ whenever all factors do; this is the inductive step underlying extension-closure for $\\mathcal{P}((a, b))$.",
+    "proofExposition": "Induction on the truncation level $k$: the zeroth chain object is zero, and the step follows from `intervalProp_of_triangle` applied to the distinguished triangle from the tower at each level.",
     "termExposition": null
   },
   {
@@ -499,8 +499,8 @@
     "contentHash": 11138942183035903174,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Extension-closure of $\\mathcal{P}((a, b))$ over Postnikov towers: if all HN factors of a Postnikov tower lie in $\\mathcal{P}((a, b))$, then the total object does too.",
+    "proofExposition": "Apply `intervalProp_chain_of_postnikovTower` up to level $n$ to reach the top of the chain, then transfer the property through the top isomorphism.",
     "termExposition": null
   },
   {
@@ -511,8 +511,8 @@
     "contentHash": 17569569073003906306,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Extension-closure of $\\mathcal{P}(< t)$: if every factor of a Postnikov tower lies in $\\mathcal{P}(< t)$, then the total object also lies in $\\mathcal{P}(< t)$.",
+    "proofExposition": "Induction on the tower length, applying `ltProp_of_triangle` at each extension step.",
     "termExposition": null
   },
   {
@@ -727,8 +727,8 @@
     "contentHash": 6096788600968039696,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ lies in the heart of the $t$-structure associated to the phase-shifted slicing at $a$, and $l \\le \\phi^-(E)$, then $E \\in \\mathcal{P}(\\ge l)$ and $E \\in \\mathcal{P}(\\le a+1)$.",
+    "proofExposition": "The heart condition is rewritten using the phase-shift heart characterization; the $\\ge l$ property follows from the lower phase bound and $\\phi^-(E)$, while the $\\le a+1$ property comes from the heart's upper truncation at $a + 1$.",
     "termExposition": null
   },
   {
@@ -739,8 +739,8 @@
     "contentHash": 9553551398312193259,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ lies in the heart of the $t$-structure associated to the phase-shifted slicing at $a$, and $\\phi^+(E) \\le u$, then $E \\in \\mathcal{P}(> a)$ and $E \\in \\mathcal{P}(\\le u)$.",
+    "proofExposition": "The heart condition translates to $E \\in \\mathcal{P}(> a)$ via the phase-shift characterization; the $\\le u$ bound follows from $\\phi^+(E) \\le u$ and monotonicity of $\\mathcal{P}(\\le -)$.",
     "termExposition": null
   },
   {
@@ -751,8 +751,8 @@
     "contentHash": 9971161282028438203,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\psi_1 - \\varepsilon_0 \\le \\phi^-(E)$, $\\phi^+(E) \\le \\psi_1 + \\varepsilon_0$, $\\psi_2 < \\psi_1$, and $\\psi_1 \\le \\psi_2 + 2\\varepsilon_0$, then $E$ lies in the heart of the $t$-structure at the midpoint $\\frac{\\psi_1 + \\psi_2}{2} - \\frac{1}{2}$.",
+    "proofExposition": "Apply `mem_phaseShiftHeart_of_phaseBounds_smallGap`: the midpoint $a = \\frac{\\psi_1+\\psi_2}{2} - \\frac{1}{2}$ satisfies $a < \\phi^-(E)$ (using $\\psi_2 < \\psi_1$ and $\\varepsilon_0 < 1/4$) and $\\phi^+(E) \\le a + 1$ (using $\\psi_1 \\le \\psi_2 + 2\\varepsilon_0$).",
     "termExposition": null
   },
   {
@@ -763,8 +763,8 @@
     "contentHash": 10101703608710786824,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\psi_2 - \\varepsilon_0 \\le \\phi^-(E)$, $\\phi^+(E) \\le \\psi_2 + \\varepsilon_0$, $\\psi_2 < \\psi_1$, and $\\psi_1 \\le \\psi_2 + 2\\varepsilon_0$, then $E$ lies in the heart of the $t$-structure at the midpoint $\\frac{\\psi_1 + \\psi_2}{2} - \\frac{1}{2}$.",
+    "proofExposition": "Symmetric to `mem_phaseShiftHeart_of_midpoint_left`: the gap conditions $\\psi_2 < \\psi_1$ and $\\psi_1 \\le \\psi_2 + 2\\varepsilon_0$ combined with $\\varepsilon_0 < 1/4$ ensure the midpoint shift places $E$ inside the heart window.",
     "termExposition": null
   },
   {
@@ -787,8 +787,8 @@
     "contentHash": 12573438430565885661,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\psi_2 < \\psi_1 \\le \\psi_2 + 2\\varepsilon_0$ and $\\varepsilon_0 < 1/8$, then the width $(\\psi_2 + \\varepsilon_0) - (\\psi_1 - \\varepsilon_0) + 2\\varepsilon_0 < 1$.",
+    "proofExposition": "Direct linear arithmetic from the hypotheses.",
     "termExposition": null
   },
   {
@@ -799,8 +799,8 @@
     "contentHash": 2284882560250507667,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\psi_1 \\le \\psi_2 + 2\\varepsilon_0$ and $\\varepsilon_0 < 1/8$, then the window width $(\\psi_1 + \\varepsilon_0) - (\\tfrac{\\psi_1+\\psi_2}{2} - \\tfrac{1}{2}) + 2\\varepsilon_0 < 1$.",
+    "proofExposition": "Direct linear arithmetic from the hypotheses.",
     "termExposition": null
   },
   {
@@ -811,8 +811,8 @@
     "contentHash": 9809727141373366954,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\psi_1 \\le \\psi_2 + 2\\varepsilon_0$ and $\\varepsilon_0 < 1/8$, then the window width $(\\tfrac{\\psi_1+\\psi_2}{2} + \\tfrac{1}{2}) - (\\psi_2 - \\varepsilon_0) + 2\\varepsilon_0 < 1$.",
+    "proofExposition": "Direct linear arithmetic from the hypotheses.",
     "termExposition": null
   },
   {
@@ -835,8 +835,8 @@
     "contentHash": 367963771212280746,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X$ is a nonzero object with $\\phi \\le \\phi^-(X)$ and $\\phi^+(X) < \\phi + 1$, and $\\mathrm{Im}(Z(X) \\cdot e^{-i\\pi\\phi}) = 0$, then $X \\in \\mathcal{P}(\\phi)$.",
+    "proofExposition": "Decompose $X$ via its HN filtration; all phases lie in $[\\phi, \\phi+1)$. Each factor contributes a non-negative imaginary part to the sum (by `im_Z_nonneg_of_phases_above`), so the sum being zero forces each term to zero. For nonzero factors, $\\sin(\\pi(\\psi_i - \\phi)) = 0$ with $\\psi_i \\in [\\phi, \\phi+1)$ forces $\\psi_i = \\phi$. Strict antitone of HN phases then gives $n = 1$, so $X$ is isomorphic to its unique factor in $\\mathcal{P}(\\phi)$.",
     "termExposition": null
   },
   {
@@ -859,8 +859,8 @@
     "contentHash": 11537671219668497381,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given a distinguished triangle $A \\to B \\to X_3 \\to A[1]$ with $A, B \\in \\mathcal{P}(\\phi)$, the $t$-structure truncation pieces of $X_3$ with respect to the phase-shifted $t$-structure at $\\phi - 1$ satisfy $\\tau_{\\ge 0}(X_3) \\in \\mathcal{P}(\\phi)$ and $(\\tau_{< 0}(X_3))[-1] \\in \\mathcal{P}(\\phi)$.",
+    "proofExposition": "Use $K_0$ additivity: $\\mathrm{Im}(Z(X_3) \\cdot e^{-i\\pi\\phi}) = 0$ from the triangle. The truncation triangle gives $\\mathrm{Im}(Z(L) \\cdot \\mathrm{rot}) + \\mathrm{Im}(Z(Q) \\cdot \\mathrm{rot}) = 0$, where $Q = \\tau_{\\ge 0}(X_3)$ has phases in $(\\phi-1, \\phi]$ (non-positive imaginary part) and $L$ has phases in $[\\phi, \\phi+1)$ (non-negative imaginary part). Both must vanish; apply `P_phi_of_im_zero_heart` and `P_phi_of_im_zero_above`.",
     "termExposition": null
   },
   {
@@ -871,9 +871,9 @@
     "contentHash": 15754903164603818440,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "$\\mathcal{P}(\\phi)$ has finite products for a stability condition.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructed from `hasFiniteProducts_of_has_binary_and_terminal`, which combines the binary product instance (from $\\mathcal{P}(\\phi)$ being closed under biproducts) with the terminal object (zero object)."
   },
   {
     "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.P_phi_abelian",
@@ -955,8 +955,8 @@
     "contentHash": 17230739510123379275,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ is nonzero with all $\\sigma$-phases in $[\\phi, \\phi+1)$, then $\\mathrm{Im}(Z(E) \\cdot e^{-i\\pi\\phi}) \\ge 0$.",
+    "proofExposition": "Decompose $E$ via its HN filtration; all HN phases $\\psi_i \\in [\\phi, \\phi+1)$. Write $Z(\\text{factor}_i) = m_i \\cdot e^{i\\pi\\psi_i}$; then $\\mathrm{Im}(Z(\\text{factor}_i) \\cdot e^{-i\\pi\\phi}) = m_i \\sin(\\pi(\\psi_i - \\phi)) \\ge 0$ since $\\psi_i - \\phi \\in [0, 1)$. Sum over all factors.",
     "termExposition": null
   },
   {
@@ -1003,8 +1003,8 @@
     "contentHash": 7363425917190763011,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Among the nonzero strict subobjects of an object $X$ in a thin interval category $\\mathcal{P}((a,b))$, assuming the set of such subobjects is finite, there exists one, say $M$, with maximal $W$-phase. Moreover, $M$ can be chosen maximal for inclusion among all nonzero strict subobjects of maximal $W$-phase. The maximality condition is strict: any nonzero strict subobject properly containing $M$ has strictly smaller $W$-phase.",
+    "proofExposition": "Since the set of nonzero strict subobjects is finite and nonempty (the top subobject qualifies when $X$ is nonzero), one picks a phase-maximizing element $M_0$. Among those achieving the maximum phase one then takes a maximal element $M$ for inclusion. Strict phase decrease for elements above $M$ follows because any such element would equal a larger element of the same-phase fiber, contradicting the maximality of $M$ in that fiber.",
     "termExposition": null
   },
   {
@@ -1015,8 +1015,8 @@
     "contentHash": 3133372343781926749,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Among the proper strict subobjects of a non-$W$-semistable object $X$ in $\\mathcal{P}((a,b))$, assuming finiteness of all subobject sets, there exists a proper strict subobject $M$ (a \"kernel\") such that: (i) the cokernel $X/M$ has minimal $W$-phase among all proper strict subobject cokernels, and (ii) $M$ is maximal for inclusion among all proper strict subobjects achieving that minimal cokernel phase. Moreover, any proper strict subobject strictly larger than $M$ has strictly larger cokernel phase.",
+    "proofExposition": "Non-semistability of $X$ supplies an initial proper strict subobject via the failure of the triangle test. Finite minimization over proper strict subobjects yields a phase-minimizing $M_0$, then a further maximization within the minimal-phase fiber yields the desired $M$. The strict phase increase above $M$ follows from maximality within the fiber.",
     "termExposition": null
   },
   {
@@ -1027,8 +1027,8 @@
     "contentHash": 12047060491991514248,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Among the proper strict subobjects of a non-$W$-semistable object $X$ in $\\mathcal{P}((a,b))$, there exists a proper strict subobject $M$ such that: (i) the cokernel has minimal $W$-phase among all proper strict subobject cokernels, and (ii) $M$ is minimal for inclusion among all proper strict subobjects achieving that minimal cokernel phase. Any proper strict subobject strictly smaller than $M$ has strictly larger cokernel $W$-phase.",
+    "proofExposition": "Apply `exists_minPhase_maximal_strictKernel` to get a minimal-cokernel-phase element $M_0$, then minimize within the minimal-phase fiber to obtain $M$. Strict phase increase below $M$ follows by minimality in the fiber.",
     "termExposition": null
   },
   {
@@ -1087,9 +1087,9 @@
     "contentHash": 572435289100860889,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given subobjects $A \\leq B$ of $M$ in the interval category $\\mathcal{P}((a,b))$, the cokernel of the lifted inclusion $\\mathrm{intervalLiftSub}(M, A) \\leq \\mathrm{intervalLiftSub}(M, B)$ inside $X$ is canonically isomorphic to the cokernel of the original inclusion $A \\leq B$ inside $M$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The isomorphism is constructed via the canonical identifications of the lifted subobjects with the original ones (given by `Subobject.underlyingIso`), using `cokernel.mapIso` to transport the cokernel along those identifications."
   },
   {
     "declName": "CategoryTheory.Triangulated.intervalLiftSub_arrow_strictMono_of_strictMono",
@@ -1099,8 +1099,8 @@
     "contentHash": 3064848539188777618,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $M \\hookrightarrow X$ and $A \\hookrightarrow M$ are both strict monomorphisms in $\\mathcal{P}((a,b))$, then the arrow of the lifted subobject $\\mathrm{intervalLiftSub}(M, A) \\hookrightarrow X$ is also a strict monomorphism.",
+    "proofExposition": "The lifted arrow represents $\\mathrm{Subobject.mk}(A.\\mathrm{arrow} \\circ M.\\mathrm{arrow})$. The composition of two strict monomorphisms in $\\mathcal{P}((a,b))$ is a strict monomorphism, and `intervalSubobject_arrow_strictMono_of_strictMono` promotes this to the canonical arrow of the resulting subobject.",
     "termExposition": null
   },
   {
@@ -1111,8 +1111,8 @@
     "contentHash": 9206096091459128287,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The lift of the bottom subobject of $M$ to a subobject of $X$ is the bottom subobject of $X$: $\\mathrm{intervalLiftSub}(M, \\bot) = \\bot$.",
+    "proofExposition": "The defining arrow of $\\mathrm{intervalLiftSub}(M, \\bot)$ is $\\bot.\\mathrm{arrow} \\circ M.\\mathrm{arrow}$. Since $\\bot.\\mathrm{arrow} = 0$, the composite is zero, and a subobject with zero arrow equals $\\bot$.",
     "termExposition": null
   },
   {
@@ -1123,8 +1123,8 @@
     "contentHash": 3732430299550905465,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any subobject $A$ of $M$, the lifted subobject satisfies $\\mathrm{intervalLiftSub}(M, A) \\leq M$ in $\\mathrm{Subobject}(X)$.",
+    "proofExposition": "The arrow of $\\mathrm{intervalLiftSub}(M, A)$ factors through $M.\\mathrm{arrow}$ by definition, giving the required inequality via `Subobject.mk_le_mk_of_comm`.",
     "termExposition": null
   },
   {
@@ -1135,8 +1135,8 @@
     "contentHash": 14473855571418399430,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $A \\neq \\top$ in $\\mathrm{Subobject}(M)$, then the lifted subobject satisfies $\\mathrm{intervalLiftSub}(M, A) < M$ strictly in $\\mathrm{Subobject}(X)$.",
+    "proofExposition": "We have $\\mathrm{intervalLiftSub}(M, A) \\leq M$ by `intervalLiftSub_le`. Equality would imply $A = \\top$ via injectivity of `Subobject.map M.arrow`, contradicting the hypothesis.",
     "termExposition": null
   },
   {
@@ -1147,8 +1147,8 @@
     "contentHash": 17520821347106913341,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The lifting operation is monotone: if $A \\leq B$ in $\\mathrm{Subobject}(M)$ then $\\mathrm{intervalLiftSub}(M, A) \\leq \\mathrm{intervalLiftSub}(M, B)$ in $\\mathrm{Subobject}(X)$.",
+    "proofExposition": "Use `Subobject.mk_le_mk_of_comm` with the morphism `Subobject.ofLE A B h` witnessing the passage from the defining arrow of the smaller lift to that of the larger.",
     "termExposition": null
   },
   {
@@ -1159,8 +1159,8 @@
     "contentHash": 9359137651519480954,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $A \\neq \\bot$ in $\\mathrm{Subobject}(M)$, then $\\mathrm{intervalLiftSub}(M, A) \\neq \\bot$ in $\\mathrm{Subobject}(X)$.",
+    "proofExposition": "If the lift were $\\bot$, its defining arrow $A.\\mathrm{arrow} \\circ M.\\mathrm{arrow}$ would be zero. Since $M.\\mathrm{arrow}$ is a monomorphism, $A.\\mathrm{arrow} = 0$, forcing $A = \\bot$, a contradiction.",
     "termExposition": null
   },
   {
@@ -1171,8 +1171,8 @@
     "contentHash": 5835202034968842019,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The $W$-phase of the lifted subobject $\\mathrm{intervalLiftSub}(M, A)$ (viewed as an interval object) equals the $W$-phase of $A$ itself: $\\mathrm{wPhase}(\\mathrm{intervalLiftSub}(M, A)) = \\mathrm{wPhase}(A)$.",
+    "proofExposition": "The canonical isomorphism `Subobject.underlyingIso(A.arrow ≫ M.arrow)` identifies the underlying interval object of the lift with that of $A$. Phase invariance under isomorphism (`wPhase_iso`) then gives the equality.",
     "termExposition": null
   },
   {
@@ -1183,8 +1183,8 @@
     "contentHash": 4608166075264378613,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $f : Y \\to X$ is a strict monomorphism in $\\mathcal{P}((a,b))$, then the canonical arrow of the subobject $\\mathrm{Subobject.mk}(f)$ is also a strict monomorphism.",
+    "proofExposition": "The canonical arrow of $\\mathrm{Subobject.mk}(f)$ equals $e.\\mathrm{hom} \\circ f$ where $e$ is the underlying isomorphism. Since $e.\\mathrm{hom}$ is a strict mono (as an isomorphism) and $f$ is a strict mono, their composite is a strict mono by the composition rule in $\\mathcal{P}((a,b))$.",
     "termExposition": null
   },
   {
@@ -1195,8 +1195,8 @@
     "contentHash": 11238225954907994694,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The arrow of the bottom subobject $\\bot \\hookrightarrow X$ in the interval category $\\mathcal{P}((a,b))$ is a strict monomorphism.",
+    "proofExposition": "The bottom arrow is the zero map. Since its cokernel projection is an isomorphism (the cokernel of zero is the target), the zero map is a strict monomorphism, verified by constructing a kernel fork limit from the zero source.",
     "termExposition": null
   },
   {
@@ -1207,8 +1207,8 @@
     "contentHash": 4014385779540885431,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "A subobject $B$ of $X$ in the interval category $\\mathcal{P}((a,b))$ is zero (as an interval object) if and only if $B = \\bot$.",
+    "proofExposition": "If $B$ is zero then its arrow is zero, so $\\mathrm{Subobject.mk}(B.\\mathrm{arrow}) = \\bot$, i.e., $B = \\bot$. Conversely, $\\bot$ is zero because it is isomorphic to the zero object via `Subobject.botCoeIsoZero`.",
     "termExposition": null
   },
   {
@@ -1219,8 +1219,8 @@
     "contentHash": 8290314559372476118,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $B \\neq \\bot$ in $\\mathrm{Subobject}(X)$ inside $\\mathcal{P}((a,b))$, then $B$ is not the zero object.",
+    "proofExposition": "This is the contrapositive of one direction of `intervalSubobject_isZero_iff_eq_bot`.",
     "termExposition": null
   },
   {
@@ -1231,8 +1231,8 @@
     "contentHash": 13831198598743147847,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X$ is a nonzero object in $\\mathcal{P}((a,b))$, then the top subobject $\\top \\in \\mathrm{Subobject}(X)$ is not equal to $\\bot$.",
+    "proofExposition": "If $\\top = \\bot$ then $\\top$ would be a zero object by `intervalSubobject_isZero_iff_eq_bot`, but $\\top$ is isomorphic to $X$ via its arrow, forcing $X = 0$, a contradiction.",
     "termExposition": null
   },
   {
@@ -1243,8 +1243,8 @@
     "contentHash": 5085763389368499511,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a strict monomorphism $f : Y \\to X$ in $\\mathcal{P}((a,b))$, the $K_0$ class satisfies $v([X]) = v([Y]) + v(\\mathrm{coker}(f))$ in $\\Lambda$.",
+    "proofExposition": "The strict monomorphism $f$ yields a strict short exact sequence $0 \\to Y \\to X \\to \\mathrm{coker}(f) \\to 0$ in $\\mathcal{P}((a,b))$, and the $K_0$ additivity for strict short exact sequences gives the identity after applying $v$.",
     "termExposition": null
   },
   {
@@ -1255,8 +1255,8 @@
     "contentHash": 8522179474547810017,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $M \\neq \\top$ in $\\mathrm{Subobject}(X)$ and $\\mathrm{Subobject}(X)$ is finite, then $|\\mathrm{Subobject}(M)| < |\\mathrm{Subobject}(X)|$ as natural-number cardinalities.",
+    "proofExposition": "The pushforward functor $\\mathrm{Subobject.map}(M.\\mathrm{arrow})$ embeds $\\mathrm{Subobject}(M)$ injectively into $\\mathrm{Subobject}(X)$ but misses $\\top$ (since the image of any subobject maps into $M \\neq \\top$). Finite injectivity without surjectivity gives strict cardinality inequality.",
     "termExposition": null
   },
   {
@@ -1279,8 +1279,8 @@
     "contentHash": 14989989622590356521,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\mathcal{P}((a_1, b_1)) \\subseteq \\mathcal{P}((a_2, b_2))$ and an object $X \\in \\mathcal{P}((a_1, b_1))$ is strictly Artinian when viewed in $\\mathcal{P}((a_2, b_2))$, then $X$ is strictly Artinian in $\\mathcal{P}((a_1, b_1))$.",
+    "proofExposition": "The inclusion functor $I$ sends strict subobjects of $X$ in the smaller interval category injectively and monotonically to strict subobjects of $I(X)$ in the larger category, using the fact that the inclusion preserves strict monomorphisms. A descending chain in the smaller category would produce one in the larger, which terminates by hypothesis; injectivity then shows the original chain stabilizes.",
     "termExposition": null
   },
   {
@@ -1303,8 +1303,8 @@
     "contentHash": 16243471525414835558,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\mathcal{P}((a_1, b_1)) \\subseteq \\mathcal{P}((a_2, b_2))$ and $X \\in \\mathcal{P}((a_1, b_1))$ is both strictly Artinian and strictly Noetherian when viewed in $\\mathcal{P}((a_2, b_2))$, then $X$ has strict finite length in $\\mathcal{P}((a_1, b_1))$.",
+    "proofExposition": "Combines `interval_strictArtinianObject_of_inclusion_strict` and `interval_strictNoetherianObject_of_inclusion_strict`.",
     "termExposition": null
   },
   {
@@ -1327,8 +1327,8 @@
     "contentHash": 17469003138006072513,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\mathcal{P}((a_1, b_1)) \\subseteq \\mathcal{P}((a_2, b_2))$ and an object $X \\in \\mathcal{P}((a_1, b_1))$ is strictly Noetherian when viewed in $\\mathcal{P}((a_2, b_2))$, then $X$ is strictly Noetherian in $\\mathcal{P}((a_1, b_1))$.",
+    "proofExposition": "The same injection-via-inclusion argument as the Artinian case, applied to ascending chains: an ascending chain of strict subobjects in the smaller category maps injectively and monotonically to one in the larger, which stabilizes, and injectivity pulls the stabilization back.",
     "termExposition": null
   },
   {
@@ -1363,8 +1363,8 @@
     "contentHash": 6362958142441972151,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If every object of $\\mathcal{P}((a_2, b_2))$ has strict finite length and $\\mathcal{P}((a_1, b_1)) \\subseteq \\mathcal{P}((a_2, b_2))$, then every object of $\\mathcal{P}((a_1, b_1))$ has strict finite length.",
+    "proofExposition": "Given $X \\in \\mathcal{P}((a_1, b_1))$, the image $I(X)$ in the larger category has strict finite length by hypothesis, so `interval_strictFiniteLength_of_inclusion_strict` applies.",
     "termExposition": null
   },
   {
@@ -1519,9 +1519,9 @@
     "contentHash": 13778351429844396837,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For a subobject $K \\hookrightarrow E$ and a subobject $S$ of $K$, the pushforward $(\\mathrm{Subobject.map}(K.\\mathrm{arrow}))_*(S)$ (which represents $S$ as a subobject of $E$ via the composite arrow $S.\\mathrm{arrow} \\circ K.\\mathrm{arrow}$) is canonically isomorphic to $S$ itself.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Uses `Subobject.map_eq_mk` to identify the pushforward with $\\mathrm{Subobject.mk}(S.\\mathrm{arrow} \\circ K.\\mathrm{arrow})$, then applies `Subobject.isoOfEqMk` to extract the canonical underlying isomorphism."
   },
   {
     "declName": "CategoryTheory.Triangulated.Subobject.map_eq_mk",
@@ -1531,8 +1531,8 @@
     "contentHash": 14178507573614998580,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a subobject $K \\hookrightarrow E$ and a subobject $S$ of $K$, the pushforward along $K.\\mathrm{arrow}$ satisfies $(\\mathrm{Subobject.map}(K.\\mathrm{arrow}))_*(S) = \\mathrm{Subobject.mk}(S.\\mathrm{arrow} \\circ K.\\mathrm{arrow})$.",
+    "proofExposition": "Rewrite $S = \\mathrm{Subobject.mk}(S.\\mathrm{arrow})$, then apply `Subobject.map_mk` to compute the pushforward explicitly as $\\mathrm{Subobject.mk}(S.\\mathrm{arrow} \\circ K.\\mathrm{arrow})$.",
     "termExposition": null
   },
   {
@@ -1579,9 +1579,9 @@
     "contentHash": 16277916109954398874,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For a morphism $q : X \\to Y$ in the interval category $\\mathcal{P}((a,b))$, the kernel subobject $\\ker(q) \\hookrightarrow X$ equipped with its natural nullhomotopy is a limit kernel fork for $q$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Given any fork $g : W \\to X$ with $g \\circ q = 0$, lift $g$ through the categorical kernel via `kernel.lift`, then compose with the inverse of the kernel--subobject isomorphism to land in the kernel subobject. The uniqueness follows from the universal property of the categorical kernel."
   },
   {
     "declName": "CategoryTheory.Triangulated.interval_kernelSubobject_ne_top_of_strictEpi_nonzero",
@@ -1615,8 +1615,8 @@
     "contentHash": 9322181563505945003,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $q : X \\to Y$ is a strict epimorphism in $\\mathcal{P}((a,b))$, then the sequence $0 \\to \\ker(q) \\to X \\xrightarrow{q} Y \\to 0$ is strictly short exact.",
+    "proofExposition": "Apply `interval_strictShortExact_of_kernel_strictEpi` to the short complex $\\ker(q) \\to X \\xrightarrow{q} Y$, using `interval_kernelSubobject_isLimitKernelFork` to supply the required limit kernel fork.",
     "termExposition": null
   },
   {
@@ -1747,9 +1747,9 @@
     "contentHash": 1822756887761639236,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For nested subobjects $S \\leq T$ of $X$ and a monomorphism $f : X \\to Y$, the cokernel of the induced map $(\\mathrm{Subobject.map}(f))_*(S) \\hookrightarrow (\\mathrm{Subobject.map}(f))_*(T)$ is canonically isomorphic to the cokernel of the original inclusion $S \\hookrightarrow T$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Apply `cokernel.mapIso` using the canonical isomorphisms $\\mathrm{mapMonoIso}(f, S)$ and $\\mathrm{mapMonoIso}(f, T)$ for the source and target, verified to intertwine the two inclusion maps via `ofLE_map_comp_mapMonoIso_hom`."
   },
   {
     "declName": "CategoryTheory.Triangulated.Subobject.mapMonoIso",
@@ -1759,9 +1759,9 @@
     "contentHash": 10043150171444866387,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For a monomorphism $f : X \\to Y$ and a subobject $S$ of $X$, the pushforward $(\\mathrm{Subobject.map}(f))_*(S)$ (a subobject of $Y$) is canonically isomorphic to $S$ as an object.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Uses `Subobject.map_eq_mk_mono` to identify the pushforward with $\\mathrm{Subobject.mk}(S.\\mathrm{arrow} \\circ f)$, then extracts the underlying isomorphism via `Subobject.isoOfEqMk`."
   },
   {
     "declName": "CategoryTheory.Triangulated.Subobject.map_eq_mk_mono",
@@ -1771,8 +1771,8 @@
     "contentHash": 16775598485981726415,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a monomorphism $f : X \\to Y$ and a subobject $S$ of $X$, the pushforward satisfies $(\\mathrm{Subobject.map}(f))_*(S) = \\mathrm{Subobject.mk}(S.\\mathrm{arrow} \\circ f)$.",
+    "proofExposition": "The same computation as `Subobject.map_eq_mk` but specialized to the case where $f$ is a monomorphism, using `Subobject.map_mk` after rewriting $S$ as $\\mathrm{Subobject.mk}(S.\\mathrm{arrow})$.",
     "termExposition": null
   },
   {
@@ -1783,8 +1783,8 @@
     "contentHash": 12806535935536063483,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a monomorphism $f : X \\to Y$ and nested subobjects $S \\leq T$ of $X$, the diagram relating the pushforward inclusion $(\\mathrm{map}(f))_*(S) \\hookrightarrow (\\mathrm{map}(f))_*(T)$ with the original inclusion $S \\hookrightarrow T$ commutes via the canonical isomorphisms: $\\mathrm{ofLE}((\\mathrm{map}(f))_*(S), (\\mathrm{map}(f))_*(T)) \\circ (\\mathrm{mapMonoIso}(f, T)).\\mathrm{hom} = (\\mathrm{mapMonoIso}(f, S)).\\mathrm{hom} \\circ \\mathrm{ofLE}(S, T)$.",
+    "proofExposition": "After unfolding definitions, both sides compose to the same map into $T$, which is detected by cancelling the arrow of $T$ followed by $f$ (both of which are monomorphisms).",
     "termExposition": null
   },
   {
@@ -1795,9 +1795,9 @@
     "contentHash": 5845605266940960534,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For a subobject $A$ of $X$ in the interval category $\\mathcal{P}((a,b))$, there is a canonical isomorphism $\\mathrm{coker}(A \\hookrightarrow \\top) \\cong \\mathrm{coker}(A.\\mathrm{arrow})$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The inclusion $A \\hookrightarrow \\top$ factors as $A \\hookrightarrow X$ composed with the isomorphism $\\top \\cong X$. Using `cokernelCompIsIso` and `cokernelIsoOfEq`, one identifies the cokernel of the composite with the cokernel of $A.\\mathrm{arrow}$."
   },
   {
     "declName": "CategoryTheory.Triangulated.thinFiniteLength_cokernel",
@@ -1831,8 +1831,8 @@
     "contentHash": 12490230935714607951,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a monomorphism $f : X \\to Y$ in $\\mathcal{P}((a,b))$ and nested subobjects $S \\leq T$ of $X$, the $W$-phase of $\\mathrm{coker}((\\mathrm{map}(f))_*(S) \\hookrightarrow (\\mathrm{map}(f))_*(T))$ equals the $W$-phase of $\\mathrm{coker}(S \\hookrightarrow T)$.",
+    "proofExposition": "The canonical isomorphism `Subobject.cokernelMapMonoIso` identifies the two cokernels as interval objects; phase invariance under isomorphism (`wPhase_iso`) gives equality.",
     "termExposition": null
   },
   {
@@ -1843,8 +1843,8 @@
     "contentHash": 2575979874455214797,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a subobject $A$ of $X$ in $\\mathcal{P}((a,b))$, the $W$-phase of $\\mathrm{coker}(A \\hookrightarrow \\top)$ equals the $W$-phase of $\\mathrm{coker}(A.\\mathrm{arrow})$: $\\mathrm{wPhaseOf}(W(v([\\mathrm{coker}(A \\hookrightarrow \\top)])), \\alpha) = \\mathrm{wPhaseOf}(W(v([\\mathrm{coker}(A.\\mathrm{arrow})])), \\alpha)$.",
+    "proofExposition": "The canonical isomorphism `interval_cokernelTopIso` identifies the two cokernels as interval objects, so their $K_0$ classes and hence their $W$-phases agree via `cl_iso`.",
     "termExposition": null
   },
   {
@@ -1951,8 +1951,8 @@
     "contentHash": 10736296115610426428,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If complex numbers $w_1, \\ldots, w_n$ all satisfy $\\operatorname{Im}(w_j \\cdot e^{-i\\pi\\psi}) < 0$, then their sum satisfies $\\operatorname{Im}\\bigl((\\sum_j w_j) \\cdot e^{-i\\pi\\psi}\\bigr) < 0$. This is the dual of `im_sum_pos_of_all_pos`.",
+    "proofExposition": "Rewrite the imaginary part of the sum as the sum of imaginary parts via additivity of $\\operatorname{Im}$, then apply `Finset.sum_neg`.",
     "termExposition": null
   },
   {
@@ -1963,8 +1963,8 @@
     "contentHash": 964844077894319167,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If complex numbers $w_1, \\ldots, w_n$ all satisfy $\\operatorname{Im}(w_j \\cdot e^{-i\\pi\\psi}) > 0$, then their sum satisfies $\\operatorname{Im}\\bigl((\\sum_j w_j) \\cdot e^{-i\\pi\\psi}\\bigr) > 0$.",
+    "proofExposition": "Rewrite the imaginary part of the sum as the sum of imaginary parts via additivity of $\\operatorname{Im}$, then apply `Finset.sum_pos`.",
     "termExposition": null
   },
   {
@@ -1975,8 +1975,8 @@
     "contentHash": 17655215723499716270,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "A nonzero complex number $z$ with $\\arg(z) > 0$ lies in $\\{z \\in \\mathbb{C} : \\operatorname{Im}(z) > 0\\} \\cup \\mathbb{R}_{<0}$.",
+    "proofExposition": "If $\\operatorname{Im}(z) > 0$ we are done. Otherwise $\\operatorname{Im}(z) \\le 0$; combined with $\\arg(z) > 0$ which forces $\\operatorname{Im}(z) \\ge 0$ (since $\\arg \\ge 0$ implies $\\operatorname{Im} \\ge 0$ for the standard branch), we get $\\operatorname{Im}(z) = 0$. Then $z$ must have negative real part, since $\\arg(z) = 0$ would require $\\operatorname{Re}(z) \\ge 0$ and $\\operatorname{Im}(z) = 0$, contradicting $\\arg(z) > 0$.",
     "termExposition": null
   },
   {
@@ -1987,8 +1987,8 @@
     "contentHash": 12917134493782380861,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\psi < \\mathrm{wPhaseOf}(w, \\psi)$, then $w \\cdot e^{-i\\pi\\psi}$ lies in $\\{z \\in \\mathbb{C} : \\operatorname{Im}(z) > 0\\} \\cup \\mathbb{R}_{<0}$. This is the converse of `wPhaseOf_gt_of_mem_upperHalfPlaneUnion`.",
+    "proofExposition": "Unfolding the definition of $\\mathrm{wPhaseOf}$, the hypothesis $\\psi < \\mathrm{wPhaseOf}(w, \\psi)$ gives $\\arg(w \\cdot e^{-i\\pi\\psi})/\\pi > 0$, hence $\\arg(w \\cdot e^{-i\\pi\\psi}) > 0$, and the result follows from `mem_upperHalfPlaneUnion_of_arg_pos`.",
     "termExposition": null
   },
   {
@@ -2011,8 +2011,8 @@
     "contentHash": 11635665820850073960,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\operatorname{Im}(w \\cdot e^{-i\\pi\\psi}) > 0$ and $\\mathrm{wPhaseOf}(w, \\alpha) \\in (\\psi - 1, \\psi + 1)$, then $\\mathrm{wPhaseOf}(w, \\alpha) > \\psi$.",
+    "proofExposition": "By contradiction, assume $\\mathrm{wPhaseOf}(w, \\alpha) \\le \\psi$. Then the phase difference $\\mathrm{wPhaseOf}(w, \\alpha) - \\psi \\in (-1, 0]$, so $\\sin(\\pi(\\mathrm{wPhaseOf}(w, \\alpha) - \\psi)) \\le 0$. Using the polar identity $\\operatorname{Im}(w \\cdot e^{-i\\pi\\psi}) = \\|w\\| \\cdot \\sin(\\pi(\\mathrm{wPhaseOf}(w, \\alpha) - \\psi))$ and $\\|w\\| \\ge 0$, this contradicts positivity of the imaginary part.",
     "termExposition": null
   },
   {
@@ -2035,8 +2035,8 @@
     "contentHash": 2654088075992579790,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $w \\cdot e^{-i\\pi\\psi}$ lies in $\\{z \\in \\mathbb{C} : \\operatorname{Im}(z) > 0\\} \\cup \\mathbb{R}_{<0}$, then $\\psi < \\mathrm{wPhaseOf}(w, \\psi)$. Together with `mem_upperHalfPlaneUnion_of_wPhaseOf_gt`, this gives a characterization: $\\psi < \\mathrm{wPhaseOf}(w, \\psi)$ if and only if $w \\cdot e^{-i\\pi\\psi}$ lies in $\\{z \\in \\mathbb{C} : \\operatorname{Im}(z) > 0\\} \\cup \\mathbb{R}_{<0}$.",
+    "proofExposition": "The argument of $w \\cdot e^{-i\\pi\\psi}$ is positive by `arg_pos_of_mem_upperHalfPlaneUnion`. Dividing by $\\pi > 0$ gives $\\mathrm{wPhaseOf}(w, \\psi) = \\psi + \\arg(\\cdot)/\\pi > \\psi$.",
     "termExposition": null
   },
   {
@@ -2047,8 +2047,8 @@
     "contentHash": 3087326793681321584,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $w = w_1 + w_2$, $\\mathrm{wPhaseOf}(w, \\alpha) \\le \\psi$ with $\\mathrm{wPhaseOf}(w, \\alpha) \\in (\\psi-1, \\psi+1)$, $w_1 \\ne 0$ with $\\mathrm{wPhaseOf}(w_1, \\alpha) > \\psi$, and $\\mathrm{wPhaseOf}(w_2, \\alpha) \\in (\\psi-1, \\psi+1)$, then $\\mathrm{wPhaseOf}(w_2, \\alpha) < \\psi$. This is a one-sided seesaw: a total phase at most $\\psi$ combined with a summand of phase strictly above $\\psi$ forces the other summand below $\\psi$.",
+    "proofExposition": "From the imaginary part identity, $\\operatorname{Im}(w \\cdot e^{-i\\pi\\psi}) \\le 0$ (total phase $\\le \\psi$) and $\\operatorname{Im}(w_1 \\cdot e^{-i\\pi\\psi}) > 0$ (phase above $\\psi$). By additivity, $\\operatorname{Im}(w_2 \\cdot e^{-i\\pi\\psi}) < 0$, so `wPhaseOf_lt_of_im_neg` concludes.",
     "termExposition": null
   },
   {
@@ -2059,8 +2059,8 @@
     "contentHash": 3075803377629072554,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $w = w_1 + w_2$ with $\\mathrm{wPhaseOf}(w_1, \\alpha) \\in (\\psi-1, \\psi]$, $w_2 \\ne 0$ with $\\mathrm{wPhaseOf}(w_2, \\alpha) < \\psi$ and $\\mathrm{wPhaseOf}(w_2, \\alpha) \\in (\\psi-1, \\psi+1)$, and $\\mathrm{wPhaseOf}(w, \\alpha) \\in (\\psi-1, \\psi+1)$, then $\\mathrm{wPhaseOf}(w, \\alpha) < \\psi$.",
+    "proofExposition": "Both summands contribute non-positive and strictly negative imaginary parts after rotating by $e^{-i\\pi\\psi}$; their sum is strictly negative, and `wPhaseOf_lt_of_im_neg` gives the conclusion.",
     "termExposition": null
   },
   {
@@ -2071,8 +2071,8 @@
     "contentHash": 4353289605435673592,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\operatorname{Im}(w \\cdot e^{-i\\pi\\psi}) < 0$ and $\\mathrm{wPhaseOf}(w, \\alpha) \\in (\\psi-1, \\psi+1)$, then $\\mathrm{wPhaseOf}(w, \\alpha) < \\psi$. This is the dual of `wPhaseOf_gt_of_im_pos`.",
+    "proofExposition": "By contradiction, assume $\\mathrm{wPhaseOf}(w, \\alpha) \\ge \\psi$. The phase difference lies in $[0,1)$, so $\\sin(\\pi(\\mathrm{wPhaseOf}(w,\\alpha) - \\psi)) \\ge 0$. The polar identity then gives $\\operatorname{Im}(w \\cdot e^{-i\\pi\\psi}) = \\|w\\| \\cdot \\sin(\\cdots) \\ge 0$, contradicting the hypothesis.",
     "termExposition": null
   },
   {
@@ -2383,8 +2383,8 @@
     "contentHash": 3848328632358029148,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a subobject $M \\hookrightarrow X$ in the interval category $\\mathcal{P}((a,b))$ and any subobject $B$ of $\\operatorname{coker}(M \\hookrightarrow X)$, we have $M \\le (\\operatorname{coker}(M))^*(B)$ in the subobject lattice of $X$, where $(\\operatorname{coker}(M))^*(B)$ denotes the pullback of $B$ along the cokernel map.",
+    "proofExposition": "Use the pullback square: the zero map $0 \\to B$ and $M.\\mathrm{arrow}$ satisfy the commutativity condition since $M.\\mathrm{arrow} \\circ \\pi = 0$ (cokernel condition), providing the required factorization.",
     "termExposition": null
   },
   {
@@ -2395,8 +2395,8 @@
     "contentHash": 15293679226710138634,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $M \\le (\\operatorname{coker}(M))^*(B)$ as provided by `interval_le_pullback_cokernel`, the composite $M \\xrightarrow{\\mathrm{ofLE}} (\\operatorname{coker}(M))^*(B) \\xrightarrow{\\pi} B$ is zero. That is, the inclusion of $M$ into the pullback subobject followed by the pullback projection to $B$ vanishes.",
+    "proofExposition": "Check after postcomposing with $B.\\mathrm{arrow}$: the composite equals $M.\\mathrm{arrow} \\circ \\operatorname{coker}.\\pi = 0$ by the cokernel condition, and $B.\\mathrm{arrow}$ is a monomorphism.",
     "termExposition": null
   },
   {
@@ -2599,8 +2599,8 @@
     "contentHash": 8783107545447408272,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $M \\hookrightarrow X$ a strict monomorphism in $\\mathcal{P}((a,b))$ and $B \\hookrightarrow \\operatorname{coker}(M)$ a strict monomorphism, the $W$-charge of the cokernel of the pulled-back subobject equals the $W$-charge of the cokernel of $B$: $W(v[\\operatorname{coker}((\\operatorname{coker}(M))^*(B) \\hookrightarrow X)]) = W(v[\\operatorname{coker}(B)])$.",
+    "proofExposition": "Apply $K_0$-additivity to the three strict short exact sequences: $M \\hookrightarrow X \\twoheadrightarrow \\operatorname{coker}(M)$, $(\\operatorname{coker}(M))^*(B) \\hookrightarrow X \\twoheadrightarrow \\operatorname{coker}((\\operatorname{coker}(M))^*(B))$, and $B \\hookrightarrow \\operatorname{coker}(M) \\twoheadrightarrow \\operatorname{coker}(B)$, together with `Wobj_pullback_eq_add` for the middle term. Cancellation in the abelian group $\\Lambda$ yields the result.",
     "termExposition": null
   },
   {
@@ -2611,8 +2611,8 @@
     "contentHash": 8942799346111903394,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For strict monomorphisms $A \\hookrightarrow M \\hookrightarrow X$ in $\\mathcal{P}((a,b))$, let $\\tilde{A} \\hookrightarrow X$ be the lift of $A$ through $M$. Then $W(v[\\operatorname{coker}(\\tilde{A} \\hookrightarrow X)]) = W(v[\\operatorname{coker}(A \\hookrightarrow M)]) + W(v[\\operatorname{coker}(M \\hookrightarrow X)])$.",
+    "proofExposition": "Apply $K_0$-additivity to the three strict short exact sequences for $M \\hookrightarrow X$, $A \\hookrightarrow M$, and $\\tilde{A} \\hookrightarrow X$. Since $W(v[\\tilde{A}]) = W(v[A])$ (by the isomorphism between $\\tilde{A}$ and $A$ as interval objects), the formula follows by linear algebra in $\\Lambda$.",
     "termExposition": null
   },
   {
@@ -2623,8 +2623,8 @@
     "contentHash": 15862179208522499382,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a strict monomorphism $M \\hookrightarrow X$ in $\\mathcal{P}((a,b))$ and a subobject $B$ of $\\operatorname{coker}(M)$, the $W$-charge of the pullback $(\\operatorname{coker}(M))^*(B)$ satisfies $W(v[(\\operatorname{coker}(M))^*(B)]) = W(v[M]) + W(v[B])$.",
+    "proofExposition": "The sequence $M \\to (\\operatorname{coker}(M))^*(B) \\to B$ is a strict short exact sequence by `interval_strictShortExact_ofLE_pullbackπ_cokernel`. Apply $W$-additivity for strict short exact sequences.",
     "termExposition": null
   },
   {
@@ -2683,8 +2683,8 @@
     "contentHash": 9525711755728734874,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $M$ is a proper subobject of $X$ in $\\mathcal{P}((a,b))$ (i.e., $M \\ne \\top$) and $M$ is a strict monomorphism, then $\\operatorname{coker}(M \\hookrightarrow X)$ is nonzero.",
+    "proofExposition": "If the cokernel were zero, $M \\hookrightarrow X$ would be an epimorphism. Combined with being a strict monomorphism, it would be an isomorphism, forcing $M = \\top$, a contradiction.",
     "termExposition": null
   },
   {
@@ -2695,8 +2695,8 @@
     "contentHash": 7714271336405391905,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $B$ is a nonzero subobject of $\\operatorname{coker}(M)$ in $\\mathcal{P}((a,b))$, then $M < (\\operatorname{coker}(M))^*(B)$ strictly in the subobject lattice of $X$.",
+    "proofExposition": "We have $M \\le (\\operatorname{coker}(M))^*(B)$ by `interval_le_pullback_cokernel`. For strictness, if $M = (\\operatorname{coker}(M))^*(B)$ then the inclusion $\\mathrm{ofLE}$ is an isomorphism, so by `interval_ofLE_pullbackπ_eq_zero` the pullback projection $\\pi_B$ is zero. But $\\pi_B$ is a strict epimorphism (as pullback of the cokernel strict epimorphism), so $B$ is zero, contradicting $B \\ne \\bot$.",
     "termExposition": null
   },
   {
@@ -2719,8 +2719,8 @@
     "contentHash": 7934319762899287482,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $B$ is a proper subobject of $\\operatorname{coker}(M)$ and $B$ is a strict monomorphism, then the pullback $(\\operatorname{coker}(M))^*(B)$ is a proper subobject of $X$ (i.e., not $\\top$).",
+    "proofExposition": "If $(\\operatorname{coker}(M))^*(B) = \\top$, its inclusion is an isomorphism. One then constructs a retraction of $\\operatorname{coker}.\\pi$ through $B.\\mathrm{arrow}$, making $B.\\mathrm{arrow}$ an epimorphism. Since $B$ is already a strict monomorphism, it is an isomorphism, so $B = \\top$, a contradiction.",
     "termExposition": null
   },
   {
@@ -2731,8 +2731,8 @@
     "contentHash": 10901005956516286514,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given subobjects $A' \\le B'$ of $\\operatorname{coker}(M)$ in $\\mathcal{P}((a,b))$, the pullbacks satisfy a naturality square: the map $\\mathrm{ofLE}((\\operatorname{coker}(M))^*(A') \\le (\\operatorname{coker}(M))^*(B'))$ followed by the pullback projection $\\pi_{B'}$ equals the pullback projection $\\pi_{A'}$ followed by $\\mathrm{ofLE}(A' \\le B')$.",
+    "proofExposition": "Post-compose both sides with $B'.\\mathrm{arrow}$ and use the pullback square identities for $A'$ and $B'$ to reduce to the single equation $\\mathrm{pbA}.\\mathrm{arrow} \\circ q = \\mathrm{pbA}.\\mathrm{arrow} \\circ q$.",
     "termExposition": null
   },
   {
@@ -3235,9 +3235,9 @@
     "contentHash": 17035134341092439886,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The condition that the $W$-charge of $E$ is nonzero: $W(v[E]) \\ne 0$. This is the nonvanishing hypothesis required for the $W$-phase of $E$ to be well-defined.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The proposition $W(v[E]) \\ne 0$, packaged as an abbreviation for convenient use in semistability and phase computations."
   },
   {
     "declName": "CategoryTheory.Triangulated.SkewedStabilityFunction.wNe_def",
@@ -3247,8 +3247,8 @@
     "contentHash": 2268279538442358827,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The definitional unfolding: $\\mathrm{wNe}(E)$ is definitionally equal to $W(v[E]) \\ne 0$.",
+    "proofExposition": "This is immediate by reflexivity of the definition.",
     "termExposition": null
   },
   {
@@ -3259,9 +3259,9 @@
     "contentHash": 15311935513605621241,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The $W$-phase of an object $E$, defined as $\\mathrm{wPhaseOf}(W(v[E]), \\alpha)$, where $\\alpha$ is the skewing parameter of the skewed stability function. This is the phase function on $\\mathcal{P}((a,b))$ used throughout the deformation construction.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The real number $\\mathrm{wPhaseOf}(W(v[E]), \\alpha)$, lying in $(\\alpha - 1, \\alpha + 1]$ whenever it is well-defined."
   },
   {
     "declName": "CategoryTheory.Triangulated.SkewedStabilityFunction.wPhase_congr",
@@ -3271,8 +3271,8 @@
     "contentHash": 6138250944508948361,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $W(v[E]) = W(v[E'])$, then $\\mathrm{wPhase}(E) = \\mathrm{wPhase}(E')$.",
+    "proofExposition": "Immediate from the definition $\\mathrm{wPhase}(E) = \\mathrm{wPhaseOf}(W(v[E]), \\alpha)$ and the hypothesis.",
     "termExposition": null
   },
   {
@@ -3283,8 +3283,8 @@
     "contentHash": 4931223000679460340,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The definitional equality $\\mathrm{wPhase}(E) = \\mathrm{wPhaseOf}(W(v[E]), \\alpha)$.",
+    "proofExposition": "This holds by reflexivity.",
     "termExposition": null
   },
   {
@@ -3295,8 +3295,8 @@
     "contentHash": 6980632614399831993,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Isomorphic objects have the same $W$-phase: if $E \\cong E'$ then $\\mathrm{wPhase}(E) = \\mathrm{wPhase}(E')$.",
+    "proofExposition": "An isomorphism $E \\cong E'$ induces $v[E] = v[E']$ in $K_0$, hence $W(v[E]) = W(v[E'])$, and the result follows from `wPhase_congr`.",
     "termExposition": null
   },
   {
@@ -3307,8 +3307,8 @@
     "contentHash": 18171367595567869222,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Let $E_1, E_2, E$ be objects with $W(v[E_1]) + W(v[E_2]) = W(v[E])$. Suppose $\\mathrm{wPhase}(E) = \\psi$, $\\mathrm{wPhase}(E_1) \\in (\\psi-1, \\psi]$, $W(v[E_2]) \\ne 0$, and $\\mathrm{wPhase}(E_2) \\in (\\psi-1, \\psi+1)$. Then $\\mathrm{wPhase}(E_2) \\ge \\psi$. In other words, if $E_1$ has phase at most $\\psi$ (below the total) and the total phase is exactly $\\psi$, then $E_2$ must have phase at least $\\psi$.",
+    "proofExposition": "By contradiction assume $\\mathrm{wPhase}(E_2) < \\psi$. Setting $\\mathrm{rot} = e^{-i\\pi\\psi}$: since $\\mathrm{wPhase}(E) = \\psi$, we have $\\operatorname{Im}(W(v[E]) \\cdot \\mathrm{rot}) = 0$; since $\\mathrm{wPhase}(E_1) \\le \\psi$, we get $\\operatorname{Im}(W(v[E_1]) \\cdot \\mathrm{rot}) \\le 0$; since $W(v[E_2]) \\ne 0$ and $\\mathrm{wPhase}(E_2) < \\psi$, we get $\\operatorname{Im}(W(v[E_2]) \\cdot \\mathrm{rot}) < 0$. Adding these via the decomposition $W(v[E]) = W(v[E_1]) + W(v[E_2])$ gives a contradiction.",
     "termExposition": null
   },
   {
@@ -3463,9 +3463,9 @@
     "contentHash": 1105795767875924835,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "A connected component of numerical stability conditions, i.e., a connected component of the space $\\text{NStab}(C)$ of numerical stability conditions on $C$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as a connected component of `StabilityCondition.WithClassMap C (numericalQuotientMap k C)`, the space of stability conditions whose central charge factors through the numerical Grothendieck group $N(C)$."
   },
   {
     "declName": "CategoryTheory.Triangulated.NumericalK₀",
@@ -3475,9 +3475,9 @@
     "contentHash": 13611771758053380212,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The numerical Grothendieck group $N(C)$ attached to the Euler form $\\chi$. This is the quotient $K_0(C)/\\text{rad}(\\chi)$ where the left radical $\\text{rad}(\\chi) = \\{[E] \\in K_0(C) : \\chi([E],[F]) = 0 \\text{ for all } [F]\\}$ is the kernel of the Euler form.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as the quotient `K₀ C ⧸ eulerFormRad k C`, i.e., $K_0(C)$ modulo the left radical of the Euler form $\\chi(E,F) = \\sum_i (-1)^i \\dim_k \\operatorname{Ext}^i(E,F)$."
   },
   {
     "declName": "CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup",
@@ -3487,9 +3487,9 @@
     "contentHash": 4848134445243878280,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The abelian group structure on the numerical Grothendieck group $N(C) = K_0(C)/\\text{rad}(\\chi)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Inherited from the quotient group structure on `K₀ C ⧸ eulerFormRad k C` via `inferInstanceAs`."
   },
   {
     "declName": "CategoryTheory.Triangulated.NumericalStabilityCondition",
@@ -3499,9 +3499,9 @@
     "contentHash": 9945797023302358314,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Numerical stability conditions on $C$: stability conditions $(Z, \\mathcal{P})$ whose central charge $Z : K_0(C) \\to \\mathbb{C}$ factors through the numerical quotient $v : K_0(C) \\to N(C)$, so that $Z = \\tilde{Z} \\circ v$ for some $\\tilde{Z} : N(C) \\to \\mathbb{C}$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as `StabilityCondition.WithClassMap C (numericalQuotientMap k C)`, the subspace of stability conditions compatible with the quotient map $K_0(C) \\to N(C)$."
   },
   {
     "declName": "CategoryTheory.Triangulated.NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents",
@@ -3511,9 +3511,9 @@
     "contentHash": 3327556729538489433,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The assertion that on each connected component of $\\text{NStab}(C)$, the forgetful map sending a numerical stability condition to its central charge $\\tilde{Z} : N(C) \\to \\mathbb{C}$ is a local homeomorphism. This is the content of Bridgeland's Corollary 1.3.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as `StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents` for the class map `numericalQuotientMap k C`, packaging the local-homeomorphism statement from Corollary 1.3."
   },
   {
     "declName": "CategoryTheory.Triangulated.NumericallyFinite",
@@ -3535,9 +3535,9 @@
     "contentHash": 6025749437071508343,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The Euler form $\\chi : K_0(C) \\times K_0(C) \\to \\mathbb{Z}$, defined by $\\chi([E],[F]) = \\sum_i (-1)^i \\dim_k \\operatorname{Hom}(E, F[i])$. This is a bilinear form on the Grothendieck group, obtained by applying the universal property of $K_0$ twice.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructed as `K₀.lift C (eulerFormInner k C)`, using the fact that `eulerFormInner k C : C → (K₀ C →+ ℤ)` is triangle-additive in the first argument (instance `eulerFormInner_isTriangleAdditive`)."
   },
   {
     "declName": "CategoryTheory.Triangulated.eulerFormInner",
@@ -3559,9 +3559,9 @@
     "contentHash": 10048782498284572298,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The assignment $E \\mapsto \\chi(E, -)$, viewed as a function from objects of $C$ to group homomorphisms $K_0(C) \\to \\mathbb{Z}$, is triangle-additive in $E$. This allows the Euler form to descend to a well-defined bilinear form on $K_0(C)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "For a distinguished triangle $X \\to Y \\to Z \\to X[1]$, the identity $\\chi([Y], [F]) = \\chi([X], [F]) + \\chi([Z], [F])$ follows from `eulerFormObj_covariant_triangleAdditive` via `K₀.hom_ext`."
   },
   {
     "declName": "CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive",
@@ -3583,8 +3583,8 @@
     "contentHash": 15614899906091469109,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a fixed object $F \\in C$, the assignment $E \\mapsto \\chi(E, F) = \\sum_n (-1)^n \\dim_k \\operatorname{Hom}(E, F[n])$ is triangle-additive in $E$: for any distinguished triangle $X \\to Y \\to Z \\to X[1]$, we have $\\chi(Y, F) = \\chi(X, F) + \\chi(Z, F)$.",
+    "proofExposition": "The proof mirrors that of the contravariant case, using the Yoneda functor `preadditiveYoneda.obj F` and the long exact Hom sequence from distinguished triangles in $C^{\\mathrm{op}}$. The rank-nullity theorem applied at each degree yields the pointwise identity $\\dim \\operatorname{Hom}(Y, F[n]) = \\dim \\operatorname{Hom}(X, F[n]) + \\dim \\operatorname{Hom}(Z, F[n]) - r(n-1) - r(n)$, and `eulerSum_of_rank_identity_int` cancels the correction terms telescopically.",
     "termExposition": null
   },
   {
@@ -3595,9 +3595,9 @@
     "contentHash": 15519422023754189837,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The left radical of the Euler form on $K_0(C)$: $\\text{rad}(\\chi) = \\{v \\in K_0(C) : \\chi(v, w) = 0 \\text{ for all } w \\in K_0(C)\\}$. This is the kernel of the map $K_0(C) \\to \\operatorname{Hom}(K_0(C), \\mathbb{Z})$ induced by $\\chi$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as the kernel `(eulerForm k C).ker` of the bilinear form viewed as a group homomorphism $K_0(C) \\to (K_0(C) \\to^+ \\mathbb{Z})$."
   },
   {
     "declName": "CategoryTheory.Triangulated.eulerSum_of_rank_identity",
@@ -3607,8 +3607,8 @@
     "contentHash": 2747112409171601103,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "An abstract Euler characteristic telescoping lemma: if the dimension of $\\operatorname{Hom}(E, b(n))$ satisfies $\\dim(E \\to b(n)) = \\dim(E \\to a(n)) + \\dim(E \\to c(n)) - r(n-1) - r(n)$ for all $n$, with all supports finite, then the alternating sums satisfy $\\chi(E, b) = \\chi(E, a) + \\chi(E, c)$.",
+    "proofExposition": "The proof rewrites the sum over $b$ using the rank identity, then shows the correction term $\\sum_n (-1)^n(-r(n-1) - r(n))$ vanishes by `finsum_alternating_shift_cancel`.",
     "termExposition": null
   },
   {
@@ -3619,8 +3619,8 @@
     "contentHash": 16765881184649713293,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "An integer-valued analogue of `eulerSum_of_rank_identity`: if integer sequences $a$, $b$, $c$, $r$ satisfy $b(n) = a(n) + c(n) - r(n-1) - r(n)$ pointwise with finitely supported $a$, $c$, $r$, then $\\sum_n (-1)^n b(n) = \\sum_n (-1)^n a(n) + \\sum_n (-1)^n c(n)$. Used for the covariant Euler form.",
+    "proofExposition": "Same telescoping argument as `eulerSum_of_rank_identity`, working directly with integer-valued sequences rather than dimensions of Hom spaces.",
     "termExposition": null
   },
   {
@@ -3631,8 +3631,8 @@
     "contentHash": 9383579940360936606,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a middle-exact sequence $K \\xrightarrow{f} M \\xrightarrow{g} N$ of finite-dimensional $k$-vector spaces with $\\operatorname{im}(f) = \\ker(g)$, we have $\\dim_k M = \\dim_k \\operatorname{im}(f) + \\dim_k \\operatorname{im}(g)$ (as integers).",
+    "proofExposition": "Follows immediately from the rank-nullity theorem applied to $g$: $\\dim M = \\dim \\ker(g) + \\dim \\operatorname{im}(g) = \\dim \\operatorname{im}(f) + \\dim \\operatorname{im}(g)$.",
     "termExposition": null
   },
   {
@@ -3643,8 +3643,8 @@
     "contentHash": 10761481605193646570,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any finitely supported integer-valued sequence $r : \\mathbb{Z} \\to \\mathbb{Z}$, the alternating sums satisfy $\\sum_n (-1)^n r(n-1) + \\sum_n (-1)^n r(n) = 0$.",
+    "proofExposition": "Re-index the first sum by $n \\mapsto n+1$; then $(-1)^{n+1} = -(-1)^n$ and the two sums cancel.",
     "termExposition": null
   },
   {
@@ -3655,9 +3655,9 @@
     "contentHash": 9125173901612294914,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "If $C$ is numerically finite (i.e., satisfies the `NumericallyFinite` typeclass), then the numerical Grothendieck group $N(C)$ is a finitely generated abelian group.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Synthesized from `NumericallyFinite.fg`, which asserts `AddGroup.FG (NumericalK₀ k C)` as its defining field."
   },
   {
     "declName": "CategoryTheory.Triangulated.linearCoyonedaObjIsHomological",
@@ -3667,9 +3667,9 @@
     "contentHash": 8951113879186391727,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For any object $E \\in C$, the $k$-linear Yoneda functor $\\operatorname{Hom}(E, -) : C \\to \\operatorname{Mod}_k$ is homological, i.e., it sends distinguished triangles to long exact sequences.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The `IsHomological` instance is constructed by reducing to the exactness of the additive coyoneda via `preadditiveCoyoneda.map_distinguished_exact` and forgetting the $k$-linear structure."
   },
   {
     "declName": "CategoryTheory.Triangulated.linearMap_range_eq_ker_of_addMonoidHom",
@@ -3679,8 +3679,8 @@
     "contentHash": 12119284575612023022,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If the range-equals-kernel identity holds at the level of underlying additive monoid homomorphisms, then it holds as an equality of $k$-linear submodules.",
+    "proofExposition": "The range of a linear map and its kernel coincide with the range and kernel of the underlying additive monoid homomorphism as subsets, so the hypothesis directly implies the conclusion.",
     "termExposition": null
   },
   {
@@ -3691,8 +3691,8 @@
     "contentHash": 11883278266102044789,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a composable pair $f : A \\to B$, $g : B \\to C'$ of morphisms in $C$ with $f \\circ g = 0$, if the sequence is exact at $B$ (in the sense that any $x : E \\to B$ with $x \\circ g = 0$ lifts to $E \\to A$), then the image of $\\operatorname{Hom}(E, f)$ equals the kernel of $\\operatorname{Hom}(E, g)$ as $k$-linear submodules.",
+    "proofExposition": "Verified by unfolding the linear map definitions: the inclusion $\\operatorname{im} \\subset \\ker$ follows from $f \\circ g = 0$, and the reverse inclusion is the exactness hypothesis.",
     "termExposition": null
   },
   {
@@ -3703,9 +3703,9 @@
     "contentHash": 4387857277535915129,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The canonical quotient map $v : K_0(C) \\twoheadrightarrow N(C)$, sending a class $[E] \\in K_0(C)$ to its image in the numerical Grothendieck group $N(C) = K_0(C)/\\text{rad}(\\chi)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as `QuotientAddGroup.mk' (eulerFormRad k C)`, the canonical projection onto the quotient by the left radical of the Euler form."
   },
   {
     "declName": "CategoryTheory.ObjectProperty.ExtensionClosure",
@@ -3739,9 +3739,9 @@
     "contentHash": 2291118578961936353,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The extension closure $P^{\\text{ext}}$ of any object property $P$ is closed under isomorphisms: if $E \\in P^{\\text{ext}}$ and $E \\cong F$, then $F \\in P^{\\text{ext}}$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The `IsClosedUnderIsomorphisms` instance follows from `ExtensionClosure.of_iso`, which fills in the third vertex of the isomorphism triangle as a zero object."
   },
   {
     "declName": "CategoryTheory.ObjectProperty.ExtensionClosure.instIsTriangulatedClosed₂",
@@ -3751,9 +3751,9 @@
     "contentHash": 9556295582361059607,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The extension closure $P^{\\text{ext}}$ satisfies the triangulated closure condition: if $X \\to E \\to Y \\to X[1]$ is a distinguished triangle with $X, Y \\in P^{\\text{ext}}$, then $E \\in P^{\\text{ext}}$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The `IsTriangulatedClosed₂` instance is provided by the `ExtensionClosure.ext` constructor applied to the given distinguished triangle."
   },
   {
     "declName": "CategoryTheory.ObjectProperty.ExtensionClosure.le_of_closed",
@@ -3811,8 +3811,8 @@
     "contentHash": 16092542659142478922,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $z_1, z_2 \\in \\mathcal{H}$, the argument of the sum satisfies $\\arg(z_1 + z_2) \\leq \\max(\\arg z_1, \\arg z_2)$. This is the upper half of the see-saw inequality for phases.",
+    "proofExposition": "Without loss of generality, assume $\\arg z_1 \\leq \\arg z_2$. Then $\\text{cross}(z_1, z_2) \\geq 0$ by `cross_nonneg_of_arg_le`. Since $(z_1+z_2).\\text{re} \\cdot z_2.\\text{im} - (z_1+z_2).\\text{im} \\cdot z_2.\\text{re} = \\text{cross}(z_1,z_2)$ (the self-terms cancel), `arg_le_of_cross_nonneg` gives $\\arg(z_1+z_2) \\leq \\arg z_2 = \\max$.",
     "termExposition": null
   },
   {
@@ -3823,8 +3823,8 @@
     "contentHash": 13266877158063364236,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $z_1, z_2 \\in \\mathcal{H}$ with $\\arg z_1 \\neq \\arg z_2$, the argument of the sum satisfies the strict inequality $\\arg(z_1 + z_2) < \\max(\\arg z_1, \\arg z_2)$.",
+    "proofExposition": "Suppose WLOG $\\arg z_1 < \\arg z_2$. Then $\\text{cross}(z_1,z_2) > 0$ by `cross_pos_of_arg_lt`, and since $(z_1+z_2).\\text{re} \\cdot z_2.\\text{im} - (z_1+z_2).\\text{im} \\cdot z_2.\\text{re} = \\text{cross}(z_1,z_2)$, the strict version `arg_lt_of_cross_pos` gives $\\arg(z_1+z_2) < \\arg z_2 = \\max$.",
     "termExposition": null
   },
   {
@@ -3835,8 +3835,8 @@
     "contentHash": 10026338394971035949,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $z_1 \\neq 0$, $z_2 \\neq 0$, $\\arg z_2 > 0$, and $\\text{cross}(z_1, z_2) = z_1.\\text{re} \\cdot z_2.\\text{im} - z_1.\\text{im} \\cdot z_2.\\text{re} \\geq 0$, then $\\arg z_1 \\leq \\arg z_2$.",
+    "proofExposition": "By `cross_eq_norm_mul_sin`, the cross product equals $\\|z_1\\|\\|z_2\\|\\sin(\\arg z_2 - \\arg z_1)$. If $\\arg z_1 > \\arg z_2$ then $\\arg z_2 - \\arg z_1 \\in (-\\pi, 0)$ and $\\sin < 0$, contradicting nonnegativity of the cross product.",
     "termExposition": null
   },
   {
@@ -3847,8 +3847,8 @@
     "contentHash": 4637516401225000849,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $z_1 \\neq 0$, $z_2 \\neq 0$, $\\arg z_2 > 0$, and $\\text{cross}(z_1, z_2) > 0$, then $\\arg z_1 < \\arg z_2$.",
+    "proofExposition": "By `cross_eq_norm_mul_sin`, a positive cross product forces $\\sin(\\arg z_2 - \\arg z_1) > 0$. If $\\arg z_1 \\geq \\arg z_2$ then $\\arg z_2 - \\arg z_1 \\leq 0$, so $\\sin \\leq 0$, a contradiction.",
     "termExposition": null
   },
   {
@@ -3859,8 +3859,8 @@
     "contentHash": 4704724881246076594,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Every element of $\\mathcal{H}$ has strictly positive argument: for $z \\in \\mathcal{H}$, $\\arg z > 0$. Equivalently, $\\arg z \\in (0, \\pi]$.",
+    "proofExposition": "If $z.\\text{im} > 0$, then $\\arg z \\geq 0$ and $\\arg z \\neq 0$ (since $\\arg z = 0$ would force $z.\\text{im} = 0$). If $z.\\text{im} = 0$ and $z.\\text{re} < 0$, then $\\arg z = \\pi > 0$.",
     "termExposition": null
   },
   {
@@ -3871,8 +3871,8 @@
     "contentHash": 16053456265496444881,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a nonempty finite set $s$ and a function $f : s \\to \\mathcal{H}$, the argument of the sum satisfies $\\arg\\bigl(\\sum_{i \\in s} f(i)\\bigr) \\leq \\sup_{i \\in s} \\arg(f(i))$.",
+    "proofExposition": "By induction on $s$ using `Finset.Nonempty.cons_induction`. The base case is trivial. For the inductive step, apply `arg_add_le_max` and `sum_mem_upperHalfPlane`, then use the induction hypothesis and monotonicity of $\\max$.",
     "termExposition": null
   },
   {
@@ -3883,8 +3883,8 @@
     "contentHash": 436782420281530771,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The two-dimensional cross product of complex numbers satisfies $z_1.\\text{re} \\cdot z_2.\\text{im} - z_1.\\text{im} \\cdot z_2.\\text{re} = \\|z_1\\| \\cdot \\|z_2\\| \\cdot \\sin(\\arg z_2 - \\arg z_1)$.",
+    "proofExposition": "Write each $z_j = \\|z_j\\|(\\cos(\\arg z_j) + i\\sin(\\arg z_j))$, substitute, and expand using the sine subtraction formula $\\sin(\\alpha - \\beta) = \\sin\\alpha\\cos\\beta - \\cos\\alpha\\sin\\beta$.",
     "termExposition": null
   },
   {
@@ -3895,8 +3895,8 @@
     "contentHash": 1892921182859874102,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $z_1.\\text{im} \\geq 0$, $z_1 \\neq 0$, $z_2 \\neq 0$, and $\\arg z_1 \\leq \\arg z_2$, then $\\text{cross}(z_1, z_2) = z_1.\\text{re} \\cdot z_2.\\text{im} - z_1.\\text{im} \\cdot z_2.\\text{re} \\geq 0$.",
+    "proofExposition": "By `cross_eq_norm_mul_sin`, the cross product equals $\\|z_1\\|\\|z_2\\|\\sin(\\arg z_2 - \\arg z_1)$. The hypothesis $\\arg z_1 \\leq \\arg z_2$ gives $\\arg z_2 - \\arg z_1 \\in [0, \\pi]$, where $\\sin \\geq 0$.",
     "termExposition": null
   },
   {
@@ -3907,8 +3907,8 @@
     "contentHash": 4615807774041456827,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\arg z_1 > 0$, $z_1 \\neq 0$, $z_2 \\neq 0$, and $\\arg z_1 < \\arg z_2$, then $\\text{cross}(z_1, z_2) > 0$.",
+    "proofExposition": "By `cross_eq_norm_mul_sin`, the cross product equals $\\|z_1\\|\\|z_2\\|\\sin(\\arg z_2 - \\arg z_1)$. The strict angle inequality gives $\\arg z_2 - \\arg z_1 \\in (0, \\pi)$ (using $\\arg z_1 > 0$ and $\\arg z_2 \\leq \\pi$), where $\\sin > 0$.",
     "termExposition": null
   },
   {
@@ -3919,8 +3919,8 @@
     "contentHash": 6844512506608207871,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Every element of $\\mathcal{H}$ has nonneg imaginary part: for $z \\in \\mathcal{H}$, $\\operatorname{Im}(z) \\geq 0$.",
+    "proofExposition": "By case analysis: in the strict upper half-plane, $\\operatorname{Im}(z) > 0$; on the negative real axis, $\\operatorname{Im}(z) = 0$.",
     "termExposition": null
   },
   {
@@ -3931,8 +3931,8 @@
     "contentHash": 4012074702463554658,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a nonempty finite set $s$ and a function $f : s \\to \\mathcal{H}$, the argument of the sum satisfies $\\inf_{i \\in s} \\arg(f(i)) \\leq \\arg\\bigl(\\sum_{i \\in s} f(i)\\bigr)$.",
+    "proofExposition": "By induction on $s$ using `Finset.Nonempty.cons_induction`. The base case is trivial. The inductive step applies `min_arg_le_arg_add` and `sum_mem_upperHalfPlane`, then uses the induction hypothesis and monotonicity of $\\min$.",
     "termExposition": null
   },
   {
@@ -3943,8 +3943,8 @@
     "contentHash": 8408546329138858814,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The set $\\mathcal{H}$ is closed under addition: if $z_1, z_2 \\in \\mathcal{H}$, then $z_1 + z_2 \\in \\mathcal{H}$.",
+    "proofExposition": "If either $z_1$ or $z_2$ has strictly positive imaginary part, so does $z_1 + z_2$. If both lie on the negative real axis, their sum does too.",
     "termExposition": null
   },
   {
@@ -3955,8 +3955,8 @@
     "contentHash": 13907583407841541139,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $z_1, z_2 \\in \\mathcal{H}$, the argument of the sum satisfies $\\min(\\arg z_1, \\arg z_2) \\leq \\arg(z_1 + z_2)$. This is the lower half of the see-saw inequality.",
+    "proofExposition": "Without loss of generality $\\arg z_1 \\leq \\arg z_2$. Then $\\text{cross}(z_1, z_2) \\geq 0$, and since $z_1.\\text{re} \\cdot (z_1+z_2).\\text{im} - z_1.\\text{im} \\cdot (z_1+z_2).\\text{re} = \\text{cross}(z_1,z_2)$, `arg_le_of_cross_nonneg` gives $\\arg z_1 = \\min \\leq \\arg(z_1+z_2)$.",
     "termExposition": null
   },
   {
@@ -3967,8 +3967,8 @@
     "contentHash": 18353821703058370375,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $z_1, z_2 \\in \\mathcal{H}$ with $\\arg z_1 \\neq \\arg z_2$, the argument of the sum satisfies the strict inequality $\\min(\\arg z_1, \\arg z_2) < \\arg(z_1 + z_2)$.",
+    "proofExposition": "Suppose WLOG $\\arg z_1 < \\arg z_2$. Then $\\text{cross}(z_1,z_2) > 0$ by `cross_pos_of_arg_lt`, and the identity $z_1.\\text{re} \\cdot (z_1+z_2).\\text{im} - z_1.\\text{im} \\cdot (z_1+z_2).\\text{re} = \\text{cross}(z_1,z_2)$ lets `arg_lt_of_cross_pos` conclude $\\arg z_1 = \\min < \\arg(z_1+z_2)$.",
     "termExposition": null
   },
   {
@@ -3979,8 +3979,8 @@
     "contentHash": 9066426620122227286,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "A nonempty finite sum of elements of $\\mathcal{H}$ lies in $\\mathcal{H}$: if $s$ is a nonempty finite set and $f(i) \\in \\mathcal{H}$ for all $i \\in s$, then $\\sum_{i \\in s} f(i) \\in \\mathcal{H}$.",
+    "proofExposition": "By induction on the nonempty finset using `Finset.Nonempty.cons_induction`, reducing to the binary case `mem_upperHalfPlaneUnion_of_add`.",
     "termExposition": null
   },
   {
@@ -3991,9 +3991,9 @@
     "contentHash": 2214824110340801275,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Bridgeland's semi-closed upper half-plane $\\mathcal{H} = \\{z \\in \\mathbb{C} : \\operatorname{Im}(z) > 0\\} \\cup \\{z \\in \\mathbb{C} : \\operatorname{Im}(z) = 0,\\, \\operatorname{Re}(z) < 0\\}$. For $z \\in \\mathcal{H}$, the argument satisfies $\\arg z \\in (0, \\pi]$, so the phase $\\phi(z) = \\frac{1}{\\pi}\\arg z$ takes values in $(0, 1]$. This matches the set $\\{r e^{i\\pi\\phi} : r > 0,\\, 0 < \\phi \\leq 1\\}$ of Definition 2.1.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The subset of $\\mathbb{C}$ given by `{z | 0 < z.im} ∪ {z | z.im = 0 ∧ z.re < 0}`."
   },
   {
     "declName": "CategoryTheory.upperHalfPlaneUnion_ne_zero",
@@ -4003,8 +4003,8 @@
     "contentHash": 1019977411862766969,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Every element of $\\mathcal{H}$ is nonzero.",
+    "proofExposition": "In the strict upper half-plane, $\\operatorname{Im}(z) > 0 \\neq 0$; on the negative real axis, $\\operatorname{Re}(z) < 0 \\neq 0$.",
     "termExposition": null
   },
   {
@@ -4015,8 +4015,8 @@
     "contentHash": 3823549234679378933,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\|u\\| < \\sin(\\pi \\varepsilon)$ with $0 < \\varepsilon \\leq 1/2$, then $|\\arg(1+u)| < \\pi\\varepsilon$. In other words, a complex perturbation of $1$ by a vector of norm less than $\\sin(\\pi\\varepsilon)$ stays within angular distance $\\pi\\varepsilon$ of the positive real axis.",
+    "proofExposition": "Since $\\|u\\| < 1$, the number $1+u$ is nonzero and has positive real part, so $|\\arg(1+u)| < \\pi/2$. By `abs_sin_arg_le_norm_sub_one`, $|\\sin(\\arg(1+u))| \\leq \\|u\\|$. Using `sin_abs_eq_abs_sin` (valid since $|\\arg(1+u)| < \\pi/2$), monotonicity of $\\sin$ on $[0, \\pi/2]$ then forces $|\\arg(1+u)| < \\pi\\varepsilon$.",
     "termExposition": null
   },
   {
@@ -4027,8 +4027,8 @@
     "contentHash": 1018574668159500324,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any nonzero $z \\in \\mathbb{C}$, $|\\sin(\\arg z)| \\leq \\|z - 1\\|$.",
+    "proofExposition": "Using $\\sin(\\arg z) = z.\\text{im}/\\|z\\|$, the bound reduces to $|z.\\text{im}| \\leq \\|z - 1\\| \\cdot \\|z\\|$, which is the core inequality `im_sq_le_norm_sq_mul`.",
     "termExposition": null
   },
   {
@@ -4039,8 +4039,8 @@
     "contentHash": 3426643355206863660,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any $z \\in \\mathbb{C}$, $(\\operatorname{Im} z)^2 \\leq \\|z - 1\\|^2 \\cdot \\|z\\|^2$. This is the key geometric inequality underlying the phase perturbation bound.",
+    "proofExposition": "Expand both sides in terms of $z.\\text{re}$ and $z.\\text{im}$: the right-hand side minus the left-hand side equals $((z.\\text{re})^2 + (z.\\text{im})^2 - z.\\text{re})^2 \\geq 0$.",
     "termExposition": null
   },
   {
@@ -4051,8 +4051,8 @@
     "contentHash": 395456989525556172,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $x \\in \\mathbb{R}$ with $|x| < \\pi/2$, $\\sin(|x|) = |\\sin(x)|$.",
+    "proofExposition": "For $x \\geq 0$, both sides equal $\\sin(x) \\geq 0$. For $x < 0$, use $\\sin(-x) = -\\sin(x)$ and the fact that $\\sin(x) < 0$ when $-\\pi/2 < x < 0$.",
     "termExposition": null
   },
   {
@@ -4063,8 +4063,8 @@
     "contentHash": 3841893568849413924,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $m_1 \\cdot e^{i\\pi\\phi} = m_2 \\cdot e^{i\\pi\\psi}$ with $m_1, m_2 > 0$ and $|\\phi - \\psi| < 2$, then $\\phi = \\psi$. Two positive-real multiples of complex exponentials on distinct rays (within a half-turn of each other) cannot coincide.",
+    "proofExposition": "Taking arguments, $\\arg(e^{i\\pi\\phi}) = \\arg(e^{i\\pi\\psi})$ as elements of $(-\\pi, \\pi]$. This forces $\\pi\\phi - \\pi\\psi = 2\\pi n$ for some integer $n$; but $|\\phi - \\psi| < 2$ implies $|\\pi\\phi - \\pi\\psi| < 2\\pi$, so $n = 0$ and $\\phi = \\psi$.",
     "termExposition": null
   },
   {
@@ -4075,8 +4075,8 @@
     "contentHash": 1415327629674936732,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $m_i \\geq 0$ and the phases $\\theta_i$ all lie in an interval $[\\alpha, \\alpha + w]$ with $w < \\pi$, then $\\cos(w/2) \\cdot \\sum_i m_i \\leq \\|\\sum_i m_i e^{i\\theta_i}\\|$. This variant works with explicit phase angles rather than complex arguments.",
+    "proofExposition": "Project each term onto the bisector direction $\\beta = \\alpha + w/2$ by multiplying by $e^{-i\\beta}$; since $|\\theta_i - \\beta| \\leq w/2$, cosine monotonicity gives $\\cos(w/2) \\cdot m_i \\leq \\operatorname{Re}(m_i e^{i(\\theta_i - \\beta)})$. Sum over $i$, then bound $\\operatorname{Re}$ by norm and use $\\|e^{-i\\beta}\\| = 1$.",
     "termExposition": null
   },
   {
@@ -4087,8 +4087,8 @@
     "contentHash": 11081963431441995404,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If complex numbers $z_i$ all have arguments in the open interval $(\\alpha, \\alpha + w)$ with $w < \\pi$, then $\\cos(w/2) \\cdot \\sum_i \\|z_i\\| \\leq \\|\\sum_i z_i\\|$.",
+    "proofExposition": "Apply `re_mul_exp_neg_ge_cos_mul_norm` to each $z_i$ to get pointwise bounds on the rotated real parts, sum, then use $\\operatorname{Re}(w) \\leq \\|w\\|$ and $\\|e^{-i(\\alpha + w/2)}\\| = 1$.",
     "termExposition": null
   },
   {
@@ -4099,8 +4099,8 @@
     "contentHash": 8245157479430310523,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $z$ has argument in the open interval $(\\alpha, \\alpha + w)$ with $w < \\pi$, then projecting $z$ onto the bisector direction $e^{i(\\alpha + w/2)}$ yields at least $\\cos(w/2) \\cdot \\|z\\|$: $\\cos(w/2) \\cdot \\|z\\| \\leq \\operatorname{Re}(z \\cdot e^{-i(\\alpha + w/2)})$.",
+    "proofExposition": "Write $z = \\|z\\| e^{i\\arg z}$ in polar form. Then $\\operatorname{Re}(z e^{-i(\\alpha+w/2)}) = \\|z\\|\\cos(\\arg z - (\\alpha + w/2))$. Since $\\arg z \\in (\\alpha, \\alpha+w)$, the deviation $|\\arg z - (\\alpha+w/2)| < w/2$, so $\\cos(\\arg z - (\\alpha+w/2)) \\geq \\cos(w/2)$ by monotonicity of cosine on $[0,\\pi]$.",
     "termExposition": null
   },
   {
@@ -4111,8 +4111,8 @@
     "contentHash": 13143158786456114445,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "In the full subcategory determined by a property $P$, the cokernel satisfies $f.\\text{hom} \\circ (\\text{coker}.\\pi\\, f).\\text{hom} = 0$. This is the simp-normal form of the standard cokernel condition.",
+    "proofExposition": "Apply `congr_arg (·.hom)` to the standard cokernel condition `cokernel.condition f`.",
     "termExposition": null
   },
   {
@@ -4123,8 +4123,8 @@
     "contentHash": 7050264459713799397,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Variant of `cokernel_condition_hom` for the post-simp normal form where a morphism appears as `ObjectProperty.homMk g`: $g \\circ (\\text{coker}.\\pi\\,(\\text{homMk}\\, g)).\\text{hom} = 0$.",
+    "proofExposition": "Reduces to `cokernel_condition_hom` applied to `ObjectProperty.homMk g`.",
     "termExposition": null
   },
   {
@@ -4135,8 +4135,8 @@
     "contentHash": 1648880584844599664,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "In the full subcategory, the cokernel universal property in `.hom`-distributed form: $(\\text{coker}.\\pi\\, f).\\text{hom} \\circ (\\text{coker.desc}\\, f\\, g\\, h).\\text{hom} = g.\\text{hom}$.",
+    "proofExposition": "Apply `congr_arg (·.hom)` to the standard identity `cokernel.π_desc f g h`.",
     "termExposition": null
   },
   {
@@ -4147,8 +4147,8 @@
     "contentHash": 9875477637171418426,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "A morphism `ObjectProperty.homMk f : X ⟶ Y` in the full subcategory is zero if and only if the underlying morphism $f : X.\\text{obj} \\to Y.\\text{obj}$ is zero.",
+    "proofExposition": "The forward direction extracts the underlying morphism via `congr_arg InducedCategory.Hom.hom`; the reverse direction uses `ext` to reduce to the base category.",
     "termExposition": null
   },
   {
@@ -4159,8 +4159,8 @@
     "contentHash": 12735043740397195079,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "In the full subcategory, the kernel satisfies $(\\text{ker}.\\iota\\, f).\\text{hom} \\circ f.\\text{hom} = 0$. This is the simp-normal form of the standard kernel condition.",
+    "proofExposition": "Apply `congr_arg (·.hom)` to the standard kernel condition `kernel.condition f`.",
     "termExposition": null
   },
   {
@@ -4171,8 +4171,8 @@
     "contentHash": 5886250053903624878,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Variant of `kernel_condition_hom` for the post-simp normal form where a morphism appears as `ObjectProperty.homMk g`: $(\\text{ker}.\\iota\\,(\\text{homMk}\\, g)).\\text{hom} \\circ g = 0$.",
+    "proofExposition": "Reduces to `kernel_condition_hom` applied to `ObjectProperty.homMk g`.",
     "termExposition": null
   },
   {
@@ -4183,8 +4183,8 @@
     "contentHash": 2320408430122478723,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "In the full subcategory, the kernel universal property in `.hom`-distributed form: $(\\text{ker.lift}\\, f\\, g\\, h).\\text{hom} \\circ (\\text{ker}.\\iota\\, f).\\text{hom} = g.\\text{hom}$.",
+    "proofExposition": "Apply `congr_arg (·.hom)` to the standard identity `kernel.lift_ι f g h`.",
     "termExposition": null
   },
   {
@@ -4231,8 +4231,8 @@
     "contentHash": 14816790507760271871,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Two group homomorphisms $f, g : K_0(C) \\to A$ are equal if and only if they agree on all generator classes $[X]$ for $X \\in C$.",
+    "proofExposition": "The `_iff` variant of the `@[ext]` lemma `K₀.hom_ext`, converting the equality of homomorphisms into the pointwise condition on generators.",
     "termExposition": null
   },
   {
@@ -4471,9 +4471,9 @@
     "contentHash": 6358421512135847313,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Any triangle-additive function $f : C \\to A$ (in the sense of `IsTriangleAdditive`) is additive for the triangle presentation of $K_0(C)$, i.e., it satisfies $f(T.\\mathrm{obj}_2) = f(T.\\mathrm{obj}_1) + f(T.\\mathrm{obj}_3)$ for each distinguished triangle $T$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Unfolds `IsTriangleAdditive.additive` for each relation $\\langle T, hT \\rangle$ of the `trianglePresentation`."
   },
   {
     "declName": "CategoryTheory.Triangulated.trianglePresentation",
@@ -4579,9 +4579,9 @@
     "contentHash": 5266567283723437488,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The quotient $P.K_0 = \\mathrm{FreeAbelianGroup}(\\mathrm{Obj}) \\mathop{/} P.\\mathrm{subgroup}$ inherits the structure of an abelian group.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Obtained by transporting the canonical abelian group structure on the quotient of a free abelian group."
   },
   {
     "declName": "K0Presentation.isAdditive_of",
@@ -4879,8 +4879,8 @@
     "contentHash": 17292490305400134065,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Two group homomorphisms $f, g : K_0(\\mathcal{A}) \\to A$ from the Grothendieck group of the heart are equal if and only if they agree on all generator classes $[E]$ for heart objects $E \\in \\mathcal{A}$.",
+    "proofExposition": "The `_iff` variant of `HeartK0.hom_ext`, reflecting the fact that $K_0(\\mathcal{A})$ is generated by classes of objects.",
     "termExposition": null
   },
   {
@@ -5143,8 +5143,8 @@
     "contentHash": 17880542061292265638,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a natural number $n \\in \\mathbb{N}$, shifting by $n$ acts on $K_0$-classes by the sign $(-1)^n$: $[X[n]] = (-1)^n [X]$ in $K_0(C)$.",
+    "proofExposition": "By induction on $n$: the base case uses the shift-zero isomorphism, and the inductive step applies $K_0.\\mathrm{of\\_shift\\_one}$ to reduce $[X[n+1]]$ to $-[X[n]] = -(-1)^n[X] = (-1)^{n+1}[X]$.",
     "termExposition": null
   },
   {
@@ -5155,8 +5155,8 @@
     "contentHash": 18019673591158731291,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $n \\in \\mathbb{N}$, shifting by $\\operatorname{negSucc}(n) = -(n+1)$ acts on $K_0$-classes by $(-1)^{n+1}$: $[X[-(n+1)]] = (-1)^{n+1}[X]$ in $K_0(C)$.",
+    "proofExposition": "By induction on $n$: the base case is $[X[-1]] = -[X]$ from `K₀.of_shift_neg_one`, and the inductive step uses $X[\\operatorname{negSucc}(n+1)] \\cong (X[\\operatorname{negSucc}(n)])[-1]$ together with $K_0.\\mathrm{of\\_shift\\_neg\\_one}$.",
     "termExposition": null
   },
   {
@@ -5287,8 +5287,8 @@
     "contentHash": 17282094289801273074,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If, for every distinguished triangle $A \\to X_2 \\to X_3 \\xrightarrow{\\delta} A[1]$ with $A$ in the heart $\\mathcal{A}$, the induced short complex in $\\mathcal{A}$ coming from $H^0{}'$ completes to a distinguished triangle in $\\mathcal{A}$, then the $H^0$ functor is homological.",
+    "proofExposition": "Reduces to `H0Functor_isHomological_of_heartSourceH0primeShortComplex_f_is_kernel` by invoking `heartSourceH0primeShortComplex_f_is_kernel_of_distTriang` to produce the kernel property from the distinguished triangle hypothesis.",
     "termExposition": null
   },
   {
@@ -5299,8 +5299,8 @@
     "contentHash": 10518822115344046534,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If, for every distinguished triangle $A \\to X_2 \\to X_3 \\to A[1]$ with $A$ in the heart $\\mathcal{A}$, the first map of the heart-source $H^0{}'$ short complex is a kernel, then the $H^0$ functor is homological.",
+    "proofExposition": "Applies `H0Functor_isHomological_of_eval_of_heartSourceH0primeShortComplex`, using `heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_of_f_is_kernel` to convert the kernel hypothesis into the required exactness of the preaddditive coyoneda evaluation.",
     "termExposition": null
   },
   {
@@ -5323,8 +5323,8 @@
     "contentHash": 7682234766691733293,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a heart object $E \\in \\mathcal{A}$, the composition of the inverse of the $H^0{}'$-isomorphism $H^0{}'(E) \\cong E$ with the truncation inclusion $\\tau^{\\ge 0}(E) \\hookrightarrow \\tau^{\\le 0}\\tau^{\\ge 0}(E)$ equals the truncation projection $E \\twoheadrightarrow \\tau^{\\ge 0}(E)$.",
+    "proofExposition": "Verified by chasing through the pentagon identity for the interchange of $\\tau^{\\le}$ and $\\tau^{\\ge}$ truncations and the naturality of the truncation counit, combined with the shift-zero isomorphism.",
     "termExposition": null
   },
   {
@@ -5335,8 +5335,8 @@
     "contentHash": 16558430889443413840,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The reassociated form of `H0primeObjIsoOfHeart_inv_hom_comp_truncLEι`: for any further morphism $h$, composing the inverse $H^0{}'$-isomorphism then the $\\tau^{\\le 0}\\tau^{\\ge 0}$ inclusion then $h$ equals composing $\\tau^{\\ge 0}$-projection then $h$.",
+    "proofExposition": "Automatic from `H0primeObjIsoOfHeart_inv_hom_comp_truncLEι` by the `@[reassoc]` attribute.",
     "termExposition": null
   },
   {
@@ -5347,8 +5347,8 @@
     "contentHash": 15507680377445246313,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given heart objects $E, A \\in \\mathcal{A}$, an object $X_3 \\in C$, a connecting morphism $\\delta : X_3 \\to A[1]$, and a map $m : E \\to X_3$ satisfying $m \\circ \\pi^{\\ge 0}_{X_3} = 0$, there exists a factorization $u : E \\to \\tau^{[-1,0)}(X_3)$ such that $u \\circ \\phi = m \\circ \\delta$, where $\\phi$ is the heart-source morphism to $A[1]$.",
+    "proofExposition": "Since $m$ kills $\\tau^{\\ge 0}(X_3)$, coyoneda exactness of the triangle $\\tau^{<0}(X_3) \\to X_3 \\to \\tau^{\\ge 0}(X_3)$ gives a lift $u_0 : E \\to \\tau^{<0}(X_3)$. Composing with $\\tau^{\\ge -1}$-projection and applying `truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom` yields the required identity.",
     "termExposition": null
   },
   {
@@ -5359,8 +5359,8 @@
     "contentHash": 15377856375983213719,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given heart objects $E, A \\in \\mathcal{A}$, maps $f : E \\to X_2$ and $g : X_2 \\to X_3$, and a connecting map $\\delta : X_3 \\to A[1]$, if the composition $H^0{}'(E \\to X_2) \\circ H^0{}'(g) = 0$, then there exists $u : E \\to \\tau^{[-1,0)}(X_3)$ with $u \\circ \\phi = f \\circ g \\circ \\delta$.",
+    "proofExposition": "The hypothesis $h.\\mathrm{toH0primeHom}(E, f) \\circ H^0{}'(g) = 0$ is converted via `toH0primeHom_eq_zero_iff` to $f \\circ g \\circ \\pi^{\\ge 0}_{X_3} = 0$, then `exists_comp_heartSourceNegOneToAShiftHom_eq_of_comp_truncGEπ_zero` applies.",
     "termExposition": null
   },
   {
@@ -5371,8 +5371,8 @@
     "contentHash": 7729653945847147664,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a distinguished triangle $A \\xrightarrow{f} X_2 \\xrightarrow{g} X_3 \\xrightarrow{\\delta} A[1]$ with $A$ in the heart, the composition $\\phi \\circ f[1]$ (where $\\phi : \\tau^{[-1,0)}(X_3) \\to A[1]$) factors through the boundary map $\\tau^{<-1}(X_3)[1] \\to X_2[1]$ of the $(-1,0)$ triangle.",
+    "proofExposition": "The composite $\\pi^{\\ge -1} \\circ \\phi \\circ f[1]$ vanishes because $\\delta \\circ f[1] = 0$ in the distinguished triangle; triangle coyoneda exactness then gives the claimed factorization.",
     "termExposition": null
   },
   {
@@ -5443,8 +5443,8 @@
     "contentHash": 11342896966989564714,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a heart object $E \\in \\mathcal{A}$, the zeroth heart cohomology class $h^0_t(E) \\in K_0(\\mathcal{A})$ equals the ordinary generator class $[E]$.",
+    "proofExposition": "The $n=0$ heart cohomology of a heart object is canonically isomorphic to $E$ itself via `H0FunctorObjIsoOfHeart`, so $K_0$-classes agree by `HeartK0.of_iso`.",
     "termExposition": null
   },
   {
@@ -5455,9 +5455,9 @@
     "contentHash": 5372938015700981394,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For a heart object $E \\in \\mathcal{A}$ and $n \\in \\mathbb{Z}$, the underlying $C$-object of the $n$-th heart cohomology $H^n_t(E[-n])$ is canonically isomorphic to $E$ itself.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Since $E[-n]$ is concentrated in degree $n$ (it is $\\tau^{\\ge n}$ and $\\tau^{\\le n}$), the pure-degree truncation $\\tau^{[n,n]}(E[-n])$ is isomorphic to $E[-n]$; after shifting by $n$ one recovers $E$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartEulerClassObj",
@@ -5527,9 +5527,9 @@
     "contentHash": 7528023539465971484,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given a heart object $A \\in \\mathcal{A}$ and objects $X_2, X_3 \\in C$ with maps $f : A \\to X_2$, $g : X_2 \\to X_3$, $f \\circ g = 0$, the short complex in $\\mathcal{A}$ obtained by applying $H^0{}'$ is $H^0{}'(A) \\xrightarrow{\\iota^{-1} \\circ H^0{}'(f)} H^0{}'(X_2) \\xrightarrow{H^0{}'(g)} H^0{}'(X_3)$, where $\\iota : H^0{}'(A) \\xrightarrow{\\sim} A$ is the canonical isomorphism.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructed as a `ShortComplex` with first map the isomorphism-adjusted $H^0{}'(f)$ and second map $H^0{}'(g)$; vanishing of the composite follows by functoriality from $f \\circ g = 0$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartSourceH0primeShortComplexIso",
@@ -5539,9 +5539,9 @@
     "contentHash": 13205857018346826808,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "When the triple $(A, f, g, \\delta)$ forms a distinguished triangle, there is a canonical isomorphism between the heart-source $H^0{}'$ short complex and the image of the ambient distinguished-triangle short complex under the functor $H^0{}'$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as a short-complex isomorphism with component $H^0{}'(A) \\cong A$ in the first slot and identities elsewhere; compatibility of the square is immediate from the definition of `heartSourceH0primeShortComplex`."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartSourceH0primeShortComplex_cokernelDesc",
@@ -5551,9 +5551,9 @@
     "contentHash": 10556734834922351591,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given the heart-source $H^0{}'$ short complex $A \\xrightarrow{f'} H^0{}'(X_2) \\xrightarrow{g'} H^0{}'(X_3)$, the canonical map from the cokernel of $f'$ to $H^0{}'(X_3)$ induced by $g'$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The universal property of the cokernel applied to $g'$, which satisfies $f' \\circ g' = 0$ by definition of the short complex."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartSourceH0primeShortComplex_cokernelπ_comp_cokernelDesc",
@@ -5563,8 +5563,8 @@
     "contentHash": 11158521664662962875,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The cokernel projection $\\pi : H^0{}'(X_2) \\twoheadrightarrow \\operatorname{coker}(f')$ composed with the canonical descent $H^0{}'(X_3)$ equals the second map $g' = H^0{}'(g)$ of the heart-source short complex.",
+    "proofExposition": "Immediate from the universal property of the cokernel: $\\pi \\circ \\mathrm{desc} = g'$.",
     "termExposition": null
   },
   {
@@ -5575,8 +5575,8 @@
     "contentHash": 1821520832821565305,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The reassociated form of `heartSourceH0primeShortComplex_cokernelπ_comp_cokernelDesc`: for any further morphism $h$, composing the cokernel projection, then the canonical descent, then $h$ equals composing $g'$ then $h$.",
+    "proofExposition": "Automatic from the base identity by the `@[reassoc]` attribute.",
     "termExposition": null
   },
   {
@@ -5587,8 +5587,8 @@
     "contentHash": 13854065421154131157,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The first map of the heart-source $H^0{}'$ short complex equals the canonical map $h.\\mathrm{toH0primeHom}(A, f) : A \\to H^0{}'(X_2)$ associated to $f : A \\to X_2$.",
+    "proofExposition": "Follows from `H0primeObjIsoOfHeart_inv_comp_H0primeFunctor_map`, which identifies the adjusted $H^0{}'(f)$ with `toH0primeHom`.",
     "termExposition": null
   },
   {
@@ -5599,9 +5599,9 @@
     "contentHash": 2402964330028965364,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "When the morphisms from a heart-source $H^0{}'$ short complex themselves form a distinguished triangle in $\\mathcal{A}$, the first map is a kernel: the heart-source short complex is short exact, so $f'$ is a monomorphism and its kernel fork is a limit.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Applies `heartFullSubcategory_shortExact_of_distTriang` to the given distinguished triangle in $\\mathcal{A}$ and extracts `fIsKernel` from the resulting short exactness."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_iff",
@@ -5611,8 +5611,8 @@
     "contentHash": 6356193675571312955,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a distinguished triangle $(A, X_2, X_3, \\delta)$ and a heart object $E \\in \\mathcal{A}$, the short complex obtained by applying $H^0{}'$ and then $\\operatorname{Hom}(-, E)$ to the ambient triangle is exact if and only if the corresponding complex for the heart-source short complex is exact.",
+    "proofExposition": "The isomorphism `heartSourceH0primeShortComplexIso` between the two short complexes transports exactness, using `ShortComplex.exact_iff_of_iso`.",
     "termExposition": null
   },
   {
@@ -5623,8 +5623,8 @@
     "contentHash": 13962564338566212432,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If the first map $f'$ of the heart-source $H^0{}'$ short complex is a kernel, then for every heart object $E$ the complex $\\operatorname{Hom}(H^0{}'(X_3), E) \\to \\operatorname{Hom}(H^0{}'(X_2), E) \\to \\operatorname{Hom}(A, E)$ is exact.",
+    "proofExposition": "Applies `ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel` directly.",
     "termExposition": null
   },
   {
@@ -5635,9 +5635,9 @@
     "contentHash": 665390592607985101,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "After shifting back by $-1$, the morphism `heartSourceNegOneToAShiftHom` $: \\tau^{[-1,0)}(X_3) \\to A[1]$ yields a map $H^{-1}_t(X_3) \\to A$ in the heart, using the canonical isomorphism $\\tau^{[-1,-1]}(X_3)[-1] \\cong \\tau^{[-1,0)}(X_3)[-1]$ and the shift adjunction $A[1][-1] \\cong A$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructed by pre-composing the shift-by-$(-1)$ of `heartSourceNegOneToAShiftHom` with the canonical isomorphism $\\tau^{[-1,-1]}(X_3)[-1] \\cong \\tau^{[-1,0)}(X_3)[-1]$ and post-composing with the shift adjunction isomorphism."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartSourceNegOneToAShiftHom",
@@ -5647,9 +5647,9 @@
     "contentHash": 11869543185822657082,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given a heart object $A \\in \\mathcal{A}$ and a map $\\delta : X_3 \\to A[1]$, this is the canonical morphism $\\tau^{[-1,0)}(X_3) \\to A[1]$ induced by composing $\\tau^{<0}(X_3) \\hookrightarrow X_3 \\xrightarrow{\\delta} A[1]$ and using the vanishing of $\\tau^{<-1}(X_3) \\to A[1]$ (since $A[1]$ has $\\ge -1$ support and $\\tau^{<-1}(X_3)$ has $\\le -2$ support).",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Obtained by applying `Triangle.yoneda_exact₂` to the triangle $\\tau^{<-1}(X_3) \\to \\tau^{<0}(X_3) \\to \\tau^{[-1,0)}(X_3)$ with the map $s = \\iota_0 \\circ \\delta : \\tau^{<0}(X_3) \\to A[1]$ and the vanishing condition coming from t-structure orthogonality."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.isGE_lowerBound",
@@ -5719,8 +5719,8 @@
     "contentHash": 12907174961252375710,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The composition $\\pi^{\\ge -1}_{\\tau^{<0}(X_3)} \\circ \\phi = \\iota_0 \\circ \\delta$, where $\\pi^{\\ge -1}$ is the $\\tau^{\\ge -1}$-projection and $\\iota_0 : \\tau^{<0}(X_3) \\hookrightarrow X_3$ is the truncation inclusion.",
+    "proofExposition": "This is the defining property of $\\phi = $ `heartSourceNegOneToAShiftHom`, extracted from the `choose_spec` of the `Triangle.yoneda_exact₂` application.",
     "termExposition": null
   },
   {
@@ -5731,8 +5731,8 @@
     "contentHash": 3581688508726601077,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The reassociated form of `truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom`: for any further morphism $h$, composing $\\pi^{\\ge -1} \\circ \\phi \\circ h$ equals $\\iota_0 \\circ \\delta \\circ h$.",
+    "proofExposition": "Automatic from the base identity by the `@[reassoc]` attribute.",
     "termExposition": null
   },
   {
@@ -5755,8 +5755,8 @@
     "contentHash": 3988789537593684199,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any morphism $\\varphi : (\\tau^{<-1}(X_3))[1] \\to X_2[1]$, the composite $\\varphi \\circ (\\pi^{\\ge 0}_{X_2})[1]$ is zero.",
+    "proofExposition": "The source $(\\tau^{<-1}(X_3))[1]$ has $\\le -2$ support (using `isLE_truncLT_obj` and the shift formula), while the target of $\\pi^{\\ge 0}_{X_2}$ has $\\ge 0$ support, hence its shift has $\\ge -1$ support. The t-structure orthogonality `t.zero` gives the vanishing.",
     "termExposition": null
   },
   {
@@ -5875,8 +5875,8 @@
     "contentHash": 16124404787609527014,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a monomorphism $f : X \\to Y$ and a subobject $S \\hookrightarrow X$, the image of $S$ under $\\mathrm{Subobject.map}(f)$ equals the subobject $\\mathrm{mk}(S.\\mathrm{arrow} \\circ f)$ defined by the composite.",
+    "proofExposition": "Rewrites $S = \\mathrm{mk}(S.\\mathrm{arrow})$ via `Subobject.mk_arrow`, then applies `Subobject.map_mk`.",
     "termExposition": null
   },
   {
@@ -5887,8 +5887,8 @@
     "contentHash": 7600153548426485242,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a monomorphism $f : X \\to Y$ and subobjects $S \\le T$ of $X$, the canonical inclusion $\\mathrm{map}(f)(S) \\hookrightarrow \\mathrm{map}(f)(T)$ followed by the comparison isomorphism $\\mathrm{map}(f)(T) \\cong T$ equals the comparison isomorphism $\\mathrm{map}(f)(S) \\cong S$ followed by the inclusion $S \\hookrightarrow T$.",
+    "proofExposition": "Both sides are characterized by post-composing with $T.\\mathrm{arrow} \\circ f$; the identity follows from `Subobject.eq_of_comp_arrow_eq` and cancellation of $f$.",
     "termExposition": null
   },
   {
@@ -5899,8 +5899,8 @@
     "contentHash": 8763477070546291302,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a monomorphism $f : X \\to Y$ and subobjects $S \\le T$ of $X$, the cokernel of $\\mathrm{map}(f)(S) \\hookrightarrow \\mathrm{map}(f)(T)$ is semistable if and only if the cokernel of $S \\hookrightarrow T$ is semistable.",
+    "proofExposition": "Both directions apply `Z.isSemistable_of_iso` with the isomorphism `Subobject.cokernelMapMonoIso_local` and its inverse.",
     "termExposition": null
   },
   {
@@ -5923,8 +5923,8 @@
     "contentHash": 18204183715797501950,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a monomorphism $f : X \\to Y$ and subobjects $S \\le T$ of $X$, the phase of the cokernel of $\\mathrm{map}(f)(S) \\hookrightarrow \\mathrm{map}(f)(T)$ equals the phase of the cokernel of $S \\hookrightarrow T$.",
+    "proofExposition": "Applies `Z.phase_eq_of_iso` with the isomorphism `Subobject.cokernelMapMonoIso_local`.",
     "termExposition": null
   },
   {
@@ -6019,8 +6019,8 @@
     "contentHash": 7261350484427844765,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "An associativity-reassociated variant of the naturality square for the isomorphism $H^0(X) \\cong H^{0\\prime}(X)$, recording that composing $H^0(f)$ with the comparison map at $Y$ equals the comparison map at $X$ followed by $H^{0\\prime}(f)$ followed by any further morphism.",
+    "proofExposition": "Follows by applying `@[reassoc]` to `H0ObjIsoH0prime_hom_naturality`.",
     "termExposition": null
   },
   {
@@ -6067,8 +6067,8 @@
     "contentHash": 576405163849008357,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any distinguished triangle $T$ and heart object $E$, exactness of the short complex $\\operatorname{Hom}(H^{0\\prime}(-),E)$ applied to $T$ is equivalent to exactness of $\\operatorname{Hom}(\\tau^{\\ge 0}(-), E.\\mathrm{obj})$ applied to the same triangle.",
+    "proofExposition": "Uses the natural isomorphism `toH0primeNatIsoViaTruncGE` to transfer exactness along the natural isomorphism $H^{0\\prime}\\text{-coyoneda} \\cong \\tau^{\\ge 0}\\text{-coyoneda}$ via `ShortComplex.exact_iff_of_iso`.",
     "termExposition": null
   },
   {
@@ -6079,9 +6079,9 @@
     "contentHash": 4951689239191933687,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "$H^{0\\prime}(X)$ is canonically isomorphic to $H^{0\\prime}(\\tau^{\\ge 0} X)$. Replacing $X$ by its $\\tau^{\\ge 0}$-truncation does not change the degree-zero cohomology object in the heart.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructed as the image under $\\tau^{\\le 0}$ of the canonical isomorphism $\\tau^{\\ge 0}(\\tau^{\\ge 0} X) \\xrightarrow{\\sim} \\tau^{\\ge 0} X$ induced by the idempotence of $\\tau^{\\ge 0}$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.H0primeObjIsoTruncGE_hom_naturality",
@@ -6091,8 +6091,8 @@
     "contentHash": 6328152702423624487,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The forward component of `H0primeObjIsoTruncGE` is natural: for $g : X \\to Y$, the square commutes in which the top row is $H^{0\\prime}(X) \\to H^{0\\prime}(\\tau^{\\ge 0}X) \\xrightarrow{H^{0\\prime}(\\tau^{\\ge 0} g)} H^{0\\prime}(\\tau^{\\ge 0}Y)$ and the bottom row is $H^{0\\prime}(X) \\xrightarrow{H^{0\\prime}(g)} H^{0\\prime}(Y) \\to H^{0\\prime}(\\tau^{\\ge 0}Y)$.",
+    "proofExposition": "Reduces to naturality of $\\tau^{\\ge 0}\\pi_0$ (the counit of the truncation adjunction) under $\\tau^{\\le 0}$.",
     "termExposition": null
   },
   {
@@ -6103,8 +6103,8 @@
     "contentHash": 17784778949829011839,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Reassociated form of `H0primeObjIsoTruncGE_hom_naturality`, appending a further morphism on the right.",
+    "proofExposition": "Immediate from `@[reassoc]` applied to `H0primeObjIsoTruncGE_hom_naturality`.",
     "termExposition": null
   },
   {
@@ -6115,8 +6115,8 @@
     "contentHash": 17269126205319193533,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Naturality of the inverse of `H0primeObjIsoTruncGE`: for $g : X \\to Y$ the square with horizontal arrows $H^{0\\prime}(\\tau^{\\ge 0}(-)) \\to H^{0\\prime}(-)$ and vertical arrows $H^{0\\prime}(g)$ and $H^{0\\prime}(\\tau^{\\ge 0} g)$ commutes.",
+    "proofExposition": "Deduced from the naturality of the forward direction by cancellation with the isomorphism.",
     "termExposition": null
   },
   {
@@ -6127,8 +6127,8 @@
     "contentHash": 7427775785537379877,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Reassociated form of `H0primeObjIsoTruncGE_inv_naturality`.",
+    "proofExposition": "Immediate from `@[reassoc]` applied to `H0primeObjIsoTruncGE_inv_naturality`.",
     "termExposition": null
   },
   {
@@ -6151,8 +6151,8 @@
     "contentHash": 10908591146750131595,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The inverse map `fromH0primeHom` is additive: for $X \\in \\tau^{\\ge 0}$ and $\\beta_1, \\beta_2 : E \\to H^{0\\prime}(X)$ in the heart, $\\mathrm{from}(\\beta_1 + \\beta_2) = \\mathrm{from}(\\beta_1) + \\mathrm{from}(\\beta_2)$.",
+    "proofExposition": "Expands the definition and distributes precomposition with a fixed morphism over addition.",
     "termExposition": null
   },
   {
@@ -6163,8 +6163,8 @@
     "contentHash": 7916849471087391874,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $X \\in \\tau^{\\ge 0}$ and $\\beta : E \\to H^{0\\prime}(X)$, postcomposing `fromH0primeHom`($\\beta$) with the projection $\\pi_0 : X \\to \\tau^{\\ge 0} X$ recovers $\\beta.\\mathrm{hom} \\circ \\iota$, where $\\iota : H^{0\\prime}(X) \\hookrightarrow \\tau^{\\ge 0} X$ is the truncation inclusion. This is the key compatibility used in the bijectivity argument.",
+    "proofExposition": "Unfolds `fromH0primeHom_of_isGE` and applies `IsIso.hom_inv_id` in the composition.",
     "termExposition": null
   },
   {
@@ -6175,8 +6175,8 @@
     "contentHash": 8540771349314985449,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Reassociated version of `fromH0primeHom_of_isGE_hom`, appending a further morphism on the right.",
+    "proofExposition": "Immediate from `@[reassoc]` applied to `fromH0primeHom_of_isGE_hom`.",
     "termExposition": null
   },
   {
@@ -6187,8 +6187,8 @@
     "contentHash": 975042162459393581,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $X \\in \\tau^{\\ge 0}$ and $f : E.\\mathrm{obj} \\to X$, composing $\\mathrm{to}(f)$ with the inverse recovers $f$: $\\mathrm{from}(\\mathrm{to}(f)) = f$. This is one half of the adjunction isomorphism.",
+    "proofExposition": "Cancels the projection using the mono property of $\\tau^{\\ge 0}\\pi_0$ and the simp lemma `fromH0primeHom_of_isGE_hom` together with `toH0primeHom_hom`.",
     "termExposition": null
   },
   {
@@ -6199,8 +6199,8 @@
     "contentHash": 11631190595369035774,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The inverse map sends the zero morphism to zero: $\\mathrm{from}(0) = 0$ for $X \\in \\tau^{\\ge 0}$.",
+    "proofExposition": "Immediate from the definition, using `simp`.",
     "termExposition": null
   },
   {
@@ -6307,8 +6307,8 @@
     "contentHash": 12596541552488856404,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Reassociated form of `toH0primeHom_comp_H0primeFunctor_map`: $\\mathrm{to}_E(f) \\circ H^{0\\prime}(g) \\circ h = \\mathrm{to}_E(f \\circ g) \\circ h$.",
+    "proofExposition": "Immediate from `@[reassoc]`.",
     "termExposition": null
   },
   {
@@ -6319,8 +6319,8 @@
     "contentHash": 14155467095520112108,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Characterization of `toH0primeHom`: a morphism $\\beta : E \\to H^{0\\prime}(X)$ satisfying $\\beta.\\mathrm{hom} \\circ \\iota = f \\circ \\pi$ (where $\\pi$ is the truncation projection and $\\iota$ the inclusion) must equal $\\mathrm{to}(f)$.",
+    "proofExposition": "Applies the uniqueness lemma `hom_ext_toH0prime`, using the hypothesized equation and `toH0primeHom_hom`.",
     "termExposition": null
   },
   {
@@ -6331,8 +6331,8 @@
     "contentHash": 11803138096845249465,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $X \\in \\tau^{\\ge 0}$ and $\\beta : E \\to H^{0\\prime}(X)$, $\\mathrm{to}(\\mathrm{from}(\\beta)) = \\beta$. Together with `fromH0primeHom_of_isGE_toH0primeHom`, this establishes the additive equivalence `toH0primeIsoOfIsGE`.",
+    "proofExposition": "Uses `toH0primeHom_eq` with the equality provided by `fromH0primeHom_of_isGE_hom`.",
     "termExposition": null
   },
   {
@@ -6355,8 +6355,8 @@
     "contentHash": 4539718291702670124,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Reassociated form of `toH0primeHom_hom`: $\\mathrm{to}(f).\\mathrm{hom} \\circ \\iota \\circ g = f \\circ \\pi \\circ g$.",
+    "proofExposition": "Immediate from `@[reassoc (attr := simp)]` on `toH0primeHom_hom`.",
     "termExposition": null
   },
   {
@@ -6379,9 +6379,9 @@
     "contentHash": 690424116492388326,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For $X \\in \\tau^{\\ge 0}$ and a heart object $E$, there is an additive isomorphism $\\operatorname{Hom}(E.\\mathrm{obj}, X) \\xrightarrow{\\sim} \\operatorname{Hom}_{\\mathcal{A}}(E, H^{0\\prime}(X))$. The key point is that $\\tau^{\\ge 0} X \\cong X$ allows the truncation-projection to be inverted.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Assembled from `toH0primeHom` (the forward map) and `fromH0primeHom_of_isGE` (the inverse), with the two inverse laws given by `fromH0primeHom_of_isGE_toH0primeHom` and `toH0primeHom_fromH0primeHom_of_isGE`."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.toH0primeIsoViaTruncGE",
@@ -6391,9 +6391,9 @@
     "contentHash": 6452437918830006955,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For any $X$ and heart object $E$, there is an additive isomorphism $\\operatorname{Hom}(E.\\mathrm{obj}, \\tau^{\\ge 0} X) \\xrightarrow{\\sim} \\operatorname{Hom}_{\\mathcal{A}}(E, H^{0\\prime}(X))$ obtained by composing `toH0primeIsoOfIsGE` for $\\tau^{\\ge 0} X$ with the inverse of the canonical isomorphism $H^{0\\prime}(X) \\cong H^{0\\prime}(\\tau^{\\ge 0} X)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Transports the comparison `toH0primeIsoOfIsGE` (which applies to $\\tau^{\\ge 0} X \\in \\tau^{\\ge 0}$) along `H0primeObjIsoTruncGE` to give a comparison directly from maps into $\\tau^{\\ge 0} X$ to maps into $H^{0\\prime}(X)$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.toH0primeIsoViaTruncGE_naturality",
@@ -6403,8 +6403,8 @@
     "contentHash": 10808381751698036989,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The isomorphism `toH0primeIsoViaTruncGE` is natural in $X$: for $g : X \\to Y$ and $f : E.\\mathrm{obj} \\to \\tau^{\\ge 0} X$, $\\mathrm{iso}_{Y}(f \\circ \\tau^{\\ge 0} g) = \\mathrm{iso}_{X}(f) \\circ H^{0\\prime}(g)$.",
+    "proofExposition": "Expands definitions and applies `toH0primeHom_comp_H0primeFunctor_map` together with naturality of `H0primeObjIsoTruncGE_inv`.",
     "termExposition": null
   },
   {
@@ -6415,9 +6415,9 @@
     "contentHash": 11185793680831556665,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For a heart object $E$, the functor $X \\mapsto \\operatorname{Hom}(E, H^{0\\prime}(X))$ (i.e., $H^{0\\prime}$ followed by coyoneda at $E$) is naturally isomorphic to the functor $X \\mapsto \\operatorname{Hom}(E.\\mathrm{obj}, \\tau^{\\ge 0} X)$ (coyoneda at $E.\\mathrm{obj}$ precomposed with $\\tau^{\\ge 0}$).",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Assembles the objectwise isomorphisms `toH0primeIsoViaTruncGE` into a natural isomorphism via `NatIso.ofComponents`, with naturality supplied by `toH0primeIsoViaTruncGE_naturality`."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.toH0primeNatTrans",
@@ -6475,8 +6475,8 @@
     "contentHash": 8747303191264980827,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Reassociated composition rule for `descTruncGE`: if $Z \\in \\tau^{\\ge n}$, then $\\tau^{\\ge n}(g) \\circ \\mathrm{desc}(f) \\circ h = \\mathrm{desc}(g \\circ f) \\circ h$.",
+    "proofExposition": "Follows from `truncGE_map_comp_descTruncGE` by `@[reassoc]`.",
     "termExposition": null
   },
   {
@@ -6511,8 +6511,8 @@
     "contentHash": 9440541982092668199,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $H^{0\\prime}$ is a homological functor then so is $H^0$.",
+    "proofExposition": "Applies `Functor.IsHomological.of_iso` to the natural isomorphism $H^0 \\cong H^{0\\prime}$.",
     "termExposition": null
   },
   {
@@ -6523,8 +6523,8 @@
     "contentHash": 3388050298113137875,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If for every distinguished triangle $T$ and every heart object $E$ the short complex $\\operatorname{Hom}(H^{0\\prime}(-), E)$ applied to $T$ is exact, then $H^0$ is a homological functor.",
+    "proofExposition": "Chains together `H0primeFunctor_preadditiveYoneda_isHomological_of_eval` (to lift pointwise coyoneda exactness to homologicality of $H^{0\\prime} \\circ \\mathrm{Yoneda}$), then `H0primeFunctor_isHomological_of_preadditiveYoneda` (faithfulness of Yoneda), and finally `H0Functor_isHomological_of_H0primeFunctor`.",
     "termExposition": null
   },
   {
@@ -6535,8 +6535,8 @@
     "contentHash": 2958269480769624474,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "To show $H^0$ is homological, it suffices to verify exactness of $\\operatorname{Hom}(H^{0\\prime}(-), E)$ only for distinguished triangles whose first object is a heart object.",
+    "proofExposition": "For a general distinguished triangle $T$, applies the octahedral splitting `H0primeFunctor_preadditiveCoyoneda_exact_iff_octahedral_split` to reduce to exactness of the triangle whose first term is $\\tau^{\\ge 0}(T_1)$, then uses `H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_zero_of_heart_case` (which reduces to the heart case via another octahedral split at level 1) to conclude.",
     "termExposition": null
   },
   {
@@ -6547,8 +6547,8 @@
     "contentHash": 2396103774096646699,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The composite functor $H^{0\\prime} \\circ \\mathrm{Yoneda}$ evaluated at an object $E^{\\mathrm{op}}$ equals $H^{0\\prime}$ followed by $\\mathrm{coyoneda}$ at $E$: these are definitionally equal.",
+    "proofExposition": "Proved by `rfl`.",
     "termExposition": null
   },
   {
@@ -6559,8 +6559,8 @@
     "contentHash": 3406390531392270750,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If the composite $H^{0\\prime} \\circ \\mathrm{Yoneda}$ is homological (as a functor to presheaves of abelian groups on $\\mathcal{A}$), then $H^{0\\prime}$ itself is homological.",
+    "proofExposition": "Yoneda's embedding is faithful, so exactness of a short complex in $\\mathcal{A}$ can be detected after postcomposing with Yoneda; applies `Functor.reflects_exact_of_faithful`.",
     "termExposition": null
   },
   {
@@ -6571,8 +6571,8 @@
     "contentHash": 11936351003246590553,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a distinguished triangle $T$ and heart object $E$, there exists an octahedral splitting of $T$ at the $\\tau^{\\ge 0}$-truncation of $T_1$ such that exactness of $\\operatorname{Hom}(H^{0\\prime}(-), E)$ on $T$ is equivalent to exactness on the split triangle with first term $\\tau^{\\ge 0}(T_1)$.",
+    "proofExposition": "Applies `exists_truncLT_octahedral_split` at $n = 0$ to produce the octahedral data, verifies that the relevant map on $\\tau^{\\ge 0}$ is an iso using `isIso₂_truncGE_map_of_isLE`, and converts between the two exactness statements via `H0primeFunctor_preadditiveCoyoneda_exact_iff_truncGE` and `truncGE_preadditiveCoyoneda_exact_iff_of_split`.",
     "termExposition": null
   },
   {
@@ -6583,8 +6583,8 @@
     "contentHash": 2897942823416439028,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If the first object $A$ of a distinguished triangle satisfies $A \\in \\tau^{\\ge 1}$, then $\\operatorname{Hom}(H^{0\\prime}(-), E)$ is exact on that triangle for every heart object $E$.",
+    "proofExposition": "Since $A \\in \\tau^{\\ge 1}$ implies $A \\in \\tau^{\\ge 0}$, the rotation of the triangle has third term in $\\tau^{\\ge 0}$, making $\\tau^{< 0}$ of the middle map an isomorphism. Then `H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_truncLT_map` applies.",
     "termExposition": null
   },
   {
@@ -6595,8 +6595,8 @@
     "contentHash": 12948283471660549810,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $A \\in \\tau^{\\ge 0}$ and the $\\operatorname{Hom}(H^{0\\prime}(-),E)$-exactness holds for all distinguished triangles with heart source, then exactness holds for the triangle with first term $A$.",
+    "proofExposition": "Applies the octahedral splitting at $n = 1$: the first term of the auxiliary triangle $h_{13}$ is $\\tau^{<1}(A) \\in \\mathcal{A}$, so the heart hypothesis gives its exactness; then `H0primeFunctor_preadditiveCoyoneda_exact_of_split_one` assembles the result.",
     "termExposition": null
   },
   {
@@ -6607,8 +6607,8 @@
     "contentHash": 15804881707764280618,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\tau^{<0}(m_3)$ is an isomorphism in a distinguished triangle $A \\to Z \\to X_3$, then $\\operatorname{Hom}(H^{0\\prime}(-), E)$ is exact on that triangle for every heart object $E$.",
+    "proofExposition": "Uses the obstruction sequence: a cocycle $\\beta$ killed by $H^{0\\prime}(m_3)$ must satisfy the obstruction $\\beta.\\mathrm{hom} \\circ \\iota \\circ \\delta_Z = 0$, which holds because the shifted isomorphism $\\tau^{<0}(m_3)^{[1]}$ is also an isomorphism. Then `exists_toH0primeHom_eq_of_obstruction_zero` and `coyoneda_exact₂` supply the preimage.",
     "termExposition": null
   },
   {
@@ -6619,8 +6619,8 @@
     "contentHash": 16355043680355968782,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given an octahedral splitting of a distinguished triangle $A \\to X_2 \\to X_3$ at $\\tau^{\\ge 1}(A)$, if exactness of $\\operatorname{Hom}(H^{0\\prime}(-),E)$ holds for the auxiliary triangle $h_{13}$, then it holds for the original triangle.",
+    "proofExposition": "Works through the exactness criterion: given a cocycle $\\beta$ killed by $H^{0\\prime}(g)$, uses exactness of $h_{23}$ (which holds since its first term lies in $\\tau^{\\ge 1}$, hence has zero $H^{0\\prime}$) to replace $\\beta$ by one killed by $v$, then uses $h_{13}$-exactness to lift.",
     "termExposition": null
   },
   {
@@ -6631,8 +6631,8 @@
     "contentHash": 8684896218952470419,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If for every distinguished triangle $T$ and heart object $E$ the complex $\\operatorname{Hom}(H^{0\\prime}(-), E)$ is exact, then the composite $H^{0\\prime} \\circ \\mathrm{Yoneda}$ is a homological functor.",
+    "proofExposition": "Exactness in the functor category $[\\mathcal{A}^{\\mathrm{op}}, \\mathrm{Ab}]$ is detected objectwise by `ShortComplex.exact_of_eval`; at each object $E$ the required exactness is the hypothesis via the identity `H0primeFunctor_comp_preadditiveYoneda_eval`.",
     "termExposition": null
   },
   {
@@ -6643,8 +6643,8 @@
     "contentHash": 14132364146779602914,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For $\\beta : E \\to H^{0\\prime}(X)$ and $g : X \\to Y$, the composite $\\beta \\circ H^{0\\prime}(g)$ vanishes if and only if $\\beta.\\mathrm{hom} \\circ \\iota \\circ \\tau^{\\ge 0}(g) = 0$ in $C$.",
+    "proofExposition": "Both directions use naturality of the truncation inclusion $\\iota = (\\tau^{\\le 0}\\iota_0)$ and the faithfulness of the inclusion of the heart.",
     "termExposition": null
   },
   {
@@ -6655,8 +6655,8 @@
     "contentHash": 11285683952957829188,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\beta : E \\to H^{0\\prime}(X)$ satisfies the vanishing condition $\\beta.\\mathrm{hom} \\circ \\iota \\circ \\delta_X = 0$ (where $\\delta_X : \\tau^{\\ge 0}(X) \\to (\\tau^{<0}(X))[1]$ is the connecting map), then there exists $f : E.\\mathrm{obj} \\to X$ with $\\beta = \\mathrm{to}(f)$.",
+    "proofExposition": "Sets $b = \\beta.\\mathrm{hom} \\circ \\iota$; the vanishing of $b \\circ \\delta$ means $b$ factors through the canonical map $X \\to \\tau^{\\ge 0}(X)$ by coyoneda exactness of the t-structure triangle.",
     "termExposition": null
   },
   {
@@ -6691,8 +6691,8 @@
     "contentHash": 8661964366827598802,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X \\in \\tau^{\\ge 1}$, then $H^{0\\prime}(X) = 0$ in the heart.",
+    "proofExposition": "The object $\\tau^{\\le 0}(\\tau^{\\ge 0}(X))$ is zero because $\\tau^{\\ge 0}(X) \\in \\tau^{\\ge 1}$ by assumption, and truncation of an object in $\\tau^{\\ge 1}$ by $\\tau^{\\le 0}$ vanishes.",
     "termExposition": null
   },
   {
@@ -6703,8 +6703,8 @@
     "contentHash": 15430796664718876794,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The map $\\mathrm{to}(f) : E \\to H^{0\\prime}(X)$ is zero if and only if $f \\circ \\pi = 0$, where $\\pi : X \\to \\tau^{\\ge 0}(X)$ is the truncation projection.",
+    "proofExposition": "Forward: specialize `toH0primeHom_hom` at the zero. Backward: the zero hypothesis forces `toH0primeHom_hom` to read $0 = 0$, and `hom_ext_toH0prime` then gives equality with the zero morphism.",
     "termExposition": null
   },
   {
@@ -6715,8 +6715,8 @@
     "contentHash": 11691131046092658920,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Given an octahedral splitting data in which the map $v : X_2 \\to Z$ induces an isomorphism $\\tau^{\\ge 0}(v)$, exactness of the $\\tau^{\\ge 0}$-coyoneda complex on the original triangle is equivalent to exactness on the split triangle.",
+    "proofExposition": "Constructs a short-complex isomorphism via `shortComplexOfDistTriangle_map_truncGEIsoOfSplit` and applies `ShortComplex.exact_iff_of_iso`.",
     "termExposition": null
   },
   {
@@ -6727,8 +6727,8 @@
     "contentHash": 7325035154942269215,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "A short complex $S$ of functors $J \\to A$ (with $A$ abelian) is exact if and only if each evaluation $S_j$ is exact in $A$.",
+    "proofExposition": "Checks the epi-kernel-lift criterion objectwise: the map $S.f$ lifts to a map into $\\ker(S.g)$, and epimorphism of this lift at each object $j$ follows from the assumed pointwise exactness via the commutation of kernel comparison with evaluation.",
     "termExposition": null
   },
   {
@@ -6739,8 +6739,8 @@
     "contentHash": 7132443427017302904,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $S.f : X_1 \\to X_2$ is a kernel of $S.g$ (in the sense that the fork is a limit), then for every object $E$ the short complex $\\operatorname{Hom}(-, E)$ applied to $S$ is exact.",
+    "proofExposition": "Applies the universal property of the limit fork to lift any element in the kernel of postcomposition with $S.g$ to a preimage under $S.f$.",
     "termExposition": null
   },
   {
@@ -6751,9 +6751,9 @@
     "contentHash": 4427623603681031467,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given a homological functor $F : C \\to A$ (with shift sequence) and a spectral object $X$ in $C$, the associated graded pieces $H^n(F(-))$ together with the connecting morphisms from the long exact homology sequences of the triangles $X.\\omega_2(D)$ assemble into a spectral object in $A$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The $n$-th row functor is $X.\\omega_1 \\circ F^{[n]}$; the connecting maps are the components of `F.homologySequenceδ` applied to $X.\\omega_2$. Exactness of the three-term segments is inherited from the homological functor axioms applied to the distinguished triangles $X.\\omega_2(D)$."
   },
   {
     "declName": "CategoryTheory.Triangulated.TStructure.exists_truncLT_octahedral_split",
@@ -6775,8 +6775,8 @@
     "contentHash": 9800774007444682008,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a distinguished triangle $A \\to X_2 \\to X_3$ with $A \\in \\mathcal{A}$ (the heart), the map $\\tau^{< -1}(g) : \\tau^{< -1}(X_2) \\to \\tau^{< -1}(X_3)$ is an isomorphism.",
+    "proofExposition": "Rotates the triangle; the third term of the rotation is $A[1] \\in \\tau^{\\ge -1}$ (since heart objects are in $\\tau^{\\ge 0}$). Applies `isIso₁_truncLT_map_of_isGE` to the rotated triangle.",
     "termExposition": null
   },
   {
@@ -6799,9 +6799,9 @@
     "contentHash": 7877327680455651065,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given a distinguished triangle $f, g, \\delta$ and an octahedral splitting $m_1, m_3, v$ in which $\\tau^{\\ge 0}(v)$ is an isomorphism, the short complex obtained by applying $\\tau^{\\ge 0}$ to the original triangle is isomorphic to the short complex obtained by applying $\\tau^{\\ge 0}$ to the split triangle.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructs a `ShortComplex.isoMk` whose first component is the isomorphism $\\tau^{\\ge 0}(\\pi_0 \\circ -)$ (idempotence), second component is $\\tau^{\\ge 0}(v)$ (an isomorphism by hypothesis), and third is the identity, with compatibility proved from the defining equations of the octahedral split."
   },
   {
     "declName": "CategoryTheory.Triangulated.TStructure.truncGELEObjShiftIso",
@@ -6847,8 +6847,8 @@
     "contentHash": 18197124811623449921,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If a morphism is zero with respect to one `HasZeroMorphisms` instance on a category $D$, it is zero with respect to any other. This handles the fact that `HasZeroMorphisms` instances are a proposition (`Subsingleton`).",
+    "proofExposition": "Uses `Subsingleton.elim` to identify the two instances and then `simp`.",
     "termExposition": null
   },
   {
@@ -6859,8 +6859,8 @@
     "contentHash": 13369520140860708046,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Exactness of a short complex is independent of the choice of `HasZeroMorphisms` instance on the ambient category, since that instance is unique up to propositional equality.",
+    "proofExposition": "Eliminates both `HasZeroMorphisms` instances and the zero-composite witnesses by `Subsingleton.elim`, then applies `simp`.",
     "termExposition": null
   },
   {
@@ -6883,8 +6883,8 @@
     "contentHash": 5703748844268601514,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $X$ concentrated in t-structure degree $a$ (i.e., $\\tau^{\\ge a}X \\simeq X \\simeq \\tau^{<a+1}X$) and any lower bound $b \\le a$, the central charge $Z$ applied to the partial Euler characteristic $\\sum_{n=b}^{a} [H^n(X)]$ equals $Z$ applied to the single term $[H^a(X)]$.",
+    "proofExposition": "Applies `heartCohClassSum_eq_top_of_pure` to reduce to the single nonzero term, then takes $Z$ of both sides.",
     "termExposition": null
   },
   {
@@ -6895,8 +6895,8 @@
     "contentHash": 15221239496132558380,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a pure object $X$ concentrated in degree $a$ and any lower bound $b \\le a$, we have $Z\\bigl(\\sum_{n=b}^{a} [H^n(X)]\\bigr) = (-1)^{|a|} \\cdot Z(H^a(X))$.",
+    "proofExposition": "Combines `ZOnHeartK0_heartCohClassSum_eq_top_of_pure` with the formula `ZOnHeartK0_heartCohClass` expressing the central charge of a single cohomology class via the sign $(-1)^{|n|}$.",
     "termExposition": null
   },
   {
@@ -6967,8 +6967,8 @@
     "contentHash": 1869949826596240418,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $0 \\to X_1 \\to X_2 \\to X_3 \\to 0$ is a short exact sequence in the heart $\\mathcal{A}$, then $Z(\\sum_n (-1)^n [H^n(X_2)]) = Z(\\sum_n (-1)^n [H^n(X_1)]) + Z(\\sum_n (-1)^n [H^n(X_3)])$.",
+    "proofExposition": "Since all three objects lie in the heart, `eulerZObj` reduces to `heartZObj` for each; the result then follows from the additivity of the stability function $Z$ on short exact sequences in $\\mathcal{A}$.",
     "termExposition": null
   },
   {
@@ -6979,8 +6979,8 @@
     "contentHash": 17507621643387661749,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $E$ of amplitude $[b, a]$ and $b < a$, the Euler central charge decomposes as $Z(\\tau^{<a} E) + Z([H^a(E)])$.",
+    "proofExposition": "Unfolds `eulerZObj` in terms of `heartEulerClassObj` and applies `heartEulerClassObj_eq_truncLT_add_heartCohClass`, then uses linearity of $Z$.",
     "termExposition": null
   },
   {
@@ -6991,8 +6991,8 @@
     "contentHash": 8560581380216503214,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $E$ of amplitude $[b, a]$ and $b < a$, the Euler central charge decomposes as $Z(\\tau^{<a} E) + Z(\\tau^{\\ge a} E)$.",
+    "proofExposition": "Applies `eulerZObj_eq_truncLT_add_heartCohClass` and `heartEulerClassObj_of_truncGE_of_isLE` to replace the $[H^a(E)]$ term with the Euler class of $\\tau^{\\ge a} E$.",
     "termExposition": null
   },
   {
@@ -7003,8 +7003,8 @@
     "contentHash": 3719539122066304677,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X \\simeq 0$, then $Z(\\sum_n (-1)^n [H^n(X)]) = 0$.",
+    "proofExposition": "Reduces to `heartEulerClassObj_eq_zero_of_isZero` and then applies `map_zero`.",
     "termExposition": null
   },
   {
@@ -7039,8 +7039,8 @@
     "contentHash": 2002548047647994712,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a heart object $E \\in \\mathcal{A}$ and $n \\in \\mathbb{Z}$, the Euler central charge of the shift $E[-n]$ equals $(-1)^{|n|} Z(E)$.",
+    "proofExposition": "Rewrites using `heartEulerClassObj_of_heart_shift` for the class, then applies linearity and `ZOnHeartK0_of`.",
     "termExposition": null
   },
   {
@@ -7051,8 +7051,8 @@
     "contentHash": 10368695448597948819,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $X$ concentrated in degree $n$, the Euler central charge is $(-1)^{|n|} Z(H^n(X))$.",
+    "proofExposition": "Applies `heartEulerClassObj_of_pure` and `ZOnHeartK0_heartCohClass` to reduce to a single weighted heart central charge.",
     "termExposition": null
   },
   {
@@ -7063,8 +7063,8 @@
     "contentHash": 3814961104935977068,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X_1 \\to X_2 \\to X_3 \\to X_1[1]$ is a distinguished triangle and all three objects are concentrated in the same t-structure degree $n$, then $Z(\\sum_k(-1)^k[H^k(X_2)]) = Z(\\sum_k(-1)^k[H^k(X_1)]) + Z(\\sum_k(-1)^k[H^k(X_3)])$.",
+    "proofExposition": "Reduces each `eulerZObj` to a single signed class via `heartEulerClassObj_of_pure` and `heartCohClass_eq_pureClass`, then applies `heartK0_relation_of_pure_distTriang` and linearity of $Z$.",
     "termExposition": null
   },
   {
@@ -7075,8 +7075,8 @@
     "contentHash": 9448130380535938738,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The partial Euler characteristic $\\sum_{n=b}^{a} [H^n(X)]$ does not depend on the choice of bounds $[b, a]$, as long as $X$ has amplitude $[b, a]$. More precisely, if $X$ has amplitude both contained in $[b_1, a_1]$ and in $[b_2, a_2]$, then the two partial sums agree.",
+    "proofExposition": "Both sums are expanded to a common envelope $[\\min(b_1,b_2), \\max(a_1,a_2)]$ using `heartCohClassSum_shrink_lower` and `heartCohClassSum_shrink_upper`; the two envelopes agree by transitivity.",
     "termExposition": null
   },
   {
@@ -7087,8 +7087,8 @@
     "contentHash": 15717043402477779969,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X$ is concentrated in degree $n$ and $b \\le n \\le b + m$, then $\\sum_{j=0}^{m} [H^{b+j}(X)] = [H^n(X)]$.",
+    "proofExposition": "Isolates the unique nonzero index $k = n - b$ in the sum using `Finset.sum_eq_single_of_mem`, with all other terms vanishing by `heartCohClass_eq_zero_of_lt_pure` or `heartCohClass_eq_zero_of_gt_pure`.",
     "termExposition": null
   },
   {
@@ -7099,8 +7099,8 @@
     "contentHash": 14849832985413260828,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $X$ concentrated in degree $a$ with lower bound $b \\le a$, we have $\\sum_{n=b}^{a} [H^n(X)] = [H^a(X)]$.",
+    "proofExposition": "Specializes `heartCohClassSum_eq_single_of_pure` to $n = a$.",
     "termExposition": null
   },
   {
@@ -7111,8 +7111,8 @@
     "contentHash": 17837452712757063505,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X$ has $\\tau^{\\le c} X \\simeq X$ and the summation range starts strictly above $c$, then $\\sum_{j=0}^{n-1} [H^{b+j}(X)] = 0$.",
+    "proofExposition": "Each summand $[H^{b+j}(X)]$ vanishes by `heartCohClass_eq_zero_of_gt_bound` since $b + j > c$.",
     "termExposition": null
   },
   {
@@ -7123,8 +7123,8 @@
     "contentHash": 4723084759320333991,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X \\simeq 0$, then $\\sum_{j=0}^{n-1} [H^{b+j}(X)] = 0$ for all $b$ and $n$.",
+    "proofExposition": "Each summand vanishes by `heartCohClass_eq_zero_of_isZero`.",
     "termExposition": null
   },
   {
@@ -7135,8 +7135,8 @@
     "contentHash": 2595928437703090711,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X$ has $\\tau^{\\ge c} X \\simeq X$ and the entire summation range lies strictly below $c$, then $\\sum_{j=0}^{n-1} [H^{b+j}(X)] = 0$.",
+    "proofExposition": "Each summand $[H^{b+j}(X)]$ vanishes by `heartCohClass_eq_zero_of_lt_bound` since $b + j < c$.",
     "termExposition": null
   },
   {
@@ -7147,8 +7147,8 @@
     "contentHash": 16916204406400335308,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Truncating $E$ above degree $a - 1$ does not change the partial sum $\\sum_{n=b}^{a-1} [H^n(E)]$ for $b < a$.",
+    "proofExposition": "Each summand satisfies $b + j < a$, so `heartCohClass_of_truncLT` applies termwise.",
     "termExposition": null
   },
   {
@@ -7159,8 +7159,8 @@
     "contentHash": 10067694918347792618,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ has $\\tau^{\\le a-1} E \\simeq E$, then the top degree $a$ contributes zero to the sum: $\\sum_{n=b}^{a} [H^n(E)] = \\sum_{n=b}^{a-1} [H^n(E)]$.",
+    "proofExposition": "Splits off the top term from the sum using `Finset.sum_range_succ` and shows it is zero via `heartCohClass_eq_zero_of_gt_bound`.",
     "termExposition": null
   },
   {
@@ -7171,8 +7171,8 @@
     "contentHash": 36180611478978720,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ has $\\tau^{\\ge b} E \\simeq E$ and $c \\le b \\le a$, then $\\sum_{n=c}^{a} [H^n(E)] = \\sum_{n=b}^{a} [H^n(E)]$: degrees below $b$ contribute zero.",
+    "proofExposition": "Induction on $b - c$: at each step raises the lower index by 1 using `heartCohClassSum_succ_lower`, which removes a zero leading term.",
     "termExposition": null
   },
   {
@@ -7183,8 +7183,8 @@
     "contentHash": 16635742572123551980,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ has $\\tau^{\\le a} E \\simeq E$ and $b \\le a \\le c$, then $\\sum_{n=b}^{c} [H^n(E)] = \\sum_{n=b}^{a} [H^n(E)]$: degrees above $a$ contribute zero.",
+    "proofExposition": "Induction on $c - a$: at each step reduces the upper index by 1 using `heartCohClassSum_pred_upper`, which removes a zero trailing term.",
     "termExposition": null
   },
   {
@@ -7195,8 +7195,8 @@
     "contentHash": 14135783873050611000,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $X$ concentrated in degree $n$, the $K_0$-class $[H^n(X)]$ in $K_0(\\mathcal{A})$ equals $(-1)^{|n|} [A]$ where $A$ is the underlying heart object (the `heartShiftOfPure` of $X$).",
+    "proofExposition": "Uses `heartCohIso_of_pure` to obtain a canonical isomorphism $H^n(X) \\cong A$, then applies `HeartK0.of_iso`.",
     "termExposition": null
   },
   {
@@ -7219,8 +7219,8 @@
     "contentHash": 8573582135876991539,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X$ satisfies $\\tau^{\\le n} X \\simeq X$ and $m > n$, then $[H^m(X)] = 0$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Delegates to `heartCohClass_eq_zero_of_gt_bound`.",
     "termExposition": null
   },
   {
@@ -7231,8 +7231,8 @@
     "contentHash": 9793710811346151853,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X \\simeq 0$, then $[H^n(X)] = 0$ in $K_0(\\mathcal{A})$ for all $n$.",
+    "proofExposition": "The functor $\\tau^{\\ge n}\\tau^{\\le n}$ sends zero objects to zero objects; from this one deduces $H^n(X) = 0$ in the heart, and `HeartK0.of_isZero` gives the class zero.",
     "termExposition": null
   },
   {
@@ -7255,8 +7255,8 @@
     "contentHash": 9594798957611880730,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X$ satisfies $\\tau^{\\ge n} X \\simeq X$ and $m < n$, then $[H^m(X)] = 0$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Delegates to `heartCohClass_eq_zero_of_lt_bound`.",
     "termExposition": null
   },
   {
@@ -7279,8 +7279,8 @@
     "contentHash": 10487990025330683148,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ satisfies $\\tau^{\\le a} E \\simeq E$, then $[H^a(\\tau^{\\ge a} E)] = [H^a(E)]$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Applies `HeartK0.of_iso` using the canonical isomorphism `heartCohIso_of_truncGE_of_isLE`.",
     "termExposition": null
   },
   {
@@ -7303,9 +7303,9 @@
     "contentHash": 5047833036357183997,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "For a pure object $X$ concentrated in degree $n$, the $n$-th heart cohomology object $H^n(X)$ is canonically isomorphic to the underlying heart object $A$ (the `heartShiftOfPure` of $X$).",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructed by composing the truncation isomorphisms $\\tau^{\\le n} X \\xrightarrow{\\sim} X \\xrightarrow{\\sim} \\tau^{\\ge n} X$ coming from the purity hypotheses, then applying the shift by $n$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartCohIso_of_truncGE_of_isLE",
@@ -7315,9 +7315,9 @@
     "contentHash": 928674884533724946,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Truncating below degree $a$ does not change the $a$-th heart cohomology: if $E$ satisfies $\\tau^{\\le a} E \\simeq E$, then $H^a(\\tau^{\\ge a} E) \\cong H^a(E)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Constructed by chaining the natural isomorphisms of $\\tau^{\\ge a}\\tau^{\\le a}$ applied to $E$ and $\\tau^{\\ge a} E$, using the $\\tau^{\\le a}$-invertibility of the counit map for objects that are already $\\tau^{\\le a}$-acyclic."
   },
   {
     "declName": "CategoryTheory.Triangulated.HeartStabilityData.heartCohIso_of_truncLT",
@@ -7363,8 +7363,8 @@
     "contentHash": 3867516503027970391,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $E$ of amplitude $[b, a]$ with $b < a$, the Euler characteristic class satisfies $[E]^{\\chi} = [\\tau^{<a} E]^{\\chi} + [\\tau^{\\ge a} E]^{\\chi}$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Combines `heartEulerClassObj_eq_truncLT_add_heartCohClass` with `heartEulerClassObj_of_truncGE_of_isLE` to identify the $[H^a(E)]$ summand with $[\\tau^{\\ge a} E]^{\\chi}$.",
     "termExposition": null
   },
   {
@@ -7375,8 +7375,8 @@
     "contentHash": 16702457902999857685,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X \\simeq 0$, then $\\sum_n (-1)^n [H^n(X)] = 0$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Reduces to the case $[b, a] = [0, 0]$ and applies `heartCohClassSum_eq_zero_of_isZero`.",
     "termExposition": null
   },
   {
@@ -7399,8 +7399,8 @@
     "contentHash": 11761284402638005031,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a heart object $E \\in \\mathcal{A}$ and $n \\in \\mathbb{Z}$, the Euler characteristic class of the shift $E[-n]$ is $(-1)^{|n|} [E]$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Combines `heartEulerClassObj_of_pure` with the formula `heartCohClass_of_heart_shift`, using the purity of shifts of heart objects.",
     "termExposition": null
   },
   {
@@ -7411,8 +7411,8 @@
     "contentHash": 4279002695408096098,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For an object $X$ concentrated in degree $n$, the Euler characteristic class $\\sum_k (-1)^k [H^k(X)]$ equals the single term $[H^n(X)]$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Expresses `heartEulerClassObj` as the partial sum on $[n, n]$ via `heartEulerClassObj_eq_heartCohClassSum`, then applies `heartCohClassSum_eq_top_of_pure`.",
     "termExposition": null
   },
   {
@@ -7423,8 +7423,8 @@
     "contentHash": 6098614195180085090,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E$ satisfies $\\tau^{\\le a} E \\simeq E$, then the Euler characteristic class of $\\tau^{\\ge a} E$ is $[H^a(E)]$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "The object $\\tau^{\\ge a} E$ is pure of degree $a$, so `heartEulerClassObj_of_pure` applies; the resulting class is identified with $[H^a(E)]$ via `heartCohClass_of_truncGE_of_isLE`.",
     "termExposition": null
   },
   {
@@ -7435,8 +7435,8 @@
     "contentHash": 5121280934954089293,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X_1 \\to X_2 \\to X_3 \\to X_1[1]$ is a distinguished triangle with all objects concentrated in the same degree $n$, then $\\sum_k(-1)^k[H^k(X_2)] = \\sum_k(-1)^k[H^k(X_1)] + \\sum_k(-1)^k[H^k(X_3)]$ in $K_0(\\mathcal{A})$.",
+    "proofExposition": "Reduces each Euler class to a signed heart class via `heartEulerClassObj_of_pure` and `heartCohClass_eq_pureClass`, then invokes `heartK0_relation_of_pure_distTriang` which extracts a short exact sequence in the heart.",
     "termExposition": null
   },
   {
@@ -7651,8 +7651,8 @@
     "contentHash": 13266877158063364236,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $z_1, z_2 \\in \\mathbb{H} \\cup \\mathbb{R}_{<0}$ (the upper half-plane union) have distinct arguments, then $\\arg(z_1 + z_2) < \\max(\\arg z_1, \\arg z_2)$.",
+    "proofExposition": "Direct application of the library lemma `arg_add_lt_max`.",
     "termExposition": null
   },
   {
@@ -7663,8 +7663,8 @@
     "contentHash": 9420093786374565708,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $E, F$ are semistable heart objects with $\\phi(F) < \\phi(E)$, then every morphism $E \\to F$ in $\\mathcal{A}$ is zero.",
+    "proofExposition": "Direct application of the general stability function lemma `hom_zero_of_semistable_phase_gt`.",
     "termExposition": null
   },
   {
@@ -7675,8 +7675,8 @@
     "contentHash": 17549995871735027718,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $p : E \\twoheadrightarrow Q$ is an epimorphism in $\\mathcal{A}$ from a semistable object $E$, and $Q \\not\\simeq 0$, then $\\phi(E) \\le \\phi(Q)$.",
+    "proofExposition": "Direct application of `phase_le_of_epi` for stability functions.",
     "termExposition": null
   },
   {
@@ -7783,8 +7783,8 @@
     "contentHash": 9424270848333573048,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $\\phi_2 < \\phi_1$, then the phase index satisfies $\\lfloor\\phi_2\\rfloor \\le \\lfloor\\phi_1\\rfloor$ (where $\\lfloor \\cdot \\rfloor$ denotes the integer part relative to the interval $(0,1]$).",
+    "proofExposition": "By contradiction: if $\\mathrm{phaseIndex}(\\phi_1) < \\mathrm{phaseIndex}(\\phi_2)$, then $\\mathrm{phaseIndex}(\\phi_1) + 1 \\le \\mathrm{phaseIndex}(\\phi_2)$, and combining `phaseIndex_lt_phase` and `phase_le_phaseIndex_add_one` yields $\\phi_2 < \\phi_1 \\le \\mathrm{phaseIndex}(\\phi_1) + 1 \\le \\mathrm{phaseIndex}(\\phi_2) < \\phi_2$, a contradiction.",
     "termExposition": null
   },
   {
@@ -7795,8 +7795,8 @@
     "contentHash": 10634045810831754003,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any $\\phi \\in \\mathbb{R}$, the phase index satisfies $\\mathrm{phaseIndex}(\\phi) < \\phi$.",
+    "proofExposition": "From $\\mathrm{phaseBase}(\\phi) \\in (0, 1]$ we have $\\mathrm{phaseBase}(\\phi) > 0$; since $\\mathrm{phaseBase}(\\phi) + \\mathrm{phaseIndex}(\\phi) = \\phi$, we get $\\mathrm{phaseIndex}(\\phi) < \\phi$.",
     "termExposition": null
   },
   {
@@ -7903,8 +7903,8 @@
     "contentHash": 10376736438402840470,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any $\\phi \\in \\mathbb{R}$, we have $\\phi \\le \\mathrm{phaseIndex}(\\phi) + 1$.",
+    "proofExposition": "From $\\mathrm{phaseBase}(\\phi) \\le 1$ and $\\phi = \\mathrm{phaseBase}(\\phi) + \\mathrm{phaseIndex}(\\phi)$.",
     "termExposition": null
   },
   {
@@ -7939,8 +7939,8 @@
     "contentHash": 4886080963443360080,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "An object $X$ lies in the shifted heart semistable locus $\\mathrm{shiftedHeartSemistable}(\\psi, n)$ if and only if its shift $X[1]$ lies in $\\mathrm{shiftedHeartSemistable}(\\psi, n+1)$.",
+    "proofExposition": "Uses the canonical isomorphism $(X[1])[-(n+1)] \\cong X[-n]$ to transfer the heart membership and semistability conditions between the two formulations.",
     "termExposition": null
   },
   {
@@ -7951,8 +7951,8 @@
     "contentHash": 363438206475963187,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "An object $X$ lies in $\\mathrm{shiftedHeartSemistable}(\\psi, 0)$ if and only if it is zero or it lies in the heart with phase $\\psi$ (without any shift).",
+    "proofExposition": "Unfolds the definition at shift $n = 0$ and uses the natural isomorphism $X[0] \\cong X$ to identify the shifted condition with the unshifted heart membership and semistability.",
     "termExposition": null
   },
   {
@@ -9319,9 +9319,9 @@
     "contentHash": 14301993663440075737,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "If $X$ is a strict-Noetherian object, the strict subobjects of $X$ are well-founded with respect to the greater-than order, i.e., there are no infinite strictly ascending chains of strict subobjects.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Extracts the `WellFoundedGT (StrictSubobject X)` instance directly from the `IsStrictNoetherianObject` hypothesis via `isStrictNoetherianObject.prop_of_is`."
   },
   {
     "declName": "CategoryTheory.instWellFoundedLTStrictSubobjectOfIsStrictArtinianObject",
@@ -9331,9 +9331,9 @@
     "contentHash": 10562350510579092350,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "If $X$ is a strict-Artinian object, the strict subobjects of $X$ are well-founded with respect to the less-than order, i.e., there are no infinite strictly descending chains of strict subobjects.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Extracts the `WellFoundedLT (StrictSubobject X)` instance directly from the `IsStrictArtinianObject` hypothesis via `isStrictArtinianObject.prop_of_is`."
   },
   {
     "declName": "CategoryTheory.isArtinianObject_of_faithful_preservesMono",
@@ -9895,9 +9895,9 @@
     "contentHash": 12864285962153104511,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given an HN filtration $F$ of $E$ with $n \\geq 2$ factors whose first factor is zero, produce a new HN filtration of $E$ with $n-1$ factors by discarding the zero factor at position $0$. The resulting filtration has phases $\\phi(1) > \\cdots > \\phi(n-1)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Since the first factor $F.\\mathrm{triangle}(0).\\mathrm{obj}_3$ is zero, the triangle at index 0 gives an isomorphism $\\mathrm{chain}(0) \\cong \\mathrm{chain}(1)$, so $\\mathrm{chain}(1)$ is also zero and can serve as the new base. The new filtration is built by re-indexing: the chain, triangles, and phases are shifted by one, while the top isomorphism is adjusted to compensate."
   },
   {
     "declName": "CategoryTheory.Triangulated.HNFiltration.dropLast",
@@ -9907,9 +9907,9 @@
     "contentHash": 11258645982820687712,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given an HN filtration $F$ of $E$ with $n \\geq 2$ factors whose last factor is zero, produce a new HN filtration of $E$ with $n-1$ factors by discarding the zero factor at position $n-1$. The resulting filtration has phases $\\phi(0) > \\cdots > \\phi(n-2)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Since the last factor is zero, the triangle at index $n-1$ gives an isomorphism $\\mathrm{chain}(n-1) \\cong \\mathrm{chain}(n) \\cong E$. The new filtration is the prefix of length $n-1$, with its top isomorphism extended by this chain of isomorphisms to reach $E$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_factor",
@@ -9919,8 +9919,8 @@
     "contentHash": 10301076380253164018,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any nonzero object $E$, every HN filtration of $E$ has at least one nonzero factor.",
+    "proofExposition": "By contradiction: if all factors were zero, an inductive argument shows each chain object $\\mathrm{chain}(k)$ is zero (using the triangles and the zero base), so $E \\cong \\mathrm{chain}(n) \\cong 0$, contradicting $E \\neq 0$.",
     "termExposition": null
   },
   {
@@ -9931,8 +9931,8 @@
     "contentHash": 13214596581968214698,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any nonzero object $E$ with respect to a slicing, there exists an HN filtration of $E$ whose first factor is nonzero.",
+    "proofExposition": "Starting from any HN filtration, repeatedly apply `dropFirst` to eliminate zero first factors. The number of factors $n$ strictly decreases at each step, and at least one factor must be nonzero by `exists_nonzero_factor`, so the process terminates.",
     "termExposition": null
   },
   {
@@ -9943,8 +9943,8 @@
     "contentHash": 7267552998049043683,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any nonzero object $E$ with respect to a slicing, there exists an HN filtration of $E$ whose last factor is nonzero.",
+    "proofExposition": "Starting from any HN filtration, repeatedly apply `dropLast` to eliminate zero last factors. The number of factors $n$ strictly decreases at each step and must eventually yield a nonzero last factor, since some factor is always nonzero.",
     "termExposition": null
   },
   {
@@ -9955,8 +9955,8 @@
     "contentHash": 11369518941043306029,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any nonzero object $E$, every HN filtration of $E$ has at least one factor, i.e., $n \\geq 1$.",
+    "proofExposition": "If $n = 0$ then `zero_isZero` gives $E \\cong 0$, contradicting the hypothesis that $E$ is nonzero.",
     "termExposition": null
   },
   {
@@ -9967,9 +9967,9 @@
     "contentHash": 4570967216098338220,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given an HN filtration of $E$ and an isomorphism $E \\cong E'$, transport the filtration to an HN filtration of $E'$ with the same phases and semistability data.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "All filtration data (chain, triangles, phases, semistability) are unchanged; only the top isomorphism is composed with $e : E \\cong E'$ to land in $E'$. Conversely, `zero_isZero` is transferred via $e^{-1}$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HNFiltration.phiMinus",
@@ -9979,9 +9979,9 @@
     "contentHash": 2936336338820671282,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The lowest phase $\\phi^-(E)$ of a nonzero object $E$, extracted from an HN filtration $F$ with $n \\geq 1$ factors. It is the phase of the last (lowest-phase) factor: $\\phi^- = \\phi(n-1)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as $F.\\phi(\\langle n-1, \\cdot \\rangle)$, the phase assigned to the last index of the filtration. The strict antitonicity of $\\phi$ ensures this is the smallest of all factor phases."
   },
   {
     "declName": "CategoryTheory.Triangulated.HNFiltration.phiPlus",
@@ -9991,9 +9991,9 @@
     "contentHash": 182167878328127309,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The highest phase $\\phi^+(E)$ of a nonzero object $E$, extracted from an HN filtration $F$ with $n \\geq 1$ factors. It is the phase of the first (highest-phase) factor: $\\phi^+ = \\phi(0)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as $F.\\phi(\\langle 0, h \\rangle)$, the phase assigned to the first index of the filtration. The strict antitonicity of $\\phi$ ensures this is the largest of all factor phases."
   },
   {
     "declName": "CategoryTheory.Triangulated.HNFiltration.prefix",
@@ -10003,9 +10003,9 @@
     "contentHash": 6096429267901076805,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given an HN filtration $F$ of $E$ and $0 < k \\leq n$, extract the first $k$ factors to obtain an HN filtration of the intermediate object $\\mathrm{chain}(k)$ with phases $\\phi(0) > \\cdots > \\phi(k-1)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The prefix filtration truncates the chain at index $k$, restricts all triangles and phase data to indices $0, \\ldots, k-1$, and uses a reflexivity isomorphism as the new top isomorphism since $\\mathrm{chain}(k)$ is already the top object of the truncated tower."
   },
   {
     "declName": "CategoryTheory.Triangulated.HNFiltration.prefix_φ",
@@ -10015,8 +10015,8 @@
     "contentHash": 17003267305265437648,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The phase of the $j$-th factor in the prefix filtration of length $k$ equals the phase of the $j$-th factor in the original filtration: $(F.\\mathrm{prefix}\\, k).\\phi(j) = F.\\phi(j)$ for $j < k$.",
+    "proofExposition": "This holds by reflexivity, since the prefix filtration's phase function is defined by directly restricting $F.\\phi$ to $\\{0, \\ldots, k-1\\}$.",
     "termExposition": null
   },
   {
@@ -10027,9 +10027,9 @@
     "contentHash": 13448497392434449242,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Given a slicing and an HN filtration $F$ of $E$ with phases $\\phi_0 > \\phi_1 > \\cdots > \\phi_{n-1}$, produce an HN filtration of $E[a]$ with shifted phases $\\phi_0 + a > \\phi_1 + a > \\cdots > \\phi_{n-1} + a$, for $a \\in \\mathbb{Z}$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The chain is obtained by applying the shift functor $[a]$ levelwise. Distinguished triangles are preserved by the shift functor. Each factor's semistability follows from `shift_int`, which states that $E \\in \\mathcal{P}(\\phi)$ if and only if $E[a] \\in \\mathcal{P}(\\phi + a)$."
   },
   {
     "declName": "CategoryTheory.Triangulated.HNFiltration.shiftHN_phiMinus",
@@ -10039,8 +10039,8 @@
     "contentHash": 8700558897605954094,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The lowest phase of the shifted HN filtration $F.\\mathrm{shiftHN}(s, a)$ equals the lowest phase of $F$ plus $a$: $\\phi^-(F.\\mathrm{shiftHN}(a)) = \\phi^-(F) + a$.",
+    "proofExposition": "This is immediate by definition, since the shifted filtration's phase function is $j \\mapsto F.\\phi(j) + a$, so the last phase is $F.\\phi(n-1) + a$.",
     "termExposition": null
   },
   {
@@ -10051,8 +10051,8 @@
     "contentHash": 16220327828276887119,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "The highest phase of the shifted HN filtration $F.\\mathrm{shiftHN}(s, a)$ equals the highest phase of $F$ plus $a$: $\\phi^+(F.\\mathrm{shiftHN}(a)) = \\phi^+(F) + a$.",
+    "proofExposition": "This is immediate by definition, since the shifted filtration's phase function is $j \\mapsto F.\\phi(j) + a$, so the first phase is $F.\\phi(0) + a$.",
     "termExposition": null
   },
   {
@@ -10075,8 +10075,8 @@
     "contentHash": 15622940435861365619,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Two slicings are equal if and only if they have the same phase predicate function $P : \\mathbb{R} \\to \\mathrm{ObjectProperty}\\, C$.",
+    "proofExposition": "All fields of the `Slicing` structure other than $P$ are propositions (or are uniquely determined by $P$), so equality of $P$ implies equality of the entire structure by `simp` after destructuring.",
     "termExposition": null
   },
   {
@@ -10087,9 +10087,9 @@
     "contentHash": 9744034010409810529,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The interval subcategory predicate $\\mathcal{P}((a,b))$: an object $E$ lies in $\\mathcal{P}((a,b))$ if $E$ is zero, or if there exists an HN filtration of $E$ all of whose factor phases lie strictly in the open interval $(a, b)$.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Defined as `fun E ↦ IsZero E ∨ ∃ F : HNFiltration, ∀ i, a < F.φ i ∧ F.φ i < b`. The zero clause ensures that zero objects, which have no HN factors, trivially belong to every interval subcategory."
   },
   {
     "declName": "CategoryTheory.Triangulated.Slicing.phiMinus",
@@ -10099,9 +10099,9 @@
     "contentHash": 12619863359432169136,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The intrinsic lowest phase $\\phi^-(E)$ of a nonzero object $E$ with respect to a slicing $s$, defined as the phase of the last factor in any HN filtration with nonzero last factor.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Uses `exists_nonzero_last` to choose an HN filtration $F$ with a nonzero last factor, then returns $F.\\phi(n-1)$. Well-definedness (independence of the choice of filtration) is established by `phiMinus_eq_of_nonzero_last_factors`."
   },
   {
     "declName": "CategoryTheory.Triangulated.Slicing.phiPlus",
@@ -10111,9 +10111,9 @@
     "contentHash": 15465089368856597368,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "The intrinsic highest phase $\\phi^+(E)$ of a nonzero object $E$ with respect to a slicing $s$, defined as the phase of the first factor in any HN filtration with nonzero first factor.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Uses `exists_nonzero_first` to choose an HN filtration $F$ with a nonzero first factor, then returns $F.\\phi(0)$. Well-definedness (independence of the choice of filtration) is established by `phiPlus_eq_of_nonzero_factors`."
   },
   {
     "declName": "CategoryTheory.Triangulated.Slicing.shift",
@@ -10123,8 +10123,8 @@
     "contentHash": 11676127633461764732,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X \\in \\mathcal{P}(\\phi)$, then $X[1] \\in \\mathcal{P}(\\phi + 1)$. Shifting an object by $[1]$ increases its semistability phase by $1$.",
+    "proofExposition": "This is the forward direction of the `shift_iff` axiom of a slicing, applied via `(s.shift_iff φ X).mp`.",
     "termExposition": null
   },
   {
@@ -10135,8 +10135,8 @@
     "contentHash": 3096529140080442190,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For any integer $n \\in \\mathbb{Z}$: $X \\in \\mathcal{P}(\\phi)$ if and only if $X[n] \\in \\mathcal{P}(\\phi + n)$.",
+    "proofExposition": "For non-negative $n$ the result follows by induction using `shift_nat` and `unshift_nat`. For negative $n = -(m+1)$, one uses the isomorphism $X[0] \\cong X[-m-1][m+1]$ from `shiftFunctorAdd'`, together with `shift_nat` and `unshift_nat` to transfer membership.",
     "termExposition": null
   },
   {
@@ -10147,8 +10147,8 @@
     "contentHash": 9708931758275746357,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "If $X[1] \\in \\mathcal{P}(\\phi + 1)$, then $X \\in \\mathcal{P}(\\phi)$. This is the converse of the shift axiom.",
+    "proofExposition": "This is the backward direction of the `shift_iff` axiom, applied via `(s.shift_iff φ X).mpr`.",
     "termExposition": null
   },
   {
@@ -10159,8 +10159,8 @@
     "contentHash": 14579386234853932026,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a natural number $n \\in \\mathbb{N}$: if $X \\in \\mathcal{P}(\\phi)$, then $X[n] \\in \\mathcal{P}(\\phi + n)$.",
+    "proofExposition": "By induction on $n$. The base case uses the zero-shift isomorphism $X[0] \\cong X$. The inductive step applies `shift_iff` once and uses `shiftFunctorAdd'` to rewrite $X[n][1]$ as $X[n+1]$ up to isomorphism.",
     "termExposition": null
   },
   {
@@ -10171,8 +10171,8 @@
     "contentHash": 1636064646082096367,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "For a natural number $n \\in \\mathbb{N}$: if $X[n] \\in \\mathcal{P}(\\phi + n)$, then $X \\in \\mathcal{P}(\\phi)$.",
+    "proofExposition": "By induction on $n$, using `shift_iff` (its backward direction) and `shiftFunctorAdd'` in reverse to strip off one shift at a time.",
     "termExposition": null
   },
   {
@@ -10183,8 +10183,8 @@
     "contentHash": 16566665726831630819,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "Zero objects satisfy every phase predicate: if $X$ is a zero object, then $X \\in \\mathcal{P}(\\phi)$ for every $\\phi \\in \\mathbb{R}$.",
+    "proofExposition": "By `ObjectProperty.prop_of_iso`, the zero object $0$ satisfies $\\mathcal{P}(\\phi)$ (from `zero_mem`), and any zero object $X$ is isomorphic to $0$, so $X$ also satisfies $\\mathcal{P}(\\phi)$.",
     "termExposition": null
   },
   {
@@ -10195,9 +10195,9 @@
     "contentHash": 6114337037397719204,
     "paperRef": null,
     "paperComment": null,
-    "prose": "",
+    "prose": "Each phase slice $\\mathcal{P}(\\phi)$ of a slicing contains the zero object, making it an instance of the `ContainsZero` typeclass.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "Provided by exhibiting the zero object $0$ together with `isZero_zero C` and the `zero_mem` field of the slicing. This packages the zero-membership axiom into Mathlib's `ObjectProperty.ContainsZero` interface."
   },
   {
     "declName": "CategoryTheory.Triangulated.Slicing.gtProp_of_triangle",
@@ -11947,8 +11947,8 @@
     "contentHash": 9613634436487335375,
     "paperRef": "Theorem 1.2",
     "paperComment": null,
-    "prose": "",
-    "proofExposition": null,
+    "prose": "**Bridgeland's Theorem 1.2.** For each connected component $\\Sigma$ of the stability space $\\mathrm{Stab}(C)$, there exists a complex linear subspace $V(\\Sigma) \\subset \\mathrm{Hom}(\\Lambda, \\mathbb{C})$ with a norm topology and a local homeomorphism $Z : \\Sigma \\to V(\\Sigma)$ sending each stability condition to its central charge.",
+    "proofExposition": "For a fixed connected component $\\Sigma$ with representative $\\sigma_0$, set $V(\\Sigma) = \\{Z \\in \\mathrm{Hom}(\\Lambda,\\mathbb{C}) \\mid \\mathrm{stabSeminorm}(\\sigma_0, Z) < \\infty\\}$ with the norm induced by $\\mathrm{stabSeminorm}(\\sigma_0, \\cdot)$. The map $Z : \\Sigma \\to V(\\Sigma)$ is a local homeomorphism: continuity follows from Proposition 6.3 and Lemma 6.2 via subadditivity and norm comparison between stability conditions in the same component; injectivity on small neighborhoods uses Lemma 6.4 (stability conditions with the same central charge and nearby slicings are equal); and the open map property follows from Theorem 7.1 combined with Lemma 6.2, showing that the image of a basis neighborhood contains a norm ball.",
     "termExposition": null
   },
   {
@@ -12223,9 +12223,9 @@
     "contentHash": 6309087110807412043,
     "paperRef": "Lemma 6.1",
     "paperComment": "pseudo-emetric (not generalized metric: missing separation); Lean uses sup of phase differences, paper uses inf of containment radii — equivalence not proved",
-    "prose": "",
+    "prose": "The space of slicings $\\mathrm{Slicing}(C)$ carries Bridgeland's generalized metric, defined by $d(\\mathcal{P}, \\mathcal{Q}) = \\sup_{E \\neq 0} \\max(|\\phi^+_{\\mathcal{P}}(E) - \\phi^+_{\\mathcal{Q}}(E)|, |\\phi^-_{\\mathcal{P}}(E) - \\phi^-_{\\mathcal{Q}}(E)|)$, making it a pseudo-extended-metric space.",
     "proofExposition": null,
-    "termExposition": null
+    "termExposition": "The three axioms of a `PseudoEMetricSpace` — self-distance zero, symmetry, and the triangle inequality — are verified for `slicingDist` by `slicingDist_self`, `slicingDist_symm`, and `slicingDist_triangle` respectively. Note: this is a pseudo (not separated) extended metric, as distinct slicings can have distance zero; separation is not established here."
   },
   {
     "declName": "CategoryTheory.Triangulated.intervalProp_of_semistable_slicingDist",
