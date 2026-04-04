@@ -349,3 +349,48 @@ the hypothesis is always available at the call sites. If it is, the
 - Entry 5 (`cl_id`): DONE — permanent v=id normalization
 - Entry 6 (surjectivity for norm tower): DONE — `[Fact (Function.Surjective v)]`
   carries surjectivity through instances. Initial "barrier" was illusory.
+
+---
+
+## Entry 7: `chargeOf` and `rw` through `abbrev` (2026-04-01)
+
+**Trigger:** Attempting to introduce `σ.chargeOf E := σ.Z (cl C v E)` as an
+abstraction for the 159 charge-evaluation sites.
+
+**Key finding:** `rw` does NOT match patterns inside `abbrev` bodies. Confirmed
+with MWE: `rw [h]` where `h : foo 3 = 10` fails on goal `bar 3 = 12` even when
+`abbrev bar n := foo n + 2`. This is because `rw` uses `kabstract` which visits
+SYNTACTIC subexpressions, not whnf-reduced ones. Neither `erw`, `simp only`,
+nor `▸` work. Only `simp [bar, h]` or `simp_rw [bar_def, h]` succeed.
+
+**Mathlib idiom:** For any `abbrev` that wraps a composition, provide
+`@[simp] theorem foo_def : foo x = <body> := rfl`. Then `simp_rw [foo_def, ...]`
+composes with existing lemmas without duplicate API.
+
+**Design for `chargeOf`:**
+1. Define `chargeOf v Z E := Z (cl C v E)` as standalone `abbrev` BEFORE the
+   structure (with `variable {C} in` to make `C` implicit for dot notation)
+2. Provide `@[simp] chargeOf_def : chargeOf v Z E = Z (cl C v E) := rfl`
+3. Rename structure field to `compat'` (raw form with `Z (v (K₀.of C E))`)
+4. Add `compat` theorem (with `variable {C} in` and `omit [IsTriangulated C] in`)
+   returning `chargeOf v σ.Z E = m * exp(iπφ)`
+5. All downstream proofs use `σ.compat` (chargeOf level), never `σ.compat'`
+6. Where `rw` needs `cl_*` lemmas on chargeOf goals: `simp_rw [chargeOf_def, ...]`
+
+**Status:** Design validated. Implementation requires atomic commit —
+`compat'`/`compat` rename breaks all callers, so the downstream substitution
+must happen in the same commit. ~20 `rw` sites need `simp_rw [chargeOf_def, ...]`.
+
+**Lesson:** `abbrev` in Lean 4 is transparent for type checking but opaque for
+`rw`/`▸`/`simp only` subexpression matching. Any `abbrev` wrapping a composition
+needs a `_def` unfold lemma. This should be recorded as a project convention.
+
+**Correction (same session):** Most apparent `rw` failures were from incomplete
+substitution — goals still had the old form while hypotheses had the new.
+Once both sides use `σ.charge E`, `rw [hmZ]` works directly. The only genuine
+friction is `rw [hZ : σ.Z = τ.Z]` inside `σ.charge E` — rewriting a raw field
+inside the abbreviation. That's one site, fixed with `simp [hZ]`.
+
+**Final design:** `σ.charge E` (not standalone `chargeOf`). Structure field
+`compat'` (raw), theorem `compat` (returns `σ.charge E`). `@[simp] charge_def`
+for the rare case where `simp` needs to unfold. Full substitution is atomic.

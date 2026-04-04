@@ -51,7 +51,7 @@ theorem StabilityCondition.WithClassMap.W_ne_zero_of_seminorm_lt_one (σ : Stabi
     exact (ENNReal.toReal_lt_toReal hfin ENNReal.ofReal_ne_top).mpr hW
   -- Z([E]) = m · exp(iπφ) with m > 0, so ‖Z([E])‖ = m > 0
   obtain ⟨m, hm, hmZ⟩ := σ.compat φ E hP hE
-  have hZ_pos : (0 : ℝ) < ‖σ.Z (cl C v E)‖ := by
+  have hZ_pos : (0 : ℝ) < ‖σ.charge E‖ := by
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hm,
         Complex.norm_exp_ofReal_mul_I, mul_one]; exact hm
   -- ‖(W - Z)([E])‖ ≤ M · ‖Z([E])‖
@@ -59,7 +59,7 @@ theorem StabilityCondition.WithClassMap.W_ne_zero_of_seminorm_lt_one (σ : Stabi
   -- If W([E]) = 0, then (W - Z)([E]) = -Z([E]), so ‖(W-Z)([E])‖ = ‖Z([E])‖
   -- But ‖(W-Z)([E])‖ ≤ M · ‖Z([E])‖ with M < 1, contradicting ‖Z([E])‖ > 0
   intro hw0
-  have hWZ : (W - σ.Z) (cl C v E) = W (cl C v E) - σ.Z (cl C v E) :=
+  have hWZ : (W - σ.Z) (cl C v E) = W (cl C v E) - σ.charge E :=
     AddMonoidHom.sub_apply W σ.Z (cl C v E)
   rw [hWZ, hw0, zero_sub, norm_neg] at hbd
   nlinarith
@@ -86,7 +86,7 @@ decomposes `E` via its HN filtration and applies the sector estimate
 theorem StabilityCondition.WithClassMap.norm_Z_pos_of_intervalProp (σ : StabilityCondition.WithClassMap C v)
     {E : C} (hE : ¬IsZero E) {a b : ℝ} (hab : b - a < 1)
     (hI : σ.slicing.intervalProp C a b E) :
-    0 < ‖σ.Z (cl C v E)‖ := by
+    0 < ‖σ.charge E‖ := by
   obtain ⟨F, hn, hfirst, hlast⟩ := HNFiltration.exists_both_nonzero C σ.slicing hE
   -- All HN phases are in (a, b)
   have hphases : ∀ i : Fin F.n, a < F.φ i ∧ F.φ i < b := by
@@ -104,16 +104,14 @@ theorem StabilityCondition.WithClassMap.norm_Z_pos_of_intervalProp (σ : Stabili
         _ < b := σ.slicing.phiPlus_lt_of_intervalProp C hE hI
   set P := F.toPostnikovTower
   -- K₀ decomposition: Z(E) = Σ Z(Fᵢ) = Σ ‖Z(Fᵢ)‖ * exp(iπφᵢ)
-  have hZE : σ.Z (cl C v E) =
-      ∑ i : Fin F.n, σ.Z (cl C v (P.factor i)) := by
-    rw [cl_postnikovTower_eq_sum C v P, map_sum]
+  have hZE := σ.charge_postnikovTower_eq_sum P
   have hZi : ∀ i : Fin F.n,
-      σ.Z (cl C v (P.factor i)) =
-      ↑(‖σ.Z (cl C v (P.factor i))‖) *
+      σ.charge (P.factor i) =
+      ↑(‖σ.charge (P.factor i)‖) *
         Complex.exp (↑(Real.pi * F.φ i) * Complex.I) := by
     intro i
     by_cases hi : IsZero (P.factor i)
-    · simp [cl_isZero (C := C) (v := v) hi]
+    · simp [σ.charge_isZero hi]
     · obtain ⟨m, hm, hmZ⟩ :=
         σ.compat (F.φ i) (P.factor i) (F.semistable i) hi
       rw [hmZ]; congr 1
@@ -136,21 +134,21 @@ theorem StabilityCondition.WithClassMap.norm_Z_pos_of_intervalProp (σ : Stabili
   -- Apply sector estimate
   have hsector :
       Real.cos (Real.pi * (b - a) / 2) *
-        ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖ ≤
-      ‖σ.Z (cl C v E)‖ := by
+        ∑ i : Fin F.n, ‖σ.charge (P.factor i)‖ ≤
+      ‖σ.charge E‖ := by
     calc Real.cos (Real.pi * (b - a) / 2) *
-            ∑ i : Fin F.n, ‖σ.Z (cl C v (P.factor i))‖
+            ∑ i : Fin F.n, ‖σ.charge (P.factor i)‖
         ≤ ‖∑ i : Fin F.n,
-            ↑(‖σ.Z (cl C v (P.factor i))‖) *
+            ↑(‖σ.charge (P.factor i)‖) *
               Complex.exp (↑(Real.pi * F.φ i) * Complex.I)‖ :=
           norm_sum_exp_ge_cos_mul_sum
             (fun i _ ↦ norm_nonneg _) hw0 hw (fun i _ ↦ hθ i)
-      _ = ‖∑ i : Fin F.n, σ.Z (cl C v (P.factor i))‖ := by
+      _ = ‖∑ i : Fin F.n, σ.charge (P.factor i)‖ := by
           congr 1; exact Finset.sum_congr rfl (fun i _ ↦ (hZi i).symm)
-      _ = ‖σ.Z (cl C v E)‖ := by rw [← hZE]
+      _ = ‖σ.charge E‖ := by rw [← hZE]
   -- First factor is nonzero, so ‖Z(F₀)‖ > 0
   have hfactor_pos :
-      0 < ‖σ.Z (cl C v (P.factor ⟨0, hn⟩))‖ := by
+      0 < ‖σ.charge (P.factor ⟨0, hn⟩)‖ := by
     obtain ⟨m, hm, hmZ⟩ :=
       σ.compat _ _ (F.semistable ⟨0, hn⟩) hfirst
     rw [hmZ, norm_mul, Complex.norm_real, Real.norm_eq_abs,
@@ -160,10 +158,10 @@ theorem StabilityCondition.WithClassMap.norm_Z_pos_of_intervalProp (σ : Stabili
     Real.cos_pos_of_mem_Ioo
       ⟨by nlinarith [Real.pi_pos], by nlinarith [Real.pi_pos]⟩
   have hsum_pos : 0 < ∑ i : Fin F.n,
-      ‖σ.Z (cl C v (P.factor i))‖ := by
+      ‖σ.charge (P.factor i)‖ := by
     apply lt_of_lt_of_le hfactor_pos
     exact Finset.single_le_sum
-      (f := fun i ↦ ‖σ.Z (cl C v (P.factor i))‖)
+      (f := fun i ↦ ‖σ.charge (P.factor i)‖)
       (fun i _ ↦ norm_nonneg _)
       (Finset.mem_univ (⟨0, hn⟩ : Fin F.n))
   exact lt_of_lt_of_le (mul_pos hcos_pos hsum_pos) hsector
@@ -205,7 +203,7 @@ theorem StabilityCondition.WithClassMap.W_ne_zero_of_intervalProp (σ : Stabilit
     linarith
   have hWZ_bound : ‖(W - σ.Z) (cl C v E)‖ ≤
       M / Real.cos (Real.pi * (b - a) / 2) *
-        ‖σ.Z (cl C v E)‖ :=
+        ‖σ.charge E‖ :=
     sector_bound' C σ (W - σ.Z) hE hab_pos.le
       hab hwidth hM0
       (fun A φ hP hA ↦ stabSeminorm_bound_real C σ _ hfin hP hA)
@@ -215,7 +213,7 @@ theorem StabilityCondition.WithClassMap.W_ne_zero_of_intervalProp (σ : Stabilit
   -- If W(E) = 0, then ‖(W-Z)(E)‖ = ‖Z(E)‖, contradicting the bound
   intro hw0
   have hWZ : (W - σ.Z) (cl C v E) =
-      W (cl C v E) - σ.Z (cl C v E) :=
+      W (cl C v E) - σ.charge E :=
     AddMonoidHom.sub_apply W σ.Z (cl C v E)
   rw [hWZ, hw0, zero_sub, norm_neg] at hWZ_bound
   nlinarith

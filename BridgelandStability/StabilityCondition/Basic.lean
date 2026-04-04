@@ -33,12 +33,12 @@ open scoped ENNReal
 universe v u u'
 
 namespace CategoryTheory.Triangulated
+open PreStabilityCondition.WithClassMap (charge_congr charge_def)
 
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-variable {Λ : Type u'} [AddCommGroup Λ]
 
 /-! ### Ext theorems -/
 
@@ -81,7 +81,7 @@ identity class map simplified away. -/
 theorem preStabilityCondition_compat_apply (σ : PreStabilityCondition.WithClassMap C v)
     (φ : ℝ) (E : C) (hE : σ.slicing.P φ E) (hNZ : ¬IsZero E) :
     ∃ (m : ℝ), 0 < m ∧
-      σ.Z (cl C v E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
+      σ.charge E = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
   simpa using σ.compat φ E hE hNZ
 
 /-! ### Phase rigidity for same central charge -/
@@ -95,7 +95,7 @@ theorem StabilityCondition.WithClassMap.phase_eq_of_same_Z (σ τ : StabilityCon
     (habs : |φ - ψ| < 2) : φ = ψ := by
   obtain ⟨m₁, hm₁, h₁⟩ := σ.compat φ E hσ hE
   obtain ⟨m₂, hm₂, h₂⟩ := τ.compat ψ E hτ hE
-  rw [hZ] at h₁
+  rw [charge_congr hZ E] at h₁
   exact eq_of_pos_mul_exp_eq hm₁ hm₂ habs (h₁.symm.trans h₂)
 
 /-- A real multiple of `exp(iπψ)` cannot equal a sum of positive real multiples of

@@ -62,11 +62,54 @@ structure WithClassMap (v : K₀ C →+ Λ) where
   slicing : Slicing C
   /-- The central charge on the class lattice `Λ`. -/
   Z : Λ →+ ℂ
-  /-- Compatibility: for every nonzero semistable object `E` of phase `φ`, the
-  class-map central charge `Z(v([E]))` lies on the ray `ℝ₊ · exp(iπφ)` in `ℂ`. -/
-  compat : ∀ (φ : ℝ) (E : C), slicing.P φ E → ¬IsZero E →
+  /-- Compatibility (raw). Use `σ.compat` instead. -/
+  compat' : ∀ (φ : ℝ) (E : C), slicing.P φ E → ¬IsZero E →
     ∃ (m : ℝ), 0 < m ∧
       Z (v (K₀.of C E)) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I)
+
+omit [IsTriangulated C] in
+variable {C} in
+/-- The central charge evaluated at the class of `E`. This is `Z(v[E])`. -/
+noncomputable abbrev WithClassMap.charge {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) (E : C) : ℂ :=
+  σ.Z (cl C v E)
+
+omit [IsTriangulated C] in
+variable {C} in
+theorem WithClassMap.charge_def {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) (E : C) :
+    σ.charge E = σ.Z (cl C v E) := rfl
+
+omit [IsTriangulated C] in
+variable {C} in
+/-- Compatibility: for nonzero semistable `E` of phase `φ`, `σ.charge E`
+lies on the ray `ℝ₊ · exp(iπφ)`. -/
+theorem WithClassMap.compat {v : K₀ C →+ Λ} (σ : WithClassMap C v)
+    (φ : ℝ) (E : C) (hP : σ.slicing.P φ E) (hE : ¬IsZero E) :
+    ∃ (m : ℝ), 0 < m ∧
+      σ.charge E = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) :=
+  σ.compat' φ E hP hE
+
+omit [IsTriangulated C] in
+variable {C} in
+theorem WithClassMap.charge_isZero {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) {E : C} (hE : IsZero E) :
+    σ.charge E = 0 := by
+  simp [charge_def, cl_isZero (C := C) (v := v) hE]
+
+omit [IsTriangulated C] in
+variable {C} in
+theorem WithClassMap.charge_congr {v : K₀ C →+ Λ}
+    {σ τ : WithClassMap C v} (h : σ.Z = τ.Z) (E : C) :
+    σ.charge E = τ.charge E := by
+  simp only [charge_def, h]
+
+omit [IsTriangulated C] in
+variable {C} in
+theorem WithClassMap.charge_postnikovTower_eq_sum {v : K₀ C →+ Λ}
+    (σ : WithClassMap C v) {E : C} (P : PostnikovTower C E) :
+    σ.charge E = ∑ i : Fin P.n, σ.charge (P.factor i) := by
+  simp only [charge_def, cl_postnikovTower_eq_sum C v P, map_sum]
 
 end PreStabilityCondition
 
@@ -135,7 +178,7 @@ When `v = id` (i.e., `Λ = K₀(D)`), this recovers Bridgeland's original semino
 def stabSeminorm {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v)
     (U : Λ →+ ℂ) : ℝ≥0∞ :=
   ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
-    ENNReal.ofReal (‖U (v (K₀.of C E))‖ / ‖σ.Z (v (K₀.of C E))‖)
+    ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖)
 
 /-! ### Topology on Stab(D) -/
 
