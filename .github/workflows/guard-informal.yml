@@ -1,12 +1,12 @@
 name: Guard @[informal] Declarations
 
 on:
-  pull_request:
-    branches: [main]
+  push:
     paths:
       - "BridgelandStability/**/*.lean"
       - "ExtractDecls.lean"
       - "lakefile.toml"
+      - "informalizations.json"
 
 permissions:
   contents: read
@@ -17,7 +17,7 @@ jobs:
     name: Check paper-aligned declarations
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout PR branch
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -35,31 +35,29 @@ jobs:
           with open("informalizations-main.json") as f:
               main = json.load(f)
           with open("informalizations.json") as f:
-              pr = json.load(f)
+              current = json.load(f)
 
           main_tagged = {e["declName"]: e for e in main if e.get("paperRef")}
-          pr_tagged = {e["declName"]: e for e in pr if e.get("paperRef")}
+          cur_tagged = {e["declName"]: e for e in current if e.get("paperRef")}
 
           changes = []
 
           for name, me in main_tagged.items():
-              pe = pr_tagged.get(name)
-              if pe is None:
+              ce = cur_tagged.get(name)
+              if ce is None:
                   changes.append(f"**REMOVED**: `{name}` ← {me['paperRef']}")
-              elif pe.get("contentHash") != me.get("contentHash"):
+              elif ce.get("contentHash") != me.get("contentHash"):
                   changes.append(f"**CHANGED**: `{name}` ← {me['paperRef']}")
 
-          for name, pe in pr_tagged.items():
+          for name, ce in cur_tagged.items():
               if name not in main_tagged:
-                  changes.append(f"**NEW TAG**: `{name}` ← {pe['paperRef']}")
+                  changes.append(f"**NEW TAG**: `{name}` ← {ce['paperRef']}")
 
           if changes:
               body = "## ⚠️ Paper-aligned declarations modified\n\n"
-              body += "The following `@[informal]`-tagged declarations were changed in this PR.\n"
+              body += "The following `@[informal]`-tagged declarations were changed.\n"
               body += "These declarations claim alignment with specific statements in "
               body += "Bridgeland's paper (math/0212237v3).\n\n"
-              body += "Add the `paper-alignment-reviewed` label to confirm the changes "
-              body += "are intentional.\n\n"
               for c in changes:
                   body += f"- {c}\n"
 
@@ -76,28 +74,51 @@ jobs:
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Post review comment
+      - name: Find associated PR
         if: steps.compare.outputs.has_changes == 'true'
+        id: find-pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
+          pr_number=$(gh pr list -R ${{ github.repository }} \
+            --head ${{ github.ref_name }} \
+            --json number --jq '.[0].number // empty' 2>/dev/null || true)
+          echo "pr_number=${pr_number}" >> "$GITHUB_OUTPUT"
+
+      - name: Post review comment on PR
+        if: steps.compare.outputs.has_changes == 'true' && steps.find-pr.outputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ steps.find-pr.outputs.pr_number }} \
             -R ${{ github.repository }} \
             --body "$(cat comment-body.md)
 
+          Add the \`paper-alignment-reviewed\` label to confirm the changes are intentional.
+
           🤖 *This check was generated automatically by the guard-informal workflow.*"
 
-      - name: Require review label
+      - name: Fail if tagged declarations changed
         if: steps.compare.outputs.has_changes == 'true'
         run: |
-          labels=$(gh pr view ${{ github.event.pull_request.number }} \
-            -R ${{ github.repository }} \
-            --json labels --jq '.labels[].name' 2>/dev/null || true)
-          if echo "$labels" | grep -q "paper-alignment-reviewed"; then
-            echo "Label present — approved."
-          else
-            echo "::error::Paper-aligned declarations were modified. Add the 'paper-alignment-reviewed' label to merge."
-            exit 1
+          # On main, just warn
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "::warning::Paper-aligned declarations were modified on main."
+            cat comment-body.md
+            exit 0
           fi
+          # On other branches, check for label on associated PR
+          pr_number="${{ steps.find-pr.outputs.pr_number }}"
+          if [ -n "$pr_number" ]; then
+            labels=$(gh pr view "$pr_number" \
+              -R ${{ github.repository }} \
+              --json labels --jq '.labels[].name' 2>/dev/null || true)
+            if echo "$labels" | grep -q "paper-alignment-reviewed"; then
+              echo "Label present — approved."
+              exit 0
+            fi
+          fi
+          echo "::error::Paper-aligned declarations were modified. Add the 'paper-alignment-reviewed' label to the PR to merge."
+          exit 1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
