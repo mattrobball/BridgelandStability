@@ -1,0 +1,118 @@
+name: Guard @[informal] Declarations
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "BridgelandStability/**/*.lean"
+      - "ExtractDecls.lean"
+      - "lakefile.toml"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check:
+    name: Check paper-aligned declarations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get baseline from main
+        run: |
+          git show origin/main:extracted.json > extracted-main.json 2>/dev/null || echo "[]" > extracted-main.json
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Build and extract declarations
+        run: |
+          lake build BridgelandStability
+          rm -f .lake/build/lib/lean/ExtractDecls.olean .lake/build/lib/lean/ExtractDecls.ilean
+          lake build extractDecls
+
+      - name: Compare @[informal] declarations
+        id: compare
+        run: |
+          python3 - <<'PYEOF'
+          import json, sys
+
+          with open("extracted-main.json") as f:
+              main = json.load(f)
+          with open("extracted.json") as f:
+              pr = json.load(f)
+
+          main_tagged = {e["declName"]: e for e in main if e.get("paperRef")}
+          pr_tagged = {e["declName"]: e for e in pr if e.get("paperRef")}
+
+          changes = []
+
+          for name, me in main_tagged.items():
+              pe = pr_tagged.get(name)
+              if pe is None:
+                  changes.append(f"**REMOVED**: `{name}` ← {me['paperRef']}")
+              elif pe.get("contentHash") != me.get("contentHash"):
+                  changes.append(f"**CHANGED**: `{name}` ← {me['paperRef']}")
+
+          for name, pe in pr_tagged.items():
+              if name not in main_tagged:
+                  changes.append(f"**NEW TAG**: `{name}` ← {pe['paperRef']}")
+
+          if changes:
+              body = "## ⚠️ Paper-aligned declarations modified\n\n"
+              body += "The following `@[informal]`-tagged declarations were changed in this PR.\n"
+              body += "These declarations claim alignment with specific statements in "
+              body += "Bridgeland's paper (math/0212237v3).\n\n"
+              body += "Add the `paper-alignment-reviewed` label to confirm the changes "
+              body += "are intentional.\n\n"
+              for c in changes:
+                  body += f"- {c}\n"
+
+              with open("comment-body.md", "w") as f:
+                  f.write(body)
+
+              for c in changes:
+                  print(f"  {c}", file=sys.stderr)
+          PYEOF
+
+          if [ -f comment-body.md ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post review comment
+        if: steps.compare.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            -R ${{ github.repository }} \
+            --body "$(cat comment-body.md)
+
+          🤖 *This check was generated automatically by the guard-informal workflow.*"
+
+      - name: Require review label
+        if: steps.compare.outputs.has_changes == 'true'
+        run: |
+          labels=$(gh pr view ${{ github.event.pull_request.number }} \
+            -R ${{ github.repository }} \
+            --json labels --jq '.labels[].name' 2>/dev/null || true)
+          if echo "$labels" | grep -q "paper-alignment-reviewed"; then
+            echo "Label present — approved."
+          else
+            echo "::error::Paper-aligned declarations were modified. Add the 'paper-alignment-reviewed' label to merge."
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

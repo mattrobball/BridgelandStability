@@ -66,6 +66,16 @@ jobs:
             echo "has_gaps=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Commit extraction baseline
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet extracted.json 2>/dev/null; then
+            git add extracted.json
+            git commit -m "ci: update extracted.json baseline [skip ci]"
+            git push
+          fi
+
       - name: Upload extraction artifacts
         if: steps.gaps.outputs.has_gaps == 'true'
         uses: actions/upload-artifact@v4
