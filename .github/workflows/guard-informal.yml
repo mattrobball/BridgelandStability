@@ -24,22 +24,7 @@ jobs:
 
       - name: Get baseline from main
         run: |
-          git show origin/main:extracted.json > extracted-main.json 2>/dev/null || echo "[]" > extracted-main.json
-
-      - name: Install elan
-        run: |
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
-            | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Get Mathlib cache
-        run: lake exe cache get
-
-      - name: Build and extract declarations
-        run: |
-          lake build BridgelandStability
-          rm -f .lake/build/lib/lean/ExtractDecls.olean .lake/build/lib/lean/ExtractDecls.ilean
-          lake build extractDecls
+          git show origin/main:informalizations.json > informalizations-main.json 2>/dev/null || echo "[]" > informalizations-main.json
 
       - name: Compare @[informal] declarations
         id: compare
@@ -47,9 +32,9 @@ jobs:
           python3 - <<'PYEOF'
           import json, sys
 
-          with open("extracted-main.json") as f:
+          with open("informalizations-main.json") as f:
               main = json.load(f)
-          with open("extracted.json") as f:
+          with open("informalizations.json") as f:
               pr = json.load(f)
 
           main_tagged = {e["declName"]: e for e in main if e.get("paperRef")}
