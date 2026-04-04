@@ -43,8 +43,8 @@
     "contentHash": 11313856334110460500,
     "paperRef": null,
     "paperComment": null,
-    "prose": "In a finite-length interval subcategory, upper boundary truncation yields a strict short exact sequence.",
-    "proofExposition": "The boundary triangle from `exists_upper_boundary_triangle` gives a distinguished triangle. In the abelian heart, this yields a strict short exact sequence via `strictShortExact_of_distTriang`.",
+    "prose": "In a thin interval subcategory $\\mathcal{P}((a, b_2))$ (with $b_2 - a \\le 1$), given $a < b_1 \\le b_2$ and $Q \\in \\mathcal{P}((a, b_2))$, there exists a strict short exact sequence $0 \\to X_1 \\to Q \\to X_3 \\to 0$ in $\\mathcal{P}((a, b_2))$ with $X_1 \\in \\mathcal{P}(\\ge b_1)$ and $X_3 \\in \\mathcal{P}((a, b_1))$.",
+    "proofExposition": "Apply `exists_upper_boundary_triangle` to obtain the distinguished triangle, then use `strictShortExact_of_distTriang` to package it as a strict short exact sequence in the thin interval category.",
     "termExposition": null
   },
   {
@@ -943,8 +943,8 @@
     "contentHash": 823735614116052227,
     "paperRef": null,
     "paperComment": null,
-    "prose": "**Hom-vanishing within $\\mathcal{P}(\\phi)$.** Every morphism $A \\to B$ in $\\mathcal{P}(\\phi)$ that factors through the heart with a kernel in $\\mathcal{P}(\\phi)$ has the image also in $\\mathcal{P}(\\phi)$.",
-    "proofExposition": "Uses the imaginary-part argument: the kernel and image lie in the heart, and their $K_0$ contributions force the imaginary part to vanish.",
+    "prose": "**Negative-degree Hom vanishing in $\\mathcal{P}(\\varphi)$.** For $X, Y \\in \\mathcal{P}(\\varphi)$ and $n < 0$, every morphism $\\iota(X) \\to \\iota(Y)\\llbracket n \\rrbracket$ is zero.",
+    "proofExposition": "The shift axiom gives $Y\\llbracket n \\rrbracket \\in \\mathcal{P}(\\varphi + n)$. Since $n < 0$, we have $\\varphi > \\varphi + n$, so the slicing's Hom-vanishing axiom applies directly.",
     "termExposition": null
   },
   {
@@ -991,8 +991,8 @@
     "contentHash": 742780958921705870,
     "paperRef": null,
     "paperComment": null,
-    "prose": "In a finite-length interval subcategory, a non-W-semistable object admits a maximal strict subobject with maximal W-phase strictly above the W-phase of the ambient object.",
-    "proofExposition": "Iterate `exists_phase_gt_strictSubobject_of_not_semistable`. Finite length of the subobject lattice guarantees termination, yielding a W-semistable maximal subobject.",
+    "prose": "For a nonzero object $X$ in a thin interval subcategory $\\mathcal{P}((a,b))$ with finite subobject lattice, there exists a nonzero strict subobject $M$ of $X$ with maximal $W$-phase among all nonzero strict subobjects, and maximal for inclusion among those with the same $W$-phase.",
+    "proofExposition": "Delegates to `exists_maxPhase_maximal_strictSubobject_of_finite` using `Set.toFinite` to convert the `Finite (Subobject X)` instance to finiteness of the set of nonzero strict subobjects.",
     "termExposition": null
   },
   {
