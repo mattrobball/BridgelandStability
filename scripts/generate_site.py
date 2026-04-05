@@ -191,15 +191,21 @@ def generate_doc_file(module_name: str, entries: list, prefix: str) -> str:
     title_counts: dict[str, int] = {}
     for t in raw_titles:
         title_counts[t] = title_counts.get(t, 0) + 1
-    # For duplicates, use more of the qualified name
+    # For duplicates, use more of the qualified name until unique
     heading_titles = []
     for entry, raw in zip(entries, raw_titles):
         if title_counts[raw] > 1:
             parts = entry["declName"].split(".")
             drop = {"CategoryTheory", "Triangulated", "Limits", "Abelian"}
             filtered = [p for p in parts if p not in drop]
-            # Use last 2 components to disambiguate
-            heading_titles.append(".".join(filtered[-2:]) if len(filtered) >= 2 else raw)
+            # Try increasing suffix lengths until unique
+            for n in range(2, len(filtered) + 1):
+                candidate = ".".join(filtered[-n:])
+                if sum(1 for e2 in entries
+                       if ".".join([p for p in e2["declName"].split(".")
+                                    if p not in drop][-n:]) == candidate) == 1:
+                    break
+            heading_titles.append(candidate if len(filtered) >= 2 else raw)
         else:
             heading_titles.append(raw)
 
