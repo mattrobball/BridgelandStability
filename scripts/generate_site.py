@@ -340,7 +340,7 @@ def generate_root_file(
     lines.append("")
     lines.append(
         "For verification of the formal statements against their source code, "
-        "see the (Comparator Manual)(https://mattrobball.github.io/BridgelandStability/). "
+        "see the [Comparator Manual](comparator/). "
         "The comparator pairs each declaration with its full proof body, "
         "enabling direct inspection of the formalization's trusted base."
     )
