@@ -20,25 +20,56 @@ env:
   LEAN_EXPOSITION_REPO: mattrobball/lean-exposition
   LEAN_EXPOSITION_REF: codex/comparator-manual-design
 
+# ════════════════════════════════════════════════════════════════
+# Job graph:
+#   build-project ──┬──> verify ──────────┬──> deploy
+#                   └──> generate-manual ──┘
+# ════════════════════════════════════════════════════════════════
+
 jobs:
+  # ── Job 1: Build BridgelandStability oleans ───────────────────
+  build-project:
+    name: Build Project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Restore olean cache
+        uses: actions/cache@v4
+        with:
+          path: .lake/build
+          key: oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('BridgelandStability/**/*.lean') }}
+          restore-keys: |
+            oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Build BridgelandStability
+        run: lake build BridgelandStability
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bridgeland-build
+          path: .lake/build
+          retention-days: 1
+
+  # ── Job 2: Comparator verification ────────────────────────────
   verify:
-    name: Verify & Build Manual
+    name: Verify Comparator
+    needs: build-project
     runs-on: ubuntu-latest
     outputs:
       comparator-status: ${{ steps.comparator.outcome }}
-      decl-count: ${{ steps.badge-data.outputs.decl_count }}
-      sorry-count: ${{ steps.badge-data.outputs.sorry_count }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # ── Comparator verification (sandboxed) ────────────────────────
-
-      - name: Build landrun
-        run: |
-          git clone --depth 1 https://github.com/Zouuup/landrun
-          cd landrun && go build -o /usr/local/bin/landrun ./cmd/landrun
-          landrun --version
+      - uses: actions/checkout@v4
 
       - name: Install elan
         run: |
@@ -48,6 +79,20 @@ jobs:
 
       - name: Get Mathlib cache
         run: lake exe cache get
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bridgeland-build
+          path: .lake/build
+
+      - name: Build project (incremental)
+        run: lake build BridgelandStability
+
+      - name: Build landrun
+        run: |
+          git clone --depth 1 https://github.com/Zouuup/landrun
+          cd landrun && go build -o /usr/local/bin/landrun ./cmd/landrun
 
       - name: Build lean4export
         run: |
@@ -67,30 +112,14 @@ jobs:
         continue-on-error: true
         run: lake env comparator comparator.json
 
-      # ── Badge data ─────────────────────────────────────────────────
-
-      - name: Collect badge data
-        id: badge-data
-        run: |
-          if [ "${{ steps.comparator.outcome }}" = "success" ]; then
-            echo "status=verified" >> "$GITHUB_OUTPUT"
-            echo "color=brightgreen" >> "$GITHUB_OUTPUT"
-            echo "label=comparator" >> "$GITHUB_OUTPUT"
-          else
-            echo "status=failed" >> "$GITHUB_OUTPUT"
-            echo "color=red" >> "$GITHUB_OUTPUT"
-            echo "label=comparator" >> "$GITHUB_OUTPUT"
-          fi
-          # Count declarations from the manifest (produced by exposition)
-          echo "decl_count=59" >> "$GITHUB_OUTPUT"
-          echo "sorry_count=0" >> "$GITHUB_OUTPUT"
-
       - name: Generate badge SVG
         run: |
           mkdir -p badge
-          status="${{ steps.badge-data.outputs.status }}"
-          color="${{ steps.badge-data.outputs.color }}"
-          if [ "$color" = "brightgreen" ]; then hex="#4c1"; else hex="#e05d44"; fi
+          if [ "${{ steps.comparator.outcome }}" = "success" ]; then
+            status="verified"; hex="#4c1"
+          else
+            status="failed"; hex="#e05d44"
+          fi
           cat > badge/comparator.svg << SVGEOF
           <svg xmlns="http://www.w3.org/2000/svg" width="140" height="20">
             <linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
@@ -105,37 +134,85 @@ jobs:
           </svg>
           SVGEOF
 
-      # ── Comparator manual (trusted, not sandboxed) ─────────────────
+      - name: Upload badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: badge
+          path: badge/
+          retention-days: 1
 
-      - name: Build exposition binary
-        if: steps.comparator.outcome == 'success'
+      - name: Fail if comparator failed
+        if: steps.comparator.outcome != 'success'
+        run: exit 1
+
+  # ── Job 3: Generate comparator manual (Verso shadow build) ───
+  generate-manual:
+    name: Generate Manual
+    needs: build-project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bridgeland-build
+          path: .lake/build
+
+      - name: Build project (incremental)
+        run: lake build BridgelandStability
+
+      # ── Exposition binary (cached) ──
+
+      - name: Clone lean-exposition
         run: |
           git clone --depth 1 --branch "$LEAN_EXPOSITION_REF" \
             "https://github.com/$LEAN_EXPOSITION_REPO" /tmp/lean-exposition
-          cd /tmp/lean-exposition
-          lake build exposition
+
+      - name: Restore exposition cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/lean-exposition/.lake
+          key: exposition-${{ hashFiles('lean-toolchain') }}-${{ env.LEAN_EXPOSITION_REF }}
+
+      - name: Build exposition binary
+        run: |
+          cd /tmp/lean-exposition && lake build exposition
           echo "EXPOSITION_BIN=/tmp/lean-exposition/.lake/build/bin/exposition" >> "$GITHUB_ENV"
 
-      - name: Build project for exposition
-        if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
-        run: lake build BridgelandStability
+      # ── Shadow build (cached Verso/SubVerso) ──
+
+      - name: Restore shadow cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            comparator-shadow/.lake/packages/verso
+            comparator-shadow/.lake/packages/subverso
+            comparator-shadow/.lake/packages/MD4Lean
+            comparator-shadow/.lake/packages/plausible
+          key: shadow-verso-${{ hashFiles('lean-toolchain') }}
+          restore-keys: |
+            shadow-verso-
 
       - name: Generate comparator manual
-        if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
         run: |
           lake env "$EXPOSITION_BIN" \
             --root BridgelandStability \
-            --repo-url https://github.com/${{ github.repository }} \
+            --repo-url "https://github.com/${{ github.repository }}" \
             --comparator-config comparator.json \
             --write-shadow comparator-shadow \
             --shadow-only
 
-      - name: Split into multi-page
-        if: steps.comparator.outcome == 'success' && env.EXPOSITION_BIN != ''
-        run: python3 /tmp/lean-exposition/scripts/split_pages.py comparator-shadow/_out/html-multi
-
-      - name: Upload manual preview
-        if: github.event_name == 'pull_request' && steps.comparator.outcome == 'success'
+      - name: Upload manual
         uses: actions/upload-artifact@v4
         with:
           name: comparator-manual
@@ -143,42 +220,114 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  # ── Job 4: Build informal exposition site ──────────────────────
+  build-site:
+    name: Build Informal Site
+    needs: build-project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      # ── Deploy to gh-pages (main only) ─────────────────────────────
-
-      - name: Prepare deployment
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.comparator.outcome == 'success'
+      - name: Install elan
         run: |
-          site_dir="comparator-shadow/_out/html-multi"
-          if [ -d "$site_dir" ]; then
-            cp -r badge "$site_dir/"
-            touch "$site_dir/.nojekyll"
-          fi
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Configure Pages
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.comparator.outcome == 'success'
-        uses: actions/configure-pages@v5
+      - name: Get Mathlib cache
+        run: lake exe cache get
 
-      - name: Upload Pages artifact
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.comparator.outcome == 'success'
-        uses: actions/upload-pages-artifact@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
-          path: comparator-shadow/_out/html-multi
+          name: bridgeland-build
+          path: .lake/build
 
-      - name: Fail if comparator failed
-        if: steps.comparator.outcome != 'success'
-        run: exit 1
+      - name: Build project (incremental)
+        run: lake build BridgelandStability
 
+      - name: Generate Verso docs
+        run: |
+          python3 scripts/generate_site.py \
+            --json informalizations.json \
+            --output site-build \
+            --source-path "$(pwd)" \
+            --prefix BridgelandStability \
+            --verso-rev v4.29.0
+
+      - name: Restore site cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            site-build/.lake
+            site-build/lake-manifest.json
+          key: site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('informalizations.json') }}
+          restore-keys: |
+            site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-
+
+      - name: Build Verso site
+        run: |
+          cd site-build
+          if [ ! -f lake-manifest.json ]; then
+            lake update
+          fi
+          lake exe cache get || true
+          lake build informal
+          lake exe informal
+
+      - name: Style site
+        run: |
+          pip install beautifulsoup4
+          python3 scripts/style_site.py site-build/_out/html-multi
+
+      - name: Upload site
+        uses: actions/upload-artifact@v4
+        with:
+          name: informal-site
+          path: site-build/_out/html-multi
+          if-no-files-found: warn
+          retention-days: 7
+
+  # ── Job 5: Deploy to GitHub Pages ─────────────────────────────
   deploy:
     name: Deploy Pages
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: verify
+    needs: [verify, generate-manual, build-site]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Download informal site
+        uses: actions/download-artifact@v4
+        with:
+          name: informal-site
+          path: site
+
+      - name: Download comparator manual
+        uses: actions/download-artifact@v4
+        with:
+          name: comparator-manual
+          path: site/comparator
+        continue-on-error: true
+
+      - name: Download badge
+        uses: actions/download-artifact@v4
+        with:
+          name: badge
+          path: site/badge
+
+      - name: Prepare deployment
+        run: touch site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-

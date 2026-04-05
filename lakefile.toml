@@ -21,5 +21,9 @@ name = "BridgelandStability"
 srcDir = "."
 
 [[lean_exe]]
+name = "checkInformal"
+root = "CheckInformal"
+
+[[lean_exe]]
 name = "extractDecls"
 root = "ExtractDecls"
