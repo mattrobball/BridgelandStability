@@ -199,11 +199,9 @@ jobs:
             comparator-shadow/.lake/packages/subverso
             comparator-shadow/.lake/packages/MD4Lean
             comparator-shadow/.lake/packages/plausible
-            comparator-shadow/.lake/build
-          key: shadow-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('BridgelandStability/**/*.lean') }}
+          key: shadow-verso-${{ hashFiles('lean-toolchain') }}
           restore-keys: |
-            shadow-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-
-            shadow-${{ hashFiles('lean-toolchain') }}-
+            shadow-verso-
 
       - name: Generate comparator manual
         run: |
@@ -260,16 +258,19 @@ jobs:
       - name: Restore site cache
         uses: actions/cache@v4
         with:
-          path: site-build/.lake
-          key: site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('informalizations.json') }}
+          path: |
+            site-build/.lake
+            site-build/lake-manifest.json
+          key: site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('informalizations.json') }}
           restore-keys: |
-            site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('lake-manifest.json') }}-
             site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-
 
       - name: Build Verso site
         run: |
           cd site-build
-          lake update
+          if [ ! -f lake-manifest.json ]; then
+            lake update
+          fi
           lake exe cache get || true
           lake build informal
           lake exe informal
