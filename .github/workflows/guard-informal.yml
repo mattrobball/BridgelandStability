@@ -37,7 +37,7 @@ jobs:
       - name: Run #check_informal
         id: check
         run: |
-          output=$(lake build CheckInformal 2>&1)
+          output=$(lake build checkInformal 2>&1)
           echo "$output"
           if echo "$output" | grep -q "issue(s) found"; then
             echo "has_issues=true" >> "$GITHUB_OUTPUT"
