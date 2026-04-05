@@ -222,21 +222,93 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-  # ── Job 4: Deploy to GitHub Pages ─────────────────────────────
+  # ── Job 4: Build informal exposition site ──────────────────────
+  build-site:
+    name: Build Informal Site
+    needs: build-project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bridgeland-build
+          path: .lake/build
+
+      - name: Build project (incremental)
+        run: lake build BridgelandStability
+
+      - name: Generate Verso docs
+        run: |
+          python3 scripts/generate_site.py \
+            --json informalizations.json \
+            --output site-build \
+            --source-path "$(pwd)" \
+            --prefix BridgelandStability \
+            --verso-rev v4.29.0
+
+      - name: Restore site cache
+        uses: actions/cache@v4
+        with:
+          path: site-build/.lake
+          key: site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('informalizations.json') }}
+          restore-keys: |
+            site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('lake-manifest.json') }}-
+            site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-
+
+      - name: Build Verso site
+        run: |
+          cd site-build
+          lake update
+          lake exe cache get || true
+          lake build informal
+          lake exe informal
+
+      - name: Style site
+        run: |
+          pip install beautifulsoup4
+          python3 scripts/style_site.py site-build/_out/html-multi
+
+      - name: Upload site
+        uses: actions/upload-artifact@v4
+        with:
+          name: informal-site
+          path: site-build/_out/html-multi
+          if-no-files-found: warn
+          retention-days: 7
+
+  # ── Job 5: Deploy to GitHub Pages ─────────────────────────────
   deploy:
     name: Deploy Pages
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: [verify, generate-manual]
+    needs: [verify, generate-manual, build-site]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download manual
+      - name: Download informal site
+        uses: actions/download-artifact@v4
+        with:
+          name: informal-site
+          path: site
+
+      - name: Download comparator manual
         uses: actions/download-artifact@v4
         with:
           name: comparator-manual
-          path: site
+          path: site/comparator
+        continue-on-error: true
 
       - name: Download badge
         uses: actions/download-artifact@v4
