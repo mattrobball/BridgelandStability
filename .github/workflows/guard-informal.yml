@@ -2,11 +2,6 @@ name: Guard @[informal] Declarations
 
 on:
   push:
-    paths:
-      - "BridgelandStability/**/*.lean"
-      - "ExtractDecls.lean"
-      - "CheckInformal.lean"
-      - "lakefile.toml"
 
 permissions:
   contents: read
