@@ -30,29 +30,30 @@ formalized core but not every clause of the paper statement.
 <!-- BEGIN INFORMAL TABLE -->
 | Paper | Lean declaration | File | Notes |
 |-------|-----------------|------|-------|
-| Definition 2.1 | `StabilityFunction` | `StabilityFunction/Basic.lean` |  |
-| Definition 2.2 | `IsSemistable` | `StabilityFunction/Basic.lean` |  |
-| Definition 2.3 | `AbelianHNFiltration` | `StabilityFunction/HarderNarasimhan.lean` | HN filtration for abelian categories |
-| Definition 2.3 | `StabilityFunction.HasHNProperty` | `StabilityFunction/HarderNarasimhan.lean` | HN property predicate |
+| Definition 2.1 | `CategoryTheory.StabilityFunction` | `StabilityFunction/Basic.lean` |  |
+| Definition 2.2 | `CategoryTheory.StabilityFunction.IsSemistable` | `StabilityFunction/Basic.lean` |  |
+| Definition 2.3 | `CategoryTheory.AbelianHNFiltration` | `StabilityFunction/HarderNarasimhan.lean` | HN filtration for abelian categories |
+| Definition 2.3 | `CategoryTheory.StabilityFunction.HasHNProperty` | `StabilityFunction/HarderNarasimhan.lean` | HN property predicate |
 | Definition 3.3 | `HNFiltration` | `Slicing/Defs.lean` | axiom (c): HN decomposition data for triangulated categories |
 | Definition 3.3 | `Slicing` | `Slicing/Defs.lean` |  |
-| Lemma 3.4 | `Slicing.phiPlus_triangle_le` | `Slicing/ExtensionClosure.lean` | φ⁺(A) ≤ φ⁺(E) |
 | Lemma 3.4 | `Slicing.phiMinus_triangle_le` | `Slicing/ExtensionClosure.lean` | φ⁻(E) ≤ φ⁻(B) |
-| Definition 4.1 | `QuasiAbelian` | `QuasiAbelian/Basic.lean` |  |
+| Lemma 3.4 | `Slicing.phiPlus_triangle_le` | `Slicing/ExtensionClosure.lean` | φ⁺(A) ≤ φ⁺(E) |
+| Definition 4.1 | `CategoryTheory.QuasiAbelian` | `QuasiAbelian/Basic.lean` |  |
 | Definition 4.4 | `SkewedStabilityFunction` | `IntervalCategory/FiniteLength.lean` | weaker: only σ-semistable nonvanishing, not all nonzero objects |
-| Definition 5.1 | `WithClassMap` | `StabilityCondition/Defs.lean` |  |
+| Definition 5.1 | `PreStabilityCondition.WithClassMap` | `StabilityCondition/Defs.lean` |  |
+| Lemma 5.2 | `StabilityCondition.WithClassMap.P_phi_abelian` | `Deformation/IntervalAbelian.lean` |  |
+| Proposition 5.3 | `HeartStabilityData.toPhasePackage` | `HeartEquivalence/Reverse.lean` | reverse: partial, missing central charge construction + HN existence |
 | Proposition 5.3 | `StabilityCondition.toHeartStabilityData` | `HeartEquivalence/Reverse.lean` | forward: stability condition → heart stability data |
-| Proposition 5.3 | `HeartStabilityData.toPhasePackage` | `HeartEquivalence/Reverse.lean` | reverse: *partial*, missing central charge construction + HN existence |
 | Definition 5.7 | `Slicing.IsLocallyFinite` | `IntervalCategory/FiniteLength.lean` | per-object strict finite length is weaker than finite length of all chains (paper's assumption) |
-| Definition 5.7 | `WithClassMap` | `StabilityCondition/Defs.lean` |  |
-| Lemma 6.1 | `PseudoEMetricSpace (Slicing C)` | `StabilityCondition/Seminorm.lean` | pseudo-emetric (not generalized metric: missing separation); Lean uses sup of phase differences, paper uses inf of containment radii — equivalence not proved |
+| Definition 5.7 | `StabilityCondition.WithClassMap` | `StabilityCondition/Defs.lean` |  |
+| Lemma 6.1 | `instPseudoEMetricSpaceSlicing` | `StabilityCondition/Seminorm.lean` | pseudo-emetric (not generalized metric: missing separation); Lean uses sup of phase differences, paper uses inf of containment radii — equivalence not proved |
 | Lemma 6.2 | `stabSeminorm_dominated_of_connected` | `StabilityCondition/ConnectedComponent.lean` | one direction; apply both ways for full equivalence |
 | Lemma 6.4 | `StabilityCondition.WithClassMap.eq_of_same_Z_near` | `StabilityCondition/Deformation.lean` |  |
 | Theorem 7.1 | `StabilityCondition.WithClassMap.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin` | `Deformation/Theorem.lean` | ε₀ and WideSectorFiniteLength (= ∀ t, P((t-4ε₀,t+4ε₀)) per-object strict finite length) taken as parameters; both follow from local finiteness for ε₀ < η/4 |
-| Theorem 1.2 | `CentralChargeIsLocalHomeomorphOnConnectedComponents` | `StabilityCondition/Defs.lean` | statement only; proof is componentTopologicalLinearLocalModel |
+| Theorem 1.2 | `StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents` | `StabilityCondition/Defs.lean` | statement only; proof is componentTopologicalLinearLocalModel |
 | Theorem 1.2 | `centralChargeIsLocalHomeomorphOnConnectedComponents` | `StabilityCondition/LocalHomeomorphism.lean` |  |
-| Corollary 1.3 | `StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent` | `NumericalStabilityManifold.lean` | class-map generalization; manifold consequence only |
 | Corollary 1.3 | `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent` | `NumericalStabilityManifold.lean` | complex manifold conclusion only; local homeomorphism is in componentTopologicalLinearLocalModel |
+| Corollary 1.3 | `StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent` | `NumericalStabilityManifold.lean` | class-map generalization; manifold consequence only |
 <!-- END INFORMAL TABLE -->
 
 All file paths are relative to `BridgelandStability/`.
