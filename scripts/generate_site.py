@@ -388,6 +388,8 @@ def generate_root_file(
         "audit whether the formal statements faithfully capture the mathematics."
     )
     lines.append("")
+    lines.append("# Contributing")
+    lines.append("")
     lines.append(
         "Each declaration below is paired with an informal description and, where "
         "available, a proof sketch. Passing the type checker is necessary but not "
@@ -404,7 +406,7 @@ def generate_root_file(
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
-        "the paper that has a formal analog tagged with `@(informal)`. "
+        "the paper that has a formal analog tagged with `@\\[informal\\]`. "
         "It is generated from the Lean environment extension at build time."
     )
     lines.append("")

@@ -211,27 +211,98 @@ h2 {
 /* ── Alignment table ── */
 table.informal-alignment {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-family: var(--inf-text);
-  font-size: 0.9rem;
-  margin: 1.5rem 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 2rem 0;
+  border: 1px solid var(--inf-card-border);
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+table.informal-alignment thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 table.informal-alignment th {
   background: var(--inf-badge-bg);
   color: var(--inf-muted);
+  font-family: var(--inf-heading);
   font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-align: left;
-  padding: 0.4rem 0.6rem;
+  padding: 0.6rem 0.8rem;
   border-bottom: 2px solid var(--inf-rule);
+  white-space: nowrap;
 }
 table.informal-alignment td {
-  padding: 0.35rem 0.6rem;
-  border-bottom: 1px solid var(--inf-rule);
-  vertical-align: top;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--inf-rule) 50%, transparent);
+  vertical-align: baseline;
 }
+table.informal-alignment tbody tr:last-child td {
+  border-bottom: none;
+}
+table.informal-alignment tbody tr:hover {
+  background: color-mix(in srgb, var(--inf-badge-bg) 40%, transparent);
+}
+/* Paper ref column — compact, serif */
+table.informal-alignment td:first-child {
+  white-space: nowrap;
+  color: var(--inf-accent);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+/* Declaration and file columns — monospace, allow wrapping at dots */
 table.informal-alignment code {
   font-family: var(--inf-code);
+  font-size: 0.8rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: none;
+  background: none;
+  padding: 0;
+  color: var(--inf-ink);
+}
+/* Notes column — muted, italic when present */
+table.informal-alignment td:nth-child(4):not(:empty) {
+  color: var(--inf-muted);
+  font-style: italic;
   font-size: 0.82rem;
+}
+/* Responsive: stack on narrow viewports */
+@media (max-width: 640px) {
+  table.informal-alignment,
+  table.informal-alignment thead,
+  table.informal-alignment tbody,
+  table.informal-alignment tr,
+  table.informal-alignment td,
+  table.informal-alignment th {
+    display: block;
+  }
+  table.informal-alignment thead { display: none; }
+  table.informal-alignment tr {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--inf-rule);
+  }
+  table.informal-alignment td {
+    padding: 0.15rem 0;
+    border: none;
+  }
+  table.informal-alignment td:first-child {
+    font-size: 0.82rem;
+    margin-bottom: 0.15rem;
+  }
+  table.informal-alignment td:first-child::before { content: none; }
+  table.informal-alignment td:nth-child(3),
+  table.informal-alignment td:nth-child(4) {
+    font-size: 0.75rem;
+    color: var(--inf-muted);
+  }
 }
 """
 

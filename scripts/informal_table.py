@@ -26,7 +26,7 @@ def build_rows(entries: list[dict], prefix: str = "BridgelandStability.") -> lis
         seen.add(key)
         mod = e["moduleName"]
         rel = mod.removeprefix(prefix).replace(".", "/") + ".lean"
-        name = decl.removeprefix("CategoryTheory.Triangulated.")
+        name = decl.removeprefix("CategoryTheory.Triangulated.").removeprefix("CategoryTheory.")
         note = e.get("comment") or ""
         rows.append((sort_key(ref), ref, name, rel, note))
     rows.sort()
