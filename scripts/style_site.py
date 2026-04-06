@@ -355,10 +355,11 @@ def inject_alignment_table(soup: BeautifulSoup, json_path: Path) -> bool:
         tbody.append(tr)
     table_tag.append(tbody)
 
-    # Find insertion point: after the "Contributing" section or at end of content
+    # Find insertion point: after the "Paper Alignment" heading
     inserted = False
-    for h1 in soup.find_all("h1"):
-        if h1.string and "Paper Alignment" in h1.string:
+    for h1 in soup.find_all(["h1", "h2"]):
+        text = h1.get_text(strip=True)
+        if "Paper Alignment" in text:
             # Insert after the paragraph(s) following this heading
             sibling = h1.find_next_sibling()
             while sibling and sibling.name == "p":
@@ -371,11 +372,13 @@ def inject_alignment_table(soup: BeautifulSoup, json_path: Path) -> bool:
             break
 
     if not inserted:
-        # Fallback: append to first article or main content div
-        article = soup.find("article") or soup.find("div", class_="content")
-        if article:
-            article.append(table_tag)
-            inserted = True
+        # Fallback: look for the section containing "Paper Alignment"
+        for section in soup.find_all("section"):
+            text = section.get_text(strip=True)[:50]
+            if "Paper Alignment" in text:
+                section.append(table_tag)
+                inserted = True
+                break
 
     return inserted
 
