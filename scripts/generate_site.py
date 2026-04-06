@@ -33,6 +33,7 @@ CHAPTER_ORDER = [
     "HeartEquivalence",
     "StabilityCondition",
     "Deformation",
+    "ForMathlib",
 ]
 
 
@@ -399,8 +400,6 @@ def generate_root_file(
         "you think should happen and start a discussion. Once we figure out what "
         "needs to change, AI agents will do the rest."
     )
-    lines.append("")
-    lines.append("# Paper Alignment")
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "

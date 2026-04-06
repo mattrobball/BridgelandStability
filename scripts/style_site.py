@@ -420,18 +420,11 @@ def inject_alignment_table(soup: BeautifulSoup, json_path: Path, site_base: str 
         tbody.append(tr)
     table_tag.append(tbody)
 
-    # Find insertion point: after the "Paper Alignment" heading and its paragraphs
+    # Find insertion point: after the paragraph mentioning @[informal]
     inserted = False
-    for tag in soup.find_all(["h1", "h2", "h3"]):
-        text = tag.get_text(strip=True)
-        if "Paper Alignment" in text:
-            sibling = tag.find_next_sibling()
-            while sibling and sibling.name == "p":
-                sibling = sibling.find_next_sibling()
-            if sibling:
-                sibling.insert_before(table_tag)
-            else:
-                tag.parent.append(table_tag)
+    for p in soup.find_all("p"):
+        if "informal" in p.get_text():
+            p.insert_after(table_tag)
             inserted = True
             break
 
@@ -455,13 +448,10 @@ def process_file(path: Path, site_root: Path, json_path: Path | None = None) -> 
         removed = strip_source_docstrings(soup)
         wrapped = wrap_decl_sections(soup)
 
-    # Inject alignment table on the page containing the Paper Alignment heading
+    # Inject alignment table on the root landing page
     table_injected = False
-    if json_path and path.name == "index.html":
-        for tag in soup.find_all(["h1", "h2", "h3"]):
-            if "Paper Alignment" in tag.get_text(strip=True):
-                table_injected = inject_alignment_table(soup, json_path)
-                break
+    if json_path and path.name == "index.html" and path.parent == site_root:
+        table_injected = inject_alignment_table(soup, json_path)
 
     # Inject CSS on ALL pages for consistent styling
     inject_stylesheet(soup)
