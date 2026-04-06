@@ -207,8 +207,6 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
     lines.append("htmlSplit := .never")
     lines.append("%%%")
     lines.append("")
-    lines.append(f"# {title}")
-    lines.append("")
 
     # Pre-compute heading titles, disambiguating duplicates
     raw_titles = [short_title(e["declName"]) for e in entries]
@@ -318,34 +316,35 @@ def generate_chapter_file(group_name: str, module_names: list[str], prefix: str)
 
 # ── Root doc generation (NEW) ───────────────────────────────────────────────
 
-def generate_root_file(
+def _build_includes(
     chapter_groups: list[tuple[str, list[str]]],
     direct_leaves: list[tuple[str, str]],
-    total_entries: int,
-) -> str:
-    """Generate Root.lean that composes all chapters into one manual.
-
-    chapter_groups: (group_name, module_names) — groups with chapter files
-    direct_leaves: (group_name, doc_module_name) — single-component modules included directly
-    """
-    # All includes in mathematical dependency order (already sorted)
-    all_includes = []  # (import_name, include_name)
+) -> list[tuple[str, str]]:
+    """Build the ordered list of (import_name, include_name) for chapter pages."""
+    all_includes = []
     chapter_set = {g for g, _ in chapter_groups}
     leaf_set = {g: dm for g, dm in direct_leaves}
 
-    # Rebuild the full ordered list from CHAPTER_ORDER
     for name in CHAPTER_ORDER:
         if name in chapter_set:
             all_includes.append((f"InformalDocs.{name}", f"InformalDocs.{name}"))
         elif name in leaf_set:
             all_includes.append((leaf_set[name], leaf_set[name]))
-    # Catch any not in CHAPTER_ORDER
     for g, _ in chapter_groups:
         if (f"InformalDocs.{g}", f"InformalDocs.{g}") not in all_includes:
             all_includes.append((f"InformalDocs.{g}", f"InformalDocs.{g}"))
     for g, dm in direct_leaves:
         if (dm, dm) not in all_includes:
             all_includes.append((dm, dm))
+    return all_includes
+
+
+def generate_chapters_file(
+    chapter_groups: list[tuple[str, list[str]]],
+    direct_leaves: list[tuple[str, str]],
+) -> str:
+    """Generate Chapters.lean — all chapter includes on a single page."""
+    all_includes = _build_includes(chapter_groups, direct_leaves)
 
     lines = []
     lines.append("import VersoManual")
@@ -355,6 +354,30 @@ def generate_root_file(
     lines.append("open Verso.Genre Manual")
     lines.append("")
     lines.append("set_option maxHeartbeats 800000")
+    lines.append("")
+    lines.append('#doc (Manual) "Chapters" =>')
+    lines.append("")
+    lines.append(
+        "The chapters below follow the mathematical dependency order of the formalization."
+    )
+    lines.append("")
+    for _, inc in all_includes:
+        lines.append(f"{{include 0 {inc}}}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def generate_root_file(
+    chapter_groups: list[tuple[str, list[str]]],
+    direct_leaves: list[tuple[str, str]],
+    total_entries: int,
+) -> str:
+    """Generate Root.lean — landing page with intro, contributing, and paper alignment."""
+    lines = []
+    lines.append("import VersoManual")
+    lines.append("import InformalDocs.Chapters")
+    lines.append("")
+    lines.append("open Verso.Genre Manual")
     lines.append("")
     lines.append('#doc (Manual) "Bridgeland Stability Conditions" =>')
     lines.append("")
@@ -388,10 +411,8 @@ def generate_root_file(
         "audit whether the formal statements faithfully capture the mathematics."
     )
     lines.append("")
-    lines.append("# Contributing")
-    lines.append("")
     lines.append(
-        "Each declaration below is paired with an informal description and, where "
+        "Each declaration is paired with an informal description and, where "
         "available, a proof sketch. Passing the type checker is necessary but not "
         "sufficient: the formalization aims for Mathlib quality, with correct "
         "abstractions, reusable lemmas, and proofs that could survive code review "
@@ -406,15 +427,11 @@ def generate_root_file(
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
-        "the paper that has a formal analog tagged with `@\\[informal\\]`. "
-        "It is generated from the Lean environment extension at build time."
+        "the paper that has a formal analog tagged with `@\\[informal\\]`."
     )
     lines.append("")
-    lines.append("The chapters below follow the mathematical dependency order of the formalization:")
+    lines.append("{include 0 InformalDocs.Chapters}")
     lines.append("")
-    for _, inc in all_includes:
-        lines.append(f"{{include 0 {inc}}}")
-        lines.append("")
     return "\n".join(lines)
 
 
@@ -535,6 +552,13 @@ def main():
         print(f"  InformalDocs/{group_name}.lean ({len(module_names)} modules)")
     for group_name, dm in direct_leaves:
         print(f"  (direct) {dm}")
+
+    # ── Chapters doc ──
+    chapters_content = generate_chapters_file(chapter_groups, direct_leaves)
+    chapters_path = os.path.join(args.output, "InformalDocs", "Chapters.lean")
+    with open(chapters_path, "w") as f:
+        f.write(chapters_content)
+    print(f"  InformalDocs/Chapters.lean")
 
     # ── Root doc ──
     root_content = generate_root_file(chapter_groups, direct_leaves, len(entries))

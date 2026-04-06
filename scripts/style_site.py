@@ -257,22 +257,21 @@ table.informal-alignment td:first-child {
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
-/* Declaration and file columns — monospace, allow wrapping at dots */
+/* Declaration column — monospace, linked */
 table.informal-alignment code {
   font-family: var(--inf-code);
   font-size: 0.8rem;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  hyphens: none;
   background: none;
   padding: 0;
-  color: var(--inf-ink);
 }
-/* Notes column — muted, italic when present */
-table.informal-alignment td:nth-child(4):not(:empty) {
-  color: var(--inf-muted);
-  font-style: italic;
-  font-size: 0.82rem;
+table.informal-alignment a {
+  color: var(--inf-ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+table.informal-alignment a:hover {
+  border-bottom-color: var(--inf-accent);
 }
 /* Responsive: stack on narrow viewports */
 @media (max-width: 640px) {
@@ -296,12 +295,6 @@ table.informal-alignment td:nth-child(4):not(:empty) {
   table.informal-alignment td:first-child {
     font-size: 0.82rem;
     margin-bottom: 0.15rem;
-  }
-  table.informal-alignment td:first-child::before { content: none; }
-  table.informal-alignment td:nth-child(3),
-  table.informal-alignment td:nth-child(4) {
-    font-size: 0.75rem;
-    color: var(--inf-muted);
   }
 }
 """
@@ -377,21 +370,19 @@ def inject_stylesheet(soup: BeautifulSoup) -> None:
     head.append(style)
 
 
-def inject_alignment_table(soup: BeautifulSoup, json_path: Path) -> bool:
-    """Inject the @[informal] alignment table into the root page.
+def inject_alignment_table(soup: BeautifulSoup, json_path: Path, site_base: str = "") -> bool:
+    """Inject the @[informal] alignment table into the landing page.
 
-    Looks for <!--INFORMAL-TABLE--> marker comment in the HTML.
-    If not found, appends the table after the "Contributing" heading.
+    Declarations link to their Verso doc pages via the find/ endpoint.
     """
     if not json_path.exists():
         return False
 
     import json
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from informal_table import build_rows, render_markdown
+    from informal_table import build_rows
 
     entries = json.loads(json_path.read_text())
-    # informalizations.json uses paperRef (nullable); filter to tagged only
     tagged = [e for e in entries if e.get("paperRef")]
     if not tagged:
         return False
@@ -400,11 +391,11 @@ def inject_alignment_table(soup: BeautifulSoup, json_path: Path) -> bool:
     if not rows:
         return False
 
-    # Build HTML table
+    # Build HTML table — two columns: Paper, Declaration (linked)
     table_tag = soup.new_tag("table", attrs={"class": "informal-alignment"})
     thead = soup.new_tag("thead")
     tr = soup.new_tag("tr")
-    for col in ["Paper", "Lean declaration", "File", "Notes"]:
+    for col in ["Paper", "Lean declaration"]:
         th = soup.new_tag("th")
         th.string = col
         tr.append(th)
@@ -412,44 +403,37 @@ def inject_alignment_table(soup: BeautifulSoup, json_path: Path) -> bool:
     table_tag.append(thead)
 
     tbody = soup.new_tag("tbody")
-    for _, ref, name, f, note in rows:
+    for _, ref, short_name, full_name in rows:
         tr = soup.new_tag("tr")
-        for val in [ref, name, f, note]:
-            td = soup.new_tag("td")
-            if val in (name, f):
-                code = soup.new_tag("code")
-                code.string = val
-                td.append(code)
-            else:
-                td.string = val
-            tr.append(td)
+        # Paper ref
+        td_ref = soup.new_tag("td")
+        td_ref.string = ref
+        tr.append(td_ref)
+        # Declaration name, linked to Verso find/ endpoint
+        td_decl = soup.new_tag("td")
+        link = soup.new_tag("a", href=f"{site_base}find/?domain=Verso.Genre.Manual.doc&name={full_name}")
+        code = soup.new_tag("code")
+        code.string = short_name
+        link.append(code)
+        td_decl.append(link)
+        tr.append(td_decl)
         tbody.append(tr)
     table_tag.append(tbody)
 
-    # Find insertion point: after the "Paper Alignment" heading
+    # Find insertion point: after the "Paper Alignment" heading and its paragraphs
     inserted = False
-    for h1 in soup.find_all(["h1", "h2"]):
-        text = h1.get_text(strip=True)
+    for tag in soup.find_all(["h1", "h2", "h3"]):
+        text = tag.get_text(strip=True)
         if "Paper Alignment" in text:
-            # Insert after the paragraph(s) following this heading
-            sibling = h1.find_next_sibling()
+            sibling = tag.find_next_sibling()
             while sibling and sibling.name == "p":
                 sibling = sibling.find_next_sibling()
             if sibling:
                 sibling.insert_before(table_tag)
             else:
-                h1.parent.append(table_tag)
+                tag.parent.append(table_tag)
             inserted = True
             break
-
-    if not inserted:
-        # Fallback: look for the section containing "Paper Alignment"
-        for section in soup.find_all("section"):
-            text = section.get_text(strip=True)[:50]
-            if "Paper Alignment" in text:
-                section.append(table_tag)
-                inserted = True
-                break
 
     return inserted
 
