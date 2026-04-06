@@ -22,6 +22,8 @@ srcDir = "."
 
 [[lean_lib]]
 name = "CheckInformal"
+srcDir = "scripts/lean"
 
 [[lean_lib]]
 name = "ExtractDecls"
+srcDir = "scripts/lean"
