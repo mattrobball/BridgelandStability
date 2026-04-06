@@ -404,7 +404,7 @@ def generate_root_file(
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
-        "the paper that has a formal analog tagged with `@(informal)`. "
+        "the paper that has a formal analog tagged with `@\\[informal\\]`. "
         "It is generated from the Lean environment extension at build time."
     )
     lines.append("")
