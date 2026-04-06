@@ -42,6 +42,9 @@ jobs:
             echo "has_issues=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Check README table is up to date
+        run: python3 scripts/generate_readme_table.py --check
+
       - name: Find associated PR
         if: steps.check.outputs.has_issues == 'true'
         id: find-pr

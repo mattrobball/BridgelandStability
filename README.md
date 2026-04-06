@@ -1,205 +1,69 @@
 # BridgelandStability
 
-This repository is an experimental AI-assisted formalization of the main
-results of Tom
-Bridgeland's paper
+AI-assisted formalization in Lean 4 / Mathlib of the main results of
+Bridgeland's
 [Stability conditions on triangulated categories](https://annals.math.princeton.edu/2007/166-2/p01)
-in Lean 4 using Mathlib.
+(Annals of Mathematics, 2007).
 
-The mathematical target is the deformation-theoretic core of the paper:
-the topology on `Stab(D)`, the local-homeomorphism theorem for the central
-charge, and the consequent complex manifold structure on connected components
-of the space of numerically finite stability conditions.
+## Headline results
 
-## What Bridgeland stability conditions are
+The formalization covers Sections 2--7 of the paper, culminating in:
 
-Classical moduli theory studies stability for objects in abelian categories:
-stable vector bundles, semistable coherent sheaves, Harder-Narasimhan
-filtrations, wall-crossing, and moduli spaces. Bridgeland's insight was that
-the same package can be lifted from abelian categories to triangulated
-categories.
+- **Theorem 1.2** — the central charge map is a local homeomorphism on each
+  connected component of `Stab(D)`.
+- **Corollary 1.3** — connected components of `Stab_N(D)` are
+  finite-dimensional complex manifolds.
 
-A Bridgeland stability condition on a triangulated category `D` consists, at a
-high level, of:
+Both are proved for an arbitrary surjective class map `v : K₀(D) →+ Λ` and
+specialized to the identity (Theorem 1.2) and the numerical quotient
+(Corollary 1.3).
 
-- a central charge `Z : K_0(D) -> C`;
-- a slicing `P(phi)` of `D` by semistable objects of phase `phi`;
-- Harder-Narasimhan type decompositions for all nonzero objects;
-- a compatibility condition saying that semistable objects of phase `phi` are
-  sent by `Z` to the ray `R_{>0} * exp(i pi phi)`.
+## Paper declarations with formal analogs
 
-One of the key structural facts in the paper is that this can also be described
-in terms of a bounded t-structure together with a stability function on its
-heart having the Harder-Narasimhan property. That equivalence is one of the
-main reasons the theory is usable: it lets one move back and forth between
-triangulated and abelian viewpoints.
+Every definition, lemma, and theorem below from the paper is formalized
+in Lean and tagged with `@[informal]`. Entries marked *partial* have a
+formalized core but not every clause of the paper statement.
 
-## Why D-branes show up
+<!-- BEGIN INFORMAL TABLE -->
+| Paper | Lean declaration | File | Notes |
+|-------|-----------------|------|-------|
+| Definition 2.1 | `StabilityFunction` | `StabilityFunction/Basic.lean` |  |
+| Definition 2.2 | `IsSemistable` | `StabilityFunction/Basic.lean` |  |
+| Definition 2.3 | `AbelianHNFiltration` | `StabilityFunction/HarderNarasimhan.lean` | HN filtration for abelian categories |
+| Definition 2.3 | `StabilityFunction.HasHNProperty` | `StabilityFunction/HarderNarasimhan.lean` | HN property predicate |
+| Definition 3.3 | `HNFiltration` | `Slicing/Defs.lean` | axiom (c): HN decomposition data for triangulated categories |
+| Definition 3.3 | `Slicing` | `Slicing/Defs.lean` |  |
+| Lemma 3.4 | `Slicing.phiPlus_triangle_le` | `Slicing/ExtensionClosure.lean` | φ⁺(A) ≤ φ⁺(E) |
+| Lemma 3.4 | `Slicing.phiMinus_triangle_le` | `Slicing/ExtensionClosure.lean` | φ⁻(E) ≤ φ⁻(B) |
+| Definition 4.1 | `QuasiAbelian` | `QuasiAbelian/Basic.lean` |  |
+| Definition 4.4 | `SkewedStabilityFunction` | `IntervalCategory/FiniteLength.lean` | weaker: only σ-semistable nonvanishing, not all nonzero objects |
+| Definition 5.1 | `WithClassMap` | `StabilityCondition/Defs.lean` |  |
+| Proposition 5.3 | `StabilityCondition.toHeartStabilityData` | `HeartEquivalence/Reverse.lean` | forward: stability condition → heart stability data |
+| Proposition 5.3 | `HeartStabilityData.toPhasePackage` | `HeartEquivalence/Reverse.lean` | reverse: *partial*, missing central charge construction + HN existence |
+| Definition 5.7 | `Slicing.IsLocallyFinite` | `IntervalCategory/FiniteLength.lean` | per-object strict finite length is weaker than finite length of all chains (paper's assumption) |
+| Definition 5.7 | `WithClassMap` | `StabilityCondition/Defs.lean` |  |
+| Lemma 6.1 | `PseudoEMetricSpace (Slicing C)` | `StabilityCondition/Seminorm.lean` | pseudo-emetric (not generalized metric: missing separation); Lean uses sup of phase differences, paper uses inf of containment radii — equivalence not proved |
+| Lemma 6.2 | `stabSeminorm_dominated_of_connected` | `StabilityCondition/ConnectedComponent.lean` | one direction; apply both ways for full equivalence |
+| Lemma 6.4 | `StabilityCondition.WithClassMap.eq_of_same_Z_near` | `StabilityCondition/Deformation.lean` |  |
+| Theorem 7.1 | `StabilityCondition.WithClassMap.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin` | `Deformation/Theorem.lean` | ε₀ and WideSectorFiniteLength (= ∀ t, P((t-4ε₀,t+4ε₀)) per-object strict finite length) taken as parameters; both follow from local finiteness for ε₀ < η/4 |
+| Theorem 1.2 | `CentralChargeIsLocalHomeomorphOnConnectedComponents` | `StabilityCondition/Defs.lean` | statement only; proof is componentTopologicalLinearLocalModel |
+| Theorem 1.2 | `centralChargeIsLocalHomeomorphOnConnectedComponents` | `StabilityCondition/LocalHomeomorphism.lean` |  |
+| Corollary 1.3 | `StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent` | `NumericalStabilityManifold.lean` | class-map generalization; manifold consequence only |
+| Corollary 1.3 | `NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent` | `NumericalStabilityManifold.lean` | complex manifold conclusion only; local homeomorphism is in componentTopologicalLinearLocalModel |
+<!-- END INFORMAL TABLE -->
 
-The definition did not come out of nowhere. Bridgeland explicitly frames the
-paper as a mathematical response to Michael Douglas's work on D-branes and
-`Pi`-stability in string theory. In that story, BPS branes on a Calabi-Yau are
-expected to be organized by a derived category, while physical stability should
-depend on a central charge and vary continuously in moduli. Bridgeland's paper
-takes that insight and turns it into a precise piece of homological algebra.
+All file paths are relative to `BridgelandStability/`.
+Regenerate with `lake build checkInformal && python3 scripts/generate_readme_table.py`.
 
-The paper is therefore motivated by physics, but mathematically it is mostly
-about the main structural results around slicings, hearts, deformation
-estimates, and the topology of the space of stability conditions itself.
+## Verification
 
-## The Local-Homeomorphism Statements
+Corollary 1.3 is set up for independent verification via
+[`leanprover/comparator`](https://github.com/leanprover/comparator). The
+**61 project declarations** that the formal statement depends on are documented
+with their paper-level counterparts in
+[`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
 
-The headline result of the 2007 paper is Theorem 1.2. For each connected
-component `Sigma` of the space `Stab(D)` of locally finite stability
-conditions, the central charge map is a local homeomorphism
-
-`Z : Sigma -> V(Sigma) subset Hom_Z(K(D), C)`.
-
-So `Stab(D)` is not just a set of structures: locally, each connected component
-looks like a linear space of possible central charges.
-
-> For each connected component `Σ ⊂ Stab(D)` there are a linear subspace
-> `V(Σ) ⊂ Hom_Z(K(D), C)`, with a well-defined linear topology, and a local
-> homeomorphism `Z : Σ → V(Σ)` which maps a stability condition `(Z, P)` to
-> its central charge `Z`.
-
-In the current formalization, this paper statement is packaged as the proposition-object
-`CategoryTheory.Triangulated.StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents` in
-`BridgelandStability/StabilityCondition/Topology.lean`:
-
-```lean
-def StabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents : Prop :=
-  ∀ (cc : ConnectedComponents (StabilityCondition C)),
-    ∃ (V : Submodule ℂ (K₀ C →+ ℂ))
-      (_ : NormedAddCommGroup V)
-      (_ : NormedSpace ℂ V)
-      (hZ : ∀ σ : StabilityCondition C,
-        ConnectedComponents.mk σ = cc → σ.Z ∈ V),
-      @IsLocalHomeomorph
-        {σ : StabilityCondition C // ConnectedComponents.mk σ = cc}
-        V inferInstance inferInstance
-        (fun ⟨σ, hσ⟩ ↦ ⟨σ.Z, hZ σ hσ⟩)
-```
-
-The corresponding proof term is assembled in
-`BridgelandStability/StabilityCondition/LocalHomeomorphism.lean` as
-`StabilityCondition.centralChargeIsLocalHomeomorphOnConnectedComponents`.
-
-Under the hood, the current architecture is class-map-first: the foundational
-generic proposition-object is
-`CategoryTheory.Triangulated.StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents`,
-defined in `BridgelandStability/StabilityCondition/Topology.lean` for a class
-map `v : K₀(D) → Λ`. The ordinary theorem above is the explicit `v = id`
-wrapper, kept as the paper-facing statement for `Stab(D)`.
-
-Corollary 1.3 is the numerically finite version. In the current Lean code,
-the hypothesis `NumericallyFinite k C` means that the numerical Grothendieck
-group is finitely generated. Under that hypothesis, for the canonical numerical quotient
-
-`N(D) = K(D) / K(D)^perp`,
-
-the space `Stab_N(D)` of numerical stability conditions has connected
-components that are finite-dimensional complex manifolds, with local charts
-again given by the central charge map into `Hom_Z(N(D), C)`.
-
-That is the formal geometric payoff of the paper: the stability condition
-itself is a point in a manifold, and wall-crossing can be studied by moving in
-that manifold.
-
-> Suppose `D` is numerically finite. For each connected component
-> `Σ ⊂ Stab_N(D)` there are a subspace `V(Σ) ⊂ Hom_Z(N(D), C)` and a local
-> homeomorphism `Z : Σ → V(Σ)` which maps a stability condition to its central
-> charge `Z`. In particular `Σ` is a finite-dimensional complex manifold.
-
-The corresponding numerical local-homeomorphism statement is currently formalized as
-`CategoryTheory.Triangulated.NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents`
-in `BridgelandStability/EulerForm/Basic.lean`:
-
-```lean
-abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-    [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
-  StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
-    (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
-```
-
-The corresponding generic and numerical complex-manifold theorems live in
-`BridgelandStability/NumericalStabilityManifold.lean`:
-
-```lean
-theorem StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent
-    {Λ : Type u'} [AddCommGroup Λ] [AddGroup.FG Λ]
-    {v : K₀ C →+ Λ} (hv : Function.Surjective v)
-    (cc : StabilityCondition.WithClassMap.ComponentIndex C v) :
-    ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
-      (_ : FiniteDimensional ℂ E)
-      (_ : ChartedSpace E (StabilityCondition.WithClassMap.Component C v cc)),
-      IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
-        (StabilityCondition.WithClassMap.Component C v cc)
-
-theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
-    [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k]
-    [NumericallyFinite k C]
-    (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :
-    ∃ (E : Type u) (_ : NormedAddCommGroup E) (_ : NormedSpace ℂ E)
-      (_ : FiniteDimensional ℂ E)
-      (_ : ChartedSpace E (NumericalComponent (k := k) C cc)),
-      IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
-        (NumericalComponent (k := k) C cc)
-```
-
-The generic manifold theorem is proved for a surjective class map
-`v : K₀ C →+ Λ` with finitely generated class lattice `Λ`. The numerical
-theorem is the specialization to the canonical quotient map
-`K₀ C →+ NumericalK₀ k C`.
-
-## Techniques from the paper
-
-Bridgeland's construction is powerful because it combines several ideas that
-are individually classical but unusually effective together:
-
-- Harder-Narasimhan theory on hearts of bounded t-structures;
-- slicings `P(phi)` as a continuous analogue of the discrete cohomological
-  truncation data coming from t-structures;
-- locally finite interval categories `P((a,b))`, which control exactness and
-  finiteness in short phase windows;
-- a generalized metric on slicings, measuring how far the phases of objects can
-  move;
-- a seminorm on central charges, which lets one compare nearby stability
-  conditions quantitatively;
-- a deformation theorem proving local injectivity and local surjectivity of the
-  central charge map.
-
-From a formalization perspective, this is exactly the kind of paper that is
-both attractive and painful: the definitions are clean, but the proof depends
-on many layers of category theory, homological algebra, topology, and careful
-control of coercions between them.
-
-## Why the theory matters now
-
-Bridgeland's original paper has turned into infrastructure for several major
-parts of modern geometry and mathematical physics.
-
-- It gives new invariants of triangulated categories via their spaces of
-  stability conditions, and already in the original paper the elliptic curve
-  case is computed explicitly.
-- It led to the detailed study of stability manifolds for K3 surfaces, where a
-  distinguished connected component can be described very concretely.
-- It became a basic tool for moduli spaces of complexes and for wall-crossing
-  in birational geometry. In particular, Bayer and Macri showed that varying a
-  Bridgeland stability condition produces nef divisors on moduli spaces and
-  gives a systematic link between wall-crossing and the minimal model program.
-- In Calabi-Yau 3 settings, stability conditions feed directly into
-  Donaldson-Thomas and BPS counting theories, where wall-crossing formulas
-  measure how semistable objects change across walls in the stability manifold.
-- In another direction, spaces of stability conditions have been identified with
-  moduli spaces of quadratic differentials in important classes of examples,
-  tying the theory to cluster structures, exact WKB, and mirror-symmetry
-  phenomena.
-
-This repository is aimed at the foundation under those applications: if the
-basic manifold and deformation story is formalized well, a lot of later
-geometry becomes more approachable.
+The root import is [`BridgelandStability.lean`](BridgelandStability.lean).
 
 ## Project charter
 
@@ -213,38 +77,7 @@ has to be Mathlib quality: correct abstractions, reusable lemmas, sane names,
 controlled imports, and proofs that could plausibly survive code review and
 upstreaming.
 
-## What is formalized
-
-The current codebase formalizes Sections 5-7 of the paper, culminating in
-Theorem 1.2 (local homeomorphism) and Corollary 1.3 (complex manifold structure
-on numerical stability conditions). The main layers are:
-
-- Stability functions, phases, semistability, HN filtrations, and uniqueness.
-- Slicings, phase arithmetic, extension-closure, and the passage between
-  slicings and t-structures.
-- Ordinary and class-map stability conditions, the Bridgeland topology, the
-  seminorm machinery, and the deformation theorem (Section 7).
-- The heart-equivalence and interval-category exactness infrastructure used in
-  the deformation argument.
-- The numerical quotient `NumericalK₀`, the specialization to Euler-form
-  stability conditions, and the complex manifold assembly for connected
-  components.
-
-The root import is [`BridgelandStability.lean`](BridgelandStability.lean).
-This is an active formalization project; some files expose reusable APIs, others
-still need the cleanup and renaming that Mathlib would require.
-
-Corollary 1.3 is set up for independent verification via
-[`leanprover/comparator`](https://github.com/leanprover/comparator). The
-**61 project declarations** that the formal statement depends on are documented
-with their paper-level counterparts in
-[`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
-
-## Selected References
-
-This is a deliberately compressed and non-exhaustive list of papers and a small
-number of recent preprints: the original motivation, the foundational theorem,
-some geometric applications, and recent threefold developments.
+## Selected references
 
 1. Michael R. Douglas,
    [D-branes, Categories and N=1 Supersymmetry](https://arxiv.org/abs/hep-th/0011017),
