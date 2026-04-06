@@ -4,7 +4,7 @@ on:
   push:
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
@@ -42,8 +42,18 @@ jobs:
             echo "has_issues=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Check README table is up to date
-        run: python3 scripts/generate_readme_table.py --check
+      - name: Update README table
+        run: |
+          python3 scripts/generate_readme_table.py
+          if git diff --quiet README.md; then
+            echo "README table already up to date"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "docs: update @[informal] alignment table [skip ci]"
+            git push
+          fi
 
       - name: Find associated PR
         if: steps.check.outputs.has_issues == 'true'

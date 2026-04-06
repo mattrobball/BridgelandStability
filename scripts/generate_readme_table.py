@@ -3,7 +3,7 @@
 
 Usage:
     lake build checkInformal
-    python3 scripts/generate_readme_table.py [--check]
+    python3 scripts/generate_readme_table.py
 """
 
 import json
@@ -59,13 +59,8 @@ def main():
 
     new = readme[: start + len(BEGIN)] + "\n" + table + readme[end:]
 
-    if "--check" in sys.argv:
-        if new != readme:
-            sys.exit("README table is stale. Run: python3 scripts/generate_readme_table.py")
-        print(f"OK ({len(rows)} entries)")
-    else:
-        README.write_text(new)
-        print(f"Updated README.md ({len(rows)} entries)")
+    README.write_text(new)
+    print(f"Updated README.md ({len(rows)} entries)")
 
 
 if __name__ == "__main__":
