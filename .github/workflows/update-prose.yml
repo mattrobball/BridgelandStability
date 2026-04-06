@@ -49,7 +49,7 @@ jobs:
       - name: Build project and extract declarations
         run: |
           lake build BridgelandStability
-          lake build extractDecls
+          lake build ExtractDecls
 
       - name: Merge with existing prose
         run: |

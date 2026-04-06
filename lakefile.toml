@@ -20,10 +20,8 @@ rev = "main"
 name = "BridgelandStability"
 srcDir = "."
 
-[[lean_exe]]
-name = "checkInformal"
-root = "CheckInformal"
+[[lean_lib]]
+name = "CheckInformal"
 
-[[lean_exe]]
-name = "extractDecls"
-root = "ExtractDecls"
+[[lean_lib]]
+name = "ExtractDecls"
