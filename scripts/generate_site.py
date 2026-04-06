@@ -241,7 +241,7 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
 
         # Escape underscores in headings — Verso treats _ as emphasis
         st_safe = heading.replace("_", "\\_")
-        lines.append(f"## {st_safe}")
+        lines.append(f"# {st_safe}")
         lines.append("")
 
         # Paper alignment badge
