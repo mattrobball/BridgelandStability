@@ -2,16 +2,6 @@ name: Lint
 
 on:
   push:
-    paths:
-      - "BridgelandStability/**/*.lean"
-      - "lakefile.toml"
-      - "lean-toolchain"
-  pull_request:
-    branches: [main]
-    paths:
-      - "BridgelandStability/**/*.lean"
-      - "lakefile.toml"
-      - "lean-toolchain"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

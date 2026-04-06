@@ -1,7 +1,7 @@
 name: Update Informal Prose
 
 on:
-  push:
+  pull_request:
     branches: [main]
     paths:
       - "BridgelandStability/**/*.lean"
@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: update-prose
+  group: update-prose-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -27,9 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       has-gaps: ${{ steps.gaps.outputs.has_gaps }}
-      gap-summary: ${{ steps.gaps.outputs.summary }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Install elan
         run: |
@@ -59,9 +60,6 @@ jobs:
           review=$(echo "$output" | grep -c "Needs review" || true)
           if [ "$empty" != "0" ] || [ "$review" != "0" ]; then
             echo "has_gaps=true" >> "$GITHUB_OUTPUT"
-            echo "summary<<EOF" >> "$GITHUB_OUTPUT"
-            echo "$output" >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
           else
             echo "has_gaps=false" >> "$GITHUB_OUTPUT"
           fi
@@ -82,6 +80,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Download extraction artifacts
         uses: actions/download-artifact@v4
@@ -111,7 +111,7 @@ jobs:
             The prose should describe the mathematical content, not the Lean encoding.
             Use notation consistent with Bridgeland's paper (math/0212237v3).
 
-            After updating, commit changes to a new branch and open a PR.
+            Commit the updated informalizations.json to this branch.
           claude_args: >-
             --allowedTools
             "Bash(python3:*),Bash(git:*),Bash(gh:*),Edit,Write,Read,Glob,Grep"

@@ -207,6 +207,32 @@ h2 {
 
 /* ── KaTeX ── */
 .katex { font-size: 1em; }
+
+/* ── Alignment table ── */
+table.informal-alignment {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--inf-text);
+  font-size: 0.9rem;
+  margin: 1.5rem 0;
+}
+table.informal-alignment th {
+  background: var(--inf-badge-bg);
+  color: var(--inf-muted);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 2px solid var(--inf-rule);
+}
+table.informal-alignment td {
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid var(--inf-rule);
+  vertical-align: top;
+}
+table.informal-alignment code {
+  font-family: var(--inf-code);
+  font-size: 0.82rem;
+}
 """
 
 
@@ -280,7 +306,81 @@ def inject_stylesheet(soup: BeautifulSoup) -> None:
     head.append(style)
 
 
-def process_file(path: Path, site_root: Path) -> bool:
+def inject_alignment_table(soup: BeautifulSoup, json_path: Path) -> bool:
+    """Inject the @[informal] alignment table into the root page.
+
+    Looks for <!--INFORMAL-TABLE--> marker comment in the HTML.
+    If not found, appends the table after the "Contributing" heading.
+    """
+    if not json_path.exists():
+        return False
+
+    import json
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from informal_table import build_rows, render_markdown
+
+    entries = json.loads(json_path.read_text())
+    # informalizations.json uses paperRef (nullable); filter to tagged only
+    tagged = [e for e in entries if e.get("paperRef")]
+    if not tagged:
+        return False
+
+    rows = build_rows(tagged)
+    if not rows:
+        return False
+
+    # Build HTML table
+    table_tag = soup.new_tag("table", attrs={"class": "informal-alignment"})
+    thead = soup.new_tag("thead")
+    tr = soup.new_tag("tr")
+    for col in ["Paper", "Lean declaration", "File", "Notes"]:
+        th = soup.new_tag("th")
+        th.string = col
+        tr.append(th)
+    thead.append(tr)
+    table_tag.append(thead)
+
+    tbody = soup.new_tag("tbody")
+    for _, ref, name, f, note in rows:
+        tr = soup.new_tag("tr")
+        for val in [ref, name, f, note]:
+            td = soup.new_tag("td")
+            if val in (name, f):
+                code = soup.new_tag("code")
+                code.string = val
+                td.append(code)
+            else:
+                td.string = val
+            tr.append(td)
+        tbody.append(tr)
+    table_tag.append(tbody)
+
+    # Find insertion point: after the "Contributing" section or at end of content
+    inserted = False
+    for h1 in soup.find_all("h1"):
+        if h1.string and "Paper Alignment" in h1.string:
+            # Insert after the paragraph(s) following this heading
+            sibling = h1.find_next_sibling()
+            while sibling and sibling.name == "p":
+                sibling = sibling.find_next_sibling()
+            if sibling:
+                sibling.insert_before(table_tag)
+            else:
+                h1.parent.append(table_tag)
+            inserted = True
+            break
+
+    if not inserted:
+        # Fallback: append to first article or main content div
+        article = soup.find("article") or soup.find("div", class_="content")
+        if article:
+            article.append(table_tag)
+            inserted = True
+
+    return inserted
+
+
+def process_file(path: Path, site_root: Path, json_path: Path | None = None) -> bool:
     """Process one HTML file.  Returns True if modified."""
     html = path.read_text()
     soup = BeautifulSoup(html, "html.parser")
@@ -297,31 +397,49 @@ def process_file(path: Path, site_root: Path) -> bool:
         removed = strip_source_docstrings(soup)
         wrapped = wrap_decl_sections(soup)
 
+    # Inject alignment table on root page
+    table_injected = False
+    if json_path and path.name == "index.html" and path.parent == site_root:
+        table_injected = inject_alignment_table(soup, json_path)
+
     # Inject CSS on ALL pages for consistent styling
     inject_stylesheet(soup)
 
     path.write_text(str(soup))
     rel = path.relative_to(site_root)
-    if removed or wrapped:
-        print(f"  {rel}: removed {removed} docstrings, marked {wrapped} sections")
+    if removed or wrapped or table_injected:
+        parts = []
+        if removed:
+            parts.append(f"removed {removed} docstrings")
+        if wrapped:
+            parts.append(f"marked {wrapped} sections")
+        if table_injected:
+            parts.append("injected alignment table")
+        print(f"  {rel}: {', '.join(parts)}")
     return True
 
 
 # ── Entry point ─────────────────────────────────────────────────────────────
 
 def main():
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <html-dir-or-file>")
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} <html-dir-or-file> [--json <informalizations.json>]")
         sys.exit(1)
 
     target = Path(sys.argv[1])
+    json_path = None
+    if "--json" in sys.argv:
+        idx = sys.argv.index("--json")
+        if idx + 1 < len(sys.argv):
+            json_path = Path(sys.argv[idx + 1])
+
     if target.is_file():
-        process_file(target, target.parent)
+        process_file(target, target.parent, json_path)
     elif target.is_dir():
         files = sorted(target.rglob("*.html"))
         processed = 0
         for f in files:
-            if process_file(f, target):
+            if process_file(f, target, json_path):
                 processed += 1
         print(f"Processed {processed}/{len(files)} HTML files")
     else:
