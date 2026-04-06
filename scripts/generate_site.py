@@ -345,6 +345,18 @@ def generate_root_file(
         "enabling direct inspection of the formalization's trusted base."
     )
     lines.append("")
+    lines.append("# Contributing")
+    lines.append("")
+    lines.append(
+        "This project is AI-assisted: all Lean code is written by AI agents, "
+        "guided by human reviewers. If you spot an issue — a wrong formalization, "
+        "a missing lemma, a naming problem, or a proof that could be cleaner — "
+        "open an issue on "
+        "[GitHub](https://github.com/mattrobball/BridgelandStability/issues/new). "
+        "Each declaration below links back to its source; use the paper reference "
+        "tags (e.g. \\[Definition 5.1\\]) to identify what you are reporting on."
+    )
+    lines.append("")
     lines.append("The chapters below follow the mathematical dependency order of the formalization:")
     lines.append("")
     for _, inc in all_includes:
