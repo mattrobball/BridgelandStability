@@ -253,7 +253,8 @@ jobs:
             --output site-build \
             --source-path "$(pwd)" \
             --prefix BridgelandStability \
-            --verso-rev v4.29.0
+            --verso-rev v4.29.0 \
+            --repo-url "https://github.com/${{ github.repository }}"
 
       - name: Restore site cache
         uses: actions/cache@v4

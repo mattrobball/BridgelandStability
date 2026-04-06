@@ -167,7 +167,31 @@ def ordered_groups(groups: dict[str, list[str]]) -> list[tuple[str, list[str]]]:
 
 # ── Leaf doc generation (unchanged) ─────────────────────────────────────────
 
-def generate_doc_file(module_name: str, entries: list, prefix: str) -> str:
+def issue_url(repo_url: str, decl_name: str, module_name: str,
+              source_file: str | None, start_line: int | None,
+              paper_ref: str | None) -> str:
+    """Build a GitHub new-issue URL with pre-filled metadata."""
+    from urllib.parse import quote
+    short = decl_name.rsplit(".", 1)[-1]
+    title = f"Review: {short}"
+    source = f"{source_file}:{start_line}" if source_file and start_line else "unavailable"
+    ref_line = f"**Paper:** {paper_ref}" if paper_ref else ""
+    body = "\n".join(filter(None, [
+        f"**Declaration:** `{decl_name}`",
+        f"**Module:** `{module_name}`",
+        f"**Source:** {source}",
+        ref_line,
+        "",
+        "---",
+        "",
+        "**Describe the issue:**",
+        "",
+    ]))
+    return f"{repo_url}/issues/new?title={quote(title)}&body={quote(body)}&labels=exposition-review"
+
+
+def generate_doc_file(module_name: str, entries: list, prefix: str,
+                      repo_url: str | None = None) -> str:
     """Generate a single Verso doc .lean file for one module."""
     lines = []
     lines.append(f"import {module_name}")
@@ -253,6 +277,16 @@ def generate_doc_file(module_name: str, entries: list, prefix: str) -> str:
 
         lines.append("{docstring " + decl_name + "}")
         lines.append("")
+
+        # Issue link
+        if repo_url:
+            url = issue_url(
+                repo_url, decl_name, module_name,
+                entry.get("sourceFile"), entry.get("startLine"),
+                paper_ref,
+            )
+            lines.append(f"[Open Issue]({url})")
+            lines.append("")
 
     return "\n".join(lines)
 
@@ -423,6 +457,11 @@ def main():
         default="v4.29.0",
         help="Verso git revision",
     )
+    parser.add_argument(
+        "--repo-url",
+        default=None,
+        help="GitHub repo URL for issue/source links",
+    )
     args = parser.parse_args()
 
     with open(args.json) as f:
@@ -439,7 +478,7 @@ def main():
         rel_path = module_to_path(module_name, args.prefix)
         out_path = os.path.join(args.output, rel_path)
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
-        content = generate_doc_file(module_name, mod_entries, args.prefix)
+        content = generate_doc_file(module_name, mod_entries, args.prefix, args.repo_url)
         with open(out_path, "w") as f:
             f.write(content)
         print(f"  {rel_path} ({len(mod_entries)} entries)")
