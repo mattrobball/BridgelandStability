@@ -279,7 +279,7 @@ jobs:
       - name: Style site
         run: |
           pip install beautifulsoup4
-          python3 scripts/style_site.py site-build/_out/html-multi
+          python3 scripts/style_site.py site-build/_out/html-multi --json informalizations.json
 
       - name: Upload site
         uses: actions/upload-artifact@v4

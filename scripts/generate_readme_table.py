@@ -7,9 +7,10 @@ Usage:
 """
 
 import json
-import re
 import sys
 from pathlib import Path
+
+from informal_table import build_rows, render_markdown
 
 ROOT = Path(__file__).resolve().parent.parent
 JSON = ROOT / "artifacts" / "formal_informal_alignments.json"
@@ -18,39 +19,9 @@ BEGIN = "<!-- BEGIN INFORMAL TABLE -->"
 END = "<!-- END INFORMAL TABLE -->"
 
 
-def sort_key(ref: str) -> tuple[int, int]:
-    m = re.search(r"(\d+)\.(\d+)", ref)
-    sec, sub = (int(m.group(1)), int(m.group(2))) if m else (0, 0)
-    return (100, sub) if sec == 1 else (sec, sub)  # headline results last
-
-
 def main():
     entries = json.loads(JSON.read_text())
-
-    # deduplicate by (paperRef, declName)
-    seen, rows = set(), []
-    for e in entries:
-        key = (e["paperRef"], e["declName"])
-        if key in seen:
-            continue
-        seen.add(key)
-        # module → relative file path
-        mod = e["moduleName"]
-        prefix = "BridgelandStability."
-        rel = mod.removeprefix(prefix).replace(".", "/") + ".lean"
-        # short display name
-        name = e["declName"].removeprefix("CategoryTheory.Triangulated.")
-        note = e.get("comment", "")
-        rows.append((sort_key(e["paperRef"]), e["paperRef"], name, rel, note))
-
-    rows.sort()
-    header = "| Paper | Lean declaration | File | Notes |"
-    sep = "|-------|-----------------|------|-------|"
-    lines = [header, sep] + [
-        f"| {ref} | `{name}` | `{f}` | {note} |"
-        for _, ref, name, f, note in rows
-    ]
-    table = "\n".join(lines) + "\n"
+    table = render_markdown(build_rows(entries))
 
     readme = README.read_text()
     start, end = readme.find(BEGIN), readme.find(END)
@@ -58,9 +29,8 @@ def main():
         sys.exit(f"Missing {BEGIN} / {END} markers in README.md")
 
     new = readme[: start + len(BEGIN)] + "\n" + table + readme[end:]
-
     README.write_text(new)
-    print(f"Updated README.md ({len(rows)} entries)")
+    print(f"Updated README.md ({len(build_rows(entries))} entries)")
 
 
 if __name__ == "__main__":
