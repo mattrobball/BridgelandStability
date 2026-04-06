@@ -16,7 +16,10 @@ The formalization covers Sections 2--7 of the paper, culminating in:
 
 Both are proved for an arbitrary surjective class map `v : K₀(D) →+ Λ` and
 specialized to the identity (Theorem 1.2) and the numerical quotient
-(Corollary 1.3).
+(Corollary 1.3). The formalization works in the class-map generality of
+Bayer–Macrì–Stellari [8, Appendix A] and Bayer–Lahoz–Macrì–Nuer–Perry–Stellari
+[11], where the central charge factors through a surjection `v : K₀(D) →+ Λ`;
+the classical `Stab(D)` is the specialization `v = id`.
 
 ## Paper declarations with formal analogs
 
@@ -91,30 +94,33 @@ upstreaming.
 4. Daniele Arcara and Aaron Bertram,
    [Bridgeland-stable moduli spaces for K-trivial surfaces](https://ems.press/journals/jems/articles/4662),
    Journal of the European Mathematical Society 15 (2013), 1-38.
-5. Arend Bayer and Emanuele Macri,
+5. Arend Bayer and Emanuele Macrì,
    [Projectivity and birational geometry of Bridgeland moduli spaces](https://www.ams.org/jams/2014-27-03/S0894-0347-2014-00790-6/),
    Journal of the American Mathematical Society 27 (2014), 707-752.
-6. Arend Bayer and Emanuele Macri,
+6. Arend Bayer and Emanuele Macrì,
    [MMP for moduli of sheaves on K3s via wall-crossing: nef and movable cones, Lagrangian fibrations](https://doi.org/10.1007/s00222-014-0501-8),
    Inventiones mathematicae 198 (2014), 505-590.
 7. Tom Bridgeland and Ivan Smith,
    [Quadratic differentials as stability conditions](https://link.springer.com/article/10.1007/s10240-014-0066-5),
    Publications mathematiques de l'IHES 121 (2015), 155-278.
-8. Marcello Bernardara, Emanuele Macri, Benjamin Schmidt, Xiaolei Zhao,
+8. Arend Bayer, Emanuele Macrì, and Paolo Stellari,
+   [The space of stability conditions on abelian threefolds, and on some Calabi-Yau threefolds](https://doi.org/10.1007/s00222-016-0665-5),
+   Inventiones mathematicae 206 (2016), 869-933.
+9. Marcello Bernardara, Emanuele Macrì, Benjamin Schmidt, Xiaolei Zhao,
    [Bridgeland Stability Conditions on Fano Threefolds](https://epiga.episciences.org/3255),
    EpiGA 1 (2017), article 8.
-9. Chunyi Li,
-   [On stability conditions for the quintic threefold](https://link.springer.com/article/10.1007/s00222-019-00888-z),
-   Inventiones mathematicae 218 (2019), 301-340.
-10. Arend Bayer, Marti Lahoz, Emanuele Macri, Howard Nuer, Alexander Perry, Paolo Stellari,
-   [Stability conditions in families](https://link.springer.com/article/10.1007/s10240-021-00124-6),
-   Publications mathematiques de l'IHES 133 (2021), 157-325.
-11. Soheyla Feyzbakhsh and Richard P. Thomas,
+10. Chunyi Li,
+    [On stability conditions for the quintic threefold](https://link.springer.com/article/10.1007/s00222-019-00888-z),
+    Inventiones mathematicae 218 (2019), 301-340.
+11. Arend Bayer, Martí Lahoz, Emanuele Macrì, Howard Nuer, Alexander Perry, Paolo Stellari,
+    [Stability conditions in families](https://link.springer.com/article/10.1007/s10240-021-00124-6),
+    Publications mathematiques de l'IHES 133 (2021), 157-325.
+12. Soheyla Feyzbakhsh and Richard P. Thomas,
     [Rank r DT theory from rank 1](https://www.ams.org/jams/2023-36-03/S0894-0347-2023-00922-5/),
     Journal of the American Mathematical Society 36 (2023), 795-826.
-12. Soheyla Feyzbakhsh and Richard P. Thomas,
+13. Soheyla Feyzbakhsh and Richard P. Thomas,
     [Rank r DT theory from rank 0](https://projecteuclid.org/journals/duke-mathematical-journal/volume-173/issue-11/Rank-r-DT-theory-from-rank-0/10.1215/00127094-2023-0085.short),
     Duke Mathematical Journal 173 (2024), 2063-2116.
-13. Soheyla Feyzbakhsh, Naoki Koseki, Zhiyu Liu, Nick Rekuski,
+14. Soheyla Feyzbakhsh, Naoki Koseki, Zhiyu Liu, Nick Rekuski,
     [Stability conditions on Calabi-Yau threefolds via Brill-Noether theory of curves](https://arxiv.org/abs/2509.24990),
     preprint, 2025.
