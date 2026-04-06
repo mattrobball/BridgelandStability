@@ -1,4 +1,4 @@
-name: Lint
+name: Build & Lint
 
 on:
   push:
@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint
+  build-and-lint:
+    name: Build & Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
