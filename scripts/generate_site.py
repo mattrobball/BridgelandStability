@@ -33,6 +33,7 @@ CHAPTER_ORDER = [
     "HeartEquivalence",
     "StabilityCondition",
     "Deformation",
+    "ForMathlib",
 ]
 
 
@@ -339,11 +340,12 @@ def _build_includes(
     return all_includes
 
 
-def generate_chapters_file(
+def generate_root_file(
     chapter_groups: list[tuple[str, list[str]]],
     direct_leaves: list[tuple[str, str]],
+    total_entries: int,
 ) -> str:
-    """Generate Chapters.lean — all chapter includes on a single page."""
+    """Generate Root.lean — landing page + chapter includes."""
     all_includes = _build_includes(chapter_groups, direct_leaves)
 
     lines = []
@@ -355,38 +357,14 @@ def generate_chapters_file(
     lines.append("")
     lines.append("set_option maxHeartbeats 800000")
     lines.append("")
-    lines.append('#doc (Manual) "Chapters" =>')
-    lines.append("")
-    lines.append(
-        "The chapters below follow the mathematical dependency order of the formalization."
-    )
-    lines.append("")
-    for _, inc in all_includes:
-        lines.append(f"{{include 0 {inc}}}")
-        lines.append("")
-    return "\n".join(lines)
-
-
-def generate_root_file(
-    chapter_groups: list[tuple[str, list[str]]],
-    direct_leaves: list[tuple[str, str]],
-    total_entries: int,
-) -> str:
-    """Generate Root.lean — landing page with intro, contributing, and paper alignment."""
-    lines = []
-    lines.append("import VersoManual")
-    lines.append("import InformalDocs.Chapters")
-    lines.append("")
-    lines.append("open Verso.Genre Manual")
-    lines.append("")
     lines.append('#doc (Manual) "Bridgeland Stability Conditions" =>')
     lines.append("")
     lines.append(
-        "Inspired by Douglas's work on \\`Π\\`-stability in string theory, "
+        "Inspired by Douglas's work on Π-stability in string theory, "
         "Bridgeland stability conditions allow one to extract a complex manifold "
         "from a triangulated category. A stability condition pairs a central charge "
-        "--- a group homomorphism from the Grothendieck group to the complex numbers "
-        "--- with a slicing of the category into semistable objects of each phase. "
+        "— a group homomorphism from the Grothendieck group to the complex numbers "
+        "— with a slicing of the category into semistable objects of each phase. "
         "Bridgeland's main theorem is that the space of all such conditions is itself "
         "a complex manifold, with local charts given by the central charge."
     )
@@ -394,16 +372,16 @@ def generate_root_file(
     lines.append(
         "This site documents a machine-checked proof of that theorem, formalized "
         "in Lean 4 using Mathlib. All Lean code is written by AI agents guided by "
-        "human mathematicians --- no human writes proof scripts. The formalization "
-        "covers Sections 2--7 of Bridgeland's "
+        "human mathematicians — no human writes proof scripts. The formalization "
+        "covers Sections 2–7 of Bridgeland's "
         "*Stability conditions on triangulated categories* (Annals of Mathematics, 2007), "
-        "working in the class-map generality of Bayer--Macr\\`i--Stellari and "
-        "Bayer--Lahoz--Macr\\`i--Nuer--Perry--Stellari."
+        "working in the class-map generality of Bayer–Macrì–Stellari and "
+        "Bayer–Lahoz–Macrì–Nuer–Perry–Stellari."
     )
     lines.append("")
     lines.append(
         "Why trust a proof written by AI? Two independent checks. First, every "
-        "logical step is verified by Lean's kernel --- a small, fixed type checker "
+        "logical step is verified by Lean's kernel — a small, fixed type checker "
         "that accepts or rejects proofs regardless of how they were produced. The "
         "kernel guarantees the arguments are correct. Second, the "
         "[Comparator Manual](comparator/) lists the definitions the result "
@@ -417,21 +395,20 @@ def generate_root_file(
         "sufficient: the formalization aims for Mathlib quality, with correct "
         "abstractions, reusable lemmas, and proofs that could survive code review "
         "and upstreaming. If you see a mathematical inaccuracy, a missing "
-        "generalization, a cleaner definition, or --- if you know Lean --- a better "
+        "generalization, a cleaner definition, or — if you know Lean — a better "
         "proof strategy, each declaration has a link to open an issue. Describe what "
         "you think should happen and start a discussion. Once we figure out what "
         "needs to change, AI agents will do the rest."
     )
-    lines.append("")
-    lines.append("# Paper Alignment")
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
         "the paper that has a formal analog tagged with `@\\[informal\\]`."
     )
     lines.append("")
-    lines.append("{include 0 InformalDocs.Chapters}")
-    lines.append("")
+    for _, inc in all_includes:
+        lines.append(f"{{include 0 {inc}}}")
+        lines.append("")
     return "\n".join(lines)
 
 
@@ -552,13 +529,6 @@ def main():
         print(f"  InformalDocs/{group_name}.lean ({len(module_names)} modules)")
     for group_name, dm in direct_leaves:
         print(f"  (direct) {dm}")
-
-    # ── Chapters doc ──
-    chapters_content = generate_chapters_file(chapter_groups, direct_leaves)
-    chapters_path = os.path.join(args.output, "InformalDocs", "Chapters.lean")
-    with open(chapters_path, "w") as f:
-        f.write(chapters_content)
-    print(f"  InformalDocs/Chapters.lean")
 
     # ── Root doc ──
     root_content = generate_root_file(chapter_groups, direct_leaves, len(entries))
