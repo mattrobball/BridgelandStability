@@ -202,7 +202,7 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
     lines.append("set_option verso.docstring.allowMissing true")
     lines.append("")
     title = human_title(module_name, prefix)
-    lines.append(f'#doc (Manual) "{module_name}" =>')
+    lines.append(f'#doc (Manual) "{title}" =>')
     lines.append("%%%")
     lines.append("htmlSplit := .never")
     lines.append("%%%")
@@ -285,7 +285,7 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
                 entry.get("sourceFile"), entry.get("startLine"),
                 paper_ref,
             )
-            lines.append(f"[Open Issue]({url})")
+            lines.append(f"Something wrong, better idea? [Suggest a change]({url})")
             lines.append("")
 
     return "\n".join(lines)
@@ -359,36 +359,45 @@ def generate_root_file(
     lines.append('#doc (Manual) "Bridgeland Stability Conditions" =>')
     lines.append("")
     lines.append(
-        "This is an informal mathematical exposition of the Lean 4 formalization of "
-        "\\*\\*Bridgeland stability conditions\\*\\* on triangulated categories. "
-        f"It pairs {total_entries} formalized declarations with prose descriptions, "
-        "proof sketches, and interactive type signatures with hover information "
-        "and go-to-definition links."
+        "Inspired by Douglas's work on \\`Π\\`-stability in string theory, "
+        "Bridgeland stability conditions allow one to extract a complex manifold "
+        "from a triangulated category. A stability condition pairs a central charge "
+        "--- a group homomorphism from the Grothendieck group to the complex numbers "
+        "--- with a slicing of the category into semistable objects of each phase. "
+        "Bridgeland's main theorem is that the space of all such conditions is itself "
+        "a complex manifold, with local charts given by the central charge."
     )
     lines.append("")
     lines.append(
-        "The formalization covers the full proof that the space of stability conditions "
-        "on a triangulated category is a complex manifold, following Bridgeland's original "
-        "paper *Stability conditions on triangulated categories* (Annals of Mathematics, 2007)."
+        "This site documents a machine-checked proof of that theorem, formalized "
+        "in Lean 4 using Mathlib. All Lean code is written by AI agents guided by "
+        "human mathematicians --- no human writes proof scripts. The formalization "
+        "covers Sections 2--7 of Bridgeland's "
+        "*Stability conditions on triangulated categories* (Annals of Mathematics, 2007), "
+        "working in the class-map generality of Bayer--Macr\\`i--Stellari and "
+        "Bayer--Lahoz--Macr\\`i--Nuer--Perry--Stellari."
     )
     lines.append("")
     lines.append(
-        "For verification of the formal statements against their source code, "
-        "see the [Comparator Manual](comparator/). "
-        "The comparator pairs each declaration with its full proof body, "
-        "enabling direct inspection of the formalization's trusted base."
+        "Why trust a proof written by AI? Two independent checks. First, every "
+        "logical step is verified by Lean's kernel --- a small, fixed type checker "
+        "that accepts or rejects proofs regardless of how they were produced. The "
+        "kernel guarantees the arguments are correct. Second, the "
+        "[Comparator Manual](comparator/) lists the definitions the result "
+        "depends on, paired with their informal mathematical meanings, so you can "
+        "audit whether the formal statements faithfully capture the mathematics."
     )
     lines.append("")
-    lines.append("# Contributing")
-    lines.append("")
     lines.append(
-        "This project is AI-assisted: all Lean code is written by AI agents, "
-        "guided by human reviewers. If you spot an issue — a wrong formalization, "
-        "a missing lemma, a naming problem, or a proof that could be cleaner — "
-        "open an issue on "
-        "[GitHub](https://github.com/mattrobball/BridgelandStability/issues/new). "
-        "Each declaration below links back to its source; use the paper reference "
-        "tags (e.g. \\[Definition 5.1\\]) to identify what you are reporting on."
+        "Each declaration below is paired with an informal description and, where "
+        "available, a proof sketch. Passing the type checker is necessary but not "
+        "sufficient: the formalization aims for Mathlib quality, with correct "
+        "abstractions, reusable lemmas, and proofs that could survive code review "
+        "and upstreaming. If you see a mathematical inaccuracy, a missing "
+        "generalization, a cleaner definition, or --- if you know Lean --- a better "
+        "proof strategy, each declaration has a link to open an issue. Describe what "
+        "you think should happen and start a discussion. Once we figure out what "
+        "needs to change, AI agents will do the rest."
     )
     lines.append("")
     lines.append("# Paper Alignment")
@@ -483,6 +492,8 @@ def main():
 
     # ── Leaf docs (one per module) ──
     for module_name, mod_entries in sorted(by_module.items()):
+        # Sort by source line when available, then alphabetically as fallback
+        mod_entries.sort(key=lambda e: (e.get("startLine") or 999999, e["declName"]))
         rel_path = module_to_path(module_name, args.prefix)
         out_path = os.path.join(args.output, rel_path)
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
