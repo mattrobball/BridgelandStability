@@ -388,6 +388,8 @@ def generate_root_file(
         "audit whether the formal statements faithfully capture the mathematics."
     )
     lines.append("")
+    lines.append("# Contributing")
+    lines.append("")
     lines.append(
         "Each declaration below is paired with an informal description and, where "
         "available, a proof sketch. Passing the type checker is necessary but not "
