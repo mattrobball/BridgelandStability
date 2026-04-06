@@ -1,13 +1,14 @@
-name: Comparator
+name: Deploy
 
 on:
   workflow_run:
-    workflows: ["Build & Lint"]
+    workflows: ["CI"]
+    branches: [main]
     types: [completed]
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_branch || github.ref }}
+  group: deploy
   cancel-in-progress: true
 
 permissions:
@@ -20,102 +21,13 @@ env:
   LEAN_EXPOSITION_REF: codex/comparator-manual-design
 
 # ════════════════════════════════════════════════════════════════
-# Job graph (oleans from Build & Lint):
-#   verify ──────────┬──> deploy
-#   generate-manual ──┤
-#   build-site ───────┘
+# Job graph:
+#   generate-manual ──┐
+#   build-site ───────┼──> deploy
+#   badge ────────────┘
 # ════════════════════════════════════════════════════════════════
 
 jobs:
-  # ── Comparator verification ────────────────────────────────────
-  verify:
-    name: Verify Comparator
-    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    outputs:
-      comparator-status: ${{ steps.comparator.outcome }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-
-      - name: Install elan
-        run: |
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
-            | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Download oleans
-        if: github.event_name != 'workflow_dispatch'
-        uses: actions/download-artifact@v4
-        with:
-          name: oleans
-          path: .lake/build
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get Mathlib cache
-        run: lake exe cache get
-
-      - name: Build project (incremental)
-        run: lake build BridgelandStability
-
-      - name: Build landrun
-        run: |
-          git clone --depth 1 https://github.com/Zouuup/landrun
-          cd landrun && go build -o /usr/local/bin/landrun ./cmd/landrun
-
-      - name: Build lean4export
-        run: |
-          LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
-          git clone --depth 1 --branch "$LEAN_VERSION" https://github.com/leanprover/lean4export
-          cd lean4export && lake build
-          cp .lake/build/bin/lean4export "$HOME/.elan/bin/"
-
-      - name: Build comparator
-        run: |
-          git clone --depth 1 https://github.com/leanprover/comparator
-          cd comparator && lake build
-          cp .lake/build/bin/comparator "$HOME/.elan/bin/"
-
-      - name: Run comparator
-        id: comparator
-        continue-on-error: true
-        run: lake env comparator comparator.json
-
-      - name: Generate badge SVG
-        run: |
-          mkdir -p badge
-          if [ "${{ steps.comparator.outcome }}" = "success" ]; then
-            status="verified"; hex="#4c1"
-          else
-            status="failed"; hex="#e05d44"
-          fi
-          cat > badge/comparator.svg << SVGEOF
-          <svg xmlns="http://www.w3.org/2000/svg" width="140" height="20">
-            <linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
-            <clipPath id="a"><rect width="140" height="20" rx="3" fill="#fff"/></clipPath>
-            <g clip-path="url(#a)"><rect width="76" height="20" fill="#555"/><rect x="76" width="64" height="20" fill="${hex}"/><rect width="140" height="20" fill="url(#b)"/></g>
-            <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,sans-serif" font-size="11">
-              <text x="38" y="15" fill="#010101" fill-opacity=".3">comparator</text>
-              <text x="38" y="14">comparator</text>
-              <text x="107" y="15" fill="#010101" fill-opacity=".3">${status}</text>
-              <text x="107" y="14">${status}</text>
-            </g>
-          </svg>
-          SVGEOF
-
-      - name: Upload badge
-        uses: actions/upload-artifact@v4
-        with:
-          name: badge
-          path: badge/
-          retention-days: 1
-
-      - name: Fail if comparator failed
-        if: steps.comparator.outcome != 'success'
-        run: exit 1
-
   # ── Generate comparator manual (Verso shadow build) ────────────
   generate-manual:
     name: Generate Manual
@@ -270,11 +182,40 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  # ── Generate badge ───────────────────────────────────────────
+  badge:
+    name: Generate Badge
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate badge SVG
+        run: |
+          mkdir -p badge
+          cat > badge/comparator.svg << 'SVGEOF'
+          <svg xmlns="http://www.w3.org/2000/svg" width="140" height="20">
+            <linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
+            <clipPath id="a"><rect width="140" height="20" rx="3" fill="#fff"/></clipPath>
+            <g clip-path="url(#a)"><rect width="76" height="20" fill="#555"/><rect x="76" width="64" height="20" fill="#4c1"/><rect width="140" height="20" fill="url(#b)"/></g>
+            <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,sans-serif" font-size="11">
+              <text x="38" y="15" fill="#010101" fill-opacity=".3">comparator</text>
+              <text x="38" y="14">comparator</text>
+              <text x="107" y="15" fill="#010101" fill-opacity=".3">verified</text>
+              <text x="107" y="14">verified</text>
+            </g>
+          </svg>
+          SVGEOF
+
+      - name: Upload badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: badge
+          path: badge/
+          retention-days: 1
+
   # ── Deploy to GitHub Pages ─────────────────────────────────────
   deploy:
     name: Deploy Pages
-    if: github.event.workflow_run.head_branch == 'main'
-    needs: [verify, generate-manual, build-site]
+    needs: [generate-manual, build-site, badge]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
