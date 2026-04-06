@@ -1,14 +1,13 @@
 name: Comparator
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: ["Build & Lint"]
+    types: [completed]
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_branch || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -21,55 +20,24 @@ env:
   LEAN_EXPOSITION_REF: codex/comparator-manual-design
 
 # ════════════════════════════════════════════════════════════════
-# Job graph:
-#   build-project ──┬──> verify ──────────┬──> deploy
-#                   └──> generate-manual ──┘
+# Job graph (oleans from Build & Lint):
+#   verify ──────────┬──> deploy
+#   generate-manual ──┤
+#   build-site ───────┘
 # ════════════════════════════════════════════════════════════════
 
 jobs:
-  # ── Job 1: Build BridgelandStability oleans ───────────────────
-  build-project:
-    name: Build Project
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install elan
-        run: |
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
-            | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Restore olean cache
-        uses: actions/cache@v4
-        with:
-          path: .lake/build
-          key: oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('BridgelandStability/**/*.lean') }}
-          restore-keys: |
-            oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-
-
-      - name: Get Mathlib cache
-        run: lake exe cache get
-
-      - name: Build BridgelandStability
-        run: lake build BridgelandStability
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: bridgeland-build
-          path: .lake/build
-          retention-days: 1
-
-  # ── Job 2: Comparator verification ────────────────────────────
+  # ── Comparator verification ────────────────────────────────────
   verify:
     name: Verify Comparator
-    needs: build-project
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     outputs:
       comparator-status: ${{ steps.comparator.outcome }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Install elan
         run: |
@@ -77,14 +45,17 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Get Mathlib cache
-        run: lake exe cache get
-
-      - name: Download build artifacts
+      - name: Download oleans
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/download-artifact@v4
         with:
-          name: bridgeland-build
+          name: oleans
           path: .lake/build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
 
       - name: Build project (incremental)
         run: lake build BridgelandStability
@@ -145,13 +116,15 @@ jobs:
         if: steps.comparator.outcome != 'success'
         run: exit 1
 
-  # ── Job 3: Generate comparator manual (Verso shadow build) ───
+  # ── Generate comparator manual (Verso shadow build) ────────────
   generate-manual:
     name: Generate Manual
-    needs: build-project
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Install elan
         run: |
@@ -159,14 +132,17 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Get Mathlib cache
-        run: lake exe cache get
-
-      - name: Download build artifacts
+      - name: Download oleans
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/download-artifact@v4
         with:
-          name: bridgeland-build
+          name: oleans
           path: .lake/build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
 
       - name: Build project (incremental)
         run: lake build BridgelandStability
@@ -220,13 +196,15 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-  # ── Job 4: Build informal exposition site ──────────────────────
+  # ── Build informal exposition site ─────────────────────────────
   build-site:
     name: Build Informal Site
-    needs: build-project
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Install elan
         run: |
@@ -234,14 +212,17 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Get Mathlib cache
-        run: lake exe cache get
-
-      - name: Download build artifacts
+      - name: Download oleans
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/download-artifact@v4
         with:
-          name: bridgeland-build
+          name: oleans
           path: .lake/build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
 
       - name: Build project (incremental)
         run: lake build BridgelandStability
@@ -289,10 +270,10 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-  # ── Job 5: Deploy to GitHub Pages ─────────────────────────────
+  # ── Deploy to GitHub Pages ─────────────────────────────────────
   deploy:
     name: Deploy Pages
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.event.workflow_run.head_branch == 'main'
     needs: [verify, generate-manual, build-site]
     runs-on: ubuntu-latest
     environment:

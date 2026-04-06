@@ -1,4 +1,4 @@
-name: Lint
+name: Build & Lint
 
 on:
   push:
@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint
+  build-and-lint:
+    name: Build & Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,3 +42,10 @@ jobs:
 
       - name: Run style linter
         run: lake exe lint-style
+
+      - name: Upload oleans
+        uses: actions/upload-artifact@v4
+        with:
+          name: oleans
+          path: .lake/build
+          retention-days: 1
