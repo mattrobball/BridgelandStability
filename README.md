@@ -5,9 +5,26 @@ Bridgeland's
 [Stability conditions on triangulated categories](https://annals.math.princeton.edu/2007/166-2/p01)
 (Annals of Mathematics, 2007).
 
-## Headline results
+## What Bridgeland stability conditions are
 
-The formalization covers Sections 2--7 of the paper, culminating in:
+Inspired by Douglas's work on Π-stability in string theory, Bridgeland
+showed that the classical stability package — central charges, semistable
+objects, Harder-Narasimhan filtrations — can be lifted from abelian categories
+to triangulated categories. A Bridgeland stability condition on a triangulated
+category `D` consists of a central charge `Z : K₀(D) → ℂ` and a slicing
+`P(φ)` into semistable objects of each phase, subject to compatibility and
+Harder-Narasimhan existence axioms.
+
+The headline result is that the space `Stab(D)` of all such conditions is
+itself a complex manifold, with local charts given by the central charge.
+The theory has since become one of the most active areas in modern
+mathematics. It provides infrastructure for wall-crossing in birational
+geometry, Donaldson-Thomas theory, and the study of moduli spaces of sheaves
+on surfaces and threefolds.
+
+## Main results
+
+The formalization covers Sections 2–7 of the paper, culminating in:
 
 - **Theorem 1.2** — the central charge map is a local homeomorphism on each
   connected component of `Stab(D)`.
@@ -21,19 +38,15 @@ Bayer–Macrì–Stellari [8, Appendix A] and Bayer–Lahoz–Macrì–Nuer–Pe
 [11], where the central charge factors through a surjection `v : K₀(D) →+ Λ`;
 the classical `Stab(D)` is the specialization `v = id`.
 
-## Paper declarations with formal analogs
+## Documentation
 
-Every `@[informal]`-tagged declaration is listed in the
-[paper alignment table](https://mattrobball.github.io/BridgelandStability/#paper-alignment)
-on the project website.
-
-## Verification
-
-Corollary 1.3 is set up for independent verification via
-[`leanprover/comparator`](https://github.com/leanprover/comparator). The
-project declarations that the formal statement depends on are documented
-with their paper-level counterparts in
-[`artifacts/trusted-formalization-base.md`](artifacts/trusted-formalization-base.md).
+The [project website](https://mattrobball.github.io/BridgelandStability/)
+pairs each formalized declaration with an informal mathematical description
+and lists which paper statements currently have exact formal analogs. The
+[Comparator Manual](https://mattrobball.github.io/BridgelandStability/comparator/)
+independently verifies the formal statements against their source and lists
+the definitions the result depends on — the trusted base you must audit
+to trust the proof.
 
 The root import is [`BridgelandStability.lean`](BridgelandStability.lean).
 
