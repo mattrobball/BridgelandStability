@@ -186,6 +186,38 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* Bold section labels on landing page — act as visual dividers */
+.titlepage > p > strong:only-child {
+  display: block;
+  font-family: var(--inf-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--inf-accent);
+  letter-spacing: -0.01em;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--inf-rule);
+}
+.titlepage > p:first-of-type > strong:only-child {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* ── Hide duplicate docstring entries in sidebar TOC ──
+   Verso's {docstring} creates a TOC entry with the full qualified name
+   alongside the heading entry with the short name — hide the former. */
+#toc .split-toc li:has(> a > code) {
+  display: none;
+}
+
+/* ── Prevent ugly wrapping of long declaration names in sidebar TOC ── */
+#toc .split-toc .header a {
+  word-break: break-all;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
 /* ── Section headings ── */
 h2 {
   font-family: var(--inf-heading);
@@ -420,25 +452,154 @@ def inject_alignment_table(soup: BeautifulSoup, json_path: Path, site_base: str 
         tbody.append(tr)
     table_tag.append(tbody)
 
-    # Find insertion point: after "Paper alignment" heading and its paragraph
+    # Find insertion point: after "Paper alignment" heading/label and its paragraph
     inserted = False
-    for tag in soup.find_all(["h1", "h2", "h3"]):
+    # Search headings first, then bold labels (for non-heading section markers)
+    candidates = list(soup.find_all(["h1", "h2", "h3"]))
+    candidates += list(soup.find_all("strong"))
+    for tag in candidates:
         if "Paper alignment" in tag.get_text(strip=True):
-            # Skip past any paragraphs after the heading
-            sibling = tag.find_next_sibling()
-            while sibling and sibling.name == "p":
+            # If inside a <p>, anchor from the <p>
+            anchor = tag if tag.name != "strong" else (tag.parent if tag.parent and tag.parent.name == "p" else tag)
+            # Skip one description paragraph after the anchor
+            sibling = anchor.find_next_sibling()
+            if sibling and sibling.name == "p":
                 sibling = sibling.find_next_sibling()
             if sibling:
                 sibling.insert_before(table_tag)
             else:
-                tag.parent.append(table_tag)
+                anchor.parent.append(table_tag)
             inserted = True
             break
 
     return inserted
 
 
-def process_file(path: Path, site_root: Path, json_path: Path | None = None) -> bool:
+# ── Chapter stub detection and link rewriting ──────────────────────────────
+
+def detect_stubs(site_root: Path) -> dict[str, dict]:
+    """Scan site for chapter stub pages and extract navigation info.
+
+    A stub is an index.html that has a section-toc but no namedocs
+    (i.e. no declaration content — just a listing page).
+    Excludes the root index.html.
+
+    Returns dict mapping stub relative URL (e.g. "Slicing/") to:
+      - first_child: href of the first child page
+      - prev: href from the stub's own prev-next nav (the page before this stub)
+    """
+    stubs = {}
+    for html_path in sorted(site_root.rglob("*.html")):
+        if html_path.name != "index.html":
+            continue
+        if html_path.parent == site_root:
+            continue
+        soup = BeautifulSoup(html_path.read_text(), "html.parser")
+        toc_ol = soup.find("ol", class_="section-toc")
+        has_namedocs = soup.find("div", class_="namedocs")
+        if not toc_ol or has_namedocs:
+            continue
+
+        # This is a stub — extract first child link
+        first_link = toc_ol.find("a", href=True)
+        if not first_link:
+            continue
+
+        # Extract the stub's own prev/next labels and hrefs
+        prev_href = None
+        prev_title = None
+        next_title = None
+        for nav in soup.find_all("nav", class_="prev-next-buttons"):
+            prev_a = nav.find("a", rel="prev")
+            if prev_a and prev_a.get("href"):
+                prev_href = prev_a["href"]
+                prev_title = prev_a.get("title", "")
+            next_a = nav.find("a", rel="next")
+            if next_a:
+                next_title = next_a.get("title", "")
+            break
+
+        # Also grab the title for the first child from the section-toc
+        first_child_title = first_link.get_text(separator=" ", strip=True) if first_link else ""
+
+        rel = str(html_path.parent.relative_to(site_root)) + "/"
+        stubs[rel] = {
+            "first_child": first_link["href"],
+            "first_child_title": first_child_title,
+            "prev": prev_href,
+            "prev_title": prev_title,
+        }
+    return stubs
+
+
+def rewrite_nav_links(soup: BeautifulSoup, stubs: dict[str, dict]) -> int:
+    """Rewrite prev/next and TOC links to skip chapter stubs.
+
+    All Verso pages use ``<base href="...">`` pointing to site root,
+    so all hrefs are already site-root-relative.
+
+    Returns count of rewritten links.
+    """
+    count = 0
+
+    def href_to_stub_key(href: str) -> str | None:
+        """Extract stub key from an href, or None if it doesn't match a stub."""
+        clean = href.split("#")[0]
+        if clean and not clean.endswith("/"):
+            clean += "/"
+        return clean if clean in stubs else None
+
+    def update_button_label(a_tag, new_title: str) -> None:
+        """Update the visible label and title attribute of a nav button."""
+        if new_title:
+            a_tag["title"] = new_title
+            where = a_tag.find("span", class_="where")
+            if where:
+                where.string = new_title
+
+    # Rewrite prev/next buttons
+    for nav in soup.find_all("nav", class_="prev-next-buttons"):
+        for a in nav.find_all("a", href=True):
+            key = href_to_stub_key(a["href"])
+            if not key:
+                continue
+            stub_info = stubs[key]
+            is_prev = a.get("rel") == ["prev"]
+            is_next = a.get("rel") == ["next"]
+            if is_next:
+                # Skip stub, go to its first child
+                a["href"] = stub_info["first_child"]
+                update_button_label(a, stub_info.get("first_child_title"))
+                count += 1
+            elif is_prev and stub_info.get("prev"):
+                # Skip stub, go to what was before the stub
+                a["href"] = stub_info["prev"]
+                update_button_label(a, stub_info.get("prev_title"))
+                count += 1
+
+    # Rewrite TOC sidebar links that point to stubs
+    toc_nav = soup.find("nav", id="toc")
+    if toc_nav:
+        for a in toc_nav.find_all("a", href=True):
+            key = href_to_stub_key(a["href"])
+            if key:
+                a["href"] = stubs[key]["first_child"]
+                count += 1
+
+    return count
+
+
+def add_stub_redirect(soup: BeautifulSoup, first_child_href: str) -> None:
+    """Add a JS redirect to a chapter stub page (fallback for direct URL access)."""
+    script = soup.new_tag("script")
+    script.string = f'window.location.replace("{first_child_href}");'
+    head = soup.find("head")
+    if head:
+        head.append(script)
+
+
+def process_file(path: Path, site_root: Path, json_path: Path | None = None,
+                 stubs: dict[str, dict] | None = None) -> bool:
     """Process one HTML file.  Returns True if modified."""
     html = path.read_text()
     soup = BeautifulSoup(html, "html.parser")
@@ -473,12 +634,25 @@ def process_file(path: Path, site_root: Path, json_path: Path | None = None) -> 
     if json_path and path.name == "index.html" and path.parent == site_root:
         table_injected = inject_alignment_table(soup, json_path)
 
+    # Rewrite navigation links to skip chapter stubs
+    nav_rewritten = 0
+    is_stub = False
+    if stubs:
+        nav_rewritten = rewrite_nav_links(soup, stubs)
+
+        # If this page IS a stub, add redirect to first child
+        rel_dir = str(path.parent.relative_to(site_root)) + "/" if path.parent != site_root else ""
+        page_key = rel_dir + path.name if path.name != "index.html" else rel_dir
+        if page_key in stubs:
+            add_stub_redirect(soup, stubs[page_key]["first_child"])
+            is_stub = True
+
     # Inject CSS on ALL pages for consistent styling
     inject_stylesheet(soup)
 
     path.write_text(str(soup))
     rel = path.relative_to(site_root)
-    if removed or wrapped or table_injected:
+    if removed or wrapped or table_injected or nav_rewritten or is_stub:
         parts = []
         if removed:
             parts.append(f"removed {removed} docstrings")
@@ -486,6 +660,10 @@ def process_file(path: Path, site_root: Path, json_path: Path | None = None) -> 
             parts.append(f"marked {wrapped} sections")
         if table_injected:
             parts.append("injected alignment table")
+        if nav_rewritten:
+            parts.append(f"rewrote {nav_rewritten} nav links")
+        if is_stub:
+            parts.append("stub redirect")
         print(f"  {rel}: {', '.join(parts)}")
     return True
 
@@ -507,10 +685,16 @@ def main():
     if target.is_file():
         process_file(target, target.parent, json_path)
     elif target.is_dir():
+        # Pass 1: detect chapter stubs and extract their navigation info
+        stubs = detect_stubs(target)
+        if stubs:
+            print(f"Detected {len(stubs)} chapter stubs: {', '.join(stubs.keys())}")
+
+        # Pass 2: process all HTML files with stub-skipping
         files = sorted(target.rglob("*.html"))
         processed = 0
         for f in files:
-            if process_file(f, target, json_path):
+            if process_file(f, target, json_path, stubs=stubs):
                 processed += 1
         print(f"Processed {processed}/{len(files)} HTML files")
     else:

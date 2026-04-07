@@ -3,10 +3,14 @@
 
 Reads informalizations.json and produces a unified Verso manual:
   - InformalDocs/<path>.lean   (one per source module — leaf pages)
-  - InformalDocs/<Group>.lean  (one per top-level group — chapter pages)
-  - InformalDocs/Root.lean     (root manual composing all chapters)
+  - InformalDocs/<Group>.lean  (one per multi-module group — chapter pages)
+  - InformalDocs/Root.lean     (root manual composing chapters + direct leaves)
   - InformalMain.lean          (single manualMain entry point)
   - lakefile.toml              (project config)
+
+Chapter pages group leaves in the TOC sidebar. The style post-processor
+(style_site.py) auto-redirects stub chapter pages to their first child
+so users never see a bare table-of-contents page.
 """
 
 import json
@@ -151,8 +155,8 @@ def group_modules(by_module: dict, prefix: str) -> dict[str, list[str]]:
     return dict(groups)
 
 
-def ordered_groups(groups: dict[str, list[str]]) -> list[tuple[str, list[str]]]:
-    """Return groups in mathematical dependency order."""
+def _ordered_groups(groups: dict[str, list[str]]) -> list[tuple[str, list[str]]]:
+    """Return groups in mathematical dependency order (unused, kept for reference)."""
     result = []
     seen = set()
     for name in CHAPTER_ORDER:
@@ -192,7 +196,8 @@ def issue_url(repo_url: str, decl_name: str, module_name: str,
 
 
 def generate_doc_file(module_name: str, entries: list, prefix: str,
-                      repo_url: str | None = None) -> str:
+                      repo_url: str | None = None,
+                      title_override: str | None = None) -> str:
     """Generate a single Verso doc .lean file for one module."""
     lines = []
     lines.append(f"import {module_name}")
@@ -202,7 +207,7 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
     lines.append("")
     lines.append("set_option verso.docstring.allowMissing true")
     lines.append("")
-    title = human_title(module_name, prefix)
+    title = title_override or human_title(module_name, prefix)
     lines.append(f'#doc (Manual) "{title}" =>')
     lines.append("%%%")
     lines.append("htmlSplit := .never")
@@ -290,13 +295,14 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
     return "\n".join(lines)
 
 
-# ── Chapter doc generation (NEW) ────────────────────────────────────────────
+# ── Chapter doc generation ─────────────────────────────────────────────────
 
 def generate_chapter_file(group_name: str, module_names: list[str], prefix: str) -> str:
     """Generate a chapter .lean file that includes all leaf modules in a group.
 
     No ``# heading`` — the ``#doc`` title serves as the chapter name in the TOC.
-    Adding a heading would create an extra empty intermediate page when Verso splits.
+    The resulting stub page is made invisible by the style post-processor,
+    which rewrites all navigation links to skip it.
     """
     doc_mods = [doc_module_name(m, prefix) for m in module_names]
 
@@ -315,13 +321,13 @@ def generate_chapter_file(group_name: str, module_names: list[str], prefix: str)
     return "\n".join(lines)
 
 
-# ── Root doc generation (NEW) ───────────────────────────────────────────────
+# ── Root doc generation ────────────────────────────────────────────────────
 
 def _build_includes(
     chapter_groups: list[tuple[str, list[str]]],
     direct_leaves: list[tuple[str, str]],
 ) -> list[tuple[str, str]]:
-    """Build the ordered list of (import_name, include_name) for chapter pages."""
+    """Build the ordered list of (import_name, include_name) for Root."""
     all_includes = []
     chapter_set = {g for g, _ in chapter_groups}
     leaf_set = {g: dm for g, dm in direct_leaves}
@@ -345,7 +351,7 @@ def generate_root_file(
     direct_leaves: list[tuple[str, str]],
     total_entries: int,
 ) -> str:
-    """Generate Root.lean — landing page + chapter includes."""
+    """Generate Root.lean — landing page + chapter/leaf includes."""
     all_includes = _build_includes(chapter_groups, direct_leaves)
 
     lines = []
@@ -373,26 +379,26 @@ def generate_root_file(
         "sheaves on surfaces and threefolds."
     )
     lines.append("")
-    lines.append("## About this formalization")
+    lines.append("*About this formalization*")
     lines.append("")
     lines.append(
         "This site documents a machine-checked proof of the complex manifold theorem, formalized "
         "in Lean 4 using Mathlib. All Lean code is written by AI agents guided by "
         "human mathematicians — no human writes proof scripts. The formalization "
         "covers Sections 2–7 of Bridgeland's "
-        "*Stability conditions on triangulated categories* (Annals of Mathematics, 2007), "
+        "_Stability conditions on triangulated categories_ (Annals of Mathematics, 2007), "
         "working in class-map generality as in Bayer–Macrì–Stellari and "
         "Bayer–Lahoz–Macrì–Nuer–Perry–Stellari."
     )
     lines.append("")
-    lines.append("## Paper alignment")
+    lines.append("*Paper alignment*")
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
         "the paper that currently has an exact formal analog."
     )
     lines.append("")
-    lines.append("## Why trust a proof written by AI?")
+    lines.append("*Why trust a proof written by AI?*")
     lines.append("")
     lines.append(
         "Two independent checks. First, every "
@@ -405,7 +411,7 @@ def generate_root_file(
         "Auto-generated [API documentation](api/BridgelandStability.html) is also available."
     )
     lines.append("")
-    lines.append("## Contributing")
+    lines.append("*Contributing*")
     lines.append("")
     lines.append(
         "Each declaration is paired with an informal description and, where "
@@ -500,38 +506,35 @@ def main():
     print(f"Found {len(by_module)} modules")
 
     # ── Leaf docs (one per module) ──
+    # For single-module groups, use the group name as the page title.
+    groups = group_modules(by_module, args.prefix)
+    single_module_groups = {
+        mods[0]: group for group, mods in groups.items() if len(mods) == 1
+    }
+
     for module_name, mod_entries in sorted(by_module.items()):
-        # Sort by source line when available, then alphabetically as fallback
         mod_entries.sort(key=lambda e: (e.get("startLine") or 999999, e["declName"]))
         rel_path = module_to_path(module_name, args.prefix)
         out_path = os.path.join(args.output, rel_path)
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
-        content = generate_doc_file(module_name, mod_entries, args.prefix, args.repo_url)
+        title = single_module_groups.get(module_name)
+        content = generate_doc_file(module_name, mod_entries, args.prefix,
+                                    args.repo_url, title_override=title)
         with open(out_path, "w") as f:
             f.write(content)
         print(f"  {rel_path} ({len(mod_entries)} entries)")
 
-    # ── Chapter docs (one per group) ──
-    # Single-component modules (e.g. BridgelandStability.ExtensionClosure) have
-    # their leaf at InformalDocs/ExtensionClosure.lean — same path as the chapter
-    # would get.  For these, skip the chapter and include the leaf directly in Root.
-    groups = group_modules(by_module, args.prefix)
-    sorted_groups = ordered_groups(groups)
-    prefix_parts = args.prefix.split(".")
+    # ── Chapter docs (one per multi-module group) ──
+    sorted_groups = _ordered_groups(groups)
 
-    # Partition into groups that need chapters vs direct includes
     chapter_groups = []   # (group_name, module_names) — get a chapter file
     direct_leaves = []    # (group_name, doc_module_name) — included directly in Root
 
     for group_name, module_names in sorted_groups:
         if len(module_names) == 1:
-            mod = module_names[0]
-            remainder = mod.split(".")[len(prefix_parts):]
-            if len(remainder) == 1:
-                # Single-component module — leaf path collides with chapter path
-                direct_leaves.append((group_name, doc_module_name(mod, args.prefix)))
-                continue
-        chapter_groups.append((group_name, module_names))
+            direct_leaves.append((group_name, doc_module_name(module_names[0], args.prefix)))
+        else:
+            chapter_groups.append((group_name, module_names))
 
     print(f"\nGenerating {len(chapter_groups)} chapter files ({len(direct_leaves)} direct leaves):")
     for group_name, module_names in chapter_groups:
@@ -564,7 +567,7 @@ def main():
         f.write(lakefile_content)
     print(f"  lakefile.toml")
 
-    print(f"\nGenerated {len(by_module)} leaf docs + {len(sorted_groups)} chapters + Root + InformalMain + lakefile")
+    print(f"\nGenerated {len(by_module)} leaf docs + {len(chapter_groups)} chapters + Root + InformalMain + lakefile")
 
 
 if __name__ == "__main__":
