@@ -366,7 +366,11 @@ def generate_root_file(
         "— a group homomorphism from the Grothendieck group to the complex numbers "
         "— with a slicing of the category into semistable objects of each phase. "
         "Bridgeland's main theorem is that the space of all such conditions is itself "
-        "a complex manifold, with local charts given by the central charge."
+        "a complex manifold, with local charts given by the central charge. "
+        "The theory has since become one of the most active areas in modern "
+        "mathematics. It provides infrastructure for wall-crossing in birational "
+        "geometry, Donaldson-Thomas theory, and the study of moduli spaces of "
+        "sheaves on surfaces and threefolds."
     )
     lines.append("")
     lines.append(
@@ -403,7 +407,7 @@ def generate_root_file(
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
-        "the paper that has a formal analog tagged with `@\\[informal\\]`."
+        "the paper that currently has an exact formal analog tagged with `@\\[informal\\]`."
     )
     lines.append("")
     for _, inc in all_includes:
