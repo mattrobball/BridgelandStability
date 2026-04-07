@@ -358,9 +358,6 @@ def generate_root_file(
     lines.append("set_option maxHeartbeats 800000")
     lines.append("")
     lines.append('#doc (Manual) "Bridgeland Stability Conditions" =>')
-    lines.append("%%%")
-    lines.append("htmlSplit := .never")
-    lines.append("%%%")
     lines.append("")
     lines.append(
         "Inspired by Douglas's work on Π-stability in string theory, "
