@@ -420,11 +420,18 @@ def inject_alignment_table(soup: BeautifulSoup, json_path: Path, site_base: str 
         tbody.append(tr)
     table_tag.append(tbody)
 
-    # Find insertion point: after the paragraph mentioning @[informal]
+    # Find insertion point: after "Paper alignment" heading and its paragraph
     inserted = False
-    for p in soup.find_all("p"):
-        if "informal" in p.get_text():
-            p.insert_after(table_tag)
+    for tag in soup.find_all(["h1", "h2", "h3"]):
+        if "Paper alignment" in tag.get_text(strip=True):
+            # Skip past any paragraphs after the heading
+            sibling = tag.find_next_sibling()
+            while sibling and sibling.name == "p":
+                sibling = sibling.find_next_sibling()
+            if sibling:
+                sibling.insert_before(table_tag)
+            else:
+                tag.parent.append(table_tag)
             inserted = True
             break
 
@@ -448,7 +455,20 @@ def process_file(path: Path, site_root: Path, json_path: Path | None = None) -> 
         removed = strip_source_docstrings(soup)
         wrapped = wrap_decl_sections(soup)
 
-    # Inject alignment table on the root landing page
+    # Root page: suppress inline Contents section
+    if path.name == "index.html" and path.parent == site_root:
+        for h2 in soup.find_all("h2"):
+            if h2.get_text(strip=True) == "Contents":
+                section = h2.find_parent("section")
+                if section:
+                    section.decompose()
+                else:
+                    toc = h2.find_next_sibling("ol", class_="section-toc")
+                    if toc:
+                        toc.decompose()
+                    h2.decompose()
+                break
+
     table_injected = False
     if json_path and path.name == "index.html" and path.parent == site_root:
         table_injected = inject_alignment_table(soup, json_path)

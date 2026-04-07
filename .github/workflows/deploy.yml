@@ -184,10 +184,65 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  # ── Build API docs (doc-gen4) ──────────────────────────────────
+  build-api-docs:
+    name: Build API Docs
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Download oleans
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/download-artifact@v4
+        with:
+          name: oleans
+          path: .lake/build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Restore docbuild cache
+        uses: actions/cache@v4
+        with:
+          path: docbuild/.lake
+          key: docbuild-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('docbuild/lakefile.toml') }}
+          restore-keys: |
+            docbuild-${{ hashFiles('lean-toolchain') }}-
+
+      - name: Build API docs
+        run: |
+          cd docbuild
+          MATHLIB_NO_CACHE_ON_UPDATE=1 lake update doc-gen4
+          lake build BridgelandStability:docs
+
+      - name: Package BS-only docs
+        run: |
+          pip install beautifulsoup4
+          python3 scripts/package_api_docs.py docbuild/.lake/build/doc api-docs
+
+      - name: Upload API docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-docs
+          path: api-docs
+          if-no-files-found: warn
+          retention-days: 7
+
   # ── Deploy to GitHub Pages ─────────────────────────────────────
   deploy:
     name: Deploy Pages
-    needs: [generate-manual, build-site]
+    needs: [generate-manual, build-site, build-api-docs]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -206,6 +261,13 @@ jobs:
           path: site/comparator
         continue-on-error: true
 
+      - name: Download API docs
+        uses: actions/download-artifact@v4
+        with:
+          name: api-docs
+          path: site/api
+        continue-on-error: true
+
       - name: Download badge
         uses: actions/download-artifact@v4
         with:
@@ -215,7 +277,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare deployment
-        run: touch site/.nojekyll
+        run: |
+          touch site/.nojekyll
+          cp -r site/badge site/comparator/badge 2>/dev/null || true
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

@@ -358,6 +358,9 @@ def generate_root_file(
     lines.append("set_option maxHeartbeats 800000")
     lines.append("")
     lines.append('#doc (Manual) "Bridgeland Stability Conditions" =>')
+    lines.append("%%%")
+    lines.append("htmlSplit := .never")
+    lines.append("%%%")
     lines.append("")
     lines.append(
         "Inspired by Douglas's work on Π-stability in string theory, "
@@ -373,25 +376,39 @@ def generate_root_file(
         "sheaves on surfaces and threefolds."
     )
     lines.append("")
+    lines.append("# About this formalization")
+    lines.append("")
     lines.append(
-        "This site documents a machine-checked proof of that theorem, formalized "
+        "This site documents a machine-checked proof of the complex manifold theorem, formalized "
         "in Lean 4 using Mathlib. All Lean code is written by AI agents guided by "
         "human mathematicians — no human writes proof scripts. The formalization "
         "covers Sections 2–7 of Bridgeland's "
         "*Stability conditions on triangulated categories* (Annals of Mathematics, 2007), "
-        "working in the class-map generality of Bayer–Macrì–Stellari and "
+        "working in class-map generality as in Bayer–Macrì–Stellari and "
         "Bayer–Lahoz–Macrì–Nuer–Perry–Stellari."
     )
     lines.append("")
+    lines.append("# Paper alignment")
+    lines.append("")
     lines.append(
-        "Why trust a proof written by AI? Two independent checks. First, every "
+        "The table below lists every definition, lemma, and theorem from "
+        "the paper that currently has an exact formal analog."
+    )
+    lines.append("")
+    lines.append("# Why trust a proof written by AI?")
+    lines.append("")
+    lines.append(
+        "Two independent checks. First, every "
         "logical step is verified by Lean's kernel — a small, fixed type checker "
         "that accepts or rejects proofs regardless of how they were produced. The "
         "kernel guarantees the arguments are correct. Second, the "
         "[Comparator Manual](comparator/) lists the definitions the result "
         "depends on, paired with their informal mathematical meanings, so you can "
-        "audit whether the formal statements faithfully capture the mathematics."
+        "audit whether the formal statements faithfully capture the mathematics. "
+        "Auto-generated [API documentation](api/BridgelandStability.html) is also available."
     )
+    lines.append("")
+    lines.append("# Contributing")
     lines.append("")
     lines.append(
         "Each declaration is paired with an informal description and, where "
@@ -403,11 +420,6 @@ def generate_root_file(
         "proof strategy, each declaration has a link to open an issue. Describe what "
         "you think should happen and start a discussion. Once we figure out what "
         "needs to change, AI agents will do the rest."
-    )
-    lines.append("")
-    lines.append(
-        "The table below lists every definition, lemma, and theorem from "
-        "the paper that currently has an exact formal analog tagged with `@\\[informal\\]`."
     )
     lines.append("")
     for _, inc in all_includes:
