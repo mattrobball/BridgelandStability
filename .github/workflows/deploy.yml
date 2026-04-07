@@ -224,7 +224,7 @@ jobs:
         run: |
           cd docbuild
           MATHLIB_NO_CACHE_ON_UPDATE=1 lake update doc-gen4
-          lake exe cache get
+          lake exe cache get || true
           lake build BridgelandStability:docs
 
       - name: Package BS-only docs
