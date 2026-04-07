@@ -243,7 +243,7 @@ jobs:
   # ── Deploy to GitHub Pages ─────────────────────────────────────
   deploy:
     name: Deploy Pages
-    needs: [generate-manual, build-site]
+    needs: [generate-manual, build-site, build-api-docs]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
