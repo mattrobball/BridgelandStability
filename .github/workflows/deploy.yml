@@ -24,6 +24,7 @@ env:
 # Job graph:
 #   generate-manual ──┐
 #   build-site ───────┼──> deploy
+#   build-api-docs ───┤
 #   badge ────────────┘
 # ════════════════════════════════════════════════════════════════
 
