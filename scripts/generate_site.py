@@ -373,7 +373,7 @@ def generate_root_file(
         "sheaves on surfaces and threefolds."
     )
     lines.append("")
-    lines.append("# About this formalization")
+    lines.append("## About this formalization")
     lines.append("")
     lines.append(
         "This site documents a machine-checked proof of the complex manifold theorem, formalized "
@@ -385,14 +385,14 @@ def generate_root_file(
         "Bayer–Lahoz–Macrì–Nuer–Perry–Stellari."
     )
     lines.append("")
-    lines.append("# Paper alignment")
+    lines.append("## Paper alignment")
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
         "the paper that currently has an exact formal analog."
     )
     lines.append("")
-    lines.append("# Why trust a proof written by AI?")
+    lines.append("## Why trust a proof written by AI?")
     lines.append("")
     lines.append(
         "Two independent checks. First, every "
@@ -405,7 +405,7 @@ def generate_root_file(
         "Auto-generated [API documentation](api/BridgelandStability.html) is also available."
     )
     lines.append("")
-    lines.append("# Contributing")
+    lines.append("## Contributing")
     lines.append("")
     lines.append(
         "Each declaration is paired with an informal description and, where "
