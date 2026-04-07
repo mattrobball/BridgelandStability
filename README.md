@@ -33,20 +33,21 @@ The formalization covers Sections 2–7 of the paper, culminating in:
 
 Both are proved for an arbitrary surjective class map `v : K₀(D) →+ Λ` and
 specialized to the identity (Theorem 1.2) and the numerical quotient
-(Corollary 1.3). The formalization works in the class-map generality of
+(Corollary 1.3). The formalization works in class-map generality as in
 Bayer–Macrì–Stellari [8, Appendix A] and Bayer–Lahoz–Macrì–Nuer–Perry–Stellari
 [11], where the central charge factors through a surjection `v : K₀(D) →+ Λ`;
 the classical `Stab(D)` is the specialization `v = id`.
 
 ## Documentation
 
-The [project website](https://mattrobball.github.io/BridgelandStability/)
-pairs each formalized declaration with an informal mathematical description
-and lists which paper statements currently have exact formal analogs. The
-[Comparator Manual](https://mattrobball.github.io/BridgelandStability/comparator/)
-independently verifies the formal statements against their source and lists
-the definitions the result depends on — the trusted base you must audit
-to trust the proof.
+- [**Project website**](https://mattrobball.github.io/BridgelandStability/) —
+  informal mathematical descriptions of each declaration, with a table of
+  paper statements that currently have exact formal analogs.
+- [**API docs**](https://mattrobball.github.io/BridgelandStability/api/) —
+  auto-generated Lean API documentation (doc-gen4).
+- [**Comparator Manual**](https://mattrobball.github.io/BridgelandStability/comparator/) —
+  independent verification of the formal statements against their source,
+  listing the trusted base you must audit to trust the proof.
 
 The root import is [`BridgelandStability.lean`](BridgelandStability.lean).
 
