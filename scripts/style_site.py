@@ -184,6 +184,26 @@ body {
   font-size: 1.6rem;
   color: var(--inf-ink);
   letter-spacing: -0.02em;
+  text-align: center;
+}
+
+/* Subtitle repo link — centered beneath title */
+.titlepage > p:first-of-type:has(> a:only-child) {
+  text-align: center;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+  font-family: var(--inf-code);
+  font-size: 0.85rem;
+}
+.titlepage > p:first-of-type > a:only-child {
+  color: var(--inf-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s, color 0.15s;
+}
+.titlepage > p:first-of-type > a:only-child:hover {
+  color: var(--inf-accent);
+  border-bottom-color: var(--inf-accent);
 }
 
 /* Bold section labels on landing page — act as visual dividers */
