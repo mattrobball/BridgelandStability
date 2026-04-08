@@ -184,7 +184,6 @@ body {
   font-size: 1.6rem;
   color: var(--inf-ink);
   letter-spacing: -0.02em;
-  text-align: center;
 }
 
 /* Subtitle repo link — centered beneath title */
