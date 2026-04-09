@@ -40,31 +40,32 @@ def check_drift(extracted: list[dict], baseline: list[dict]) -> tuple[list[str],
                 f"declaration changed (hash {old_hash} \u2192 {new_hash})"
             )
 
-        old_deps = {d["name"]: d["hash"] for d in (old.get("depHashes") or [])
-                     if isinstance(d, dict)}
-        new_deps = {d["name"]: d["hash"] for d in (ext.get("depHashes") or [])
-                     if isinstance(d, dict)}
+        old_raw = old.get("depHashes")
+        new_raw = ext.get("depHashes")
+        if old_raw is not None and new_raw is not None:
+            old_deps = {d["name"]: d["hash"] for d in old_raw if isinstance(d, dict)}
+            new_deps = {d["name"]: d["hash"] for d in new_raw if isinstance(d, dict)}
 
-        for dep_name, new_dep_hash in new_deps.items():
-            old_dep_hash = old_deps.get(dep_name)
-            if old_dep_hash is None:
-                issues.append(
-                    f'@[informal "{paper_ref}"] on {name}: '
-                    f"new dependency {dep_name}"
-                )
-            elif old_dep_hash != new_dep_hash:
-                issues.append(
-                    f'@[informal "{paper_ref}"] on {name}: '
-                    f"dependency {dep_name} changed "
-                    f"(hash {old_dep_hash} \u2192 {new_dep_hash})"
-                )
+            for dep_name, new_dep_hash in new_deps.items():
+                old_dep_hash = old_deps.get(dep_name)
+                if old_dep_hash is None:
+                    issues.append(
+                        f'@[informal "{paper_ref}"] on {name}: '
+                        f"new dependency {dep_name}"
+                    )
+                elif old_dep_hash != new_dep_hash:
+                    issues.append(
+                        f'@[informal "{paper_ref}"] on {name}: '
+                        f"dependency {dep_name} changed "
+                        f"(hash {old_dep_hash} \u2192 {new_dep_hash})"
+                    )
 
-        for dep_name in old_deps:
-            if dep_name not in new_deps:
-                issues.append(
-                    f'@[informal "{paper_ref}"] on {name}: '
-                    f"dependency {dep_name} no longer exists"
-                )
+            for dep_name in old_deps:
+                if dep_name not in new_deps:
+                    issues.append(
+                        f'@[informal "{paper_ref}"] on {name}: '
+                        f"dependency {dep_name} no longer exists"
+                    )
 
     return issues, informal_count
 
