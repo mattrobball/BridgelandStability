@@ -4,9 +4,6 @@ on:
   pull_request:
     types: [labeled]
 
-permissions:
-  contents: write
-
 jobs:
   update:
     name: Update informalizations.json
@@ -16,6 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.BASELINE_PAT }}
 
       - name: Install elan
         run: |
@@ -59,8 +57,9 @@ jobs:
             git push
           fi
 
-      - name: Trigger CI
+      - name: Remove label
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BASELINE_PAT }}
         run: |
-          gh workflow run ci.yml --ref ${{ github.event.pull_request.head.ref }}
+          gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels/paper-alignment-reviewed \
+            --method DELETE || true
