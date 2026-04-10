@@ -4471,161 +4471,12 @@
     "moduleName": "BridgelandStability.Deformation.Theorem",
     "docstring": "**Bridgeland's Theorem 7.1** (deformation of stability conditions). Under the\nusual small-deformation hypothesis on `W`, there exists a locally-finite stability\ncondition `τ = (W, Q)` with `d(P, Q) < ε`.\n\nThis is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict\nhypothesis `‖W - Z‖_σ < sin(πε)`. ",
     "contentHash": 2945119946,
-    "depHashes": [
-      {
-        "name": "K0Presentation",
-        "hash": 7772445006477011862
-      },
-      {
-        "name": "CategoryTheory.IsStrict",
-        "hash": 7135880552163233274
-      },
-      {
-        "name": "CategoryTheory.IsStrictArtinianObject",
-        "hash": 15388544720159029403
-      },
-      {
-        "name": "CategoryTheory.IsStrictMono",
-        "hash": 14779517540494153594
-      },
-      {
-        "name": "CategoryTheory.IsStrictNoetherianObject",
-        "hash": 2182356318851621875
-      },
-      {
-        "name": "CategoryTheory.StrictSubobject",
-        "hash": 3544390795110552247
-      },
-      {
-        "name": "CategoryTheory.isStrictArtinianObject",
-        "hash": 16350026007897470619
-      },
-      {
-        "name": "CategoryTheory.isStrictNoetherianObject",
-        "hash": 11174749214104362353
-      },
-      {
-        "name": "K0Presentation.K0",
-        "hash": 3659455236499603614
-      },
-      {
-        "name": "K0Presentation.instAddCommGroupK0",
-        "hash": 9165456505815703553
-      },
-      {
-        "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
-      },
-      {
-        "name": "CategoryTheory.Subobject.IsStrict",
-        "hash": 15586729248856199015
-      },
-      {
-        "name": "CategoryTheory.Triangulated.HNFiltration",
-        "hash": 5533943424435606618
-      },
-      {
-        "name": "CategoryTheory.Triangulated.K₀",
-        "hash": 16179907036562392430
-      },
-      {
-        "name": "CategoryTheory.Triangulated.PostnikovTower",
-        "hash": 8675667888685392150
-      },
-      {
-        "name": "CategoryTheory.Triangulated.SectorFiniteLength",
-        "hash": 8481259963555956883
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing",
-        "hash": 18408969535839669265
-      },
-      {
-        "name": "CategoryTheory.Triangulated.WideSectorFiniteLength",
-        "hash": 16554146860654512069
-      },
-      {
-        "name": "CategoryTheory.Triangulated.cl",
-        "hash": 3325020243848601836
-      },
-      {
-        "name": "CategoryTheory.Triangulated.slicingDist",
-        "hash": 9430808323950209248
-      },
-      {
-        "name": "CategoryTheory.Triangulated.stabSeminorm",
-        "hash": 13930161479186574991
-      },
-      {
-        "name": "CategoryTheory.Triangulated.trianglePresentation",
-        "hash": 12972622036783765388
-      },
-      {
-        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first",
-        "hash": 4257020478
-      },
-      {
-        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
-        "hash": 3099320964
-      },
-      {
-        "name": "CategoryTheory.Triangulated.K₀.instAddCommGroup",
-        "hash": 16892865333854316272
-      },
-      {
-        "name": "CategoryTheory.Triangulated.K₀.of",
-        "hash": 13044907939242779829
-      },
-      {
-        "name": "CategoryTheory.Triangulated.PostnikovTower.factor",
-        "hash": 6662455596190571773
-      },
-      {
-        "name": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
-        "hash": 916775816589270417
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.IntervalCat",
-        "hash": 5964334993691740330
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.IsLocallyFinite",
-        "hash": 3411065432377103572
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels",
-        "hash": 2911349172
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels",
-        "hash": 580046852
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.intervalProp",
-        "hash": 11853708044905834547
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.phiMinus",
-        "hash": 2404613883158623531
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.phiPlus",
-        "hash": 696119402052897309
-      },
-      {
-        "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap",
-        "hash": 7404402731433473216
-      },
-      {
-        "name": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge",
-        "hash": 13598234241301105364
-      }
-    ],
-    "paperRef": "Theorem 7.1",
-    "paperComment": "ε₀ and WideSectorFiniteLength (= ∀ t, P((t-4ε₀,t+4ε₀)) per-object strict finite length) taken as parameters; both follow from local finiteness for ε₀ < η/4",
+    "depHashes": null,
+    "paperRef": null,
+    "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/Theorem.lean",
     "startLine": 234,
-    "endLine": 313,
+    "endLine": 312,
     "prose": "**Bridgeland's Theorem 7.1** (deformation of stability conditions). Under the small-deformation hypothesis $\\|W - Z\\|_\\sigma < \\sin(\\pi\\varepsilon)$, there exists a locally-finite stability condition $\\tau = (W, Q)$ with $d(P, Q) < \\varepsilon$.",
     "proofExposition": "The strict hypothesis $\\|W - Z\\|_\\sigma < \\sin(\\pi\\varepsilon)$ allows shrinking: find $\\varepsilon' < \\varepsilon$ with $\\|W - Z\\|_\\sigma < \\sin(\\pi\\varepsilon')$ via the intermediate value theorem (more precisely, by taking $\\varepsilon' = \\operatorname{arcsin}(y)/\\pi$ where $y$ is the midpoint between the seminorm and $\\sin(\\pi\\varepsilon)$). Apply `slicingDist_deformed_le` at $\\varepsilon'$ to get $d(P, Q) \\le \\varepsilon' < \\varepsilon$.",
     "termExposition": null
@@ -16975,6 +16826,163 @@
     "termExposition": null
   },
   {
+    "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.deformation",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.StabilityCondition.Deformation",
+    "docstring": "**Bridgeland's Theorem 7.1.** Let σ be a locally-finite stability condition.\nThen there is an ε₀ > 0 such that if 0 < ε < ε₀ and W satisfies\n‖W − Z‖_σ < sin(πε), then there is a locally-finite stability condition\nτ = (W, Q) with d(P, Q) < ε. ",
+    "contentHash": 950973110,
+    "depHashes": [
+      {
+        "name": "K0Presentation",
+        "hash": 7772445006477011862
+      },
+      {
+        "name": "CategoryTheory.IsStrict",
+        "hash": 7135880552163233274
+      },
+      {
+        "name": "CategoryTheory.IsStrictArtinianObject",
+        "hash": 15388544720159029403
+      },
+      {
+        "name": "CategoryTheory.IsStrictMono",
+        "hash": 14779517540494153594
+      },
+      {
+        "name": "CategoryTheory.IsStrictNoetherianObject",
+        "hash": 2182356318851621875
+      },
+      {
+        "name": "CategoryTheory.StrictSubobject",
+        "hash": 3544390795110552247
+      },
+      {
+        "name": "CategoryTheory.isStrictArtinianObject",
+        "hash": 16350026007897470619
+      },
+      {
+        "name": "CategoryTheory.isStrictNoetherianObject",
+        "hash": 11174749214104362353
+      },
+      {
+        "name": "K0Presentation.K0",
+        "hash": 3659455236499603614
+      },
+      {
+        "name": "K0Presentation.instAddCommGroupK0",
+        "hash": 9165456505815703553
+      },
+      {
+        "name": "K0Presentation.subgroup",
+        "hash": 8313089044335043819
+      },
+      {
+        "name": "CategoryTheory.Subobject.IsStrict",
+        "hash": 15586729248856199015
+      },
+      {
+        "name": "CategoryTheory.Triangulated.HNFiltration",
+        "hash": 5533943424435606618
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀",
+        "hash": 16179907036562392430
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PostnikovTower",
+        "hash": 8675667888685392150
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing",
+        "hash": 18408969535839669265
+      },
+      {
+        "name": "CategoryTheory.Triangulated.cl",
+        "hash": 3325020243848601836
+      },
+      {
+        "name": "CategoryTheory.Triangulated.slicingDist",
+        "hash": 9430808323950209248
+      },
+      {
+        "name": "CategoryTheory.Triangulated.stabSeminorm",
+        "hash": 13930161479186574991
+      },
+      {
+        "name": "CategoryTheory.Triangulated.trianglePresentation",
+        "hash": 12972622036783765388
+      },
+      {
+        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first",
+        "hash": 4257020478
+      },
+      {
+        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
+        "hash": 3099320964
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀.instAddCommGroup",
+        "hash": 16892865333854316272
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀.of",
+        "hash": 13044907939242779829
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PostnikovTower.factor",
+        "hash": 6662455596190571773
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
+        "hash": 916775816589270417
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.IntervalCat",
+        "hash": 5964334993691740330
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.IsLocallyFinite",
+        "hash": 3411065432377103572
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels",
+        "hash": 2911349172
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels",
+        "hash": 580046852
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.intervalProp",
+        "hash": 11853708044905834547
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.phiMinus",
+        "hash": 2404613883158623531
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.phiPlus",
+        "hash": 696119402052897309
+      },
+      {
+        "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap",
+        "hash": 7404402731433473216
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge",
+        "hash": 13598234241301105364
+      }
+    ],
+    "paperRef": "Theorem 7.1",
+    "paperComment": null,
+    "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
+    "startLine": 122,
+    "endLine": 137,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
+  },
+  {
     "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.eq_of_same_Z_near",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Deformation",
@@ -17113,8 +17121,8 @@
     "paperRef": "Lemma 6.4",
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 529,
-    "endLine": 539,
+    "startLine": 546,
+    "endLine": 556,
     "prose": "**Lemma 6.4 consequence**: two stability conditions with the same central charge and\n  $d(\\mathcal{P}, \\mathcal{Q}) < 1$ are equal.",
     "proofExposition": "Applies `bridgeland_lemma_6_4` to conclude $\\mathcal{P} = \\mathcal{Q}$, then uses\n  extensionality with $Z_\\sigma = Z_\\tau$.",
     "termExposition": null
@@ -17129,8 +17137,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 541,
-    "endLine": 563,
+    "startLine": 558,
+    "endLine": 580,
     "prose": "Two stability conditions in the same $B_\\varepsilon(\\sigma)$ with the same central\n  charge are equal.",
     "proofExposition": "Triangle inequality on slicing distances gives $d(\\mathcal{P}_1, \\mathcal{P}_2)\n  < 2\\varepsilon < 1$, then applies `eq_of_same_Z_near`.",
     "termExposition": null
@@ -17177,8 +17185,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 403,
-    "endLine": 416,
+    "startLine": 420,
+    "endLine": 433,
     "prose": "Shrinking the radius shrinks the neighborhood: if $\\delta \\leq \\varepsilon < 1/8$,\n  then $B_\\delta(\\sigma) \\subseteq B_\\varepsilon(\\sigma)$.",
     "proofExposition": "Both the $\\sin(\\pi\\delta) \\leq \\sin(\\pi\\varepsilon)$ bound and $\\delta \\leq\n  \\varepsilon$ are monotone.",
     "termExposition": null
@@ -17193,8 +17201,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 390,
-    "endLine": 401,
+    "startLine": 407,
+    "endLine": 418,
     "prose": "A basis neighborhood contains its center: $\\sigma \\in B_\\varepsilon(\\sigma)$.",
     "proofExposition": "The charge difference is zero (seminorm zero), and the slicing distance is zero.",
     "termExposition": null
@@ -17209,8 +17217,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 583,
-    "endLine": 766,
+    "startLine": 600,
+    "endLine": 783,
     "prose": "A small Bridgeland basis neighborhood (with radius below the local Theorem 7.1\n  witness) lies inside the connected component of its center.\n\n  This is the direct straight-line interpolation argument from Bridgeland Section 7.",
     "proofExposition": "Constructs a continuous path $\\gamma \\colon [0, 1] \\to \\operatorname{Stab}$ from\n  $\\sigma$ to $\\tau$ by lifting the straight-line charge interpolation $Z_t = (1-t)\n  Z(\\sigma) + t Z(\\tau)$ via repeated application of Theorem 7.1. Continuity of\n  $\\gamma$ follows from the local lifting: for each $t$, nearby times lift to nearby\n  stability conditions via the same deformation theorem. The path connects $\\sigma$\n  and $\\tau$, placing them in the same path component.",
     "termExposition": null
@@ -17225,8 +17233,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 418,
-    "endLine": 527,
+    "startLine": 435,
+    "endLine": 544,
     "prose": "If $\\tau \\in B_\\varepsilon(\\sigma)$, then some smaller basis neighborhood of\n  $\\tau$ is contained in $B_\\varepsilon(\\sigma)$. This is the local basis-refinement\n  step.",
     "proofExposition": "Chooses $\\delta$ small enough that $K \\cdot \\sin(\\pi\\delta)$ absorbs the gap\n  in both the seminorm and slicing distance bounds, using the local domination constant\n  and the triangle inequality.",
     "termExposition": null
@@ -17241,8 +17249,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 768,
-    "endLine": 851,
+    "startLine": 785,
+    "endLine": 868,
     "prose": "**Local continuation** along the straight-line charge interpolation. Starting from\n  a lifted point $\\rho_0$ over time $t$, nearby times also admit lifts inside the\n  same ambient basis neighborhood and in the same connected component as $\\rho_0$.",
     "proofExposition": "Chooses $\\eta$ small enough that $|s - t| < \\eta$ implies the seminorm\n  $\\|Z_s - Z(\\rho_0)\\|_{\\rho_0} < \\sin(\\pi\\delta)$ (using the scaling property\n  of the seminorm), then applies Theorem 7.1 at $\\rho_0$ and verifies the lifted point\n  lies in both the ambient basis neighborhood (by monotonicity) and the correct\n  connected component (by `basisNhd_subset_connectedComponent_small`).",
     "termExposition": null
@@ -17257,8 +17265,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 122,
-    "endLine": 124,
+    "startLine": 139,
+    "endLine": 141,
     "prose": "The **affine interpolation** between the central charges of $\\sigma$ and $\\tau$:\n  $Z_t = Z(\\sigma) + t \\cdot (Z(\\tau) - Z(\\sigma))$ for $t \\in \\mathbb{R}$.",
     "proofExposition": null,
     "termExposition": "Defined as $\\sigma.Z + t \\cdot (\\tau.Z - \\sigma.Z)$ using scalar multiplication\n  on additive group homomorphisms."
@@ -17273,8 +17281,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 130,
-    "endLine": 133,
+    "startLine": 147,
+    "endLine": 150,
     "prose": "$Z_1 = Z(\\tau)$: the interpolation at $t = 1$ recovers the target charge.",
     "proofExposition": "Immediate from $\\sigma.Z + 1 \\cdot (\\tau.Z - \\sigma.Z) = \\tau.Z$.",
     "termExposition": null
@@ -17289,8 +17297,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 135,
-    "endLine": 138,
+    "startLine": 152,
+    "endLine": 155,
     "prose": "$Z_t - Z(\\sigma) = t \\cdot (Z(\\tau) - Z(\\sigma))$.",
     "proofExposition": "Direct computation from the definition of the interpolation.",
     "termExposition": null
@@ -17305,8 +17313,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 140,
-    "endLine": 145,
+    "startLine": 157,
+    "endLine": 162,
     "prose": "$Z_t - Z_s = (t - s) \\cdot (Z(\\tau) - Z(\\sigma))$.",
     "proofExposition": "Subtracts the two interpolation formulas and simplifies.",
     "termExposition": null
@@ -17321,8 +17329,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 126,
-    "endLine": 128,
+    "startLine": 143,
+    "endLine": 145,
     "prose": "$Z_0 = Z(\\sigma)$: the interpolation at $t = 0$ recovers the initial charge.",
     "proofExposition": "Immediate from $0 \\cdot (\\tau.Z - \\sigma.Z) = 0$.",
     "termExposition": null
@@ -17337,8 +17345,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 189,
-    "endLine": 212,
+    "startLine": 206,
+    "endLine": 229,
     "prose": "The Bridgeland seminorm satisfies the triangle inequality:\n  $\\|U + V\\|_\\sigma \\leq \\|U\\|_\\sigma + \\|V\\|_\\sigma$.",
     "proofExposition": "For each semistable object, $\\|(U + V)([E])\\| / \\|Z([E])\\| \\leq\n  \\|U([E])\\| / \\|Z([E])\\| + \\|V([E])\\| / \\|Z([E])\\|$ by the norm triangle\n  inequality, then takes the supremum.",
     "termExposition": null
@@ -17353,8 +17361,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 338,
-    "endLine": 388,
+    "startLine": 355,
+    "endLine": 405,
     "prose": "**Local forward domination**. If $\\tau \\in B_\\varepsilon(\\sigma)$, then\n  $\\|U\\|_\\tau \\leq K \\cdot \\|U\\|_\\sigma$ for some finite $K$.",
     "proofExposition": "Direct application of the explicit seminorm comparison `stabSeminorm_le_of_near`\n  with the constant $K = 1 / (\\cos(\\pi\\varepsilon) - M_Z)$.",
     "termExposition": null
@@ -17369,8 +17377,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 218,
-    "endLine": 336,
+    "startLine": 235,
+    "endLine": 353,
     "prose": "**Local seminorm domination**. If $\\tau \\in B_\\varepsilon(\\sigma)$ with\n  $\\varepsilon < 1/8$, then there exists a finite constant $K$ such that\n  $\\|U\\|_\\sigma \\leq K \\cdot \\|U\\|_\\tau$ for all $U$.\n\n  This is the local form of Lemma 6.2.",
     "proofExposition": "Bounds $\\|\\tau.Z - \\sigma.Z\\|_\\tau$ using the explicit seminorm comparison,\n  verifies $M_Z / (c - M_Z) < c$ via the trigonometric inequality, then constructs\n  the reverse comparison constant $K = 1 / (c - N_Z)$.",
     "termExposition": null
@@ -17385,8 +17393,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 214,
-    "endLine": 216,
+    "startLine": 231,
+    "endLine": 233,
     "prose": "The Bridgeland seminorm satisfies $\\|-U\\|_\\sigma = \\|U\\|_\\sigma$.",
     "proofExposition": "Follows from $\\|-U([E])\\| = \\|U([E])\\|$.",
     "termExposition": null
@@ -17401,8 +17409,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 147,
-    "endLine": 166,
+    "startLine": 164,
+    "endLine": 183,
     "prose": "The Bridgeland seminorm is $\\mathbb{R}$-homogeneous:\n  $\\|t \\cdot U\\|_\\sigma = |t| \\cdot \\|U\\|_\\sigma$.",
     "proofExposition": "Pulls $|t|$ out of each term $\\|tU([E])\\| / \\|Z([E])\\|$ using\n  $\\|tU([E])\\| = |t| \\cdot \\|U([E])\\|$, then factors through the supremum.",
     "termExposition": null
@@ -17417,8 +17425,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/Deformation.lean",
-    "startLine": 168,
-    "endLine": 187,
+    "startLine": 185,
+    "endLine": 204,
     "prose": "The Bridgeland seminorm is $\\mathbb{C}$-homogeneous:\n  $\\|t \\cdot U\\|_\\sigma = \\|t\\| \\cdot \\|U\\|_\\sigma$ for $t \\in \\mathbb{C}$.",
     "proofExposition": "Same as `stabSeminorm_smul` using $\\|tU([E])\\| = \\|t\\| \\cdot \\|U([E])\\|$.",
     "termExposition": null
