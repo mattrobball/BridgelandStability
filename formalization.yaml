@@ -73,11 +73,12 @@ cost:
     output incl 10M reasoning) + 3.3B cached input, 78 sessions.
   person_hours: "31.4"            # 5-min gap analysis on merged Claude+Codex+commit timestamps
   api_spend: >
-    $245 actual (21/30 month x ($250 Claude Max + $100 Codex Pro)).
-    ~$8.9k equivalent at verified API list rates (Claude Opus 4.6:
-    $7.4k at $5/$25 per MTok, cache read $0.50/MTok; Codex GPT-5.4:
-    $1.5k at $2.50/$15 per MTok, cached input $0.25/MTok). 36x ratio,
-    dominated by cache tokens (65% of list cost).
+    ~$198 actual (17/30 month x ($250 Claude Max + $100 Codex Pro)).
+    List-rate equivalent estimated at ~$8.9k from local session logs
+    and published API pricing (Claude Opus 4.6: $5/$25 per MTok,
+    cache read $0.50/MTok; GPT-5.4: $2.50/$15 per MTok, cached input
+    $0.25/MTok). Estimate is likely high — local token counters may
+    not match billing exactly.
   hardware: "API-only"
   includes_failures: true
 
