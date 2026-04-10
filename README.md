@@ -107,3 +107,9 @@ upstreaming.
 14. Soheyla Feyzbakhsh, Naoki Koseki, Zhiyu Liu, Nick Rekuski,
     [Stability conditions on Calabi-Yau threefolds via Brill-Noether theory of curves](https://arxiv.org/abs/2509.24990),
     preprint, 2025.
+15. Arend Bayer,
+    [A short proof of the deformation property of Bridgeland stability conditions](https://arxiv.org/abs/1606.02169),
+    preprint, 2016.
+16. Chunyi Li,
+    [A Remark on Stability Conditions on Smooth Projective Varieties](https://arxiv.org/abs/2601.22994),
+    preprint, 2026.
