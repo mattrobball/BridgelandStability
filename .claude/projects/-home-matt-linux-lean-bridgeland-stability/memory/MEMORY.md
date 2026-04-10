@@ -1,0 +1,2 @@
+- [Show code directly](feedback_show_code_directly.md) — always paste code inline, don't just point at file locations
+- [Record tests](feedback_record_tests.md) — add tests to existing test libraries, not throwaway scripts

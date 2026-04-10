@@ -1,0 +1,783 @@
+{"99":
+ "<code>Batteries.Tactic.Lint.checkUnivs : Batteries.Tactic.Lint.Linter</code><span class=\"sep\"></span><code class=\"docstring\">A linter for checking that there are no bad `max u v` universe levels.\nChecks whether all universe levels `u` in the type of `d` are \"good\".\nThis means that `u` either occurs in a `level` of `d` by itself, or (recursively)\nwith only other good levels.\nWhen this fails, usually this means that there is a level `max u v`, where neither `u` nor `v`\noccur by themselves in a level. It is ok if *one* of `u` or `v` never occurs alone. For example,\n`(α : Type u) (β : Type (max u v))` is a occasionally useful method of saying that `β` lives in\na higher universe level than `α`.\n</code>",
+ "98":
+ "<code class=\"docstring\">`@[nolint linterName]` omits the tagged declaration from being checked by\nthe linter with name `linterName`. </code>",
+ "97": "<code>K₀ C →+ Λ</code>",
+ "96": "<code>Type u'</code>",
+ "95":
+ "<code>CategoryTheory.Triangulated.cl.{v, u, u'} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {Λ : Type u'} [AddCommGroup Λ]\n  (v : K₀ C →+ Λ) (E : C) : Λ</code><span class=\"sep\"></span><code class=\"docstring\">The class of an object `E` in the target lattice `Λ`, via the class map\n`v : K₀(C) → Λ`. This is `v([E])` in the notation of Bridgeland, BMS16, etc.\n\nAt `v = id`: `cl v E = K₀.of C E` definitionally. </code>",
+ "94":
+ "<code>K0Presentation.lift.{u, v, u_1} {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel) {A : Type u_1}\n  [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 →+ A</code><span class=\"sep\"></span><code class=\"docstring\">The universal property: an additive function lifts uniquely to a group homomorphism. </code>",
+ "93":
+ "<code>CategoryTheory.Triangulated.K₀.lift.{v, u, u_1} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {A : Type u_1} [AddCommGroup A]\n  (f : C → A) [IsTriangleAdditive f] : K₀ C →+ A</code><span class=\"sep\"></span><code class=\"docstring\">The universal property of K₀: any triangle-additive function lifts\nto an additive group homomorphism from K₀. </code>",
+ "92":
+ "<code>FreeAbelianGroup.of.{u} {α : Type u} (x : α) : FreeAbelianGroup α</code><span class=\"sep\"></span><code class=\"docstring\">The canonical map from `α` to `FreeAbelianGroup α`. </code>",
+ "91":
+ "<code>QuotientAddGroup.mk.{u_1} {α : Type u_1} [AddGroup α] {s : AddSubgroup α} (a : α) : α ⧸ s</code><span class=\"sep\"></span><code class=\"docstring\">The canonical map from an `AddGroup` `α` to the quotient `α ⧸ s`. </code>",
+ "90": "<code>C</code>",
+ "9": "<code>Type u</code>",
+ "89":
+ "<code>CategoryTheory.Triangulated.K₀.of.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (X : C) : K₀ C</code><span class=\"sep\"></span><code class=\"docstring\">The class map sending an object `X` of `C` to its class `[X]` in `K₀ C`. </code>",
+ "88":
+ "<code class=\"docstring\">`inferInstanceAs α` synthesizes an instance of type `α`, transporting it from a\ndefinitionally equal type if necessary. This is useful when `α` is definitionally equal to\nsome `α'` for which instances are registered, as it prevents leaking the definition's RHS\nat lower transparencies.\n\n`inferInstanceAs` requires an expected type from context. If you just need to synthesize an\ninstance without transporting between types, use `inferInstance` instead.\n\nSee `Lean.Meta.WrapInstance` for details.\n</code>",
+ "87":
+ "<code>CategoryTheory.Triangulated.K₀.instAddCommGroup.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] : AddCommGroup (K₀ C)</code>",
+ "86":
+ "<code>K0Presentation.K0.{u, v} {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The Grothendieck group: free abelian group on objects modulo the relations. </code>",
+ "85": "<code class=\"docstring\">The universe parameter [anonymous]</code>",
+ "84":
+ "<code>CategoryTheory.Triangulated.K₀.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The Grothendieck group of a pretriangulated category `C`, defined as the quotient of\n`FreeAbelianGroup C` by the distinguished triangle relations. </code>",
+ "83": "<code>T ∈ Pretriangulated.distinguishedTriangles</code>",
+ "82":
+ "<code>∀ (x : { T // T ∈ Pretriangulated.distinguishedTriangles }),\n  f ((trianglePresentation C).obj₂ x) = f ((trianglePresentation C).obj₁ x) + f ((trianglePresentation C).obj₃ x)</code>",
+ "81":
+ "<code>K0Presentation.IsAdditive.{u, v, u_1} {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel) {A : Type u_1}\n  [AddCommGroup A] (f : Obj → A) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A function on objects is *additive* for a presentation if it respects the relations. </code>",
+ "80":
+ "<code>{ T // T ∈ Pretriangulated.distinguishedTriangles } → C</code><span class=\"sep\"></span><code class=\"docstring\">The third term. </code>",
+ "8":
+ "<code>CategoryTheory.Linear.{w, v, u} (R : Type w) [Semiring R] (C : Type u) [Category.{v, u} C] [Preadditive C] :\n  Type (max (max u v) w)</code><span class=\"sep\"></span><code class=\"docstring\">A category is called `R`-linear if `P ⟶ Q` is an `R`-module such that composition is\n`R`-linear in both variables. </code>",
+ "79":
+ "<code>{ T // T ∈ Pretriangulated.distinguishedTriangles } → C</code><span class=\"sep\"></span><code class=\"docstring\">The middle term (the one that equals the sum of the other two). </code>",
+ "78": "<code>{ T // T ∈ Pretriangulated.distinguishedTriangles }</code>",
+ "77":
+ "<code>{ T // T ∈ Pretriangulated.distinguishedTriangles } → C</code><span class=\"sep\"></span><code class=\"docstring\">The first term of the relation (e.g., `T.obj₁` or `S.X₁`). </code>",
+ "76":
+ "<code>K0Presentation.{u, v} (Obj : Type u) (Rel : Type v) : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">A presentation of a Grothendieck-style group: objects, relations, and\nthe three-term decomposition `obj₂(r) = obj₁(r) + obj₃(r)`. </code>",
+ "75":
+ "<code>CategoryTheory.Triangulated.trianglePresentation.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] :\n  K0Presentation C { T // T ∈ Pretriangulated.distinguishedTriangles }</code><span class=\"sep\"></span><code class=\"docstring\">The `K0Presentation` for distinguished triangles in a pretriangulated category:\ngenerators are objects of `C`, relations are distinguished triangles. </code>",
+ "74":
+ "<code>CategoryTheory.Pretriangulated.Triangle.obj₃.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Pretriangulated.Triangle C) : C</code><span class=\"sep\"></span><code class=\"docstring\">the third object of a triangle </code>",
+ "73":
+ "<code>CategoryTheory.Pretriangulated.Triangle.obj₁.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Pretriangulated.Triangle C) : C</code><span class=\"sep\"></span><code class=\"docstring\">the first object of a triangle </code>",
+ "72":
+ "<code>CategoryTheory.Pretriangulated.Triangle.obj₂.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Pretriangulated.Triangle C) : C</code><span class=\"sep\"></span><code class=\"docstring\">the second object of a triangle </code>",
+ "71":
+ "<code class=\"docstring\">distinguished triangles in a pretriangulated category </code>",
+ "70":
+ "<code>CategoryTheory.Pretriangulated.Triangle.{v, u} (C : Type u) [Category.{v, u} C] [HasShift C ℤ] : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">A triangle in `C` is a sextuple `(X,Y,Z,f,g,h)` where `X,Y,Z` are objects of `C`,\nand `f : X ⟶ Y`, `g : Y ⟶ Z`, `h : Z ⟶ X⟦1⟧` are morphisms in `C`. </code>",
+ "7":
+ "<code>Field.{u} (K : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">A `Field` is a `CommRing` with multiplicative inverses for nonzero elements.\n\nAn instance of `Field K` includes maps `ratCast : ℚ → K` and `qsmul : ℚ → K → K`.\nThose two fields are needed to implement the `DivisionRing K → Algebra ℚ K` instance since we need\nto control the specific definitions for some special cases of `K` (in particular `K = ℚ` itself).\nSee also note [forgetful inheritance].\n\nIf the field has positive characteristic `p`, our division by zero convention forces\n`ratCast (1 / p) = 1 / 0 = 0`. </code>",
+ "69": "<code>Pretriangulated.Triangle C</code>",
+ "68":
+ "<code>CategoryTheory.Triangulated.IsTriangleAdditive.additive.{v, u, u_1} {C : Type u} {inst✝ : Category.{v, u} C}\n  {inst✝¹ : HasZeroObject C} {inst✝² : HasShift C ℤ} {inst✝³ : Preadditive C}\n  {inst✝⁴ : ∀ (n : ℤ), (shiftFunctor C n).Additive} {inst✝⁵ : Pretriangulated C} {A : Type u_1}\n  {inst✝⁶ : AddCommGroup A} {f : C → A} [self : IsTriangleAdditive f] (T : Pretriangulated.Triangle C) :\n  T ∈ Pretriangulated.distinguishedTriangles → f T.obj₂ = f T.obj₁ + f T.obj₃</code>",
+ "67":
+ "<code class=\"docstring\">The universe of propositions. `Prop ≡ Sort 0`.\n\nEvery proposition is propositionally equal to either `True` or `False`. </code>",
+ "66": "<code>C → A</code>",
+ "65":
+ "<code>AddCommGroup.{u} (G : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">An additive commutative group is an additive group with commutative `(+)`. </code>",
+ "64":
+ "<code class=\"docstring\">The syntax `variable (X Y ... Z : Type*)` creates a new distinct implicit universe variable\n`&gt; 0` for each variable in the sequence. </code>",
+ "63": "<code>Type u_1</code>",
+ "62":
+ "<code>CategoryTheory.Triangulated.IsTriangleAdditive.{v, u, u_1} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {A : Type u_1}\n  [AddCommGroup A] (f : C → A) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A function `f : C → A` to an additive group is triangle-additive if\n`f(B) = f(A) + f(C)` for every distinguished triangle `A → B → C → A⟦1⟧`. </code>",
+ "61":
+ "<code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent.{v, u, u'}\n  (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C] {Λ : Type u'} [AddCommGroup Λ]\n  [AddGroup.FG Λ] {v : K₀ C →+ Λ} [Fact (Function.Surjective ⇑v)] (cc : ComponentIndex C v) :\n  ∃ E x x_1, ∃ (_ : FiniteDimensional ℂ E), ∃ x_3, IsManifold 𝓘(ℂ, E) ⊤ (Component C v cc)</code><span class=\"sep\"></span><code class=\"docstring\">**Bridgeland's Corollary 1.3** for `Stab_Λ(D)`. Each connected component of the\nstability space `Stab_Λ(D)` is a complex manifold.\n\nThe proof is direct: `ComponentTopologicalLinearLocalModel` gives a local homeomorphism\n`σ ↦ σ.Z` into `V(Σ) ⊆ Hom(Λ, ℂ)`. Since `Λ` has finite rank, `Hom(Λ, ℂ)` is\nfinite-dimensional, hence so is `V(Σ)`. The generic manifold construction applies. </code>",
+ "60":
+ "<code class=\"docstring\">This is a \"finishing\" tactic modification of `simp`. It has two forms.\n\n* `simpa [rules, ⋯] using e` will simplify the goal and the type of\n`e` using `rules`, then try to close the goal using `e`.\n\nSimplifying the type of `e` makes it more likely to match the goal\n(which has also been simplified). This construction also tends to be\nmore robust under changes to the simp lemma set.\n\n* `simpa [rules, ⋯]` will simplify the goal and the type of a\nhypothesis `this` if present in the context, then try to close the goal using\nthe `assumption` tactic.\n</code>",
+ "6": "<code class=\"docstring\">The universe parameter w</code>",
+ "59": "<code>Fact (Function.Surjective ⇑(numericalQuotientMap k C))</code>",
+ "58":
+ "<code>CategoryTheory.Triangulated.eulerFormRad.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)] : AddSubgroup (K₀ C)</code><span class=\"sep\"></span><code class=\"docstring\">The left radical of the Euler form on `K₀ C`. </code>",
+ "57":
+ "<code>QuotientAddGroup.mk'_surjective.{u_1} {G : Type u_1} [AddGroup G] (N : AddSubgroup G) [nN : N.Normal] :\n  Function.Surjective ⇑(QuotientAddGroup.mk' N)</code>",
+ "56": "<code>Fact.mk {p : Prop} (out : p) : Fact p</code>",
+ "55":
+ "<code>Function.Surjective.{u_1, u_2} {α : Sort u_1} {β : Sort u_2} (f : α → β) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A function `f : α → β` is called surjective if every `b : β` is equal to `f a`\nfor some `a : α`. </code>",
+ "54":
+ "<code>Fact (p : Prop) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">Wrapper for adding elementary propositions to the type class systems.\nWarning: this can easily be abused. See the rest of this docstring for details.\n\nCertain propositions should not be treated as a class globally,\nbut sometimes it is very convenient to be able to use the type class system\nin specific circumstances.\n\nFor example, `ZMod p` is a field if and only if `p` is a prime number.\nIn order to be able to find this field instance automatically by type class search,\nwe have to turn `p.prime` into an instance implicit assumption.\n\nOn the other hand, making `Nat.prime` a class would require a major refactoring of the library,\nand it is questionable whether making `Nat.prime` a class is desirable at all.\nThe compromise is to add the assumption `[Fact p.prime]` to `ZMod.field`.\n\nIn particular, this class is not intended for turning the type class system\ninto an automated theorem prover for first-order logic. </code>",
+ "53":
+ "<code class=\"docstring\">`haveI` behaves like `have`, but inlines the value instead of producing a `have` term. </code>",
+ "52":
+ "<code>Top.top.{u_1} {α : Type u_1} [self : Top α] : α</code><span class=\"sep\"></span><code class=\"docstring\">The top (`⊤`, `\\top`) element \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `⊤` in identifiers is `top`.</code>",
+ "51":
+ "<code>modelWithCornersSelf.{u_1, u_2} (𝕜 : Type u_1) [NontriviallyNormedField 𝕜] (E : Type u_2) [NormedAddCommGroup E]\n  [NormedSpace 𝕜 E] : ModelWithCorners 𝕜 E E</code><span class=\"sep\"></span><code class=\"docstring\">A vector space is a model with corners, denoted as `𝓘(𝕜, E)` within the `Manifold` namespace. </code>",
+ "50": "<code>ChartedSpace E (NumericalComponent k C cc)</code>",
+ "5":
+ "<code class=\"docstring\">A type universe. `Type ≡ Type 0`, `Type u ≡ Sort (u + 1)`. </code>",
+ "49":
+ "<code>Complex : Type</code><span class=\"sep\"></span><code class=\"docstring\">Complex numbers consist of two `Real`s: a real part `re` and an imaginary part `im`. </code>",
+ "48": "<code>NormedSpace ℂ E</code>",
+ "47": "<code>NormedAddCommGroup E</code>",
+ "46": "<code>NumericallyFinite k C</code>",
+ "45": "<code>Functor.Linear k (shiftFunctor C 1)</code>",
+ "449": "<code>Fact (a &lt; b)</code>",
+ "448":
+ "<code class=\"docstring\">The `dsimp` tactic is the definitional simplifier. It is similar to `simp` but only\napplies theorems that hold by reflexivity. Thus, the result is guaranteed to be\ndefinitionally equal to the input.\n</code>",
+ "447": "<code>Fact (b✝ - a✝ ≤ 1)</code>",
+ "446": "<code>Fact (a✝ &lt; b✝)</code>",
+ "445":
+ "<code>Real : Type</code><span class=\"sep\"></span><code class=\"docstring\">The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational\nnumbers. </code>",
+ "444": "<code>η &lt; 1 / 2</code>",
+ "443": "<code>0 &lt; η</code>",
+ "442":
+ "<code>CategoryTheory.Triangulated.Slicing.IsLocallyFinite.intervalFinite.{v, u} {C : Type u} [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] {s : Slicing C} (self : IsLocallyFinite C s) :\n  ∃ η,\n    ∃ (hη : 0 &lt; η) (hη' : η &lt; 1 / 2),\n      ∀ (t : ℝ),\n        let a := t - η;\n        let b := t + η;\n        ∀ (E : IntervalCat C s a b), IsStrictArtinianObject E ∧ IsStrictNoetherianObject E</code>",
+ "441":
+ "<code><span class=\"literal string\">\"per-object strict finite length is weaker than finite length of all chains (paper's assumption)\"</span> : String</code>",
+ "440":
+ "<code>CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernel.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C]\n  {a b : ℝ} [Fact (a &lt; b)] [Fact (b - a ≤ 1)] (s : Slicing C) {X Y : IntervalCat C s a b} (f : X ⟶ Y) : HasCokernel f</code>",
+ "44": "<code>IsFiniteType k C</code>",
+ "439":
+ "<code>CategoryTheory.Limits.HasCokernels.mk.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C]\n  (has_colimit : ∀ {X Y : C} (f : X ⟶ Y), HasCokernel f := by infer_instance) : HasCokernels C</code>",
+ "438":
+ "<code>CategoryTheory.Limits.HasCokernels.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroMorphisms C] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`HasCokernels` represents the existence of cokernels for every morphism. </code>",
+ "437":
+ "<code>CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C]\n  {a b : ℝ} [Fact (a &lt; b)] [Fact (b - a ≤ 1)] (s : Slicing C) : HasCokernels (IntervalCat C s a b)</code>",
+ "436":
+ "<code>CategoryTheory.Triangulated.Slicing.intervalCat_hasKernel.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C]\n  {a b : ℝ} [Fact (a &lt; b)] [Fact (b - a ≤ 1)] (s : Slicing C) {X Y : IntervalCat C s a b} (f : X ⟶ Y) : HasKernel f</code>",
+ "435": "<code>IntervalCat C s a b</code>",
+ "434":
+ "<code>CategoryTheory.Limits.HasKernels.mk.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C]\n  (has_limit : ∀ {X Y : C} (f : X ⟶ Y), HasKernel f := by infer_instance) : HasKernels C</code>",
+ "433":
+ "<code>CategoryTheory.Limits.HasKernels.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroMorphisms C] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`HasKernels` represents the existence of kernels for every morphism. </code>",
+ "432":
+ "<code>CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C]\n  {a b : ℝ} [Fact (a &lt; b)] [Fact (b - a ≤ 1)] (s : Slicing C) : HasKernels (IntervalCat C s a b)</code>",
+ "431":
+ "<code>ConnectedComponents.mk.{u} {α : Type u} [TopologicalSpace α] : α → ConnectedComponents α</code><span class=\"sep\"></span><code class=\"docstring\">Coercion from a topological space to the set of connected components of this space. </code>",
+ "430": "<code>ComponentIndex C v</code>",
+ "43": "<code>Linear k C</code>",
+ "429":
+ "<code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component.{v, u, u'} (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ) (cc : ComponentIndex C v) : Type (max 0 u u')</code><span class=\"sep\"></span><code class=\"docstring\">The type of `v`-relative stability conditions in a fixed connected component. </code>",
+ "428":
+ "<code>ConnectedComponents.{u} (α : Type u) [TopologicalSpace α] : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The quotient of a space by its connected components </code>",
+ "427": "<code>Set (WithClassMap C v)</code>",
+ "426":
+ "<code>TopologicalSpace.generateFrom.{u} {α : Type u} (g : Set (Set α)) : TopologicalSpace α</code><span class=\"sep\"></span><code class=\"docstring\">The smallest topological space containing the collection `g` of basic sets </code>",
+ "425":
+ "<code>TopologicalSpace.{u} (X : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">A topology on `X`. </code>",
+ "424":
+ "<code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace.{v, u, u'} (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} : TopologicalSpace (WithClassMap C v)</code><span class=\"sep\"></span><code class=\"docstring\">The Bridgeland topology on `Stab_v(D)`, generated by the basis neighborhoods\n`B_ε(σ)` for all stability conditions `σ` and all `ε ∈ (0, 1/8)`.\n\nThis is the BLMNPS topology: the coarsest making both the charge map `σ ↦ σ.Z`\nand the slicing map continuous. When `v = id`, this recovers Bridgeland's original\ntopology on `Stab(D)`. </code>",
+ "423":
+ "<code>Real.sin (x : ℝ) : ℝ</code><span class=\"sep\"></span><code class=\"docstring\">The real sine function, defined as the real part of the complex sine </code>",
+ "422":
+ "<code>Set.{u} (α : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">A set is a collection of elements of some type `α`.\n\nAlthough `Set` is defined as `α → Prop`, this is an implementation detail which should not be\nrelied on. Instead, `setOf` and membership of a set (`∈`) should be used to convert between sets\nand predicates.\n</code>",
+ "421":
+ "<code>CategoryTheory.Triangulated.basisNhd.{v, u, u'} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C] {Λ : Type u'}\n  [AddCommGroup Λ] {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v) (ε : ℝ) :\n  Set (StabilityCondition.WithClassMap C v)</code><span class=\"sep\"></span><code class=\"docstring\">The basis neighborhood `B_ε(σ)` for the Bridgeland topology on `Stab_v(D)`. </code>",
+ "420": "<code>StabilityCondition.WithClassMap C v</code>",
+ "42": "<code>Field k</code>",
+ "419":
+ "<code>CategoryTheory.Triangulated.stabSeminorm.{v, u, u'} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C] {Λ : Type u'}\n  [AddCommGroup Λ] {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ) : ℝ≥0∞</code><span class=\"sep\"></span><code class=\"docstring\">The Bridgeland seminorm `‖U‖_σ` on `Hom(Λ, ℂ)`. For a class-map stability\ncondition `σ = (Z, P)` with class map `v : K₀(D) → Λ` and a group homomorphism\n`U : Λ → ℂ`, this is `sup { |U(v[E])| / |Z(v[E])| : E is σ-semistable and nonzero }`.\n\nWhen `v = id` (i.e., `Λ = K₀(D)`), this recovers Bridgeland's original seminorm. </code>",
+ "418":
+ "<code>CategoryTheory.Triangulated.Slicing.IsLocallyFinite.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [IsTriangulated C]\n  (s : Slicing C) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A slicing is locally finite if there exists `η &gt; 0` with `η &lt; 1/2` such that every\nobject in each thin interval category `P((t-η, t+η))` has finite length in the\nquasi-abelian sense, i.e. ACC/DCC on strict subobjects.\n\nThe extra bound `η &lt; 1/2` is a harmless normalization: any Bridgeland witness may be\nshrunk to such an `η`, and then the width `2η` is at most `1`, so the thin interval\ncategory carries the exact / quasi-abelian structure proved above. </code>",
+ "417":
+ "<code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.locallyFinite.{v, u, u'} {C : Type u} [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} (self : WithClassMap C v) :\n  Slicing.IsLocallyFinite C self.slicing</code><span class=\"sep\"></span><code class=\"docstring\">The slicing is locally finite. </code>",
+ "416":
+ "<code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.{v, u, u'} (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ) : Type (max u u')</code><span class=\"sep\"></span><code class=\"docstring\">A Bridgeland stability condition with respect to a class map `v : K₀(C) → Λ`.\nThis is the locally-finite refinement of `PreStabilityCondition.WithClassMap`. </code>",
+ "415":
+ "<code><span class=\"literal string\">\"Definition 5.7\"</span> : String</code>",
+ "414":
+ "<code>Max.max.{u} {α : Type u} [self : Max α] : α → α → α</code><span class=\"sep\"></span><code class=\"docstring\">Returns the greater of its two arguments. \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `max` in identifiers is `max`.\n\n * The recommended spelling of `⊔` in identifiers is `sup` (`⊔` is the preferred notation for `max` when the type is not linearly ordered.).</code>",
+ "413":
+ "<code>ENNReal.ofReal (r : ℝ) : ℝ≥0∞</code><span class=\"sep\"></span><code class=\"docstring\">`ofReal x` returns `x` if it is nonnegative, `0` otherwise. </code>",
+ "412":
+ "<code>CategoryTheory.Triangulated.slicingDist.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (s₁ s₂ : Slicing C) : ℝ≥0∞</code><span class=\"sep\"></span><code class=\"docstring\">The Bridgeland generalized metric on slicings. For slicings `s₁` and `s₂`,\nthis is the supremum over all nonzero objects `E` of\n`max(|φ₁⁺(E) - φ₂⁺(E)|, |φ₁⁻(E) - φ₂⁻(E)|)`. </code>",
+ "411": "<code>WithClassMap C v</code>",
+ "410":
+ "<code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge.{v, u, u'} {C : Type u} [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} (σ : WithClassMap C v) (E : C) : ℂ</code><span class=\"sep\"></span><code class=\"docstring\">The central charge evaluated at the class of `E`. This is `Z(v[E])`. </code>",
+ "41":
+ "<code>CategoryTheory.IsTriangulated.{v_1, u_1} (C : Type u_1) [Category.{v_1, u_1} C] [Preadditive C] [HasZeroObject C]\n  [HasShift C ℤ] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A triangulated category is a pretriangulated category which satisfies\nthe octahedron axiom (TR 4). </code>",
+ "409":
+ "<code>Complex.I : ℂ</code><span class=\"sep\"></span><code class=\"docstring\">The imaginary unit. </code>",
+ "408":
+ "<code>Real.pi : ℝ</code><span class=\"sep\"></span><code class=\"docstring\">The number π = 3.14159265... Defined here using choice as twice a zero of cos in [1,2],\nfrom which one can derive all its properties. For explicit bounds on π,\nsee `Mathlib/Analysis/Real/Pi/Bounds.lean`.\n\nDenoted `π`, once the `Real` namespace is opened. </code>",
+ "407":
+ "<code>Complex.exp (z : ℂ) : ℂ</code><span class=\"sep\"></span><code class=\"docstring\">The complex exponential function, defined via its Taylor series </code>",
+ "406": "<code>Λ →+ ℂ</code>",
+ "405":
+ "<code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.compat'.{v, u, u'} {C : Type u} [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} (self : WithClassMap C v) (φ : ℝ) (E : C) :\n  self.slicing.P φ E → ¬IsZero E → ∃ m, 0 &lt; m ∧ self.Z (v (K₀.of C E)) = ↑m * cexp (↑(Real.pi * φ) * I)</code><span class=\"sep\"></span><code class=\"docstring\">Compatibility (raw). Use `σ.compat` instead. </code>",
+ "404":
+ "<code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.Z.{v, u, u'} {C : Type u} [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} (self : WithClassMap C v) : Λ →+ ℂ</code><span class=\"sep\"></span><code class=\"docstring\">The central charge on the class lattice `Λ`. </code>",
+ "403":
+ "<code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.slicing.{v, u, u'} {C : Type u} [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ} (self : WithClassMap C v) : Slicing C</code><span class=\"sep\"></span><code class=\"docstring\">The underlying slicing. </code>",
+ "402":
+ "<code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.{v, u, u'} (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ) : Type (max u u')</code><span class=\"sep\"></span><code class=\"docstring\">A Bridgeland prestability condition with respect to a class map\n`v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient\ncharge is recovered by precomposition with `v`. </code>",
+ "401":
+ "<code><span class=\"literal string\">\"Definition 5.1\"</span> : String</code>",
+ "400":
+ "<code>CategoryTheory.ObjectProperty.FullSubcategory.{v, u} {C : Type u} [Category.{v, u} C] (P : ObjectProperty C) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">A subtype-like structure for full subcategories. Morphisms just ignore the property. We don't use\nactual subtypes since the simp-normal form `↑X` of `X.val` does not work well for full\nsubcategories. </code>",
+ "40": "<code>IsTriangulated C</code>",
+ "4": "<code>Type w</code>",
+ "399":
+ "<code>CategoryTheory.Triangulated.Slicing.IntervalCat.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (s : Slicing C) (a b : ℝ) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The interval subcategory `P((a, b))` of a slicing, defined as the full subcategory\non objects whose HN phases all lie in `(a, b)`. An object `E` belongs to `P((a, b))` if\nit is zero or admits an HN filtration with all phases in `(a, b)`.\n\nThis is **Bridgeland's Definition 4.1** specialized to open intervals. </code>",
+ "398":
+ "<code>Nat.sub_one_lt_of_le {a b : ℕ} (h₀ : 0 &lt; a) (h₁ : a ≤ b) : a - 1 &lt; b</code>",
+ "397":
+ "<code>CategoryTheory.Triangulated.Slicing.phiMinus.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (s : Slicing C) (E : C)\n  (hE : ¬IsZero E) : ℝ</code><span class=\"sep\"></span><code class=\"docstring\">The intrinsic lowest phase of a nonzero object with respect to a slicing.\nThis is the phase of the last factor in any HN filtration with nonzero last factor.\nWell-defined by `phiMinus_eq_of_nonzero_last_factors`. </code>",
+ "396":
+ "<code>Exists.choose_spec.{u_1} {α : Sort u_1} {p : α → Prop} (P : ∃ a, p a) : p P.choose</code><span class=\"sep\"></span><code class=\"docstring\">Show that an element extracted from `P : ∃ a, p a` using `P.choose` satisfies `p`. </code>",
+ "395": "<code>0 &lt; ⋯.choose.n</code>",
+ "394":
+ "<code>Exists.choose.{u_1} {α : Sort u_1} {p : α → Prop} (P : ∃ a, p a) : α</code><span class=\"sep\"></span><code class=\"docstring\">Extract an element from an existential statement, using `Classical.choose`. </code>",
+ "393":
+ "<code class=\"docstring\">`let` is used to declare a local definition. Example:\n```\nlet x := 1\nlet y := x + 1\nx + y\n```\nSince functions are first class citizens in Lean, you can use `let` to declare\nlocal functions too.\n```\nlet double := fun x =&gt; 2*x\ndouble (double 3)\n```\nFor recursive definitions, you should use `let rec`.\nYou can also perform pattern matching using `let`. For example,\nassume `p` has type `Nat × Nat`, then you can write\n```\nlet (x, y) := p\nx + y\n```\n\nThe *anaphoric let* `let := v` defines a variable called `this`.\n</code>",
+ "392":
+ "<code>CategoryTheory.Triangulated.Slicing.phiPlus.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (s : Slicing C) (E : C)\n  (hE : ¬IsZero E) : ℝ</code><span class=\"sep\"></span><code class=\"docstring\">The intrinsic highest phase of a nonzero object with respect to a slicing.\nThis is the phase of the first factor in any HN filtration with nonzero first factor.\nWell-defined by `phiPlus_eq_of_nonzero_factors`. </code>",
+ "391": "<code>¬IsZero (G.triangle ⟨G.n - 1, ⋯⟩).obj₃</code>",
+ "390":
+ "<code>CategoryTheory.Triangulated.HNFiltration.dropLast.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {P : ℝ → ObjectProperty C}\n  {E : C} (F : HNFiltration C P E) (hn : 1 &lt; F.n) (hzero : IsZero (F.triangle ⟨F.n - 1, ⋯⟩).obj₃) : HNFiltration C P E</code><span class=\"sep\"></span><code class=\"docstring\">Drop the last factor from an HN filtration when it is zero. The resulting\nfiltration has `n - 1` factors with phases `φ(0) &gt; ⋯ &gt; φ(n-2)`. </code>",
+ "39":
+ "<code>CategoryTheory.Pretriangulated.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive] : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">A preadditive category `C` with an additive shift, and a class of \"distinguished triangles\"\nrelative to that shift is called pretriangulated if the following hold:\n* Any triangle that is isomorphic to a distinguished triangle is also distinguished.\n* Any triangle of the form `(X,X,0,id,0,0)` is distinguished.\n* For any morphism `f : X ⟶ Y` there exists a distinguished triangle of the form `(X,Y,Z,f,g,h)`.\n* The triangle `(X,Y,Z,f,g,h)` is distinguished if and only if `(Y,Z,X⟦1⟧,g,h,-f⟦1⟧)` is.\n* Given a diagram:\n  ```\n        f       g       h\n    X  ───&gt; Y  ───&gt; Z  ───&gt; X⟦1⟧\n    │       │                │\n    │a      │b               │a⟦1⟧'\n    V       V                V\n    X' ───&gt; Y' ───&gt; Z' ───&gt; X'⟦1⟧\n        f'      g'      h'\n  ```\n  where the left square commutes, and whose rows are distinguished triangles,\n  there exists a morphism `c : Z ⟶ Z'` such that `(a,b,c)` is a triangle morphism.\n</code>",
+ "389": "<code>(dropLast C G hn1 hlast).n ≤ m</code>",
+ "388": "<code>i = ⟨G.n - 1, ⋯⟩</code>",
+ "387": "<code>IsZero (G.triangle ⟨G.n - 1, ⋯⟩).obj₃</code>",
+ "386":
+ "<code>∀ (G : HNFiltration C s.P E), G.n ≤ m → ∃ H, ∃ (hn : 0 &lt; H.n), ¬IsZero (H.triangle ⟨H.n - 1, ⋯⟩).obj₃</code>",
+ "385":
+ "<code>∀ (m : ℕ) (G : HNFiltration C s.P E), G.n ≤ m → ∃ H, ∃ (hn : 0 &lt; H.n), ¬IsZero (H.triangle ⟨H.n - 1, ⋯⟩).obj₃</code>",
+ "384":
+ "<code>CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (s : Slicing C) {E : C}\n  (hE : ¬IsZero E) : ∃ F, ∃ (hn : 0 &lt; F.n), ¬IsZero (F.triangle ⟨F.n - 1, ⋯⟩).obj₃</code><span class=\"sep\"></span><code class=\"docstring\">For any nonzero object, there exists an HN filtration with nonzero last factor.\nProved by repeatedly dropping zero last factors. </code>",
+ "383":
+ "<code>CategoryTheory.Triangulated.HNFiltration.dropFirst.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {P : ℝ → ObjectProperty C}\n  {E : C} (F : HNFiltration C P E) (hn : 1 &lt; F.n) (hzero : IsZero (F.triangle ⟨0, ⋯⟩).obj₃) : HNFiltration C P E</code><span class=\"sep\"></span><code class=\"docstring\">Drop the first factor from an HN filtration when it is zero. The resulting\nfiltration has `n - 1` factors with phases `φ(1) &gt; ⋯ &gt; φ(n-1)`. </code>",
+ "382": "<code>(dropFirst C G hn1 hfirst).n ≤ m</code>",
+ "381":
+ "<code>id.{u} {α : Sort u} (a : α) : α</code><span class=\"sep\"></span><code class=\"docstring\">The identity function. `id` takes an implicit argument `α : Sort u`\n(a type in any universe), and an argument `a : α`, and returns `a`.\n\nAlthough this may look like a useless function, one application of the identity\nfunction is to explicitly put a type on an expression. If `e` has type `T`,\nand `T'` is definitionally equal to `T`, then `@id T' e` typechecks, and Lean\nknows that this expression has type `T'` rather than `T`. This can make a\ndifference for typeclass inference, since `T` and `T'` may have different\ntypeclass instances on them. `show T' from e` is sugar for an `@id T' e`\nexpression.\n</code>",
+ "380": "<code>∀ (i : Fin G.n), IsZero (G.triangle i).obj₃</code>",
+ "38": "<code>Pretriangulated C</code>",
+ "379": "<code>¬IsZero (G.triangle i).obj₃</code>",
+ "378":
+ "<code>Exists.elim.{u} {α : Sort u} {p : α → Prop} {b : Prop} (h₁ : ∃ x, p x) (h₂ : ∀ (a : α), p a → b) : b</code>",
+ "377":
+ "<code>CategoryTheory.Triangulated.HNFiltration.exists_nonzero_factor.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {P : ℝ → ObjectProperty C}\n  {E : C} (F : HNFiltration C P E) (hE : ¬IsZero E) : ∃ i, ¬IsZero (F.triangle i).obj₃</code><span class=\"sep\"></span><code class=\"docstring\">For any HN filtration of a nonzero object, at least one factor is nonzero.\nIf all factors were zero, the chain would start and end at zero, contradicting E nonzero. </code>",
+ "376": "<code>i = ⟨0, hGn0⟩</code>",
+ "375":
+ "<code class=\"docstring\">`subst x...` substitutes each hypothesis `x` with a definition found in the local context,\nthen eliminates the hypothesis.\n- If `x` is a local definition, then its definition is used.\n- Otherwise, if there is a hypothesis of the form `x = e` or `e = x`,\n  then `e` is used for the definition of `x`.\n\nIf `h : a = b`, then `subst h` may be used if either `a` or `b` unfolds to a local hypothesis.\nThis is similar to the `cases h` tactic.\n\nSee also: `subst_vars` for substituting all local hypotheses that have a defining equation.\n</code>",
+ "374": "<code>Fin.ext {n : ℕ} {a b : Fin n} (h : ↑a = ↑b) : a = b</code>",
+ "373": "<code>Fin G.n</code>",
+ "372": "<code>G.n ≤ 1</code>",
+ "371":
+ "<code class=\"docstring\">`push c` rewrites the goal by pushing the constant `c` deeper into an expression.\nFor instance, `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.\nMore precisely, the `push` tactic repeatedly rewrites an expression by applying lemmas\nof the form `c ... = ... (c ...)` (where `c` can appear 0 or more times on the right hand side).\nTo extend the `push` tactic, you can tag a lemma of this form with the `@[push]` attribute.\n\nTo instead move a constant closer to the head of the expression, use the `pull` tactic.\n\n`push` works as both a tactic and a conv tactic.\n\n* `push _ ~ _` pushes the (binary) operator `~`, `push ~ _` pushes the (unary) operator `~`.\n* `push c at l1 l2 ...` rewrites at the given locations.\n* `push c at *` rewrites at all hypotheses and the goal.\n* `push +distrib Not` rewrites `¬ (p ∧ q)` into `¬ p ∨ ¬ q` (without `+distrib`, it rewrites it\n  into `p → ¬ q` instead).\n* `push (disch := tac) c` uses the tactic `tac` to discharge any hypotheses for `@[push]` lemmas.\n\nExamples:\n* `push Not` is the same as `push ¬ _`, and it rewrites `¬ ∀ ε &gt; 0, ∃ δ &gt; 0, δ &lt; ε` into\n  `∃ ε &gt; 0, ∀ δ &gt; 0, ε ≤ δ`. Notably, this preserves the binder names.\n* `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.\n* `push (disch := positivity) Real.log` rewrites `log (a * b ^ 2)` into `log a + 2 * log b`.\n* `push fun _ ↦ _` rewrites `fun x =&gt; f x ^ 2 + 5` into `f ^ 2 + 5`\n* `push ∀ _, _` rewrites `∀ a, p a ∧ q a` into `(∀ a, p a) ∧ (∀ a, q a)`.\n</code>",
+ "370": "<code>¬1 &lt; G.n</code>",
+ "37":
+ "<code>CategoryTheory.Functor.Additive.{v_1, u_1, v_2, u_2} {C : Type u_1} {D : Type u_2} [Category.{v_1, u_1} C]\n  [Category.{v_2, u_2} D] [Preadditive C] [Preadditive D] (F : C ⥤ D) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A functor `F` is additive provided `F.map` is an additive homomorphism. </code>",
+ "369": "<code>1 &lt; G.n</code>",
+ "368": "<code>¬IsZero (G.triangle ⟨0, hGn0⟩).obj₃</code>",
+ "367": "<code>IsZero (G.triangle ⟨0, hGn0⟩).obj₃</code>",
+ "366":
+ "<code class=\"docstring\">`by_cases (h :)? p` splits the main goal into two cases, assuming `h : p` in the first branch, and `h : ¬ p` in the second branch.\n</code>",
+ "365":
+ "<code>CategoryTheory.Triangulated.HNFiltration.n_pos.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {P : ℝ → ObjectProperty C} {E : C}\n  (F : HNFiltration C P E) (hE : ¬IsZero E) : 0 &lt; F.n</code><span class=\"sep\"></span><code class=\"docstring\">For a nonzero object, any HN filtration has at least one factor. </code>",
+ "364": "<code>0 &lt; G.n</code>",
+ "363": "<code>G.n ≤ m + 1</code>",
+ "362":
+ "<code>∀ (G : HNFiltration C s.P E), G.n ≤ m → ∃ H, ∃ (hn : 0 &lt; H.n), ¬IsZero (H.triangle ⟨0, hn⟩).obj₃</code>",
+ "361":
+ "<code>Nat.succ (n : ℕ) : ℕ</code><span class=\"sep\"></span><code class=\"docstring\">The successor of a natural number `n`.\n\nUsing `Nat.succ n` should usually be avoided in favor of `n + 1`, which is the [simp normal\nform](https://lean-lang.org/doc/reference/4.29.0/find/?domain=Verso.Genre.Manual.section&name=simp-normal-forms).\n</code>",
+ "360":
+ "<code>absurd.{v} {a : Prop} {b : Sort v} (h₁ : a) (h₂ : ¬a) : b</code><span class=\"sep\"></span><code class=\"docstring\">Anything follows from two contradictory hypotheses. Example:\n```\nexample (hp : p) (hnp : ¬p) : q := absurd hp hnp\n```\nFor more information: [Propositional Logic](https://lean-lang.org/theorem_proving_in_lean4/propositions_and_proofs.html#propositional-logic)\n</code>",
+ "36": "<code>∀ (n : ℤ), (shiftFunctor C n).Additive</code>",
+ "359": "<code>G.n ≤ 0</code>",
+ "358":
+ "<code>Nat.zero : ℕ</code><span class=\"sep\"></span><code class=\"docstring\">Zero, the smallest natural number.\n\nUsing `Nat.zero` explicitly should usually be avoided in favor of the literal `0`, which is the\n[simp normal form](https://lean-lang.org/doc/reference/4.29.0/find/?domain=Verso.Genre.Manual.section&name=simp-normal-forms).\n</code>",
+ "357":
+ "<code class=\"docstring\">After `with`, there is an optional tactic that runs on all branches, and\nthen a list of alternatives.\n</code>",
+ "356":
+ "<code class=\"docstring\">Assuming `x` is a variable in the local context with an inductive type,\n`induction x` applies induction on `x` to the main goal,\nproducing one goal for each constructor of the inductive type,\nin which the target is replaced by a general instance of that constructor\nand an inductive hypothesis is added for each recursive argument to the constructor.\nIf the type of an element in the local context depends on `x`,\nthat element is reverted and reintroduced afterward,\nso that the inductive hypothesis incorporates that hypothesis as well.\n\nFor example, given `n : Nat` and a goal with a hypothesis `h : P n` and target `Q n`,\n`induction n` produces one goal with hypothesis `h : P 0` and target `Q 0`,\nand one goal with hypotheses `h : P (Nat.succ a)` and `ih₁ : P a → Q a` and target `Q (Nat.succ a)`.\nHere the names `a` and `ih₁` are chosen automatically and are not accessible.\nYou can use `with` to provide the variables names for each constructor.\n- `induction e`, where `e` is an expression instead of a variable,\n  generalizes `e` in the goal, and then performs induction on the resulting variable.\n- `induction e using r` allows the user to specify the principle of induction that should be used.\n  Here `r` should be a term whose result type must be of the form `C t`,\n  where `C` is a bound variable and `t` is a (possibly empty) sequence of bound variables\n- `induction e generalizing z₁ ... zₙ`, where `z₁ ... zₙ` are variables in the local context,\n  generalizes over `z₁ ... zₙ` before applying the induction but then introduces them in each goal.\n  In other words, the net effect is that each inductive hypothesis is generalized.\n- Given `x : Nat`, `induction x with | zero =&gt; tac₁ | succ x' ih =&gt; tac₂`\n  uses tactic `tac₁` for the `zero` case, and `tac₂` for the `succ` case.\n</code>",
+ "355":
+ "<code>le_rfl.{u_1} {α : Type u_1} [Preorder α] {a : α} : a ≤ a</code><span class=\"sep\"></span><code class=\"docstring\">A version of `le_refl` where the argument is implicit </code>",
+ "354": "<code>0 &lt; H.n</code>",
+ "353":
+ "<code>∀ (m : ℕ) (G : HNFiltration C s.P E), G.n ≤ m → ∃ H, ∃ (hn : 0 &lt; H.n), ¬IsZero (H.triangle ⟨0, hn⟩).obj₃</code>",
+ "352":
+ "<code class=\"docstring\">Given a main goal `ctx ⊢ t`, `suffices h : t' from e` replaces the main goal with `ctx ⊢ t'`,\n`e` must have type `t` in the context `ctx, h : t'`.\n\nThe variant `suffices h : t' by tac` is a shorthand for `suffices h : t' from by tac`.\nIf `h :` is omitted, the name `this` is used.\n </code>",
+ "351":
+ "<code class=\"docstring\">The `obtain` tactic is a combination of `have` and `rcases`. See `rcases` for\na description of supported patterns.\n\n```lean\nobtain ⟨patt⟩ : type := proof\n```\nis equivalent to\n```lean\nhave h : type := proof\nrcases h with ⟨patt⟩\n```\n\nIf `⟨patt⟩` is omitted, `rcases` will try to infer the pattern.\n\nIf `type` is omitted, `:= proof` is required.\n</code>",
+ "350":
+ "<code>LT.lt.{u} {α : Type u} [self : LT α] : α → α → Prop</code><span class=\"sep\"></span><code class=\"docstring\">The less-than relation: `x &lt; y` \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `&lt;` in identifiers is `lt`.</code>",
+ "35":
+ "<code>CategoryTheory.Preadditive.{v, u} (C : Type u) [Category.{v, u} C] : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">A category is called preadditive if `P ⟶ Q` is an abelian group such that composition is\nlinear in both variables. </code>",
+ "349":
+ "<code>Fin.mk {n : ℕ} (val : ℕ) (isLt : val &lt; n) : Fin n</code><span class=\"sep\"></span><code class=\"docstring\">Creates a `Fin n` from `i : Nat` and a proof that `i &lt; n`. </code>",
+ "348": "<code>0 &lt; F.n</code>",
+ "347": "<code>¬IsZero E</code>",
+ "346":
+ "<code>CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (s : Slicing C) {E : C}\n  (hE : ¬IsZero E) : ∃ F, ∃ (hn : 0 &lt; F.n), ¬IsZero (F.triangle ⟨0, hn⟩).obj₃</code><span class=\"sep\"></span><code class=\"docstring\">For any nonzero object, there exists an HN filtration with nonzero first factor.\nProved by repeatedly dropping zero first factors; terminates since `n` decreases\nand some factor must be nonzero (by `exists_nonzero_factor`). </code>",
+ "345": "<code>Fin F.n</code>",
+ "344": "<code>HNFiltration C s.P E</code>",
+ "343": "<code>Slicing C</code>",
+ "342":
+ "<code>CategoryTheory.Triangulated.Slicing.intervalProp.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (s : Slicing C)\n  (a b : ℝ) : ObjectProperty C</code><span class=\"sep\"></span><code class=\"docstring\">The interval subcategory predicate `P((a,b))`: an object `E` belongs to the\ninterval subcategory if it is zero or all phases in its HN filtration lie in `(a,b)`. </code>",
+ "341":
+ "<code>CategoryTheory.Triangulated.Slicing.hn_exists.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (self : Slicing C) (E : C) :\n  Nonempty (HNFiltration C self.P E)</code><span class=\"sep\"></span><code class=\"docstring\">Every object has a Harder-Narasimhan filtration. </code>",
+ "340": "<code>A ⟶ B</code>",
+ "34": "<code>Preadditive C</code>",
+ "339":
+ "<code>CategoryTheory.Triangulated.Slicing.hom_vanishing.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (self : Slicing C)\n  (φ₁ φ₂ : ℝ) (A B : C) : φ₂ &lt; φ₁ → self.P φ₁ A → self.P φ₂ B → ∀ (f : A ⟶ B), f = 0</code><span class=\"sep\"></span><code class=\"docstring\">Morphisms from higher-phase to lower-phase nonzero semistable objects vanish. </code>",
+ "338":
+ "<code>CategoryTheory.Triangulated.Slicing.shift_iff.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (self : Slicing C) (φ : ℝ) (X : C) :\n  self.P φ X ↔ self.P (φ + 1) ((shiftFunctor C 1).obj X)</code><span class=\"sep\"></span><code class=\"docstring\">Shifting by `[1]` increases the phase by 1, and conversely. </code>",
+ "337":
+ "<code>CategoryTheory.Triangulated.Slicing.zero_mem.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (self : Slicing C) (φ : ℝ) : self.P φ 0</code><span class=\"sep\"></span><code class=\"docstring\">The zero object satisfies every phase predicate. </code>",
+ "336":
+ "<code>CategoryTheory.ObjectProperty.IsClosedUnderIsomorphisms.{v, u} {C : Type u} [Category.{v, u} C] (P : ObjectProperty C) :\n  Prop</code><span class=\"sep\"></span><code class=\"docstring\">A predicate `C → Prop` on the objects of a category is closed under isomorphisms\nif whenever `P X`, then all the objects `Y` that are isomorphic to `X` also satisfy `P Y`. </code>",
+ "335": "<code>ℝ</code>",
+ "334":
+ "<code>CategoryTheory.Triangulated.Slicing.closedUnderIso.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (self : Slicing C)\n  (φ : ℝ) : (self.P φ).IsClosedUnderIsomorphisms</code><span class=\"sep\"></span><code class=\"docstring\">Each phase slice is closed under isomorphisms. </code>",
+ "333":
+ "<code>CategoryTheory.Triangulated.Slicing.P.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (self : Slicing C) : ℝ → ObjectProperty C</code><span class=\"sep\"></span><code class=\"docstring\">For each phase `φ ∈ ℝ`, the property of semistable objects of phase `φ`. </code>",
+ "332":
+ "<code>CategoryTheory.Triangulated.Slicing.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] : Type u</code><span class=\"sep\"></span><code class=\"docstring\">A slicing of a pretriangulated category `C`, as defined in\nBridgeland (2007), Definition 5.1. A slicing assigns to each real number `φ`\na full subcategory of semistable objects `P(φ)` (as an `ObjectProperty`),\nsubject to shift, Hom-vanishing, and Harder-Narasimhan existence axioms.\n\nEach `P(φ)` is an `ObjectProperty C`, enabling use of the `ObjectProperty` API\n(e.g. `FullSubcategory`, shift stability, closure properties). </code>",
+ "331":
+ "<code>CategoryTheory.Triangulated.HNFiltration.semistable.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {P : ℝ → ObjectProperty C}\n  {E : C} (self : HNFiltration C P E) (j : Fin self.n) : P (self.φ j) (self.factor j)</code><span class=\"sep\"></span><code class=\"docstring\">Each factor is semistable of the given phase. </code>",
+ "330": "<code>Fin n → ℝ</code>",
+ "33":
+ "<code>Int : Type</code><span class=\"sep\"></span><code class=\"docstring\">The integers.\n\nThis type is special-cased by the compiler and overridden with an efficient implementation. The\nruntime has a special representation for `Int` that stores “small” signed numbers directly, while\nlarger numbers use a fast arbitrary-precision arithmetic library (usually\n[GMP](https://gmplib.org/)). A “small number” is an integer that can be encoded with one fewer bits\nthan the platform's pointer size (i.e. 63 bits on 64-bit architectures and 31 bits on 32-bit\narchitectures).\n</code>",
+ "329":
+ "<code>StrictAnti.{u, v} {α : Type u} {β : Type v} [Preorder α] [Preorder β] (f : α → β) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A function `f` is strictly antitone if `a &lt; b` implies `f b &lt; f a`. </code>",
+ "328":
+ "<code>CategoryTheory.Triangulated.HNFiltration.hφ.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {P : ℝ → ObjectProperty C} {E : C}\n  (self : HNFiltration C P E) : StrictAnti self.φ</code><span class=\"sep\"></span><code class=\"docstring\">The phases are strictly decreasing (higher phase factors appear first). </code>",
+ "327":
+ "<code>CategoryTheory.Triangulated.HNFiltration.φ.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {P : ℝ → ObjectProperty C} {E : C}\n  (self : HNFiltration C P E) : Fin self.n → ℝ</code><span class=\"sep\"></span><code class=\"docstring\">The phases of the semistable factors, in strictly decreasing order. </code>",
+ "326": "<code>ℝ → ObjectProperty C</code>",
+ "325":
+ "<code>CategoryTheory.Triangulated.HNFiltration.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (P : ℝ → ObjectProperty C) (E : C) :\n  Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">A Harder-Narasimhan (HN) filtration of an object `E` with respect to a phase\npredicate `P`. This extends a `PostnikovTower` with phase data: each factor is\nsemistable with a given phase, and the phases are strictly decreasing. </code>",
+ "324":
+ "<code><span class=\"literal string\">\"axiom (c): HN decomposition data for triangulated categories\"</span> : String</code>",
+ "323":
+ "<code><span class=\"literal string\">\"Definition 3.3\"</span> : String</code>",
+ "322":
+ "<code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component.{v, u, u'} (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)\n  (cc : StabilityCondition.WithClassMap.ComponentIndex C v) : Type (max 0 u u')</code><span class=\"sep\"></span><code class=\"docstring\">The type of `v`-relative stability conditions in a fixed connected component. </code>",
+ "321":
+ "<code>AddGroup.FG.{u_4} (H : Type u_4) [AddGroup H] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">An additive group is finitely generated if it is finitely generated as an additive subgroup of\nitself. </code>",
+ "320":
+ "<code>CategoryTheory.Triangulated.NumericallyFinite.fg.{w, v, u} {k : Type w} {inst✝ : Field k} {C : Type u}\n  {inst✝¹ : Category.{v, u} C} {inst✝² : HasZeroObject C} {inst✝³ : HasShift C ℤ} {inst✝⁴ : Preadditive C}\n  {inst✝⁵ : ∀ (n : ℤ), (shiftFunctor C n).Additive} {inst✝⁶ : Pretriangulated C} {inst✝⁷ : Linear k C}\n  {inst✝⁸ : IsFiniteType k C} {inst✝⁹ : Functor.Linear k (shiftFunctor C 1)} [self : NumericallyFinite k C] :\n  AddGroup.FG (NumericalK₀ k C)</code><span class=\"sep\"></span><code class=\"docstring\">The Euler-form numerical Grothendieck group is finitely generated. </code>",
+ "32":
+ "<code>CategoryTheory.HasShift.{v, u, u_2} (C : Type u) (A : Type u_2) [Category.{v, u} C] [AddMonoid A] :\n  Type (max (max u u_2) v)</code><span class=\"sep\"></span><code class=\"docstring\">A category has a shift indexed by an additive monoid `A`\nif there is a monoidal functor from `A` to `C ⥤ C`. </code>",
+ "319":
+ "<code>QuotientAddGroup.mk'.{u_1} {G : Type u_1} [AddGroup G] (N : AddSubgroup G) [nN : N.Normal] : G →+ G ⧸ N</code><span class=\"sep\"></span><code class=\"docstring\">The additive group homomorphism from `G` to `G/N`. </code>",
+ "318":
+ "<code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup.{w, v, u} (k : Type w) [Field k] (C : Type u)\n  [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive]\n  [Pretriangulated C] [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)] :\n  AddCommGroup (NumericalK₀ k C)</code><span class=\"sep\"></span><code class=\"docstring\">The `AddCommGroup` instance on `NumericalK₀ k C`. </code>",
+ "317":
+ "<code>CategoryTheory.Triangulated.NumericalK₀.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)] : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The numerical Grothendieck group attached to the Euler form on `K₀`. </code>",
+ "316":
+ "<code>CategoryTheory.Triangulated.eulerForm.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)] : K₀ C →+ K₀ C →+ ℤ</code><span class=\"sep\"></span><code class=\"docstring\">The Euler form on `K₀`, obtained by applying the universal property of `K₀`\ntwice to `eulerFormObj`. </code>",
+ "315":
+ "<code>CategoryTheory.Triangulated.IsTriangleAdditive.additive.{v, u, u_1} {C : Type u} {inst✝ : Category.{v, u} C}\n  {inst✝¹ : HasZeroObject C} {inst✝² : HasShift C ℤ} {inst✝³ : Preadditive C}\n  {inst✝⁴ : ∀ (n : ℤ), (shiftFunctor C n).Additive} {inst✝⁵ : Pretriangulated C} {A : Type u_1}\n  {inst✝⁶ : AddCommGroup A} {f : C → A} [self : IsTriangleAdditive f] (T : Triangle C) :\n  T ∈ distinguishedTriangles → f T.obj₂ = f T.obj₁ + f T.obj₃</code>",
+ "314": "<code>IsTriangleAdditive fun E =&gt; eulerFormObj k C E F</code>",
+ "313":
+ "<code>CategoryTheory.Triangulated.eulerFormObj_covariant_triangleAdditive.{w, v, u} (k : Type w) [Field k] (C : Type u)\n  [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive]\n  [Pretriangulated C] [Linear k C] [IsFiniteType k C] (F : C) [Functor.Linear k (shiftFunctor C 1)] :\n  IsTriangleAdditive fun E =&gt; eulerFormObj k C E F</code>",
+ "312":
+ "<code>CategoryTheory.Triangulated.K₀.lift_of.{v, u, u_1} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {A : Type u_1} [AddCommGroup A]\n  (f : C → A) [IsTriangleAdditive f] (X : C) : (K₀.lift C f) (K₀.of C X) = f X</code><span class=\"sep\"></span><code class=\"docstring\">The lift of a triangle-additive function agrees with the original function on generators. </code>",
+ "311":
+ "<code>AddMonoidHom.add_apply.{u_2, u_3} {M : Type u_2} {N : Type u_3} [AddZeroClass M] [AddCommMonoid N] (f g : M →+ N)\n  (x : M) : (f + g) x = f x + g x</code>",
+ "310":
+ "<code>CategoryTheory.Triangulated.K₀.hom_ext.{v, u, u_1} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {A : Type u_1} [AddCommGroup A]\n  {f g : K₀ C →+ A} (h : ∀ (X : C), f (K₀.of C X) = g (K₀.of C X)) : f = g</code><span class=\"sep\"></span><code class=\"docstring\">Two homomorphisms from `K₀ C` that agree on all object classes are equal. </code>",
+ "31": "<code>HasShift C ℤ</code>",
+ "309":
+ "<code>∀ T ∈ distinguishedTriangles, eulerFormInner k C T.obj₂ = eulerFormInner k C T.obj₁ + eulerFormInner k C T.obj₃</code>",
+ "308":
+ "<code>CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive.{w, v, u} (k : Type w) [Field k] (C : Type u)\n  [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive]\n  [Pretriangulated C] [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)] :\n  IsTriangleAdditive (eulerFormInner k C)</code><span class=\"sep\"></span><code class=\"docstring\">The outer function `E ↦ eulerFormInner E` is triangle-additive, so the Euler\nform descends to a bilinear form on `K₀`. </code>",
+ "307": "<code>IsTriangleAdditive fun F =&gt; eulerFormObj k C E F</code>",
+ "306":
+ "<code>AddMonoidHom.{u_10, u_11} (M : Type u_10) (N : Type u_11) [AddZero M] [AddZero N] : Type (max u_10 u_11)</code><span class=\"sep\"></span><code class=\"docstring\">`M →+ N` is the type of functions `M → N` that preserve the `AddZero` structure.\n\n`AddMonoidHom` is also used for group homomorphisms.\n\nWhen possible, instead of parametrizing results over `(f : M →+ N)`,\nyou should parametrize over `(F : Type*) [AddMonoidHomClass F M N] (f : F)`.\n\nWhen you extend this structure, make sure to extend `AddMonoidHomClass`.\n</code>",
+ "305":
+ "<code>CategoryTheory.Triangulated.eulerFormInner.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [Linear k C] [IsFiniteType k C] (E : C) : K₀ C →+ ℤ</code><span class=\"sep\"></span><code class=\"docstring\">For fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism `K₀ C →+ ℤ`\nusing the universal property of `K₀`. </code>",
+ "304":
+ "<code>CategoryTheory.Triangulated.eulerSum_of_rank_identity.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [Preadditive C] [Linear k C] (E : C) {a b c : ℤ → C} {r : ℤ → ℤ}\n  (hrank :\n    ∀ (n : ℤ),\n      ↑(Module.finrank k (E ⟶ b n)) = ↑(Module.finrank k (E ⟶ a n)) + ↑(Module.finrank k (E ⟶ c n)) - r (n - 1) - r n)\n  (hfin_a : {n | Nontrivial (E ⟶ a n)}.Finite) (hfin_b : {n | Nontrivial (E ⟶ b n)}.Finite)\n  (hfin_c : {n | Nontrivial (E ⟶ c n)}.Finite) (hr : (Function.support r).Finite) :\n  ∑ᶠ (n : ℤ), ↑n.negOnePow * ↑(Module.finrank k (E ⟶ b n)) =\n    ∑ᶠ (n : ℤ), ↑n.negOnePow * ↑(Module.finrank k (E ⟶ a n)) + ∑ᶠ (n : ℤ), ↑n.negOnePow * ↑(Module.finrank k (E ⟶ c n))</code>",
+ "303":
+ "<code>Exists.intro.{u} {α : Sort u} {p : α → Prop} (w : α) (h : p w) : Exists p</code><span class=\"sep\"></span><code class=\"docstring\">Existential introduction. If `a : α` and `h : p a`,\nthen `⟨a, h⟩` is a proof that `∃ x : α, p x`. </code>",
+ "302":
+ "<code class=\"docstring\">`apply e` tries to match the current goal against the conclusion of `e`'s type.\nIf it succeeds, then the tactic returns as many subgoals as the number of premises that\nhave not been fixed by type inference or type class resolution.\nNon-dependent premises are added before dependent ones.\n\nThe `apply` tactic uses higher-order pattern matching, type class resolution,\nand first-order unification with dependent types.\n\n\nExtensions:\n\n * * `apply (config := cfg) e` allows for additional configuration (see `Lean.Meta.ApplyConfig`):\n     * `newGoals` controls which new goals are added by `apply`, in which order.\n     * `-synthAssignedInstances` will not synthesize instance implicit arguments if they have been\n       assigned by `isDefEq`.\n     * `+allowSynthFailures` will create new goals when instance synthesis fails, rather than erroring.\n     * `+approx` enables `isDefEq` approximations (see `Lean.Meta.approxDefEq`).</code>",
+ "301":
+ "<code>Subsingleton.elim.{u} {α : Sort u} [h : Subsingleton α] (a b : α) : a = b</code><span class=\"sep\"></span><code class=\"docstring\">If a type is a subsingleton, then all of its elements are equal.\n</code>",
+ "300":
+ "<code class=\"docstring\">`exact e` closes the main goal if its target type matches that of `e`.\n</code>",
+ "30":
+ "<code>CategoryTheory.Limits.HasZeroObject.{v, u} (C : Type u) [Category.{v, u} C] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A category \"has a zero object\" if it has an object which is both initial and terminal. </code>",
+ "3":
+ "<code>CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent.{w, v, u} (C : Type u)\n  [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive]\n  [Pretriangulated C] [IsTriangulated C] (k : Type w) [Field k] [Linear k C] [IsFiniteType k C]\n  [Functor.Linear k (shiftFunctor C 1)] [NumericallyFinite k C]\n  (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :\n  ∃ E x x_1, ∃ (_ : FiniteDimensional ℂ E), ∃ x_3, IsManifold 𝓘(ℂ, E) ⊤ (NumericalComponent k C cc)</code><span class=\"sep\"></span><code class=\"docstring\">**Bridgeland's Corollary 1.3** for numerical stability conditions. Each connected\ncomponent of `Stab_N(D)` is a complex manifold of dimension `rk(N(D))`.\n\nThis is a specialization of the generic class-map theorem to\n`v = numericalQuotientMap k C`, which is surjective by definition. </code>",
+ "299": "<code>E ⟶ (shiftFunctor C n).obj T.obj₃</code>",
+ "298":
+ "<code>(E ⟶ (shiftFunctor C n).obj T.obj₃) →ₗ[k] E ⟶ (shiftFunctor C (n + 1)).obj T.obj₁</code>",
+ "297": "<code>δ_lin n = 0</code>",
+ "296": "<code>Subsingleton (E ⟶ (shiftFunctor C (n + 1)).obj T.obj₁)</code>",
+ "295":
+ "<code>Iff.mp {a b : Prop} (self : a ↔ b) : a → b</code><span class=\"sep\"></span><code class=\"docstring\">Modus ponens for if and only if. If `a ↔ b` and `a`, then `b`. </code>",
+ "294":
+ "<code>not_nontrivial_iff_subsingleton.{u_1} {α : Type u_1} : ¬Nontrivial α ↔ Subsingleton α</code>",
+ "293":
+ "<code>Subsingleton.{u} (α : Sort u) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A _subsingleton_ is a type with at most one element. It is either empty or has a unique element.\n\nAll propositions are subsingletons because of proof irrelevance: false propositions are empty, and\nall proofs of a true proposition are equal to one another. Some non-propositional types are also\nsubsingletons.\n</code>",
+ "292":
+ "<code>False : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`False` is the empty proposition. Thus, it has no introduction rules.\nIt represents a contradiction. `False` elimination rule, `False.rec`,\nexpresses the fact that anything follows from a contradiction.\nThis rule is sometimes called ex falso (short for ex falso sequitur quodlibet),\nor the principle of explosion.\nFor more information: [Propositional Logic](https://lean-lang.org/theorem_proving_in_lean4/propositions_and_proofs.html#propositional-logic)\n</code>",
+ "291":
+ "<code>Not (a : Prop) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`Not p`, or `¬p`, is the negation of `p`. It is defined to be `p → False`,\nso if your goal is `¬p` you can use `intro h` to turn the goal into\n`h : p ⊢ False`, and if you have `hn : ¬p` and `h : p` then `hn h : False`\nand `(hn h).elim` will prove anything.\nFor more information: [Propositional Logic](https://lean-lang.org/theorem_proving_in_lean4/propositions_and_proofs.html#propositional-logic)\n\n\nConventions for notations in identifiers:\n\n * The recommended spelling of `¬` in identifiers is `not`.</code>",
+ "290": "<code>¬Nontrivial (E ⟶ (shiftFunctor C (n + 1)).obj T.obj₁)</code>",
+ "29": "<code>HasZeroObject C</code>",
+ "289":
+ "<code class=\"docstring\">`by_contra h` proves `⊢ p` by contradiction,\nintroducing a hypothesis `h : ¬p` and proving `False`.\n* If `p` is a negation `¬q`, `h : q` will be introduced instead of `¬¬q`.\n* If `p` is decidable, it uses `Decidable.byContradiction` instead of `Classical.byContradiction`.\n* If `h` is omitted, the introduced variable will be called `this`.\n</code>",
+ "288": "<code>Nontrivial (E ⟶ (shiftFunctor C (n + 1)).obj T.obj₁)</code>",
+ "287":
+ "<code>Ne.{u} {α : Sort u} (a b : α) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`a ≠ b`, or `Ne a b` is defined as `¬ (a = b)` or `a = b → False`,\nand asserts that `a` and `b` are not equal.\n\n\nConventions for notations in identifiers:\n\n * The recommended spelling of `≠` in identifiers is `ne`.</code>",
+ "286": "<code>r n ≠ 0</code>",
+ "285": "<code>n ∈ Function.support r</code>",
+ "284":
+ "<code>Set.image.{u, v} {α : Type u} {β : Type v} (f : α → β) (s : Set α) : Set β</code><span class=\"sep\"></span><code class=\"docstring\">The image of `s : Set α` by `f : α → β`, written `f '' s`, is the set of `b : β` such that\n`f a = b` for some `a ∈ s`. </code>",
+ "283":
+ "<code>HasSubset.Subset.{u} {α : Type u} [self : HasSubset α] : α → α → Prop</code><span class=\"sep\"></span><code class=\"docstring\">Subset relation: `a ⊆ b`  \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `⊆` in identifiers is `subset`.</code>",
+ "282":
+ "<code>Set.Finite.image.{u, v} {α : Type u} {β : Type v} {s : Set α} (f : α → β) (hs : s.Finite) : (f '' s).Finite</code>",
+ "281":
+ "<code>Set.Finite.subset.{u} {α : Type u} {s : Set α} (hs : s.Finite) {t : Set α} (ht : t ⊆ s) : t.Finite</code>",
+ "280":
+ "<code class=\"docstring\">`refine e` behaves like `exact e`, except that named (`?x`) or unnamed (`?_`)\nholes in `e` that are not solved by unification with the main goal's target type\nare converted into new goals, using the hole's name, if any, as the goal case name.\n</code>",
+ "28":
+ "<code>CategoryTheory.Category.{v, u} (obj : Type u) : Type (max u (v + 1))</code><span class=\"sep\"></span><code class=\"docstring\">The typeclass `Category C` describes morphisms associated to objects of type `C`.\nThe universe levels of the objects and morphisms are unconstrained, and will often need to be\nspecified explicitly, as `Category.{v} C`. (See also `LargeCategory` and `SmallCategory`.) </code>",
+ "279":
+ "<code>Function.support.{u_1, u_3} {ι : Type u_1} {M : Type u_3} [Zero M] (f : ι → M) : Set ι</code><span class=\"sep\"></span><code class=\"docstring\">`support` of a function is the set of points `x` such that `f x ≠ 0`. </code>",
+ "278": "<code>(Function.support r).Finite</code>",
+ "277":
+ "<code class=\"docstring\">`linarith` attempts to find a contradiction between hypotheses that are linear (in)equalities.\nEquivalently, it can prove a linear inequality by assuming its negation and proving `False`.\n\nIn theory, `linarith` should prove any goal that is true in the theory of linear arithmetic over\nthe rationals. While there is some special handling for non-dense orders like `Nat` and `Int`,\nthis tactic is not complete for these theories and will not prove every true goal. It will solve\ngoals over arbitrary types that instantiate `CommRing`, `LinearOrder` and `IsStrictOrderedRing`.\n\nAn example:\n```lean\nexample (x y z : ℚ) (h1 : 2*x &lt; 3*y) (h2 : -4*x + 2*z &lt; 0)\n        (h3 : 12*y - 4* z &lt; 0) : False := by\n  linarith\n```\n\n`linarith` will use all appropriate hypotheses and the negation of the goal, if applicable.\nDisequality hypotheses require case splitting and are not normally considered\n(see the `splitNe` option below).\n\n`linarith [t1, t2, t3]` will additionally use proof terms `t1, t2, t3`.\n\n`linarith only [h1, h2, h3, t1, t2, t3]` will use only the goal (if relevant), local hypotheses\n`h1`, `h2`, `h3`, and proofs `t1`, `t2`, `t3`. It will ignore the rest of the local context.\n\n`linarith!` will use a stronger reducibility setting to try to identify atoms. For example,\n```lean\nexample (x : ℚ) : id x ≥ x := by\n  linarith\n```\nwill fail, because `linarith` will not identify `x` and `id x`. `linarith!` will.\nThis can sometimes be expensive.\n\n`linarith (config := { .. })` takes a config object with five\noptional arguments:\n* `discharger` specifies a tactic to be used for reducing an algebraic equation in the\n  proof stage. The default is `ring`. Other options include `simp` for basic\n  problems.\n* `transparency` controls how hard `linarith` will try to match atoms to each other. By default\n  it will only unfold `reducible` definitions.\n* If `splitHypotheses` is true, `linarith` will split conjunctions in the context into separate\n  hypotheses.\n* If `splitNe` is `true`, `linarith` will case split on disequality hypotheses.\n  For a given `x ≠ y` hypothesis, `linarith` is run with both `x &lt; y` and `x &gt; y`,\n  and so this runs linarith exponentially many times with respect to the number of\n  disequality hypotheses. (`false` by default.)\n* If `exfalso` is `false`, `linarith` will fail when the goal is neither an inequality nor `False`.\n  (`true` by default.)\n* If `minimize` is `false`, `linarith?` will report all hypotheses appearing in its initial\n  proof without attempting to drop redundancies. (`true` by default.)\n* `restrict_type` (not yet implemented in mathlib4)\n  will only use hypotheses that are inequalities over `tp`. This is useful\n  if you have e.g. both integer- and rational-valued inequalities in the local context, which can\n  sometimes confuse the tactic.\n\nA variant, `nlinarith`, does some basic preprocessing to handle some nonlinear goals.\n\nThe option `set_option trace.linarith true` will trace certain intermediate stages of the `linarith`\nroutine.\n</code>",
+ "276":
+ "<code class=\"docstring\">Location specifications are used by many tactics that can operate on either the\nhypotheses or the goal. It can have one of the forms:\n* 'empty' is not actually present in this syntax, but most tactics use\n  `(location)?` matchers. It means to target the goal only.\n* `at h₁ ... hₙ`: target the hypotheses `h₁`, ..., `hₙ`\n* `at h₁ h₂ ⊢`: target the hypotheses `h₁` and `h₂`, and the goal\n* `at *`: target all hypotheses and the goal\n</code>",
+ "275":
+ "<code>Module.finrank k ↥(δ_lin n).range + Module.finrank k ↥(δ_lin n).ker =\n  Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₃)</code>",
+ "274":
+ "<code>↑(Module.finrank k ↥g_n.range) = ↑(Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₃)) - r n</code>",
+ "273":
+ "<code>Module.finrank k ↥f_n.range + Module.finrank k ↥f_n.ker = Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₁)</code>",
+ "272":
+ "<code>LinearMap.finrank_range_add_finrank_ker.{u, v, v'} {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V]\n  [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂] [FiniteDimensional K V] (f : V →ₗ[K] V₂) :\n  Module.finrank K ↥f.range + Module.finrank K ↥f.ker = Module.finrank K V</code><span class=\"sep\"></span><code class=\"docstring\">rank-nullity theorem : the dimensions of the kernel and the range of a linear map add up to\nthe dimension of the source space. </code>",
+ "271":
+ "<code>↑(Module.finrank k ↥f_n.range) = ↑(Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₁)) - r (n - 1)</code>",
+ "270": "<code>Submodule k (E ⟶ (shiftFunctor C n).obj T.obj₃)</code>",
+ "27": "<code>Category.{v, u} C</code>",
+ "269":
+ "<code>CategoryTheory.Functor.homologySequence_exact₃.{v_1, u_1, v_3, u_3} {C : Type u_1} {A : Type u_3}\n  [Category.{v_1, u_1} C] [HasShift C ℤ] [Category.{v_3, u_3} A] (F : C ⥤ A) [HasZeroObject C] [Preadditive C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [Abelian A] [F.IsHomological] [F.ShiftSequence ℤ]\n  (T : Triangle C) (hT : T ∈ distinguishedTriangles) (n₀ n₁ : ℤ) (h : n₀ + 1 = n₁) :\n  { X₁ := (F.shift n₀).obj T.obj₂, X₂ := (F.shift n₀).obj T.obj₃, X₃ := (F.shift n₁).obj T.obj₁,\n      f := (F.shift n₀).map T.mor₂, g := F.homologySequenceδ T n₀ n₁ h, zero := ⋯ }.Exact</code>",
+ "268": "<code>g_n.range = (δ_lin n).ker</code>",
+ "267":
+ "<code>Module.finrank k ↥(δ_lin n).ker = Module.finrank k ↥g_n.range</code>",
+ "266": "<code>n = n - 1 + 1</code>",
+ "265":
+ "<code class=\"docstring\">* `change tgt'` will change the goal from `tgt` to `tgt'`,\n  assuming these are definitionally equal.\n* `change t' at h` will change hypothesis `h : t` to have type `t'`, assuming\n  assuming `t` and `t'` are definitionally equal.\n* `change a with b` will change occurrences of `a` to `b` in the goal,\n  assuming `a` and `b` are definitionally equal.\n* `change a with b at h` similarly changes `a` to `b` in the type of hypothesis `h`.\n</code>",
+ "264": "<code>↑(Module.finrank k ↥f_n.ker) = r (n - 1)</code>",
+ "263": "<code>Module.Finite k (E ⟶ (shiftFunctor C n).obj T.obj₃)</code>",
+ "262": "<code>Module.Finite k (E ⟶ (shiftFunctor C n).obj T.obj₁)</code>",
+ "261":
+ "<code>CategoryTheory.Triangulated.finrank_mid_of_exact.{w, v} (k : Type w) [Field k] {K M N : Type v} [AddCommGroup K]\n  [Module k K] [AddCommGroup M] [Module k M] [AddCommGroup N] [Module k N] [Module.Finite k M] (f : K →ₗ[k] M)\n  (g : M →ₗ[k] N) (hfg : f.range = g.ker) :\n  ↑(Module.finrank k M) = ↑(Module.finrank k ↥f.range) + ↑(Module.finrank k ↥g.range)</code>",
+ "260":
+ "<code>↑(Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₂)) =\n  ↑(Module.finrank k ↥f_n.range) + ↑(Module.finrank k ↥g_n.range)</code>",
+ "26":
+ "<code class=\"docstring\">`by tac` constructs a term of the expected type by running the tactic(s) `tac`. </code>",
+ "259": "<code>Module.Finite k (E ⟶ (shiftFunctor C n).obj T.obj₂)</code>",
+ "258":
+ "<code>CategoryTheory.Functor.homologySequence_exact₂.{v_1, u_1, v_3, u_3} {C : Type u_1} {A : Type u_3}\n  [Category.{v_1, u_1} C] [HasShift C ℤ] [Category.{v_3, u_3} A] (F : C ⥤ A) [HasZeroObject C] [Preadditive C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [Abelian A] [F.IsHomological] [F.ShiftSequence ℤ]\n  (T : Triangle C) (hT : T ∈ distinguishedTriangles) (n₀ : ℤ) :\n  { X₁ := (F.shift n₀).obj T.obj₁, X₂ := (F.shift n₀).obj T.obj₂, X₃ := (F.shift n₀).obj T.obj₃,\n      f := (F.shift n₀).map T.mor₁, g := (F.shift n₀).map T.mor₂, zero := ⋯ }.Exact</code>",
+ "257": "<code>f_n.range = g_n.ker</code>",
+ "256":
+ "<code>CategoryTheory.Pretriangulated.Triangle.mor₂.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Triangle C) : self.obj₂ ⟶ self.obj₃</code><span class=\"sep\"></span><code class=\"docstring\">the second morphism of a triangle </code>",
+ "255":
+ "<code>(E ⟶ (shiftFunctor C n).obj T.obj₂) →ₗ[k] E ⟶ (shiftFunctor C n).obj T.obj₃</code>",
+ "254":
+ "<code>(E ⟶ (shiftFunctor C n).obj T.obj₁) →ₗ[k] E ⟶ (shiftFunctor C n).obj T.obj₂</code>",
+ "253":
+ "<code>∀ (n : ℤ),\n  ↑(Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₂)) =\n    ↑(Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₁)) + ↑(Module.finrank k (E ⟶ (shiftFunctor C n).obj T.obj₃)) -\n        r (n - 1) -\n      r n</code>",
+ "252":
+ "<code>Eq.symm.{u} {α : Sort u} {a b : α} (h : a = b) : b = a</code><span class=\"sep\"></span><code class=\"docstring\">Equality is symmetric: if `a = b` then `b = a`.\n\nBecause this is in the `Eq` namespace, if you have a variable `h : a = b`,\n`h.symm` can be used as shorthand for `Eq.symm h` as a proof of `b = a`.\n\nFor more information: [Equality](https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality)\n</code>",
+ "251":
+ "<code>Submodule.{u, v} (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] [Module R M] : Type v</code><span class=\"sep\"></span><code class=\"docstring\">A submodule of a module is one which is closed under vector operations.\nThis is a sufficient condition for the subset of vectors in the submodule\nto themselves form a module. </code>",
+ "250": "<code>Submodule k (E ⟶ (shiftFunctor C (m + 1)).obj T.obj₁)</code>",
+ "25":
+ "<code>WithTop.{u_2} (α : Type u_2) : Type u_2</code><span class=\"sep\"></span><code class=\"docstring\">Attach `⊤` to a type. </code>",
+ "249":
+ "<code>congrArg.{u, v} {α : Sort u} {β : Sort v} {a₁ a₂ : α} (f : α → β) (h : a₁ = a₂) : f a₁ = f a₂</code><span class=\"sep\"></span><code class=\"docstring\">Congruence in the function argument: if `a₁ = a₂` then `f a₁ = f a₂` for\nany (nondependent) function `f`. This is more powerful than it might look at first, because\nyou can also use a lambda expression for `f` to prove that\n`&lt;something containing a₁&gt; = &lt;something containing a₂&gt;`. This function is used\ninternally by tactics like `congr` and `simp` to apply equalities inside\nsubterms.\n\nFor more information: [Equality](https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality)\n</code>",
+ "248":
+ "<code>CategoryTheory.Functor.homologySequence_exact₁.{v_1, u_1, v_3, u_3} {C : Type u_1} {A : Type u_3}\n  [Category.{v_1, u_1} C] [HasShift C ℤ] [Category.{v_3, u_3} A] (F : C ⥤ A) [HasZeroObject C] [Preadditive C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [Abelian A] [F.IsHomological] [F.ShiftSequence ℤ]\n  (T : Triangle C) (hT : T ∈ distinguishedTriangles) (n₀ n₁ : ℤ) (h : n₀ + 1 = n₁) :\n  { X₁ := (F.shift n₀).obj T.obj₃, X₂ := (F.shift n₁).obj T.obj₁, X₃ := (F.shift n₁).obj T.obj₂,\n      f := F.homologySequenceδ T n₀ n₁ h, g := (F.shift n₁).map T.mor₁, zero := ⋯ }.Exact</code>",
+ "247":
+ "<code>CategoryTheory.ShortComplex.Exact.moduleCat_range_eq_ker.{v, u} {R : Type u} [Ring R] {S : ShortComplex (ModuleCat R)}\n  (hS : S.Exact) : (ModuleCat.Hom.hom S.f).range = (ModuleCat.Hom.hom S.g).ker</code>",
+ "246": "<code>(δ_lin m).range = f_succ.ker</code>",
+ "245":
+ "<code>(E ⟶ (shiftFunctor C (m + 1)).obj T.obj₁) →ₗ[k] E ⟶ (shiftFunctor C (m + 1)).obj T.obj₂</code>",
+ "244":
+ "<code>CategoryTheory.Pretriangulated.Triangle.mor₁.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Triangle C) : self.obj₁ ⟶ self.obj₂</code><span class=\"sep\"></span><code class=\"docstring\">the first morphism of a triangle </code>",
+ "243":
+ "<code>LinearMap.ker.{u_1, u_2, u_5, u_7} {R : Type u_1} {R₂ : Type u_2} {M : Type u_5} {M₂ : Type u_7} [Semiring R]\n  [Semiring R₂] [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module R₂ M₂] {τ₁₂ : R →+* R₂} (f : M →ₛₗ[τ₁₂] M₂) :\n  Submodule R M</code><span class=\"sep\"></span><code class=\"docstring\">The kernel of a linear map `f : M → M₂` is defined to be `comap f ⊥`. This is equivalent to the\nset of `x : M` such that `f x = 0`. The kernel is a submodule of `M`. </code>",
+ "242":
+ "<code>∀ (m : ℤ), ↑(Module.finrank k ↥(ModuleCat.Hom.hom ((F.shift (m + 1)).map T.mor₁)).ker) = r m</code>",
+ "241":
+ "<code>CategoryTheory.Pretriangulated.preadditiveCoyoneda_homologySequenceδ_apply.{v_1, u_1} {C : Type u_1}\n  [Category.{v_1, u_1} C] [Preadditive C] [HasShift C ℤ] (T : Triangle C) (n₀ n₁ : ℤ) (h : n₀ + 1 = n₁) {A : Cᵒᵖ}\n  (x : Opposite.unop A ⟶ (shiftFunctor C n₀).obj T.obj₃) :\n  (ConcreteCategory.hom ((preadditiveCoyoneda.obj A).homologySequenceδ T n₀ n₁ h)) x =\n    x ≫ (shiftFunctor C n₀).map T.mor₃ ≫ (shiftFunctorAdd' C 1 n₀ n₁ ⋯).inv.app T.obj₁</code>",
+ "240":
+ "<code>CategoryTheory.Functor.shift.{v_1, u_1, v_2, u_2, u_3} {C : Type u_1} {A : Type u_2} [Category.{v_1, u_1} C]\n  [Category.{v_2, u_2} A] (F : C ⥤ A) {M : Type u_3} [AddMonoid M] [HasShift C M] [F.ShiftSequence M] (n : M) : C ⥤ A</code><span class=\"sep\"></span><code class=\"docstring\">The shifted functors given by the shift sequence. </code>",
+ "24":
+ "<code>IsManifold.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {E : Type u_2} [NormedAddCommGroup E]\n  [NormedSpace 𝕜 E] {H : Type u_3} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (n : WithTop ℕ∞) (M : Type u_4)\n  [TopologicalSpace M] [ChartedSpace H M] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">Typeclass defining manifolds with respect to a model with corners, over a\nfield `𝕜`. This definition includes the model with corners `I` (which might allow boundary, corners,\nor not, so this class covers both manifolds with boundary and manifolds without boundary), and\na smoothness parameter `n : WithTop ℕ∞` (where `n = 0` means topological manifold, `n = ∞` means\nsmooth manifold and `n = ω` means analytic manifold). </code>",
+ "239": "<code>↑((F.shift n).obj T.obj₃)</code>",
+ "238":
+ "<code class=\"docstring\">Applies extensionality lemmas that are registered with the `@[ext]` attribute.\n* `ext pat*` applies extensionality theorems as much as possible,\n  using the patterns `pat*` to introduce the variables in extensionality theorems using `rintro`.\n  For example, the patterns are used to name the variables introduced by lemmas such as `funext`.\n* Without patterns,`ext` applies extensionality lemmas as much\n  as possible but introduces anonymous hypotheses whenever needed.\n* `ext pat* : n` applies ext theorems only up to depth `n`.\n\nThe `ext1 pat*` tactic is like `ext pat*` except that it only applies a single extensionality theorem.\n\nUnused patterns will generate warning.\nPatterns that don't match the variables will typically result in the introduction of anonymous hypotheses.\n</code>",
+ "237":
+ "<code class=\"docstring\">Introduces one or more hypotheses, optionally naming and/or pattern-matching them.\nFor each hypothesis to be introduced, the remaining main goal's target type must\nbe a `let` or function type.\n\n* `intro` by itself introduces one anonymous hypothesis, which can be accessed\n  by e.g. `assumption`. It is equivalent to `intro _`.\n* `intro x y` introduces two hypotheses and names them. Individual hypotheses\n  can be anonymized via `_`, given a type ascription, or matched against a pattern:\n  ```lean\n  -- ... ⊢ α × β → ...\n  intro (a, b)\n  -- ..., a : α, b : β ⊢ ...\n  ```\n* `intro rfl` is short for `intro h; subst h`, if `h` is an equality where the left-hand or right-hand side\n  is a variable.\n* Alternatively, `intro` can be combined with pattern matching much like `fun`:\n  ```lean\n  intro\n  | n + 1, 0 =&gt; tac\n  | ...\n  ```\n</code>",
+ "236":
+ "<code>ModuleCat.Hom.hom.{v, u} {R : Type u} [Ring R] {A B : ModuleCat R} (f : A.Hom B) : ↑A →ₗ[R] ↑B</code><span class=\"sep\"></span><code class=\"docstring\">Turn a morphism in `ModuleCat` back into a `LinearMap`. </code>",
+ "235":
+ "<code>rfl.{u} {α : Sort u} {a : α} : a = a</code><span class=\"sep\"></span><code class=\"docstring\">`rfl : a = a` is the unique constructor of the equality type. This is the\nsame as `Eq.refl` except that it takes `a` implicitly instead of explicitly.\n\nThis is a more powerful theorem than it may appear at first, because although\nthe statement of the theorem is `a = a`, Lean will allow anything that is\ndefinitionally equal to that type. So, for instance, `2 + 2 = 4` is proven in\nLean by `rfl`, because both sides are the same up to definitional equality.\n</code>",
+ "234":
+ "<code>CategoryTheory.Functor.homologySequenceδ.{v_1, u_1, v_3, u_3} {C : Type u_1} {A : Type u_3} [Category.{v_1, u_1} C]\n  [HasShift C ℤ] [Category.{v_3, u_3} A] (F : C ⥤ A) [F.ShiftSequence ℤ] (T : Triangle C) (n₀ n₁ : ℤ)\n  (h : n₀ + 1 = n₁) : (F.shift n₀).obj T.obj₃ ⟶ (F.shift n₁).obj T.obj₁</code><span class=\"sep\"></span><code class=\"docstring\">The connecting homomorphism in the long exact sequence attached to a homological\nfunctor and a distinguished triangle. </code>",
+ "233":
+ "<code>∀ (n : ℤ), ModuleCat.Hom.hom (F.homologySequenceδ T n (n + 1) ⋯) = δ_lin n</code>",
+ "232":
+ "<code>CategoryTheory.Functor.map.{v₁, v₂, u₁, u₂} {C : Type u₁} [Category.{v₁, u₁} C] {D : Type u₂} [Category.{v₂, u₂} D]\n  (self : C ⥤ D) {X Y : C} : (X ⟶ Y) → (self.obj X ⟶ self.obj Y)</code><span class=\"sep\"></span><code class=\"docstring\">The action of a functor on morphisms. </code>",
+ "231":
+ "<code>CategoryTheory.CategoryStruct.comp.{v, u} {obj : Type u} [self : CategoryStruct.{v, u} obj] {X Y Z : obj} :\n  (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)</code><span class=\"sep\"></span><code class=\"docstring\">Composition of morphisms in a category, written `f ≫ g`. </code>",
+ "230":
+ "<code>LinearMap.{u_14, u_15, u_16, u_17} {R : Type u_14} {S : Type u_15} [Semiring R] [Semiring S] (σ : R →+* S)\n  (M : Type u_16) (M₂ : Type u_17) [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module S M₂] :\n  Type (max u_16 u_17)</code><span class=\"sep\"></span><code class=\"docstring\">A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`\nis semilinear if it satisfies the two properties `f (x + y) = f x + f y` and\n`f (c • x) = (σ c) • f x`. Elements of `LinearMap σ M M₂` (available under the notation\n`M →ₛₗ[σ] M₂`) are bundled versions of such maps. For plain linear maps (i.e. for which\n`σ = RingHom.id R`), the notation `M →ₗ[R] M₂` is available. An unbundled version of plain linear\nmaps is available with the predicate `IsLinearMap`, but it should be avoided most of the time. </code>",
+ "23":
+ "<code>CategoryTheory.Triangulated.NumericalComponent.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)]\n  (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">A connected component of numerical stability conditions. </code>",
+ "229":
+ "<code>LinearMap.range.{u_1, u_2, u_5, u_6} {R : Type u_1} {R₂ : Type u_2} {M : Type u_5} {M₂ : Type u_6} [Semiring R]\n  [Semiring R₂] [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module R₂ M₂] {τ₁₂ : R →+* R₂}\n  [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) : Submodule R₂ M₂</code><span class=\"sep\"></span><code class=\"docstring\">The range of a linear map `f : M → M₂` is a submodule of `M₂`.\nSee Note [range copy pattern]. </code>",
+ "228": "<code>ℤ → ℤ</code>",
+ "227":
+ "<code>CategoryTheory.NatTrans.app.{v₁, v₂, u₁, u₂} {C : Type u₁} [Category.{v₁, u₁} C] {D : Type u₂} [Category.{v₂, u₂} D]\n  {F G : C ⥤ D} (self : NatTrans F G) (X : C) : F.obj X ⟶ G.obj X</code><span class=\"sep\"></span><code class=\"docstring\">The component of a natural transformation. </code>",
+ "226":
+ "<code>CategoryTheory.Iso.inv.{v, u} {C : Type u} [Category.{v, u} C] {X Y : C} (self : X ≅ Y) : Y ⟶ X</code><span class=\"sep\"></span><code class=\"docstring\">The backwards direction of an isomorphism. </code>",
+ "225":
+ "<code>CategoryTheory.shiftFunctorAdd'.{v, u, u_1} (C : Type u) {A : Type u_1} [Category.{v, u} C] [AddMonoid A] [HasShift C A]\n  (i j k : A) (h : i + j = k) : shiftFunctor C k ≅ shiftFunctor C i ⋙ shiftFunctor C j</code><span class=\"sep\"></span><code class=\"docstring\">When `k = i + j`, shifting by `k` is the same as shifting by `i` and then shifting by `j`. </code>",
+ "224":
+ "<code>CategoryTheory.Pretriangulated.Triangle.mor₃.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Triangle C) : self.obj₃ ⟶ (shiftFunctor C 1).obj self.obj₁</code><span class=\"sep\"></span><code class=\"docstring\">the third morphism of a triangle </code>",
+ "223":
+ "<code>CategoryTheory.Linear.rightComp.{w, v, u} {C : Type u} [Category.{v, u} C] [Preadditive C] (R : Type w) [Semiring R]\n  [Linear R C] (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z</code><span class=\"sep\"></span><code class=\"docstring\">Composition by a fixed right argument as an `R`-linear map. </code>",
+ "222":
+ "<code>(n : ℤ) → (E ⟶ (shiftFunctor C n).obj T.obj₃) →ₗ[k] E ⟶ (shiftFunctor C (n + 1)).obj T.obj₁</code>",
+ "221": "<code>F.IsHomological</code>",
+ "220":
+ "<code>CategoryTheory.Triangulated.linearCoyonedaObjIsHomological.{w, v, u} (k : Type w) [Field k] (C : Type u)\n  [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive]\n  [Pretriangulated C] [Linear k C] (E : C) : ((linearCoyoneda k C).obj (Opposite.op E)).IsHomological</code>",
+ "22":
+ "<code>ChartedSpace.{u_5, u_6} (H : Type u_5) [TopologicalSpace H] (M : Type u_6) [TopologicalSpace M] : Type (max u_5 u_6)</code><span class=\"sep\"></span><code class=\"docstring\">A charted space is a topological space endowed with an atlas, i.e., a set of local\nhomeomorphisms taking values in a model space `H`, called charts, such that the domains of the\ncharts cover the whole space. We express the covering property by choosing for each `x` a member\n`chartAt x` of the atlas containing `x` in its source: in the smooth case, this is convenient to\nconstruct the tangent bundle in an efficient way.\nThe model space is written as an explicit parameter as there can be several model spaces for a\ngiven topological space. For instance, a complex manifold (modelled over `ℂ^n`) will also be seen\nsometimes as a real manifold over `ℝ^(2n)`.\n</code>",
+ "219":
+ "<code>CategoryTheory.Functor.IsHomological.{v_1, u_1, v_3, u_3} {C : Type u_1} {A : Type u_3} [Category.{v_1, u_1} C]\n  [HasShift C ℤ] [Category.{v_3, u_3} A] (F : C ⥤ A) [HasZeroObject C] [Preadditive C]\n  [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] [Abelian A] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A functor from a pretriangulated category to an abelian category is a homological functor\nif it sends distinguished triangles to exact sequences. </code>",
+ "218": "<code>F.ShiftSequence ℤ</code>",
+ "217":
+ "<code>CategoryTheory.Functor.ShiftSequence.tautological.{v_1, u_1, v_2, u_2, u_3} {C : Type u_1} {A : Type u_2}\n  [Category.{v_1, u_1} C] [Category.{v_2, u_2} A] (F : C ⥤ A) (M : Type u_3) [AddMonoid M] [HasShift C M] :\n  F.ShiftSequence M</code><span class=\"sep\"></span><code class=\"docstring\">The tautological shift sequence on a functor. </code>",
+ "216":
+ "<code>CategoryTheory.Functor.ShiftSequence.{v_1, u_1, v_2, u_2, u_3} {C : Type u_1} {A : Type u_2} [Category.{v_1, u_1} C]\n  [Category.{v_2, u_2} A] (F : C ⥤ A) (M : Type u_3) [AddMonoid M] [HasShift C M] :\n  Type (max (max (max (max u_1 u_2) u_3) v_1) v_2)</code><span class=\"sep\"></span><code class=\"docstring\">A shift sequence for a functor `F : C ⥤ A` when `C` is equipped with a shift\nby a monoid `M` involves a sequence of functor `sequence n : C ⥤ A` for all `n : M`\nwhich behave like `shiftFunctor C n ⋙ F`. </code>",
+ "215":
+ "<code class=\"docstring\">`letI` behaves like `let`, but inlines the value instead of producing a `let` term. </code>",
+ "214":
+ "<code>CategoryTheory.Functor.{v₁, v₂, u₁, u₂} (C : Type u₁) [Category.{v₁, u₁} C] (D : Type u₂) [Category.{v₂, u₂} D] :\n  Type (max v₁ v₂ u₁ u₂)</code><span class=\"sep\"></span><code class=\"docstring\">`Functor C D` represents a functor between categories `C` and `D`.\n\nTo apply a functor `F` to an object use `F.obj X`, and to a morphism use `F.map f`.\n\nThe axiom `map_id` expresses preservation of identities, and\n`map_comp` expresses functoriality. </code>",
+ "213":
+ "<code>Opposite.op.{u} {α : Sort u} (unop : α) : αᵒᵖ</code><span class=\"sep\"></span><code class=\"docstring\">The canonical map `α → αᵒᵖ`. </code>",
+ "212":
+ "<code>CategoryTheory.linearCoyoneda.{w, v, u} (R : Type w) [Ring R] (C : Type u) [Category.{v, u} C] [Preadditive C]\n  [Linear R C] : Cᵒᵖ ⥤ C ⥤ ModuleCat R</code><span class=\"sep\"></span><code class=\"docstring\">The Yoneda embedding for `R`-linear categories `C`,\nsending an object `Y : Cᵒᵖ` to the `ModuleCat R`-valued copresheaf on `C`,\nwith value on `X : C` given by `ModuleCat.of R (unop Y ⟶ X)`. </code>",
+ "211":
+ "<code>ModuleCat.{v, u} (R : Type u) [Ring R] : Type (max u (v + 1))</code><span class=\"sep\"></span><code class=\"docstring\">The category of R-modules and their morphisms.\n\nNote that in the case of `R = ℤ`, we cannot\nimpose here that the `ℤ`-multiplication field from the module structure is defeq to the one coming\nfrom the `isAddCommGroup` structure (contrary to what we do for all module structures in\nmathlib), which creates some difficulties down the road. </code>",
+ "210": "<code>C ⥤ ModuleCat k</code>",
+ "21":
+ "<code>FiniteDimensional.{u_1, u_2} (K : Type u_1) (V : Type u_2) [DivisionRing K] [AddCommGroup V] [Module K V] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`FiniteDimensional` vector spaces are defined to be finite modules.\nUse `Module.Basis.finiteDimensional_of_finite` to prove finite dimension from another definition. </code>",
+ "209":
+ "<code class=\"docstring\">The `let` tactic is for adding definitions to the local context of the main goal.\nThe definition can be unfolded, unlike definitions introduced by `have`.\n\n* `let x : t := e` adds the definition `x : t := e` if `e` is a term of type `t`.\n* `let x := e` uses the type of `e` for `t`.\n* `let : t := e` and `let := e` use `this` for the name of the hypothesis.\n* `let pat := e` for a pattern `pat` is equivalent to `match e with | pat =&gt; _`,\n  where `_` stands for the tactics that follow this one.\n  It is convenient for types that let only one applicable constructor.\n  For example, given `p : α × β × γ`, `let ⟨x, y, z⟩ := p` produces the\n  local variables `x : α`, `y : β`, and `z : γ`.\n* The syntax `let (eq := h) pat := e` is equivalent to `match h : e with | pat =&gt; _`,\n  which adds the equation `h : e = pat` to the local context.\n\nThe tactic supports all the same syntax variants and options as the `let` term.\n\n## Properties and relations\n\n* Unlike `have`, it is possible to unfold definitions introduced using `let`, using tactics\n  such as `simp`, `dsimp`, `unfold`, and `subst`.\n* The `clear_value` tactic turns a `let` definition into a `have` definition after the fact.\n  The tactic might fail if the local context depends on the value of the variable.\n* The `let` tactic is preferred for data (non-propositions).\n* Sometimes `have` is used for non-propositions to ensure that the variable is never unfolded,\n  which may be important for performance reasons.\n</code>",
+ "208":
+ "<code>Quiver.Hom.{v, u} {V : Type u} [self : Quiver V] : V → V → Type v</code><span class=\"sep\"></span><code class=\"docstring\">The type of edges/arrows/morphisms between a given source and target. </code>",
+ "207":
+ "<code>HMul.hMul.{u, v, w} {α : Type u} {β : Type v} {γ : outParam (Type w)} [self : HMul α β γ] : α → β → γ</code><span class=\"sep\"></span><code class=\"docstring\">`a * b` computes the product of `a` and `b`.\nThe meaning of this notation is type-dependent. \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `*` in identifiers is `mul`.</code>",
+ "206":
+ "<code>finsum.{u_7, u_8} {M : Type u_7} {α : Sort u_8} [AddCommMonoid M] (f : α → M) : M</code><span class=\"sep\"></span><code class=\"docstring\">Sum of `f x` as `x` ranges over the elements of the support of `f`, if it's finite. Zero\notherwise. </code>",
+ "205": "<code>T ∈ distinguishedTriangles</code>",
+ "204": "<code>Triangle C</code>",
+ "203":
+ "<code>∀ T ∈ distinguishedTriangles, eulerFormObj k C E T.obj₂ = eulerFormObj k C E T.obj₁ + eulerFormObj k C E T.obj₃</code>",
+ "202":
+ "<code>CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive.{w, v, u} (k : Type w) [Field k] (C : Type u)\n  [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive]\n  [Pretriangulated C] [Linear k C] [IsFiniteType k C] (E : C) : IsTriangleAdditive fun F =&gt; eulerFormObj k C E F</code>",
+ "201":
+ "<code>CategoryTheory.IsStrictNoetherianObject.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] [HasKernels C]\n  [HasCokernels C] (X : C) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain\ncondition. </code>",
+ "200":
+ "<code>CategoryTheory.ObjectProperty.Is.{v, u} {C : Type u} [CategoryStruct.{v, u} C] (P : ObjectProperty C) (X : C) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">The typeclass associated to `P : ObjectProperty C`. </code>",
+ "20":
+ "<code>NormedSpace.{u_6, u_7} (𝕜 : Type u_6) (E : Type u_7) [NormedField 𝕜] [SeminormedAddCommGroup E] : Type (max u_6 u_7)</code><span class=\"sep\"></span><code class=\"docstring\">A normed space over a normed field is a vector space endowed with a norm which satisfies the\nequality `‖c • x‖ = ‖c‖ ‖x‖`. We require only `‖c • x‖ ≤ ‖c‖ ‖x‖` in the definition, then prove\n`‖c • x‖ = ‖c‖ ‖x‖` in `norm_smul`.\n\nNote that since this requires `SeminormedAddCommGroup` and not `NormedAddCommGroup`, this\ntypeclass can be used for \"seminormed spaces\" too, just as `Module` can be used for\n\"semimodules\". </code>",
+ "2":
+ "<code><span class=\"literal string\">\"complex manifold conclusion only; local homeomorphism is in componentTopologicalLinearLocalModel\"</span> : String</code>",
+ "199":
+ "<code>CategoryTheory.IsStrictArtinianObject.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] [HasKernels C]\n  [HasCokernels C] (X : C) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">An object is *strict-Artinian* if its strict subobjects satisfy the descending chain\ncondition. </code>",
+ "198":
+ "<code>WellFoundedGT.{u_1} (α : Type u_1) [LT α] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A class for a well-founded relation `&gt;`. </code>",
+ "197":
+ "<code>CategoryTheory.isStrictNoetherianObject.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] [HasKernels C]\n  [HasCokernels C] : ObjectProperty C</code><span class=\"sep\"></span><code class=\"docstring\">An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain\ncondition. This is the exact finite-length notion relevant to quasi-abelian categories. </code>",
+ "196":
+ "<code>WellFoundedLT.{u_1} (α : Type u_1) [LT α] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A class for a well-founded relation `&lt;`. </code>",
+ "195":
+ "<code>CategoryTheory.ObjectProperty.{v, u} (C : Type u) [CategoryStruct.{v, u} C] : Type u</code><span class=\"sep\"></span><code class=\"docstring\">A property of objects in a category `C` is a predicate `C → Prop`. </code>",
+ "194":
+ "<code>CategoryTheory.isStrictArtinianObject.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] [HasKernels C]\n  [HasCokernels C] : ObjectProperty C</code><span class=\"sep\"></span><code class=\"docstring\">An object is *strict-Artinian* if its strict subobjects satisfy the descending chain\ncondition. This is the exact finite-length notion relevant to quasi-abelian categories. </code>",
+ "193":
+ "<code>CategoryTheory.StrictSubobject.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] [HasKernels C]\n  [HasCokernels C] (X : C) : Type (max 0 u v)</code><span class=\"sep\"></span><code class=\"docstring\">The ordered type of strict subobjects of `X`. </code>",
+ "192":
+ "<code>CategoryTheory.Subobject.arrow.{v₁, u₁} {C : Type u₁} [Category.{v₁, u₁} C] {X : C} (Y : Subobject X) :\n  underlying.obj Y ⟶ X</code><span class=\"sep\"></span><code class=\"docstring\">The morphism in `C` from the arbitrarily chosen underlying object to the ambient object.\n</code>",
+ "191":
+ "<code>CategoryTheory.Subobject.{v₁, u₁} {C : Type u₁} [Category.{v₁, u₁} C] (X : C) : Type (max u₁ v₁)</code><span class=\"sep\"></span><code class=\"docstring\">The category of subobjects of `X : C`, defined as isomorphism classes of monomorphisms into `X`.\n</code>",
+ "190": "<code>Subobject X</code>",
+ "19":
+ "<code>NormedAddCommGroup.{u_8} (E : Type u_8) : Type u_8</code><span class=\"sep\"></span><code class=\"docstring\">A normed group is an additive group endowed with a norm for which `dist x y = ‖-x + y‖` defines\na metric space structure. </code>",
+ "189":
+ "<code>CategoryTheory.Subobject.IsStrict.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] [HasKernels C]\n  [HasCokernels C] {X : C} (P : Subobject X) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A subobject is *strict* if its arrow is a strict monomorphism. This is the\nquasi-abelian notion of admissible / exact subobject used in Bridgeland's finite-length\nthin interval categories. </code>",
+ "188":
+ "<code>CategoryTheory.IsStrictMono.strict.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] {X Y : C} {f : X ⟶ Y}\n  [HasKernel f] [HasCokernel f] [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)] (self : IsStrictMono f) :\n  IsStrict f</code>",
+ "187":
+ "<code>CategoryTheory.Mono.{v, u} {C : Type u} [Category.{v, u} C] {X Y : C} (f : X ⟶ Y) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A morphism `f` is a monomorphism if it can be cancelled when postcomposed:\n`g ≫ f = h ≫ f` implies `g = h`. \n\n[Stacks Tag 003B](https://stacks.math.columbia.edu/tag/003B)</code>",
+ "186":
+ "<code>CategoryTheory.IsStrictMono.mono.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] {X Y : C} {f : X ⟶ Y}\n  [HasKernel f] [HasCokernel f] [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)] (self : IsStrictMono f) : Mono f</code>",
+ "185":
+ "<code>CategoryTheory.IsStrictMono.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] {X Y : C} (f : X ⟶ Y)\n  [HasKernel f] [HasCokernel f] [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A morphism is a *strict monomorphism* if it is both a monomorphism and strict. </code>",
+ "184": "<code>X ⟶ Y</code>",
+ "183":
+ "<code>CategoryTheory.Abelian.coimageImageComparison.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] {P Q : C}\n  (f : P ⟶ Q) [HasCokernel f] [HasKernel f] [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)] :\n  Abelian.coimage f ⟶ Abelian.image f</code><span class=\"sep\"></span><code class=\"docstring\">The canonical map from the abelian coimage to the abelian image.\nIn any abelian category this is an isomorphism.\n\nConversely, any additive category with kernels and cokernels and\nin which this is always an isomorphism, is abelian. </code>",
+ "182":
+ "<code>CategoryTheory.IsIso.{v, u} {C : Type u} [Category.{v, u} C] {X Y : C} (f : X ⟶ Y) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">The `IsIso` typeclass expresses that a morphism is invertible.\n\nGiven a morphism `f` with `IsIso f`, one can view `f` as an isomorphism via `asIso f` and get\nthe inverse using `inv f`. </code>",
+ "181":
+ "<code>CategoryTheory.IsStrict.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroMorphisms C] {X Y : C} (f : X ⟶ Y) [HasKernel f]\n  [HasCokernel f] [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A morphism `f` is *strict* if the canonical comparison morphism from the\n(abelian) coimage to the (abelian) image is an isomorphism. In an abelian category,\nevery morphism is strict.\n\nThis uses `Abelian.coimageImageComparison` from `Mathlib.CategoryTheory.Abelian.Images`,\nwhich is defined without assuming the category is abelian. </code>",
+ "180":
+ "<code>CategoryTheory.Pretriangulated.Triangle.obj₃.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Triangle C) : C</code><span class=\"sep\"></span><code class=\"docstring\">the third object of a triangle </code>",
+ "18": "<code class=\"docstring\">The universe parameter u</code>",
+ "179": "<code>Fin P.n</code>",
+ "178": "<code>PostnikovTower C E</code>",
+ "177":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.factor.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (P : PostnikovTower C E) (i : Fin P.n) : C</code><span class=\"sep\"></span><code class=\"docstring\">The `i`-th factor of a Postnikov tower, derived as `obj₃` of the `i`-th\ndistinguished triangle. </code>",
+ "176":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.zero_isZero.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) : self.n = 0 → IsZero E</code><span class=\"sep\"></span><code class=\"docstring\">When `n = 0`, the object `E` is zero. </code>",
+ "175":
+ "<code>CategoryTheory.ComposableArrows.right.{v_1, u_1} {C : Type u_1} [Category.{v_1, u_1} C] {n : ℕ}\n  (F : ComposableArrows C n) : C</code><span class=\"sep\"></span><code class=\"docstring\">The rightmost object of `F : ComposableArrows C n`. </code>",
+ "174":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.top_iso.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) : Nonempty (self.chain.right ≅ E)</code><span class=\"sep\"></span><code class=\"docstring\">The rightmost object is isomorphic to `E`. </code>",
+ "173":
+ "<code>CategoryTheory.ComposableArrows.left.{v_1, u_1} {C : Type u_1} [Category.{v_1, u_1} C] {n : ℕ}\n  (F : ComposableArrows C n) : C</code><span class=\"sep\"></span><code class=\"docstring\">The leftmost object of `F : ComposableArrows C n`. </code>",
+ "172":
+ "<code>CategoryTheory.Limits.IsZero.{v, u} {C : Type u} [Category.{v, u} C] (X : C) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">An object `X` in a category is a *zero object* if for every object `Y`\nthere is a unique morphism `to : X → Y` and a unique morphism `from : Y → X`.\n\nThis is a characteristic predicate for `HasZeroObject`. </code>",
+ "171":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.base_isZero.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) : IsZero self.chain.left</code><span class=\"sep\"></span><code class=\"docstring\">The leftmost object is zero. </code>",
+ "170":
+ "<code>CategoryTheory.Iso.{v, u} {C : Type u} [Category.{v, u} C] (X Y : C) : Type v</code><span class=\"sep\"></span><code class=\"docstring\">An isomorphism (a.k.a. an invertible morphism) between two objects of a category.\nThe inverse morphism is bundled.\n\nSee also `CategoryTheory.Core` for the category with the same objects and isomorphisms playing\nthe role of morphisms. </code>",
+ "17":
+ "<code>CategoryTheory.Triangulated.numericalQuotientMap.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)] : K₀ C →+ NumericalK₀ k C</code><span class=\"sep\"></span><code class=\"docstring\">The quotient map `K₀(C) → N(C)`. </code>",
+ "169":
+ "<code>∀ (i : Fin n), Nonempty ((triangle i).obj₁ ≅ chain.obj' ↑i ⋯)</code>",
+ "168":
+ "<code>CategoryTheory.Pretriangulated.Triangle.obj₂.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Triangle C) : C</code><span class=\"sep\"></span><code class=\"docstring\">the second object of a triangle </code>",
+ "167":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.triangle_obj₂.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) (i : Fin self.n) : Nonempty ((self.triangle i).obj₂ ≅ self.chain.obj' (↑i + 1) ⋯)</code><span class=\"sep\"></span><code class=\"docstring\">The triangle's second object is isomorphic to the (i+1)-th chain object. </code>",
+ "166":
+ "<code class=\"docstring\">`lia` solves linear integer arithmetic goals.\n\nIt is a implemented as a thin wrapper around the `grind` tactic, enabling only the `lia` solver.\nPlease use `grind` instead if you need additional capabilities.\n</code>",
+ "165":
+ "<code>LE.le.{u} {α : Type u} [self : LE α] : α → α → Prop</code><span class=\"sep\"></span><code class=\"docstring\">The less-equal relation: `x ≤ y` \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `≤` in identifiers is `le`.\n\n * The recommended spelling of `&lt;=` in identifiers is `le` (prefer `≤` over `&lt;=`).</code>",
+ "164":
+ "<code>CategoryTheory.Pretriangulated.distinguishedTriangles.{v, u} {C : Type u} {inst✝ : Category.{v, u} C}\n  {inst✝¹ : HasZeroObject C} {inst✝² : HasShift C ℤ} {inst✝³ : Preadditive C}\n  {inst✝⁴ : ∀ (n : ℤ), (shiftFunctor C n).Additive} [self : Pretriangulated C] : Set (Triangle C)</code><span class=\"sep\"></span><code class=\"docstring\">a class of triangle which are called `distinguished` </code>",
+ "163": "<code>∀ (i : Fin n), triangle i ∈ distinguishedTriangles</code>",
+ "162":
+ "<code>Nat : Type</code><span class=\"sep\"></span><code class=\"docstring\">The natural numbers, starting at zero.\n\nThis type is special-cased by both the kernel and the compiler, and overridden with an efficient\nimplementation. Both use a fast arbitrary-precision arithmetic library (usually\n[GMP](https://gmplib.org/)); at runtime, `Nat` values that are sufficiently small are unboxed.\n</code>",
+ "161":
+ "<code>Fin.val {n : ℕ} (self : Fin n) : ℕ</code><span class=\"sep\"></span><code class=\"docstring\">The number that is strictly less than `n`.\n\n`Fin.val` is a coercion, so any `Fin n` can be used in a position where a `Nat` is expected.\n</code>",
+ "160":
+ "<code>CategoryTheory.ComposableArrows.obj'.{v_1, u_1} {C : Type u_1} [Category.{v_1, u_1} C] {n : ℕ}\n  (F : ComposableArrows C n) (i : ℕ) (hi : i ≤ n := by valid) : C</code><span class=\"sep\"></span><code class=\"docstring\">The `i`th object (with `i : ℕ` such that `i ≤ n`) of `F : ComposableArrows C n`. </code>",
+ "16":
+ "<code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex.{v, u, u'} (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [IsTriangulated C] {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ) : Type (max u' u)</code><span class=\"sep\"></span><code class=\"docstring\">The connected-component index set for `Stab_v(D)`. </code>",
+ "159": "<code>ComposableArrows C n</code>",
+ "158":
+ "<code>CategoryTheory.Pretriangulated.Triangle.obj₁.{v, u} {C : Type u} [Category.{v, u} C] [HasShift C ℤ]\n  (self : Triangle C) : C</code><span class=\"sep\"></span><code class=\"docstring\">the first object of a triangle </code>",
+ "157":
+ "<code>Nonempty.{u} (α : Sort u) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`Nonempty α` is a typeclass that says that `α` is not an empty type,\nthat is, there exists an element in the type. It differs from `Inhabited α`\nin that `Nonempty α` is a `Prop`, which means that it does not actually carry\nan element of `α`, only a proof that *there exists* such an element.\nGiven `Nonempty α`, you can construct an element of `α` *nonconstructively*\nusing `Classical.choice`.\n</code>",
+ "156":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.triangle_obj₁.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) (i : Fin self.n) : Nonempty ((self.triangle i).obj₁ ≅ self.chain.obj' ↑i ⋯)</code><span class=\"sep\"></span><code class=\"docstring\">The triangle's first object is isomorphic to the i-th chain object. </code>",
+ "155": "<code>Fin n → Triangle C</code>",
+ "154": "<code>Fin n</code>",
+ "153":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.triangle_dist.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) (i : Fin self.n) : self.triangle i ∈ distinguishedTriangles</code><span class=\"sep\"></span><code class=\"docstring\">Each triangle is distinguished. </code>",
+ "152":
+ "<code>Fin (n : ℕ) : Type</code><span class=\"sep\"></span><code class=\"docstring\">Natural numbers less than some upper bound.\n\nIn particular, a `Fin n` is a natural number `i` with the constraint that `i &lt; n`. It is the\ncanonical type with `n` elements.\n</code>",
+ "151":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.triangle.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) : Fin self.n → Triangle C</code><span class=\"sep\"></span><code class=\"docstring\">Each consecutive pair of objects completes to a distinguished triangle. </code>",
+ "150": "<code>ℕ</code>",
+ "15":
+ "<code>StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)</code>",
+ "149":
+ "<code>CategoryTheory.ComposableArrows.{v_1, u_1} (C : Type u_1) [Category.{v_1, u_1} C] (n : ℕ) : Type (max v_1 u_1)</code><span class=\"sep\"></span><code class=\"docstring\">`ComposableArrows C n` is the type of functors `Fin (n + 1) ⥤ C`. </code>",
+ "148":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.chain.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C]\n  [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C}\n  (self : PostnikovTower C E) : ComposableArrows C self.n</code><span class=\"sep\"></span><code class=\"docstring\">The chain of objects: `A₀ → A₁ → ⋯ → Aₙ`. </code>",
+ "147":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.n.{v, u} {C : Type u} [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] {E : C} (self : PostnikovTower C E) : ℕ</code><span class=\"sep\"></span><code class=\"docstring\">The number of factors (equivalently, the number of distinguished triangles). </code>",
+ "146":
+ "<code>CategoryTheory.Triangulated.PostnikovTower.{v, u} (C : Type u) [Category.{v, u} C] [HasZeroObject C] [HasShift C ℤ]\n  [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C] (E : C) : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">A Postnikov tower of an object `E` in a pretriangulated category. This consists of\na chain of `n+1` objects connected by `n` distinguished triangles:\n```\n0 = A₀ → A₁ → ⋯ → Aₙ ≅ E\n```\nwhere each step `Aᵢ → Aᵢ₊₁` completes to a distinguished triangle\n`Aᵢ → Aᵢ₊₁ → Fᵢ → Aᵢ⟦1⟧` with factor `Fᵢ = (triangle i).obj₃`.\n\nThe factor objects are derived from the triangles (as `obj₃`) rather than stored\nas a separate data field. </code>",
+ "145":
+ "<code>Module.finrank.{u_1, u_2} (R : Type u_1) (M : Type u_2) [Semiring R] [AddCommMonoid M] [Module R M] : ℕ</code><span class=\"sep\"></span><code class=\"docstring\">The rank of a module as a natural number.\n\nFor a finite-dimensional vector space `V` over a field `k`, `Module.finrank k V` is equal to\nthe dimension of `V` over `k`.\n\nFor a general module `M` over a ring `R`, `Module.finrank R M` is defined to be the supremum of the\ncardinalities of the `R`-linearly independent subsets of `M`, if this supremum is finite. It is\ndefined by convention to be `0` if this supremum is infinite. See `Module.rank` for a\ncardinal-valued version where infinite rank modules have rank an infinite cardinal.\n\nNote that if `R` is not a field then there can exist modules `M` with `¬(Module.Finite R M)` but\n`finrank R M ≠ 0`. For example `ℚ` has `finrank` equal to `1` over `ℤ`, because the nonempty\n`ℤ`-linearly independent subsets of `ℚ` are precisely the nonzero singletons. </code>",
+ "144":
+ "<code>Int.negOnePow (n : ℤ) : ℤˣ</code><span class=\"sep\"></span><code class=\"docstring\">The map `ℤ → ℤˣ` which sends `n` to `(-1 : ℤˣ) ^ n`. </code>",
+ "143":
+ "<code>CategoryTheory.Triangulated.eulerFormObj.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasShift C ℤ] [Preadditive C] [Linear k C] (E F : C) : ℤ</code><span class=\"sep\"></span><code class=\"docstring\">The Euler form on objects: `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])`.\nThis is defined as a finitely-supported sum using `finsum`. </code>",
+ "142":
+ "<code>CategoryTheory.Functor.obj.{v₁, v₂, u₁, u₂} {C : Type u₁} [Category.{v₁, u₁} C] {D : Type u₂} [Category.{v₂, u₂} D]\n  (self : C ⥤ D) : C → D</code><span class=\"sep\"></span><code class=\"docstring\">The action of a functor on objects. </code>",
+ "141":
+ "<code>Nontrivial.{u_3} (α : Type u_3) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">Predicate typeclass for expressing that a type is not reduced to a single element. In rings,\nthis is equivalent to `0 ≠ 1`. In vector spaces, this is equivalent to positive dimension. </code>",
+ "140":
+ "<code>Set.Finite.{u} {α : Type u} (s : Set α) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A set is finite if the corresponding `Subtype` is finite,\ni.e., if there exists a natural `n : ℕ` and an equivalence `s ≃ Fin n`. </code>",
+ "14":
+ "<code>CategoryTheory.Triangulated.NumericallyFinite.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasZeroObject C] [HasShift C ℤ] [Preadditive C] [∀ (n : ℤ), (shiftFunctor C n).Additive] [Pretriangulated C]\n  [Linear k C] [IsFiniteType k C] [Functor.Linear k (shiftFunctor C 1)] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">The category `C` is numerically finite if the numerical Grothendieck group attached to the\nEuler form is finitely generated as an abelian group. </code>",
+ "139":
+ "<code>CategoryTheory.Triangulated.IsFiniteType.finite_support.{w, v, u} (k : Type w) {inst✝ : Field k} {C : Type u}\n  {inst✝¹ : Category.{v, u} C} {inst✝² : HasShift C ℤ} {inst✝³ : Preadditive C} {inst✝⁴ : Linear k C}\n  [self : IsFiniteType k C] (E F : C) : {n | Nontrivial (E ⟶ (shiftFunctor C n).obj F)}.Finite</code><span class=\"sep\"></span><code class=\"docstring\">For each pair of objects, only finitely many shifted Hom spaces are nontrivial. </code>",
+ "138":
+ "<code>Module.Finite.{u_1, u_4} (R : Type u_1) (M : Type u_4) [Semiring R] [AddCommMonoid M] [Module R M] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A module over a semiring is `Module.Finite` if it is finitely generated as a module. </code>",
+ "137":
+ "<code>CategoryTheory.Triangulated.IsFiniteType.finite_dim.{w, v, u} {k : Type w} {inst✝ : Field k} {C : Type u}\n  {inst✝¹ : Category.{v, u} C} {inst✝² : HasShift C ℤ} {inst✝³ : Preadditive C} {inst✝⁴ : Linear k C}\n  [self : IsFiniteType k C] (E F : C) : Module.Finite k (E ⟶ F)</code><span class=\"sep\"></span><code class=\"docstring\">Each Hom space `Hom(E, F)` is finite-dimensional over `k`. </code>",
+ "136":
+ "<code class=\"docstring\">`abel` solves equations in the language of *additive*, commutative monoids and groups.\n\n`abel` and its variants work as both tactics and conv tactics.\n\n* `abel1` fails if the target is not an equality that is provable by the axioms of\n  commutative monoids/groups.\n* `abel_nf` rewrites all group expressions into a normal form.\n  * `abel_nf at h` rewrites in a hypothesis.\n  * `abel_nf (config := cfg)` allows for additional configuration:\n    * `red`: the reducibility setting (overridden by `!`).\n    * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).\n    * `recursive`: if true, `abel_nf` also recurses into atoms.\n* `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.\n\nExamples:\n```\nexample [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel\nexample [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel\n```\n</code>",
+ "135":
+ "<code class=\"docstring\">`rw` is like `rewrite`, but also tries to close the goal by \"cheap\" (reducible) `rfl` afterwards.\n</code>",
+ "134":
+ "<code>HAdd.hAdd.{u, v, w} {α : Type u} {β : Type v} {γ : outParam (Type w)} [self : HAdd α β γ] : α → β → γ</code><span class=\"sep\"></span><code class=\"docstring\">`a + b` computes the sum of `a` and `b`.\nThe meaning of this notation is type-dependent. \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `+` in identifiers is `add`.</code>",
+ "133": "<code>f (P.obj₂ r) = f (P.obj₁ r) + f (P.obj₃ r)</code>",
+ "132":
+ "<code class=\"docstring\">The `have` tactic is for adding opaque definitions and hypotheses to the local context of the main goal.\nThe definitions forget their associated value and cannot be unfolded, unlike definitions added by the `let` tactic.\n\n* `have h : t := e` adds the hypothesis `h : t` if `e` is a term of type `t`.\n* `have h := e` uses the type of `e` for `t`.\n* `have : t := e` and `have := e` use `this` for the name of the hypothesis.\n* `have pat := e` for a pattern `pat` is equivalent to `match e with | pat =&gt; _`,\n  where `_` stands for the tactics that follow this one.\n  It is convenient for types that have only one applicable constructor.\n  For example, given `h : p ∧ q ∧ r`, `have ⟨h₁, h₂, h₃⟩ := h` produces the\n  hypotheses `h₁ : p`, `h₂ : q`, and `h₃ : r`.\n* The syntax `have (eq := h) pat := e` is equivalent to `match h : e with | pat =&gt; _`,\n  which adds the equation `h : e = pat` to the local context.\n\nThe tactic supports all the same syntax variants and options as the `have` term.\n\n## Properties and relations\n\n* It is not possible to unfold a variable introduced using `have`, since the definition's value is forgotten.\n  The `let` tactic introduces definitions that can be unfolded.\n* The `have h : t := e` is like doing `let h : t := e; clear_value h`.\n* The `have` tactic is preferred for propositions, and `let` is preferred for non-propositions.\n* Sometimes `have` is used for non-propositions to ensure that the variable is never unfolded,\n  which may be important for performance reasons.\n    Consider using the equivalent `let +nondep` to indicate the intent.\n\n</code>",
+ "131":
+ "<code>FreeAbelianGroup.lift_apply_of.{u, v} {α : Type u} {β : Type v} [AddCommGroup β] (f : α → β) (x : α) :\n  (FreeAbelianGroup.lift f) (FreeAbelianGroup.of x) = f x</code>",
+ "130":
+ "<code>map_sub.{u_7, u_8, u_9} {G : Type u_7} {H : Type u_8} {F : Type u_9} [FunLike F G H] [AddGroup G] [SubtractionMonoid H]\n  [AddMonoidHomClass F G H] (f : F) (a b : G) : f (a - b) = f a - f b</code><span class=\"sep\"></span><code class=\"docstring\">Additive group homomorphisms preserve subtraction. </code>",
+ "13":
+ "<code>CategoryTheory.Functor.Linear.{u_1, v_1, u_2, v_2, u_3} (R : Type u_1) [Semiring R] {C : Type u_2} {D : Type u_3}\n  [Category.{v_1, u_2} C] [Category.{v_2, u_3} D] [Preadditive C] [Preadditive D] [Linear R C] [Linear R D]\n  (F : C ⥤ D) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">An additive functor `F` is `R`-linear provided `F.map` is an `R`-module morphism. </code>",
+ "129":
+ "<code>AddMonoidHom.mem_ker.{u_1, u_7} {G : Type u_1} [AddGroup G] {M : Type u_7} [AddZeroClass M] {f : G →+ M} {x : G} :\n  x ∈ f.ker ↔ f x = 0</code>",
+ "128":
+ "<code>SetLike.mem_coe.{u_1, u_2} {A : Type u_1} {B : Type u_2} [i : SetLike A B] {p : A} {x : B} : x ∈ ↑p ↔ x ∈ p</code>",
+ "127":
+ "<code class=\"docstring\">The `simp` tactic uses lemmas and hypotheses to simplify the main goal target or\nnon-dependent hypotheses. It has many variants:\n- `simp` simplifies the main goal target using lemmas tagged with the attribute `[simp]`.\n- `simp [h₁, h₂, ..., hₙ]` simplifies the main goal target using the lemmas tagged\n  with the attribute `[simp]` and the given `hᵢ`'s, where the `hᵢ`'s are expressions.-\n- If an `hᵢ` is a defined constant `f`, then `f` is unfolded. If `f` has equational lemmas associated\n  with it (and is not a projection or a `reducible` definition), these are used to rewrite with `f`.\n- `simp [*]` simplifies the main goal target using the lemmas tagged with the\n  attribute `[simp]` and all hypotheses.\n- `simp only [h₁, h₂, ..., hₙ]` is like `simp [h₁, h₂, ..., hₙ]` but does not use `[simp]` lemmas.\n- `simp [-id₁, ..., -idₙ]` simplifies the main goal target using the lemmas tagged\n  with the attribute `[simp]`, but removes the ones named `idᵢ`.\n- `simp at h₁ h₂ ... hₙ` simplifies the hypotheses `h₁ : T₁` ... `hₙ : Tₙ`. If\n  the target or another hypothesis depends on `hᵢ`, a new simplified hypothesis\n  `hᵢ` is introduced, but the old one remains in the local context.\n- `simp at *` simplifies all the hypotheses and the target.\n- `simp [*] at *` simplifies target and all (propositional) hypotheses using the\n  other hypotheses.\n</code>",
+ "126":
+ "<code>AddMonoidHom.ker.{u_1, u_7} {G : Type u_1} [AddGroup G] {M : Type u_7} [AddZeroClass M] (f : G →+ M) : AddSubgroup G</code><span class=\"sep\"></span><code class=\"docstring\">The additive kernel of an `AddMonoid` homomorphism is the `AddSubgroup` of elements\nsuch that `f x = 0` </code>",
+ "125":
+ "<code>HSub.hSub.{u, v, w} {α : Type u} {β : Type v} {γ : outParam (Type w)} [self : HSub α β γ] : α → β → γ</code><span class=\"sep\"></span><code class=\"docstring\">`a - b` computes the difference of `a` and `b`.\nThe meaning of this notation is type-dependent.\n* For natural numbers, this operator saturates at 0: `a - b = 0` when `a ≤ b`. \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `-` in identifiers is `sub` (when used as a binary operator).</code>",
+ "124":
+ "<code>Eq.{u_1} {α : Sort u_1} : α → α → Prop</code><span class=\"sep\"></span><code class=\"docstring\">The equality relation. It has one introduction rule, `Eq.refl`.\nWe use `a = b` as notation for `Eq a b`.\nA fundamental property of equality is that it is an equivalence relation.\n```\nvariable (α : Type) (a b c d : α)\nvariable (hab : a = b) (hcb : c = b) (hcd : c = d)\n\nexample : a = d :=\n  Eq.trans (Eq.trans hab (Eq.symm hcb)) hcd\n```\nEquality is much more than an equivalence relation, however. It has the important property that every assertion\nrespects the equivalence, in the sense that we can substitute equal expressions without changing the truth value.\nThat is, given `h1 : a = b` and `h2 : p a`, we can construct a proof for `p b` using substitution: `Eq.subst h1 h2`.\nExample:\n```\nexample (α : Type) (a b : α) (p : α → Prop)\n        (h1 : a = b) (h2 : p a) : p b :=\n  Eq.subst h1 h2\n\nexample (α : Type) (a b : α) (p : α → Prop)\n    (h1 : a = b) (h2 : p a) : p b :=\n  h1 ▸ h2\n```\nThe triangle in the second presentation is a macro built on top of `Eq.subst` and `Eq.symm`, and you can enter it by typing `\\t`.\nFor more information: [Equality](https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality)\n\n\nConventions for notations in identifiers:\n\n * The recommended spelling of `=` in identifiers is `eq`.</code>",
+ "123":
+ "<code>setOf.{u} {α : Type u} (p : α → Prop) : Set α</code><span class=\"sep\"></span><code class=\"docstring\">Turn a predicate `p : α → Prop` into a set, also written as `{x | p x}` </code>",
+ "122":
+ "<code>Membership.mem.{u, v} {α : outParam (Type u)} {γ : Type v} [self : Membership α γ] : γ → α → Prop</code><span class=\"sep\"></span><code class=\"docstring\">The membership relation `a ∈ s : Prop` where `a : α`, `s : γ`. \n\nConventions for notations in identifiers:\n\n * The recommended spelling of `∈` in identifiers is `mem`.</code>",
+ "121":
+ "<code>x ∈ {x | ∃ r, x = FreeAbelianGroup.of (P.obj₂ r) - FreeAbelianGroup.of (P.obj₁ r) - FreeAbelianGroup.of (P.obj₃ r)}</code>",
+ "120": "<code>P.IsAdditive f</code>",
+ "12": "<code>ℤ</code>",
+ "119": "<code>AddCommGroup A</code>",
+ "118":
+ "<code>x = FreeAbelianGroup.of (P.obj₂ r) - FreeAbelianGroup.of (P.obj₁ r) - FreeAbelianGroup.of (P.obj₃ r)</code>",
+ "117":
+ "<code>Iff.mpr {a b : Prop} (self : a ↔ b) : b → a</code><span class=\"sep\"></span><code class=\"docstring\">Modus ponens for if and only if, reversed. If `a ↔ b` and `b`, then `a`. </code>",
+ "116":
+ "<code>AddSubgroup.closure_le.{u_1} {G : Type u_1} [AddGroup G] (K : AddSubgroup G) {k : Set G} :\n  AddSubgroup.closure k ≤ K ↔ k ⊆ ↑K</code><span class=\"sep\"></span><code class=\"docstring\">An additive subgroup `K` includes `closure k` if and only if it includes `k` </code>",
+ "115":
+ "<code>FreeAbelianGroup.lift.{u, v} {α : Type u} {β : Type v} [AddCommGroup β] : (α → β) ≃ (FreeAbelianGroup α →+ β)</code><span class=\"sep\"></span><code class=\"docstring\">The map `FreeAbelianGroup α →+ A` induced by a map of types `α → A`. </code>",
+ "114":
+ "<code>QuotientAddGroup.lift.{u_1, u_4} {G : Type u_1} {M : Type u_4} [AddGroup G] [AddMonoid M] (N : AddSubgroup G)\n  [nN : N.Normal] (φ : G →+ M) (HN : N ≤ φ.ker) : G ⧸ N →+ M</code><span class=\"sep\"></span><code class=\"docstring\">An `AddGroup` homomorphism `φ : G →+ M` with `N ⊆ ker(φ)` descends (i.e. `lift`s)\nto an `AddGroup` homomorphism `G/N →+ M`. </code>",
+ "113":
+ "<code>K0Presentation.IsAdditive.additive.{u, v, u_1} {Obj : Type u} {Rel : Type v} {P : K0Presentation Obj Rel} {A : Type u_1}\n  {inst✝ : AddCommGroup A} {f : Obj → A} [self : P.IsAdditive f] (r : Rel) : f (P.obj₂ r) = f (P.obj₁ r) + f (P.obj₃ r)</code>",
+ "112": "<code>Obj → A</code>",
+ "111": "<code>K0Presentation Obj Rel</code>",
+ "110": "<code>Rel</code>",
+ "11":
+ "<code>CategoryTheory.shiftFunctor.{v, u, u_1} (C : Type u) {A : Type u_1} [Category.{v, u} C] [AddMonoid A] [HasShift C A]\n  (i : A) : C ⥤ C</code><span class=\"sep\"></span><code class=\"docstring\">The shift autoequivalence, moving objects and morphisms 'up'. </code>",
+ "109": "<code>FreeAbelianGroup Obj</code>",
+ "108":
+ "<code>AddSubgroup.closure.{u_1} {G : Type u_1} [AddGroup G] (k : Set G) : AddSubgroup G</code><span class=\"sep\"></span><code class=\"docstring\">The `AddSubgroup` generated by a set </code>",
+ "107":
+ "<code>FreeAbelianGroup.{u} (α : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">If `α` is a type, then `FreeAbelianGroup α` is the free abelian group generated by `α`.\nThis is an abelian group equipped with a function\n`FreeAbelianGroup.of : α → FreeAbelianGroup α` which has the following universal property:\nif `G` is any abelian group, and `f : α → G` is any function, then this function is\nthe composite of `FreeAbelianGroup.of` and a unique group homomorphism\n`FreeAbelianGroup.lift f : FreeAbelianGroup α →+ G`.\n\nA typical element of `FreeAbelianGroup α` is a formal sum of\nelements of `α` and their formal inverses.\nFor example if `x` and `y` are terms of type `α` then `x + x + x - y` is a\n\"typical\" element of `FreeAbelianGroup α`. In particular if `α` is empty\nthen `FreeAbelianGroup α` is isomorphic to the trivial group, and if `α` has one term\nthen `FreeAbelianGroup α` is isomorphic to `ℤ`.\nOne can think of `FreeAbelianGroup α` as the functions `α →₀ ℤ` with finite support,\nand addition given pointwise.\n\nTODO: rename to `FreeAddCommGroup` and introduce a multiplicative version\n</code>",
+ "106":
+ "<code>AddSubgroup.{u_3} (G : Type u_3) [AddGroup G] : Type u_3</code><span class=\"sep\"></span><code class=\"docstring\">An additive subgroup of an additive group `G` is a subset containing 0, closed\nunder addition and additive inverse. </code>",
+ "105":
+ "<code>K0Presentation.subgroup.{u, v} {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel) :\n  AddSubgroup (FreeAbelianGroup Obj)</code><span class=\"sep\"></span><code class=\"docstring\">The subgroup of relations: `{obj₂(r) - obj₁(r) - obj₃(r) | r : Rel}`. </code>",
+ "104":
+ "<code>K0Presentation.obj₃.{u, v} {Obj : Type u} {Rel : Type v} (self : K0Presentation Obj Rel) : Rel → Obj</code><span class=\"sep\"></span><code class=\"docstring\">The third term. </code>",
+ "103":
+ "<code>K0Presentation.obj₂.{u, v} {Obj : Type u} {Rel : Type v} (self : K0Presentation Obj Rel) : Rel → Obj</code><span class=\"sep\"></span><code class=\"docstring\">The middle term (the one that equals the sum of the other two). </code>",
+ "102":
+ "<code>K0Presentation.obj₁.{u, v} {Obj : Type u} {Rel : Type v} (self : K0Presentation Obj Rel) : Rel → Obj</code><span class=\"sep\"></span><code class=\"docstring\">The first term of the relation (e.g., `T.obj₁` or `S.X₁`). </code>",
+ "101": "<code class=\"docstring\">The universe parameter v</code>",
+ "100": "<code>Type v</code>",
+ "10":
+ "<code>CategoryTheory.Triangulated.IsFiniteType.{w, v, u} (k : Type w) [Field k] (C : Type u) [Category.{v, u} C]\n  [HasShift C ℤ] [Preadditive C] [Linear k C] : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A `k`-linear pretriangulated category is of finite type if all Hom spaces are\nfinite-dimensional over `k` and for each pair of objects, only finitely many shifted\nHom spaces are nonzero. </code>",
+ "1":
+ "<code><span class=\"literal string\">\"Corollary 1.3\"</span> : String</code>",
+ "0": "<code class=\"docstring\">The `@[informal]` attribute syntax. </code>"}

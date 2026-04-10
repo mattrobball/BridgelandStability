@@ -42,6 +42,7 @@ variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 real `ε₀ < 1/8` such that for all `t`, every object in `P((t - 4ε₀, t + 4ε₀))` has
 finite length. The width `8ε₀` is chosen to fit inside the local finiteness
 parameter `2η`. -/
+@[informal "Test tag for CI workflow"]
 theorem StabilityCondition.WithClassMap.exists_epsilon0 (σ : StabilityCondition.WithClassMap C v) :
     ∃ ε₀ : ℝ, ∃ hε₀ : 0 < ε₀, ∃ hε₀' : ε₀ < 1 / 8,
       ∀ t : ℝ,

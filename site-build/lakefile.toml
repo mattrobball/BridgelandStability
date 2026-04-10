@@ -1,0 +1,18 @@
+name = "BridgelandInformal"
+version = "0.1.0"
+
+[[require]]
+name = "verso"
+git = "https://github.com/leanprover/verso"
+rev = "v4.29.0"
+
+[[require]]
+name = "BridgelandStability"
+path = "/home/matt.linux/lean/bridgeland-stability"
+
+[[lean_lib]]
+name = "InformalDocs"
+
+[[lean_exe]]
+name = "informal"
+root = "InformalMain"

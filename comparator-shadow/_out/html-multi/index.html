@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+      (function(){
+  const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
+  if (!(path.endsWith("/") || path.endsWith(".html"))) {
+    window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
+  }
+})()</script>
+    <base href="./"><meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>BridgelandStability Comparator Manual</title><link rel="stylesheet" href="book.css">
+    <link rel="stylesheet" href="verso-vars.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+    <script src="-verso-search/elasticlunr.min.js"></script>
+    <script src="-verso-search/fuzzysort.min.js"></script>
+    <script src="-verso-search/searchIndex.js"></script>
+    <script type="module" src="-verso-search/search-init.js"></script>
+    <link rel="stylesheet" href="-verso-search/search-box.css">
+    <link rel="stylesheet" href="-verso-search/search-highlight.css">
+    <link rel="stylesheet" href="-verso-search/domain-display.css">
+    <script src="-verso-data/katex/katex.js"></script>
+    <script src="-verso-data/katex/math.js"></script>
+    <script src="-verso-data/popper.min.js"></script>
+    <script src="-verso-data/tippy-bundle.umd.min.js"></script>
+    <link rel="stylesheet" href="-verso-data/tippy-border.css">
+    <link rel="stylesheet" href="-verso-data/katex/katex.css">
+    <style>#graph-root { background: var(--site-card, #fffdf8); border: 1px solid var(--site-border, #d8cdbd); border-radius: 14px; min-height: 620px; padding: 1rem; margin: 1rem 0; } #graph-root svg { display: block; }</style><style>.decl-anchor { height: 0; margin: 0; padding: 0; }</style><style>main section > h2, main section > h3, main section > h4 { border-left: 4px solid var(--verso-structure-color, #154734); padding-left: 0.6rem; }</style><style>:root { --site-ink: #193428; --site-muted: #5a655f; --site-warm: #fbf7ef; --site-card: #fffdf8; --site-accent: #a14d2a; --site-border: #d8cdbd; --verso-structure-color: #154734; --verso-toc-background-color: #f4efe5; --verso-selected-color: #f0dcc8; --verso-text-font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif; --verso-structure-font-family: 'Avenir Next Condensed', 'Gill Sans', sans-serif; --verso-code-font-family: 'Iosevka Term', 'JetBrains Mono', monospace; }</style><style>.hl.lean.block { background: #faf4e8; border: 1px solid #eadfcf; border-radius: 10px; padding: 0.85rem 1rem; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7); }</style><style>details.collapsible-proof > summary { cursor: pointer; color: var(--site-muted, #666); font-style: italic; margin: 0.3em 0; user-select: none; font-family: var(--verso-structure-font-family, sans-serif); font-size: 0.88rem; }</style><style>details.collapsible-proof > summary:hover { color: var(--site-accent, #a14d2a); }</style><style>
+
+.hl.lean {
+  white-space: pre;
+  font-weight: normal;
+  font-style: normal;
+  font-size: inherit;
+}
+
+.hl.lean .keyword {
+  color: var(--verso-code-keyword-color,);
+  font-weight: var(--verso-code-keyword-weight, bold);
+  font-style: var(--verso-code-keyword-style, normal);
+  font-family: var(--verso-code-keyword-font-family,);
+}
+
+.hl.lean .const {
+  color: var(--verso-code-const-color,);
+  font-weight: var(--verso-code-const-weight, normal);
+  font-style: var(--verso-code-const-style, normal);
+  font-family: var(--verso-code-const-font-family,);
+}
+
+.hl.lean .var {
+  color: var(--verso-code-var-color,);
+  font-weight: var(--verso-code-var-weight, normal);
+  font-style: var(--verso-code-var-style, italic);
+  font-family: var(--verso-code-var-font-family,);
+
+  position: relative;
+}
+
+.hl.lean .literal, .hl.lean .unknown {
+  color: var(--verso-code-color,);
+  font-weight: normal;
+  font-style: normal;
+  font-family: var(--verso-code-font-family,);
+}
+
+.hover-container {
+  width: 0;
+  height: 0;
+  position: relative;
+  display: inline;
+}
+
+.hl.lean a {
+  color: inherit;
+  text-decoration: currentcolor underline dotted;
+}
+
+.hl.lean a:hover {
+  text-decoration: currentcolor underline solid;
+}
+
+.hl.lean .hover-info {
+  white-space: normal;
+}
+
+.hl.lean .token .hover-info {
+  display: none;
+  position: absolute;
+  background-color: #e5e5e5;
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 300;
+}
+
+.hl.lean .hover-info.messages {
+  max-height: 10rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding: 0 0.5rem 0 0;
+  display: block;
+}
+
+.hl.lean .hover-info code {
+  white-space: pre-wrap;
+  background: none;
+  color: black;
+}
+
+.hl.lean .hover-info.messages > code {
+  padding: 0.5rem;
+  display: block;
+  width: fit-content;
+}
+
+.hl.lean .hover-info.messages > code:only-child {
+  margin: 0;
+}
+
+.hl.lean .hover-info.messages > code {
+  margin: 0.1rem;
+}
+
+.hl.lean .hover-info.messages > code:not(:first-child) {
+  margin-top: 0rem;
+}
+
+.hl.lean {
+}
+
+.hl.lean.block {
+  display: block;
+}
+
+.hl.lean.inline {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.hl.lean * {
+}
+
+.hl.lean .token {
+  transition: all 0.25s; /* Slight fade for highlights */
+}
+
+@media (hover: hover) {
+  .hl.lean .token.binding-hl, .hl.lean .literal.string:hover, .hl.lean .token.typed:hover {
+    background-color: #eee;
+    border-radius: 2px;
+    transition: none;
+  }
+}
+
+
+.hl.lean .has-info .token:not(.tactic-state):not(.tactic-state *), .hl.lean .has-info .inter-text:not(.tactic-state):not(.tactic-state *) {
+  text-decoration-style: wavy;
+  text-decoration-line: underline;
+  text-decoration-thickness: from-font;
+  text-decoration-skip-ink: none;
+}
+
+.hl.lean .has-info .hover-info {
+  display: none;
+  position: absolute;
+  transform: translate(0.25rem, 0.3rem);
+  border: 1px solid black;
+  padding: 0.5rem;
+  z-index: 400;
+  text-align: left;
+}
+
+.hl.lean .has-info.error :not(.tactic-state):not(.tactic-state *){
+  text-decoration-color: red;
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.error:hover {
+    background-color: #ffb3b3;
+  }
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #ffb3b3;
+}
+
+.tippy-box[data-theme~='error'] .hl.lean .hover-info.messages > code.error {
+  background: none;
+  border: none;
+}
+
+.error .verso-message, .error .verso-message .token, .error .verso-message label {
+  color: var(--verso-error-color);
+}
+
+.error .verso-message .case-label:has(input[type="checkbox"])::before {
+  background-color: var(--verso-error-color) !important;
+}
+
+.hl.lean .has-info.warning :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: var(--verso-warning-indicator-color);
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.warning:hover {
+    background-color:var(--verso-warning-color);
+  }
+}
+
+.hl.lean .hover-info.messages > code.warning {
+  background-color: var(--verso-warning-color);
+}
+
+.lean-output {
+  border-left: 0.2em solid transparent;
+  padding: 0 0 0 0.5em;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.lean-output.error {
+  border-color: var(--verso-error-indicator-color);
+}
+
+.lean-output.information {
+  border-color: var(--verso-info-indicator-color);
+}
+
+.lean-output.warning {
+  border-color: var(--verso-warning-indicator-color);
+}
+
+.hl.lean .hover-info.messages > code.error {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='warning'] .hl.lean .hover-info.messages > code.warning {
+  background: none;
+  border: none;
+}
+
+
+.hl.lean .has-info.information :not(.tactic-state):not(.tactic-state *) {
+  text-decoration-color: var(--verso-info-indicator-color, blue);
+}
+
+@media (hover: hover) {
+  .hl.lean .has-info.information:hover {
+    background-color: #4777ff;
+  }
+}
+
+
+.hl.lean .hover-info.messages > code.information {
+  background-color: #e5e5e5;
+  border-left: 0.2rem solid #4777ff;
+}
+
+.tippy-box[data-theme~='info'] .hl.lean .hover-info.messages > code.information {
+  background: none;
+  border: none;
+}
+
+.hl.lean div.docstring {
+  font-family: var(--verso-text-font-family, sans-serif);
+  white-space: normal;
+  max-width: calc(min(40rem, 90vw));
+  width: max-content;
+}
+
+.hl.lean div.docstring > :last-child {
+  margin-bottom: 0;
+}
+
+.hl.lean div.docstring > :first-child {
+  margin-top: 0;
+}
+
+.hl.lean .hover-info .sep {
+  display: block;
+  width: auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  height: 1px;
+  border-top: 1px solid #ccc;
+}
+
+.hl.lean code {
+  font-family: var(--verso-code-font-family);
+}
+
+.hl.lean .tactic-state {
+  display: none;
+  position: relative;
+  width: fit-content;
+  border: 1px solid #888888;
+  border-radius: 0.1rem;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+}
+
+.hl.lean.popup .tactic-state {
+  position: static;
+  display: block;
+  width: auto;
+  border: none;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #ffffff;
+}
+
+
+.hl.lean .tactic {
+  position: relative;
+  display: inline;
+  vertical-align: top;
+  /* Without these, mobile Safari will start making font sizes inconsistent when its text size adjustment feature is triggered.*/
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.hl.lean .tactic:has(.tactic-toggle:checked) {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+}
+
+.hl.lean .tactic-toggle:checked ~ .tactic-state {
+  display: inline-block;
+  vertical-align: top;
+  grid-row: 2;
+  justify-self: start;
+}
+
+.hl.lean .tactic > label {
+  position: relative;
+  grid-row: 1;
+  display: inline;
+}
+
+@media (hover: hover) {
+  .hl.lean .tactic:has(.tactic-toggle:not(:checked)) > label:hover {
+    background-color: #eeeeee;
+  }
+}
+
+.hl.lean .tactic-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .tactic > label::after {
+  content: "";
+  border: 1px solid #bbbbbb;
+  /* These need to be em, not rem, to scale with the font */
+  border-radius: 1em;
+  height: 0.25em;
+  vertical-align: middle;
+  width: 0.6em;
+  margin-left: 0.1em;
+  margin-right: 0.1em;
+  display: inline-block;
+  transition: all 0.5s;
+}
+
+/*
+@media (hover: hover) {
+  .hl.lean .tactic > label:hover::after {
+    border: 1px solid #aaaaaa;
+    background-color: #aaaaaa;
+    transition: all 0.5s;
+  }
+}
+*/
+
+.hl.lean .tactic > label:has(+ .tactic-toggle:checked)::after {
+  border: 1px solid #999999;
+  background-color: #999999;
+  transition: all 0.5s;
+}
+
+.hl.lean .tactic-state .goal + .goal {
+  margin-top: 1.5em;
+}
+
+/*
+Some CSS frameworks customize details/summary in ways not compatible with Verso's output.
+*/
+
+.hl.lean details {
+  display: block !important;
+  margin: 0;
+}
+
+.hl.lean details summary {
+  display: list-item !important;
+  margin: 0;
+}
+
+.hl.lean details summary:focus {
+  outline: none;
+  outline-offset: none;
+  color: inherit;
+}
+
+.hl.lean ul > li {
+  margin-bottom: 0;
+}
+
+.hl.lean details summary::marker {
+  display: inline !important;
+}
+
+.hl.lean details > summary:first-of-type {
+  list-style-type: disclosure-closed;
+  list-style-position: inside;
+}
+
+.hl.lean details[open] > summary:first-of-type {
+  list-style-type: disclosure-open;
+}
+
+.hl.lean details summary::before, .hl.lean details summary::after {
+  content: "" !important;
+  background: none;
+  display: none;
+}
+
+.hl.lean .tactic-state summary {
+  /* These need to be em, not rem, to scale with the font */
+  margin-left: -0.5em;
+}
+
+.hl.lean .tactic-state details {
+  /* These need to be em, not rem, to scale with the font */
+  padding-left: 0.5em;
+}
+
+.hl.lean .case-label {
+  display: block;
+  position: relative;
+}
+
+.hl.lean .case-label input[type="checkbox"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -10;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"])::before {
+  display: inline-block;
+  background-color: black;
+  content: ' ';
+  transition: ease 0.2s;
+  margin-right: 0.7em;
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+  width: 0.6em;
+  height: 0.6em;
+  vertical-align: middle;
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:not(:checked))::before {
+  transform: rotate(-90deg);
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]) {
+
+}
+
+.hl.lean .case-label:has(input[type="checkbox"]:checked) {
+
+}
+
+
+.hl.lean .labeled-case > :not(:first-child) {
+  max-height: 0px;
+  display: block;
+  overflow: hidden;
+  transition: max-height 0.1s ease-in;
+  /* These need to be em, not rem, to scale with the font */
+  margin-left: 0.5em;
+  margin-top: 0.1em;
+}
+
+.hl.lean .labeled-case:has(.case-label input[type="checkbox"]:checked) > :not(:first-child) {
+  max-height: 100%;
+}
+
+
+.hl.lean .goal-name::before {
+  font-style: normal;
+  content: "case ";
+}
+
+.hl.lean .goal-name {
+  font-style: italic;
+  font-family: var(--verso-code-font-family);
+  color: inherit;
+}
+
+.hl.lean .hypotheses {
+  display: table;
+}
+
+.hl.lean .hypothesis {
+  display: table-row;
+}
+
+.hl.lean .hypothesis > * {
+  display: table-cell;
+}
+
+
+.hl.lean .hypotheses .colon {
+  text-align: center;
+  /* This needs to be em, not rem, to scale with the font */
+  min-width: 1em;
+}
+
+.hl.lean .hypotheses .name {
+  text-align: right;
+}
+
+.hl.lean .hypotheses .name,
+.hl.lean .hypotheses .type,
+.hl.lean .conclusion .type {
+  font-family: var(--verso-code-font-family);
+}
+
+.tippy-box {
+  /* Without these, mobile Safari will start making font sizes inconsistent when its text size adjustment feature is triggered.*/
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.tippy-box[data-theme~='lean'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+}
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #e5e5e5;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='top'] > .tippy-arrow::after {
+  bottom: -11px;
+  border-width: 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='bottom'] > .tippy-arrow::after {
+  top: -11px;
+  border-width: 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: #e5e5e5;
+  border-width: 11px 0 11px 11px;
+}
+.tippy-box[data-theme~='message'][data-placement^='left'] > .tippy-arrow::after {
+  right: -11px;
+  border-width: 11px 0 11px 11px;
+}
+
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #e5e5e5;
+  border-width: 11px 11px 11px 0;
+}
+.tippy-box[data-theme~='message'][data-placement^='right'] > .tippy-arrow::after {
+  left: -11px;
+  border-width: 11px 11px 11px 0;
+}
+
+
+
+.tippy-box[data-theme~='warning'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid var(--verso-warning-color);
+}
+
+.tippy-box[data-theme~='error'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #f7a7af;
+}
+
+.tippy-box[data-theme~='info'] {
+  background-color: #e5e5e5;
+  color: black;
+  border: 3px solid #99b3c2;
+}
+
+.tippy-box[data-theme~='tactic'] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: white;
+}
+.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: white;
+}
+
+.extra-doc-links {
+  list-style-type: none;
+  margin-left: 0;
+  padding: 0;
+}
+
+.extra-doc-links > li {
+  display: inline-block;
+}
+
+.extra-doc-links > li:not(:last-child)::after {
+  content: '|';
+  display: inline-block;
+  margin: 0 0.25em;
+}
+
+.verso-message .trace {
+  display: block;
+}
+
+.verso-message .trace > summary::marker {
+  color: var(--verso-text-color);
+}
+
+.verso-message .trace-children {
+  margin: 0;
+  padding: 0;
+}
+
+.verso-message .trace-children > li {
+  list-style-type: none;
+  margin-left: 1.5em;
+}
+
+.verso-message .trace-children > li:not(:has(.trace)) {
+  margin-left: 0;
+}
+
+.verso-message .trace-class {
+  color: color-mix(in srgb, currentColor 70%, transparent);
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+.verso-message .text {
+  white-space: pre-wrap;
+}
+
+</style><style>body { color: var(--site-ink); }</style><script>
+      
+window.onload = () => {
+
+    // Don't show hovers inside of closed tactic states
+    function blockedByTactic(elem) {
+      let parent = elem.parentNode;
+      while (parent && "classList" in parent) {
+        if (parent.classList.contains("tactic")) {
+          const toggle = parent.querySelector("input.tactic-toggle");
+          if (toggle) {
+            return !toggle.checked;
+          }
+        }
+        parent = parent.parentNode;
+      }
+      return false;
+    }
+
+    // Track whether any tippy is visible (O(1) check instead of DOM scan)
+    let visibleTippyCount = 0;
+    function blockedByTippy(elem) {
+      return visibleTippyCount > 0;
+    }
+
+    // Binding highlights via event delegation with cached lookups
+    const bindingCache = new Map(); // context+binding -> [token elements]
+    let highlightedTokens = [];
+    function getBindingTokens(context, binding) {
+      const key = context + "\0" + binding;
+      let tokens = bindingCache.get(key);
+      if (!tokens) {
+        tokens = [];
+        for (const example of document.querySelectorAll(".hl.lean")) {
+          if (example.dataset.leanContext == context) {
+            for (const tok of example.querySelectorAll(".token[data-binding=\"" + CSS.escape(binding) + "\"]")) {
+              tokens.push(tok);
+            }
+          }
+        }
+        bindingCache.set(key, tokens);
+      }
+      return tokens;
+    }
+    for (const container of document.querySelectorAll(".hl.lean")) {
+      container.addEventListener("mouseover", (event) => {
+        const c = event.target.closest(".token");
+        if (!c || !c.dataset.binding || c.dataset.binding === "" || !container.contains(c)) return;
+        if (blockedByTactic(c)) return;
+        const tokens = getBindingTokens(container.dataset.leanContext, c.dataset.binding);
+        for (const tok of tokens) {
+          tok.classList.add("binding-hl");
+        }
+        highlightedTokens = tokens;
+      });
+      container.addEventListener("mouseout", (event) => {
+        const c = event.target.closest(".token");
+        if (!c || !container.contains(c)) return;
+        for (const tok of highlightedTokens) {
+          tok.classList.remove("binding-hl");
+        }
+        highlightedTokens = [];
+      });
+    }
+    /* Render docstrings */
+    if ('undefined' !== typeof marked) {
+        for (const d of document.querySelectorAll("code.docstring, pre.docstring")) {
+            const str = d.innerText;
+            const html = marked.parse(str);
+            const rendered = document.createElement("div");
+            rendered.classList.add("docstring");
+            rendered.innerHTML = html;
+            d.parentNode.replaceChild(rendered, d);
+        }
+    }
+    // Add hovers
+    let docsJson = "-verso-docs.json";
+    fetch(docsJson).then((resp) => resp.json()).then((versoDocData) => {
+
+      function hideParentTooltips(element) {
+        let parent = element.parentElement;
+        while (parent) {
+          const tippyInstance = parent._tippy;
+          if (tippyInstance) {
+            tippyInstance.hide();
+          }
+          parent = parent.parentElement;
+        }
+      }
+
+
+
+      const defaultTippyProps = {
+        /* DEBUG -- remove the space: * /
+        onHide(any) { return false; },
+        trigger: "click",
+        // */
+        /* theme: "lean", */
+        maxWidth: "none",
+        appendTo: () => document.body,
+        interactive: true,
+        delay: [100, null],
+        /* ignoreAttributes: true, */
+        followCursor: 'initial',
+        onShow(inst) {
+          if (inst.reference.className == 'tactic') {
+            const toggle = inst.reference.querySelector("input.tactic-toggle");
+            if (toggle && toggle.checked) {
+              return false;
+            }
+            hideParentTooltips(inst.reference);
+            if (blockedByTippy(inst.reference)) { return false; }
+
+          } else if (inst.reference.querySelector(".hover-info") || "versoHover" in inst.reference.dataset) {
+            if (blockedByTactic(inst.reference)) { return false };
+            if (blockedByTippy(inst.reference)) { return false; }
+          } else { // Nothing to show here!
+            return false;
+          }
+        },
+        onShown(inst) { visibleTippyCount++; },
+        onHidden(inst) { visibleTippyCount = Math.max(0, visibleTippyCount - 1); },
+        content (tgt) {
+          const content = document.createElement("span");
+          if (tgt.className == 'tactic') {
+            const state = tgt.querySelector(".tactic-state").cloneNode(true);
+            state.style.display = "block";
+            content.appendChild(state);
+            content.style.display = "block";
+            content.className = "hl lean popup";
+          } else {
+            content.className = "hl lean";
+            content.style.display = "block";
+            content.style.maxHeight = "300px";
+            content.style.overflowY = "auto";
+            content.style.overflowX = "hidden";
+            const hoverId = tgt.dataset.versoHover;
+            const hoverInfo = tgt.querySelector(".hover-info");
+            if (hoverId) { // Docstrings from the table
+              // TODO stop doing an implicit conversion from string to number here
+              let data = versoDocData[hoverId];
+              if (data) {
+                const info = document.createElement("span");
+                info.className = "hover-info";
+                info.style.display = "block";
+                info.innerHTML = data;
+                content.appendChild(info);
+                /* Render docstrings - TODO server-side */
+                if ('undefined' !== typeof marked) {
+                    for (const d of content.querySelectorAll("code.docstring, pre.docstring")) {
+                        const str = d.innerText;
+                        const html = marked.parse(str);
+                        const rendered = document.createElement("div");
+                        rendered.classList.add("docstring");
+                        rendered.innerHTML = html;
+                        d.parentNode.replaceChild(rendered, d);
+                    }
+                }
+              } else {
+                content.innerHTML = "Failed to load doc ID: " + hoverId;
+              }
+            } else if (hoverInfo) { // The inline info, still used for compiler messages
+              content.appendChild(hoverInfo.cloneNode(true));
+            }
+            const extraLinks = tgt.parentElement.dataset['versoLinks'];
+            if (extraLinks) {
+              try {
+                const extras = JSON.parse(extraLinks);
+                const links = document.createElement('ul');
+                links.className = 'extra-doc-links';
+                extras.forEach((l) => {
+                  const li = document.createElement('li');
+                  li.innerHTML = "<a href=\"" + l['href'] + "\" title=\"" + l.long + "\">" + l.short + "</a>";
+                  links.appendChild(li);
+                });
+                content.appendChild(links);
+              } catch (error) {
+                console.error(error);
+              }
+            }
+          }
+          return content;
+        }
+      };
+
+
+      document.querySelectorAll('.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token, .hl.lean .level-var, .hl.lean .level-const, .hl.lean .level-op, .hl.lean .sort').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'lean');
+      });
+      document.querySelectorAll('.hl.lean .has-info.warning').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'warning message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.information').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'info message');
+      });
+      document.querySelectorAll('.hl.lean .has-info.error').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'error message');
+      });
+      document.querySelectorAll('.hl.lean .tactic').forEach(element => {
+        element.setAttribute('data-tippy-theme', 'tactic');
+      });
+      // Skip tokens inside closed tactics — they interfere with tactic tippys
+      const closedTactics = new Set();
+      document.querySelectorAll('.hl.lean .tactic').forEach(tactic => {
+        const toggle = tactic.querySelector('input.tactic-toggle');
+        if (toggle && !toggle.checked) closedTactics.add(tactic);
+      });
+      function isInsideClosedTactic(el) {
+        const tactic = el.closest('.tactic');
+        return tactic && tactic !== el && closedTactics.has(tactic);
+      }
+
+      const tokenSelector = '.hl.lean .const.token, .hl.lean .keyword.token, .hl.lean .literal.token, .hl.lean .option.token, .hl.lean .var.token, .hl.lean .typed.token, .hl.lean .has-info, .hl.lean .tactic, .hl.lean .level-var, .hl.lean .level-const, .hl.lean .level-op, .hl.lean .sort';
+      tippy(Array.from(document.querySelectorAll(tokenSelector)).filter(el => !isInsideClosedTactic(el)), defaultTippyProps);
+
+      // Create/destroy token tippys when tactic checkbox toggles
+      const tacticTippySelector = '.const.token, .keyword.token, .literal.token, .option.token, .var.token, .typed.token, .has-info, .level-var, .level-const, .level-op, .sort';
+      document.querySelectorAll('.hl.lean .tactic').forEach(tactic => {
+        const toggle = tactic.querySelector('input.tactic-toggle');
+        if (toggle) toggle.addEventListener('change', () => {
+          if (toggle.checked) {
+            closedTactics.delete(tactic);
+            tactic.querySelectorAll('.token').forEach(tok => {
+              if (!tok._tippy && tok.matches(tacticTippySelector)) {
+                tippy(tok, defaultTippyProps);
+              }
+            });
+          } else {
+            closedTactics.add(tactic);
+            tactic.querySelectorAll('.token').forEach(tok => {
+              if (tok._tippy) tok._tippy.destroy();
+            });
+          }
+        });
+      });
+  });
+}
+</script>
+    <script>
+      document.addEventListener('DOMContentLoaded',function(){var el=document.getElementById('graph-data');if(!el)return;var data=JSON.parse(el.textContent);var root=document.getElementById('graph-root');if(!root)return;var w=root.clientWidth,h=600;var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width','100%');svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);root.appendChild(svg);var nodeMap={};data.nodes.forEach(function(n){nodeMap[n.id]=n;});var groups=Array.from(new Set(data.nodes.map(function(n){return n.groupKey})));var colors=['#3d6b59','#b96d2d','#7a4e7a','#2f5f87','#8a3b3b','#5f6f2e','#9a5b8f','#6b5041'];function groupColor(g){return colors[groups.indexOf(g)%colors.length]}var sim=d3.forceSimulation(data.nodes).force('link',d3.forceLink(data.edges).id(function(d){return d.id}).distance(80).strength(0.2)).force('charge',d3.forceManyBody().strength(-210)).force('center',d3.forceCenter(w/2,h/2)).force('collide',d3.forceCollide(22));var g=document.createElementNS('http://www.w3.org/2000/svg','g');svg.appendChild(g);var linkG=document.createElementNS('http://www.w3.org/2000/svg','g');g.appendChild(linkG);var nodeG=document.createElementNS('http://www.w3.org/2000/svg','g');g.appendChild(nodeG);data.edges.forEach(function(e){var line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('stroke','#b8b0a4');line.setAttribute('stroke-opacity','0.6');line.setAttribute('stroke-width','1.2');line._data=e;linkG.appendChild(line)});data.nodes.forEach(function(n){var ng=document.createElementNS('http://www.w3.org/2000/svg','g');ng.setAttribute('cursor','pointer');var c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('r','10');c.setAttribute('fill',groupColor(n.groupKey));c.setAttribute('stroke','#1f6b4b');c.setAttribute('stroke-width','2');ng.appendChild(c);var t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('dx','14');t.setAttribute('dy','4');t.setAttribute('font-size','11');t.setAttribute('fill','#333');t.textContent=n.label;ng.appendChild(t);ng._data=n;ng.addEventListener('click',function(){if(n.href)window.location.href=n.href});nodeG.appendChild(ng)});sim.on('tick',function(){linkG.childNodes.forEach(function(l){l.setAttribute('x1',l._data.source.x);l.setAttribute('y1',l._data.source.y);l.setAttribute('x2',l._data.target.x);l.setAttribute('y2',l._data.target.y)});nodeG.childNodes.forEach(function(ng){var d=ng._data;ng.setAttribute('transform','translate('+d.x+','+d.y+')')})});var zoom=d3.zoom().scaleExtent([0.25,4]).on('zoom',function(e){g.setAttribute('transform',e.transform)});d3.select(svg).call(zoom)})</script>
+    <script src="-verso-search/search-highlight.js" defer="defer"></script>
+    </head>
+<body>
+<header><div class="header-logo-wrapper"></div><div class="header-title-wrapper"><a href="" class="header-title"><h1>BridgelandStability Comparator Manual</h1></a></div></header>
+<label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
+<div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
+<nav id="toc"><input type="checkbox" id="toggle-toc"><div class="first"><a href="./" class="toc-title"><h1>BridgelandStability Comparator Manual</h1></a><div class="split-tocs"><div class="split-toc book"><div class="title"><label for="--split-toc-toggle" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--split-toc-toggle" checked="checked"></label><span>Table of Contents</span></div><table><tr class="numbered current"><td class="num">1.</td><td><a href="./">Overview</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="grothendieckgroup-basic/">GrothendieckGroup.Basic</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="grothendieckgroup-defs/">GrothendieckGroup.Defs</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="numericalstability-defs/">NumericalStability.Defs</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="postnikovtower-defs/">PostnikovTower.Defs</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="quasiabelian-basic/">QuasiAbelian.Basic</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="eulerform-basic/">EulerForm.Basic</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="slicing-defs/">Slicing.Defs</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="intervalcategory-basic/">IntervalCategory.Basic</a></td></tr><tr class="numbered"><td class="num">10.</td><td><a href="stabilitycondition-defs/">StabilityCondition.Defs</a></td></tr><tr class="numbered"><td class="num">11.</td><td><a href="intervalcategory-quasiabelian/">IntervalCategory.QuasiAbelian</a></td></tr><tr class="numbered"><td class="num">12.</td><td><a href="intervalcategory-finitelength/">IntervalCategory.FiniteLength</a></td></tr></table></div></div></div></nav>
+<main><div class="content-wrapper">
+<section>
+              <h2 id="BridgelandStability-Comparator-Manual--Overview">
+                1. Overview<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=BridgelandStability-Comparator-Manual--Overview" title="Permalink">🔗</a></span></h2>
+              <p>
+                <img src="badge/comparator.svg" alt="comparator"></p>
+              <p>
+                Repository: <a href="https://github.com/mattrobball/BridgelandStability">https://github.com/mattrobball/BridgelandStability</a></p>
+              <p>
+                This manual presents the comparator view of the formalization.
+It was generated mechanically from the trusted formalization base walk rooted at the comparator target theorem in <code>BridgelandStability.NumericalStabilityManifold</code>.
+The formalization covers <strong>57</strong> declarations across <strong>11</strong> modules.</p>
+              <section>
+                <h3 id="shadow-entry-bridgelandstability-numericalstabilitymanifold-categorytheory-triangulated-numericalstabilitycondition-existscomplexmanifoldonconnectedcomponent-198-218">
+                  1.1. <code>CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent</code><span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=shadow-entry-bridgelandstability-numericalstabilitymanifold-categorytheory-triangulated-numericalstabilitycondition-existscomplexmanifoldonconnectedcomponent-198-218" title="Permalink">🔗</a></span></h3>
+                <p>
+                  <code>Theorem</code> | <code>BridgelandStability.NumericalStabilityManifold</code> | <a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/NumericalStabilityManifold.lean#L198">Source</a> | <a href="https://github.com/mattrobball/BridgelandStability/issues/new?title=Review: existsComplexManifoldOnConnectedComponent&amp;body=**Declaration:** `CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`%0A**Module:** `BridgelandStability.NumericalStabilityManifold`%0A**Source:** BridgelandStability/NumericalStabilityManifold.lean:198%0A**Status:** proved%0A%0A---%0A%0A**Describe the issue:**%0A&amp;labels=exposition-review">Open Issue</a></p>
+                <div class="decl-anchor" id="CategoryTheory___Triangulated___NumericalStabilityCondition___existsComplexManifoldOnConnectedComponent"></div>
+                <code class="hl lean block" data-lean-context="examples"><span class="doc-comment token" data-binding="">/-- **Bridgeland's Corollary 1.3** for numerical stability conditions. Each connected
+component of `Stab_N(D)` is a complex manifold of dimension `rk(N(D))`.
+
+This is a specialization of the generic class-map theorem to
+`v = numericalQuotientMap k C`, which is surjective by definition. -/</span><span class="inter-text">
+</span><span class="unknown token" data-binding="">@[</span><span class="keyword token" data-binding="kw-occ-Informal.informal-8799" data-verso-hover="0">informal</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="1">"Corollary 1.3"</span><span class="inter-text"> </span><span class="literal string token" data-binding="" data-verso-hover="2">"complex manifold conclusion only; local homeomorphism is in componentTopologicalLinearLocalModel"</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+</span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Command.theorem-8924">theorem</span><span class="inter-text"> </span><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent" data-verso-hover="3" id="CategoryTheory___Triangulated___NumericalStabilityCondition___existsComplexManifoldOnConnectedComponent-next">NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent</span><span class="inter-text">
+    </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="5">Type</span><span class="inter-text"> </span><span class="level-var token" data-binding="level-var-w" data-verso-hover="6">w</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-Field" data-verso-hover="7">Field</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+    </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-CategoryTheory.Linear" data-verso-hover="8">Linear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><a href="numericalstability-defs/#CategoryTheory___Triangulated___IsFiniteType" title="Documentation for CategoryTheory.Triangulated.IsFiniteType"><span class="const token" data-binding="const-CategoryTheory.Triangulated.IsFiniteType" data-verso-hover="10">IsFiniteType</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+    </span><span class="unknown token" data-binding="">[</span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-CategoryTheory.shiftFunctor" data-verso-hover="11">shiftFunctor</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="typed token" data-binding="" data-verso-hover="12">1</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="unknown token" data-binding="">ℤ</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-CategoryTheory.Functor.Linear" data-verso-hover="13">Linear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+    </span><span class="unknown token" data-binding="">[</span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericallyFinite" title="Documentation for CategoryTheory.Triangulated.NumericallyFinite"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericallyFinite" data-verso-hover="14">NumericallyFinite</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+    </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><a href="stabilitycondition-defs/#CategoryTheory___Triangulated___StabilityCondition___WithClassMap___ComponentIndex" title="Documentation for CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex"><span class="const token" data-binding="const-CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex" data-verso-hover="16">StabilityCondition.WithClassMap.ComponentIndex</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___numericalQuotientMap" title="Documentation for CategoryTheory.Triangulated.numericalQuotientMap"><span class="const token" data-binding="const-CategoryTheory.Triangulated.numericalQuotientMap" data-verso-hover="17">numericalQuotientMap</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+    </span><span class="unknown token" data-binding="">∃</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.31173" data-verso-hover="9">E</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="5">Type</span><span class="inter-text"> </span><span class="level-var token" data-binding="level-var-u" data-verso-hover="18">u</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-NormedAddCommGroup" data-verso-hover="19">NormedAddCommGroup</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31173" data-verso-hover="9">E</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-NormedSpace" data-verso-hover="20">NormedSpace</span><span class="inter-text"> </span><span class="unknown token" data-binding="">ℂ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31173" data-verso-hover="9">E</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+      </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-FiniteDimensional" data-verso-hover="21">FiniteDimensional</span><span class="inter-text"> </span><span class="unknown token" data-binding="">ℂ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31173" data-verso-hover="9">E</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+      </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-ChartedSpace" data-verso-hover="22">ChartedSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31173" data-verso-hover="9">E</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericalComponent" title="Documentation for CategoryTheory.Triangulated.NumericalComponent"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericalComponent" data-verso-hover="23">NumericalComponent</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">,</span><span class="inter-text">
+      </span><span class="const token" data-binding="const-IsManifold" data-verso-hover="24">IsManifold</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">𝓘(</span><span class="unknown token" data-binding="">ℂ</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31173" data-verso-hover="9">E</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">⊤</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-WithTop" data-verso-hover="25">WithTop</span><span class="inter-text"> </span><span class="unknown token" data-binding="">ℕ∞</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+        </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericalComponent" title="Documentation for CategoryTheory.Triangulated.NumericalComponent"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericalComponent" data-verso-hover="23">NumericalComponent</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="unknown token" data-binding="">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span><span class="unknown token" data-binding="">)</span></code><details class="collapsible-proof"><summary>Show proof</summary><code class="hl lean block" data-lean-context="examples"><span class="unknown token" data-binding="">:=</span><span class="inter-text"> </span><span class="tactic"><label for="tactic-state-4486268881240250462-9496-9498-0"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Term.byTactic-9496" data-verso-hover="26">by</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-4486268881240250462-9496-9498-0"><span class="tactic-state"><span class="goal"><span class="hypotheses"><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="5">Type u</span><span class="inter-text"></span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30584" data-verso-hover="27">inst✝¹¹</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Category" data-verso-hover="28">Category.{v, u}</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30598" data-verso-hover="29">inst✝¹⁰</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Limits.HasZeroObject" data-verso-hover="30">HasZeroObject</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30621" data-verso-hover="31">inst✝⁹</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.HasShift" data-verso-hover="32">HasShift</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="const token" data-binding="const-Int" data-verso-hover="33">ℤ</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30635" data-verso-hover="34">inst✝⁸</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Preadditive" data-verso-hover="35">Preadditive</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30694" data-verso-hover="36">inst✝⁷</span></span><span class="colon">:</span><span class="type"><span class="unknown token" data-binding="">∀</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="12">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Int" data-verso-hover="33">ℤ</span><span class="unknown token" data-binding="">),</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-CategoryTheory.shiftFunctor" data-verso-hover="11">shiftFunctor</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="12">n</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-CategoryTheory.Functor.Additive" data-verso-hover="37">Additive</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30742" data-verso-hover="38">inst✝⁶</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Pretriangulated" data-verso-hover="39">Pretriangulated</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30791" data-verso-hover="40">inst✝⁵</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.IsTriangulated" data-verso-hover="41">IsTriangulated</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="5">Type w</span><span class="inter-text"></span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31925" data-verso-hover="42">inst✝⁴</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-Field" data-verso-hover="7">Field</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31926" data-verso-hover="43">inst✝³</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Linear" data-verso-hover="8">Linear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31927" data-verso-hover="44">inst✝²</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><a href="numericalstability-defs/#CategoryTheory___Triangulated___IsFiniteType" title="Documentation for CategoryTheory.Triangulated.IsFiniteType"><span class="const token" data-binding="const-CategoryTheory.Triangulated.IsFiniteType" data-verso-hover="10">IsFiniteType</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31928" data-verso-hover="45">inst✝¹</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Functor.Linear" data-verso-hover="13">Functor.Linear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-CategoryTheory.shiftFunctor" data-verso-hover="11">shiftFunctor</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="unknown token" data-binding="">1</span><span class="unknown token" data-binding="">)</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31929" data-verso-hover="46">inst✝</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericallyFinite" title="Documentation for CategoryTheory.Triangulated.NumericallyFinite"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericallyFinite" data-verso-hover="14">NumericallyFinite</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><a href="stabilitycondition-defs/#CategoryTheory___Triangulated___StabilityCondition___WithClassMap___ComponentIndex" title="Documentation for CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex"><span class="const token" data-binding="const-CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex" data-verso-hover="16">StabilityCondition.WithClassMap.ComponentIndex</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___numericalQuotientMap" title="Documentation for CategoryTheory.Triangulated.numericalQuotientMap"><span class="const token" data-binding="const-CategoryTheory.Triangulated.numericalQuotientMap" data-verso-hover="17">numericalQuotientMap</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">)</span></span></span></span><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="unknown token" data-binding="">∃</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="9">E</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75793" data-verso-hover="47">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75794" data-verso-hover="48">x_1</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∃</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-FiniteDimensional" data-verso-hover="21">FiniteDimensional</span><span class="inter-text"> </span><span class="const token" data-binding="const-Complex" data-verso-hover="49">ℂ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="9">E</span><span class="unknown token" data-binding="">),</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∃</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75810" data-verso-hover="50">x_3</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-IsManifold" data-verso-hover="24">IsManifold</span><span class="inter-text"> </span><span class="const token" data-binding="const-modelWithCornersSelf" data-verso-hover="51">𝓘(</span><span class="const token" data-binding="const-Complex" data-verso-hover="49">ℂ</span><span class="const token" data-binding="const-modelWithCornersSelf" data-verso-hover="51">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="9">E</span><span class="const token" data-binding="const-modelWithCornersSelf" data-verso-hover="51">)</span><span class="inter-text"> </span><span class="const token" data-binding="const-Top.top" data-verso-hover="52">⊤</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericalComponent" title="Documentation for CategoryTheory.Triangulated.NumericalComponent"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericalComponent" data-verso-hover="23">NumericalComponent</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span><span class="unknown token" data-binding="">)</span></span></span></span></span></span><span class="inter-text">
+  </span><span class="tactic"><label for="tactic-state-18098395661095722698-9501-9626-2"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.tacticHaveI__-9501" data-verso-hover="53">haveI</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Fact" data-verso-hover="54">Fact</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Function.Surjective" data-verso-hover="55">Function.Surjective</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___numericalQuotientMap" title="Documentation for CategoryTheory.Triangulated.numericalQuotientMap"><span class="const token" data-binding="const-CategoryTheory.Triangulated.numericalQuotientMap" data-verso-hover="17">numericalQuotientMap</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:=</span><span class="inter-text">
+    </span><span class="unknown token" data-binding="const-Fact.mk" data-verso-hover="56">⟨</span><span class="const token" data-binding="const-QuotientAddGroup.mk'_surjective" data-verso-hover="57">QuotientAddGroup.mk'_surjective</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___eulerFormRad" title="Documentation for CategoryTheory.Triangulated.eulerFormRad"><span class="const token" data-binding="const-CategoryTheory.Triangulated.eulerFormRad" data-verso-hover="58">eulerFormRad</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="const-Fact.mk" data-verso-hover="56">⟩</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-18098395661095722698-9501-9626-2"><span class="tactic-state"><span class="goal"><span class="hypotheses"><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="5">Type u</span><span class="inter-text"></span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30584" data-verso-hover="27">inst✝¹¹</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Category" data-verso-hover="28">Category.{v, u}</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30598" data-verso-hover="29">inst✝¹⁰</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Limits.HasZeroObject" data-verso-hover="30">HasZeroObject</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30621" data-verso-hover="31">inst✝⁹</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.HasShift" data-verso-hover="32">HasShift</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="const token" data-binding="const-Int" data-verso-hover="33">ℤ</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30635" data-verso-hover="34">inst✝⁸</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Preadditive" data-verso-hover="35">Preadditive</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30694" data-verso-hover="36">inst✝⁷</span></span><span class="colon">:</span><span class="type"><span class="unknown token" data-binding="">∀</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="12">n</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Int" data-verso-hover="33">ℤ</span><span class="unknown token" data-binding="">),</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-CategoryTheory.shiftFunctor" data-verso-hover="11">shiftFunctor</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="12">n</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-CategoryTheory.Functor.Additive" data-verso-hover="37">Additive</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30742" data-verso-hover="38">inst✝⁶</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Pretriangulated" data-verso-hover="39">Pretriangulated</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30791" data-verso-hover="40">inst✝⁵</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.IsTriangulated" data-verso-hover="41">IsTriangulated</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="5">Type w</span><span class="inter-text"></span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31925" data-verso-hover="42">inst✝⁴</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-Field" data-verso-hover="7">Field</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31926" data-verso-hover="43">inst✝³</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Linear" data-verso-hover="8">Linear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31927" data-verso-hover="44">inst✝²</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><a href="numericalstability-defs/#CategoryTheory___Triangulated___IsFiniteType" title="Documentation for CategoryTheory.Triangulated.IsFiniteType"><span class="const token" data-binding="const-CategoryTheory.Triangulated.IsFiniteType" data-verso-hover="10">IsFiniteType</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31928" data-verso-hover="45">inst✝¹</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-CategoryTheory.Functor.Linear" data-verso-hover="13">Functor.Linear</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-CategoryTheory.shiftFunctor" data-verso-hover="11">shiftFunctor</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="unknown token" data-binding="">1</span><span class="unknown token" data-binding="">)</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31929" data-verso-hover="46">inst✝</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericallyFinite" title="Documentation for CategoryTheory.Triangulated.NumericallyFinite"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericallyFinite" data-verso-hover="14">NumericallyFinite</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><a href="stabilitycondition-defs/#CategoryTheory___Triangulated___StabilityCondition___WithClassMap___ComponentIndex" title="Documentation for CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex"><span class="const token" data-binding="const-CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex" data-verso-hover="16">StabilityCondition.WithClassMap.ComponentIndex</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___numericalQuotientMap" title="Documentation for CategoryTheory.Triangulated.numericalQuotientMap"><span class="const token" data-binding="const-CategoryTheory.Triangulated.numericalQuotientMap" data-verso-hover="17">numericalQuotientMap</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">)</span></span></span><span class="hypothesis"><span class="name"><span class="var token" data-binding="var-_uniq.32281" data-verso-hover="59">this</span></span><span class="colon">:</span><span class="type"><span class="inter-text"></span><span class="const token" data-binding="const-Fact" data-verso-hover="54">Fact</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="const token" data-binding="const-Function.Surjective" data-verso-hover="55">Function.Surjective</span><span class="inter-text"> </span><span class="unknown token" data-binding="">⇑</span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___numericalQuotientMap" title="Documentation for CategoryTheory.Triangulated.numericalQuotientMap"><span class="const token" data-binding="const-CategoryTheory.Triangulated.numericalQuotientMap" data-verso-hover="17">numericalQuotientMap</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="unknown token" data-binding="">)</span><span class="unknown token" data-binding="">)</span></span></span></span><span class="conclusion"><span class="prefix">⊢ </span><span class="type"><span class="unknown token" data-binding="">∃</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="9">E</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75793" data-verso-hover="47">x</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75794" data-verso-hover="48">x_1</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∃</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(_</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-FiniteDimensional" data-verso-hover="21">FiniteDimensional</span><span class="inter-text"> </span><span class="const token" data-binding="const-Complex" data-verso-hover="49">ℂ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="9">E</span><span class="unknown token" data-binding="">),</span><span class="inter-text"> </span><span class="unknown token" data-binding="">∃</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75810" data-verso-hover="50">x_3</span><span class="unknown token" data-binding="">,</span><span class="inter-text"> </span><span class="const token" data-binding="const-IsManifold" data-verso-hover="24">IsManifold</span><span class="inter-text"> </span><span class="const token" data-binding="const-modelWithCornersSelf" data-verso-hover="51">𝓘(</span><span class="const token" data-binding="const-Complex" data-verso-hover="49">ℂ</span><span class="const token" data-binding="const-modelWithCornersSelf" data-verso-hover="51">,</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.75792" data-verso-hover="9">E</span><span class="const token" data-binding="const-modelWithCornersSelf" data-verso-hover="51">)</span><span class="inter-text"> </span><span class="const token" data-binding="const-Top.top" data-verso-hover="52">⊤</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericalComponent" title="Documentation for CategoryTheory.Triangulated.NumericalComponent"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericalComponent" data-verso-hover="23">NumericalComponent</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.30793" data-verso-hover="4">k</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span><span class="unknown token" data-binding="">)</span></span></span></span></span></span><span class="inter-text">
+  </span><span class="tactic"><label for="tactic-state-7-9629-9744-4"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.simpa-9629" data-verso-hover="60">simpa</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><a href="eulerform-basic/#CategoryTheory___Triangulated___NumericalComponent" title="Documentation for CategoryTheory.Triangulated.NumericalComponent"><span class="const token" data-binding="const-CategoryTheory.Triangulated.NumericalComponent" data-verso-hover="23">NumericalComponent</span></a><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-null-9656">using</span><span class="inter-text">
+    </span><span class="const token" data-binding="const-CategoryTheory.Triangulated.StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent" data-verso-hover="61">StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.24184" data-verso-hover="9">C</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.31168" data-verso-hover="15">cc</span></label><input type="checkbox" class="tactic-toggle" id="tactic-state-7-9629-9744-4"><span class="tactic-state">All goals completed! 🐙</span></span></code></details></section>
+              <section>
+                <h3 id="BridgelandStability-Comparator-Manual--Overview--Declaration-census">
+                  1.2. Declaration census<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=BridgelandStability-Comparator-Manual--Overview--Declaration-census" title="Permalink">🔗</a></span></h3>
+                <p>
+                  Every constant in the transitive closure of the target theorem's type.
+Auxiliary declarations are resolved to their user-facing parent.</p>
+                <p>
+                  <strong>126</strong> raw constants: <strong>55</strong> user-facing, <strong>71</strong> auxiliary.</p>
+                <ul>
+                  <li>
+                    <p>
+                      <code>K0Presentation</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.IsStrict</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.IsStrictArtinianObject</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.IsStrictMono</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.IsStrictNoetherianObject</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.StrictSubobject</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.isStrictArtinianObject</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.isStrictNoetherianObject</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.IsAdditive</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.K0</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.lift</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.mk</code> — constructor → <code>K0Presentation</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.obj₁</code> — projection → <code>K0Presentation</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.obj₂</code> — projection → <code>K0Presentation</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.obj₃</code> — projection → <code>K0Presentation</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.subgroup</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.IsStrictMono.mk</code> — constructor → <code>CategoryTheory.IsStrictMono</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Subobject.IsStrict</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.HNFiltration</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.IsFiniteType</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.IsTriangleAdditive</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalComponent</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericallyFinite</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PostnikovTower</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.basisNhd</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.cl</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.eulerForm</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.eulerFormInner</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.eulerFormObj</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.eulerFormRad</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.numericalQuotientMap</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.slicingDist</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.stabSeminorm</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.trianglePresentation</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.IsAdditive.mk</code> — constructor → <code>K0Presentation.IsAdditive</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.instAddCommGroupK0._proof_1</code> — internal → <code>K0Presentation.instAddCommGroupK0</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>K0Presentation.lift._proof_1</code> — internal → <code>K0Presentation.lift</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Subobject.IsStrict._proof_1</code> — internal → <code>CategoryTheory.Subobject.IsStrict</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Subobject.IsStrict._proof_2</code> — internal → <code>CategoryTheory.Subobject.IsStrict</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Subobject.IsStrict._proof_3</code> — internal → <code>CategoryTheory.Subobject.IsStrict</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Subobject.IsStrict._proof_4</code> — internal → <code>CategoryTheory.Subobject.IsStrict</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.HNFiltration.mk</code> — constructor → <code>CategoryTheory.Triangulated.HNFiltration</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.HNFiltration.toPostnikovTower</code> — projection → <code>CategoryTheory.Triangulated.HNFiltration</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.HNFiltration.φ</code> — projection → <code>CategoryTheory.Triangulated.HNFiltration</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.IsFiniteType.mk</code> — constructor → <code>CategoryTheory.Triangulated.IsFiniteType</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.IsTriangleAdditive.mk</code> — constructor → <code>CategoryTheory.Triangulated.IsTriangleAdditive</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.lift</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.of</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericallyFinite.mk</code> — constructor → <code>CategoryTheory.Triangulated.NumericallyFinite</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PostnikovTower._proof_1</code> — internal → <code>CategoryTheory.Triangulated.PostnikovTower</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PostnikovTower._proof_3</code> — internal → <code>CategoryTheory.Triangulated.PostnikovTower</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PostnikovTower.factor</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PostnikovTower.mk</code> — constructor → <code>CategoryTheory.Triangulated.PostnikovTower</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PostnikovTower.n</code> — projection → <code>CategoryTheory.Triangulated.PostnikovTower</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PostnikovTower.triangle</code> — projection → <code>CategoryTheory.Triangulated.PostnikovTower</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.IntervalCat</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.IsLocallyFinite</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.P</code> — projection → <code>CategoryTheory.Triangulated.Slicing</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.intervalProp</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.mk</code> — constructor → <code>CategoryTheory.Triangulated.Slicing</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.phiMinus</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.phiPlus</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.numericalQuotientMap._proof_1</code> — internal → <code>CategoryTheory.Triangulated.numericalQuotientMap</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last._proof_1</code> — internal → <code>CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._aux_1</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._aux_12</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._aux_14</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._aux_17</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._aux_4</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._aux_8</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_10</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_11</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_16</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_19</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_20</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_21</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_22</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_23</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_3</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_6</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.K₀.instAddCommGroup._proof_7</code> — internal → <code>CategoryTheory.Triangulated.K₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._aux_1</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._aux_12</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._aux_14</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._aux_17</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._aux_4</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._aux_8</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_10</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_11</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_16</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_19</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_20</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_21</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_22</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_23</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_3</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_6</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup._proof_7</code> — internal → <code>CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.Z</code> — projection → <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.mk</code> — constructor → <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.slicing</code> — projection → <code>CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.IsLocallyFinite.mk</code> — constructor → <code>CategoryTheory.Triangulated.Slicing.IsLocallyFinite</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.phiMinus._proof_1</code> — internal → <code>CategoryTheory.Triangulated.Slicing.phiMinus</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.phiMinus._proof_2</code> — internal → <code>CategoryTheory.Triangulated.Slicing.phiMinus</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.Slicing.phiPlus._proof_1</code> — internal → <code>CategoryTheory.Triangulated.Slicing.phiPlus</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.mk</code> — constructor → <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.toWithClassMap</code> — projection → <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap</code></p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace</code> — user</p>
+                    </li>
+                  <li>
+                    <p>
+                      <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace._proof_1</code> — internal → <code>CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace</code></p>
+                    </li>
+                  </ul>
+                </section>
+              <section>
+                <h3 id="BridgelandStability-Comparator-Manual--Overview--Dependency-graph">
+                  1.3. Dependency graph<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=BridgelandStability-Comparator-Manual--Overview--Dependency-graph" title="Permalink">🔗</a></span></h3>
+                <p>
+                  Click a node to navigate to its declaration.</p>
+                <div id="graph-root">
+                  <script id="graph-data" type="application/json">
+                    {"edges":[{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.NumericalComponent"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.NumericalK₀"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.NumericallyFinite"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.numericalQuotientMap"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex"},{"source":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace"},{"source":"CategoryTheory.Triangulated.PostnikovTower.factor","target":"CategoryTheory.Triangulated.PostnikovTower"},{"source":"CategoryTheory.Triangulated.trianglePresentation","target":"K0Presentation"},{"source":"K0Presentation.subgroup","target":"K0Presentation"},{"source":"K0Presentation.IsAdditive","target":"K0Presentation"},{"source":"CategoryTheory.IsStrictMono","target":"CategoryTheory.IsStrict"},{"source":"CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive","target":"CategoryTheory.Triangulated.IsTriangleAdditive"},{"source":"CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive","target":"CategoryTheory.Triangulated.eulerFormObj"},{"source":"CategoryTheory.Triangulated.HNFiltration","target":"CategoryTheory.Triangulated.PostnikovTower"},{"source":"CategoryTheory.Triangulated.HNFiltration","target":"CategoryTheory.Triangulated.PostnikovTower.factor"},{"source":"CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive","target":"K0Presentation.IsAdditive"},{"source":"CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive","target":"CategoryTheory.Triangulated.IsTriangleAdditive"},{"source":"CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive","target":"CategoryTheory.Triangulated.trianglePresentation"},{"source":"K0Presentation.K0","target":"K0Presentation"},{"source":"K0Presentation.K0","target":"K0Presentation.subgroup"},{"source":"CategoryTheory.Subobject.IsStrict","target":"CategoryTheory.IsStrictMono"},{"source":"CategoryTheory.Triangulated.Slicing","target":"CategoryTheory.Triangulated.HNFiltration"},{"source":"CategoryTheory.Triangulated.K₀","target":"K0Presentation.K0"},{"source":"CategoryTheory.Triangulated.K₀","target":"CategoryTheory.Triangulated.trianglePresentation"},{"source":"K0Presentation.instAddCommGroupK0","target":"K0Presentation"},{"source":"K0Presentation.instAddCommGroupK0","target":"K0Presentation.K0"},{"source":"K0Presentation.instAddCommGroupK0","target":"K0Presentation.subgroup"},{"source":"K0Presentation.lift","target":"K0Presentation"},{"source":"K0Presentation.lift","target":"K0Presentation.IsAdditive"},{"source":"K0Presentation.lift","target":"K0Presentation.K0"},{"source":"K0Presentation.lift","target":"K0Presentation.subgroup"},{"source":"CategoryTheory.StrictSubobject","target":"CategoryTheory.Subobject.IsStrict"},{"source":"CategoryTheory.Triangulated.Slicing.intervalProp","target":"CategoryTheory.Triangulated.HNFiltration"},{"source":"CategoryTheory.Triangulated.Slicing.intervalProp","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first","target":"CategoryTheory.Triangulated.HNFiltration"},{"source":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last","target":"CategoryTheory.Triangulated.HNFiltration"},{"source":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.K₀.instAddCommGroup","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.K₀.of","target":"K0Presentation.subgroup"},{"source":"CategoryTheory.Triangulated.K₀.of","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.K₀.of","target":"CategoryTheory.Triangulated.trianglePresentation"},{"source":"CategoryTheory.isStrictArtinianObject","target":"CategoryTheory.StrictSubobject"},{"source":"CategoryTheory.isStrictArtinianObject","target":"CategoryTheory.Subobject.IsStrict"},{"source":"CategoryTheory.isStrictNoetherianObject","target":"CategoryTheory.StrictSubobject"},{"source":"CategoryTheory.isStrictNoetherianObject","target":"CategoryTheory.Subobject.IsStrict"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.K₀.of"},{"source":"CategoryTheory.Triangulated.Slicing.phiPlus","target":"CategoryTheory.Triangulated.HNFiltration"},{"source":"CategoryTheory.Triangulated.Slicing.phiPlus","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.Slicing.phiPlus","target":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first"},{"source":"CategoryTheory.Triangulated.Slicing.phiMinus","target":"CategoryTheory.Triangulated.HNFiltration"},{"source":"CategoryTheory.Triangulated.Slicing.phiMinus","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.Slicing.phiMinus","target":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last"},{"source":"CategoryTheory.Triangulated.K₀.lift","target":"K0Presentation.lift"},{"source":"CategoryTheory.Triangulated.K₀.lift","target":"CategoryTheory.Triangulated.IsTriangleAdditive"},{"source":"CategoryTheory.Triangulated.K₀.lift","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.K₀.lift","target":"CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive"},{"source":"CategoryTheory.Triangulated.K₀.lift","target":"CategoryTheory.Triangulated.trianglePresentation"},{"source":"CategoryTheory.Triangulated.K₀.lift","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.cl","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.cl","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.cl","target":"CategoryTheory.Triangulated.K₀.of"},{"source":"CategoryTheory.Triangulated.Slicing.IntervalCat","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.Slicing.IntervalCat","target":"CategoryTheory.Triangulated.Slicing.intervalProp"},{"source":"CategoryTheory.IsStrictArtinianObject","target":"CategoryTheory.isStrictArtinianObject"},{"source":"CategoryTheory.IsStrictNoetherianObject","target":"CategoryTheory.isStrictNoetherianObject"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge","target":"CategoryTheory.Triangulated.cl"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge","target":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.slicingDist","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.slicingDist","target":"CategoryTheory.Triangulated.Slicing.phiMinus"},{"source":"CategoryTheory.Triangulated.slicingDist","target":"CategoryTheory.Triangulated.Slicing.phiPlus"},{"source":"CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels","target":"CategoryTheory.Triangulated.Slicing.IntervalCat"},{"source":"CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels","target":"CategoryTheory.Triangulated.Slicing.intervalProp"},{"source":"CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels","target":"CategoryTheory.Triangulated.Slicing.IntervalCat"},{"source":"CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels","target":"CategoryTheory.Triangulated.Slicing.intervalProp"},{"source":"CategoryTheory.Triangulated.eulerFormInner","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.eulerFormInner","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.eulerFormInner","target":"CategoryTheory.Triangulated.eulerFormObj"},{"source":"CategoryTheory.Triangulated.eulerFormInner","target":"CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive"},{"source":"CategoryTheory.Triangulated.eulerFormInner","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.eulerFormInner","target":"CategoryTheory.Triangulated.K₀.lift"},{"source":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","target":"CategoryTheory.IsStrictArtinianObject"},{"source":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","target":"CategoryTheory.IsStrictNoetherianObject"},{"source":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","target":"CategoryTheory.Triangulated.Slicing"},{"source":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","target":"CategoryTheory.Triangulated.Slicing.IntervalCat"},{"source":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","target":"CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels"},{"source":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","target":"CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels"},{"source":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","target":"CategoryTheory.Triangulated.Slicing.intervalProp"},{"source":"CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive","target":"CategoryTheory.Triangulated.IsTriangleAdditive"},{"source":"CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive","target":"CategoryTheory.Triangulated.eulerFormInner"},{"source":"CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap","target":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite"},{"source":"CategoryTheory.Triangulated.eulerForm","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.eulerForm","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.eulerForm","target":"CategoryTheory.Triangulated.eulerFormInner"},{"source":"CategoryTheory.Triangulated.eulerForm","target":"CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive"},{"source":"CategoryTheory.Triangulated.eulerForm","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.eulerForm","target":"CategoryTheory.Triangulated.K₀.lift"},{"source":"CategoryTheory.Triangulated.stabSeminorm","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.stabSeminorm","target":"CategoryTheory.Triangulated.cl"},{"source":"CategoryTheory.Triangulated.stabSeminorm","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.stabSeminorm","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.stabSeminorm","target":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge"},{"source":"CategoryTheory.Triangulated.eulerFormRad","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.eulerFormRad","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.eulerFormRad","target":"CategoryTheory.Triangulated.eulerForm"},{"source":"CategoryTheory.Triangulated.eulerFormRad","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.basisNhd","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.basisNhd","target":"CategoryTheory.Triangulated.slicingDist"},{"source":"CategoryTheory.Triangulated.basisNhd","target":"CategoryTheory.Triangulated.stabSeminorm"},{"source":"CategoryTheory.Triangulated.basisNhd","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.basisNhd","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.NumericalK₀","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.NumericalK₀","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.NumericalK₀","target":"CategoryTheory.Triangulated.eulerFormRad"},{"source":"CategoryTheory.Triangulated.NumericalK₀","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace","target":"CategoryTheory.Triangulated.basisNhd"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup","target":"CategoryTheory.Triangulated.NumericalK₀"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace"},{"source":"CategoryTheory.Triangulated.numericalQuotientMap","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.numericalQuotientMap","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.numericalQuotientMap","target":"CategoryTheory.Triangulated.NumericalK₀"},{"source":"CategoryTheory.Triangulated.numericalQuotientMap","target":"CategoryTheory.Triangulated.eulerFormRad"},{"source":"CategoryTheory.Triangulated.numericalQuotientMap","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.numericalQuotientMap","target":"CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.NumericallyFinite","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.NumericallyFinite","target":"CategoryTheory.Triangulated.NumericalK₀"},{"source":"CategoryTheory.Triangulated.NumericallyFinite","target":"CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component","target":"CategoryTheory.Triangulated.K₀"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component","target":"CategoryTheory.Triangulated.K₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex"},{"source":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace"},{"source":"CategoryTheory.Triangulated.NumericalComponent","target":"CategoryTheory.Triangulated.IsFiniteType"},{"source":"CategoryTheory.Triangulated.NumericalComponent","target":"CategoryTheory.Triangulated.NumericalK₀"},{"source":"CategoryTheory.Triangulated.NumericalComponent","target":"CategoryTheory.Triangulated.numericalQuotientMap"},{"source":"CategoryTheory.Triangulated.NumericalComponent","target":"CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup"},{"source":"CategoryTheory.Triangulated.NumericalComponent","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component"},{"source":"CategoryTheory.Triangulated.NumericalComponent","target":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex"}],"nodes":[{"groupKey":"BridgelandStability.NumericalStabilityManifold","href":"numericalstabilitymanifold/","id":"CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent","kind":"Theorem","label":"existsComplexManifoldOnConnectedComponent","moduleName":"BridgelandStability.NumericalStabilityManifold","status":"clean"},{"groupKey":"BridgelandStability.PostnikovTower.Defs","href":"postnikovtower-defs/","id":"CategoryTheory.Triangulated.PostnikovTower","kind":"Structure","label":"PostnikovTower","moduleName":"BridgelandStability.PostnikovTower.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.IsTriangleAdditive","kind":"Structure","label":"IsTriangleAdditive","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Defs","href":"grothendieckgroup-defs/","id":"K0Presentation","kind":"Structure","label":"K0Presentation","moduleName":"BridgelandStability.GrothendieckGroup.Defs","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.IsStrict","kind":"Definition","label":"IsStrict","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.NumericalStability.Defs","href":"numericalstability-defs/","id":"CategoryTheory.Triangulated.IsFiniteType","kind":"Structure","label":"IsFiniteType","moduleName":"BridgelandStability.NumericalStability.Defs","status":"clean"},{"groupKey":"BridgelandStability.NumericalStability.Defs","href":"numericalstability-defs/","id":"CategoryTheory.Triangulated.eulerFormObj","kind":"Definition","label":"eulerFormObj","moduleName":"BridgelandStability.NumericalStability.Defs","status":"clean"},{"groupKey":"BridgelandStability.PostnikovTower.Defs","href":"postnikovtower-defs/","id":"CategoryTheory.Triangulated.PostnikovTower.factor","kind":"Definition","label":"factor","moduleName":"BridgelandStability.PostnikovTower.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.trianglePresentation","kind":"Definition","label":"trianglePresentation","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Defs","href":"grothendieckgroup-defs/","id":"K0Presentation.subgroup","kind":"Definition","label":"subgroup","moduleName":"BridgelandStability.GrothendieckGroup.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Defs","href":"grothendieckgroup-defs/","id":"K0Presentation.IsAdditive","kind":"Structure","label":"IsAdditive","moduleName":"BridgelandStability.GrothendieckGroup.Defs","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.IsStrictMono","kind":"Structure","label":"IsStrictMono","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive","kind":"Theorem","label":"eulerFormObj_contravariant_triangleAdditive","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.Slicing.Defs","href":"slicing-defs/","id":"CategoryTheory.Triangulated.HNFiltration","kind":"Structure","label":"HNFiltration","moduleName":"BridgelandStability.Slicing.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive","kind":"Theorem","label":"instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Defs","href":"grothendieckgroup-defs/","id":"K0Presentation.K0","kind":"Definition","label":"K0","moduleName":"BridgelandStability.GrothendieckGroup.Defs","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.Subobject.IsStrict","kind":"Definition","label":"IsStrict","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.Slicing.Defs","href":"slicing-defs/","id":"CategoryTheory.Triangulated.Slicing","kind":"Structure","label":"Slicing","moduleName":"BridgelandStability.Slicing.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.K₀","kind":"Definition","label":"K₀","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Defs","href":"grothendieckgroup-defs/","id":"K0Presentation.instAddCommGroupK0","kind":"Definition","label":"instAddCommGroupK0","moduleName":"BridgelandStability.GrothendieckGroup.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Defs","href":"grothendieckgroup-defs/","id":"K0Presentation.lift","kind":"Definition","label":"lift","moduleName":"BridgelandStability.GrothendieckGroup.Defs","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.StrictSubobject","kind":"Definition","label":"StrictSubobject","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.Slicing.Defs","href":"slicing-defs/","id":"CategoryTheory.Triangulated.Slicing.intervalProp","kind":"Definition","label":"intervalProp","moduleName":"BridgelandStability.Slicing.Defs","status":"clean"},{"groupKey":"BridgelandStability.Slicing.Defs","href":"slicing-defs/","id":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first","kind":"Theorem","label":"exists_nonzero_first","moduleName":"BridgelandStability.Slicing.Defs","status":"clean"},{"groupKey":"BridgelandStability.Slicing.Defs","href":"slicing-defs/","id":"CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last","kind":"Theorem","label":"exists_nonzero_last","moduleName":"BridgelandStability.Slicing.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.K₀.instAddCommGroup","kind":"Definition","label":"instAddCommGroup","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.K₀.of","kind":"Definition","label":"of","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.isStrictArtinianObject","kind":"Definition","label":"isStrictArtinianObject","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.isStrictNoetherianObject","kind":"Definition","label":"isStrictNoetherianObject","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap","kind":"Structure","label":"WithClassMap","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.Slicing.Defs","href":"slicing-defs/","id":"CategoryTheory.Triangulated.Slicing.phiPlus","kind":"Definition","label":"phiPlus","moduleName":"BridgelandStability.Slicing.Defs","status":"clean"},{"groupKey":"BridgelandStability.Slicing.Defs","href":"slicing-defs/","id":"CategoryTheory.Triangulated.Slicing.phiMinus","kind":"Definition","label":"phiMinus","moduleName":"BridgelandStability.Slicing.Defs","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.K₀.lift","kind":"Definition","label":"lift","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.GrothendieckGroup.Basic","href":"grothendieckgroup-basic/","id":"CategoryTheory.Triangulated.cl","kind":"Definition","label":"cl","moduleName":"BridgelandStability.GrothendieckGroup.Basic","status":"clean"},{"groupKey":"BridgelandStability.IntervalCategory.Basic","href":"intervalcategory-basic/","id":"CategoryTheory.Triangulated.Slicing.IntervalCat","kind":"Definition","label":"IntervalCat","moduleName":"BridgelandStability.IntervalCategory.Basic","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.IsStrictArtinianObject","kind":"Definition","label":"IsStrictArtinianObject","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.QuasiAbelian.Basic","href":"quasiabelian-basic/","id":"CategoryTheory.IsStrictNoetherianObject","kind":"Definition","label":"IsStrictNoetherianObject","moduleName":"BridgelandStability.QuasiAbelian.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge","kind":"Definition","label":"charge","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.slicingDist","kind":"Definition","label":"slicingDist","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.IntervalCategory.QuasiAbelian","href":"intervalcategory-quasiabelian/","id":"CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels","kind":"Theorem","label":"intervalCat_hasKernels","moduleName":"BridgelandStability.IntervalCategory.QuasiAbelian","status":"clean"},{"groupKey":"BridgelandStability.IntervalCategory.QuasiAbelian","href":"intervalcategory-quasiabelian/","id":"CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels","kind":"Theorem","label":"intervalCat_hasCokernels","moduleName":"BridgelandStability.IntervalCategory.QuasiAbelian","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.eulerFormInner","kind":"Definition","label":"eulerFormInner","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.IntervalCategory.FiniteLength","href":"intervalcategory-finitelength/","id":"CategoryTheory.Triangulated.Slicing.IsLocallyFinite","kind":"Structure","label":"IsLocallyFinite","moduleName":"BridgelandStability.IntervalCategory.FiniteLength","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive","kind":"Theorem","label":"eulerFormInner_isTriangleAdditive","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap","kind":"Structure","label":"WithClassMap","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.eulerForm","kind":"Definition","label":"eulerForm","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.stabSeminorm","kind":"Definition","label":"stabSeminorm","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.eulerFormRad","kind":"Definition","label":"eulerFormRad","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.basisNhd","kind":"Definition","label":"basisNhd","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.NumericalK₀","kind":"Definition","label":"NumericalK₀","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace","kind":"Definition","label":"topologicalSpace","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup","kind":"Definition","label":"instAddCommGroup","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex","kind":"Definition","label":"ComponentIndex","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.numericalQuotientMap","kind":"Definition","label":"numericalQuotientMap","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.NumericallyFinite","kind":"Structure","label":"NumericallyFinite","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"},{"groupKey":"BridgelandStability.StabilityCondition.Defs","href":"stabilitycondition-defs/","id":"CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component","kind":"Definition","label":"Component","moduleName":"BridgelandStability.StabilityCondition.Defs","status":"clean"},{"groupKey":"BridgelandStability.EulerForm.Basic","href":"eulerform-basic/","id":"CategoryTheory.Triangulated.NumericalComponent","kind":"Definition","label":"NumericalComponent","moduleName":"BridgelandStability.EulerForm.Basic","status":"clean"}]}
+</script>
+                  <script src="https://d3js.org/d3.v7.min.js"></script>
+                  </div>
+                </section>
+              </section>
+            
+</div></main></div>
+
+</body>
+</html>

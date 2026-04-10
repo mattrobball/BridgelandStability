@@ -1,0 +1,21 @@
+name = "BridgelandStability"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["BridgelandStability"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "master"
+
+[[require]]
+name = "informal"
+git = "https://github.com/mattrobball/lean-informal"
+rev = "main"
+
+[[lean_lib]]
+name = "BridgelandStability"
+srcDir = "."

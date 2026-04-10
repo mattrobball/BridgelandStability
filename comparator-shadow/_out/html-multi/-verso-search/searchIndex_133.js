@@ -1,0 +1,1 @@
+window.docContents[133].resolve({"/#BridgelandStability-Comparator-Manual--Slicing___Defs":{"contents":"Module BridgelandStability.Slicing.Defs — 7 declarations (Structure, Definition, Theorem)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n","context":"BridgelandStability Comparator Manual","header":"8. Slicing.Defs","id":"/#BridgelandStability-Comparator-Manual--Slicing___Defs"}});

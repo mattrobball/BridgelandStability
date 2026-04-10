@@ -1,0 +1,6 @@
+.lake/
+
+# Blueprint build artifacts
+blueprint/print/
+blueprint/web/
+blueprint/src/web.paux

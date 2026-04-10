@@ -1,0 +1,46 @@
+name = "BridgelandStability"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["BridgelandStability"]
+
+[leanOptions]
+autoImplicit = false
+
+
+[[require]]
+name = "verso"
+git = "https://github.com/leanprover/verso"
+rev = "v4.29.0"
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.29.0"
+
+[[require]]
+name = "informal"
+git = "https://github.com/mattrobball/lean-informal"
+rev = "main"
+
+[[lean_lib]]
+name = "BridgelandStability"
+srcDir = "."
+
+[[lean_lib]]
+name = "CheckInformal"
+srcDir = "scripts/lean"
+
+[[lean_lib]]
+name = "ExtractDecls"
+srcDir = "scripts/lean"
+[[lean_lib]]
+name = "ComparatorManual"
+srcDir = "."
+
+[[lean_lib]]
+name = "ComparatorManualSupport"
+srcDir = "."
+
+[[lean_exe]]
+name = "comparatorManual"
+root = "ComparatorManualMain"
+supportInterpreter = true

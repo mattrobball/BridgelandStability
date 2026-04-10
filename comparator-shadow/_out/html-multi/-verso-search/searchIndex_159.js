@@ -1,0 +1,1 @@
+window.docContents[159].resolve({"/#BridgelandStability-Comparator-Manual--IntervalCategory___Basic":{"contents":"Module BridgelandStability.IntervalCategory.Basic — 1 declarations (Definition)\n\n\n\n","context":"BridgelandStability Comparator Manual","header":"9. IntervalCategory.Basic","id":"/#BridgelandStability-Comparator-Manual--IntervalCategory___Basic"}});
