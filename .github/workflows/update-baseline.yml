@@ -21,6 +21,14 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
+      - name: Restore olean cache
+        uses: actions/cache@v4
+        with:
+          path: .lake/build
+          key: oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('BridgelandStability/**/*.lean') }}
+          restore-keys: |
+            oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-
+
       - name: Get Mathlib cache
         run: lake exe cache get
 
@@ -54,7 +62,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore: update informalizations.json baseline"
-            git pull --rebase
             git push
           fi
 
