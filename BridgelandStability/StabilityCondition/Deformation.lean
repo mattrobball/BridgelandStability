@@ -18,7 +18,7 @@ Following Bridgeland's proof:
 - **Lemma 6.2** (`stabSeminorm_dominated_of_connected`): seminorm equivalence on V(Σ).
 - **Prop 6.3**: Z continuous into the seminorm topology.
 - **Lemma 6.4** (`eq_of_same_Z_near`): Z locally injective.
-- **Theorem 7.1** (`exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin`): Z locally surjective.
+- **Theorem 7.1** (`deformation`): Z locally surjective.
 -/
 
 @[expose] public section
@@ -117,6 +117,23 @@ theorem StabilityCondition.WithClassMap.exists_epsilon0_tenth (σ : StabilityCon
   refine ⟨ε₁ / 2, by positivity, by linarith, ?_⟩
   exact wideSectorFiniteLength_mono C σ hε₁ hε₁8 hWide₁
     (by positivity) (by linarith) (by linarith)
+
+/-- **Bridgeland's Theorem 7.1.** Let σ be a locally-finite stability condition.
+Then there is an ε₀ > 0 such that if 0 < ε < ε₀ and W satisfies
+‖W − Z‖_σ < sin(πε), then there is a locally-finite stability condition
+τ = (W, Q) with d(P, Q) < ε. -/
+@[informal "Theorem 7.1"]
+theorem StabilityCondition.WithClassMap.deformation
+    (σ : StabilityCondition.WithClassMap C v) :
+    ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∀ (W : Λ →+ ℂ) (ε : ℝ), 0 < ε → ε < ε₀ →
+      stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)) →
+      ∃ (τ : StabilityCondition.WithClassMap C v), τ.Z = W ∧
+        slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε := by
+  obtain ⟨ε₀, hε₀, hε₀10, hWide⟩ := σ.exists_epsilon0_tenth C
+  exact ⟨ε₀, hε₀, fun W ε hε hεε₀ hsin =>
+    σ.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin C W
+      (lt_of_lt_of_le hsin (ENNReal.ofReal_le_ofReal (Real.sin_le_one _)))
+      ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin⟩
 
 /-- The affine interpolation between the central charges of `σ` and `τ`. -/
 def linearInterpolationZ (σ τ : StabilityCondition.WithClassMap C v) (t : ℝ) : Λ →+ ℂ :=
@@ -579,7 +596,7 @@ private lemma sin_pi_mul_lt_one {δ : ℝ} (hδ : 0 < δ) (hδ8 : δ < 1 / 8) :
     Real.sin (Real.pi * δ) < 1 :=
   lt_trans (Real.sin_lt (by positivity)) (by nlinarith [Real.pi_lt_d4])
 
-/-- A small Bridgeland basis neighborhood, with radius below the local Theorem 7.1 witness,
+/-- A small Bridgeland basis neighborhood, with radius below the local deformation witness,
 lies in the connected component of its center. This is the direct straight-line interpolation
 argument from Bridgeland §7. -/
 theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition.WithClassMap C v)

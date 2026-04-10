@@ -89,21 +89,27 @@ upstreaming.
 8. Arend Bayer, Emanuele Macrì, and Paolo Stellari,
    [The space of stability conditions on abelian threefolds, and on some Calabi-Yau threefolds](https://doi.org/10.1007/s00222-016-0665-5),
    Inventiones mathematicae 206 (2016), 869-933.
-9. Marcello Bernardara, Emanuele Macrì, Benjamin Schmidt, Xiaolei Zhao,
-   [Bridgeland Stability Conditions on Fano Threefolds](https://epiga.episciences.org/3255),
-   EpiGA 1 (2017), article 8.
-10. Chunyi Li,
+9. Arend Bayer,
+   [A short proof of the deformation property of Bridgeland stability conditions](https://arxiv.org/abs/1606.02169),
+   preprint, 2016.
+10. Marcello Bernardara, Emanuele Macrì, Benjamin Schmidt, Xiaolei Zhao,
+    [Bridgeland Stability Conditions on Fano Threefolds](https://epiga.episciences.org/3255),
+    EpiGA 1 (2017), article 8.
+11. Chunyi Li,
     [On stability conditions for the quintic threefold](https://link.springer.com/article/10.1007/s00222-019-00888-z),
     Inventiones mathematicae 218 (2019), 301-340.
-11. Arend Bayer, Martí Lahoz, Emanuele Macrì, Howard Nuer, Alexander Perry, Paolo Stellari,
+12. Arend Bayer, Martí Lahoz, Emanuele Macrì, Howard Nuer, Alexander Perry, Paolo Stellari,
     [Stability conditions in families](https://link.springer.com/article/10.1007/s10240-021-00124-6),
     Publications mathematiques de l'IHES 133 (2021), 157-325.
-12. Soheyla Feyzbakhsh and Richard P. Thomas,
+13. Soheyla Feyzbakhsh and Richard P. Thomas,
     [Rank r DT theory from rank 1](https://www.ams.org/jams/2023-36-03/S0894-0347-2023-00922-5/),
     Journal of the American Mathematical Society 36 (2023), 795-826.
-13. Soheyla Feyzbakhsh and Richard P. Thomas,
+14. Soheyla Feyzbakhsh and Richard P. Thomas,
     [Rank r DT theory from rank 0](https://projecteuclid.org/journals/duke-mathematical-journal/volume-173/issue-11/Rank-r-DT-theory-from-rank-0/10.1215/00127094-2023-0085.short),
     Duke Mathematical Journal 173 (2024), 2063-2116.
-14. Soheyla Feyzbakhsh, Naoki Koseki, Zhiyu Liu, Nick Rekuski,
+15. Soheyla Feyzbakhsh, Naoki Koseki, Zhiyu Liu, Nick Rekuski,
     [Stability conditions on Calabi-Yau threefolds via Brill-Noether theory of curves](https://arxiv.org/abs/2509.24990),
     preprint, 2025.
+16. Chunyi Li,
+    [A Remark on Stability Conditions on Smooth Projective Varieties](https://arxiv.org/abs/2601.22994),
+    preprint, 2026.

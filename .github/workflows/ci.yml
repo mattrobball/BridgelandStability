@@ -81,10 +81,15 @@ jobs:
       - name: Get Mathlib cache
         run: lake exe cache get
 
-      - name: Run #check_informal
+      - name: Extract declarations
+        run: lake build ExtractDecls
+
+      - name: Check informal drift
         id: check
         run: |
-          output=$(lake build CheckInformal 2>&1)
+          output=$(python3 scripts/check_drift.py \
+            --extracted extracted.json \
+            --baseline informalizations.json)
           echo "$output"
           if echo "$output" | grep -q "issue(s) found"; then
             echo "has_issues=true" >> "$GITHUB_OUTPUT"
@@ -92,6 +97,13 @@ jobs:
           else
             echo "has_issues=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Upload extracted declarations
+        uses: actions/upload-artifact@v4
+        with:
+          name: extracted-decls
+          path: extracted.json
+          retention-days: 1
 
       - name: Find associated PR
         if: steps.check.outputs.has_issues == 'true'
@@ -103,6 +115,15 @@ jobs:
             --head ${{ github.ref_name }} \
             --json number --jq '.[0].number // empty' 2>/dev/null || true)
           echo "pr_number=${pr_number}" >> "$GITHUB_OUTPUT"
+
+      - name: Remove stale label
+        if: steps.check.outputs.has_issues == 'true' && steps.find-pr.outputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr edit ${{ steps.find-pr.outputs.pr_number }} \
+            -R ${{ github.repository }} \
+            --remove-label "paper-alignment-reviewed" 2>/dev/null || true
 
       - name: Post review comment on PR
         if: steps.check.outputs.has_issues == 'true' && steps.find-pr.outputs.pr_number != ''
@@ -133,30 +154,21 @@ jobs:
 
       - name: Fail if issues found
         if: steps.check.outputs.has_issues == 'true'
-        run: |
-          # On main, warn only
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "::warning::Paper-aligned declarations have drifted."
-            exit 0
-          fi
-          # No PR — warn only
-          pr_number="${{ steps.find-pr.outputs.pr_number }}"
-          if [ -z "$pr_number" ]; then
-            echo "::warning::Paper-aligned declarations have drifted. No PR found."
-            exit 0
-          fi
-          # PR exists — check for label
-          labels=$(gh pr view "$pr_number" \
-            -R ${{ github.repository }} \
-            --json labels --jq '.labels[].name' 2>/dev/null || true)
-          if echo "$labels" | grep -q "paper-alignment-reviewed"; then
-            echo "Label present — approved."
-            exit 0
-          fi
-          echo "::error::Paper-aligned declarations have drifted. Add the 'paper-alignment-reviewed' label to the PR."
-          exit 1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pr_number="${{ steps.find-pr.outputs.pr_number }}"
+          if [ -n "$pr_number" ]; then
+            labels=$(gh pr view "$pr_number" \
+              -R ${{ github.repository }} \
+              --json labels --jq '.labels[].name' 2>/dev/null || true)
+            if echo "$labels" | grep -q "paper-alignment-reviewed"; then
+              echo "Label present — baseline update workflow will handle it."
+              exit 0
+            fi
+          fi
+          echo "::error::Paper-aligned declarations have drifted. Add the 'paper-alignment-reviewed' label to update the baseline."
+          exit 1
 
   # ── Comparator verification ──────────────────────────────────
   verify-comparator:

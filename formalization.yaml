@@ -1,0 +1,146 @@
+# formalization.yaml v0.1
+schema_version: "0.1"
+
+# ── WHAT ──────────────────────────────────────────────
+artifact:
+  name: "BridgelandStability"
+  url: "https://github.com/mattrobball/BridgelandStability"
+  description: >
+    Formalization of the main results (Sections 2-7) of Bridgeland's
+    "Stability conditions on triangulated categories" (Annals 2007).
+    Theorem 1.2 (central charge is local homeomorphism on connected
+    components) and Corollary 1.3 (connected components of numerical
+    stability conditions are finite-dimensional complex manifolds),
+    both generalized to arbitrary surjective class maps.
+  date: "2026-03-20"
+  authors:
+    - "Matthew Robert Ballard"
+  license: "Apache-2.0"
+  organization: "independent"
+  funding:
+    - "Renaissance Philanthropy AI for Math"
+    - "OpenAI"
+  contribution_target: "mathlib"
+  maintenance: "active"
+
+# ── FROM WHAT ─────────────────────────────────────────
+source:
+  title: "Stability conditions on triangulated categories"
+  authors:
+    - "Tom Bridgeland"
+  id: "arXiv:math/0212237v3"      # DOI: 10.4007/annals.2007.166.317
+  type: "article"
+  license: "publisher-restricted"  # Annals of Mathematics
+  author_contacted: true
+  prior_formalization: "none"
+  size_bytes: 68866                # pdftotext of arXiv:math/0212237v3 (29 pages)
+
+# ── WITH WHAT ─────────────────────────────────────────
+toolchain:
+  system: "lean4"
+  system_version: "v4.29.0"
+  dependencies:
+    - "mathlib v4.29.0 (8a178386ffc0f5fef0b77738bb5449d50efeea95)"
+    - "lean-informal main (7a6c563388e016b597c0a13f3662c1d39dcc674f)"
+  build_manifest_url: "https://github.com/mattrobball/BridgelandStability/blob/main/lake-manifest.json"
+
+# ── HOW (MACHINE) ────────────────────────────────────
+automation:
+  method: "agent"
+  framework: "custom"             # Claude Code + Codex CLI, dual-agent parallel workflow
+  models:
+    - name: "claude-opus-4-6"
+      role: "formalization"       # primary: definitions, proofs, refactoring, sorry-closing
+    - name: "claude-opus-4-6"
+      role: "review"              # fidelity audits, code review
+    - name: "gpt-5.4"
+      role: "formalization"       # Codex CLI: parallel proof attempts, sorry-closing
+    - name: "gpt-5.4"
+      role: "review"              # plan auditing, fidelity review (52 of 78 sessions)
+    - name: "claude-sonnet-4-6"
+      role: "translation"         # CI: informal prose generation for @[informal] tags
+    - name: "chatgpt-5.2-pro"
+      role: "translation"         # paper to blueprint
+
+# ── HOW MUCH ──────────────────────────────────────────
+cost:
+  wall_time: "17 days (2026-03-05 to 2026-03-21)"
+  compute_time: >
+    337h with >= 1 AI session active (de-overlapped from 753h sum of
+    705 sessions, peak 8 concurrent). Claude: 216M new tokens (1.5M
+    input + 199M cache-create + 15M output) + 10.0B cache-read, 621
+    sessions. Codex: 203M new tokens (187M uncached input + 16M
+    output incl 10M reasoning) + 3.3B cached input, 78 sessions.
+  person_hours: "31.4"            # 5-min gap analysis on merged Claude+Codex+commit timestamps
+  api_spend: >
+    ~$198 actual (17/30 month x ($250 Claude Max + $100 Codex Pro)).
+    List-rate equivalent estimated at ~$8.9k from local session logs
+    and published API pricing (Claude Opus 4.6: $5/$25 per MTok,
+    cache read $0.50/MTok; GPT-5.4: $2.50/$15 per MTok, cached input
+    $0.25/MTok). Estimate is likely high — local token counters may
+    not match billing exactly.
+  hardware: "API-only"
+  includes_failures: true
+
+# ── HOW FAITHFUL ──────────────────────────────────────
+fidelity:
+  sorry_count: 1                  # Spec.lean:52 (comparator challenge statement; proof is in NumericalStabilityManifold.lean)
+  sorry_in_definitions: 0
+  sorry_details: >
+    1 sorry in Spec.lean:52 — the comparator challenge statement stub.
+    The actual proof lives in NumericalStabilityManifold.lean (sorry-free)
+    and is verified by leanprover/comparator via axiom export.
+  axiom_count: 0                  # no axiom declarations; comparator permits propext, Quot.sound, Classical.choice
+  axiom_details: "permitted: propext, Quot.sound, Classical.choice"
+  builds_clean: true
+  builds_clean_date: "2026-04-10"
+
+  human_review:
+    - depth: "validated"
+      coverage: "sampled"         # comparator challenge data-carrying dependencies
+      expertise:
+        math: true
+        formal: true
+      independent: false          # author is domain expert (formalization, algebraic geometry, category theory)
+      url: "https://mattrobball.github.io/BridgelandStability/"
+
+  machine_review:
+    performed: true
+    tools:
+      - "lake build"
+      - "lake exe runLinter"
+      - "lake exe lint-style"
+      - "leanprover/comparator"
+      - "Claude Opus 4.6 fidelity audits"
+      - "GPT-5.4 plan audits (52 sessions)"
+    methodology: "linting + semantic-comparison + adversarial"
+    coverage: "complete"
+    url: "https://mattrobball.github.io/BridgelandStability/comparator/"
+
+  source_mapping:
+    method: "inline-comments"     # @[informal] attributes + informalizations.json extraction
+    url: "https://mattrobball.github.io/BridgelandStability/"
+
+  known_divergences: >
+    Theorem 1.2 and Corollary 1.3 are proved for arbitrary surjective
+    class maps v: K_0(D) ->+ Lambda, generalizing the paper's identity
+    (Theorem 1.2) and numerical quotient (Corollary 1.3) cases.
+
+# ── SELF-ASSESSMENT ──────────────────────────────────
+self_assessment:
+  source_detail_level: "standard"
+  math_sophistication: "research"
+  dependency_distance: "moderate-far" # builds on Mathlib triangulated/abelian/manifold but substantial new development
+  formalization_quality: "draft"
+
+# ── COMMUNITY ────────────────────────────────────────
+community:
+  related_projects: []
+  upstream_prs: []
+  reviews: []
+
+notes: >
+  74 Lean files, 35725 LOC. 204 commits from start to Corollary 1.3:
+  120 co-authored Claude, 82 co-authored Codex, 2 pure human.
+  Project rule: "Humans write no Lean code beyond Mathlib."
+  Effort data archived in artifacts/effort_corollary_1_3.json.

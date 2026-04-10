@@ -18,7 +18,7 @@ permissions:
 
 env:
   LEAN_EXPOSITION_REPO: mattrobball/lean-exposition
-  LEAN_EXPOSITION_REF: codex/comparator-manual-design
+  LEAN_EXPOSITION_REF: refactor/use-lean-informal
 
 # ════════════════════════════════════════════════════════════════
 # Job graph:
@@ -281,7 +281,7 @@ jobs:
       - name: Prepare deployment
         run: |
           touch site/.nojekyll
-          cp -r site/badge site/comparator/badge 2>/dev/null || true
+          cp -f site/badge/comparator.svg site/comparator/badge/comparator.svg 2>/dev/null || true
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

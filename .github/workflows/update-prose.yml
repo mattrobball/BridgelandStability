@@ -28,26 +28,21 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
-      - name: Install elan
+      - name: Download extracted declarations
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/download-artifact@v4
+        with:
+          name: extracted-decls
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract declarations (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
         run: |
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Download oleans
-        if: github.event_name != 'workflow_dispatch'
-        uses: actions/download-artifact@v4
-        with:
-          name: oleans
-          path: .lake/build
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get Mathlib cache
-        run: lake exe cache get
-
-      - name: Build project and extract declarations
-        run: |
+          lake exe cache get
           lake build BridgelandStability
           lake build ExtractDecls
 
