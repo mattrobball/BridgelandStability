@@ -18,7 +18,7 @@ Following Bridgeland's proof:
 - **Lemma 6.2** (`stabSeminorm_dominated_of_connected`): seminorm equivalence on V(Σ).
 - **Prop 6.3**: Z continuous into the seminorm topology.
 - **Lemma 6.4** (`eq_of_same_Z_near`): Z locally injective.
-- **Theorem 7.1** (`exists_eq_Z_and_mem_basisNhd_of_stabSeminorm_lt_sin`): Z locally surjective.
+- **Theorem 7.1** (`deformation`): Z locally surjective.
 -/
 
 @[expose] public section
@@ -596,7 +596,7 @@ private lemma sin_pi_mul_lt_one {δ : ℝ} (hδ : 0 < δ) (hδ8 : δ < 1 / 8) :
     Real.sin (Real.pi * δ) < 1 :=
   lt_trans (Real.sin_lt (by positivity)) (by nlinarith [Real.pi_lt_d4])
 
-/-- A small Bridgeland basis neighborhood, with radius below the local Theorem 7.1 witness,
+/-- A small Bridgeland basis neighborhood, with radius below the local deformation witness,
 lies in the connected component of its center. This is the direct straight-line interpolation
 argument from Bridgeland §7. -/
 theorem basisNhd_subset_connectedComponent_small (σ : StabilityCondition.WithClassMap C v)
