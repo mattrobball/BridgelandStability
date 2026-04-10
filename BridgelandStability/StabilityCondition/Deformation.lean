@@ -118,6 +118,23 @@ theorem StabilityCondition.WithClassMap.exists_epsilon0_tenth (σ : StabilityCon
   exact wideSectorFiniteLength_mono C σ hε₁ hε₁8 hWide₁
     (by positivity) (by linarith) (by linarith)
 
+/-- **Bridgeland's Theorem 7.1.** Let σ be a locally-finite stability condition.
+Then there is an ε₀ > 0 such that if 0 < ε < ε₀ and W satisfies
+‖W − Z‖_σ < sin(πε), then there is a locally-finite stability condition
+τ = (W, Q) with d(P, Q) < ε. -/
+@[informal "Theorem 7.1"]
+theorem StabilityCondition.WithClassMap.deformation
+    (σ : StabilityCondition.WithClassMap C v) :
+    ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∀ (W : Λ →+ ℂ) (ε : ℝ), 0 < ε → ε < ε₀ →
+      stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)) →
+      ∃ (τ : StabilityCondition.WithClassMap C v), τ.Z = W ∧
+        slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε := by
+  obtain ⟨ε₀, hε₀, hε₀10, hWide⟩ := σ.exists_epsilon0_tenth C
+  exact ⟨ε₀, hε₀, fun W ε hε hεε₀ hsin =>
+    σ.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin C W
+      (lt_of_lt_of_le hsin (ENNReal.ofReal_le_ofReal (Real.sin_le_one _)))
+      ε₀ hε₀ hε₀10 hWide ε hε hεε₀ hsin⟩
+
 /-- The affine interpolation between the central charges of `σ` and `τ`. -/
 def linearInterpolationZ (σ τ : StabilityCondition.WithClassMap C v) (t : ℝ) : Λ →+ ℂ :=
   σ.Z + t • (τ.Z - σ.Z)
