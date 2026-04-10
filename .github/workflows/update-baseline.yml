@@ -5,6 +5,8 @@ on:
     types: [labeled]
 
 permissions:
+  contents: read
+  actions: read
   pull-requests: write
 
 jobs:
@@ -24,13 +26,23 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Restore olean cache
-        uses: actions/cache@v4
+      - name: Find latest CI run
+        id: find-run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          run_id=$(gh api "repos/${{ github.repository }}/actions/workflows/ci.yml/runs?branch=${{ github.event.pull_request.head.ref }}&per_page=5" \
+            --jq '.workflow_runs | map(select(.conclusion == "failure" or .conclusion == "success")) | .[0].id')
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "Using CI run: $run_id"
+
+      - name: Download oleans
+        uses: actions/download-artifact@v4
         with:
+          name: oleans
           path: .lake/build
-          key: oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('BridgelandStability/**/*.lean') }}
-          restore-keys: |
-            oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-
+          run-id: ${{ steps.find-run.outputs.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Mathlib cache
         run: lake exe cache get
