@@ -17,6 +17,9 @@ artifact:
     - "Matthew Robert Ballard"
   license: "Apache-2.0"
   organization: "independent"
+  funding:
+    - "Renaissance Philanthropy AI for Math"
+    - "OpenAI"
   contribution_target: "mathlib"
   maintenance: "active"
 

@@ -46,6 +46,7 @@ artifact:
   authors: []
   license: ""
   organization: ""        # or "independent"
+  funding: []             # grants, sponsors, or organizations that funded the work
   contribution_target: "" # mathlib | standalone | blueprint | undecided
   maintenance: ""         # active | best-effort | archival | unknown
 
@@ -145,6 +146,7 @@ notes: ""
 - **authors**: List of people who did the formalization work (not the source authors).
 - **license**: License of the formalization code.
 - **organization**: The group or team behind this. Use "independent" for solo work.
+- **funding**: List of grants, sponsors, or organizations that funded the work. Use `[]` if self-funded or unfunded.
 - **contribution_target**: Where is this heading? "mathlib" if you intend to upstream, "standalone" if it lives on its own, "blueprint" if it's a blueprint-driven project, "undecided" if you don't know yet.
 - **maintenance**: Will this be kept up to date? Be honest. "archival" is a perfectly respectable answer — it means "this was a one-time effort and will not track upstream changes."
 
