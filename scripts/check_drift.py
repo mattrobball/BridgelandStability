@@ -32,6 +32,19 @@ def check_drift(extracted: list[dict], baseline: list[dict]) -> tuple[list[str],
             )
             continue
 
+        old_ref = old.get("paperRef")
+        if old_ref != paper_ref:
+            if old_ref is None:
+                issues.append(
+                    f'@[informal "{paper_ref}"] on {name}: '
+                    f"new @[informal] tag added"
+                )
+            else:
+                issues.append(
+                    f'@[informal "{paper_ref}"] on {name}: '
+                    f"paper reference changed ({old_ref} → {paper_ref})"
+                )
+
         old_hash = old.get("contentHash")
         new_hash = ext.get("contentHash")
         if old_hash is not None and new_hash is not None and old_hash != new_hash:
@@ -66,6 +79,18 @@ def check_drift(extracted: list[dict], baseline: list[dict]) -> tuple[list[str],
                         f'@[informal "{paper_ref}"] on {name}: '
                         f"dependency {dep_name} no longer exists"
                     )
+
+    # Check for removed tags: in baseline with paperRef but not in extracted with paperRef
+    extracted_tagged = {e["declName"] for e in extracted if e.get("paperRef")}
+    for old in baseline:
+        old_ref = old.get("paperRef")
+        if not old_ref:
+            continue
+        if old["declName"] not in extracted_tagged:
+            issues.append(
+                f'@[informal "{old_ref}"] on {old["declName"]}: '
+                f"tag removed"
+            )
 
     return issues, informal_count
 
