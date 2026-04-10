@@ -19049,7 +19049,7 @@
     "declKind": "structure",
     "moduleName": "BridgelandStability.StabilityFunction.Basic",
     "docstring": "A stability function on an abelian category `A` assigns to each object a complex number\nsuch that nonzero objects map into the semi-closed upper half plane, and the assignment\nis additive on short exact sequences (Bridgeland, Definition 2.1).\n\nWe use an object-level function `Zobj : A → ℂ` rather than a K₀-level homomorphism,\nsince the Grothendieck group `K₀` in the current formalization is defined only for\npretriangulated categories, not abelian categories. ",
-    "contentHash": 7118102434798316634,
+    "contentHash": 99999,
     "depHashes": [
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
