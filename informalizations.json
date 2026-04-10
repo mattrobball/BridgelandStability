@@ -4469,7 +4469,7 @@
     "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.Theorem",
-    "docstring": "**Bridgeland's Theorem 7.1** (deformation of stability conditions). Under the\nusual small-deformation hypothesis on `W`, there exists a locally-finite stability\ncondition `τ = (W, Q)` with `d(P, Q) < ε`.\n\nThis is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict\nhypothesis `‖W - Z‖_σ < sin(πε)`. ",
+    "docstring": "Parametric deformation theorem: under the small-deformation hypothesis on `W`,\nthere exists a locally-finite stability condition `τ = (W, Q)` with `d(P, Q) < ε`.\nThe clean statement is `StabilityCondition.WithClassMap.deformation`.\n\nThis is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict\nhypothesis `‖W - Z‖_σ < sin(πε)`. ",
     "contentHash": 2945119946,
     "depHashes": null,
     "paperRef": null,
@@ -17211,7 +17211,7 @@
     "declName": "CategoryTheory.Triangulated.basisNhd_subset_connectedComponent_small",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Deformation",
-    "docstring": "A small Bridgeland basis neighborhood, with radius below the local Theorem 7.1 witness,\nlies in the connected component of its center. This is the direct straight-line interpolation\nargument from Bridgeland §7. ",
+    "docstring": "A small Bridgeland basis neighborhood, with radius below the local deformation witness,\nlies in the connected component of its center. This is the direct straight-line interpolation\nargument from Bridgeland §7. ",
     "contentHash": 1090697293,
     "depHashes": null,
     "paperRef": null,
@@ -19057,7 +19057,7 @@
     "declKind": "structure",
     "moduleName": "BridgelandStability.StabilityFunction.Basic",
     "docstring": "A stability function on an abelian category `A` assigns to each object a complex number\nsuch that nonzero objects map into the semi-closed upper half plane, and the assignment\nis additive on short exact sequences (Bridgeland, Definition 2.1).\n\nWe use an object-level function `Zobj : A → ℂ` rather than a K₀-level homomorphism,\nsince the Grothendieck group `K₀` in the current formalization is defined only for\npretriangulated categories, not abelian categories. ",
-    "contentHash": 99999,
+    "contentHash": 7118102434798316634,
     "depHashes": [
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
