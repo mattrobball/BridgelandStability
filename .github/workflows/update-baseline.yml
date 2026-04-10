@@ -1,0 +1,61 @@
+name: Update Informal Baseline
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    name: Update informalizations.json
+    if: github.event.label.name == 'paper-alignment-reviewed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Build and extract
+        run: |
+          lake build BridgelandStability
+          lake build ExtractDecls
+
+      - name: Update baseline
+        run: |
+          python3 scripts/merge_prose.py \
+            --extracted extracted.json \
+            --existing informalizations.json
+          python3 -c "
+          import json
+          with open('informalizations.json') as f:
+              data = json.load(f)
+          for e in data:
+              e.pop('needsReview', None)
+          with open('informalizations.json', 'w') as f:
+              json.dump(data, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+          "
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add informalizations.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update informalizations.json baseline"
+            git push
+          fi
