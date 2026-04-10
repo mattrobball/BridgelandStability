@@ -122,7 +122,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/${{ github.repository }}/issues/${{ steps.find-pr.outputs.pr_number }}/labels/paper-alignment-reviewed \
-            --method DELETE 2>/dev/null || true
+            --method DELETE || echo "::warning::Could not remove label"
 
       - name: Post review comment on PR
         if: steps.check.outputs.has_issues == 'true' && steps.find-pr.outputs.pr_number != ''
