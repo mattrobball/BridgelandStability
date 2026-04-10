@@ -1,0 +1,6679 @@
+{
+  "project": "bridgeland-stability",
+  "scope": "start_to_corollary_1.3",
+  "extracted_at": "2026-04-10",
+  "calendar_span": {
+    "start": "2026-03-05",
+    "end": "2026-03-21"
+  },
+  "milestones": {
+    "first_claude_session": "2026-03-05T00:02:00-05:00",
+    "first_commit": "2026-03-05T23:49:44-05:00",
+    "corollary_1_3_completed": "2026-03-20T04:43:19-04:00",
+    "corollary_1_3_strengthened": "2026-03-21T06:13:08-04:00"
+  },
+  "human_hours": {
+    "method": "gap_analysis",
+    "gap_threshold_minutes": 5,
+    "total_hours": 31.4,
+    "note": "User confirmed 5-min cutoff faithful: no idle time > 5 min when focused"
+  },
+  "claude_tokens": {
+    "sessions": 621,
+    "input_tokens": 1538558,
+    "cache_creation_input_tokens": 199056788,
+    "cache_read_input_tokens": 10019123219,
+    "output_tokens": 15152973,
+    "total": 10234871538
+  },
+  "codex_tokens": {
+    "sessions": 78,
+    "total": 3481406391
+  },
+  "raw_interactions": [
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T00:02:44.014000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T00:06:20.912000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T00:11:08.173000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T00:12:23.113000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T00:13:03.703000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T00:13:29.005000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T02:59:59.820000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T03:00:25.890000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T03:01:54.453000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T03:12:14.974000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T03:13:34.518000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T03:29:06.856000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T03:29:59.753000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T04:10:00.662000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T04:13:31.947000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T05:44:15.456000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T05:46:13.095000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T05:46:25.352000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T05:46:30.254000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T05:46:45.509000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T06:04:22.967000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T06:06:03.845000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T06:06:58.587000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T06:25:43.651000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T11:18:17.181000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T11:23:08.556000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T11:30:42.987000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T11:32:21.072000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:18:13.951000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:19:17.243000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:21:32.054000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:29:33.650000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:42:41.251000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:43:52.652000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:44:56.161000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:47:25.349000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:50:23.113000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:51:05.406000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:53:29.747000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:56:05.993000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:57:25.030000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T13:57:43.713000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T14:01:26.195000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T14:13:19.364000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T23:47:48.439000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T23:49:15.552000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-05T23:49:44"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-05T23:57:17.945000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T04:56:44.744000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:00:05.979000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:01:23.773000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:02:20.205000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:02:44.930000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:03:13.218000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:03:44.604000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:04:32.450000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:08:05.349000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:09:03.917000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:10:09.902000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:11:44.726000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:12:01.307000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:12:25.259000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:13:00.310000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:14:39.658000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:14:42.126000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:15:11.083000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:16:11.327000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:19:26.866000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:24:15.507000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:24:45.937000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T05:25:19.207000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:07:47.055000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:23:48.072000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-06T06:24:15"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:29:48.962000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:30:09.333000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:30:39.741000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:31:59.625000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:36:56.252000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:38:54.624000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T06:39:54.334000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:10:47.761000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:12:22.730000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-06T09:12:39"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:22:08.800000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:23:42.393000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:29:11.828000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:30:17.485000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:31:53.666000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:33:17.410000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:34:00.581000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:35:42.488000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:37:51.970000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:46:43.722000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:47:57.942000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:52:25.942000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T09:55:45.852000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:01:38.879000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:06:44.873000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:07:04.817000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:08:09.055000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:08:21.662000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:09:00.732000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:10:49.007000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:11:35.702000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-06T10:14:53.503000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-06T10:30:08"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-07T06:01:35.434000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T06:37:33"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T06:41:18"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-07T10:29:00.846000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T11:28:46"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T11:45:56"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-07T11:48:58.118000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T12:44:05"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T12:49:21"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T13:16:10"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T13:38:10"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T14:00:32"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T14:07:26"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T14:14:46"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T14:32:17"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-07T14:40:35"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T03:32:59.690000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T03:34:08.651000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T03:34:17.067000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T03:38:24.412000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T04:17:20.113000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-08T06:47:17"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T07:41:11.333000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T13:30:53.322000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-08T17:28:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-08T17:29:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-08T17:34:03"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-08T17:37:38"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T17:41:36.799000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-08T17:43:05"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T18:15:09.041000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T18:17:31.239000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-08T18:19:24"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T18:22:02.555000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-08T18:22:22"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T20:25:31.919000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T20:26:39.029000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T20:27:32.024000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-08T20:30:56.709000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T05:48:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T05:50:03"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:03:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:16:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:18:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:20:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:23:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:24:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:26:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:26:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:27:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:28:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:29:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:31:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:32:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:33:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:36:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:37:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:38:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:41:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:43:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:44:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:47:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:50:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:51:30"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:52:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:52:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:54:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:56:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:59:14"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T06:59:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T07:02:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T07:02:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T07:03:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T07:28:41"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T07:31:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T07:36:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T08:14:14"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T08:29:06"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-09T08:34:18"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T10:57:20.345000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T10:57:52.364000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:02:31.787000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:20:32.787000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:21:45.064000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:26:08.894000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:27:43.703000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-09T11:28:06"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:28:51.951000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:29:29.847000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T11:36:07.463000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T11:41:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-09T11:41:41"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:00:18.767000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:00:35.057000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:05:47.188000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:07:27.361000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:08:46.491000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:10:57.705000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:21:02.813000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:33:47.226000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:42:34.672000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:43:38.341000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T14:45:29.394000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T22:45:19.429000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T23:24:51.398000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-09T23:27:13"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T23:31:26.735000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T23:32:26.628000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-09T23:38:01.526000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T07:28:08.067000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T07:28:36"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T07:29:07.565000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T08:36:47.518000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T08:37:06"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T08:37:58.028000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T10:13:01.762000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T10:16:21.406000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T10:18:15.963000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T10:23:27.959000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T10:24:17.049000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-10T10:24:20.617000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T10:28:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T10:35:04"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T10:45:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T12:18:35"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T12:19:15"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T13:03:44"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T13:19:39"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T13:50:54"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T14:11:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T14:17:45"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T15:58:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T17:31:58"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T17:32:24"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T18:22:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T18:23:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T18:24:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T18:34:21"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T18:34:39"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T18:51:38"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-10T19:47:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T22:06:48"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-10T22:40:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T08:08:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T09:45:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T11:08:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T11:28:19"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-11T12:17:47"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-11T12:19:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T13:37:30"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T13:38:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T14:41:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T15:28:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T15:29:55"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-11T15:46:07"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T16:14:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T16:33:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T17:44:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T17:52:09"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T18:49:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T19:27:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T19:47:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T20:16:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T22:06:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T22:16:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T22:37:44"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T23:04:28"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T23:05:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T23:17:53"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T23:20:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T23:23:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-11T23:55:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T00:02:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T00:06:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T00:07:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T00:09:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T00:18:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T07:50:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T07:54:15"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T08:22:25"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-12T08:23:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T08:27:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T08:32:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T08:33:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T10:06:43"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T10:07:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T11:22:41"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-12T11:23:29"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T12:26:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T15:12:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T15:48:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T16:17:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T17:06:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T17:30:15"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T17:36:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T17:44:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T19:41:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T20:16:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-12T22:53:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T07:48:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T11:26:53"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T11:27:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T12:01:46"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T12:05:09.884000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T12:11:40.810000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T12:39:48"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T13:29:54"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:08:13.144000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:25:29.906000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:30:25.736000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:37:37.243000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T14:41:29"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T14:43:54"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:46:14.978000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T14:46:37"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:50:30.105000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T14:51:25"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T14:52:28"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:53:15.196000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T14:53:44"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:57:30.157000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T14:58:13"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T14:59:21.429000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T16:01:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T16:01:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T16:40:25"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T17:01:04"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T18:27:51"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T18:40:54.773000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T18:43:48.537000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T18:45:51.157000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T18:54:23.729000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T19:34:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T19:35:11"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-13T19:37:50"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T19:48:23.518000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T19:49:52.953000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T21:34:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-13T22:36:32"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T22:37:18.912000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T22:39:53.790000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-13T23:41:34.098000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T00:38:14"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T00:38:48.805000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-14T00:39:08"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T00:42:29.840000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T01:07:11"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T04:34:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T06:32:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T06:36:11"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T06:40:49.876000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T06:46:17.377000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T06:51:38.615000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T06:53:42.672000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T06:57:29"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T06:58:01.773000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T06:59:35"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T06:59:56.032000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T07:33:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T07:33:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T07:45:49"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T07:59:50.338000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T08:11:07.022000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T10:41:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-14T11:32:37"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T12:18:32.855000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T12:24:43.125000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T12:25:18.890000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T19:44:45.468000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-14T19:44:57.016000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T07:22:14.617000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T07:28:50.422000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T08:10:00.222000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T09:25:18.672000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T09:27:01.876000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T11:48:58.640000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T11:50:12.427000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:44:58.442000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:51:34.367000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:52:18.629000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:52:55.865000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:55:06.993000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:55:28.144000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:56:18.383000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T12:57:21.549000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:07:33.573000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:08:33.746000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:11:08.287000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:11:48.170000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:12:54.123000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:13:45.332000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:23:47.395000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:26:29.585000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T13:27:38.349000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T17:24:48.033000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-15T17:26:51.316000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T06:00:53.297000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T06:06:17.649000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T06:06:45.654000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T06:07:44.228000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T06:08:38.811000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T06:09:52.624000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T07:41:32.488000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T10:24:59.206000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T10:25:39.570000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T10:50:42.781000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T11:39:57.966000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T11:52:05.704000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:00:42.590000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:04:14.628000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:10:52.079000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:24:46.067000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:35:00.526000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:42:16.516000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:45:25.326000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:49:08.627000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:50:37.015000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:54:28.869000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T14:56:04.592000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:11:44.327000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:22:59.599000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:35:30.806000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:39:33.147000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:44:25.665000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:47:08.390000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:51:27.236000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:52:14.808000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:55:01.138000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T15:56:47.991000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T16:05:22.704000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T16:10:29.833000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T16:12:54.377000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T16:57:37.157000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T17:01:43.713000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T17:11:22.052000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T17:11:31.035000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:10:17.540000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:34:42.003000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:47:17.208000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-16T18:48:47"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:51:54.857000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:52:43.680000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:53:33.579000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:54:17.365000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:55:21.880000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:55:59.349000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T18:57:34.101000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:00:57.276000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:03:01.969000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:04:03.766000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:04:34.999000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:06:48.103000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-16T19:18:40"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-16T19:21:56"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:52:10.049000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:56:24.821000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T19:57:15.423000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:00:32.289000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:02:37.809000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:03:15.408000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:03:59.770000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:04:27.063000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:05:12.481000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:08:38.010000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:09:01.210000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:26:01.006000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:28:00.056000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:29:15.947000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:30:05.207000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:45:45.315000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:47:12.337000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:48:37.864000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:49:09.386000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:55:58.768000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:57:01.313000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:57:55.829000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:58:11.374000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:58:50.701000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T20:59:06.873000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T21:07:22.462000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T21:23:54.482000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-16T21:27:58.293000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:02:07.895000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:03:41.936000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:05:13.801000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:05:55.873000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:06:21.838000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:06:55.424000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:07:29.780000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:08:22.737000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:09:58.725000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T05:11:50.691000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:03:30.354000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:03:46.085000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:04:45.193000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:05:16.419000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:06:16.988000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:07:00.669000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:07:41.913000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T06:30:40.087000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T06:39:44"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T07:30:19.869000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T08:26:40"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T08:30:57.704000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T08:33:14.003000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T08:42:55.009000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T08:49:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T09:04:03"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T09:08:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T09:08:32"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T09:14:36.136000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T09:50:46.114000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T09:53:35.409000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T10:57:50.270000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:05:49.799000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:08:33.353000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:11:38.219000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:12:42.495000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:15:02.003000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:17:15.859000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:20:28.630000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:29:29.992000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:29:41.671000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:30:23.040000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:46:30.638000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:48:12.126000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:49:50.720000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:51:01.376000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:52:54.076000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:55:20.138000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:57:48.927000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T11:59:00.687000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:35:33.868000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:36:18.228000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:38:53.527000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:42:31.401000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:43:17.002000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:44:36.240000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:45:43.874000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:49:13.048000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:52:44.329000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:54:31.276000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:55:03.415000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:58:06.574000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T12:59:16.990000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:00:04.917000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:01:20.570000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:01:54.609000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:03:42.899000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:06:42.882000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:09:31.002000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:10:47.205000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:11:55.670000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:13:13.478000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:13:42.125000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:15:40.860000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T13:16:07"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:16:52.881000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:17:18.692000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:18:11.574000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:19:53.889000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:20:45.307000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:22:17.569000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:22:54.460000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:24:18.884000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:25:10.386000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:27:55.819000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:29:17.513000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:30:31.186000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:33:02.747000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:34:59.950000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:37:08.856000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:38:03.101000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:39:11.228000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:39:42.835000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:45:33.130000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T13:45:44"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:46:08.071000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:46:28.856000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:47:27.798000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:48:17.763000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:49:39.998000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:51:09.632000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:52:27.307000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:53:36.673000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:57:30.572000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T13:59:04.690000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:00:18.116000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:01:59.574000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:03:38.860000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:05:16.222000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:05:50.481000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:07:35.628000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:11:39.831000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T14:18:06"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:18:26.600000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:18:47.754000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:19:06.655000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:20:07.606000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:22:02.193000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:23:20.859000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:28:41.487000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:33:02.615000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T14:47:59"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:49:25.817000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:50:11.657000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:56:39.688000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T14:58:27.246000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:01:16.293000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:07:32.796000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:08:13.773000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:10:05.237000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:11:27.687000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:15:01.534000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:16:28.461000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T15:21:33"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:22:50.791000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:24:44.235000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:26:09.032000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:26:57.731000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T15:30:42"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:31:35.489000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T15:35:00"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:36:57.322000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:37:47.973000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:38:15.833000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:38:22.860000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:38:30.490000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:38:45.643000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T15:38:56"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:38:56.035000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:39:04.275000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:39:10.090000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:40:48.298000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:41:01.767000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:41:39.695000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:41:45.581000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:42:07.057000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:43:18.566000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:46:56.068000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:49:20.193000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:49:57.260000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:50:02.436000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:51:42.228000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T15:55:51.224000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T15:56:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:02:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:03:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:10:41"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:17:15"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:20:43.894000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:25:41"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:32:48.518000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:35:06.786000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:35:49.180000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:37:23.531000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:41:49.021000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:42:23.161000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:42:47.299000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:43:51"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:44:08.871000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:44:45.272000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:45:04.880000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:45:24.447000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T16:45:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:46:21"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:46:38.538000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:47:16"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:47:32.311000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T16:54:18"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T16:55:22.040000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:01:49.200000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T17:06:46"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:07:29.003000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:08:23.749000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:09:03.836000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:13:16.298000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:18:57.719000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:22:28.248000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T17:23:15"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T17:35:11"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:39:09.826000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T17:39:14"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:55:56.740000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:56:12.773000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T17:58:38"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T17:58:58.239000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T18:04:48"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:05:20.467000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T18:05:35"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T18:05:38"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:06:38.959000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T18:20:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T18:22:17"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:22:53.389000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T18:23:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T18:24:42"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:25:24.492000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:42:16.511000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T18:45:54"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:46:56.998000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:48:36.827000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T18:54:04.828000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T18:54:37"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T19:08:15.812000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T19:12:12.200000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T19:14:17.233000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T19:18:09"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T19:22:39.457000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-17T19:29:59.357000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T19:43:44"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T19:54:58"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T19:58:35"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-17T20:06:12"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-17T20:14:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T03:58:48"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T03:59:33.618000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T04:00:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T04:05:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T04:10:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T04:58:42"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T04:59:41.417000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:00:57.532000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T05:01:57"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:02:19.263000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T05:03:06"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:03:37.370000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T05:05:31"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:06:26.980000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T05:07:00"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:07:49.892000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:11:30.452000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:12:30.630000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T05:16:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T05:18:12"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:22:09.683000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:23:50.485000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T05:30:30.025000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T06:00:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T06:24:28"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T06:45:28"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T06:45:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T06:45:59"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T07:26:08.264000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:11:11"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T08:17:59.355000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T08:27:29.502000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:34:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:37:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:41:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:43:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:44:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:45:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:45:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:46:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:50:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:55:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:58:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T08:59:30"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T09:00:13"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T09:08:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:11:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:12:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:15:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:20:13"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T09:21:15"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:22:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:24:27"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:32:44"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:34:38"
+    },
+    {
+      "source": "commit_codex",
+      "timestamp": "2026-03-18T09:35:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:37:32"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T09:45:36"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T09:59:46.024000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:01:29.711000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:06:18.176000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:08:56.436000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:09:47.857000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:14:42.686000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T10:15:04"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:15:35.220000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:22:40.310000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T10:29:36"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:29:57.434000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:46:29.271000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T10:48:17"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:51:38.067000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T10:55:48.873000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:18:31.934000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:18:42.596000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:19:01.610000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:20:53.872000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:25:21.991000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:26:31"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:34:01.056000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:37:09.032000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:39:30.790000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:39:51.992000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:41:06.648000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:42:05.855000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:44:45.269000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:46:22.873000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:47:15.527000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:48:03.821000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T11:48:29"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:49:27.590000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:50:09.474000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:50:29"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T11:50:50.799000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:51:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:52:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:55:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:56:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:57:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T11:58:27"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T11:59:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:00:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:03:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:05:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:06:04"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:06:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:10:04"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:11:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:13:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:25:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:26:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:27:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:32:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:36:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:40:16"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T12:50:34.901000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T12:51:46.013000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T12:53:46.641000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:54:32"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T12:57:04"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T13:06:00.639000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T13:07:02.455000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:09:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:10:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:12:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:13:49"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T13:15:14.063000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T13:17:34.442000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:20:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:21:28"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:21:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:22:53"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:24:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:27:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:31:27"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T13:32:05.333000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:35:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:37:43"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T13:38:02.093000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:39:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:41:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:42:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:42:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:42:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:43:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:43:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:44:28"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:45:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:45:27"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:47:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:51:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T13:57:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:00:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:01:44"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:03:43"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:06:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:11:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:22:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:23:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:24:14"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:24:28.827000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:26:04"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:29:43.880000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:30:43.728000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:32:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:33:35"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:36:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:40:33"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:40:48.887000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:41:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:42:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:44:24"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:46:18.135000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:46:45.597000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:49:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:51:47"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:52:57.142000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:53:46.343000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T14:54:28"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T14:56:43.582000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T15:01:54"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T15:02:01.894000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T15:02:55.497000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T15:06:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T15:10:04"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T15:12:18.147000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T15:13:23"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T15:15:59.285000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:00:09.299000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:02:10.110000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:06:46.157000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:07:07.105000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:09:12"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:09:25.792000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:12:32.055000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:13:04.678000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:13:58.346000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:15:17.267000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T16:16:47.452000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:21:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:22:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:25:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:32:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:34:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:36:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:37:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:37:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:39:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:40:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:42:07"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:46:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:47:41"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T16:53:44"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T17:14:58"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T17:30:16.028000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T17:30:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T17:40:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T17:46:38"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T17:57:45.156000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T17:57:53.953000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T18:41:12.240000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T18:41:52"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T18:42:03.107000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T18:56:05"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T18:56:37.117000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T18:57:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T19:33:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T19:34:08"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T19:54:41.912000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T20:10:12.321000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T20:13:30.485000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T20:14:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T20:24:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T20:45:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-18T20:46:40"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-18T20:46:58.862000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T20:47:31"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T21:23:26"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T21:26:58"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-18T21:30:43"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T05:02:50"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:03:07.515000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:09:03.850000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T05:10:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T05:14:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T05:17:52"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:20:25.896000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:21:21.001000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:22:34.245000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:22:54.518000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:23:04.077000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:23:07.750000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:23:22.517000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:28:33.385000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T05:29:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T05:31:28"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:32:40.529000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:33:27.876000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T05:34:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T05:34:38"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T05:34:49.130000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:15:53"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:16:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:17:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:18:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:21:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:32:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:32:21"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T06:37:42.464000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:38:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:39:24"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T06:40:23.066000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T06:40:42.067000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:41:14"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:43:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T06:45:02"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T07:31:32.590000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T07:31:56.256000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T07:32:11.328000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T07:32:55"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T07:33:17.321000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T07:33:21"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T07:34:11.090000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T07:34:25"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T07:36:16.300000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:31:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:34:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:37:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:38:29"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:39:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:40:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:40:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:41:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:43:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:47:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:49:41"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T08:50:17.094000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T08:52:37.463000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:55:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:58:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T08:59:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:12:05"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T09:12:27"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:13:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:17:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:18:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:18:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:20:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:29:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:31:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:32:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:37:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:37:25"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:41:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:43:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:44:25"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T09:45:09"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:49:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:54:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:55:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T09:59:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:02:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:08:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:09:32"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:24:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:26:23"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:26:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:32:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:35:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:41:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:44:28"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:49:29"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:51:52"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T10:52:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:52:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:53:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:53:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:53:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:54:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:54:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:56:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:57:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:58:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T10:58:29"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:00:07"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:04:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:18:11"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:28:13"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T11:28:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:29:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:30:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:32:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:33:30"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:34:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:36:14"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:40:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:41:41"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:42:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:43:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:54:00"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T11:54:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:54:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T11:55:29"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T11:58:50.365000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T11:59:08.078000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T11:59:59.077000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:04:23"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:04:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:07:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:09:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:10:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:13:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:19:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:20:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:20:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:21:04"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T12:21:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:22:22"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T12:24:09.742000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:26:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:27:09"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:31:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:32:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:32:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:32:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:33:29"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T12:34:19.221000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:34:36"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T12:35:16.743000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:35:26"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:35:52"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T12:51:36.918000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:51:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:52:35"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:52:47"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T12:54:31.400000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T12:56:12.242000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T12:56:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T12:58:04"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:05:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:08:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:14:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:17:28"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:17:36.572000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:18:31.194000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:19:32.369000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:20:38"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:20:51.741000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:22:25.807000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:23:58.368000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:29:58.284000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:30:33.398000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:34:44.178000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:36:52.967000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:37:30.648000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:38:50.021000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T13:39:19.530000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:48:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:49:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:50:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:50:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:56:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:57:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T13:59:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:00:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:01:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:02:48"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:05:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:06:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:06:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:07:11"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:07:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:09:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:09:23"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:10:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:12:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:13:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:53:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T14:54:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:19:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:21:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:21:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:22:07"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:22:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:23:25"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:24:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:25:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:25:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:29:03"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:30:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:30:32"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:32:09"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:33:35"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:36:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:39:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:51:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:53:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:54:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:56:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:56:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:58:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:59:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T15:59:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:07:11"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:22:03"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:31:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:32:57"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:36:14"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:38:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:45:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:46:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:56:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T16:59:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T17:07:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:12:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:39:10"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:40:41"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:43:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:45:11"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:46:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:46:43"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:48:27"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:50:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:51:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:52:30"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:53:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:56:09"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:57:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T19:59:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:00:32"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:04:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:05:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:05:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:06:53"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:08:18"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:25:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:28:41"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:29:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:31:15"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:31:50"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T20:32:50.938000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T20:33:52.198000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:35:13"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T20:35:42.487000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T20:38:00.752000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T20:38:37.391000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T20:40:38.136000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T20:46:41"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T20:47:57.434000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T20:51:38"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T20:58:21"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:02:18"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T21:06:02.824000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T21:11:15"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:11:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T21:12:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T21:13:09"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:13:14"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T21:14:42"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:15:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T21:15:40"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:15:57"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:17:48"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T21:18:43"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-19T21:19:15"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-19T21:19:20.549000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:29:10"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-19T21:30:34"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T04:41:26.313000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T04:41:55"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:43:19"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:44:24"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:46:32"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:48:04"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:50:45"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:53:02"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:55:04"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T04:59:14"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T04:59:56.594000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T05:00:31.485000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T05:01:01.797000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T05:01:14.477000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T05:02:06"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T05:02:27.851000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T05:02:48.380000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T05:03:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:03:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:03:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:04:04"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:05:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:12:12"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T06:12:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:13:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:18:23"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T06:23:11.626000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T06:27:07.437000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T06:27:12.876000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T06:37:08"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T06:37:39.700000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T06:37:50"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T06:38:53.724000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T06:39:15.721000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T06:39:37.939000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T06:42:01"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T07:33:24"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T07:46:33"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T07:46:56"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T08:24:24.242000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T08:31:56.947000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T08:34:27.043000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T08:35:08.835000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T08:36:49.489000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:38:29"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T08:39:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:39:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:40:32"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T08:42:04.949000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:45:18"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T08:46:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:48:32"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T08:51:05"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T08:53:47.013000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:54:32"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:56:31"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T08:57:05"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T08:57:34"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:00:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:01:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:02:42"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:03:13"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:10:32.295000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:11:30.086000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:11:53.978000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:12:17.957000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:12:44"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:13:44.837000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:14:41.330000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:14:54.026000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:15:49.432000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:16:45.002000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:16:55.985000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:17:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:18:29"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:20:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:21:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:22:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:24:49"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:25:41"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:25:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:26:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:40:29"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:42:03.708000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:42:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:42:53"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:43:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:44:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:45:20"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:45:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:46:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:47:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:48:22"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:48:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:50:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:51:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:54:02"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T09:54:58.147000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:55:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:55:59"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:56:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T09:58:08"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T09:58:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T10:00:20"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T10:01:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T10:02:36"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:02:47"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:04:03"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T10:06:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T10:06:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T10:08:38"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T10:09:28"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:09:42"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T10:11:13.628000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:26:40"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:34:51"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:39:53"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:42:19"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:48:53"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T10:53:01"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:03:45"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:04:32"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:05:13"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:05:18"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:05:52"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:06:12"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:07:11"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:07:49"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:13:05"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T11:14:51.789000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:18:46"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:19:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:22:05"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:23:09"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:24:05"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T11:24:55.661000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:25:53"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:26:16"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:27:46"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:33:34"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:34:22"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T11:35:06.383000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:35:44"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T11:36:31.634000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:38:53"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:41:04"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T11:45:03.929000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T11:46:33.031000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:46:59"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:48:05"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T11:50:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:50:47"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T11:52:49.191000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:53:23"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T11:56:46"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T12:05:44"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T12:06:17.684000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:06:37"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T12:07:46.932000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:15:06"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T12:15:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:37:22"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:48:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:49:43"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:53:27"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:54:02"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:54:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T12:58:25"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T13:14:37"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:15:35.503000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:16:24.061000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:20:50.266000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:23:25.563000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:32:23.436000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:37:41.860000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:49:04.886000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T13:51:48.363000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T13:54:55"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T13:56:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T13:57:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:01:29"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:14:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:14:39"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:17:47"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:32:36"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:49:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:49:56"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:50:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T14:53:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T15:04:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T15:57:08"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T15:59:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:00:21"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:02:58"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:04:25"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:05:33"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:07:04"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:08:49"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T16:11:14.221000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T16:16:41"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T16:19:47.352000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T16:21:56"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T16:23:40.677000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T16:30:45"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T16:33:25"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T16:35:32.268000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T16:40:17"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-20T16:44:11.589000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:46:03"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T16:46:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:47:27"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T16:50:17"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:05:40"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:09:18"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:15:21"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:16:32"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:17:16"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:18:11"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:19:56"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:24:05"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:25:00"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:27:20"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:28:47"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:30:21"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:32:38"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:33:35"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:36:49"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:40:36"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:46:56"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T17:51:19"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-20T19:54:02"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T19:56:10"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:00:32"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:03:50"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:04:50"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:05:41"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:07:05"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:16:40"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:22:26"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:28:50"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:31:25"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-20T20:36:54"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T04:48:11"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T04:48:55.474000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T04:49:17"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T04:50:20"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T04:54:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T05:19:23"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T05:19:35.515000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T05:20:50.812000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T05:21:40"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T05:21:59.027000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T05:23:39"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T05:26:51"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T05:27:09"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T05:28:56"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T05:30:03.007000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T05:31:08.833000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T05:31:48"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T05:33:40"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T05:34:06.933000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T05:41:03"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T05:55:48"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T06:07:50"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T06:13:08"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T06:42:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T06:55:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T06:56:37"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T06:56:40"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T07:14:29"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T07:16:20.797000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T07:23:59"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T07:26:50"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T07:29:35"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T07:41:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T08:02:06"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T08:06:03"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T08:07:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T08:08:37"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T08:09:24"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T08:30:37"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T08:30:41.984000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T08:50:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T09:06:00"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T09:06:09"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:22:04.112000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:22:59.668000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:24:48.382000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:25:26.586000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:26:37.375000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:30:35.685000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:32:11.769000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:36:30.375000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T09:37:40.666000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T09:47:26"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T10:20:27.550000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T10:20:58.618000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T10:21:42"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T10:31:17"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T10:32:20"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T10:32:36.387000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T10:42:51"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T10:43:07"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T10:45:07.298000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T11:05:26.754000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T11:07:07"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T13:50:22"
+    },
+    {
+      "source": "commit_claude",
+      "timestamp": "2026-03-21T13:50:55"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T14:07:05"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T14:31:04"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T16:16:01"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T16:19:08"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T16:20:07"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T17:16:23"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T19:28:36.790000"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T19:41:11"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T20:21:59.907000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T20:23:24.214000"
+    },
+    {
+      "source": "claude",
+      "timestamp": "2026-03-21T20:25:08.036000"
+    },
+    {
+      "source": "codex",
+      "timestamp": "2026-03-21T20:29:31"
+    },
+    {
+      "source": "commit_human",
+      "timestamp": "2026-03-21T20:35:33"
+    }
+  ],
+  "daily": {
+    "2026-03-05": {
+      "event_count": 48,
+      "sources": {
+        "claude": 47,
+        "commit_human": 1
+      },
+      "first_event": "2026-03-05T00:02:44.014000",
+      "last_event": "2026-03-05T23:57:17.945000",
+      "span_hours": 23.91,
+      "active_hours_5min_gap": 1.03,
+      "work_sessions": 16
+    },
+    "2026-03-06": {
+      "event_count": 59,
+      "sources": {
+        "claude": 56,
+        "commit_human": 3
+      },
+      "first_event": "2026-03-06T04:56:44.744000",
+      "last_event": "2026-03-06T10:30:08",
+      "span_hours": 5.56,
+      "active_hours_5min_gap": 1.23,
+      "work_sessions": 11
+    },
+    "2026-03-07": {
+      "event_count": 16,
+      "sources": {
+        "claude": 3,
+        "commit_human": 13
+      },
+      "first_event": "2026-03-07T06:01:35.434000",
+      "last_event": "2026-03-07T14:40:35",
+      "span_hours": 8.65,
+      "active_hours_5min_gap": 0.23,
+      "work_sessions": 14
+    },
+    "2026-03-08": {
+      "event_count": 23,
+      "sources": {
+        "claude": 15,
+        "commit_human": 2,
+        "codex": 6
+      },
+      "first_event": "2026-03-08T03:32:59.690000",
+      "last_event": "2026-03-08T20:30:56.709000",
+      "span_hours": 16.97,
+      "active_hours_5min_gap": 0.61,
+      "work_sessions": 8
+    },
+    "2026-03-09": {
+      "event_count": 70,
+      "sources": {
+        "codex": 41,
+        "commit_human": 3,
+        "claude": 26
+      },
+      "first_event": "2026-03-09T05:48:57",
+      "last_event": "2026-03-09T23:38:01.526000",
+      "span_hours": 17.82,
+      "active_hours_5min_gap": 1.59,
+      "work_sessions": 19
+    },
+    "2026-03-10": {
+      "event_count": 34,
+      "sources": {
+        "claude": 10,
+        "commit_human": 13,
+        "codex": 11
+      },
+      "first_event": "2026-03-10T07:28:08.067000",
+      "last_event": "2026-03-10T22:40:20",
+      "span_hours": 15.2,
+      "active_hours_5min_gap": 0.43,
+      "work_sessions": 20
+    },
+    "2026-03-11": {
+      "event_count": 29,
+      "sources": {
+        "codex": 26,
+        "commit_human": 3
+      },
+      "first_event": "2026-03-11T08:08:59",
+      "last_event": "2026-03-11T23:55:22",
+      "span_hours": 15.77,
+      "active_hours_5min_gap": 0.37,
+      "work_sessions": 23
+    },
+    "2026-03-12": {
+      "event_count": 27,
+      "sources": {
+        "codex": 25,
+        "commit_human": 2
+      },
+      "first_event": "2026-03-12T00:02:37",
+      "last_event": "2026-03-12T22:53:12",
+      "span_hours": 22.84,
+      "active_hours_5min_gap": 0.43,
+      "work_sessions": 18
+    },
+    "2026-03-13": {
+      "event_count": 43,
+      "sources": {
+        "codex": 22,
+        "claude": 20,
+        "commit_human": 1
+      },
+      "first_event": "2026-03-13T07:48:52",
+      "last_event": "2026-03-13T23:41:34.098000",
+      "span_hours": 15.88,
+      "active_hours_5min_gap": 0.89,
+      "work_sessions": 20
+    },
+    "2026-03-14": {
+      "event_count": 28,
+      "sources": {
+        "codex": 12,
+        "claude": 15,
+        "commit_human": 1
+      },
+      "first_event": "2026-03-14T00:38:14",
+      "last_event": "2026-03-14T19:44:57.016000",
+      "span_hours": 19.11,
+      "active_hours_5min_gap": 0.49,
+      "work_sessions": 15
+    },
+    "2026-03-15": {
+      "event_count": 26,
+      "sources": {
+        "claude": 26
+      },
+      "first_event": "2026-03-15T07:22:14.617000",
+      "last_event": "2026-03-15T17:26:51.316000",
+      "span_hours": 10.08,
+      "active_hours_5min_gap": 0.43,
+      "work_sessions": 10
+    },
+    "2026-03-16": {
+      "event_count": 86,
+      "sources": {
+        "claude": 83,
+        "commit_human": 3
+      },
+      "first_event": "2026-03-16T06:00:53.297000",
+      "last_event": "2026-03-16T21:27:58.293000",
+      "span_hours": 15.45,
+      "active_hours_5min_gap": 1.97,
+      "work_sessions": 29
+    },
+    "2026-03-17": {
+      "event_count": 233,
+      "sources": {
+        "claude": 188,
+        "commit_human": 22,
+        "codex": 23
+      },
+      "first_event": "2026-03-17T05:02:07.895000",
+      "last_event": "2026-03-17T20:14:58",
+      "span_hours": 15.21,
+      "active_hours_5min_gap": 5.12,
+      "work_sessions": 42
+    },
+    "2026-03-18": {
+      "event_count": 240,
+      "sources": {
+        "codex": 140,
+        "claude": 87,
+        "commit_human": 12,
+        "commit_codex": 1
+      },
+      "first_event": "2026-03-18T03:58:48",
+      "last_event": "2026-03-18T21:30:43",
+      "span_hours": 17.53,
+      "active_hours_5min_gap": 5.86,
+      "work_sessions": 45
+    },
+    "2026-03-19": {
+      "event_count": 288,
+      "sources": {
+        "codex": 215,
+        "claude": 55,
+        "commit_human": 18
+      },
+      "first_event": "2026-03-19T05:02:50",
+      "last_event": "2026-03-19T21:30:34",
+      "span_hours": 16.46,
+      "active_hours_5min_gap": 5.86,
+      "work_sessions": 42
+    },
+    "2026-03-20": {
+      "event_count": 242,
+      "sources": {
+        "claude": 56,
+        "codex": 106,
+        "commit_human": 80
+      },
+      "first_event": "2026-03-20T04:41:26.313000",
+      "last_event": "2026-03-20T20:36:54",
+      "span_hours": 15.92,
+      "active_hours_5min_gap": 5.28,
+      "work_sessions": 41
+    },
+    "2026-03-21": {
+      "event_count": 79,
+      "sources": {
+        "codex": 26,
+        "claude": 27,
+        "commit_human": 25,
+        "commit_claude": 1
+      },
+      "first_event": "2026-03-21T04:48:11",
+      "last_event": "2026-03-21T20:35:33",
+      "span_hours": 15.79,
+      "active_hours_5min_gap": 1.44,
+      "work_sessions": 30
+    }
+  },
+  "commits_daily": {
+    "2026-03-22": {
+      "claude": 2,
+      "codex": 0,
+      "human": 0
+    },
+    "2026-03-21": {
+      "claude": 23,
+      "codex": 3,
+      "human": 0
+    },
+    "2026-03-20": {
+      "claude": 32,
+      "codex": 48,
+      "human": 0
+    },
+    "2026-03-19": {
+      "claude": 11,
+      "codex": 7,
+      "human": 0
+    },
+    "2026-03-18": {
+      "claude": 8,
+      "codex": 5,
+      "human": 0
+    },
+    "2026-03-17": {
+      "claude": 20,
+      "codex": 0,
+      "human": 2
+    },
+    "2026-03-16": {
+      "claude": 3,
+      "codex": 0,
+      "human": 0
+    },
+    "2026-03-14": {
+      "claude": 0,
+      "codex": 1,
+      "human": 0
+    },
+    "2026-03-13": {
+      "claude": 0,
+      "codex": 1,
+      "human": 0
+    },
+    "2026-03-12": {
+      "claude": 0,
+      "codex": 2,
+      "human": 0
+    },
+    "2026-03-11": {
+      "claude": 0,
+      "codex": 3,
+      "human": 0
+    },
+    "2026-03-10": {
+      "claude": 2,
+      "codex": 11,
+      "human": 0
+    },
+    "2026-03-09": {
+      "claude": 3,
+      "codex": 0,
+      "human": 0
+    },
+    "2026-03-08": {
+      "claude": 2,
+      "codex": 0,
+      "human": 0
+    },
+    "2026-03-07": {
+      "claude": 13,
+      "codex": 0,
+      "human": 0
+    },
+    "2026-03-06": {
+      "claude": 2,
+      "codex": 1,
+      "human": 0
+    },
+    "2026-03-05": {
+      "claude": 1,
+      "codex": 0,
+      "human": 0
+    }
+  },
+  "gap_distribution": {
+    "total_gaps": 1570,
+    "percentiles": {
+      "p25_seconds": 47.0,
+      "p50_seconds": 104.0,
+      "p75_seconds": 310.9,
+      "p90_seconds": 1273.0,
+      "p95_seconds": 3306.9
+    },
+    "buckets": {
+      "0-30s": {
+        "count": 217,
+        "total_hours": 1.0
+      },
+      "30s-1m": {
+        "count": 301,
+        "total_hours": 3.7
+      },
+      "1-2m": {
+        "count": 323,
+        "total_hours": 7.7
+      },
+      "2-5m": {
+        "count": 326,
+        "total_hours": 17.4
+      },
+      "5-10m": {
+        "count": 141,
+        "total_hours": 16.2
+      },
+      "10-15m": {
+        "count": 61,
+        "total_hours": 12.4
+      },
+      "15-30m": {
+        "count": 70,
+        "total_hours": 23.6
+      },
+      "30m-1h": {
+        "count": 62,
+        "total_hours": 45.5
+      },
+      "1-2h": {
+        "count": 27,
+        "total_hours": 38.8
+      },
+      "2-4h": {
+        "count": 22,
+        "total_hours": 59.8
+      },
+      "4h+": {
+        "count": 20,
+        "total_hours": 178.5
+      }
+    }
+  }
+}
