@@ -16,7 +16,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.CLAUDE_PAT }}
 
       - name: Install elan
         run: |
@@ -59,3 +58,9 @@ jobs:
             git commit -m "chore: update informalizations.json baseline"
             git push
           fi
+
+      - name: Trigger CI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run ci.yml --ref ${{ github.event.pull_request.head.ref }}
