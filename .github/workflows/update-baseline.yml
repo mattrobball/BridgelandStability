@@ -56,3 +56,10 @@ jobs:
             git commit -m "chore: update informalizations.json baseline"
             git push
           fi
+
+      - name: Remove label
+        env:
+          GH_TOKEN: ${{ secrets.BASELINE_PAT }}
+        run: |
+          gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels/paper-alignment-reviewed \
+            --method DELETE || true
