@@ -4,6 +4,11 @@ on:
   pull_request:
     types: [labeled]
 
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
 jobs:
   update:
     name: Update informalizations.json
@@ -20,6 +25,24 @@ jobs:
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Find latest CI run
+        id: find-run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          run_id=$(gh api "repos/${{ github.repository }}/actions/workflows/ci.yml/runs?branch=${{ github.event.pull_request.head.ref }}&per_page=5" \
+            --jq '.workflow_runs | map(select(.conclusion == "failure" or .conclusion == "success")) | .[0].id')
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "Using CI run: $run_id"
+
+      - name: Download oleans
+        uses: actions/download-artifact@v4
+        with:
+          name: oleans
+          path: .lake/build
+          run-id: ${{ steps.find-run.outputs.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Mathlib cache
         run: lake exe cache get
@@ -59,7 +82,7 @@ jobs:
 
       - name: Remove label
         env:
-          GH_TOKEN: ${{ secrets.BASELINE_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels/paper-alignment-reviewed \
             --method DELETE || true

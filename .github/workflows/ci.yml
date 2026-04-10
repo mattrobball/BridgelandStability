@@ -154,7 +154,19 @@ jobs:
 
       - name: Fail if issues found
         if: steps.check.outputs.has_issues == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          pr_number="${{ steps.find-pr.outputs.pr_number }}"
+          if [ -n "$pr_number" ]; then
+            labels=$(gh pr view "$pr_number" \
+              -R ${{ github.repository }} \
+              --json labels --jq '.labels[].name' 2>/dev/null || true)
+            if echo "$labels" | grep -q "paper-alignment-reviewed"; then
+              echo "Label present — baseline update workflow will handle it."
+              exit 0
+            fi
+          fi
           echo "::error::Paper-aligned declarations have drifted. Add the 'paper-alignment-reviewed' label to update the baseline."
           exit 1
 
