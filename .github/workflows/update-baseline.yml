@@ -54,6 +54,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore: update informalizations.json baseline"
+            git pull --rebase
             git push
           fi
 
