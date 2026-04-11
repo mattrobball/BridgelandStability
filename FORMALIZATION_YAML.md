@@ -8,6 +8,11 @@ As AI-assisted formalization scales, the community needs a shared way to report 
 formalization.yaml is a self-reporting metadata file that lives in the root of a formalization project. Its purpose is not gatekeeping — it is transparency. The mere existence of `author_contacted: false` or `sorry_in_definitions: 3` makes gaps visible without shaming anyone.
 
 
+## Acknowledgements
+
+This schema was developed in collaboration with Kevin Buzzard, Johan Commelin, Fabian Glöckle, Bhavik Mehta, Kim Morrison, Oliver Nash, and Adam Topaz.
+
+
 ## Design principles
 
 1. **Normalize disclosure.** The schema succeeds when people fill it in honestly, including the uncomfortable parts. Inspired by [Model Cards](https://arxiv.org/abs/1810.03993) (Mitchell et al.) and [Datasheets for Datasets](https://arxiv.org/abs/1803.09010) (Gebru et al.), which succeeded not because of their specific fields but because they established disclosure as a professional norm.
