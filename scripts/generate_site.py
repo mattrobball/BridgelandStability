@@ -367,7 +367,7 @@ def generate_root_file(
     lines.append('#doc (Manual) "Bridgeland Stability Conditions" =>')
     lines.append("")
     if repo_url:
-        lines.append(f"[{repo_url}]({repo_url})")
+        lines.append(f"[GitHub repository]({repo_url})")
         lines.append("")
     lines.append(
         "Inspired by Douglas's work on Π-stability in string theory, "
