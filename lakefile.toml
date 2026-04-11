@@ -14,7 +14,7 @@ rev = "v4.29.0"
 [[require]]
 name = "informal"
 git = "https://github.com/mattrobball/lean-informal"
-rev = "main"
+rev = "f274508afe725111cc7f47663659b8aee5ed7744"
 
 [[lean_lib]]
 name = "BridgelandStability"
@@ -26,4 +26,8 @@ srcDir = "scripts/lean"
 
 [[lean_lib]]
 name = "ExtractDecls"
+srcDir = "scripts/lean"
+
+[[lean_lib]]
+name = "EmitTFB"
 srcDir = "scripts/lean"

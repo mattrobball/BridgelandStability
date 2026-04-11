@@ -1,0 +1,6 @@
+import BridgelandStability
+import Informal
+
+#emit_standalone BridgelandStability
+  CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
+  "artifacts/trusted_base.lean"
