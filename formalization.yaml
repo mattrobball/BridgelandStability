@@ -135,7 +135,8 @@ self_assessment:
 
 # ── COMMUNITY ────────────────────────────────────────
 community:
-  related_projects: []
+  related_projects:
+    - "Joël Riou's Mathlib triangulated categories and t-structure infrastructure"
   upstream_prs: []
   reviews: []
 
@@ -144,3 +145,5 @@ notes: >
   120 co-authored Claude, 82 co-authored Codex, 2 pure human.
   Project rule: "Humans write no Lean code beyond Mathlib."
   Effort data archived in artifacts/effort_corollary_1_3.json.
+  This project would not exist today without Joël Riou's
+  triangulated categories and t-structure infrastructure in Mathlib.
