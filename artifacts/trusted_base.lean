@@ -227,16 +227,6 @@ structure IsStrictMono : Prop where
   mono : Mono f
   strict : IsStrict f
 end Strict
-section StrictKernelCokernel
-variable {X Y : C} {f : X ⟶ Y}
-  [HasZeroObject C]
-  [HasKernel f] [HasCokernel f]
-  [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)]
-end StrictKernelCokernel
-section QuasiAbelian
-variable (C : Type u) [Category.{v} C] [Preadditive C]
-  [HasKernels C] [HasCokernels C] [HasPullbacks C] [HasPushouts C]
-end QuasiAbelian
 section StrictSubobject
 variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
   [HasKernels C] [HasCokernels C]
@@ -507,10 +497,6 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped Manifold Topology
 namespace CategoryTheory.Triangulated
-section
-variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
-  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-end
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
