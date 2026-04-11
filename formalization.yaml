@@ -140,10 +140,15 @@ community:
   upstream_prs: []
   reviews: []
 
+# ── ACKNOWLEDGEMENTS ─────────────────────────────────
+acknowledgements: >
+  This project would not exist today without Joël Riou's
+  triangulated categories and t-structure infrastructure in Mathlib.
+  Thanks to Joël Riou and Robin Carlier for comments on the initial
+  attempt to formalize the statement of Corollary 1.3.
+
 notes: >
   74 Lean files, 35725 LOC. 204 commits from start to Corollary 1.3:
   120 co-authored Claude, 82 co-authored Codex, 2 pure human.
   Project rule: "Humans write no Lean code beyond Mathlib."
   Effort data archived in artifacts/effort_corollary_1_3.json.
-  This project would not exist today without Joël Riou's
-  triangulated categories and t-structure infrastructure in Mathlib.

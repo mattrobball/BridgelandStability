@@ -130,6 +130,9 @@ community:
   upstream_prs: []
   reviews: []
 
+# ── ACKNOWLEDGEMENTS ─────────────────────────────────
+acknowledgements: ""
+
 notes: ""
 ```
 
@@ -278,6 +281,11 @@ These axes help consumers quickly gauge what kind of project this is.
 - **related_projects**: URLs of other formalization efforts covering overlapping material. Checking this before starting avoids duplicated work.
 - **upstream_prs**: List of PR numbers for contributions to the parent library (e.g. Mathlib PR numbers).
 - **reviews**: Links to external reviews, assessments, or discussions of this project.
+
+
+### acknowledgements
+
+Free-form text acknowledging individuals, projects, or organizations whose work this formalization depends on or benefited from.
 
 
 ### notes
