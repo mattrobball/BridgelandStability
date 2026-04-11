@@ -350,6 +350,7 @@ def generate_root_file(
     chapter_groups: list[tuple[str, list[str]]],
     direct_leaves: list[tuple[str, str]],
     total_entries: int,
+    repo_url: str | None = None,
 ) -> str:
     """Generate Root.lean — landing page + chapter/leaf includes."""
     all_includes = _build_includes(chapter_groups, direct_leaves)
@@ -365,6 +366,9 @@ def generate_root_file(
     lines.append("")
     lines.append('#doc (Manual) "Bridgeland Stability Conditions" =>')
     lines.append("")
+    if repo_url:
+        lines.append(f"[GitHub repository]({repo_url})")
+        lines.append("")
     lines.append(
         "Inspired by Douglas's work on Π-stability in string theory, "
         "Bridgeland stability conditions allow one to extract a complex manifold "
@@ -547,7 +551,8 @@ def main():
         print(f"  (direct) {dm}")
 
     # ── Root doc ──
-    root_content = generate_root_file(chapter_groups, direct_leaves, len(entries))
+    root_content = generate_root_file(chapter_groups, direct_leaves, len(entries),
+                                      repo_url=args.repo_url)
     root_path = os.path.join(args.output, "InformalDocs", "Root.lean")
     with open(root_path, "w") as f:
         f.write(root_content)
