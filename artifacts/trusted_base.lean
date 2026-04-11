@@ -237,15 +237,6 @@ section QuasiAbelian
 variable (C : Type u) [Category.{v} C] [Preadditive C]
   [HasKernels C] [HasCokernels C] [HasPullbacks C] [HasPushouts C]
 end QuasiAbelian
-section StrictShortExact
-variable {C : Type u} [Category.{v} C] [Preadditive C] [HasKernels C] [HasCokernels C]
-end StrictShortExact
-section KernelCokernelStrict
-variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [HasKernels C] [HasCokernels C]
-end KernelCokernelStrict
-section AbelianStrict
-variable {C : Type u} [Category.{v} C] [Abelian C]
-end AbelianStrict
 section StrictSubobject
 variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
   [HasKernels C] [HasCokernels C]
@@ -256,8 +247,6 @@ quasi-abelian notion of admissible / exact subobject used in Bridgeland's finite
 thin interval categories. -/
 def IsStrict (P : Subobject X) : Prop :=
   IsStrictMono P.arrow
-section
-end
 end Subobject
 /-- The ordered type of strict subobjects of `X`. -/
 abbrev StrictSubobject (X : C) :=
@@ -277,23 +266,12 @@ def isStrictNoetherianObject : ObjectProperty C :=
 /-- An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain
 condition. -/
 abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
-section
-end
 end StrictSubobject
-section StrictSubobjectAbelian
-variable {C : Type u} [Category.{v} C] [Abelian C]
-variable {X : C}
-end StrictSubobjectAbelian
-section SubobjectFiniteness
-variable {A : Type u} [Category.{v} A] {C : Type u} [Category.{v} C]
-end SubobjectFiniteness
 section StrictSubobjectTransfer
 variable {A : Type u} [Category.{v} A] [HasZeroMorphisms A] [Preadditive A]
   [HasKernels A] [HasCokernels A]
   {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
   [HasKernels C] [HasCokernels C]
-section
-end
 end StrictSubobjectTransfer
 end CategoryTheory
 
@@ -311,9 +289,6 @@ it is zero or admits an HN filtration with all phases in `(a, b)`.
 This is **Bridgeland's Definition 4.1** specialized to open intervals. -/
 abbrev Slicing.IntervalCat (s : Slicing C) (a b : ℝ) :=
   (s.intervalProp C a b).FullSubcategory
-section FiniteProducts
-variable [IsTriangulated C]
-end FiniteProducts
 end CategoryTheory.Triangulated
 
 -- ═══ IntervalCategory.QuasiAbelian ═══
@@ -361,9 +336,6 @@ structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
       linarith⟩
     ∀ (E : s.IntervalCat C a b),
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
-section
-variable {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
-end
 end Preabelian
 variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
