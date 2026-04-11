@@ -14,6 +14,7 @@ set_option backward.privateInPublic.warn false
 universe v u u' v' u'' v'' w
 
 -- ═══ PostnikovTower.Defs ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 namespace CategoryTheory.Triangulated
@@ -56,6 +57,7 @@ def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
 end CategoryTheory.Triangulated
 
 -- ═══ Slicing.Defs ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
@@ -122,10 +124,12 @@ noncomputable def Slicing.phiMinus (s : Slicing C) (E : C) (hE : ¬IsZero E) : �
   let F := (HNFiltration.exists_nonzero_last C s hE).choose
   let hn : 0 < F.n := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
   F.φ ⟨F.n - 1, Nat.sub_one_lt_of_le hn le_rfl⟩
-end Slicing
 end CategoryTheory.Triangulated
 
 -- ═══ GrothendieckGroup.Defs ═══
+
+namespace K0Presentation
+variable {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel)
 /-- A presentation of a Grothendieck-style group: objects, relations, and
 the three-term decomposition `obj₂(r) = obj₁(r) + obj₃(r)`. -/
 @[nolint checkUnivs]
@@ -136,8 +140,6 @@ structure K0Presentation (Obj : Type u) (Rel : Type v) where
   obj₂ : Rel → Obj
   /-- The third term. -/
   obj₃ : Rel → Obj
-namespace K0Presentation
-variable {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel)
 /-- The subgroup of relations: `{obj₂(r) - obj₁(r) - obj₃(r) | r : Rel}`. -/
 def subgroup : AddSubgroup (FreeAbelianGroup Obj) :=
   AddSubgroup.closure
@@ -162,12 +164,15 @@ def lift {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 �
 end K0Presentation
 
 -- ═══ GrothendieckGroup.Basic ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits
 open scoped ZeroObject
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+section ClassMap
+variable {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
 /-- The `K0Presentation` for distinguished triangles in a pretriangulated category:
 generators are objects of `C`, relations are distinguished triangles. -/
 abbrev trianglePresentation :
@@ -196,17 +201,15 @@ instance {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] :
 to an additive group homomorphism from K₀. -/
 def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] : K₀ C →+ A :=
   (trianglePresentation C).lift f
-section ClassMap
-variable {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
 /-- The class of an object `E` in the target lattice `Λ`, via the class map
 `v : K₀(C) → Λ`. This is `v([E])` in the notation of Bridgeland, BMS16, etc.
 
 At `v = id`: `cl v E = K₀.of C E` definitionally. -/
 abbrev cl (E : C) : Λ := v (K₀.of C E)
-end ClassMap
 end CategoryTheory.Triangulated
 
 -- ═══ QuasiAbelian.Basic ═══
+
 open CategoryTheory CategoryTheory.Limits
 namespace CategoryTheory
 variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
@@ -214,6 +217,39 @@ section Strict
 variable {X Y : C} (f : X ⟶ Y)
   [HasKernel f] [HasCokernel f]
   [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)]
+section StrictKernelCokernel
+variable {X Y : C} {f : X ⟶ Y}
+  [HasZeroObject C]
+  [HasKernel f] [HasCokernel f]
+  [HasKernel (cokernel.π f)] [HasCokernel (kernel.ι f)]
+section QuasiAbelian
+variable (C : Type u) [Category.{v} C] [Preadditive C]
+  [HasKernels C] [HasCokernels C] [HasPullbacks C] [HasPushouts C]
+section StrictShortExact
+variable {C : Type u} [Category.{v} C] [Preadditive C] [HasKernels C] [HasCokernels C]
+section KernelCokernelStrict
+variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [HasKernels C] [HasCokernels C]
+section AbelianStrict
+variable {C : Type u} [Category.{v} C] [Abelian C]
+section StrictSubobject
+variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
+  [HasKernels C] [HasCokernels C]
+namespace Subobject
+variable {X : C}
+section
+variable (X Y : C)
+section
+section StrictSubobjectAbelian
+variable {C : Type u} [Category.{v} C] [Abelian C]
+variable {X : C}
+section SubobjectFiniteness
+variable {A : Type u} [Category.{v} A] {C : Type u} [Category.{v} C]
+section StrictSubobjectTransfer
+variable {A : Type u} [Category.{v} A] [HasZeroMorphisms A] [Preadditive A]
+  [HasKernels A] [HasCokernels A]
+  {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
+  [HasKernels C] [HasCokernels C]
+section
 /-- A morphism `f` is *strict* if the canonical comparison morphism from the
 (abelian) coimage to the (abelian) image is an isomorphism. In an abelian category,
 every morphism is strict.
@@ -226,22 +262,14 @@ def IsStrict : Prop :=
 structure IsStrictMono : Prop where
   mono : Mono f
   strict : IsStrict f
-end Strict
-section StrictSubobject
-variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
-  [HasKernels C] [HasCokernels C]
-namespace Subobject
-variable {X : C}
 /-- A subobject is *strict* if its arrow is a strict monomorphism. This is the
 quasi-abelian notion of admissible / exact subobject used in Bridgeland's finite-length
 thin interval categories. -/
 def IsStrict (P : Subobject X) : Prop :=
   IsStrictMono P.arrow
-end Subobject
 /-- The ordered type of strict subobjects of `X`. -/
 abbrev StrictSubobject (X : C) :=
   { P : Subobject X // P.IsStrict }
-variable (X Y : C)
 /-- An object is *strict-Artinian* if its strict subobjects satisfy the descending chain
 condition. This is the exact finite-length notion relevant to quasi-abelian categories. -/
 def isStrictArtinianObject : ObjectProperty C :=
@@ -256,22 +284,19 @@ def isStrictNoetherianObject : ObjectProperty C :=
 /-- An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain
 condition. -/
 abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
-end StrictSubobject
-section StrictSubobjectTransfer
-variable {A : Type u} [Category.{v} A] [HasZeroMorphisms A] [Preadditive A]
-  [HasKernels A] [HasCokernels A]
-  {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
-  [HasKernels C] [HasCokernels C]
-end StrictSubobjectTransfer
+end Subobject
 end CategoryTheory
 
 -- ═══ IntervalCategory.Basic ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+section FiniteProducts
+variable [IsTriangulated C]
 /-- The interval subcategory `P((a, b))` of a slicing, defined as the full subcategory
 on objects whose HN phases all lie in `(a, b)`. An object `E` belongs to `P((a, b))` if
 it is zero or admits an HN filtration with all phases in `(a, b)`.
@@ -279,33 +304,19 @@ it is zero or admits an HN filtration with all phases in `(a, b)`.
 This is **Bridgeland's Definition 4.1** specialized to open intervals. -/
 abbrev Slicing.IntervalCat (s : Slicing C) (a b : ℝ) :=
   (s.intervalProp C a b).FullSubcategory
-end CategoryTheory.Triangulated
 
--- ═══ IntervalCategory.QuasiAbelian ═══
-noncomputable section
-open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
-open scoped ZeroObject
-namespace CategoryTheory.Triangulated
-variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
-  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-section Preabelian
+-- ─── IntervalCategory.QuasiAbelian ───
+
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
     HasKernels (s.IntervalCat C a b)  := sorry
 noncomputable instance Slicing.intervalCat_hasCokernels (s : Slicing C) :
     HasCokernels (s.IntervalCat C a b)  := sorry
-end Preabelian
-end CategoryTheory.Triangulated
 
--- ═══ IntervalCategory.FiniteLength ═══
-noncomputable section
-open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
-open scoped ZeroObject
-namespace CategoryTheory.Triangulated
-variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
-  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-section Preabelian
-variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+-- ─── IntervalCategory.FiniteLength ───
+
+variable {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 omit [IsTriangulated C] in
 /-- A slicing is locally finite if there exists `η > 0` with `η < 1/2` such that every
 object in each thin interval category `P((t-η, t+η))` has finite length in the
@@ -326,12 +337,10 @@ structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
       linarith⟩
     ∀ (E : s.IntervalCat C a b),
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
-end Preabelian
-variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
-variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 end CategoryTheory.Triangulated
 
 -- ═══ StabilityCondition.Defs ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Complex
 open scoped ENNReal
@@ -341,6 +350,8 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [IsTriangulated C]
 variable {Λ : Type u'} [AddCommGroup Λ]
 namespace PreStabilityCondition
+namespace StabilityCondition
+namespace StabilityCondition.WithClassMap
 /-- A Bridgeland prestability condition with respect to a class map
 `v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient
 charge is recovered by precomposition with `v`. -/
@@ -359,15 +370,12 @@ variable {C} in
 noncomputable abbrev WithClassMap.charge {v : K₀ C →+ Λ}
     (σ : WithClassMap C v) (E : C) : ℂ :=
   σ.Z (cl C v E)
-end PreStabilityCondition
-namespace StabilityCondition
 /-- A Bridgeland stability condition with respect to a class map `v : K₀(C) → Λ`.
 This is the locally-finite refinement of `PreStabilityCondition.WithClassMap`. -/
 structure WithClassMap (v : K₀ C →+ Λ)
     extends PreStabilityCondition.WithClassMap C v where
   /-- The slicing is locally finite. -/
   locallyFinite : slicing.IsLocallyFinite C
-end StabilityCondition
 open Real in
 /-- The Bridgeland generalized metric on slicings. For slicings `s₁` and `s₂`,
 this is the supremum over all nonzero objects `E` of
@@ -401,7 +409,6 @@ instance StabilityCondition.WithClassMap.topologicalSpace {v : K₀ C →+ Λ} :
   TopologicalSpace.generateFrom
     {U | ∃ (σ : StabilityCondition.WithClassMap C v) (ε : ℝ), 0 < ε ∧ ε < 1 / 8 ∧
       U = basisNhd C σ ε}
-namespace StabilityCondition.WithClassMap
 /-- The connected-component index set for `Stab_v(D)`. -/
 abbrev ComponentIndex (v : K₀ C →+ Λ) :=
   _root_.ConnectedComponents (StabilityCondition.WithClassMap C v)
@@ -409,9 +416,12 @@ abbrev ComponentIndex (v : K₀ C →+ Λ) :=
 abbrev Component (v : K₀ C →+ Λ) (cc : StabilityCondition.WithClassMap.ComponentIndex C v) :=
   {σ : StabilityCondition.WithClassMap C v // _root_.ConnectedComponents.mk σ = cc}
 end StabilityCondition.WithClassMap
+end StabilityCondition
+end PreStabilityCondition
 end CategoryTheory.Triangulated
 
 -- ═══ NumericalStability.Defs ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 namespace CategoryTheory.Triangulated
@@ -434,6 +444,7 @@ def eulerFormObj [Linear k C] (E F : C) : ℤ :=
 end CategoryTheory.Triangulated
 
 -- ═══ EulerForm.Basic ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped CategoryTheory.Pretriangulated.Opposite
@@ -445,7 +456,6 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 section EulerTriangleAdditivity
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F)  := sorry
-end EulerTriangleAdditivity
 /-- For fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism `K₀ C →+ ℤ`
 using the universal property of `K₀`. -/
 def eulerFormInner (E : C) : K₀ C →+ ℤ := by
@@ -493,10 +503,14 @@ abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
 end CategoryTheory.Triangulated
 
 -- ═══ NumericalStabilityManifold ═══
+
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped Manifold Topology
 namespace CategoryTheory.Triangulated
+section
+variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+  [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
@@ -517,4 +531,3 @@ theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
       IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
         (NumericalComponent (k := k) C cc)  := sorry
 end CategoryTheory.Triangulated
-

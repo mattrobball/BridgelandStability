@@ -14,7 +14,7 @@ rev = "v4.29.0"
 [[require]]
 name = "informal"
 git = "https://github.com/mattrobball/lean-informal"
-rev = "4cf1c8c43cc7e7c8970dda103abf41da23719eb5"
+rev = "b04051540b6ed5cbca82fd8e29a3088574fe76e4"
 
 [[lean_lib]]
 name = "BridgelandStability"
