@@ -7,13 +7,13 @@ Auto-generated — all proofs replaced with `sorry`.
 -/
 
 set_option maxHeartbeats 400000
+set_option backward.privateInPublic true
+set_option backward.proofsInPublic true
+set_option backward.privateInPublic.warn false
 
 universe v u u' v' u'' v'' w
 
 -- ═══ PostnikovTower.Defs ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 namespace CategoryTheory.Triangulated
@@ -56,9 +56,6 @@ def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
 end CategoryTheory.Triangulated
 
 -- ═══ Slicing.Defs ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
@@ -129,9 +126,6 @@ end Slicing
 end CategoryTheory.Triangulated
 
 -- ═══ GrothendieckGroup.Defs ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 /-- A presentation of a Grothendieck-style group: objects, relations, and
 the three-term decomposition `obj₂(r) = obj₁(r) + obj₃(r)`. -/
 @[nolint checkUnivs]
@@ -168,9 +162,6 @@ def lift {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 �
 end K0Presentation
 
 -- ═══ GrothendieckGroup.Basic ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits
 open scoped ZeroObject
@@ -216,9 +207,6 @@ end ClassMap
 end CategoryTheory.Triangulated
 
 -- ═══ QuasiAbelian.Basic ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 open CategoryTheory CategoryTheory.Limits
 namespace CategoryTheory
 variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
@@ -310,9 +298,6 @@ end StrictSubobjectTransfer
 end CategoryTheory
 
 -- ═══ IntervalCategory.Basic ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
@@ -332,9 +317,6 @@ end FiniteProducts
 end CategoryTheory.Triangulated
 
 -- ═══ IntervalCategory.QuasiAbelian ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
@@ -351,9 +333,6 @@ end Preabelian
 end CategoryTheory.Triangulated
 
 -- ═══ IntervalCategory.FiniteLength ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
@@ -391,9 +370,6 @@ variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 end CategoryTheory.Triangulated
 
 -- ═══ StabilityCondition.Defs ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Complex
 open scoped ENNReal
@@ -474,9 +450,6 @@ end StabilityCondition.WithClassMap
 end CategoryTheory.Triangulated
 
 -- ═══ NumericalStability.Defs ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 namespace CategoryTheory.Triangulated
@@ -499,9 +472,6 @@ def eulerFormObj [Linear k C] (E F : C) : ℤ :=
 end CategoryTheory.Triangulated
 
 -- ═══ EulerForm.Basic ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped CategoryTheory.Pretriangulated.Opposite
@@ -561,9 +531,6 @@ abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
 end CategoryTheory.Triangulated
 
 -- ═══ NumericalStabilityManifold ═══
-set_option backward.privateInPublic true
-set_option backward.privateInPublic.warn false
-set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped Manifold Topology
