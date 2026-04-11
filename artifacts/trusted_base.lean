@@ -49,11 +49,13 @@ structure PostnikovTower (E : C) where
   top_iso : Nonempty (chain.right ≅ E)
   /-- When `n = 0`, the object `E` is zero. -/
   zero_isZero : n = 0 → IsZero E
+
 variable {C} in
 /-- The `i`-th factor of a Postnikov tower, derived as `obj₃` of the `i`-th
 distinguished triangle. -/
 def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
   (P.triangle i).obj₃
+
 end CategoryTheory.Triangulated
 
 -- ═══ Slicing.Defs ═══
@@ -75,6 +77,7 @@ structure HNFiltration (P : ℝ → ObjectProperty C) (E : C) extends PostnikovT
   hφ : StrictAnti φ
   /-- Each factor is semistable of the given phase. -/
   semistable : ∀ j, (P (φ j)) (toPostnikovTower.factor j)
+
 /-- A slicing of a pretriangulated category `C`, as defined in
 Bridgeland (2007), Definition 5.1. A slicing assigns to each real number `φ`
 a full subcategory of semistable objects `P(φ)` (as an `ObjectProperty`),
@@ -96,20 +99,24 @@ structure Slicing where
     φ₂ < φ₁ → (P φ₁) A → (P φ₂) B → ∀ (f : A ⟶ B), f = 0
   /-- Every object has a Harder-Narasimhan filtration. -/
   hn_exists : ∀ (E : C), Nonempty (HNFiltration C P E)
+
 /-- The interval subcategory predicate `P((a,b))`: an object `E` belongs to the
 interval subcategory if it is zero or all phases in its HN filtration lie in `(a,b)`. -/
 def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
+
 /-- For any nonzero object, there exists an HN filtration with nonzero first factor.
 Proved by repeatedly dropping zero first factors; terminates since `n` decreases
 and some factor must be nonzero (by `exists_nonzero_factor`). -/
 lemma HNFiltration.exists_nonzero_first (s : Slicing C) {E : C} (hE : ¬IsZero E) :
     ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n), ¬IsZero (F.triangle ⟨0, hn⟩).obj₃  := sorry
+
 /-- For any nonzero object, there exists an HN filtration with nonzero last factor.
 Proved by repeatedly dropping zero last factors. -/
 lemma HNFiltration.exists_nonzero_last (s : Slicing C) {E : C} (hE : ¬IsZero E) :
     ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n),
       ¬IsZero (F.triangle ⟨F.n - 1, by lia⟩).obj₃  := sorry
+
 /-- The intrinsic highest phase of a nonzero object with respect to a slicing.
 This is the phase of the first factor in any HN filtration with nonzero first factor.
 Well-defined by `phiPlus_eq_of_nonzero_factors`. -/
@@ -117,6 +124,7 @@ noncomputable def Slicing.phiPlus (s : Slicing C) (E : C) (hE : ¬IsZero E) : �
   let F := (HNFiltration.exists_nonzero_first C s hE).choose
   let hn := (HNFiltration.exists_nonzero_first C s hE).choose_spec.choose
   F.φ ⟨0, hn⟩
+
 /-- The intrinsic lowest phase of a nonzero object with respect to a slicing.
 This is the phase of the last factor in any HN filtration with nonzero last factor.
 Well-defined by `phiMinus_eq_of_nonzero_last_factors`. -/
@@ -124,6 +132,7 @@ noncomputable def Slicing.phiMinus (s : Slicing C) (E : C) (hE : ¬IsZero E) : �
   let F := (HNFiltration.exists_nonzero_last C s hE).choose
   let hn : 0 < F.n := (HNFiltration.exists_nonzero_last C s hE).choose_spec.choose
   F.φ ⟨F.n - 1, Nat.sub_one_lt_of_le hn le_rfl⟩
+
 end Slicing
 end CategoryTheory.Triangulated
 
@@ -139,6 +148,7 @@ structure K0Presentation (Obj : Type u) (Rel : Type v) where
   obj₂ : Rel → Obj
   /-- The third term. -/
   obj₃ : Rel → Obj
+
 namespace K0Presentation
 variable {Obj : Type u} {Rel : Type v} (P : K0Presentation Obj Rel)
 /-- The subgroup of relations: `{obj₂(r) - obj₁(r) - obj₃(r) | r : Rel}`. -/
@@ -147,13 +157,17 @@ def subgroup : AddSubgroup (FreeAbelianGroup Obj) :=
     {x | ∃ r : Rel,
       x = FreeAbelianGroup.of (P.obj₂ r) - FreeAbelianGroup.of (P.obj₁ r) -
           FreeAbelianGroup.of (P.obj₃ r)}
+
 /-- The Grothendieck group: free abelian group on objects modulo the relations. -/
 abbrev K0 : Type _ := FreeAbelianGroup Obj ⧸ P.subgroup
+
 instance : AddCommGroup P.K0 :=
   inferInstanceAs (AddCommGroup (FreeAbelianGroup Obj ⧸ P.subgroup))
+
 /-- A function on objects is *additive* for a presentation if it respects the relations. -/
 class IsAdditive {A : Type*} [AddCommGroup A] (f : Obj → A) : Prop where
   additive : ∀ r : Rel, f (P.obj₂ r) = f (P.obj₁ r) + f (P.obj₃ r)
+
 /-- The universal property: an additive function lifts uniquely to a group homomorphism. -/
 def lift {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 →+ A :=
   QuotientAddGroup.lift P.subgroup (FreeAbelianGroup.lift f)
@@ -162,6 +176,7 @@ def lift {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 �
         FreeAbelianGroup.lift_apply_of]
       have h := IsAdditive.additive (P := P) (f := f) r
       rw [h]; abel)
+
 end K0Presentation
 
 -- ═══ GrothendieckGroup.Basic ═══
@@ -179,27 +194,34 @@ abbrev trianglePresentation :
   obj₁ := fun r => r.1.obj₁
   obj₂ := fun r => r.1.obj₂
   obj₃ := fun r => r.1.obj₃
+
 /-- The Grothendieck group of a pretriangulated category `C`, defined as the quotient of
 `FreeAbelianGroup C` by the distinguished triangle relations. -/
 def K₀ : Type _ := (trianglePresentation C).K0
+
 instance K₀.instAddCommGroup : AddCommGroup (K₀ C) :=
   inferInstanceAs (AddCommGroup (trianglePresentation C).K0)
+
 /-- The class map sending an object `X` of `C` to its class `[X]` in `K₀ C`. -/
 def K₀.of (X : C) : K₀ C :=
   QuotientAddGroup.mk (FreeAbelianGroup.of X)
+
 variable {C} in
 /-- A function `f : C → A` to an additive group is triangle-additive if
 `f(B) = f(A) + f(C)` for every distinguished triangle `A → B → C → A⟦1⟧`. -/
 class IsTriangleAdditive {A : Type*} [AddCommGroup A] (f : C → A) : Prop where
   additive : ∀ (T : Pretriangulated.Triangle C),
     T ∈ (distTriang C) → f T.obj₂ = f T.obj₁ + f T.obj₃
+
 variable {C} in
 instance {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] :
     (trianglePresentation C).IsAdditive f  := sorry
+
 /-- The universal property of K₀: any triangle-additive function lifts
 to an additive group homomorphism from K₀. -/
 def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] : K₀ C →+ A :=
   (trianglePresentation C).lift f
+
 section ClassMap
 variable {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
 /-- The class of an object `E` in the target lattice `Λ`, via the class map
@@ -207,6 +229,7 @@ variable {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
 
 At `v = id`: `cl v E = K₀.of C E` definitionally. -/
 abbrev cl (E : C) : Λ := v (K₀.of C E)
+
 end ClassMap
 end CategoryTheory.Triangulated
 
@@ -227,10 +250,12 @@ This uses `Abelian.coimageImageComparison` from `Mathlib.CategoryTheory.Abelian.
 which is defined without assuming the category is abelian. -/
 def IsStrict : Prop :=
   IsIso (Abelian.coimageImageComparison f)
+
 /-- A morphism is a *strict monomorphism* if it is both a monomorphism and strict. -/
 structure IsStrictMono : Prop where
   mono : Mono f
   strict : IsStrict f
+
 end Strict
 section StrictKernelCokernel
 variable {X Y : C} {f : X ⟶ Y}
@@ -261,27 +286,33 @@ quasi-abelian notion of admissible / exact subobject used in Bridgeland's finite
 thin interval categories. -/
 def IsStrict (P : Subobject X) : Prop :=
   IsStrictMono P.arrow
+
 section
 end
 end Subobject
 /-- The ordered type of strict subobjects of `X`. -/
 abbrev StrictSubobject (X : C) :=
   { P : Subobject X // P.IsStrict }
+
 variable (X Y : C)
 /-- An object is *strict-Artinian* if its strict subobjects satisfy the descending chain
 condition. This is the exact finite-length notion relevant to quasi-abelian categories. -/
 def isStrictArtinianObject : ObjectProperty C :=
   fun X ↦ WellFoundedLT (StrictSubobject X)
+
 /-- An object is *strict-Artinian* if its strict subobjects satisfy the descending chain
 condition. -/
 abbrev IsStrictArtinianObject : Prop := isStrictArtinianObject.Is X
+
 /-- An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain
 condition. This is the exact finite-length notion relevant to quasi-abelian categories. -/
 def isStrictNoetherianObject : ObjectProperty C :=
   fun X ↦ WellFoundedGT (StrictSubobject X)
+
 /-- An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain
 condition. -/
 abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
+
 section
 end
 end StrictSubobject
@@ -317,6 +348,7 @@ it is zero or admits an HN filtration with all phases in `(a, b)`.
 This is **Bridgeland's Definition 4.1** specialized to open intervals. -/
 abbrev Slicing.IntervalCat (s : Slicing C) (a b : ℝ) :=
   (s.intervalProp C a b).FullSubcategory
+
 section FiniteProducts
 variable [IsTriangulated C]
 end FiniteProducts
@@ -334,8 +366,10 @@ section Preabelian
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
     HasKernels (s.IntervalCat C a b)  := sorry
+
 noncomputable instance Slicing.intervalCat_hasCokernels (s : Slicing C) :
     HasCokernels (s.IntervalCat C a b)  := sorry
+
 end Preabelian
 end CategoryTheory.Triangulated
 
@@ -369,6 +403,7 @@ structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
       linarith⟩
     ∀ (E : s.IntervalCat C a b),
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
+
 section
 variable {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 end
@@ -400,12 +435,14 @@ structure WithClassMap (v : K₀ C →+ Λ) where
   compat' : ∀ (φ : ℝ) (E : C), slicing.P φ E → ¬IsZero E →
     ∃ (m : ℝ), 0 < m ∧
       Z (v (K₀.of C E)) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I)
+
 omit [IsTriangulated C] in
 variable {C} in
 /-- The central charge evaluated at the class of `E`. This is `Z(v[E])`. -/
 noncomputable abbrev WithClassMap.charge {v : K₀ C →+ Λ}
     (σ : WithClassMap C v) (E : C) : ℂ :=
   σ.Z (cl C v E)
+
 end PreStabilityCondition
 namespace StabilityCondition
 /-- A Bridgeland stability condition with respect to a class map `v : K₀(C) → Λ`.
@@ -414,6 +451,7 @@ structure WithClassMap (v : K₀ C →+ Λ)
     extends PreStabilityCondition.WithClassMap C v where
   /-- The slicing is locally finite. -/
   locallyFinite : slicing.IsLocallyFinite C
+
 end StabilityCondition
 open Real in
 /-- The Bridgeland generalized metric on slicings. For slicings `s₁` and `s₂`,
@@ -423,6 +461,7 @@ def slicingDist (s₁ s₂ : Slicing C) : ℝ≥0∞ :=
   ⨆ (E : C) (hE : ¬IsZero E),
     ENNReal.ofReal (max |s₁.phiPlus C E hE - s₂.phiPlus C E hE|
                         |s₁.phiMinus C E hE - s₂.phiMinus C E hE|)
+
 /-- The Bridgeland seminorm `‖U‖_σ` on `Hom(Λ, ℂ)`. For a class-map stability
 condition `σ = (Z, P)` with class map `v : K₀(D) → Λ` and a group homomorphism
 `U : Λ → ℂ`, this is `sup { |U(v[E])| / |Z(v[E])| : E is σ-semistable and nonzero }`.
@@ -432,11 +471,13 @@ def stabSeminorm {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v)
     (U : Λ →+ ℂ) : ℝ≥0∞ :=
   ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
     ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖)
+
 /-- The basis neighborhood `B_ε(σ)` for the Bridgeland topology on `Stab_v(D)`. -/
 def basisNhd {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v) (ε : ℝ) :
     Set (StabilityCondition.WithClassMap C v) :=
   {τ | stabSeminorm C σ (τ.Z - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)) ∧
        slicingDist C σ.slicing τ.slicing < ENNReal.ofReal ε}
+
 /-- The Bridgeland topology on `Stab_v(D)`, generated by the basis neighborhoods
 `B_ε(σ)` for all stability conditions `σ` and all `ε ∈ (0, 1/8)`.
 
@@ -448,13 +489,16 @@ instance StabilityCondition.WithClassMap.topologicalSpace {v : K₀ C →+ Λ} :
   TopologicalSpace.generateFrom
     {U | ∃ (σ : StabilityCondition.WithClassMap C v) (ε : ℝ), 0 < ε ∧ ε < 1 / 8 ∧
       U = basisNhd C σ ε}
+
 namespace StabilityCondition.WithClassMap
 /-- The connected-component index set for `Stab_v(D)`. -/
 abbrev ComponentIndex (v : K₀ C →+ Λ) :=
   _root_.ConnectedComponents (StabilityCondition.WithClassMap C v)
+
 /-- The type of `v`-relative stability conditions in a fixed connected component. -/
 abbrev Component (v : K₀ C →+ Λ) (cc : StabilityCondition.WithClassMap.ComponentIndex C v) :=
   {σ : StabilityCondition.WithClassMap C v // _root_.ConnectedComponents.mk σ = cc}
+
 end StabilityCondition.WithClassMap
 end CategoryTheory.Triangulated
 
@@ -475,10 +519,12 @@ class IsFiniteType [Linear k C] : Prop where
   finite_dim : ∀ (E F : C), Module.Finite k (E ⟶ F)
   /-- For each pair of objects, only finitely many shifted Hom spaces are nontrivial. -/
   finite_support : ∀ (E F : C), Set.Finite {n : ℤ | Nontrivial (E ⟶ (shiftFunctor C n).obj F)}
+
 /-- The Euler form on objects: `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])`.
 This is defined as a finitely-supported sum using `finsum`. -/
 def eulerFormObj [Linear k C] (E F : C) : ℤ :=
   ∑ᶠ n : ℤ, (n.negOnePow : ℤ) * (Module.finrank k (E ⟶ (shiftFunctor C n).obj F) : ℤ)
+
 end CategoryTheory.Triangulated
 
 -- ═══ EulerForm.Basic ═══
@@ -494,51 +540,61 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 section EulerTriangleAdditivity
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F)  := sorry
+
 end EulerTriangleAdditivity
 /-- For fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism `K₀ C →+ ℤ`
 using the universal property of `K₀`. -/
 def eulerFormInner (E : C) : K₀ C →+ ℤ := by
   letI := eulerFormObj_contravariant_triangleAdditive (k := k) (C := C) E
   exact K₀.lift C (fun F ↦ eulerFormObj k C E F)
+
 /-- The outer function `E ↦ eulerFormInner E` is triangle-additive, so the Euler
 form descends to a bilinear form on `K₀`. -/
 instance eulerFormInner_isTriangleAdditive
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (eulerFormInner k C)  := sorry
+
 /-- The Euler form on `K₀`, obtained by applying the universal property of `K₀`
 twice to `eulerFormObj`. -/
 def eulerForm [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ K₀ C →+ ℤ :=
   K₀.lift C (eulerFormInner k C)
+
 /-- The left radical of the Euler form on `K₀ C`. -/
 def eulerFormRad [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddSubgroup (K₀ C) :=
   (eulerForm k C).ker
+
 /-- The numerical Grothendieck group attached to the Euler form on `K₀`. -/
 def NumericalK₀ [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
     Type _ :=
   K₀ C ⧸ eulerFormRad k C
+
 /-- The `AddCommGroup` instance on `NumericalK₀ k C`. -/
 instance NumericalK₀.instAddCommGroup [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddCommGroup (NumericalK₀ k C) :=
   inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad k C))
+
 /-- The quotient map `K₀(C) → N(C)`. -/
 abbrev numericalQuotientMap [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ NumericalK₀ k C :=
   QuotientAddGroup.mk' (eulerFormRad k C)
+
 /-- The category `C` is numerically finite if the numerical Grothendieck group attached to the
 Euler form is finitely generated as an abelian group. -/
 class NumericallyFinite [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k] : Prop where
   /-- The Euler-form numerical Grothendieck group is finitely generated. -/
   fg : AddGroup.FG (NumericalK₀ k C)
+
 /-- A connected component of numerical stability conditions. -/
 abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
   StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
+
 end CategoryTheory.Triangulated
 
 -- ═══ NumericalStabilityManifold ═══
@@ -570,5 +626,6 @@ theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
       (_ : ChartedSpace E (NumericalComponent (k := k) C cc)),
       IsManifold (𝓘(ℂ, E)) (⊤ : WithTop ℕ∞)
         (NumericalComponent (k := k) C cc)  := sorry
+
 end CategoryTheory.Triangulated
 
