@@ -18,8 +18,8 @@ artifact:
   license: "Apache-2.0"
   organization: "independent"
   funding:
-    - "Renaissance Philanthropy AI for Math"
-    - "OpenAI"
+    - "Renaissance Philanthropy"  # AI for Math fund
+    - "OpenAI"                    # Free year of ChatGPT Pro
   contribution_target: "mathlib"
   maintenance: "active"
 
