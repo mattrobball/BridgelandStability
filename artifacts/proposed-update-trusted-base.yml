@@ -1,0 +1,146 @@
+name: Update Trusted Formalization Base
+
+# Regenerates artifacts/trusted_base.lean whenever the comparator target's
+# trusted formalization base (TFB) may have changed.
+#
+# On PRs   : auto-commits the regenerated artifact back to the PR branch.
+# Nightly  : opens an issue if the committed artifact is stale.
+#
+# This job is intentionally independent of ci.yml so that a stale artifact
+# never blocks unrelated PRs.
+
+on:
+  pull_request:
+    paths:
+      - 'BridgelandStability/**/*.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+# ─── Constants ───────────────────────────────────────────────────────────────
+env:
+  # The comparator target declaration (from comparator.json)
+  TFB_TARGET: >-
+    CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
+  TFB_OUTPUT: artifacts/trusted_base.lean
+
+jobs:
+  regenerate:
+    name: Regenerate trusted_base.lean
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the actual PR branch (not the merge commit) so we can push
+      # back; fall back to the triggering ref for schedule / manual runs.
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BASELINE_PAT || github.token }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Restore olean cache
+        uses: actions/cache@v4
+        with:
+          path: .lake/build
+          key: oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('BridgelandStability/**/*.lean') }}
+          restore-keys: |
+            oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Build BridgelandStability
+        run: lake build BridgelandStability
+
+      # Regenerate the self-contained sorry-skeleton Lean file for the TFB.
+      # The exact lake executable name comes from mattrobball/lean-informal —
+      # update if the command was renamed upstream.
+      - name: Regenerate ${{ env.TFB_OUTPUT }}
+        run: |
+          mkdir -p artifacts
+          lake exe tfb_skeleton \
+            BridgelandStability \
+            "${{ env.TFB_TARGET }}" \
+            "${{ env.TFB_OUTPUT }}"
+
+      - name: Detect changes
+        id: diff
+        run: |
+          git add "${{ env.TFB_OUTPUT }}"
+          if git diff --staged --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "${{ env.TFB_OUTPUT }} is up to date"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "${{ env.TFB_OUTPUT }} has changed:"
+            git diff --staged --stat
+          fi
+
+      # ── PR path: auto-commit the regenerated artifact ─────────────────────
+      - name: Commit and push updated artifact
+        if: steps.diff.outputs.changed == 'true' && github.event_name == 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: regenerate ${{ env.TFB_OUTPUT }}"
+          git push
+
+      # ── Nightly path: open an issue if the artifact is stale ──────────────
+      - name: Check for existing drift issue
+        if: steps.diff.outputs.changed == 'true' && github.event_name == 'schedule'
+        id: existing-issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          existing=$(gh issue list \
+            --repo "${{ github.repository }}" \
+            --state open \
+            --search "in:title \"trusted_base.lean is stale\"" \
+            --json number --jq 'first(.[] | .number) // ""')
+          echo "number=${existing}" >> "$GITHUB_OUTPUT"
+
+      - name: Open drift issue
+        if: >-
+          steps.diff.outputs.changed == 'true' &&
+          github.event_name == 'schedule' &&
+          steps.existing-issue.outputs.number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "CI: trusted_base.lean is stale (nightly drift)" \
+            --body "The nightly CI detected that \`${{ env.TFB_OUTPUT }}\` does not match the current TFB.
+
+          To regenerate, run:
+          \`\`\`bash
+          lake exe tfb_skeleton BridgelandStability \\
+            ${{ env.TFB_TARGET }} \\
+            ${{ env.TFB_OUTPUT }}
+          \`\`\`
+          Then commit the result.
+
+          *Generated by the nightly [Update Trusted Formalization Base](https://github.com/${{ github.repository }}/actions/workflows/update-trusted-base.yml) workflow.*"
+
+      # Fail so drift is visible in the Actions tab (nightly and manual runs)
+      - name: Fail if stale (nightly or manual)
+        if: steps.diff.outputs.changed == 'true' && github.event_name != 'pull_request'
+        run: |
+          echo "::error::${{ env.TFB_OUTPUT }} is stale. Run 'lake exe tfb_skeleton' and commit the result."
+          exit 1
