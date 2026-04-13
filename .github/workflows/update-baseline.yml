@@ -50,7 +50,7 @@ jobs:
       - name: Build and extract
         run: |
           lake build BridgelandStability
-          lake build ExtractDecls
+          lake exe extract_decls BridgelandStability extracted.json
 
       - name: Update baseline
         run: |

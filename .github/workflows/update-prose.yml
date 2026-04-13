@@ -44,7 +44,7 @@ jobs:
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
           lake exe cache get
           lake build BridgelandStability
-          lake build ExtractDecls
+          lake exe extract_decls BridgelandStability extracted.json
 
       - name: Merge with existing prose
         run: |

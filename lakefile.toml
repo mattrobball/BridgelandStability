@@ -14,12 +14,8 @@ rev = "v4.29.0"
 [[require]]
 name = "informal"
 git = "https://github.com/mattrobball/lean-informal"
-rev = "main"
+rev = "60476b22686db84ba945573ec41f9cdd6f245297"  # feat/extract-decls-exe (lean-informal#1)
 
 [[lean_lib]]
 name = "BridgelandStability"
 srcDir = "."
-
-[[lean_lib]]
-name = "ExtractDecls"
-srcDir = "scripts/lean"
