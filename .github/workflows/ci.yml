@@ -82,7 +82,7 @@ jobs:
         run: lake exe cache get
 
       - name: Extract declarations
-        run: lake build ExtractDecls
+        run: lake exe extract_decls BridgelandStability extracted.json
 
       - name: Check informal drift
         id: check
