@@ -11,12 +11,20 @@ name: Update Trusted Formalization Base
 # Manual        : workflow_dispatch uses the same regenerate + auto-PR path.
 
 on:
+  # pull_request.paths also watches this workflow file and the artifact
+  # itself, so (a) edits to the workflow self-smoke on their own PR, and
+  # (b) hand-editing artifacts/trusted_base.lean in isolation cannot
+  # bypass the drift check. push.paths intentionally stays narrower so
+  # that the auto-PR merge (which only touches the artifact) does not
+  # re-trigger this workflow.
   pull_request:
     paths:
       - 'BridgelandStability/**/*.lean'
       - 'lakefile.toml'
       - 'lean-toolchain'
       - 'lake-manifest.json'
+      - 'artifacts/trusted_base.lean'
+      - '.github/workflows/update-trusted-base.yml'
   push:
     branches: [main]
     paths:
@@ -42,7 +50,12 @@ env:
 jobs:
   regenerate:
     name: Regenerate trusted_base.lean
+    # workflow_dispatch is main-only: dispatching from a feature branch would
+    # regenerate the artifact from that branch's source and still open an
+    # auto-PR against main, which would be wrong.
+    if: github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
