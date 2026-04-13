@@ -96,7 +96,6 @@ jobs:
         run: |
           lake env "$EXPOSITION_BIN" \
             --root BridgelandStability \
-            --exclude-lib CheckInformal \
             --exclude-lib ExtractDecls \
             --repo-url "https://github.com/${{ github.repository }}" \
             --comparator-config comparator.json \
