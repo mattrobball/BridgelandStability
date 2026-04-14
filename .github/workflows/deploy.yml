@@ -239,6 +239,38 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  # ── Build Coverage & Fidelity dashboard ────────────────────────
+  build-dashboard:
+    name: Build Dashboard
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate dashboard
+        run: |
+          python3 scripts/generate_dashboard.py \
+            --data artifacts/coverage-data.json \
+            --informalizations informalizations.json \
+            --output dashboard-out \
+            --repo-url "https://github.com/${{ github.repository }}" \
+            --branch main
+
+      - name: Upload dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard
+          path: dashboard-out
+          if-no-files-found: error
+          retention-days: 7
+
   # ── Deploy to GitHub Pages ─────────────────────────────────────
   deploy:
     name: Deploy Pages
@@ -248,7 +280,7 @@ jobs:
     if: >-
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
       || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
-    needs: [generate-manual, build-site, build-api-docs]
+    needs: [generate-manual, build-site, build-api-docs, build-dashboard]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -272,6 +304,13 @@ jobs:
         with:
           name: api-docs
           path: site/api
+        continue-on-error: true
+
+      - name: Download dashboard
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard
+          path: site/dashboard
         continue-on-error: true
 
       - name: Download badge

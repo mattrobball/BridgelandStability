@@ -1,0 +1,402 @@
+{
+  "_meta": {
+    "description": "Dashboard data: per-declaration coverage of Bridgeland (2007), math/0212237. Sourced from artifacts/informal-audit.md and informalizations.json. Edit this file to update the dashboard.",
+    "paper_title": "Stability conditions on triangulated categories",
+    "paper_author": "Tom Bridgeland",
+    "paper_year": 2007,
+    "paper_arxiv": "math/0212237",
+    "paper_url": "https://arxiv.org/abs/math/0212237",
+    "repo": "mattrobball/BridgelandStability",
+    "status_legend": {
+      "complete": "A faithful formalization: the Lean statement matches the paper statement, and it is proved in Lean.",
+      "generalized": "Proved in Lean under a strictly more general setup than the paper (e.g. class-map parametrization, weaker-than-paper hypothesis).",
+      "stronger_hyp": "Proved in Lean, but under strictly stronger hypotheses than the paper's statement.",
+      "partial": "Some directions or sub-parts are proved; other important parts are still missing.",
+      "statement_only": "The Lean declaration encodes the paper statement but contains no proof (the proof may live elsewhere or may not yet exist).",
+      "missing": "Not yet formalized in the repository."
+    }
+  },
+  "sections": [
+    {
+      "section": "1",
+      "title": "Main results",
+      "blurb": "Bridgeland's headline theorems describe the structure of the space of stability conditions on a triangulated category."
+    },
+    {
+      "section": "2",
+      "title": "Stability functions on abelian categories",
+      "blurb": "Phase-valued functions on an abelian category, together with the Harder\u2013Narasimhan property."
+    },
+    {
+      "section": "3",
+      "title": "Slicings of triangulated categories",
+      "blurb": "Compatible full subcategories indexed by the real line, giving an abstract notion of Harder\u2013Narasimhan filtration in the triangulated setting."
+    },
+    {
+      "section": "4",
+      "title": "Quasi-abelian categories",
+      "blurb": "Additive subcategories P((a,b)) of slicings are quasi-abelian; strict short exact sequences correspond to distinguished triangles."
+    },
+    {
+      "section": "5",
+      "title": "Stability conditions on triangulated categories",
+      "blurb": "A stability condition is a slicing plus a compatible central charge; equivalently, a t-structure whose heart carries a stability function with HN property."
+    },
+    {
+      "section": "6",
+      "title": "The space of stability conditions",
+      "blurb": "A topology on the set of locally finite stability conditions, and the proof that forgetting the slicing is a local homeomorphism onto its image."
+    },
+    {
+      "section": "7",
+      "title": "Deformation of stability conditions",
+      "blurb": "Small perturbations of the central charge can be lifted to genuine stability conditions under local finiteness."
+    },
+    {
+      "section": "8",
+      "title": "A generalized metric on the space of stability conditions",
+      "blurb": "A left-invariant metric measuring the distance between two stability conditions via phases and masses."
+    },
+    {
+      "section": "9",
+      "title": "The wall and chamber structure",
+      "blurb": "The locally finite stratification of the stability manifold by walls and chambers."
+    }
+  ],
+  "entries": [
+    {
+      "id": "Thm 1.2",
+      "section": "1",
+      "kind": "theorem",
+      "title": "Local homeomorphism onto the central charge",
+      "headline": true,
+      "status": "complete",
+      "summary": "On each connected component of the space of locally finite stability conditions, the forgetful map that sends a stability condition to its central charge is a local homeomorphism onto a linear subspace of Hom(K(D), \u2102).",
+      "lean_decl": "CategoryTheory.Triangulated.centralChargeIsLocalHomeomorphOnConnectedComponents",
+      "lean_module": "BridgelandStability.Stab.LocalHomeomorphism",
+      "note": null
+    },
+    {
+      "id": "Cor 1.3",
+      "section": "1",
+      "kind": "corollary",
+      "title": "Numerical stability manifold",
+      "headline": true,
+      "status": "complete",
+      "summary": "Each connected component of the space of numerical stability conditions carries the structure of a finite-dimensional complex manifold, modelled on a linear subspace of Hom(N(D), \u2102).",
+      "lean_decl": "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent",
+      "lean_module": "BridgelandStability.NumericalStabilityManifold",
+      "note": "A more general class-map variant (WithClassMap.existsComplexManifoldOnConnectedComponent) gives only the complex manifold consequence without the full local-homeomorphism + manifold package."
+    },
+    {
+      "id": "Def 2.1",
+      "section": "2",
+      "kind": "definition",
+      "title": "Stability function",
+      "status": "complete",
+      "summary": "A group homomorphism Z : K(\ud835\udc9c) \u2192 \u2102 sending every nonzero object of an abelian category to the strict upper half plane, together with a choice of phase \u03c6(E) \u2208 (0,1].",
+      "lean_decl": "CategoryTheory.StabilityFunction",
+      "lean_module": "BridgelandStability.StabilityFunction",
+      "note": null
+    },
+    {
+      "id": "Def 2.2",
+      "section": "2",
+      "kind": "definition",
+      "title": "Semistable object",
+      "status": "complete",
+      "summary": "A nonzero object E is semistable with respect to a stability function Z if every nonzero strict subobject A \u21aa E satisfies \u03c6(A) \u2264 \u03c6(E).",
+      "lean_decl": "CategoryTheory.StabilityFunction.IsSemistable",
+      "lean_module": "BridgelandStability.StabilityFunction",
+      "note": null
+    },
+    {
+      "id": "Def 2.3",
+      "section": "2",
+      "kind": "definition",
+      "title": "Harder\u2013Narasimhan filtration",
+      "status": "complete",
+      "summary": "A finite filtration 0 = E\u2080 \u2282 E\u2081 \u2282 \u2026 \u2282 E\u2099 = E of an object by subobjects whose successive quotients are semistable with strictly decreasing phases.",
+      "lean_decl": "CategoryTheory.AbelianHNFiltration",
+      "lean_module": "BridgelandStability.StabilityFunction.HarderNarasimhan",
+      "note": "The predicate \u201cevery object admits an HN filtration\u201d is captured by CategoryTheory.StabilityFunction.HasHNProperty."
+    },
+    {
+      "id": "Prop 2.4",
+      "section": "2",
+      "kind": "proposition",
+      "title": "Existence of HN filtrations",
+      "status": "stronger_hyp",
+      "summary": "A stability function on an abelian category admits HN filtrations whenever a suitable chain condition holds on subobjects and quotient objects, phrased in terms of phase-monotone chains.",
+      "lean_decl": "CategoryTheory.StabilityFunction.hasHN_of_finiteLength",
+      "lean_module": "BridgelandStability.StabilityFunction.HarderNarasimhan",
+      "note": "The paper uses phase-ordered chain conditions (no infinite subobject chains of strictly increasing phase, no infinite quotient chains of strictly decreasing phase). The Lean proof assumes every object has a finite subobject lattice \u2014 strictly stronger, and it excludes e.g. coherent sheaves on curves, which do satisfy the paper's hypothesis. A faithful version would need custom predicates for the phase-ordered chain conditions."
+    },
+    {
+      "id": "Lemma 3.2",
+      "section": "3",
+      "kind": "lemma",
+      "title": "Triangulated HN compatibility",
+      "status": "missing",
+      "summary": "A technical lemma packaging how HN filtrations interact with shifts in the triangulated category \u2014 used in the proof that slicings induce bounded t-structures.",
+      "lean_decl": null,
+      "lean_module": null,
+      "note": "Not yet formalized."
+    },
+    {
+      "id": "Def 3.3",
+      "section": "3",
+      "kind": "definition",
+      "title": "Slicing of a triangulated category",
+      "status": "complete",
+      "summary": "A collection of full additive subcategories P(\u03c6), one for each real number \u03c6, satisfying compatibility with shift, Hom-vanishing between subcategories of strictly decreasing phase, and existence of HN decompositions for every nonzero object.",
+      "lean_decl": "CategoryTheory.Triangulated.Slicing",
+      "lean_module": "BridgelandStability.Slicing.Defs",
+      "note": null
+    },
+    {
+      "id": "Lemma 3.4",
+      "section": "3",
+      "kind": "lemma",
+      "title": "Phase bounds from distinguished triangles",
+      "status": "partial",
+      "summary": "Given a distinguished triangle A \u2192 E \u2192 B \u2192 A[1] in a slicing, the maximum and minimum phases of E are bounded by those of A and B.",
+      "lean_decl": "CategoryTheory.Triangulated.Slicing.phiPlus_triangle_le",
+      "lean_module": "BridgelandStability.Slicing.ExtensionClosure",
+      "note": "Two of the four expected inequalities are proved \u2014 \u03c6\u207a(A) \u2264 \u03c6\u207a(E) and \u03c6\u207b(E) \u2264 \u03c6\u207b(B). The symmetric pair \u03c6\u207a(E) \u2264 \u03c6\u207a(B) and \u03c6\u207b(A) \u2264 \u03c6\u207b(E) is still missing."
+    },
+    {
+      "id": "Def 4.1",
+      "section": "4",
+      "kind": "definition",
+      "title": "Quasi-abelian category",
+      "status": "complete",
+      "summary": "An additive category with kernels and cokernels in which strict monomorphisms are stable under pushout and strict epimorphisms are stable under pullback.",
+      "lean_decl": "CategoryTheory.QuasiAbelian",
+      "lean_module": "BridgelandStability.QuasiAbelian.Basic",
+      "note": null
+    },
+    {
+      "id": "Lemma 4.2",
+      "section": "4",
+      "kind": "lemma",
+      "title": "Strict short exact sequences from triangles",
+      "status": "missing",
+      "summary": "A structural lemma used in identifying strict short exact sequences in P((a,b)) with distinguished triangles in the ambient triangulated category.",
+      "lean_decl": null,
+      "lean_module": null,
+      "note": "Not yet formalized; a closely related fact is proved inside the Def 4.3 instance, but Lemma 4.2 itself is not broken out."
+    },
+    {
+      "id": "Lemma 4.3",
+      "section": "4",
+      "kind": "lemma",
+      "title": "P((a,b)) is quasi-abelian",
+      "status": "complete",
+      "summary": "Given a slicing P and an interval (a,b) of length less than 1, the full subcategory P((a,b)) is quasi-abelian and its strict short exact sequences are exactly the distinguished triangles of the ambient category.",
+      "lean_decl": "CategoryTheory.Triangulated.Slicing.IntervalCat",
+      "lean_module": "BridgelandStability.IntervalCategory.FiniteLength",
+      "note": "Formalized as an instance on IntervalCat together with the strict-SES\u2194triangle equivalence; not yet tagged @[informal]."
+    },
+    {
+      "id": "Def 4.4",
+      "section": "4",
+      "kind": "definition",
+      "title": "Skewed stability function",
+      "status": "partial",
+      "summary": "A stability function whose central charge has an additional rotation parameter \u03b1, used to compare two nearby stability conditions on the same heart.",
+      "lean_decl": "CategoryTheory.Triangulated.SkewedStabilityFunction",
+      "lean_module": "BridgelandStability.Deformation.SkewedStabilityFunction",
+      "note": "The Lean structure packages the data (W, \u03b1) and requires nonvanishing on \u03c3-semistable objects only. Definition 4.4 in the paper requires every nonzero object to land in a strict half-plane \u2014 strictly stronger."
+    },
+    {
+      "id": "Def 5.1",
+      "section": "5",
+      "kind": "definition",
+      "title": "Stability condition",
+      "headline": true,
+      "status": "complete",
+      "summary": "A stability condition on a triangulated category \ud835\udc9f is a slicing together with a compatible central charge Z : K(\ud835\udc9f) \u2192 \u2102, i.e. for every semistable object E of phase \u03c6 one has Z(E) \u2208 \u211d\u208a \u00b7 exp(i\u03c0\u03c6).",
+      "lean_decl": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
+      "lean_module": "BridgelandStability.StabilityCondition.Defs",
+      "note": "Formalized in the class-map variant, which is strictly more general than the paper's K-theoretic statement and specializes back to it."
+    },
+    {
+      "id": "Lemma 5.2",
+      "section": "5",
+      "kind": "lemma",
+      "title": "Heart of a stability condition is abelian",
+      "status": "complete",
+      "summary": "The full subcategory P((0,1]) cut out by a stability condition is the heart of a bounded t-structure and therefore an abelian category.",
+      "lean_decl": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.P_phi_abelian",
+      "lean_module": "BridgelandStability.Deformation.IntervalAbelian",
+      "note": null
+    },
+    {
+      "id": "Prop 5.3",
+      "section": "5",
+      "kind": "proposition",
+      "title": "Stability conditions \u2194 stability functions on hearts",
+      "status": "partial",
+      "summary": "Giving a stability condition on a triangulated category is equivalent to giving a bounded t-structure on it whose heart carries a stability function with the Harder\u2013Narasimhan property.",
+      "lean_decl": "CategoryTheory.Triangulated.StabilityCondition.toHeartStabilityData",
+      "lean_module": "BridgelandStability.HeartEquivalence.Reverse",
+      "note": "The forward direction (stability condition \u2192 heart stability data) is complete. The reverse direction (HeartStabilityData.toPhasePackage) currently constructs the slicing with shift compatibility and Hom-vanishing, but still needs the central charge construction and the HN existence proof to assemble a full StabilityCondition."
+    },
+    {
+      "id": "Def 5.7",
+      "section": "5",
+      "kind": "definition",
+      "title": "Locally finite stability condition",
+      "status": "complete",
+      "summary": "A stability condition is locally finite if every half-open interval of length less than 1 contains only finitely many phases supporting a semistable object, and each resulting quasi-abelian subcategory is of finite length.",
+      "lean_decl": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap",
+      "lean_module": "BridgelandStability.StabilityCondition.Defs",
+      "note": null
+    },
+    {
+      "id": "Lemma 6.1",
+      "section": "6",
+      "kind": "lemma",
+      "title": "Generalized metric on slicings",
+      "status": "partial",
+      "summary": "The space of slicings carries a left-invariant generalized metric measuring how far one slicing has to be rotated and stretched to contain another.",
+      "lean_decl": "CategoryTheory.Triangulated.instPseudoEMetricSpaceSlicing",
+      "lean_module": "BridgelandStability.Slicing.Defs",
+      "note": "The Lean instance provides a pseudo-extended-metric space using the supremum of phase differences. The paper defines the distance as the infimum of containment radii. The two formulations are equivalent, but that equivalence is not yet proved in Lean \u2014 hence no separation (d = 0 \u2192 P = Q) and no upgrade to a generalized metric."
+    },
+    {
+      "id": "Lemma 6.2",
+      "section": "6",
+      "kind": "lemma",
+      "title": "Seminorm domination on connected patches",
+      "status": "partial",
+      "summary": "On a connected patch of stability conditions that share the same finite set of phases, the stability seminorm is dominated by the sup-norm on Hom(K(\ud835\udc9f), \u2102).",
+      "lean_decl": "CategoryTheory.Triangulated.stabSeminorm_dominated_of_connected",
+      "lean_module": "BridgelandStability.StabilityCondition.Seminorm",
+      "note": "One direction of the equivalence is proved; the reverse direction (for a full two-sided domination) is formalized only for specific setups and not yet in full generality."
+    },
+    {
+      "id": "Prop 6.3",
+      "section": "6",
+      "kind": "proposition",
+      "title": "Local linear model around a stability condition",
+      "status": "complete",
+      "summary": "Near any locally finite stability condition \u03c3, the central-charge map has a local section into the component topology, giving a linear local model for the space of stability conditions.",
+      "lean_decl": "CategoryTheory.Triangulated.componentTopologicalLinearLocalModel",
+      "lean_module": "BridgelandStability.Stab.LocalHomeomorphism",
+      "note": "This is the key technical proposition on which Theorem 1.2 directly rests."
+    },
+    {
+      "id": "Lemma 6.4",
+      "section": "6",
+      "kind": "lemma",
+      "title": "Stability conditions with equal central charge nearby",
+      "status": "complete",
+      "summary": "If two stability conditions are close enough in the stability seminorm and have the same central charge, then they are equal.",
+      "lean_decl": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.eq_of_same_Z_near",
+      "lean_module": "BridgelandStability.Deformation.Deformation",
+      "note": null
+    },
+    {
+      "id": "Thm 7.1",
+      "section": "7",
+      "kind": "theorem",
+      "title": "Deformation of stability conditions",
+      "headline": true,
+      "status": "generalized",
+      "summary": "Starting from a locally finite stability condition \u03c3, any small perturbation of its central charge can be lifted uniquely to a genuine stability condition close to \u03c3.",
+      "lean_decl": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.deformation",
+      "lean_module": "BridgelandStability.Deformation.Deformation",
+      "note": "The Lean statement takes the neighbourhood radius \u03b5\u2080 as an explicit parameter. The paper's Theorem 7.1 instead produces \u03b5\u2080 existentially from local finiteness. The existing proof is strictly stronger in the sense that it covers every valid \u03b5\u2080, so recovering the paper statement is a packaging step."
+    },
+    {
+      "id": "Lemma 7.3",
+      "section": "7",
+      "kind": "lemma",
+      "title": "Phase confinement from seminorm control",
+      "status": "complete",
+      "summary": "If the stability seminorm of a perturbation is small, every \u03c3-semistable object of phase near \u03c8 remains concentrated in a thin interval of phases around \u03c8 in the perturbed slicing.",
+      "lean_decl": "CategoryTheory.Triangulated.phase_confinement_from_stabSeminorm",
+      "lean_module": "BridgelandStability.Deformation.TargetEnvelope",
+      "note": null
+    },
+    {
+      "id": "Def 7.4",
+      "section": "7",
+      "kind": "definition",
+      "title": "Envelope of semistable objects",
+      "status": "missing",
+      "summary": "A convenient packaging of the Section 7 setup that names the collection of objects whose HN filtration is controlled by a target envelope.",
+      "lean_decl": null,
+      "lean_module": null,
+      "note": "The underlying mathematics is used in the Section 7 proofs, but no standalone Lean predicate yet names \u201cDefinition 7.4\u201d."
+    },
+    {
+      "id": "Lemma 7.5",
+      "section": "7",
+      "kind": "lemma",
+      "title": "Semistability is transferred along envelopes",
+      "status": "complete",
+      "summary": "If an object E is enveloped by objects B and C, then E is W-semistable in B if and only if it is W-semistable in C \u2014 semistability is a property of the envelope, not of the ambient slicing.",
+      "lean_decl": "CategoryTheory.Triangulated.semistable_of_target_envelope",
+      "lean_module": "BridgelandStability.Deformation.StrictShortExactSequence",
+      "note": "Proved as a one-direction statement; the reverse direction follows by symmetry."
+    },
+    {
+      "id": "Lemma 7.6",
+      "section": "7",
+      "kind": "lemma",
+      "title": "Hom-vanishing from strict phase separation",
+      "status": "complete",
+      "summary": "Given two objects E \u2208 Q(\u03c8\u2081) and F \u2208 Q(\u03c8\u2082) in the deformed slicing with \u03c8\u2081 > \u03c8\u2082, every morphism E \u2192 F vanishes.",
+      "lean_decl": "CategoryTheory.Triangulated.hom_eq_zero_of_deformedPred",
+      "lean_module": "BridgelandStability.Deformation.HomVanishing",
+      "note": null
+    },
+    {
+      "id": "Lemma 7.7",
+      "section": "7",
+      "kind": "lemma",
+      "title": "HN filtrations inside a target envelope",
+      "status": "complete",
+      "summary": "Every object in the interior of a thin, finite-length target envelope admits a W-semistable HN filtration whose factors are themselves enveloped by the same envelope.",
+      "lean_decl": "CategoryTheory.Triangulated.interior_has_enveloped_HN",
+      "lean_module": "BridgelandStability.Deformation.HNExistence",
+      "note": null
+    },
+    {
+      "id": "Prop 8.1",
+      "section": "8",
+      "kind": "proposition",
+      "title": "Generalized metric on stability conditions",
+      "status": "partial",
+      "summary": "The space of locally finite stability conditions carries a generalized metric combining the distance on slicings with a mass-ratio term on central charges.",
+      "lean_decl": "CategoryTheory.Triangulated.slicingDist",
+      "lean_module": "BridgelandStability.Deformation.Defs",
+      "note": "Only the slicing part of the metric is formalized (as a pseudo-extended-metric). The mass-ratio term that makes Proposition 8.1 a genuine left-invariant metric on stability conditions is still missing."
+    },
+    {
+      "id": "Lemma 8.2",
+      "section": "8",
+      "kind": "lemma",
+      "title": "Triangle inequality for the stability metric",
+      "status": "missing",
+      "summary": "The combined slicing-plus-mass metric of Proposition 8.1 satisfies the triangle inequality and is left-invariant under the action of autoequivalences.",
+      "lean_decl": null,
+      "lean_module": null,
+      "note": "Not yet formalized \u2014 waits on the missing mass-ratio term of Proposition 8.1."
+    },
+    {
+      "id": "Thm 9.1",
+      "section": "9",
+      "kind": "theorem",
+      "title": "Wall and chamber structure",
+      "status": "missing",
+      "summary": "The space of stability conditions on a triangulated category of finite type is locally stratified by a countable collection of real codimension-one walls, and on each chamber the HN filtration data is constant.",
+      "lean_decl": null,
+      "lean_module": null,
+      "note": "Not yet formalized."
+    }
+  ]
+}

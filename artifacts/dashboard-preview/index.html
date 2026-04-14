@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coverage &amp; Fidelity &mdash; BridgelandStability</title>
+<meta name="description" content="Mathematician-facing coverage dashboard for the BridgelandStability Lean 4 formalization.">
+<style>
+:root {
+  --bg:            #fbf9f4;
+  --bg-soft:       #f5f1e6;
+  --surface:       #ffffff;
+  --rule:          #e7e0cd;
+  --rule-strong:   #d5cdb4;
+  --text:          #23232a;
+  --muted:         #6e6a60;
+  --dim:           #948f82;
+  --accent:        #39486b;
+  --math:          #5b4a85;
+  --link:          #2e4c7a;
+  --link-hover:    #1c3358;
+  --shadow:        0 1px 0 rgba(30,25,10,0.04), 0 1px 3px rgba(30,25,10,0.06);
+  --shadow-strong: 0 2px 8px rgba(30,25,10,0.08);
+  --radius:        6px;
+
+  /* status palette: muted, earthy, paper-friendly */
+  --s-complete-bg:       #e6efdd;
+  --s-complete-fg:       #2c5a36;
+  --s-complete-ring:     #b4cd9b;
+
+  --s-generalized-bg:    #dcece9;
+  --s-generalized-fg:    #215a5c;
+  --s-generalized-ring:  #9bc4c0;
+
+  --s-stronger-bg:       #f4e6c8;
+  --s-stronger-fg:       #73491b;
+  --s-stronger-ring:     #dbc088;
+
+  --s-partial-bg:        #f6e1cd;
+  --s-partial-fg:        #743910;
+  --s-partial-ring:      #e2b185;
+
+  --s-statement-bg:      #dfe4ef;
+  --s-statement-fg:      #384266;
+  --s-statement-ring:    #a6b0cd;
+
+  --s-missing-bg:        #efd9d5;
+  --s-missing-fg:        #723733;
+  --s-missing-ring:      #cf9c95;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(46, 76, 122, 0.25);
+  transition: border-color 120ms ease, color 120ms ease;
+}
+a:hover {
+  color: var(--link-hover);
+  border-bottom-color: currentColor;
+}
+
+/* ── Page chrome ───────────────────────────────────────────────── */
+
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 48px 32px 96px;
+}
+
+header.masthead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: end;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule-strong);
+  margin-bottom: 40px;
+}
+header.masthead .title {
+  font-family: "Iowan Old Style", "Charter", "Georgia", "Times New Roman", serif;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: #1a1a20;
+}
+header.masthead .subtitle {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 54ch;
+}
+header.masthead .paper-ref {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: right;
+  max-width: 22ch;
+  line-height: 1.4;
+}
+header.masthead .paper-ref a { color: var(--muted); border-bottom-color: rgba(110,106,96,0.3); }
+header.masthead .paper-ref a:hover { color: var(--link-hover); }
+
+/* ── Introduction ──────────────────────────────────────────────── */
+
+.intro {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 17.5px;
+  line-height: 1.65;
+  color: #2c2c32;
+  max-width: 66ch;
+  margin: 0 0 36px;
+}
+.intro p { margin: 0 0 14px; }
+.intro .math { color: var(--math); }
+
+/* ── Legend / filters ─────────────────────────────────────────── */
+
+.legend {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 22px 20px;
+  margin: 0 0 40px;
+}
+.legend h2 {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 120ms ease, border-color 120ms ease, opacity 120ms ease;
+  position: relative;
+}
+.legend-item .count {
+  font-variant-numeric: tabular-nums;
+  color: var(--dim);
+  font-size: 12.5px;
+}
+.legend-item[aria-pressed="false"] { opacity: 0.45; }
+.legend-item:hover { background: var(--bg-soft); }
+
+/* Legend hover tooltip explaining each status. */
+.legend-item .defn {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  width: 290px;
+  background: #2a2a30;
+  color: #f6f3ea;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  box-shadow: var(--shadow-strong);
+  z-index: 20;
+}
+.legend-item:hover .defn,
+.legend-item:focus-visible .defn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Status chip (shared) ─────────────────────────────────────── */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.chip .glyph { font-size: 10px; line-height: 1; }
+
+.chip.s-complete       { background: var(--s-complete-bg);    color: var(--s-complete-fg);    border-color: var(--s-complete-ring); }
+.chip.s-generalized    { background: var(--s-generalized-bg); color: var(--s-generalized-fg); border-color: var(--s-generalized-ring); }
+.chip.s-stronger_hyp   { background: var(--s-stronger-bg);    color: var(--s-stronger-fg);    border-color: var(--s-stronger-ring); }
+.chip.s-partial        { background: var(--s-partial-bg);     color: var(--s-partial-fg);     border-color: var(--s-partial-ring); }
+.chip.s-statement_only { background: var(--s-statement-bg);   color: var(--s-statement-fg);   border-color: var(--s-statement-ring); }
+.chip.s-missing        { background: var(--s-missing-bg);     color: var(--s-missing-fg);     border-color: var(--s-missing-ring); }
+
+/* ── Sections ─────────────────────────────────────────────────── */
+
+.section {
+  margin: 0 0 44px;
+}
+.section-head {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding-bottom: 10px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+}
+.section-head .sec-num {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 38px;
+  font-weight: 500;
+  color: var(--rule-strong);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: lining-nums;
+}
+.section-head .sec-title {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #1f1f25;
+  letter-spacing: -0.005em;
+}
+.section-head .sec-blurb {
+  color: var(--muted);
+  font-size: 14.5px;
+  max-width: 62ch;
+}
+
+/* ── Entry cards ──────────────────────────────────────────────── */
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-left: 104px;
+}
+.entries::before {
+  /* unused; spacing handled by grid */
+  content: none;
+}
+
+.entry {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 22px;
+  transition: opacity 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+.entry[hidden] { display: none !important; }
+.entry.headline {
+  border-color: var(--rule-strong);
+  box-shadow: var(--shadow-strong);
+}
+.entry.headline::before {
+  content: "Headline result";
+  display: inline-block;
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.entry-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-bottom: 10px;
+}
+.entry-head .paper-id {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  background: var(--bg-soft);
+  border: 1px solid var(--rule);
+  padding: 3px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.entry-head .title {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: #1f1f25;
+  line-height: 1.25;
+  flex: 1 1 auto;
+  min-width: 12ch;
+}
+.entry-head .title .math { color: var(--math); font-style: italic; }
+.entry-head .chip { margin-left: auto; }
+
+.summary {
+  margin: 0 0 10px;
+  color: #31313a;
+  font-size: 15.5px;
+  max-width: 68ch;
+}
+.summary .math { color: var(--math); font-style: italic; }
+
+.note {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: #f9f5ea;
+  border-left: 3px solid var(--rule-strong);
+  border-radius: 0 4px 4px 0;
+  color: #4a4436;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.note .glyph {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  font-size: 14px;
+  padding-top: 1px;
+}
+.note .math { color: var(--math); font-style: italic; }
+
+details.lean {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  border-top: 1px dashed var(--rule);
+  padding-top: 10px;
+}
+details.lean > summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  user-select: none;
+  transition: color 120ms ease;
+}
+details.lean > summary::-webkit-details-marker { display: none; }
+details.lean > summary::before {
+  content: "\25b8";  /* ▸ */
+  display: inline-block;
+  font-size: 10px;
+  transition: transform 120ms ease;
+  color: var(--dim);
+}
+details.lean[open] > summary::before {
+  transform: rotate(90deg);
+}
+details.lean > summary:hover { color: var(--text); }
+details.lean > summary .label {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+.lean-body {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  row-gap: 6px;
+  column-gap: 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.lean-body dt {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-style: italic;
+  color: var(--dim);
+}
+.lean-body dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.lean-body .code {
+  font-family: "SF Mono", "JetBrains Mono", "Menlo", "Consolas", monospace;
+  font-size: 12.5px;
+  color: #2a2a32;
+  background: var(--bg-soft);
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+}
+.lean-body .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 4px;
+}
+.lean-body .links a {
+  font-size: 12.5px;
+}
+
+.missing-body {
+  margin-top: 10px;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--dim);
+}
+
+/* ── Footer ───────────────────────────────────────────────────── */
+
+footer.colophon {
+  margin-top: 64px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+  color: var(--dim);
+  font-size: 12.5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-style: italic;
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .page { padding: 32px 18px 64px; }
+  header.masthead {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  header.masthead .paper-ref { text-align: left; }
+  .section-head {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .section-head .sec-num { text-align: left; font-size: 28px; }
+  .entries { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div>
+      <h1 class="title">Coverage &amp; Fidelity</h1>
+      <p class="subtitle">A per-result map of the <em>BridgelandStability</em> Lean&nbsp;4 formalization &mdash; written for mathematicians, with the Lean hidden behind collapsibles.</p>
+    </div>
+    <div class="paper-ref"><a href="https://arxiv.org/abs/math/0212237" target="_blank" rel="noopener">Stability conditions on triangulated categories</a> &middot; Tom Bridgeland &middot; 2007 &middot; arXiv:math/0212237</div>
+  </header>
+  <section class="intro"><p>This dashboard is a mathematician-facing summary of the <em>BridgelandStability</em> Lean&nbsp;4 formalization. Each row is a numbered declaration from Bridgeland’s paper, stated in natural language, labelled with a clear <em>status</em>, and — when something was formalized — linked to its Lean realization through a collapsible. The intent is that you can read the whole page without ever opening a <span class="math">.lean</span> file.</p><p>The current state: 30 paper declarations tracked &mdash; 17 complete, 1 generalized, 1 stronger hypotheses, 6 partial, 5 not formalized.</p><p>Every status carries a precise meaning; hover the chips in the legend below for definitions. Where the Lean statement departs from the paper’s (stronger hypotheses, a generalization, or a partial proof), you will find a small <em>note</em> under the summary explaining exactly where and why.</p></section>
+  <section class="legend" aria-label="Status legend and filters">
+    <h2>Status &middot; click to filter &middot; hover for definitions</h2>
+    <div class="legend-items" role="group" aria-label="Filter by status"><button type="button" class="legend-item chip s-complete" data-status="complete" aria-pressed="true"><span class="glyph" aria-hidden="true">●</span>Complete<span class="count">(17)</span><span class="defn" role="tooltip">A faithful formalization: the Lean statement matches the paper statement, and it is proved in Lean.</span></button><button type="button" class="legend-item chip s-generalized" data-status="generalized" aria-pressed="true"><span class="glyph" aria-hidden="true">◆</span>Generalized<span class="count">(1)</span><span class="defn" role="tooltip">Proved in Lean under a strictly more general setup than the paper (e.g. class-map parametrization, weaker-than-paper hypothesis).</span></button><button type="button" class="legend-item chip s-stronger_hyp" data-status="stronger_hyp" aria-pressed="true"><span class="glyph" aria-hidden="true">▲</span>Stronger hypotheses<span class="count">(1)</span><span class="defn" role="tooltip">Proved in Lean, but under strictly stronger hypotheses than the paper&#x27;s statement.</span></button><button type="button" class="legend-item chip s-partial" data-status="partial" aria-pressed="true"><span class="glyph" aria-hidden="true">◐</span>Partial<span class="count">(6)</span><span class="defn" role="tooltip">Some directions or sub-parts are proved; other important parts are still missing.</span></button><button type="button" class="legend-item chip s-statement_only" data-status="statement_only" aria-pressed="true"><span class="glyph" aria-hidden="true">○</span>Statement only<span class="count">(0)</span><span class="defn" role="tooltip">The Lean declaration encodes the paper statement but contains no proof (the proof may live elsewhere or may not yet exist).</span></button><button type="button" class="legend-item chip s-missing" data-status="missing" aria-pressed="true"><span class="glyph" aria-hidden="true">×</span>Not formalized<span class="count">(5)</span><span class="defn" role="tooltip">Not yet formalized in the repository.</span></button></div>
+  </section>
+  <section class="section" data-section="1"><header class="section-head"><div class="sec-num">§1</div><div><h2 class="sec-title">Main results</h2><p class="sec-blurb">Bridgeland&#x27;s headline theorems describe the structure of the space of stability conditions on a triangulated category.</p></div></header><div class="entries"><article class="entry headline" data-status="complete" data-id="Thm 1.2"><div class="entry-head">  <span class="paper-id" title="Reference to Theorem in the paper">Thm 1.2</span>  <span class="title">Local homeomorphism onto the central charge</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">On each connected component of the space of locally finite stability conditions, the forgetful map that sends a stability condition to its central charge is a local homeomorphism onto a linear subspace of Hom(K(D), ℂ).</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">centralChargeIsLocalHomeomorphOnConnectedComponents</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.centralChargeIsLocalHomeomorphOnConnectedComponents</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Stab.LocalHomeomorphism</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/LocalHomeomorphism.lean#L646" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.centralChargeIsLocalHomeomorphOnConnectedComponents">API docs</a></span></dd></dl></details></article><article class="entry headline" data-status="complete" data-id="Cor 1.3"><div class="entry-head">  <span class="paper-id" title="Reference to Corollary in the paper">Cor 1.3</span>  <span class="title">Numerical stability manifold</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">Each connected component of the space of numerical stability conditions carries the structure of a finite-dimensional complex manifold, modelled on a linear subspace of Hom(N(D), ℂ).</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>A more general class-map variant (WithClassMap.existsComplexManifoldOnConnectedComponent) gives only the complex manifold consequence without the full local-homeomorphism + manifold package.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">existsComplexManifoldOnConnectedComponent</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.NumericalStabilityManifold</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/Spec.lean#L199" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent">API docs</a></span></dd></dl></details></article></div></section><section class="section" data-section="2"><header class="section-head"><div class="sec-num">§2</div><div><h2 class="sec-title">Stability functions on abelian categories</h2><p class="sec-blurb">Phase-valued functions on an abelian category, together with the Harder–Narasimhan property.</p></div></header><div class="entries"><article class="entry" data-status="complete" data-id="Def 2.1"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 2.1</span>  <span class="title">Stability function</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">A group homomorphism Z : K(𝒜) → ℂ sending every nonzero object of an abelian category to the strict upper half plane, together with a choice of phase φ(E) ∈ (0,1].</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">StabilityFunction</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.StabilityFunction</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.StabilityFunction</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityFunction/Basic.lean#L68" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.StabilityFunction">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Def 2.2"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 2.2</span>  <span class="title">Semistable object</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">A nonzero object E is semistable with respect to a stability function Z if every nonzero strict subobject A ↪ E satisfies φ(A) ≤ φ(E).</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">IsSemistable</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.StabilityFunction.IsSemistable</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.StabilityFunction</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityFunction/Basic.lean#L114" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.StabilityFunction.IsSemistable">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Def 2.3"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 2.3</span>  <span class="title">Harder–Narasimhan filtration</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">A finite filtration 0 = E₀ ⊂ E₁ ⊂ … ⊂ Eₙ = E of an object by subobjects whose successive quotients are semistable with strictly decreasing phases.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>The predicate “every object admits an HN filtration” is captured by CategoryTheory.StabilityFunction.HasHNProperty.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">AbelianHNFiltration</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.AbelianHNFiltration</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.StabilityFunction.HarderNarasimhan</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityFunction/HarderNarasimhan.lean#L38" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.AbelianHNFiltration">API docs</a></span></dd></dl></details></article><article class="entry" data-status="stronger_hyp" data-id="Prop 2.4"><div class="entry-head">  <span class="paper-id" title="Reference to Proposition in the paper">Prop 2.4</span>  <span class="title">Existence of HN filtrations</span>  <span class="chip s-stronger_hyp"><span class="glyph" aria-hidden="true">▲</span>Stronger hypotheses</span></div><p class="summary">A stability function on an abelian category admits HN filtrations whenever a suitable chain condition holds on subobjects and quotient objects, phrased in terms of phase-monotone chains.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>The paper uses phase-ordered chain conditions (no infinite subobject chains of strictly increasing phase, no infinite quotient chains of strictly decreasing phase). The Lean proof assumes every object has a finite subobject lattice — strictly stronger, and it excludes e.g. coherent sheaves on curves, which do satisfy the paper&#x27;s hypothesis. A faithful version would need custom predicates for the phase-ordered chain conditions.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">hasHN_of_finiteLength</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.StabilityFunction.hasHN_of_finiteLength</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.StabilityFunction.HarderNarasimhan</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityFunction/HarderNarasimhan.lean#L467" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.StabilityFunction.hasHN_of_finiteLength">API docs</a></span></dd></dl></details></article></div></section><section class="section" data-section="3"><header class="section-head"><div class="sec-num">§3</div><div><h2 class="sec-title">Slicings of triangulated categories</h2><p class="sec-blurb">Compatible full subcategories indexed by the real line, giving an abstract notion of Harder–Narasimhan filtration in the triangulated setting.</p></div></header><div class="entries"><article class="entry" data-status="missing" data-id="Lemma 3.2"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 3.2</span>  <span class="title">Triangulated HN compatibility</span>  <span class="chip s-missing"><span class="glyph" aria-hidden="true">×</span>Not formalized</span></div><p class="summary">A technical lemma packaging how HN filtrations interact with shifts in the triangulated category — used in the proof that slicings induce bounded t-structures.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Not yet formalized.</div></div><p class="missing-body">No Lean declaration in the repository yet.</p></article><article class="entry" data-status="complete" data-id="Def 3.3"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 3.3</span>  <span class="title">Slicing of a triangulated category</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">A collection of full additive subcategories P(φ), one for each real number φ, satisfying compatibility with shift, Hom-vanishing between subcategories of strictly decreasing phase, and existence of HN decompositions for every nonzero object.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">Slicing</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.Slicing</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Slicing.Defs</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/Slicing/Defs.lean#L75" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.Slicing">API docs</a></span></dd></dl></details></article><article class="entry" data-status="partial" data-id="Lemma 3.4"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 3.4</span>  <span class="title">Phase bounds from distinguished triangles</span>  <span class="chip s-partial"><span class="glyph" aria-hidden="true">◐</span>Partial</span></div><p class="summary">Given a distinguished triangle A → E → B → A[1] in a slicing, the maximum and minimum phases of E are bounded by those of A and B.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Two of the four expected inequalities are proved — φ⁺(A) ≤ φ⁺(E) and φ⁻(E) ≤ φ⁻(B). The symmetric pair φ⁺(E) ≤ φ⁺(B) and φ⁻(A) ≤ φ⁻(E) is still missing.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">phiPlus_triangle_le</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.Slicing.phiPlus_triangle_le</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Slicing.ExtensionClosure</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/Slicing/ExtensionClosure.lean#L320" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.Slicing.phiPlus_triangle_le">API docs</a></span></dd></dl></details></article></div></section><section class="section" data-section="4"><header class="section-head"><div class="sec-num">§4</div><div><h2 class="sec-title">Quasi-abelian categories</h2><p class="sec-blurb">Additive subcategories P((a,b)) of slicings are quasi-abelian; strict short exact sequences correspond to distinguished triangles.</p></div></header><div class="entries"><article class="entry" data-status="complete" data-id="Def 4.1"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 4.1</span>  <span class="title">Quasi-abelian category</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">An additive category with kernels and cokernels in which strict monomorphisms are stable under pushout and strict epimorphisms are stable under pullback.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">QuasiAbelian</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.QuasiAbelian</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.QuasiAbelian.Basic</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/QuasiAbelian/Basic.lean#L275" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.QuasiAbelian">API docs</a></span></dd></dl></details></article><article class="entry" data-status="missing" data-id="Lemma 4.2"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 4.2</span>  <span class="title">Strict short exact sequences from triangles</span>  <span class="chip s-missing"><span class="glyph" aria-hidden="true">×</span>Not formalized</span></div><p class="summary">A structural lemma used in identifying strict short exact sequences in P((a,b)) with distinguished triangles in the ambient triangulated category.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Not yet formalized; a closely related fact is proved inside the Def 4.3 instance, but Lemma 4.2 itself is not broken out.</div></div><p class="missing-body">No Lean declaration in the repository yet.</p></article><article class="entry" data-status="complete" data-id="Lemma 4.3"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 4.3</span>  <span class="title">P((a,b)) is quasi-abelian</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">Given a slicing P and an interval (a,b) of length less than 1, the full subcategory P((a,b)) is quasi-abelian and its strict short exact sequences are exactly the distinguished triangles of the ambient category.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Formalized as an instance on IntervalCat together with the strict-SES↔triangle equivalence; not yet tagged @[informal].</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">IntervalCat</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.Slicing.IntervalCat</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.IntervalCategory.FiniteLength</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/IntervalCategory/Basic.lean#L73" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.Slicing.IntervalCat">API docs</a></span></dd></dl></details></article><article class="entry" data-status="partial" data-id="Def 4.4"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 4.4</span>  <span class="title">Skewed stability function</span>  <span class="chip s-partial"><span class="glyph" aria-hidden="true">◐</span>Partial</span></div><p class="summary">A stability function whose central charge has an additional rotation parameter α, used to compare two nearby stability conditions on the same heart.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>The Lean structure packages the data (W, α) and requires nonvanishing on σ-semistable objects only. Definition 4.4 in the paper requires every nonzero object to land in a strict half-plane — strictly stronger.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">SkewedStabilityFunction</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.SkewedStabilityFunction</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.SkewedStabilityFunction</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/IntervalCategory/FiniteLength.lean#L662" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.SkewedStabilityFunction">API docs</a></span></dd></dl></details></article></div></section><section class="section" data-section="5"><header class="section-head"><div class="sec-num">§5</div><div><h2 class="sec-title">Stability conditions on triangulated categories</h2><p class="sec-blurb">A stability condition is a slicing plus a compatible central charge; equivalently, a t-structure whose heart carries a stability function with HN property.</p></div></header><div class="entries"><article class="entry headline" data-status="complete" data-id="Def 5.1"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 5.1</span>  <span class="title">Stability condition</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">A stability condition on a triangulated category 𝒟 is a slicing together with a compatible central charge Z : K(𝒟) → ℂ, i.e. for every semistable object E of phase φ one has Z(E) ∈ ℝ₊ · exp(iπφ).</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Formalized in the class-map variant, which is strictly more general than the paper&#x27;s K-theoretic statement and specializes back to it.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">WithClassMap</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.StabilityCondition.Defs</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/Defs.lean#L57" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Lemma 5.2"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 5.2</span>  <span class="title">Heart of a stability condition is abelian</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">The full subcategory P((0,1]) cut out by a stability condition is the heart of a bounded t-structure and therefore an abelian category.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">P_phi_abelian</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.StabilityCondition.WithClassMap.P_phi_abelian</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.IntervalAbelian</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/Deformation/IntervalAbelian.lean#L800" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.StabilityCondition.WithClassMap.P_phi_abelian">API docs</a></span></dd></dl></details></article><article class="entry" data-status="partial" data-id="Prop 5.3"><div class="entry-head">  <span class="paper-id" title="Reference to Proposition in the paper">Prop 5.3</span>  <span class="title">Stability conditions ↔ stability functions on hearts</span>  <span class="chip s-partial"><span class="glyph" aria-hidden="true">◐</span>Partial</span></div><p class="summary">Giving a stability condition on a triangulated category is equivalent to giving a bounded t-structure on it whose heart carries a stability function with the Harder–Narasimhan property.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>The forward direction (stability condition → heart stability data) is complete. The reverse direction (HeartStabilityData.toPhasePackage) currently constructs the slicing with shift compatibility and Hom-vanishing, but still needs the central charge construction and the HN existence proof to assemble a full StabilityCondition.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">toHeartStabilityData</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.StabilityCondition.toHeartStabilityData</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.HeartEquivalence.Reverse</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/HeartEquivalence/Reverse.lean#L240" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.StabilityCondition.toHeartStabilityData">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Def 5.7"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 5.7</span>  <span class="title">Locally finite stability condition</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">A stability condition is locally finite if every half-open interval of length less than 1 contains only finitely many phases supporting a semistable object, and each resulting quasi-abelian subcategory is of finite length.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">WithClassMap</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.StabilityCondition.WithClassMap</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.StabilityCondition.Defs</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/Defs.lean#L124" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.StabilityCondition.WithClassMap">API docs</a></span></dd></dl></details></article></div></section><section class="section" data-section="6"><header class="section-head"><div class="sec-num">§6</div><div><h2 class="sec-title">The space of stability conditions</h2><p class="sec-blurb">A topology on the set of locally finite stability conditions, and the proof that forgetting the slicing is a local homeomorphism onto its image.</p></div></header><div class="entries"><article class="entry" data-status="partial" data-id="Lemma 6.1"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 6.1</span>  <span class="title">Generalized metric on slicings</span>  <span class="chip s-partial"><span class="glyph" aria-hidden="true">◐</span>Partial</span></div><p class="summary">The space of slicings carries a left-invariant generalized metric measuring how far one slicing has to be rotated and stretched to contain another.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>The Lean instance provides a pseudo-extended-metric space using the supremum of phase differences. The paper defines the distance as the infimum of containment radii. The two formulations are equivalent, but that equivalence is not yet proved in Lean — hence no separation (d = 0 → P = Q) and no upgrade to a generalized metric.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">instPseudoEMetricSpaceSlicing</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.instPseudoEMetricSpaceSlicing</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Slicing.Defs</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/Seminorm.lean#L91" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.instPseudoEMetricSpaceSlicing">API docs</a></span></dd></dl></details></article><article class="entry" data-status="partial" data-id="Lemma 6.2"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 6.2</span>  <span class="title">Seminorm domination on connected patches</span>  <span class="chip s-partial"><span class="glyph" aria-hidden="true">◐</span>Partial</span></div><p class="summary">On a connected patch of stability conditions that share the same finite set of phases, the stability seminorm is dominated by the sup-norm on Hom(K(𝒟), ℂ).</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>One direction of the equivalence is proved; the reverse direction (for a full two-sided domination) is formalized only for specific setups and not yet in full generality.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">stabSeminorm_dominated_of_connected</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.stabSeminorm_dominated_of_connected</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.StabilityCondition.Seminorm</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/ConnectedComponent.lean#L76" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.stabSeminorm_dominated_of_connected">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Prop 6.3"><div class="entry-head">  <span class="paper-id" title="Reference to Proposition in the paper">Prop 6.3</span>  <span class="title">Local linear model around a stability condition</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">Near any locally finite stability condition σ, the central-charge map has a local section into the component topology, giving a linear local model for the space of stability conditions.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>This is the key technical proposition on which Theorem 1.2 directly rests.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">componentTopologicalLinearLocalModel</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.componentTopologicalLinearLocalModel</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Stab.LocalHomeomorphism</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/LocalHomeomorphism.lean#L309" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.componentTopologicalLinearLocalModel">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Lemma 6.4"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 6.4</span>  <span class="title">Stability conditions with equal central charge nearby</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">If two stability conditions are close enough in the stability seminorm and have the same central charge, then they are equal.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">eq_of_same_Z_near</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.StabilityCondition.WithClassMap.eq_of_same_Z_near</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.Deformation</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/Deformation.lean#L546" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.StabilityCondition.WithClassMap.eq_of_same_Z_near">API docs</a></span></dd></dl></details></article></div></section><section class="section" data-section="7"><header class="section-head"><div class="sec-num">§7</div><div><h2 class="sec-title">Deformation of stability conditions</h2><p class="sec-blurb">Small perturbations of the central charge can be lifted to genuine stability conditions under local finiteness.</p></div></header><div class="entries"><article class="entry headline" data-status="generalized" data-id="Thm 7.1"><div class="entry-head">  <span class="paper-id" title="Reference to Theorem in the paper">Thm 7.1</span>  <span class="title">Deformation of stability conditions</span>  <span class="chip s-generalized"><span class="glyph" aria-hidden="true">◆</span>Generalized</span></div><p class="summary">Starting from a locally finite stability condition σ, any small perturbation of its central charge can be lifted uniquely to a genuine stability condition close to σ.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>The Lean statement takes the neighbourhood radius ε₀ as an explicit parameter. The paper&#x27;s Theorem 7.1 instead produces ε₀ existentially from local finiteness. The existing proof is strictly stronger in the sense that it covers every valid ε₀, so recovering the paper statement is a packaging step.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">deformation</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.StabilityCondition.WithClassMap.deformation</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.Deformation</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/Deformation.lean#L122" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.StabilityCondition.WithClassMap.deformation">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Lemma 7.3"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 7.3</span>  <span class="title">Phase confinement from seminorm control</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">If the stability seminorm of a perturbation is small, every σ-semistable object of phase near ψ remains concentrated in a thin interval of phases around ψ in the perturbed slicing.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">phase_confinement_from_stabSeminorm</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.phase_confinement_from_stabSeminorm</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.TargetEnvelope</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/Deformation/TargetEnvelope.lean#L39" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.phase_confinement_from_stabSeminorm">API docs</a></span></dd></dl></details></article><article class="entry" data-status="missing" data-id="Def 7.4"><div class="entry-head">  <span class="paper-id" title="Reference to Definition in the paper">Def 7.4</span>  <span class="title">Envelope of semistable objects</span>  <span class="chip s-missing"><span class="glyph" aria-hidden="true">×</span>Not formalized</span></div><p class="summary">A convenient packaging of the Section 7 setup that names the collection of objects whose HN filtration is controlled by a target envelope.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>The underlying mathematics is used in the Section 7 proofs, but no standalone Lean predicate yet names “Definition 7.4”.</div></div><p class="missing-body">No Lean declaration in the repository yet.</p></article><article class="entry" data-status="complete" data-id="Lemma 7.5"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 7.5</span>  <span class="title">Semistability is transferred along envelopes</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">If an object E is enveloped by objects B and C, then E is W-semistable in B if and only if it is W-semistable in C — semistability is a property of the envelope, not of the ambient slicing.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Proved as a one-direction statement; the reverse direction follows by symmetry.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">semistable_of_target_envelope</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.semistable_of_target_envelope</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.StrictShortExactSequence</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/Deformation/StrictShortExactSequence.lean#L733" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.semistable_of_target_envelope">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Lemma 7.6"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 7.6</span>  <span class="title">Hom-vanishing from strict phase separation</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">Given two objects E ∈ Q(ψ₁) and F ∈ Q(ψ₂) in the deformed slicing with ψ₁ &gt; ψ₂, every morphism E → F vanishes.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">hom_eq_zero_of_deformedPred</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.hom_eq_zero_of_deformedPred</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.HomVanishing</span></dd><dt>links</dt><dd><span class="links"><a href="../api/find/?pattern=CategoryTheory.Triangulated.hom_eq_zero_of_deformedPred">API docs</a></span></dd></dl></details></article><article class="entry" data-status="complete" data-id="Lemma 7.7"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 7.7</span>  <span class="title">HN filtrations inside a target envelope</span>  <span class="chip s-complete"><span class="glyph" aria-hidden="true">●</span>Complete</span></div><p class="summary">Every object in the interior of a thin, finite-length target envelope admits a W-semistable HN filtration whose factors are themselves enveloped by the same envelope.</p><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">interior_has_enveloped_HN</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.interior_has_enveloped_HN</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.HNExistence</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/Deformation/HNExistence.lean#L257" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.interior_has_enveloped_HN">API docs</a></span></dd></dl></details></article></div></section><section class="section" data-section="8"><header class="section-head"><div class="sec-num">§8</div><div><h2 class="sec-title">A generalized metric on the space of stability conditions</h2><p class="sec-blurb">A left-invariant metric measuring the distance between two stability conditions via phases and masses.</p></div></header><div class="entries"><article class="entry" data-status="partial" data-id="Prop 8.1"><div class="entry-head">  <span class="paper-id" title="Reference to Proposition in the paper">Prop 8.1</span>  <span class="title">Generalized metric on stability conditions</span>  <span class="chip s-partial"><span class="glyph" aria-hidden="true">◐</span>Partial</span></div><p class="summary">The space of locally finite stability conditions carries a generalized metric combining the distance on slicings with a mass-ratio term on central charges.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Only the slicing part of the metric is formalized (as a pseudo-extended-metric). The mass-ratio term that makes Proposition 8.1 a genuine left-invariant metric on stability conditions is still missing.</div></div><details class="lean"><summary><span class="label">Show Lean declaration</span></summary><dl class="lean-body"><dt>declaration</dt><dd><span class="code">slicingDist</span></dd><dt>full name</dt><dd><span class="code">CategoryTheory.Triangulated.slicingDist</span></dd><dt>module</dt><dd><span class="code">BridgelandStability.Deformation.Defs</span></dd><dt>links</dt><dd><span class="links"><a href="https://github.com/mattrobball/BridgelandStability/blob/main/BridgelandStability/StabilityCondition/Defs.lean#L166" target="_blank" rel="noopener">Lean source</a> <a href="../api/find/?pattern=CategoryTheory.Triangulated.slicingDist">API docs</a></span></dd></dl></details></article><article class="entry" data-status="missing" data-id="Lemma 8.2"><div class="entry-head">  <span class="paper-id" title="Reference to Lemma in the paper">Lemma 8.2</span>  <span class="title">Triangle inequality for the stability metric</span>  <span class="chip s-missing"><span class="glyph" aria-hidden="true">×</span>Not formalized</span></div><p class="summary">The combined slicing-plus-mass metric of Proposition 8.1 satisfies the triangle inequality and is left-invariant under the action of autoequivalences.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Not yet formalized — waits on the missing mass-ratio term of Proposition 8.1.</div></div><p class="missing-body">No Lean declaration in the repository yet.</p></article></div></section><section class="section" data-section="9"><header class="section-head"><div class="sec-num">§9</div><div><h2 class="sec-title">The wall and chamber structure</h2><p class="sec-blurb">The locally finite stratification of the stability manifold by walls and chambers.</p></div></header><div class="entries"><article class="entry" data-status="missing" data-id="Thm 9.1"><div class="entry-head">  <span class="paper-id" title="Reference to Theorem in the paper">Thm 9.1</span>  <span class="title">Wall and chamber structure</span>  <span class="chip s-missing"><span class="glyph" aria-hidden="true">×</span>Not formalized</span></div><p class="summary">The space of stability conditions on a triangulated category of finite type is locally stratified by a countable collection of real codimension-one walls, and on each chamber the HN filtration data is constant.</p><div class="note"><span class="glyph" aria-hidden="true">!</span><div>Not yet formalized.</div></div><p class="missing-body">No Lean declaration in the repository yet.</p></article></div></section>
+  <footer class="colophon">
+    <div>Data: <code>artifacts/coverage-data.json</code> &middot; audited against <code>artifacts/informal-audit.md</code>.</div>
+    <div>Generated by <code>scripts/generate_dashboard.py</code>.</div>
+  </footer>
+</div>
+<script>
+(function () {
+  const items = document.querySelectorAll('.legend-item');
+  const entries = document.querySelectorAll('.entry');
+  const active = new Set();
+
+  items.forEach((btn) => {
+    active.add(btn.dataset.status);
+    btn.setAttribute('aria-pressed', 'true');
+    btn.addEventListener('click', () => {
+      const s = btn.dataset.status;
+      if (active.has(s)) {
+        active.delete(s);
+        btn.setAttribute('aria-pressed', 'false');
+      } else {
+        active.add(s);
+        btn.setAttribute('aria-pressed', 'true');
+      }
+      if (active.size === 0) {
+        // clicking the last active chip reselects all — avoid an empty view
+        items.forEach((b) => { active.add(b.dataset.status); b.setAttribute('aria-pressed', 'true'); });
+      }
+      entries.forEach((el) => {
+        el.hidden = !active.has(el.dataset.status);
+      });
+      document.querySelectorAll('.section').forEach((sec) => {
+        const visible = sec.querySelectorAll('.entry:not([hidden])').length;
+        sec.hidden = visible === 0;
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
