@@ -96,7 +96,6 @@ jobs:
         run: |
           lake env "$EXPOSITION_BIN" \
             --root BridgelandStability \
-            --exclude-lib ExtractDecls \
             --repo-url "https://github.com/${{ github.repository }}" \
             --trusted-base-raw-url "https://raw.githubusercontent.com/${{ github.repository }}/main/artifacts/trusted_base.lean" \
             --comparator-config comparator.json \
@@ -244,6 +243,12 @@ jobs:
   # ── Deploy to GitHub Pages ─────────────────────────────────────
   deploy:
     name: Deploy Pages
+    # github-pages env rejects non-main refs at resolution time, which
+    # surfaces as a red check on PRs. Gate explicitly so dispatch runs on
+    # branches see this job as "skipped" instead.
+    if: >-
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+      || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
     needs: [generate-manual, build-site, build-api-docs]
     runs-on: ubuntu-latest
     environment:

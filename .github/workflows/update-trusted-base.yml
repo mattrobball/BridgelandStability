@@ -1,0 +1,142 @@
+name: Update Trusted Formalization Base
+
+# Keeps artifacts/trusted_base.lean in sync with the comparator target's
+# TFB (trusted formalization base).
+#
+# On PRs        : check-only. Fails the job if the committed artifact is stale,
+#                 with the exact regen command in the error. No bot commits
+#                 are pushed to the contributor's branch.
+# On push/main  : regenerates the artifact and, if it drifted, opens an
+#                 auto-PR against main so the update lands via normal review.
+# Manual        : workflow_dispatch uses the same regenerate + auto-PR path.
+
+on:
+  # pull_request.paths also watches this workflow file and the artifact
+  # itself, so (a) edits to the workflow self-smoke on their own PR, and
+  # (b) hand-editing artifacts/trusted_base.lean in isolation cannot
+  # bypass the drift check. push.paths intentionally stays narrower so
+  # that the auto-PR merge (which only touches the artifact) does not
+  # re-trigger this workflow.
+  pull_request:
+    paths:
+      - 'BridgelandStability/**/*.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'artifacts/trusted_base.lean'
+      - '.github/workflows/update-trusted-base.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'BridgelandStability/**/*.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  TFB_TARGET: >-
+    CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
+  TFB_OUTPUT: artifacts/trusted_base.lean
+
+jobs:
+  regenerate:
+    name: Regenerate trusted_base.lean
+    # workflow_dispatch is main-only: dispatching from a feature branch would
+    # regenerate the artifact from that branch's source and still open an
+    # auto-PR against main, which would be wrong.
+    if: github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Restore olean cache
+        uses: actions/cache@v4
+        with:
+          path: .lake/build
+          key: oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-${{ hashFiles('BridgelandStability/**/*.lean') }}
+          restore-keys: |
+            oleans-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
+      - name: Build BridgelandStability
+        run: lake build BridgelandStability
+
+      # lake exe tfb_skeleton <rootPrefix> <targetDecl> <outputPath>
+      # Generates a self-contained Lean file with all type-level dependencies
+      # of <targetDecl>, proofs replaced by sorry.
+      - name: Regenerate ${{ env.TFB_OUTPUT }}
+        run: |
+          mkdir -p artifacts
+          lake exe tfb_skeleton BridgelandStability \
+            ${{ env.TFB_TARGET }} \
+            ${{ env.TFB_OUTPUT }}
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- "${{ env.TFB_OUTPUT }}"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "${{ env.TFB_OUTPUT }} is up to date"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "${{ env.TFB_OUTPUT }} has changed:"
+            git diff --stat -- "${{ env.TFB_OUTPUT }}"
+          fi
+
+      # ── PR path: check-only. Fail loudly so the contributor regenerates. ──
+      - name: Fail if stale (PR)
+        if: steps.diff.outputs.changed == 'true' && github.event_name == 'pull_request'
+        run: |
+          {
+            echo "::error file=${{ env.TFB_OUTPUT }}::${{ env.TFB_OUTPUT }} is out of date with the current TFB."
+            echo ""
+            echo "To regenerate locally, run:"
+            echo ""
+            echo "    lake exe tfb_skeleton BridgelandStability \\"
+            echo "      ${{ env.TFB_TARGET }} \\"
+            echo "      ${{ env.TFB_OUTPUT }}"
+            echo ""
+            echo "Then commit the result to this branch."
+          } >&2
+          exit 1
+
+      # ── Main / manual path: open an auto-PR with the regenerated artifact. ─
+      - name: Open auto-PR with regenerated artifact
+        if: steps.diff.outputs.changed == 'true' && github.event_name != 'pull_request'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: regenerate ${{ env.TFB_OUTPUT }}"
+          title: "chore: regenerate ${{ env.TFB_OUTPUT }}"
+          body: |
+            Automated regeneration of `${{ env.TFB_OUTPUT }}` after drift was
+            detected on `${{ github.ref_name }}` (trigger: `${{ github.event_name }}`).
+
+            Generated by running:
+
+            ```bash
+            lake exe tfb_skeleton BridgelandStability \
+              ${{ env.TFB_TARGET }} \
+              ${{ env.TFB_OUTPUT }}
+            ```
+          branch: chore/regenerate-trusted-base
+          base: main
+          delete-branch: true
+          add-paths: ${{ env.TFB_OUTPUT }}
