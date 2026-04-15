@@ -39,7 +39,7 @@
       "kind": "definition",
       "section": "1",
       "title": "Stability condition on a triangulated category",
-      "prose": "A stability condition (Z, 𝒫) on a triangulated category 𝒟 consists of a group homomorphism Z : K(𝒟) → ℂ called the central charge, and full additive subcategories 𝒫(φ) ⊂ 𝒟 for each φ ∈ ℝ, satisfying the following axioms: (a) if E ∈ 𝒫(φ) then Z(E) = m(E) · exp(iπφ) for some m(E) ∈ ℝ_{>0}; (b) for all φ ∈ ℝ, 𝒫(φ + 1) = 𝒫(φ)[1]; (c) if φ₁ > φ₂ and Aⱼ ∈ 𝒫(φⱼ) then Hom_𝒟(A₁, A₂) = 0; (d) for each nonzero object E ∈ 𝒟 there is a finite sequence of real numbers φ₁ > φ₂ > ⋯ > φₙ and a collection of triangles 0 = E₀ → E₁ → ⋯ → Eₙ = E with Aⱼ ∈ 𝒫(φⱼ) the cone of Eⱼ₋₁ → Eⱼ for all j."
+      "prose": "A stability condition (Z, 𝒫) on a triangulated category 𝒟 consists of a group homomorphism Z : K(𝒟) → ℂ called the central charge, and full additive subcategories 𝒫(φ) ⊂ 𝒟 for each φ ∈ ℝ, satisfying the following axioms: (a) if E ∈ 𝒫(φ) then Z(E) = m(E) · exp(iπφ) for some m(E) ∈ ℝ_{>0}; (b) for all φ ∈ ℝ, 𝒫(φ + 1) = 𝒫(φ)[1]; (c) if φ₁ > φ₂ and Aⱼ ∈ 𝒫(φⱼ) then Hom_𝒟(A₁, A₂) = 0; (d) for each nonzero object E ∈ 𝒟 there is a finite sequence of real numbers φ₁ > φ₂ > ⋯ > φₙ and a collection of triangles 0 = E₀ → E₁ → ⋯ → Eₙ = E with Aⱼ ∈ 𝒫(φⱼ) the cone of Eⱼ₋₁ → Eⱼ for all j. The same definition is restated more compactly as Definition 5.1 in §5, after slicings (Definition 3.3) are introduced to package axioms (b)–(d)."
     },
     {
       "ref": "Theorem 1.2",
@@ -144,7 +144,7 @@
       "kind": "definition",
       "section": "5",
       "title": "Stability condition",
-      "prose": "A stability condition σ = (Z, 𝒫) on a triangulated category 𝒟 consists of a group homomorphism Z : K(𝒟) → ℂ and a slicing 𝒫 of 𝒟 such that if 0 ≠ E ∈ 𝒫(φ) then Z(E) = m(E) · exp(iπφ) for some m(E) ∈ ℝ_{>0}. The linear map Z is called the central charge; the nonzero objects of 𝒫(φ) are the σ-semistable objects of phase φ, and the simple objects of 𝒫(φ) are σ-stable."
+      "prose": "A stability condition σ = (Z, 𝒫) on a triangulated category 𝒟 consists of a group homomorphism Z : K(𝒟) → ℂ and a slicing 𝒫 of 𝒟 such that if 0 ≠ E ∈ 𝒫(φ) then Z(E) = m(E) · exp(iπφ) for some m(E) ∈ ℝ_{>0}. The linear map Z is called the central charge; the nonzero objects of 𝒫(φ) are the σ-semistable objects of phase φ, and the simple objects of 𝒫(φ) are σ-stable. This is the compact restatement of Definition 1.1 using the slicing vocabulary of §3."
     },
     {
       "ref": "Lemma 5.2",
