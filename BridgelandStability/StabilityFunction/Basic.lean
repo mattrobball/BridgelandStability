@@ -71,7 +71,7 @@ is additive on short exact sequences (Bridgeland, Definition 2.1).
 We use an object-level function `Zobj : A → ℂ` rather than a K₀-level homomorphism,
 since the Grothendieck group `K₀` in the current formalization is defined only for
 pretriangulated categories, not abelian categories. -/
-@[informal "Definition 2.1"]
+@[informal "Definition 2.1" complete]
 structure StabilityFunction (A : Type u) [Category.{v} A] [Abelian A] where
   /-- The central charge on objects. -/
   Zobj : A → ℂ
@@ -113,7 +113,7 @@ lemma phase_mem_Ioc (E : A) (hE : ¬IsZero E) :
 /-- An object `E` of an abelian category is *semistable* with respect to a stability
 function `Z` if it is nonzero and for every nonzero subobject `A ↪ E`, the phase of
 `A` is at most the phase of `E` (Bridgeland, Definition 2.2). -/
-@[informal "Definition 2.2"]
+@[informal "Definition 2.2" complete]
 def IsSemistable (E : A) : Prop :=
   ¬IsZero E ∧ ∀ (B : Subobject E), ¬IsZero (B : A) →
     Z.phase (B : A) ≤ Z.phase E

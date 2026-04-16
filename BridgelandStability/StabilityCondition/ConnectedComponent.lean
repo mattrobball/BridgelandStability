@@ -73,7 +73,7 @@ theorem stabilityCondition_isOpen_connectedComponent (σ : StabilityCondition.Wi
     exact TopologicalSpace.GenerateOpen.basic _ ⟨x, ε, hε, hε8, rfl⟩
 
 /-- **Lemma 6.2**: On a connected component, seminorms are equivalent (domination). -/
-@[informal "Lemma 6.2" "one direction; apply both ways for full equivalence"]
+@[informal "Lemma 6.2" "one direction; apply both ways for full equivalence" complete]
 theorem stabSeminorm_dominated_of_connected (σ τ : StabilityCondition.WithClassMap C v)
     (h : ConnectedComponents.mk σ = ConnectedComponents.mk τ) :
     ∃ K : ENNReal, K ≠ ⊤ ∧

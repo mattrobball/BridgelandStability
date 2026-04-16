@@ -276,7 +276,7 @@ variable (C : Type u) [Category.{v} C] [Preadditive C]
 pushouts of strict monomorphisms are strict monomorphisms.
 
 This follows the definition from Schneiders (1999). -/
-@[informal "Definition 4.1"]
+@[informal "Definition 4.1" complete]
 class QuasiAbelian : Prop where
   /-- The pullback of a strict epimorphism along any morphism is a strict epimorphism. -/
   pullback_strictEpi : ∀ {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z),

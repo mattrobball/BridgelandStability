@@ -645,7 +645,7 @@ noncomputable def componentTopologicalLinearLocalModel
 /-- **Bridgeland's Theorem 1.2.** For each connected component Σ of the stability space,
 there is a linear subspace V(Σ) ⊂ Hom(Λ, ℂ) with a normed topology and a local homeomorphism
 Z : Σ → V(Σ) mapping each stability condition to its central charge. -/
-@[informal "Theorem 1.2"]
+@[informal "Theorem 1.2" complete]
 theorem centralChargeIsLocalHomeomorphOnConnectedComponents :
     StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
       (C := C) (v := v) :=

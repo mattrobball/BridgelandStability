@@ -264,7 +264,7 @@ quasi-abelian sense, i.e. ACC/DCC on strict subobjects.
 The extra bound `η < 1/2` is a harmless normalization: any Bridgeland witness may be
 shrunk to such an `η`, and then the width `2η` is at most `1`, so the thin interval
 category carries the exact / quasi-abelian structure proved above. -/
-@[informal "Definition 5.7" "per-object strict finite length is weaker than finite length of all chains (paper's assumption)"]
+@[informal "Definition 5.7" "per-object strict finite length is weaker than finite length of all chains (paper's assumption)" complete]
 structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
   intervalFinite : ∃ η : ℝ, ∃ hη : 0 < η, ∃ hη' : η < 1 / 2, ∀ t : ℝ,
     let a := t - η
@@ -666,7 +666,7 @@ every nonzero semistable object `E` of phase `φ ∈ (a, b)`, `W(v[E]) ≠ 0`.
 In the deformation theorem, `W` is a perturbation of the central charge `Z : Λ → ℂ`
 of a stability condition `(Z, P)` on `D` with respect to `Λ`, and `α` is chosen so
 that `W`-phases are well-defined in `(α - 1/2, α + 1/2)` for objects in `P((a, b))`. -/
-@[informal "Definition 4.4" "weaker: only σ-semistable nonvanishing, not all nonzero objects"]
+@[informal "Definition 4.4" "weaker: only σ-semistable nonvanishing, not all nonzero objects" complete]
 structure SkewedStabilityFunction {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
     (s : Slicing C) (a b : ℝ) where
   /-- The group homomorphism (typically a perturbation of the central charge). -/
