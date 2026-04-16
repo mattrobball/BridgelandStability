@@ -23,8 +23,9 @@ env:
 # ════════════════════════════════════════════════════════════════
 # Job graph:
 #   generate-manual ──┐
-#   build-site ───────┼──> deploy
-#   build-api-docs ───┤
+#   build-site ───────┤
+#   build-api-docs ───┼──> deploy
+#   build-comparison ─┤
 #   badge ────────────┘
 # ════════════════════════════════════════════════════════════════
 
@@ -240,6 +241,32 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  # ── Build comparison dashboard (Python-only) ──────────────────
+  build-comparison:
+    name: Build Comparison Dashboard
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Generate comparison dashboard
+        run: |
+          python3 scripts/generate_comparison.py \
+            --paper paper-statements.json \
+            --extracted informalizations.json \
+            --output comparison-out \
+            --repo-url "https://github.com/${{ github.repository }}"
+
+      - name: Upload comparison dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparison-dashboard
+          path: comparison-out
+          if-no-files-found: warn
+          retention-days: 7
+
   # ── Deploy to GitHub Pages ─────────────────────────────────────
   deploy:
     name: Deploy Pages
@@ -249,7 +276,7 @@ jobs:
     if: >-
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
       || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
-    needs: [generate-manual, build-site, build-api-docs]
+    needs: [generate-manual, build-site, build-api-docs, build-comparison]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -273,6 +300,13 @@ jobs:
         with:
           name: api-docs
           path: site/api
+        continue-on-error: true
+
+      - name: Download comparison dashboard
+        uses: actions/download-artifact@v4
+        with:
+          name: comparison-dashboard
+          path: site/comparison
         continue-on-error: true
 
       - name: Download badge
