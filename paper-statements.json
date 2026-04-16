@@ -1,0 +1,253 @@
+{
+  "_meta": {
+    "description": "Human-curated paper statements for Bridgeland (2007), 'Stability conditions on triangulated categories'. This file is the single source of truth for row-level data (prose, section, title, kind) keyed by paper reference. It is joined at dashboard-generation time with the `paperRef` field on `@[informal]` attributes in the project. The file knows nothing about Lean. Every numbered result in the paper appears here, whether or not it currently has a matching Lean declaration; results with no matching tag render as `missing` in the dashboard.",
+    "_note_draft": "SEED DRAFT — still requires human review before merging, but content is paper-sourced. Every `prose` field below was transcribed from math/0212237v3 (downloaded from arXiv and converted with pdftotext) and then lightly smoothed for running-prose presentation; Unicode math replaces the paper's LaTeX. No entry is speculative. Status does not appear in this file: per-declaration coverage status (`complete` | `partial`) lives on the `@[informal]` attribute as a separate field (added in a follow-up PR to lean-informal). Row-level status is derived at dashboard-generation time from the tagged decls' statuses.",
+    "_vocabulary": {
+      "kind": {
+        "definition": "A Definition environment in the paper.",
+        "theorem": "A Theorem environment.",
+        "lemma": "A Lemma environment.",
+        "proposition": "A Proposition environment.",
+        "corollary": "A Corollary environment.",
+        "example": "An Example environment."
+      }
+    },
+    "source": {
+      "title": "Stability conditions on triangulated categories",
+      "authors": ["Tom Bridgeland"],
+      "year": 2007,
+      "arxiv": "math/0212237",
+      "arxiv_version": "v3",
+      "url": "https://arxiv.org/abs/math/0212237"
+    },
+    "sections": {
+      "1": "Introduction",
+      "2": "Stability functions on abelian categories",
+      "3": "t-structures and slicings",
+      "4": "Quasi-abelian categories",
+      "5": "Stability conditions",
+      "6": "The space of stability conditions",
+      "7": "Deformations of stability conditions",
+      "8": "More on the space of stability conditions",
+      "9": "Stability conditions on curves"
+    }
+  },
+  "statements": [
+    {
+      "ref": "Definition 1.1",
+      "kind": "definition",
+      "section": "1",
+      "prose": "A stability condition (Z, 𝒫) on a triangulated category 𝒟 consists of a group homomorphism Z : K(𝒟) → ℂ called the central charge, and full additive subcategories 𝒫(φ) ⊂ 𝒟 for each φ ∈ ℝ, satisfying the following axioms: (a) if E ∈ 𝒫(φ) then Z(E) = m(E) · exp(iπφ) for some m(E) ∈ ℝ_{>0}; (b) for all φ ∈ ℝ, 𝒫(φ + 1) = 𝒫(φ)[1]; (c) if φ₁ > φ₂ and Aⱼ ∈ 𝒫(φⱼ) then Hom_𝒟(A₁, A₂) = 0; (d) for each nonzero object E ∈ 𝒟 there is a finite sequence of real numbers φ₁ > φ₂ > ⋯ > φₙ and objects E₀, E₁, …, Eₙ ∈ 𝒟 with E₀ = 0, Eₙ = E, together with distinguished triangles Eⱼ₋₁ → Eⱼ → Aⱼ → Eⱼ₋₁[1] for 1 ≤ j ≤ n in which Aⱼ ∈ 𝒫(φⱼ). The same definition is restated more compactly as Definition 5.1 in §5, after slicings (Definition 3.3) are introduced to package axioms (b)–(d)."
+    },
+    {
+      "ref": "Theorem 1.2",
+      "kind": "theorem",
+      "section": "1",
+      "prose": "Let 𝒟 be a triangulated category. For each connected component Σ ⊂ Stab(𝒟) there is a linear subspace V(Σ) ⊂ Hom_ℤ(K(𝒟), ℂ) with a well-defined linear topology and a local homeomorphism Z : Σ → V(Σ) which maps a stability condition (Z, 𝒫) to its central charge Z."
+    },
+    {
+      "ref": "Corollary 1.3",
+      "kind": "corollary",
+      "section": "1",
+      "prose": "Suppose 𝒟 is numerically finite. For each connected component Σ ⊂ Stab_N(𝒟) there is a subspace V(Σ) ⊂ Hom_ℤ(N(𝒟), ℂ) and a local homeomorphism Z : Σ → V(Σ) which maps a stability condition to its central charge. In particular Σ is a finite-dimensional complex manifold."
+    },
+    {
+      "ref": "Definition 2.1",
+      "kind": "definition",
+      "section": "2",
+      "prose": "A stability function on an abelian category 𝒜 is a group homomorphism Z : K(𝒜) → ℂ such that for all 0 ≠ E ∈ 𝒜 the complex number Z(E) lies in the strict upper half-plane H = { r · exp(iπφ) : r > 0 and 0 < φ ≤ 1 } ⊂ ℂ. The phase of a nonzero object E is then φ(E) = (1/π) · arg Z(E) ∈ (0, 1]."
+    },
+    {
+      "ref": "Definition 2.2",
+      "kind": "definition",
+      "section": "2",
+      "prose": "Let Z : K(𝒜) → ℂ be a stability function on an abelian category 𝒜. An object 0 ≠ E ∈ 𝒜 is said to be semistable (with respect to Z) if every subobject 0 ≠ A ⊂ E satisfies φ(A) ≤ φ(E)."
+    },
+    {
+      "ref": "Definition 2.3",
+      "kind": "definition",
+      "section": "2",
+      "prose": "Let Z : K(𝒜) → ℂ be a stability function on an abelian category 𝒜. A Harder–Narasimhan filtration of an object 0 ≠ E ∈ 𝒜 is a finite chain of subobjects 0 = E₀ ⊂ E₁ ⊂ ⋯ ⊂ Eₙ₋₁ ⊂ Eₙ = E whose factors Fⱼ = Eⱼ / Eⱼ₋₁ are semistable objects of 𝒜 with φ(F₁) > φ(F₂) > ⋯ > φ(Fₙ). The stability function Z is said to have the Harder–Narasimhan property if every nonzero object of 𝒜 has a Harder–Narasimhan filtration."
+    },
+    {
+      "ref": "Proposition 2.4",
+      "kind": "proposition",
+      "section": "2",
+      "prose": "Suppose 𝒜 is an abelian category with a stability function Z : K(𝒜) → ℂ satisfying the chain conditions (a) there are no infinite sequences of subobjects ⋯ ⊂ Eⱼ₊₁ ⊂ Eⱼ ⊂ ⋯ ⊂ E₂ ⊂ E₁ in 𝒜 with φ(Eⱼ₊₁) > φ(Eⱼ) for all j, and (b) there are no infinite sequences of quotients E₁ ↠ E₂ ↠ ⋯ ↠ Eⱼ ↠ Eⱼ₊₁ ↠ ⋯ in 𝒜 with φ(Eⱼ) > φ(Eⱼ₊₁) for all j. Then 𝒜 has the Harder–Narasimhan property."
+    },
+    {
+      "ref": "Definition 3.1",
+      "kind": "definition",
+      "section": "3",
+      "prose": "A t-structure on a triangulated category 𝒟 is a full subcategory ℱ ⊂ 𝒟, satisfying ℱ[1] ⊂ ℱ, such that if one defines ℱ^⊥ = { G ∈ 𝒟 : Hom_𝒟(F, G) = 0 for all F ∈ ℱ }, then for every object E ∈ 𝒟 there is a triangle F → E → G in 𝒟 with F ∈ ℱ and G ∈ ℱ^⊥. The heart of the t-structure is the full subcategory 𝒜 = ℱ ∩ ℱ^⊥[1] ⊂ 𝒟; the t-structure is bounded if 𝒟 = ⋃_{i,j ∈ ℤ} ℱ[i] ∩ ℱ^⊥[j]."
+    },
+    {
+      "ref": "Lemma 3.2",
+      "kind": "lemma",
+      "section": "3",
+      "prose": "Let 𝒜 ⊂ 𝒟 be a full additive subcategory of a triangulated category 𝒟. Then 𝒜 is the heart of a bounded t-structure ℱ ⊂ 𝒟 if and only if the following two conditions hold: (a) if k₁ > k₂ are integers and A, B are objects of 𝒜 then Hom_𝒟(A[k₁], B[k₂]) = 0; and (b) for every nonzero object E ∈ 𝒟 there is a finite sequence of integers k₁ > k₂ > ⋯ > kₙ and objects E₀, E₁, …, Eₙ ∈ 𝒟 with E₀ = 0, Eₙ = E, together with distinguished triangles Eⱼ₋₁ → Eⱼ → Aⱼ → Eⱼ₋₁[1] for 1 ≤ j ≤ n in which Aⱼ ∈ 𝒜[kⱼ]."
+    },
+    {
+      "ref": "Definition 3.3",
+      "kind": "definition",
+      "section": "3",
+      "prose": "A slicing 𝒫 of a triangulated category 𝒟 consists of full additive subcategories 𝒫(φ) ⊂ 𝒟 for each φ ∈ ℝ satisfying the following axioms: (a) for all φ ∈ ℝ, 𝒫(φ + 1) = 𝒫(φ)[1]; (b) if φ₁ > φ₂ and Aⱼ ∈ 𝒫(φⱼ) then Hom_𝒟(A₁, A₂) = 0; (c) for each nonzero object E ∈ 𝒟 there is a finite sequence of real numbers φ₁ > φ₂ > ⋯ > φₙ and objects E₀, E₁, …, Eₙ ∈ 𝒟 with E₀ = 0, Eₙ = E, together with distinguished triangles Eⱼ₋₁ → Eⱼ → Aⱼ → Eⱼ₋₁[1] for 1 ≤ j ≤ n in which Aⱼ ∈ 𝒫(φⱼ). Writing φ⁺(E) = φ₁ and φ⁻(E) = φₙ for the maximum and minimum phases appearing in this decomposition of E, the full additive subcategory 𝒫(I) ⊂ 𝒟 for an interval I ⊂ ℝ consists of the zero objects together with the 0 ≠ E whose phases satisfy φ⁻(E), φ⁺(E) ∈ I."
+    },
+    {
+      "ref": "Lemma 3.4",
+      "kind": "lemma",
+      "section": "3",
+      "prose": "Let 𝒫 be a slicing of a triangulated category 𝒟 and let I ⊂ ℝ be an interval of length at most one. Suppose A → E → B → A[1] is a distinguished triangle in 𝒟 all of whose vertices are nonzero objects of 𝒫(I). Then φ⁺(A) ≤ φ⁺(E) and φ⁻(E) ≤ φ⁻(B)."
+    },
+    {
+      "ref": "Definition 4.1",
+      "kind": "definition",
+      "section": "4",
+      "prose": "A quasi-abelian category is an additive category 𝒜 with kernels and cokernels such that every pullback of a strict epimorphism is a strict epimorphism, and every pushout of a strict monomorphism is a strict monomorphism. A morphism f in 𝒜 is strict if the canonical map coim f → im f is an isomorphism. A strict short exact sequence in 𝒜 is a sequence 0 → A → B → C → 0 in which A → B is a strict monomorphism with cokernel B → C; equivalently, B → C is a strict epimorphism with kernel A → B."
+    },
+    {
+      "ref": "Lemma 4.2",
+      "kind": "lemma",
+      "section": "4",
+      "prose": "An additive category 𝒜 is quasi-abelian if and only if there are abelian categories 𝒜^♯ and 𝒜^♭ and fully faithful embeddings 𝒜 ⊂ 𝒜^♯ and 𝒜 ⊂ 𝒜^♭ such that (a) if A → E is a monomorphism in 𝒜^♯ with E ∈ 𝒜 then A ∈ 𝒜, and (b) if E → B is an epimorphism in 𝒜^♭ with E ∈ 𝒜 then B ∈ 𝒜. When these conditions hold, the strict short exact sequences in 𝒜 are precisely the sequences 0 → A → B → C → 0 which are exact in both 𝒜^♯ and 𝒜^♭."
+    },
+    {
+      "ref": "Lemma 4.3",
+      "kind": "lemma",
+      "section": "4",
+      "prose": "Let 𝒫 be a slicing of a triangulated category 𝒟. For any interval I ⊂ ℝ of length less than 1, the full subcategory 𝒫(I) ⊂ 𝒟 is quasi-abelian, and its strict short exact sequences are in one-to-one correspondence with distinguished triangles in 𝒟 all of whose vertices are objects of 𝒫(I)."
+    },
+    {
+      "ref": "Definition 4.4",
+      "kind": "definition",
+      "section": "4",
+      "prose": "A skewed stability function on a quasi-abelian category 𝒜 is a group homomorphism Z : K(𝒜) → ℂ such that there is a strict half-plane H_α = { r · exp(iπφ) : r > 0 and α < φ ≤ α + 1 } ⊂ ℂ, defined by some α ∈ ℝ, with Z(E) ∈ H_α for all objects 0 ≠ E ∈ 𝒜. The phase of 0 ≠ E ∈ 𝒜 is then φ(E) = (1/π) · arg Z(E) ∈ (α, α + 1]."
+    },
+    {
+      "ref": "Definition 5.1",
+      "kind": "definition",
+      "section": "5",
+      "prose": "A stability condition σ = (Z, 𝒫) on a triangulated category 𝒟 consists of a group homomorphism Z : K(𝒟) → ℂ and a slicing 𝒫 of 𝒟 such that if 0 ≠ E ∈ 𝒫(φ) then Z(E) = m(E) · exp(iπφ) for some m(E) ∈ ℝ_{>0}. The linear map Z is called the central charge; the nonzero objects of 𝒫(φ) are the σ-semistable objects of phase φ, and the simple objects of 𝒫(φ) are σ-stable."
+    },
+    {
+      "ref": "Lemma 5.2",
+      "kind": "lemma",
+      "section": "5",
+      "prose": "If σ = (Z, 𝒫) is a stability condition on a triangulated category 𝒟 then each subcategory 𝒫(φ) ⊂ 𝒟 is abelian."
+    },
+    {
+      "ref": "Proposition 5.3",
+      "kind": "proposition",
+      "section": "5",
+      "prose": "To give a stability condition on a triangulated category 𝒟 is equivalent to giving a bounded t-structure on 𝒟 and a stability function on its heart with the Harder–Narasimhan property."
+    },
+    {
+      "ref": "Example 5.4",
+      "kind": "example",
+      "section": "5",
+      "prose": "Let 𝒜 be the category of coherent 𝒪_X-modules on a nonsingular projective curve X over an algebraically closed field k of characteristic zero, and set Z(E) = − deg(E) + i · rank(E). Applying Proposition 5.3 gives a stability condition on the bounded derived category D(𝒜)."
+    },
+    {
+      "ref": "Example 5.5",
+      "kind": "example",
+      "section": "5",
+      "prose": "Let A be a finite-dimensional algebra over a field k and let 𝒜 be the abelian category of finite-dimensional left A-modules. Then 𝒜 is a finite-length category whose Grothendieck group K(𝒜) is the free abelian group on the (finite) set of simple A-modules. There is a group homomorphism r : K(𝒜) → ℤ sending an A-module to its dimension over k, and for any homomorphism λ : K(𝒜) → ℝ the formula Z(E) = λ(E) + i · r(E) defines a stability function on 𝒜. Proposition 5.3 then produces a stability condition on the bounded derived category D(𝒜) for each such slope function."
+    },
+    {
+      "ref": "Example 5.6",
+      "kind": "example",
+      "section": "5",
+      "prose": "Let 𝒜 be the category of coherent sheaves on a nonsingular projective curve X as in Example 5.4, and let (Z, 𝒫) be the stability condition defined there. Let 0 < α < 1/2 be such that ζ = tan(πα) is irrational. Then the bounded t-structure 𝒫(> α) = 𝒫(≥ α) ⊂ 𝒟 has heart ℬ = 𝒫((α, α + 1)). Define a stability function on ℬ by W(E) = i · (rank(E) + ζ · deg(E)); all nonzero objects of ℬ are semistable of the same phase. Applying Proposition 5.3 gives a stability condition (W, 𝒬) on 𝒟 with 𝒬(1/2) = ℬ and 𝒬(ψ) = 0 unless ψ − 1/2 ∈ ℤ."
+    },
+    {
+      "ref": "Definition 5.7",
+      "kind": "definition",
+      "section": "5",
+      "prose": "A slicing 𝒫 of a triangulated category 𝒟 is locally-finite if there exists a real number η > 0 such that for all t ∈ ℝ the quasi-abelian category 𝒫((t − η, t + η)) ⊂ 𝒟 is of finite length. A stability condition (Z, 𝒫) is locally-finite if the corresponding slicing 𝒫 is."
+    },
+    {
+      "ref": "Lemma 6.1",
+      "kind": "lemma",
+      "section": "6",
+      "prose": "If 𝒫 and 𝒬 are slicings of a triangulated category 𝒟 then d(𝒫, 𝒬) = inf { ε ∈ ℝ_{≥0} : 𝒬(φ) ⊂ 𝒫([φ − ε, φ + ε]) for all φ ∈ ℝ }."
+    },
+    {
+      "ref": "Lemma 6.2",
+      "kind": "lemma",
+      "section": "6",
+      "prose": "If τ = (W, 𝒬) ∈ B_ε(σ) then there are constants k₁, k₂ > 0 such that k₁ · ‖U‖_σ < ‖U‖_τ < k₂ · ‖U‖_σ for every U ∈ Hom_ℤ(K(𝒟), ℂ)."
+    },
+    {
+      "ref": "Proposition 6.3",
+      "kind": "proposition",
+      "section": "6",
+      "prose": "For each connected component Σ ⊂ Stab(𝒟) there is a linear subspace V(Σ) ⊂ Hom_ℤ(K(𝒟), ℂ) with a well-defined linear topology and a continuous map Z : Σ → V(Σ) which sends a stability condition (Z, 𝒫) to its central charge Z."
+    },
+    {
+      "ref": "Lemma 6.4",
+      "kind": "lemma",
+      "section": "6",
+      "prose": "Suppose σ = (Z, 𝒫) and τ = (Z, 𝒬) are stability conditions on 𝒟 with the same central charge Z and with d(𝒫, 𝒬) < 1. Then σ = τ."
+    },
+    {
+      "ref": "Theorem 7.1",
+      "kind": "theorem",
+      "section": "7",
+      "prose": "Let σ = (Z, 𝒫) be a locally-finite stability condition on a triangulated category 𝒟. Then there is an ε₀ > 0 such that if 0 < ε < ε₀ and W : K(𝒟) → ℂ is a group homomorphism satisfying |W(E) − Z(E)| < sin(πε) · |Z(E)| for all E ∈ 𝒟 semistable in σ, then there is a locally-finite stability condition τ = (W, 𝒬) on 𝒟 with d(𝒫, 𝒬) < ε."
+    },
+    {
+      "ref": "Definition 7.2",
+      "kind": "definition",
+      "section": "7",
+      "prose": "A thin subcategory of 𝒟 is a full subcategory of the form 𝒫((a, b)) ⊂ 𝒟 where a and b are real numbers with 0 < b − a < 1 − 2ε. Any thin subcategory is quasi-abelian, and W defines a skewed stability function on it."
+    },
+    {
+      "ref": "Lemma 7.3",
+      "kind": "lemma",
+      "section": "7",
+      "prose": "Suppose E is W-semistable in some thin subcategory 𝒜 ⊂ 𝒟, and set ψ = ψ(E). Then E ∈ 𝒫((ψ − ε, ψ + ε))."
+    },
+    {
+      "ref": "Definition 7.4",
+      "kind": "definition",
+      "section": "7",
+      "prose": "Suppose 𝒜 = 𝒫((a, b)) is a thin subcategory of 𝒟. A nonzero object E ∈ 𝒜 is said to be enveloped by 𝒜 if a + ε ≤ ψ(E) ≤ b − ε."
+    },
+    {
+      "ref": "Lemma 7.5",
+      "kind": "lemma",
+      "section": "7",
+      "prose": "Suppose an object E ∈ 𝒟 is enveloped by thin subcategories ℬ and 𝒞 of 𝒟. Then E is W-semistable in ℬ precisely if it is W-semistable in 𝒞."
+    },
+    {
+      "ref": "Lemma 7.6",
+      "kind": "lemma",
+      "section": "7",
+      "prose": "If E ∈ 𝒬(ψ₁) and F ∈ 𝒬(ψ₂) with ψ₁ > ψ₂, then Hom_𝒟(E, F) = 0."
+    },
+    {
+      "ref": "Lemma 7.7",
+      "kind": "lemma",
+      "section": "7",
+      "prose": "Let 𝒜 = 𝒫((a, b)) ⊂ 𝒟 be a thin subcategory of finite length. Then every nonzero object of 𝒫((a + 2ε, b − 4ε)) has a finite Harder–Narasimhan filtration whose factors are W-semistable objects of 𝒜 which are enveloped by 𝒜."
+    },
+    {
+      "ref": "Proposition 8.1",
+      "kind": "proposition",
+      "section": "8",
+      "prose": "Let 𝒟 be a triangulated category. The function d(σ₁, σ₂) = sup_{0 ≠ E ∈ 𝒟} max( |φ⁻_{σ₂}(E) − φ⁻_{σ₁}(E)|, |φ⁺_{σ₂}(E) − φ⁺_{σ₁}(E)|, |log (m_{σ₂}(E) / m_{σ₁}(E))| ) ∈ [0, ∞] defines a generalised metric on Stab(𝒟). The induced topology is the same as the one defined in §6."
+    },
+    {
+      "ref": "Lemma 8.2",
+      "kind": "lemma",
+      "section": "8",
+      "prose": "The generalised metric space Stab(𝒟) carries a right action of the group GL̃⁺(2, ℝ), the universal covering space of GL⁺(2, ℝ), and a left action by isometries of the group Aut(𝒟) of exact autoequivalences of 𝒟. These two actions commute."
+    },
+    {
+      "ref": "Theorem 9.1",
+      "kind": "theorem",
+      "section": "9",
+      "prose": "Let X be a nonsingular projective curve of genus one over ℂ, and let D(X) denote the bounded derived category of coherent 𝒪_X-modules. The action of the group GL̃⁺(2, ℝ) on the space Stab(X) of locally-finite numerical stability conditions is free and transitive, so that Stab(X) ≅ GL̃⁺(2, ℝ)."
+    }
+  ]
+}
