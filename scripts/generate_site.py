@@ -399,7 +399,9 @@ def generate_root_file(
     lines.append("")
     lines.append(
         "The table below lists every definition, lemma, and theorem from "
-        "the paper that currently has an exact formal analog."
+        "the paper that currently has an exact formal analog. "
+        "The [Comparison Index](comparison/) shows every numbered result "
+        "in the paper side-by-side with its Lean formalization."
     )
     lines.append("")
     lines.append("*Why trust a proof written by AI?*")
