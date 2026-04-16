@@ -97,6 +97,7 @@ jobs:
           lake env "$EXPOSITION_BIN" \
             --root BridgelandStability \
             --repo-url "https://github.com/${{ github.repository }}" \
+            --trusted-base-raw-url "https://raw.githubusercontent.com/${{ github.repository }}/main/artifacts/trusted_base.lean" \
             --comparator-config comparator.json \
             --write-shadow comparator-shadow \
             --shadow-only
