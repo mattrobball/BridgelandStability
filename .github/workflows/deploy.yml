@@ -142,6 +142,16 @@ jobs:
       - name: Build project (incremental)
         run: lake build BridgelandStability
 
+      - name: Extract declarations
+        run: lake exe extract_decls BridgelandStability extracted.json
+
+      - name: Upload extracted declarations
+        uses: actions/upload-artifact@v4
+        with:
+          name: extracted-decls
+          path: extracted.json
+          retention-days: 7
+
       - name: Generate Verso docs
         run: |
           python3 scripts/generate_site.py \
@@ -241,21 +251,27 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-  # ── Build comparison dashboard (Python-only) ──────────────────
+  # ── Build comparison dashboard ─────────────────────────────────
   build-comparison:
     name: Build Comparison Dashboard
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    needs: [build-site]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
+      - name: Download extracted declarations
+        uses: actions/download-artifact@v4
+        with:
+          name: extracted-decls
+
       - name: Generate comparison dashboard
         run: |
           python3 scripts/generate_comparison.py \
             --paper paper-statements.json \
-            --extracted informalizations.json \
+            --extracted extracted.json \
             --output comparison-out \
             --repo-url "https://github.com/${{ github.repository }}"
 
