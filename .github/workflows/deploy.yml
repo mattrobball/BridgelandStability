@@ -175,9 +175,9 @@ jobs:
       - name: Build Verso site
         run: |
           cd site-build
-          if [ ! -f lake-manifest.json ]; then
-            lake update
-          fi
+          # `informal` tracks `main` (inputRev), so a cache-restored manifest
+          # can pin a stale rev that predates new attribute syntax.
+          lake update
           lake exe cache get || true
           lake build informal
           lake exe informal
