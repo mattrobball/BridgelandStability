@@ -62,7 +62,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 /-- A Harder-Narasimhan (HN) filtration of an object `E` with respect to a phase
 predicate `P`. This extends a `PostnikovTower` with phase data: each factor is
 semistable with a given phase, and the phases are strictly decreasing. -/
-@[informal "Definition 3.3" "axiom (c): HN decomposition data for triangulated categories" complete]
+@[informal "Definition 3.3" "axiom (c): HN decomposition data for triangulated categories"]
 structure HNFiltration (P : ℝ → ObjectProperty C) (E : C) extends PostnikovTower C E where
   /-- The phases of the semistable factors, in strictly decreasing order. -/
   φ : Fin n → ℝ
