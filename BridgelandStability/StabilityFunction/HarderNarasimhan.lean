@@ -46,7 +46,7 @@ The semistability condition connects the chain to the stability function `Z`:
 the `i`-th factor (successive quotient) is semistable and has phase `φ i`.
 We encode this via `factor_semistable` and `factor_phase`, where the factor
 objects are obtained as cokernels of the successive inclusion maps. -/
-@[informal "Definition 2.3" "HN filtration for abelian categories"]
+@[informal "Definition 2.3" "HN filtration for abelian categories" complete]
 structure AbelianHNFiltration (Z : StabilityFunction A) (E : A) where
   /-- The number of semistable factors. -/
   n : ℕ
@@ -70,7 +70,7 @@ structure AbelianHNFiltration (Z : StabilityFunction A) (E : A) where
 
 /-- A stability function has the Harder-Narasimhan property if every nonzero object
 admits a Harder-Narasimhan filtration (Bridgeland, Proposition 2.4). -/
-@[informal "Definition 2.3" "HN property predicate"]
+@[informal "Definition 2.3" "HN property predicate" complete]
 def StabilityFunction.HasHNProperty (Z : StabilityFunction A) : Prop :=
   ∀ (E : A), ¬IsZero E → Nonempty (AbelianHNFiltration Z E)
 

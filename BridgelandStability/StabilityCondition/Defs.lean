@@ -56,7 +56,7 @@ namespace PreStabilityCondition
 /-- A Bridgeland prestability condition with respect to a class map
 `v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient
 charge is recovered by precomposition with `v`. -/
-@[informal "Definition 5.1"]
+@[informal "Definition 5.1" complete]
 structure WithClassMap (v : K₀ C →+ Λ) where
   /-- The underlying slicing. -/
   slicing : Slicing C
@@ -122,7 +122,7 @@ namespace StabilityCondition
 
 /-- A Bridgeland stability condition with respect to a class map `v : K₀(C) → Λ`.
 This is the locally-finite refinement of `PreStabilityCondition.WithClassMap`. -/
-@[informal "Definition 5.7"]
+@[informal "Definition 5.7" complete]
 structure WithClassMap (v : K₀ C →+ Λ)
     extends PreStabilityCondition.WithClassMap C v where
   /-- The slicing is locally finite. -/

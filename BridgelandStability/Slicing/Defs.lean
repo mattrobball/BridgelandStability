@@ -78,7 +78,7 @@ subject to shift, Hom-vanishing, and Harder-Narasimhan existence axioms.
 
 Each `P(φ)` is an `ObjectProperty C`, enabling use of the `ObjectProperty` API
 (e.g. `FullSubcategory`, shift stability, closure properties). -/
-@[informal "Definition 3.3"]
+@[informal "Definition 3.3" complete]
 structure Slicing where
   /-- For each phase `φ ∈ ℝ`, the property of semistable objects of phase `φ`. -/
   P : ℝ → ObjectProperty C

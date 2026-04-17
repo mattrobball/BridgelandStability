@@ -122,7 +122,7 @@ theorem StabilityCondition.WithClassMap.exists_epsilon0_tenth (σ : StabilityCon
 Then there is an ε₀ > 0 such that if 0 < ε < ε₀ and W satisfies
 ‖W − Z‖_σ < sin(πε), then there is a locally-finite stability condition
 τ = (W, Q) with d(P, Q) < ε. -/
-@[informal "Theorem 7.1"]
+@[informal "Theorem 7.1" complete]
 theorem StabilityCondition.WithClassMap.deformation
     (σ : StabilityCondition.WithClassMap C v) :
     ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∀ (W : Λ →+ ℂ) (ε : ℝ), 0 < ε → ε < ε₀ →
@@ -543,7 +543,7 @@ theorem exists_basisNhd_subset_basisNhd (σ τ : StabilityCondition.WithClassMap
           linarith
 
 /-- Two stability conditions with same Z and d < 1 are equal (Lemma 6.4). -/
-@[informal "Lemma 6.4"]
+@[informal "Lemma 6.4" complete]
 theorem StabilityCondition.WithClassMap.eq_of_same_Z_near (σ τ : StabilityCondition.WithClassMap C v)
     (hZ : σ.Z = τ.Z)
     (hd : slicingDist C σ.slicing τ.slicing < ENNReal.ofReal 1) :
