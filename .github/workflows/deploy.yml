@@ -263,7 +263,11 @@ jobs:
   build-comparison:
     name: Build Comparison Dashboard
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
-    needs: [build-site]
+    # No `needs` — this job now runs in parallel with build-site / generate-manual
+    # / build-api-docs.  It sources `extracted-decls` directly from upstream CI
+    # when available (same `run-id` pattern `build-site` uses for `oleans`), and
+    # falls back to building BS + running extract_decls locally for
+    # workflow_dispatch (where there's no upstream CI run).
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -276,7 +280,9 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Download oleans
+      # Fast path (workflow_run): pull both oleans and the pre-extracted decls
+      # from the CI run that triggered us.  Skips a ~10 min BS build.
+      - name: Download oleans (from upstream CI)
         if: github.event_name != 'workflow_dispatch'
         uses: actions/download-artifact@v4
         with:
@@ -284,14 +290,25 @@ jobs:
           path: .lake/build
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download extracted-decls (from upstream CI)
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/download-artifact@v4
+        with:
+          name: extracted-decls
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Mathlib cache
         run: lake exe cache get
 
-      - name: Download extracted declarations
-        uses: actions/download-artifact@v4
-        with:
-          name: extracted-decls
+      # Slow path (workflow_dispatch only): rebuild BS and extract on the spot.
+      # The upstream-CI fast path above has already populated extracted.json.
+      - name: Build BridgelandStability (dispatch fallback)
+        if: github.event_name == 'workflow_dispatch'
+        run: lake build BridgelandStability
+      - name: Extract declarations (dispatch fallback)
+        if: github.event_name == 'workflow_dispatch'
+        run: lake exe extract_decls BridgelandStability extracted.json
 
       - name: Generate comparison shadow project
         run: |
