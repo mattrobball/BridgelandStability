@@ -14,7 +14,7 @@ rev = "v4.29.0"
 [[require]]
 name = "informal"
 git = "https://github.com/mattrobball/lean-informal"
-rev = "main"
+rev = "feat/verso-block"
 
 [[lean_lib]]
 name = "BridgelandStability"
