@@ -252,6 +252,14 @@ jobs:
           retention-days: 7
 
   # ── Build comparison dashboard ─────────────────────────────────
+  # Two-stage build:
+  #   1. Generate a Verso shadow project (`comparison-build/`) and build it
+  #      via `lake exe comparison` to produce multi-page HTML with live hover
+  #      info, full decl bodies, and cross-refs.
+  #   2. Post-process the multi-page output with `style_comparison_site.py`
+  #      into a single-page expandable-row dashboard matching the existing
+  #      live `site/comparison/` aesthetic.  Upload the post-processed dir
+  #      as the `comparison-dashboard` artifact (Pages deploy picks it up).
   build-comparison:
     name: Build Comparison Dashboard
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
@@ -262,24 +270,75 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Download oleans
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/download-artifact@v4
+        with:
+          name: oleans
+          path: .lake/build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Mathlib cache
+        run: lake exe cache get
+
       - name: Download extracted declarations
         uses: actions/download-artifact@v4
         with:
           name: extracted-decls
 
-      - name: Generate comparison dashboard
+      - name: Generate comparison shadow project
         run: |
-          python3 scripts/generate_comparison.py \
+          python3 scripts/generate_comparison_site.py \
             --paper paper-statements.json \
             --extracted extracted.json \
-            --output comparison-out \
+            --output comparison-build \
+            --source-path "$(pwd)" \
+            --prefix BridgelandStability \
+            --verso-rev v4.29.0 \
+            --repo-url "https://github.com/${{ github.repository }}"
+
+      - name: Restore comparison shadow cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            comparison-build/.lake
+            comparison-build/lake-manifest.json
+          key: comparison-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('paper-statements.json', 'extracted.json') }}
+          restore-keys: |
+            comparison-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-
+
+      - name: Build comparison site
+        run: |
+          cd comparison-build
+          # Refresh the `informal` pin so a cache-restored manifest doesn't
+          # pin a stale rev that predates new Verso block syntax.
+          lake update
+          lake exe cache get || true
+          lake build comparison
+          lake exe comparison
+
+      - name: Post-process to single-page dashboard
+        run: |
+          pip install beautifulsoup4
+          python3 scripts/style_comparison_site.py \
+            --paper paper-statements.json \
+            --extracted extracted.json \
+            --multi-html comparison-build/_out/html-multi \
+            --output comparison-dashboard \
             --repo-url "https://github.com/${{ github.repository }}"
 
       - name: Upload comparison dashboard
         uses: actions/upload-artifact@v4
         with:
           name: comparison-dashboard
-          path: comparison-out
+          path: comparison-dashboard
           if-no-files-found: warn
           retention-days: 7
 
