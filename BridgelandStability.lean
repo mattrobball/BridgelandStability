@@ -70,3 +70,4 @@ public import BridgelandStability.ForMathlib.CategoryTheory.Shift.Linear
 public import BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.ArgConvexity
 public import BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.PhasePerturbation
 public import BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.SectorBound
+public import BridgelandStability.PaperRefs

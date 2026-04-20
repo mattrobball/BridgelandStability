@@ -74,7 +74,7 @@ def _heading_slug(ref: str) -> str:
 
 def render_section(section_num: str, section_title: str,
                    entries: list[dict], informal_by_ref: dict[str, list[dict]],
-                   project_path: str) -> str:
+                   project_path: str, project_prefix: str) -> str:
     """Generate one ComparisonDocs/Section{N}.lean file for one paper section.
 
     The per-section split keeps each generated `.c` file small — a single
@@ -106,9 +106,24 @@ def render_section(section_num: str, section_title: str,
         if prose:
             lines.append(sanitize_prose(prose))
             lines.append("")
-        if ref in informal_by_ref:
+        decls = informal_by_ref.get(ref, [])
+        # `#informal_external` entries (paperRef matches a Lean decl that
+        # lives in mathlib / another upstream project) have no local source
+        # the Verso shadow can reasonably render — `loadModuleContent` on a
+        # mathlib module triggers a large sub-build.  Skip emitting the
+        # `{informalByRef}` block when all matching decls are external; the
+        # downstream `style_comparison_site.py` post-processor fills in a
+        # link-out panel from `extracted.json` directly.
+        local = [d for d in decls
+                 if d.get("moduleName", "").startswith(f"{project_prefix}.")]
+        if local:
             lines.append(f'```informalByRef (paperRef := "{ref}")')
             lines.append("```")
+            lines.append("")
+        elif decls:
+            # All-external row: placeholder text in the shadow.  The
+            # post-processor overrides with a proper external panel.
+            lines.append("_Formalized upstream._")
             lines.append("")
         else:
             lines.append("_Not yet formalized in this project._")
@@ -243,7 +258,8 @@ def main() -> int:
     for num in section_nums:
         title = section_titles.get(num, f"Section {num}")
         section_lean = render_section(num, title, by_section[num], informal_by_ref,
-                                      project_path=args.source_path)
+                                      project_path=args.source_path,
+                                      project_prefix=args.prefix)
         (out / "ComparisonDocs" / f"Section{num}.lean").write_text(section_lean)
 
     root_lean = render_root(section_nums, section_titles, source_title, args.repo_url,
