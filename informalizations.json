@@ -14578,43 +14578,14 @@
     "moduleName": "BridgelandStability.Slicing.ExtensionClosure",
     "docstring": "**Lemma 3.4** (right inequality). In a distinguished triangle `A → E → B → A⟦1⟧`\nwhere the phases of A and B lie in an interval `(a, b)` with `b ≤ a + 1`,\nwe have `φ⁻(E) ≤ φ⁻(B)`.\n\nThe proof uses the Yoneda exact sequence: if `φ⁻(E) > φ⁻(B)`, then maps `E → B⁻`\nvanish by hom-vanishing; by exactness, maps `B → B⁻` factor through `A⟦1⟧`, but\nA's shifted phases are too high, so all maps `A⟦1⟧ → B⁻` vanish too, giving\n`B⁻ = 0`, a contradiction. ",
     "contentHash": 4003221145,
-    "depHashes": [
-      {
-        "name": "CategoryTheory.Triangulated.HNFiltration",
-        "hash": 5533943424435606618
-      },
-      {
-        "name": "CategoryTheory.Triangulated.PostnikovTower",
-        "hash": 8675667888685392150
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing",
-        "hash": 18408969535839669265
-      },
-      {
-        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
-        "hash": 3099320964
-      },
-      {
-        "name": "CategoryTheory.Triangulated.PostnikovTower.factor",
-        "hash": 6662455596190571773
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.intervalProp",
-        "hash": 11853708044905834547
-      },
-      {
-        "name": "CategoryTheory.Triangulated.Slicing.phiMinus",
-        "hash": 2404613883158623531
-      }
-    ],
-    "paperRef": "Lemma 3.4",
-    "paperComment": "φ⁻(E) ≤ φ⁻(B)",
+    "depHashes": null,
+    "paperRef": null,
+    "paperComment": null,
     "sourceFile": "BridgelandStability/Slicing/ExtensionClosure.lean",
-    "startLine": 382,
-    "endLine": 444,
-    "prose": "**Lemma 3.4 (right inequality).** In a distinguished triangle $A \\to E \\to B \\to A[1]$\n  where the phases of $A$ and $B$ lie in an interval $(a, b)$ with $b \\le a + 1$, one\n  has $\\phi^-(E) \\le \\phi^-(B)$.",
-    "proofExposition": "By contradiction: if $\\phi^-(E) > \\phi^-(B)$, then maps $E \\to B^-$ vanish by\n  Hom-vanishing. By the Yoneda exact sequence, maps $B \\to B^-$ factor through $A[1]$.\n  The width condition ensures the shifted phases of $A[1]$ are above $\\phi(B^-)$,\n  so $\\operatorname{Hom}(A[1], B^-) = 0$, giving $B^- = 0$, a contradiction.",
+    "startLine": 381,
+    "endLine": 442,
+    "prose": "",
+    "proofExposition": null,
     "termExposition": null
   },
   {
@@ -14627,8 +14598,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Slicing/ExtensionClosure.lean",
-    "startLine": 446,
-    "endLine": 491,
+    "startLine": 461,
+    "endLine": 506,
     "prose": "Variant of **Lemma 3.4** (`phiMinus_triangle_le`) where the hypothesis\n  $B \\in \\mathcal{P}((a,b))$ is weakened to $\\phi^+(B) < b$. Under the same width\n  bound $b \\le a + 1$ and with $A \\in \\mathcal{P}((a,b))$, one still obtains\n  $\\phi^-(E) \\le \\phi^-(B)$.",
     "proofExposition": "Same proof strategy as `phiMinus_triangle_le`, using the weaker hypothesis\n  $\\phi^+(B) < b$ (rather than full interval membership) wherever the upper phase\n  bound of $B$ is needed.",
     "termExposition": null
@@ -14655,6 +14626,22 @@
     "moduleName": "BridgelandStability.Slicing.ExtensionClosure",
     "docstring": "**Lemma 3.4** (left inequality). In a distinguished triangle `A → E → B → A⟦1⟧`\nwhere the phases of A and B lie in an interval `(a, b)` with `b ≤ a + 1`,\nwe have `φ⁺(A) ≤ φ⁺(E)`.\n\nThe width condition `b ≤ a + 1` ensures `B⟦-1⟧` has all phases below any phase of `A`,\nso the factoring argument through `B⟦-1⟧` gives a contradiction. ",
     "contentHash": 319536657,
+    "depHashes": null,
+    "paperRef": null,
+    "paperComment": null,
+    "sourceFile": "BridgelandStability/Slicing/ExtensionClosure.lean",
+    "startLine": 320,
+    "endLine": 379,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.Slicing.phi_triangle_le",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.Slicing.ExtensionClosure",
+    "docstring": "**Lemma 3.4.** Let `𝒫` be a slicing of a triangulated category `𝒟` and let\n`I ⊂ ℝ` be an interval of length at most one. Suppose `A → E → B → A⟦1⟧` is a\ndistinguished triangle in `𝒟` all of whose vertices are nonzero objects of\n`𝒫(I)`. Then `φ⁺(A) ≤ φ⁺(E)` and `φ⁻(E) ≤ φ⁻(B)`. ",
+    "contentHash": 1725889362,
     "depHashes": [
       {
         "name": "CategoryTheory.Triangulated.HNFiltration",
@@ -14673,6 +14660,10 @@
         "hash": 4257020478
       },
       {
+        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
+        "hash": 3099320964
+      },
+      {
         "name": "CategoryTheory.Triangulated.PostnikovTower.factor",
         "hash": 6662455596190571773
       },
@@ -14681,17 +14672,21 @@
         "hash": 11853708044905834547
       },
       {
+        "name": "CategoryTheory.Triangulated.Slicing.phiMinus",
+        "hash": 2404613883158623531
+      },
+      {
         "name": "CategoryTheory.Triangulated.Slicing.phiPlus",
         "hash": 696119402052897309
       }
     ],
     "paperRef": "Lemma 3.4",
-    "paperComment": "φ⁺(A) ≤ φ⁺(E)",
+    "paperComment": null,
     "sourceFile": "BridgelandStability/Slicing/ExtensionClosure.lean",
-    "startLine": 320,
-    "endLine": 380,
-    "prose": "**Lemma 3.4 (left inequality).** In a distinguished triangle $A \\to E \\to B \\to A[1]$\n  where the phases of $A$ and $B$ lie in an interval $(a, b)$ with $b \\le a + 1$, one\n  has $\\phi^+(A) \\le \\phi^+(E)$.",
-    "proofExposition": "By contradiction: if $\\phi^+(A) > \\phi^+(E)$, then the top factor $A^+$ of $A$\n  has all maps to $E$ vanishing (phase gap). By the coYoneda exact sequence on the\n  inverse rotation, maps $A^+ \\to A$ factor through $B[-1]$. The width condition\n  $b \\le a + 1$ ensures that the shifted phases of $B[-1]$ are below $\\phi(A^+)$,\n  so $\\operatorname{Hom}(A^+, B[-1]) = 0$ as well, giving $A^+ = 0$, a contradiction.",
+    "startLine": 444,
+    "endLine": 459,
+    "prose": "",
+    "proofExposition": null,
     "termExposition": null
   },
   {
