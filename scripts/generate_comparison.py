@@ -258,7 +258,7 @@ a:hover {{ color: var(--fg); border-bottom-color: currentColor; }}
 .masthead .kicker .dot {{ color: var(--accent); margin: 0 6px; }}
 .masthead h1 {{ font-weight: 600; font-size: 32px; line-height: 1.15; margin: 0 0 6px; color: var(--fg); }}
 .masthead h1 em {{ font-weight: 500; font-style: italic; color: var(--fg-mid); }}
-.masthead .sub {{ font-size: 14.5px; color: var(--fg-dim); max-width: 78ch; line-height: 1.55; margin: 0; }}
+.masthead .sub {{ font-size: 14.5px; color: var(--fg-dim); line-height: 1.55; margin: 0; }}
 .masthead .sub code {{
   font-family: "JetBrains Mono", monospace; font-size: 12.5px;
   color: var(--fg-mid); background: var(--bg-row-alt); padding: 1px 6px; border: 1px solid var(--rule);
@@ -423,9 +423,7 @@ footer.colophon .mark {{ text-transform: uppercase; letter-spacing: 0.1em; color
   const entries = document.querySelectorAll('li.entry');
   entries.forEach(li => {{
     li.querySelector('.head').addEventListener('click', () => {{
-      const wasOpen = li.classList.contains('open');
-      entries.forEach(x => x.classList.remove('open'));
-      if (!wasOpen) li.classList.add('open');
+      li.classList.toggle('open');
     }});
   }});
 }})();

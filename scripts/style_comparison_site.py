@@ -570,8 +570,8 @@ def extract_hover_script(multi_root: Path) -> str:
 # `<a href="#CategoryTheory___Foo">…</a>` land inside a `.detail` panel that
 # is `display: none` until its `li.entry` has the `open` class. Without this
 # handler, clicking a cross-ref appends `#…` to the URL but scroll targets a
-# hidden element (no-op). This also closes other entries to mirror the
-# existing row-toggle behaviour.
+# hidden element (no-op). Other open entries are left open so users can
+# compare rows side-by-side.
 CROSSREF_CLICK_SCRIPT = """
 <script>
 (function() {{
@@ -584,12 +584,7 @@ CROSSREF_CLICK_SCRIPT = """
     if (!target) return;
     ev.preventDefault();
     const entry = target.closest('li.entry');
-    if (entry) {{
-      document.querySelectorAll('li.entry.open').forEach(x => {{
-        if (x !== entry) x.classList.remove('open');
-      }});
-      entry.classList.add('open');
-    }}
+    if (entry) entry.classList.add('open');
     // Scroll after the detail panel has been made visible.
     requestAnimationFrame(() => {{
       target.scrollIntoView({{ block: 'center', behavior: 'smooth' }});
