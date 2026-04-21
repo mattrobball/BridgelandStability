@@ -15,7 +15,12 @@ import sys
 
 
 def check_drift(extracted: list[dict], baseline: list[dict]) -> tuple[list[str], int]:
-    baseline_by_name = {e["declName"]: e for e in baseline}
+    # Key on `(declName, paperRef)` — one decl can carry multiple `@[informal]`
+    # tags, each producing its own extractor entry (and baseline record). Keying
+    # on `declName` alone collapsed the dual-tag case and would flag spurious
+    # "paper reference changed" drift whichever entry the dict overwrite
+    # happened to drop.
+    baseline_by_key = {(e["declName"], e.get("paperRef")): e for e in baseline}
     issues: list[str] = []
     informal_count = 0
 
@@ -25,25 +30,12 @@ def check_drift(extracted: list[dict], baseline: list[dict]) -> tuple[list[str],
             continue
         informal_count += 1
         name = ext["declName"]
-        old = baseline_by_name.get(name)
+        old = baseline_by_key.get((name, paper_ref))
         if old is None:
             issues.append(
                 f'@[informal "{paper_ref}"] on {name}: new declaration (not in baseline)'
             )
             continue
-
-        old_ref = old.get("paperRef")
-        if old_ref != paper_ref:
-            if old_ref is None:
-                issues.append(
-                    f'@[informal "{paper_ref}"] on {name}: '
-                    f"new @[informal] tag added"
-                )
-            else:
-                issues.append(
-                    f'@[informal "{paper_ref}"] on {name}: '
-                    f"paper reference changed ({old_ref} → {paper_ref})"
-                )
 
         old_hash = old.get("contentHash")
         new_hash = ext.get("contentHash")
@@ -80,13 +72,15 @@ def check_drift(extracted: list[dict], baseline: list[dict]) -> tuple[list[str],
                         f"dependency {dep_name} no longer exists"
                     )
 
-    # Check for removed tags: in baseline with paperRef but not in extracted with paperRef
-    extracted_tagged = {e["declName"] for e in extracted if e.get("paperRef")}
+    # Check for removed tags: baseline has this `(declName, paperRef)` pair
+    # but the freshly extracted set does not — the tag was dropped (or the
+    # paperRef changed, which manifests as drop + add).
+    extracted_keys = {(e["declName"], e["paperRef"]) for e in extracted if e.get("paperRef")}
     for old in baseline:
         old_ref = old.get("paperRef")
         if not old_ref:
             continue
-        if old["declName"] not in extracted_tagged:
+        if (old["declName"], old_ref) not in extracted_keys:
             issues.append(
                 f'@[informal "{old_ref}"] on {old["declName"]}: '
                 f"tag removed"

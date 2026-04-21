@@ -17,18 +17,49 @@ import json
 import sys
 
 
+def _key(e: dict) -> tuple[str, str | None]:
+    """Merge key: `(declName, paperRef)`.
+
+    A declaration may realize more than one paper statement (e.g. the
+    class-map form of a structure instantiates both the §1 axiom-form
+    and the §5 slicing-form of a definition). The upstream extractor
+    emits one entry per `@[informal]` tag; keying on `declName` alone
+    would collapse those back into one, silently losing prose bound to
+    the other `paperRef`. Untagged decls carry `paperRef=None`, which
+    is a well-formed key.
+    """
+    return (e["declName"], e.get("paperRef"))
+
+
 def merge(extracted: list[dict], existing: list[dict]) -> tuple[list[dict], list[dict], dict]:
-    existing_by_name = {e["declName"]: e for e in existing}
+    # Defensive dedup on `(declName, paperRef)`: the upstream `lean-informal`
+    # extractor double-emits for constants that appear in multiple modules'
+    # `constNames` (Lean 4 module system allows this). The outer module loop
+    # visits each such constant once per module and pushes an identical
+    # `DeclEntry` each time; the old `declName`-only merge key silently
+    # masked that. Upstream fix TODO in lean-informal's `collectDecls`.
+    seen_keys: set = set()
+    deduped: list[dict] = []
+    for ext in extracted:
+        key = _key(ext)
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        deduped.append(ext)
+    extracted = deduped
+
+    existing_by_key = {_key(e): e for e in existing}
     stats = {"kept": 0, "changed": 0, "added": 0, "stale": 0}
     merged = []
     seen = set()
 
     for ext in extracted:
+        key = _key(ext)
+        seen.add(key)
         name = ext["declName"]
-        seen.add(name)
 
-        if name in existing_by_name:
-            old = existing_by_name[name]
+        if key in existing_by_key:
+            old = existing_by_key[key]
             entry = {
                 "declName": name,
                 "declKind": ext["declKind"],
@@ -75,7 +106,7 @@ def merge(extracted: list[dict], existing: list[dict]) -> tuple[list[dict], list
 
     stale = []
     for old in existing:
-        if old["declName"] not in seen:
+        if _key(old) not in seen:
             stats["stale"] += 1
             stale.append(old)
 
