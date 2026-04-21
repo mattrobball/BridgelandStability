@@ -224,19 +224,27 @@ _INFORMAL_ATTR_RE = re.compile(
 
 
 def _strip_metadata(inner: str) -> str:
-    """Drop the leading `/-- … -/` docstring and the `@[informal …]` attribute
-    from a code block's inner HTML.  Both are metadata that duplicate info
-    shown in the dashboard's row header + code-head badge, so they add
-    visual noise without carrying information.  Any `<span class="inter-text">`
-    whitespace/newlines between the metadata blocks are also absorbed so the
-    surviving content starts cleanly at `def`/`theorem`/etc.
+    """Drop the leading `/-- … -/` docstring and every `@[informal …]`
+    attribute from a code block's inner HTML.  Both are metadata that
+    duplicate info shown in the dashboard's row header + code-head badge,
+    so they add visual noise without carrying information.  Any
+    `<span class="inter-text">` whitespace/newlines between the metadata
+    blocks are also absorbed so the surviving content starts cleanly at
+    `def`/`theorem`/etc.
 
-    Applied post-extraction so the raw Verso output is untouched — flip this
-    off by commenting out the call site if a user ever wants the metadata
-    visible.
+    A declaration may carry multiple `@[informal "…"]` tags (one per
+    paper statement it realizes); loop the attribute strip until no
+    match remains so every tag is removed.
+
+    Applied post-extraction so the raw Verso output is untouched — flip
+    this off by commenting out the call site if a user ever wants the
+    metadata visible.
     """
     inner = _LEAD_DOCCOMMENT_RE.sub("", inner, count=1)
-    inner = _INFORMAL_ATTR_RE.sub("", inner, count=1)
+    prev = None
+    while prev != inner:
+        prev = inner
+        inner = _INFORMAL_ATTR_RE.sub("", inner, count=1)
     # Absorb any remaining pure-whitespace inter-text spans at the very start.
     while True:
         new = _INTERTEXT_WS_RE.sub("", inner, count=1)
