@@ -195,10 +195,44 @@ def issue_url(repo_url: str, decl_name: str, module_name: str,
     return f"{repo_url}/issues/new?title={quote(title)}&body={quote(body)}&labels=exposition-review"
 
 
+def _collapse_multi_paperref(entries: list[dict]) -> list[dict]:
+    """Collapse multiple paperRef rows for the same `declName` into one.
+
+    The upstream extractor emits one entry per `@[informal]` tag, so a
+    decl carrying two tags lands here twice. Verso rejects two `# heading`
+    blocks with the same section tag, which is what PR #66 ran into. Keep
+    one entry per decl (first-seen wins for prose/proof/term expositions)
+    and collect every paperRef/paperComment/paperStatus onto a `refs` list
+    so the renderer can emit badges side-by-side.
+    """
+    by_decl: dict[str, dict] = {}
+    order: list[str] = []
+    for e in entries:
+        n = e["declName"]
+        if n not in by_decl:
+            by_decl[n] = {**e, "refs": []}
+            order.append(n)
+        ref = e.get("paperRef")
+        if ref:
+            by_decl[n]["refs"].append({
+                "paperRef": ref,
+                "paperComment": e.get("paperComment"),
+                "paperStatus": e.get("paperStatus"),
+            })
+        # Prefer the first non-empty prose/exposition seen for this decl.
+        for field in ("prose", "proofExposition", "termExposition"):
+            if not by_decl[n].get(field) and e.get(field):
+                by_decl[n][field] = e[field]
+    return [by_decl[n] for n in order]
+
+
 def generate_doc_file(module_name: str, entries: list, prefix: str,
                       repo_url: str | None = None,
                       title_override: str | None = None) -> str:
     """Generate a single Verso doc .lean file for one module."""
+    # Multi-paperRef collapse: one heading per declName, badges stacked.
+    entries = _collapse_multi_paperref(entries)
+
     lines = []
     lines.append(f"import {module_name}")
     lines.append("import VersoManual")
@@ -242,17 +276,28 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
         prose = entry.get("prose", "")
         proof_expo = entry.get("proofExposition")
         term_expo = entry.get("termExposition")
-        paper_ref = entry.get("paperRef")
-        paper_comment = entry.get("paperComment")
+        refs = entry.get("refs") or []
+        # Fallback: single paperRef without a `refs` field (shouldn't happen
+        # after _collapse_multi_paperref but robust against edge cases).
+        if not refs and entry.get("paperRef"):
+            refs = [{
+                "paperRef": entry["paperRef"],
+                "paperComment": entry.get("paperComment"),
+                "paperStatus": entry.get("paperStatus"),
+            }]
 
         # Escape underscores in headings — Verso treats _ as emphasis
         st_safe = heading.replace("_", "\\_")
         lines.append(f"# {st_safe}")
         lines.append("")
 
-        # Paper alignment badge
-        if paper_ref:
+        # Paper alignment badges (one line per tag).
+        for ref_info in refs:
+            paper_ref = ref_info.get("paperRef")
+            if not paper_ref:
+                continue
             badge = f"**\\[{paper_ref}\\]**"
+            paper_comment = ref_info.get("paperComment")
             if paper_comment:
                 safe_comment = sanitize_prose(paper_comment)
                 badge += f" {safe_comment}"
@@ -282,12 +327,14 @@ def generate_doc_file(module_name: str, entries: list, prefix: str,
         lines.append("{docstring " + decl_name + "}")
         lines.append("")
 
-        # Issue link
+        # Issue link — use the first paperRef for the URL; the body text
+        # can still mention both in the rendered page.
         if repo_url:
+            first_ref = refs[0]["paperRef"] if refs else None
             url = issue_url(
                 repo_url, decl_name, module_name,
                 entry.get("sourceFile"), entry.get("startLine"),
-                paper_ref,
+                first_ref,
             )
             lines.append(f"Something wrong, better idea? [Suggest a change]({url})")
             lines.append("")
