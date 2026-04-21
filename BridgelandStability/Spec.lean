@@ -37,8 +37,13 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
 variable (k : Type w) [Field k]
 
 /-- **Corollary 1.3** (Bridgeland 2007). Each connected component of the space of
-numerical stability conditions is a finite-dimensional complex manifold. -/
-@[informal "Corollary 1.3" "complex manifold conclusion only"]
+numerical stability conditions is a finite-dimensional complex manifold.
+
+The authoritative `@[informal "Corollary 1.3" …]` attribute lives on the
+complete proof in `BridgelandStability.NumericalStabilityManifold`; this
+`sorry`-version is kept only as the comparator target's spec statement, so
+it intentionally carries no `@[informal]` to avoid duplicating the paper
+alignment in the informalizations baseline. -/
 theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
     [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k]
