@@ -32,6 +32,22 @@ def _key(e: dict) -> tuple[str, str | None]:
 
 
 def merge(extracted: list[dict], existing: list[dict]) -> tuple[list[dict], list[dict], dict]:
+    # Defensive dedup on `(declName, paperRef)`: the upstream `lean-informal`
+    # extractor double-emits for constants that appear in multiple modules'
+    # `constNames` (Lean 4 module system allows this). The outer module loop
+    # visits each such constant once per module and pushes an identical
+    # `DeclEntry` each time; the old `declName`-only merge key silently
+    # masked that. Upstream fix TODO in lean-informal's `collectDecls`.
+    seen_keys: set = set()
+    deduped: list[dict] = []
+    for ext in extracted:
+        key = _key(ext)
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        deduped.append(ext)
+    extracted = deduped
+
     existing_by_key = {_key(e): e for e in existing}
     stats = {"kept": 0, "changed": 0, "added": 0, "stale": 0}
     merged = []

@@ -56,8 +56,7 @@ namespace PreStabilityCondition
 /-- A Bridgeland prestability condition with respect to a class map
 `v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient
 charge is recovered by precomposition with `v`. -/
-@[informal "Definition 1.1" "restated as Def 5.1" complete,
-  informal "Definition 5.1" complete]
+@[informal "Definition 1.1" "restated as Def 5.1" complete, informal "Definition 5.1" complete]
 structure WithClassMap (v : K₀ C →+ Λ) where
   /-- The underlying slicing. -/
   slicing : Slicing C
