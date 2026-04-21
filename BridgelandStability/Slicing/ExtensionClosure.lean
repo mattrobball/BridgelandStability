@@ -322,7 +322,6 @@ we have `φ⁺(A) ≤ φ⁺(E)`.
 
 The width condition `b ≤ a + 1` ensures `B⟦-1⟧` has all phases below any phase of `A`,
 so the factoring argument through `B⟦-1⟧` gives a contradiction. -/
-@[informal "Lemma 3.4" "φ⁺(A) ≤ φ⁺(E)"]
 theorem Slicing.phiPlus_triangle_le (s : Slicing C) {A E B : C}
     (hA : ¬IsZero A) (hE : ¬IsZero E)
     {a b : ℝ} (hab : b ≤ a + 1)
@@ -386,7 +385,6 @@ The proof uses the Yoneda exact sequence: if `φ⁻(E) > φ⁻(B)`, then maps `E
 vanish by hom-vanishing; by exactness, maps `B → B⁻` factor through `A⟦1⟧`, but
 A's shifted phases are too high, so all maps `A⟦1⟧ → B⁻` vanish too, giving
 `B⁻ = 0`, a contradiction. -/
-@[informal "Lemma 3.4" "φ⁻(E) ≤ φ⁻(B)"]
 theorem Slicing.phiMinus_triangle_le (s : Slicing C) {A E B : C}
     (hB : ¬IsZero B) (hE : ¬IsZero E)
     {a b : ℝ} (hab : b ≤ a + 1)
@@ -441,6 +439,23 @@ theorem Slicing.phiMinus_triangle_le (s : Slicing C) {A E B : C}
           (FB.semistable ⟨FB.n - 1, by lia⟩) GAs hAs_gap γ
   -- But B⁻ is nonzero and all maps B → B⁻ vanish — contradiction
   exact hneB (FB.isZero_factor_last_of_hom_eq_zero C s hnB hB_factor_zero)
+
+/-- **Lemma 3.4.** Let `𝒫` be a slicing of a triangulated category `𝒟` and let
+`I ⊂ ℝ` be an interval of length at most one. Suppose `A → E → B → A⟦1⟧` is a
+distinguished triangle in `𝒟` all of whose vertices are nonzero objects of
+`𝒫(I)`. Then `φ⁺(A) ≤ φ⁺(E)` and `φ⁻(E) ≤ φ⁻(B)`. -/
+@[informal "Lemma 3.4" complete]
+theorem Slicing.phi_triangle_le (s : Slicing C) {A E B : C}
+    (hA : ¬IsZero A) (hE : ¬IsZero E) (hB : ¬IsZero B)
+    {a b : ℝ} (hab : b ≤ a + 1)
+    (hA_int : s.intervalProp C a b A)
+    (hB_int : s.intervalProp C a b B)
+    {f : A ⟶ E} {g : E ⟶ B} {h : B ⟶ A⟦(1 : ℤ)⟧}
+    (hT : Triangle.mk f g h ∈ distTriang C) :
+    s.phiPlus C A hA ≤ s.phiPlus C E hE ∧
+      s.phiMinus C E hE ≤ s.phiMinus C B hB :=
+  ⟨s.phiPlus_triangle_le C hA hE hab hA_int hB_int hT,
+    s.phiMinus_triangle_le C hB hE hab hA_int hB_int hT⟩
 
 /-- Variant of **Lemma 3.4** (`phiMinus_triangle_le`) where the hypothesis `B ∈ P((a,b))`
 is weakened to `φ⁺(B) < b`. For a distinguished triangle `A → E → B → A⟦1⟧`
