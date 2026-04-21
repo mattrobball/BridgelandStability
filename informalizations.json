@@ -4360,7 +4360,7 @@
     "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.exists_eq_Z_and_slicingDist_lt_of_stabSeminorm_lt_sin",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.Theorem",
-    "docstring": "**Bridgeland's Theorem 7.1** (deformation of stability conditions). Under the\nusual small-deformation hypothesis on `W`, there exists a locally-finite stability\ncondition `τ = (W, Q)` with `d(P, Q) < ε`.\n\nThis is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict\nhypothesis `‖W - Z‖_σ < sin(πε)`. ",
+    "docstring": "Parametric deformation theorem: under the small-deformation hypothesis on `W`,\nthere exists a locally-finite stability condition `τ = (W, Q)` with `d(P, Q) < ε`.\nThe clean statement is `StabilityCondition.WithClassMap.deformation`.\n\nThis is obtained from `slicingDist_deformed_le` by shrinking `ε` slightly using the strict\nhypothesis `‖W - Z‖_σ < sin(πε)`. ",
     "contentHash": 2945119946,
     "depHashes": null,
     "paperRef": null,
@@ -12670,6 +12670,247 @@
     "termExposition": null
   },
   {
+    "declName": "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent",
+    "declKind": "theorem",
+    "moduleName": "BridgelandStability.NumericalStabilityManifold",
+    "docstring": "**Bridgeland's Corollary 1.3** for numerical stability conditions. Each connected\ncomponent of `Stab_N(D)` is a complex manifold of dimension `rk(N(D))`.\n\nThis is a specialization of the generic class-map theorem to\n`v = numericalQuotientMap k C`, which is surjective by definition. ",
+    "contentHash": 503045624,
+    "depHashes": [
+      {
+        "name": "K0Presentation",
+        "hash": 7772445006477011862
+      },
+      {
+        "name": "CategoryTheory.IsStrict",
+        "hash": 7135880552163233274
+      },
+      {
+        "name": "CategoryTheory.IsStrictArtinianObject",
+        "hash": 15388544720159029403
+      },
+      {
+        "name": "CategoryTheory.IsStrictMono",
+        "hash": 14779517540494153594
+      },
+      {
+        "name": "CategoryTheory.IsStrictNoetherianObject",
+        "hash": 2182356318851621875
+      },
+      {
+        "name": "CategoryTheory.StrictSubobject",
+        "hash": 3544390795110552247
+      },
+      {
+        "name": "CategoryTheory.isStrictArtinianObject",
+        "hash": 16350026007897470619
+      },
+      {
+        "name": "CategoryTheory.isStrictNoetherianObject",
+        "hash": 11174749214104362353
+      },
+      {
+        "name": "K0Presentation.IsAdditive",
+        "hash": 9675501635507814639
+      },
+      {
+        "name": "K0Presentation.K0",
+        "hash": 3659455236499603614
+      },
+      {
+        "name": "K0Presentation.instAddCommGroupK0",
+        "hash": 9165456505815703553
+      },
+      {
+        "name": "K0Presentation.lift",
+        "hash": 4789960066606284887
+      },
+      {
+        "name": "K0Presentation.subgroup",
+        "hash": 8313089044335043819
+      },
+      {
+        "name": "CategoryTheory.Subobject.IsStrict",
+        "hash": 15586729248856199015
+      },
+      {
+        "name": "CategoryTheory.Triangulated.HNFiltration",
+        "hash": 5533943424435606618
+      },
+      {
+        "name": "CategoryTheory.Triangulated.IsFiniteType",
+        "hash": 3562069142879585118
+      },
+      {
+        "name": "CategoryTheory.Triangulated.IsTriangleAdditive",
+        "hash": 2305209765178547060
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀",
+        "hash": 16179907036562392430
+      },
+      {
+        "name": "CategoryTheory.Triangulated.NumericalComponent",
+        "hash": 4435868589782282148
+      },
+      {
+        "name": "CategoryTheory.Triangulated.NumericalK₀",
+        "hash": 16610301436670210904
+      },
+      {
+        "name": "CategoryTheory.Triangulated.NumericallyFinite",
+        "hash": 18013020720795662258
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PostnikovTower",
+        "hash": 8675667888685392150
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing",
+        "hash": 18408969535839669265
+      },
+      {
+        "name": "CategoryTheory.Triangulated.basisNhd",
+        "hash": 13021198662277365634
+      },
+      {
+        "name": "CategoryTheory.Triangulated.cl",
+        "hash": 3325020243848601836
+      },
+      {
+        "name": "CategoryTheory.Triangulated.eulerForm",
+        "hash": 16646819050604296641
+      },
+      {
+        "name": "CategoryTheory.Triangulated.eulerFormInner",
+        "hash": 15310631517760485465
+      },
+      {
+        "name": "CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive",
+        "hash": 652538887
+      },
+      {
+        "name": "CategoryTheory.Triangulated.eulerFormObj",
+        "hash": 7267600246835421461
+      },
+      {
+        "name": "CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive",
+        "hash": 2777689636
+      },
+      {
+        "name": "CategoryTheory.Triangulated.eulerFormRad",
+        "hash": 9882453821919880245
+      },
+      {
+        "name": "CategoryTheory.Triangulated.instIsAdditiveSubtypeTriangleMemSetDistinguishedTrianglesTrianglePresentationOfIsTriangleAdditive",
+        "hash": 4270413924
+      },
+      {
+        "name": "CategoryTheory.Triangulated.numericalQuotientMap",
+        "hash": 17228282246361465177
+      },
+      {
+        "name": "CategoryTheory.Triangulated.slicingDist",
+        "hash": 9430808323950209248
+      },
+      {
+        "name": "CategoryTheory.Triangulated.stabSeminorm",
+        "hash": 13930161479186574991
+      },
+      {
+        "name": "CategoryTheory.Triangulated.trianglePresentation",
+        "hash": 12972622036783765388
+      },
+      {
+        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first",
+        "hash": 4257020478
+      },
+      {
+        "name": "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
+        "hash": 3099320964
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀.instAddCommGroup",
+        "hash": 16892865333854316272
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀.lift",
+        "hash": 10346925223641418920
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀.of",
+        "hash": 13044907939242779829
+      },
+      {
+        "name": "CategoryTheory.Triangulated.NumericalK₀.instAddCommGroup",
+        "hash": 4280083133995296455
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PostnikovTower.factor",
+        "hash": 6662455596190571773
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
+        "hash": 916775816589270417
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.IntervalCat",
+        "hash": 5964334993691740330
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.IsLocallyFinite",
+        "hash": 3411065432377103572
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels",
+        "hash": 2911349172
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels",
+        "hash": 580046852
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.intervalProp",
+        "hash": 11853708044905834547
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.phiMinus",
+        "hash": 2404613883158623531
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing.phiPlus",
+        "hash": 696119402052897309
+      },
+      {
+        "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap",
+        "hash": 7404402731433473216
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap.charge",
+        "hash": 13598234241301105364
+      },
+      {
+        "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.Component",
+        "hash": 14455369368778987842
+      },
+      {
+        "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.ComponentIndex",
+        "hash": 9882735463771168442
+      },
+      {
+        "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace",
+        "hash": 13789441654075307493
+      }
+    ],
+    "paperRef": "Corollary 1.3",
+    "paperComment": "complex manifold conclusion only",
+    "sourceFile": "BridgelandStability/NumericalStabilityManifold.lean",
+    "startLine": 199,
+    "endLine": 219,
+    "prose": "**Corollary 1.3** (Bridgeland 2007). Each connected component of the space of\n  numerical stability conditions on a triangulated category $\\mathcal{C}$ is a\n  finite-dimensional complex manifold. Here $\\mathcal{C}$ is a $k$-linear triangulated\n  category of finite type that is numerically finite, and the stability conditions are\n  numerical in the sense that they factor through the numerical Grothendieck group.",
+    "proofExposition": "The proof (currently `sorry`) should construct local charts by showing that the\n  forgetful map from stability conditions to the space of central charges (a\n  finite-dimensional complex vector space) is a local homeomorphism on each connected\n  component, using the deformation result (Theorem 1.2) and the support property.",
+    "termExposition": null
+  },
+  {
     "declName": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.existsComplexManifoldOnConnectedComponent",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.NumericalStabilityManifold",
@@ -16861,7 +17102,7 @@
     "declName": "CategoryTheory.Triangulated.basisNhd_subset_connectedComponent_small",
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Deformation",
-    "docstring": "A small Bridgeland basis neighborhood, with radius below the local Theorem 7.1 witness,\nlies in the connected component of its center. This is the direct straight-line interpolation\nargument from Bridgeland §7. ",
+    "docstring": "A small Bridgeland basis neighborhood, with radius below the local deformation witness,\nlies in the connected component of its center. This is the direct straight-line interpolation\nargument from Bridgeland §7. ",
     "contentHash": 1090697293,
     "depHashes": null,
     "paperRef": null,
@@ -20072,6 +20313,399 @@
     "endLine": 66,
     "prose": "**No negative Hom spaces in the heart.** For objects $X, Y$ in the heart of a\n  t-structure $t$, every morphism $\\iota(X) \\to \\iota(Y)[n]$ is zero when $n < 0$.",
     "proofExposition": "Since $\\iota(Y)[n]$ is $\\operatorname{IsGE}(-n)$ with $-n > 0$ and $\\iota(X)$ is\n  $\\operatorname{IsLE}(0)$, the vanishing $t.\\operatorname{zero}$ applies.",
+    "termExposition": null
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.TStructure",
+    "declKind": "structure",
+    "moduleName": "Mathlib.CategoryTheory.Triangulated.TStructure.Basic",
+    "docstring": "`TStructure C` is the type of t-structures on the (pre)triangulated category `C`. ",
+    "contentHash": 3943193091351877170,
+    "depHashes": [
+      {
+        "name": "AddCommGroup",
+        "hash": 6659035532852017114
+      },
+      {
+        "name": "AddCommMagma",
+        "hash": 6545775831447785700
+      },
+      {
+        "name": "AddCommMonoid",
+        "hash": 13813515205345874403
+      },
+      {
+        "name": "AddCommSemigroup",
+        "hash": 12693762222079899602
+      },
+      {
+        "name": "AddGroup",
+        "hash": 13269633872838146677
+      },
+      {
+        "name": "AddMonoid",
+        "hash": 16651063591713424242
+      },
+      {
+        "name": "AddMonoidHom",
+        "hash": 13546652241828883971
+      },
+      {
+        "name": "AddSemigroup",
+        "hash": 8564862895682757602
+      },
+      {
+        "name": "AddZero",
+        "hash": 1965140377217124587
+      },
+      {
+        "name": "AddZeroClass",
+        "hash": 17554093660357562101
+      },
+      {
+        "name": "DFunLike",
+        "hash": 5236380376036287105
+      },
+      {
+        "name": "FunLike",
+        "hash": 14557751204350840947
+      },
+      {
+        "name": "NegZeroClass",
+        "hash": 6900538392017135355
+      },
+      {
+        "name": "Quiver",
+        "hash": 17613988096915074787
+      },
+      {
+        "name": "Set",
+        "hash": 12061725012285573178
+      },
+      {
+        "name": "SubNegMonoid",
+        "hash": 1536439629814407840
+      },
+      {
+        "name": "SubNegZeroMonoid",
+        "hash": 18432062057584094576
+      },
+      {
+        "name": "SubtractionCommMonoid",
+        "hash": 14531239308296108257
+      },
+      {
+        "name": "SubtractionMonoid",
+        "hash": 15830627602879715510
+      },
+      {
+        "name": "Unique",
+        "hash": 6668370014527964068
+      },
+      {
+        "name": "ZeroHom",
+        "hash": 2209333684584700857
+      },
+      {
+        "name": "add_assoc",
+        "hash": 2282563254
+      },
+      {
+        "name": "add_zero",
+        "hash": 240533532
+      },
+      {
+        "name": "zero_add",
+        "hash": 2816315513
+      },
+      {
+        "name": "AddCommGroup.toAddCommMonoid",
+        "hash": 8760339070181832228
+      },
+      {
+        "name": "AddCommGroup.toDivisionAddCommMonoid",
+        "hash": 17761991631983829468
+      },
+      {
+        "name": "AddCommMonoid.toAddCommSemigroup",
+        "hash": 5518367559316753239
+      },
+      {
+        "name": "AddCommSemigroup.toAddCommMagma",
+        "hash": 4029686369576391697
+      },
+      {
+        "name": "AddGroup.toSubtractionMonoid",
+        "hash": 13313973216256566347
+      },
+      {
+        "name": "AddMonoid.toAddZeroClass",
+        "hash": 1671432546039951440
+      },
+      {
+        "name": "AddMonoidHom.instFunLike",
+        "hash": 4057309317948993489
+      },
+      {
+        "name": "AddMonoidHom.mk'",
+        "hash": 538625491227372607
+      },
+      {
+        "name": "CategoryTheory.Category",
+        "hash": 4618011946304042801
+      },
+      {
+        "name": "CategoryTheory.CategoryStruct",
+        "hash": 2121860091471463067
+      },
+      {
+        "name": "CategoryTheory.Discrete",
+        "hash": 6151877185080023117
+      },
+      {
+        "name": "CategoryTheory.Functor",
+        "hash": 14712327566494790624
+      },
+      {
+        "name": "CategoryTheory.HasShift",
+        "hash": 14268412343454409882
+      },
+      {
+        "name": "CategoryTheory.Iso",
+        "hash": 6881716723762791700
+      },
+      {
+        "name": "CategoryTheory.MonoidalCategory",
+        "hash": 9425391600375134897
+      },
+      {
+        "name": "CategoryTheory.MonoidalCategoryStruct",
+        "hash": 878130848856041490
+      },
+      {
+        "name": "CategoryTheory.NatTrans",
+        "hash": 12496764819444498722
+      },
+      {
+        "name": "CategoryTheory.ObjectProperty",
+        "hash": 17180298925034474704
+      },
+      {
+        "name": "CategoryTheory.Preadditive",
+        "hash": 760109671334979752
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated",
+        "hash": 2477927523750950947
+      },
+      {
+        "name": "CategoryTheory.SmallCategory",
+        "hash": 12623568952838748402
+      },
+      {
+        "name": "CategoryTheory.discreteCategory",
+        "hash": 2841269008655943132
+      },
+      {
+        "name": "CategoryTheory.endofunctorMonoidalCategory",
+        "hash": 16813242318250085354
+      },
+      {
+        "name": "CategoryTheory.eqToHom",
+        "hash": 17582156875115769350
+      },
+      {
+        "name": "CategoryTheory.eqToIso",
+        "hash": 5023815375055365137
+      },
+      {
+        "name": "CategoryTheory.shiftFunctor",
+        "hash": 9434215458596365100
+      },
+      {
+        "name": "CategoryTheory.shiftMonoidalFunctor",
+        "hash": 9768030860307420083
+      },
+      {
+        "name": "Int.instAddCommGroup",
+        "hash": 4228777541947103761
+      },
+      {
+        "name": "Int.instAddMonoid",
+        "hash": 8437843800844441303
+      },
+      {
+        "name": "Pi.hasLe",
+        "hash": 6011038414987292731
+      },
+      {
+        "name": "Prop.le",
+        "hash": 4831728881545868379
+      },
+      {
+        "name": "Set.Mem",
+        "hash": 15432625977473410149
+      },
+      {
+        "name": "Set.instMembership",
+        "hash": 7732108673982549572
+      },
+      {
+        "name": "SubNegZeroMonoid.toNegZeroClass",
+        "hash": 5599413253072894752
+      },
+      {
+        "name": "SubtractionMonoid.toSubNegZeroMonoid",
+        "hash": 2832039025617106794
+      },
+      {
+        "name": "CategoryTheory.Discrete.addMonoidal",
+        "hash": 8887818303909638790
+      },
+      {
+        "name": "CategoryTheory.Discrete.eqToHom",
+        "hash": 14461959410108783869
+      },
+      {
+        "name": "CategoryTheory.Discrete.eqToIso",
+        "hash": 18034145360526163623
+      },
+      {
+        "name": "CategoryTheory.Functor.Additive",
+        "hash": 13997607404489906480
+      },
+      {
+        "name": "CategoryTheory.Functor.LaxMonoidal",
+        "hash": 14030234872444456675
+      },
+      {
+        "name": "CategoryTheory.Functor.Monoidal",
+        "hash": 9178869469075773078
+      },
+      {
+        "name": "CategoryTheory.Functor.OplaxMonoidal",
+        "hash": 14162495720320005375
+      },
+      {
+        "name": "CategoryTheory.Functor.associator",
+        "hash": 12436958474509398573
+      },
+      {
+        "name": "CategoryTheory.Functor.category",
+        "hash": 4723898808814153568
+      },
+      {
+        "name": "CategoryTheory.Functor.comp",
+        "hash": 3816224558022457002
+      },
+      {
+        "name": "CategoryTheory.Functor.id",
+        "hash": 6121299363526484005
+      },
+      {
+        "name": "CategoryTheory.Functor.leftUnitor",
+        "hash": 14648616186296208218
+      },
+      {
+        "name": "CategoryTheory.Functor.rightUnitor",
+        "hash": 8569711873434471251
+      },
+      {
+        "name": "CategoryTheory.Functor.whiskerLeft",
+        "hash": 13747912619373749385
+      },
+      {
+        "name": "CategoryTheory.Functor.whiskerRight",
+        "hash": 15251089827270816163
+      },
+      {
+        "name": "CategoryTheory.Limits.HasZeroMorphisms",
+        "hash": 9901963989782752188
+      },
+      {
+        "name": "CategoryTheory.Limits.HasZeroObject",
+        "hash": 14166879773132787117
+      },
+      {
+        "name": "CategoryTheory.Limits.IsZero",
+        "hash": 11986059673602407127
+      },
+      {
+        "name": "CategoryTheory.NatTrans.hcomp",
+        "hash": 13608813945135818923
+      },
+      {
+        "name": "CategoryTheory.NatTrans.id",
+        "hash": 12614531061701356954
+      },
+      {
+        "name": "CategoryTheory.NatTrans.vcomp",
+        "hash": 10056680553393628233
+      },
+      {
+        "name": "CategoryTheory.ObjectProperty.IsClosedUnderIsomorphisms",
+        "hash": 6607961011410488044
+      },
+      {
+        "name": "CategoryTheory.Preadditive.leftComp",
+        "hash": 4497347713120110879
+      },
+      {
+        "name": "CategoryTheory.Preadditive.preadditiveHasZeroMorphisms",
+        "hash": 14032755369195481332
+      },
+      {
+        "name": "CategoryTheory.Preadditive.rightComp",
+        "hash": 723822040550814326
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.Triangle",
+        "hash": 6668832316616135526
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.TriangleMorphism",
+        "hash": 3670750763754459526
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.contractibleTriangle",
+        "hash": 10576459317217052298
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.triangleCategory",
+        "hash": 8205892836934958111
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.triangleMorphismId",
+        "hash": 16589190875797216151
+      },
+      {
+        "name": "CategoryTheory.Triangulated.TStructure",
+        "hash": 3943193091351877170
+      },
+      {
+        "name": "CategoryTheory.Limits.HasZeroObject.zero'",
+        "hash": 17207991343673852696
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.Triangle.mk",
+        "hash": 11925518656110093740
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.Triangle.rotate",
+        "hash": 15449648048945606189
+      },
+      {
+        "name": "CategoryTheory.Pretriangulated.TriangleMorphism.comp",
+        "hash": 6128864676716477096
+      }
+    ],
+    "paperRef": "Definition 3.1",
+    "paperComment": null,
+    "sourceFile": "Mathlib/CategoryTheory/Triangulated/TStructure/Basic.lean",
+    "startLine": 55,
+    "endLine": 69,
+    "prose": "",
+    "proofExposition": null,
     "termExposition": null
   }
 ]

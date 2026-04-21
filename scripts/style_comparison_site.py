@@ -94,9 +94,98 @@ def find_entry_page(multi_root: Path, section_num: str, ref: str) -> Path | None
 # Extract Verso-rendered code blocks from an entry page
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Recover the true decl keyword from source
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# `extracted.json`'s `declKind` field can say "axiom" for decls that are in
+# fact `theorem` in the source. This happens because `extract_decls` loads
+# the project env via `importModules`, and Lean 4's module system resolves
+# unexposed theorem bodies to their signature-only (axiom) form in the
+# `.olean`. The decl keyword in the source file is ground truth — read it.
+
+_LEAN_KEYWORDS = {
+    "theorem", "lemma", "def", "abbrev", "opaque", "axiom",
+    "structure", "class", "instance", "inductive",
+    "example", "noncomputable",  # noncomputable is a modifier, stripped below
+}
+
+_ATTR_LINE_RE = re.compile(r"^\s*@\[.*?\]\s*$")
+
+
+def true_decl_kind(source_path: str, start_line: int,
+                   project_root: Path) -> str | None:
+    """Return the first Lean declaration keyword at or after
+    `source_path:start_line`, stepping over docstrings (`/-- … -/`),
+    attribute lines (`@[...]`), and leading modifiers (`noncomputable`,
+    `private`, etc.).
+
+    `findDeclarationRanges?` reports the *start* of the declaration as the
+    first docstring / attribute line above the keyword, not the keyword
+    itself — so a forward scan is needed.  Returns `None` if nothing is
+    found within ~30 lines.
+    """
+    if not source_path or not start_line:
+        return None
+    abs_path = project_root / source_path
+    try:
+        with abs_path.open() as f:
+            lines = f.readlines()
+    except OSError:
+        return None
+    skip_modifiers = {
+        "noncomputable", "private", "protected", "public",
+        "meta", "partial", "unsafe", "scoped", "local",
+    }
+    i = max(0, start_line - 1)
+    in_block_comment = False
+    n = min(i + 30, len(lines))
+    while i < n:
+        line = lines[i].strip()
+        i += 1
+        # Handle `/-- … -/` docstrings that may span multiple lines.
+        if in_block_comment:
+            if "-/" in line:
+                in_block_comment = False
+                rest = line.split("-/", 1)[1].strip()
+                if not rest:
+                    continue
+                line = rest
+            else:
+                continue
+        if line.startswith("/-"):
+            if "-/" in line[2:]:
+                line = line.split("-/", 1)[1].strip()
+                if not line:
+                    continue
+            else:
+                in_block_comment = True
+                continue
+        if not line or line.startswith("--"):
+            continue
+        # Skip an entire `@[...]` attribute line (single-line form).
+        if _ATTR_LINE_RE.match(line) or line.startswith("@["):
+            # Attributes can wrap; but if the closing `]` is on this line,
+            # the attribute is done. Otherwise consume until we find one.
+            if "]" not in line:
+                while i < n and "]" not in lines[i]:
+                    i += 1
+                i += 1  # consume the line with `]`
+            continue
+        tokens = line.split()
+        for tok in tokens:
+            if tok in skip_modifiers:
+                continue
+            if tok in _LEAN_KEYWORDS:
+                return tok
+            # Non-keyword at the declaration slot — give up on this line.
+            break
+    return None
+
+
 _MAIN_RE = re.compile(r"<main[\s>].*?</main>", re.DOTALL)
 _CODE_BLOCK_RE = re.compile(
-    r'<code class="hl lean block"[^>]*>.*?</code>', re.DOTALL
+    r'(<code class="hl lean block"[^>]*>)(.*?)(</code>)', re.DOTALL
 )
 _HREF_RE = re.compile(r'href="([^"]+)"')
 _ID_RE = re.compile(r'\sid="([^"]+)"')
@@ -106,19 +195,74 @@ _A_WITH_HREF_RE = re.compile(
     re.DOTALL,
 )
 
+# A single whitespace-only `<span class="inter-text">…</span>` (holds source
+# whitespace between Verso tokens).
+_INTERTEXT_WS_RE = re.compile(
+    r'<span class="inter-text"[^>]*>\s*</span>', re.DOTALL
+)
+
+# The leading `/-- … -/` docstring Verso emits as a single
+# `<span class="doc-comment token">…</span>`.
+_LEAD_DOCCOMMENT_RE = re.compile(
+    r'^\s*<span class="doc-comment token"[^>]*>.*?</span>\s*'
+    r'(?:<span class="inter-text"[^>]*>\s*</span>\s*)*',
+    re.DOTALL,
+)
+
+# `@[informal …]` attribute: matches from an `@[` unknown-token span through
+# the next `]` unknown-token span at the top level. Attribute string args
+# contain no `]`, so non-greedy matching is safe.
+_INFORMAL_ATTR_RE = re.compile(
+    r'<span class="unknown token"[^>]*>@\[</span>'
+    r'.*?'
+    r'<span class="[^"]*keyword[^"]*token[^"]*"[^>]*>informal</span>'
+    r'.*?'
+    r'<span class="unknown token"[^>]*>\]</span>\s*'
+    r'(?:<span class="inter-text"[^>]*>\s*</span>\s*)*',
+    re.DOTALL,
+)
+
+
+def _strip_metadata(inner: str) -> str:
+    """Drop the leading `/-- … -/` docstring and the `@[informal …]` attribute
+    from a code block's inner HTML.  Both are metadata that duplicate info
+    shown in the dashboard's row header + code-head badge, so they add
+    visual noise without carrying information.  Any `<span class="inter-text">`
+    whitespace/newlines between the metadata blocks are also absorbed so the
+    surviving content starts cleanly at `def`/`theorem`/etc.
+
+    Applied post-extraction so the raw Verso output is untouched — flip this
+    off by commenting out the call site if a user ever wants the metadata
+    visible.
+    """
+    inner = _LEAD_DOCCOMMENT_RE.sub("", inner, count=1)
+    inner = _INFORMAL_ATTR_RE.sub("", inner, count=1)
+    # Absorb any remaining pure-whitespace inter-text spans at the very start.
+    while True:
+        new = _INTERTEXT_WS_RE.sub("", inner, count=1)
+        if new == inner or not new.startswith("<span") or "inter-text" not in new[:80]:
+            break
+        inner = new
+    return inner.lstrip()
+
 
 def extract_code_blocks_raw(entry_page: Path) -> list[str]:
     """Return each `<code class="hl lean block">…</code>` verbatim from the
-    entry page's `<main>`. Uses byte-exact regex slicing because BS4's
-    `html.parser` normalizes leading whitespace inside `<span>` text nodes,
-    destroying Verso's source indentation encoded as
+    entry page's `<main>`, with leading `/-- … -/` docstring and
+    `@[informal …]` attribute stripped.  Uses byte-exact regex slicing
+    because BS4's `html.parser` normalizes leading whitespace inside
+    `<span>` text nodes, destroying Verso's source indentation encoded as
     `<span class="inter-text">\\n    </span>`.
     """
     text = entry_page.read_text()
     main_match = _MAIN_RE.search(text)
     if main_match is None:
         return []
-    return [m.group(0) for m in _CODE_BLOCK_RE.finditer(main_match.group(0))]
+    results: list[str] = []
+    for m in _CODE_BLOCK_RE.finditer(main_match.group(0)):
+        open_tag, inner, close_tag = m.group(1), m.group(2), m.group(3)
+        results.append(open_tag + _strip_metadata(inner) + close_tag)
+    return results
 
 
 def rewrite_code_block_hrefs(block: str,
@@ -159,15 +303,68 @@ def collect_ids(block: str) -> list[str]:
 # Row renderer (dashboard-style, with Verso-rendered code blocks)
 # ─────────────────────────────────────────────────────────────────────────────
 
+MATHLIB_DOCS_BASE = "https://leanprover-community.github.io/mathlib4_docs"
+
+
+def is_external_decl(decl: dict, project_prefix: str) -> bool:
+    """True when the decl lives outside the current project — e.g. a
+    `#informal_external` pointer to a mathlib constant.  Detected by
+    `moduleName` not starting with the project prefix."""
+    module = decl.get("moduleName", "")
+    return bool(module) and not module.startswith(project_prefix)
+
+
+def render_external_panel(decl: dict) -> str:
+    """Link-out panel for a `#informal_external` decl.  No Verso rendering —
+    the upstream source lives outside BS's shadow project (mathlib,
+    typically), so we surface the decl name + a link to the mathlib docs
+    page rather than trying to mirror its code."""
+    name = decl["declName"]
+    module = decl.get("moduleName", "Mathlib")
+    kind = decl.get("declKind", "")
+    docs_url = f"{MATHLIB_DOCS_BASE}/{module.replace('.', '/')}.html#{name}"
+    safe_name = html.escape(name)
+    safe_module = html.escape(module)
+    safe_kind = html.escape(kind)
+    safe_url = html.escape(docs_url)
+    source_label = "Mathlib" if module.startswith("Mathlib.") else "upstream"
+    return f'''
+<div class="lean-panel external-panel">
+  <div class="code-head">
+    <span class="decl">{safe_name} <span class="kind">{safe_kind}</span></span>
+    <a href="{safe_url}" target="_blank" rel="noopener">view in {source_label} ↗</a>
+  </div>
+  <div class="external-note">
+    Formalized upstream as <code>{safe_name}</code> in <code>{safe_module}</code>.
+  </div>
+</div>
+'''
+
+
 def render_lean_panel_verso(decl: dict, paper_ref: str, repo_url: str,
-                            code_html: str | None) -> str:
-    """Dashboard-styled lean panel whose body is a Verso `<code>` block."""
+                            code_html: str | None,
+                            project_root: Path) -> str:
+    """Dashboard-styled lean panel whose body is a Verso `<code>` block.
+
+    The panel deliberately omits the `@[informal "…"]` attribute badge and
+    the leading docstring the original `generate_comparison.py` used to show
+    — paperRef is already in the row's `c-ref` column, paperComment is
+    redundant, and the docstring (when present) has been stripped from the
+    embedded Verso block by `_strip_metadata`.
+
+    Kind classification: prefer the real source keyword (`theorem`/`def`/…)
+    over `extracted.json`'s `declKind` when they disagree. Lean 4's module
+    system resolves unexposed theorem bodies to their signature-only (axiom)
+    form in `.olean`s, and `extract_decls` classifies off `env.find?`, so
+    legitimate theorems can leak through tagged as `"axiom"`. Reading the
+    source gives ground truth.
+    """
     decl_name = html.escape(decl["declName"])
-    kind = html.escape(decl.get("declKind", ""))
     sf = decl.get("sourceFile", "")
     line = decl.get("startLine", "")
+    kind_from_source = true_decl_kind(sf, line, project_root) if isinstance(line, int) else None
+    kind = html.escape(kind_from_source or decl.get("declKind", ""))
     url = source_url(repo_url, decl)
-    attr_text = render_attribute(paper_ref, decl.get("paperComment"))
     if code_html:
         # Verso's <code class="hl lean block"> already handles whitespace
         # (white-space: pre + display: block via extracted CSS), so we do NOT
@@ -179,20 +376,17 @@ def render_lean_panel_verso(decl: dict, paper_ref: str, repo_url: str,
     return f'''
 <div class="lean-panel">
   <div class="code-head">
-    <span class="attr">{attr_text}</span>
+    <span class="decl">{decl_name} <span class="kind">{kind}</span></span>
     <a href="{html.escape(url)}" target="_blank" rel="noopener">view source ↗</a>
   </div>
   <div class="codeblock verso-codeblock">{body_html}</div>
-  <div class="code-foot">
-    <span class="decl">{decl_name} · <em>{kind}</em></span>
-    <span>{html.escape(sf)}:{line}</span>
-  </div>
 </div>
 '''
 
 
 def render_row(row: dict, code_blocks_by_name: dict[str, str],
-               repo_url: str) -> str:
+               repo_url: str, project_root: Path,
+               project_prefix: str) -> str:
     ref = catchword(row["paperRef"])
     section = html.escape(row.get("section", ""))
     prose = html.escape(row["prose"])
@@ -207,8 +401,10 @@ def render_row(row: dict, code_blocks_by_name: dict[str, str],
 
     if decls:
         panels = "".join(
-            render_lean_panel_verso(d, row["paperRef"], repo_url,
-                                    code_blocks_by_name.get(d["declName"]))
+            render_external_panel(d) if is_external_decl(d, project_prefix)
+            else render_lean_panel_verso(d, row["paperRef"], repo_url,
+                                         code_blocks_by_name.get(d["declName"]),
+                                         project_root)
             for d in decls
         )
     else:
@@ -293,6 +489,38 @@ DASHBOARD_VERSO_VARS = """
 }}
 .codeblock.verso-codeblock a:hover {{
   border-bottom-color: var(--accent, #2c6742);
+}}
+/* New code-head slot: fully-qualified decl name + declKind pill.
+   `.code-head` defaults to uppercase tracking; override to a readable mono
+   style for the decl name. */
+.code-head .decl {{
+  font-family: "JetBrains Mono", monospace; font-weight: 500;
+  font-size: 11.5px; color: var(--fg-mid); text-transform: none;
+  letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; min-width: 0; flex: 1 1 auto;
+}}
+.code-head .decl .kind {{
+  color: var(--fg-faint); font-weight: 400; font-style: italic;
+  margin-left: 6px;
+}}
+/* External (upstream / mathlib) panels: compact link-out rather than a
+   code block.  The formalization lives outside the current project — we
+   surface the decl name and a docs link instead of mirroring the source. */
+.external-panel .external-note {{
+  font-size: 13.5px; line-height: 1.5; color: var(--fg-mid);
+  background: var(--bg-code); border: 1px solid var(--rule);
+  padding: 10px 14px;
+}}
+.external-panel .external-note code {{
+  font-family: "JetBrains Mono", monospace; font-size: 11.5px;
+  color: var(--fg); background: var(--bg-row-alt);
+  padding: 1px 6px; border: 1px solid var(--rule);
+}}
+.external-panel .code-head .decl .kind {{
+  color: #1d3f6e; font-style: normal; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.08em; font-size: 9.5px;
+  border: 1px solid rgba(29, 63, 110, 0.35);
+  padding: 1px 6px 0; border-radius: 2px; margin-left: 8px;
 }}
 </style>
 """
@@ -416,6 +644,15 @@ def main() -> int:
     ap.add_argument("--output", default="comparison-dashboard",
                     help="Output directory")
     ap.add_argument("--repo-url", default="https://github.com/mattrobball/BridgelandStability")
+    ap.add_argument("--project-root", default=".",
+                    help="Path to the Lean project root (for reading decl "
+                         "sources to recover true keyword when extracted.json "
+                         "misclassifies sorry'd/unexposed theorems as `axiom`)")
+    ap.add_argument("--project-prefix", default="BridgelandStability",
+                    help="Module-name prefix identifying local decls; any "
+                         "decl whose moduleName is outside this prefix is "
+                         "treated as external (e.g. mathlib) and rendered as "
+                         "a link-out panel instead of a Verso code block.")
     ap.add_argument("--copy-entries", action="store_true",
                     help="(Deprecated) Copy the Verso multi-page tree into "
                          "OUTPUT/entries/. No longer needed — out-of-dashboard "
@@ -430,6 +667,43 @@ def main() -> int:
     )
 
     rows = load_and_join(args.paper, args.extracted)
+
+    # Upstream `extract_decls` can emit multiple entries for the same
+    # `declName` when Lean 4's module system lets two `.lean` files claim
+    # the same constant (e.g. `Spec.lean` + `NumericalStabilityManifold.lean`
+    # both declaring `existsComplexManifoldOnConnectedComponent`). Every such
+    # duplicate shares the same `startLine` from `findDeclarationRanges?` —
+    # correct for one `sourceFile`, bogus for the other (past EOF). Dedupe
+    # by `declName`, preferring the entry whose `(sourceFile, startLine)`
+    # actually points inside the file.
+    project_root_path = Path(args.project_root).resolve()
+    def line_in_file(d: dict) -> bool:
+        sf = d.get("sourceFile") or ""
+        ln = d.get("startLine")
+        if not sf or not isinstance(ln, int):
+            return False
+        try:
+            with (project_root_path / sf).open() as f:
+                return ln <= sum(1 for _ in f)
+        except OSError:
+            return False
+
+    for row in rows:
+        by_name: dict[str, dict] = {}
+        order: list[str] = []
+        for d in row["declarations"]:
+            name = d.get("declName", "")
+            if not name:
+                continue
+            if name not in by_name:
+                order.append(name)
+                by_name[name] = d
+                continue
+            # Same-name duplicate: prefer the entry whose source line is
+            # actually inside its file.
+            if line_in_file(d) and not line_in_file(by_name[name]):
+                by_name[name] = d
+        row["declarations"] = [by_name[n] for n in order]
 
     # Two-pass extraction:
     #   pass 1 — pull code blocks verbatim from each Verso entry page and
@@ -504,7 +778,8 @@ def main() -> int:
     n_incomplete = sum(1 for r in rows if r["status"] == "incomplete")
     n_missing = sum(1 for r in rows if r["status"] == "missing")
 
-    rows_html = "\n".join(render_row(r, code_blocks_by_name, args.repo_url)
+    rows_html = "\n".join(render_row(r, code_blocks_by_name, args.repo_url,
+                                     project_root_path, args.project_prefix)
                           for r in rows)
 
     subtitle = (
