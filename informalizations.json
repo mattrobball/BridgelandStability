@@ -12661,7 +12661,7 @@
       }
     ],
     "paperRef": "Corollary 1.3",
-    "paperComment": "complex manifold conclusion only",
+    "paperComment": "complex manifold conclusion only; local homeomorphism is in componentTopologicalLinearLocalModel",
     "sourceFile": "BridgelandStability/Spec.lean",
     "startLine": 199,
     "endLine": 219,
@@ -17112,6 +17112,71 @@
     "prose": "A **Bridgeland prestability condition** on $\\mathcal{C}$, defined as the\n  specialization of `PreStabilityCondition.WithClassMap` to the identity class map\n  $\\operatorname{id} \\colon K_0(\\mathcal{C}) \\to K_0(\\mathcal{C})$.",
     "proofExposition": null,
     "termExposition": "An abbreviation for `PreStabilityCondition.WithClassMap C (AddMonoidHom.id (K₀ C))`."
+  },
+  {
+    "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
+    "declKind": "structure",
+    "moduleName": "BridgelandStability.StabilityCondition.Defs",
+    "docstring": "A Bridgeland prestability condition with respect to a class map\n`v : K₀(C) → Λ`. The central charge lives on `Λ`, and the ordinary ambient\ncharge is recovered by precomposition with `v`. ",
+    "contentHash": 916775816589270417,
+    "depHashes": [
+      {
+        "name": "K0Presentation",
+        "hash": 7772445006477011862
+      },
+      {
+        "name": "K0Presentation.K0",
+        "hash": 3659455236499603614
+      },
+      {
+        "name": "K0Presentation.instAddCommGroupK0",
+        "hash": 9165456505815703553
+      },
+      {
+        "name": "K0Presentation.subgroup",
+        "hash": 8313089044335043819
+      },
+      {
+        "name": "CategoryTheory.Triangulated.HNFiltration",
+        "hash": 5533943424435606618
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀",
+        "hash": 16179907036562392430
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PostnikovTower",
+        "hash": 8675667888685392150
+      },
+      {
+        "name": "CategoryTheory.Triangulated.Slicing",
+        "hash": 18408969535839669265
+      },
+      {
+        "name": "CategoryTheory.Triangulated.trianglePresentation",
+        "hash": 12972622036783765388
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀.instAddCommGroup",
+        "hash": 16892865333854316272
+      },
+      {
+        "name": "CategoryTheory.Triangulated.K₀.of",
+        "hash": 13044907939242779829
+      },
+      {
+        "name": "CategoryTheory.Triangulated.PostnikovTower.factor",
+        "hash": 6662455596190571773
+      }
+    ],
+    "paperRef": "Definition 1.1",
+    "paperComment": "restated as Def 5.1",
+    "sourceFile": "BridgelandStability/StabilityCondition/Defs.lean",
+    "startLine": 57,
+    "endLine": 69,
+    "prose": "",
+    "proofExposition": null,
+    "termExposition": null
   },
   {
     "declName": "CategoryTheory.Triangulated.PreStabilityCondition.WithClassMap",
