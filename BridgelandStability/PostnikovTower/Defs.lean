@@ -153,4 +153,17 @@ lemma cone_mem_prop (h : IsPostnikovTower Q chain) (i : Fin n) : (Q i) (h.cone i
 
 end IsPostnikovTower
 
+/-- `IsPostnikovTower Q` is closed under isomorphisms of composable arrows:
+if two chains are naturally isomorphic, being a Postnikov tower transports across. -/
+instance IsPostnikovTower.isClosedUnderIsomorphisms {n : ℕ}
+    (Q : Fin n → ObjectProperty C) :
+    ObjectProperty.IsClosedUnderIsomorphisms
+      (IsPostnikovTower (C := C) Q : ObjectProperty (ComposableArrows C n)) where
+  of_iso {chain₁ chain₂} e h :=
+    { base_isZero := h.base_isZero.of_iso (e.app (⟨0, by lia⟩ : Fin (n + 1))).symm
+      cone_mem i :=
+        ((Q i).trW.arrow_mk_iso_iff
+          (Arrow.isoMk (e.app ⟨i.val, by lia⟩) (e.app ⟨i.val + 1, by lia⟩)
+            (e.hom.naturality _).symm)).mp (h.cone_mem i) }
+
 end CategoryTheory.Triangulated
