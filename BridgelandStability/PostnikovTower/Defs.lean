@@ -6,7 +6,9 @@ Authors: Formalization
 module
 
 public import Mathlib.CategoryTheory.Triangulated.Pretriangulated
+public import Mathlib.CategoryTheory.Triangulated.Subcategory
 public import Mathlib.CategoryTheory.ComposableArrows.Basic
+public import Mathlib.CategoryTheory.IsomorphismClasses
 
 /-!
 # Postnikov Towers in Triangulated Categories
@@ -92,5 +94,63 @@ def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
 variable {C} in
 /-- The sequence of factor objects in a Postnikov tower. -/
 def PostnikovTower.factors {E : C} (P : PostnikovTower C E) : Fin P.n → C := P.factor
+
+/-! ### `IsPostnikovTower` predicate
+
+A principled replacement for the bundled `PostnikovTower` structure. Given a
+family `Q : Fin n → ObjectProperty C`, the predicate `IsPostnikovTower Q chain`
+asserts that `chain : ComposableArrows C n` is a Postnikov tower whose `i`-th
+cone lies in `Q i`. The cone of the `i`-th consecutive morphism is existentially
+bundled via `ObjectProperty.trW`, so there is no separate triangle data. -/
+
+variable {C}
+
+/-- `chain : ComposableArrows C n` is a Postnikov tower with cone conditions
+`Q : Fin n → ObjectProperty C`: the chain starts at zero, and the cone of
+each consecutive morphism lies in the prescribed `ObjectProperty`. -/
+structure IsPostnikovTower {n : ℕ} (Q : Fin n → ObjectProperty C)
+    (chain : ComposableArrows C n) : Prop where
+  /-- The chain starts at the zero object. -/
+  base_isZero : IsZero chain.left
+  /-- The cone of the `i`-th consecutive morphism lies in `Q i`. -/
+  cone_mem (i : Fin n) : (Q i).trW (chain.map' i.val (i.val + 1))
+
+namespace IsPostnikovTower
+
+variable {n : ℕ} {Q : Fin n → ObjectProperty C} {chain : ComposableArrows C n}
+
+/-- The `i`-th cone of a Postnikov tower, chosen classically from the
+`ObjectProperty.trW` witness. -/
+noncomputable def cone (h : IsPostnikovTower Q chain) (i : Fin n) : C :=
+  (h.cone_mem i).choose
+
+/-- The `i`-th distinguished triangle of a Postnikov tower, built from the
+chain's `i`-th consecutive morphism and the classical cone witness. -/
+noncomputable def triangle (h : IsPostnikovTower Q chain) (i : Fin n) :
+    Pretriangulated.Triangle C :=
+  Pretriangulated.Triangle.mk (chain.map' i.val (i.val + 1))
+    (h.cone_mem i).choose_spec.choose
+    (h.cone_mem i).choose_spec.choose_spec.choose
+
+lemma triangle_mem_distTriang (h : IsPostnikovTower Q chain) (i : Fin n) :
+    h.triangle i ∈ distTriang C :=
+  (h.cone_mem i).choose_spec.choose_spec.choose_spec.choose
+
+lemma cone_mem_prop (h : IsPostnikovTower Q chain) (i : Fin n) : (Q i) (h.cone i) :=
+  (h.cone_mem i).choose_spec.choose_spec.choose_spec.choose_spec
+
+@[simp] lemma triangle_obj₁ (h : IsPostnikovTower Q chain) (i : Fin n) :
+    (h.triangle i).obj₁ = chain.obj' i.val (by lia) := rfl
+
+@[simp] lemma triangle_obj₂ (h : IsPostnikovTower Q chain) (i : Fin n) :
+    (h.triangle i).obj₂ = chain.obj' (i.val + 1) (by lia) := rfl
+
+@[simp] lemma triangle_obj₃ (h : IsPostnikovTower Q chain) (i : Fin n) :
+    (h.triangle i).obj₃ = h.cone i := rfl
+
+@[simp] lemma triangle_mor₁ (h : IsPostnikovTower Q chain) (i : Fin n) :
+    (h.triangle i).mor₁ = chain.map' i.val (i.val + 1) := rfl
+
+end IsPostnikovTower
 
 end CategoryTheory.Triangulated
