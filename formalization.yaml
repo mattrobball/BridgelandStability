@@ -46,6 +46,9 @@ toolchain:
 
 # ── HOW (MACHINE) ────────────────────────────────────
 automation:
+  methods:
+    - method: autonomous
+      framework: custom
   method: "agent"
   framework: "custom"             # Claude Code + Codex CLI, dual-agent parallel workflow
   models:
@@ -153,3 +156,26 @@ notes: >
   120 co-authored Claude, 82 co-authored Codex, 2 pure human.
   Project rule: "Humans write no Lean code beyond Mathlib."
   Effort data archived in artifacts/effort_corollary_1_3.json.
+classification:
+  arxiv:
+    - math.AG
+  msc2020:
+    - 00A17
+project:
+  authors:
+    - Matthew Robert Ballard
+  license: Apache-2.0
+  name: BridgelandStability
+  responsible_maintainers:
+    - Matthew Robert Ballard
+review:
+  status: dflkgjsdfg
+sources:
+  - title: Stability conditions on triangulated categories
+    authors:
+      - Tom Bridgeland
+    id: arXiv:math/0212237v3
+    license: publisher-restricted
+    type: paper
+    relationship: formalizes
+    author_endorsement: participated
