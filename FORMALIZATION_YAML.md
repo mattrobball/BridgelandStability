@@ -5,7 +5,7 @@
 
 As AI-assisted formalization scales, the community needs a shared way to report what was done, how it was done, and how much to trust the result. Without this, we get a landscape of repos with opaque provenance — some carefully human-reviewed, others autonomously generated with no semantic checking, and no way to tell which is which from the outside.
 
-formalization.yaml is a self-reporting metadata file that lives in the root of a formalization project. Its purpose is not gatekeeping — it is transparency. The mere existence of `author_contacted: "no"` or `sorry_in_definitions: 3` makes gaps visible without shaming anyone.
+formalization.yaml is a self-reporting metadata file that lives in the root of a formalization project. Its purpose is not gatekeeping — it is transparency. The mere existence of `author_endorsement: "not-contacted"` or `sorry_in_definitions: 3` makes gaps visible without shaming anyone.
 
 
 ## Acknowledgements
@@ -45,7 +45,7 @@ classification fields. The complete current example is the
 [Palomar template](https://github.com/PalomarRegistry/PalomarTemplate/blob/main/formalization.yaml).
 
 ```yaml
-version: "v0.3"
+version: "v0.4"
 
 # ── WHAT ──────────────────────────────────────────────
 project:
@@ -79,7 +79,7 @@ sources:
     location: ""
     relationship: ""      # formalizes | adapts | independently-proves | background | other
     license: ""           # open | CC-BY | publisher-restricted | unknown
-    author_contacted: ""  # yes | no | n/a
+    author_endorsement: ""  # participated | endorsed | no-response | not-contacted | declined | n/a
     prior_formalization: "" # URL/citation of earlier work built upon, or "none"
     size_bytes: 0         # PDF-to-markdown, raw byte count
 
@@ -167,7 +167,7 @@ notes: ""
 - **date**: ISO 8601 date of initial release or current version.
 - **authors**: List of people who did the formalization work (not the source authors).
 - **license**: License of the formalization code.
-- **responsible_maintainers**: People responsible for the submitted formalization. Palomar requires a nonempty list of names or mappings with a name and optional GitHub or ORCID identifier.
+- **responsible_maintainers**: People responsible for the submitted formalization. In v0.4 this is a list of names; Palomar requires it to be nonempty.
 - **organization**: The group or team behind this. Use "independent" for solo work.
 - **funding**: List of grants, sponsors, or organizations that funded the work. Use `[]` if self-funded or unfunded.
 - **contribution_target**: Where is this heading? "mathlib" if you intend to upstream, "standalone" if it lives on its own, "blueprint" if it's a blueprint-driven project, "undecided" if you don't know yet.
@@ -197,8 +197,8 @@ Classify the mathematical result, not its use of Lean or AI.
 - **location**: Stable URL or bibliographic location.
 - **relationship**: How the result uses the source: `formalizes`, `adapts`, `independently-proves`, `background`, or `other`.
 - **license**: License of the source material. Relevant for redistribution of extracted content (e.g. markdown conversions in alignment data).
-- **author_contacted**: Did you reach out to the author(s) of the source material? Use `yes`, `no`, or `n/a`. The point is not to require consent but to encourage communication.
-- **prior_formalization**: If this builds on someone else's earlier formalization or blueprint, link it here. "none" if starting from scratch. This is about intellectual lineage and avoiding duplicated effort.
+- **author_endorsement**: Source-author involvement or response: `participated`, `endorsed`, `no-response`, `not-contacted`, `declined`, or `n/a`.
+- **related_formalizations**: Record earlier or parallel formalizations separately, with a stable identifier, relationship, and optional note.
 - **size_bytes**: Convert the source PDF to markdown and count bytes. A rough but comparable measure of how much material is being formalized. Enables cross-project comparisons.
 
 Palomar requires a nonempty `sources` list. For a result first presented by the formalization, use `type: original-proof` and `relationship: other`. Otherwise at least one source must use `formalizes`, `adapts`, or `independently-proves`.
