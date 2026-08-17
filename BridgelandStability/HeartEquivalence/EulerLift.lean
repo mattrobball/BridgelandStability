@@ -337,9 +337,8 @@ theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
   let eLE : (h.t.truncLE 0).obj E.obj ≅ E.obj :=
     @asIso _ _ _ _ ((h.t.truncLEι 0).app E.obj)
       ((h.t.isLE_iff_isIso_truncLEι_app 0 E.obj).mp hLE0)
-  let eGELE : (h.t.truncGELE 0 0).obj E.obj ≅ (h.t.truncGE 0).obj E.obj := by
-    simpa [TStructure.truncGELE] using
-      (asIso ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj)))
+  let eGELE : (h.t.truncGELE 0 0).obj E.obj ≅ (h.t.truncGE 0).obj E.obj :=
+    @asIso _ _ _ _ ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj)) hIsoGEMapLE
   have hpent :
       (h.t.truncGEπ 0).app ((h.t.truncLE 0).obj E.obj) ≫
           (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
@@ -439,7 +438,7 @@ theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
           ((h.H0primeObjIsoOfHeart (C := C) A).inv).hom ≫
             (h.t.truncLEι 0).app ((h.t.truncGE 0).obj A.obj) ≫
               (h.t.truncGE 0).map f := by
-    simpa [Category.assoc, HeartStabilityData.H0prime, TStructure.truncLEGE] using
+    exact
       congrArg
         (fun k => ((h.H0primeObjIsoOfHeart (C := C) A).inv).hom ≫ k)
         (NatTrans.naturality (h.t.truncLEι 0) ((h.t.truncGE 0).map f))
@@ -731,14 +730,14 @@ theorem HeartStabilityData.exists_heartSourceNegOneToAShiftHom_comp_shift_map_fa
             congrArg (fun k => k ≫ (shiftFunctor C (1 : ℤ)).map f)
               (h.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom (C := C) A δ)
       _ = (h.t.truncLTι 0).app X₃ ≫ 0 := by
-          simpa [Category.assoc] using
+          exact
             congrArg (fun k => (h.t.truncLTι 0).app X₃ ≫ k) (comp_distTriang_mor_zero₃₁ _ hT)
       _ = 0 := comp_zero
   obtain ⟨φ, hφ⟩ := Triangle.yoneda_exact₃ _
     (h.t.triangleLTLTGELT_distinguished (-1) 0 (by lia) X₃)
     (h.heartSourceNegOneToAShiftHom (C := C) A δ ≫ (shiftFunctor C (1 : ℤ)).map f)
     hzero
-  exact ⟨φ, by simpa [TStructure.triangleLTLTGELT] using hφ⟩
+  exact ⟨φ, by exact hφ⟩
 
 theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_comp_truncGEπ_zero
     (h : HeartStabilityData C)

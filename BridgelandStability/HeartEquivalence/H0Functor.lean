@@ -227,7 +227,6 @@ end
 
 /-- A morphism from a heart object into `X` factors canonically through the
 degree-zero normal form `H0prime X = τ≤0(τ≥0 X)`. -/
-@[implicit_reducible]
 noncomputable def HeartStabilityData.toH0primeHom
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} (f : E.obj ⟶ X) :
