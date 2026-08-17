@@ -174,11 +174,11 @@ theorem HeartStabilityData.H0ObjIsoH0prime_hom_naturality
           ((shiftFunctorZero C ℤ).hom.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj X)) ≫
             (h.t.truncGELEIsoLEGE 0 0).hom.app X) ≫
               (h.t.truncLE 0).map ((h.t.truncGE 0).map f) := by
-                simpa [TStructure.truncGELE, TStructure.truncLEGE, Functor.comp_obj, Functor.comp_map] using
-                  congrArg (fun k =>
-                    (shiftFunctorZero C ℤ).hom.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj X)) ≫
-                      k)
-                    (NatTrans.naturality ((h.t.truncGELEIsoLEGE 0 0).hom) f)
+                rw [Category.assoc, Category.assoc]
+                exact congrArg (fun k =>
+                  (shiftFunctorZero C ℤ).hom.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj X)) ≫
+                    k)
+                  ((h.t.truncGELEIsoLEGE 0 0).hom.naturality f)
 
 /-- The normal forms `τ≥0(τ≤0 X)` and `τ≤0(τ≥0 X)` assemble into a natural isomorphism
 of functors `C ⥤ heart(t)`. -/
