@@ -1,6 +1,6 @@
 name: Update Trusted Formalization Base
 
-# Keeps artifacts/trusted_base.lean in sync with the comparator target's
+# Keeps Challenge.lean in sync with the comparator target's
 # TFB (trusted formalization base).
 #
 # On PRs        : check-only. Fails the job if the committed artifact is stale,
@@ -13,7 +13,7 @@ name: Update Trusted Formalization Base
 on:
   # pull_request.paths also watches this workflow file and the artifact
   # itself, so (a) edits to the workflow self-smoke on their own PR, and
-  # (b) hand-editing artifacts/trusted_base.lean in isolation cannot
+  # (b) hand-editing Challenge.lean in isolation cannot
   # bypass the drift check. push.paths intentionally stays narrower so
   # that the auto-PR merge (which only touches the artifact) does not
   # re-trigger this workflow.
@@ -23,7 +23,7 @@ on:
       - 'lakefile.toml'
       - 'lean-toolchain'
       - 'lake-manifest.json'
-      - 'artifacts/trusted_base.lean'
+      - 'Challenge.lean'
       - '.github/workflows/update-trusted-base.yml'
   push:
     branches: [main]
@@ -45,11 +45,11 @@ permissions:
 env:
   TFB_TARGET: >-
     CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
-  TFB_OUTPUT: artifacts/trusted_base.lean
+  TFB_OUTPUT: Challenge.lean
 
 jobs:
   regenerate:
-    name: Regenerate trusted_base.lean
+    name: Regenerate Challenge.lean
     # workflow_dispatch is main-only: dispatching from a feature branch would
     # regenerate the artifact from that branch's source and still open an
     # auto-PR against main, which would be wrong.
@@ -84,7 +84,6 @@ jobs:
       # of <targetDecl>, proofs replaced by sorry.
       - name: Regenerate ${{ env.TFB_OUTPUT }}
         run: |
-          mkdir -p artifacts
           lake exe tfb_skeleton BridgelandStability \
             ${{ env.TFB_TARGET }} \
             ${{ env.TFB_OUTPUT }}

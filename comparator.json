@@ -1,5 +1,5 @@
 {
-  "challenge_module": "BridgelandStability.Spec",
+  "challenge_module": "Challenge",
   "solution_module": "BridgelandStability.NumericalStabilityManifold",
   "theorem_names": [
     "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent"
