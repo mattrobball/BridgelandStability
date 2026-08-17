@@ -158,7 +158,7 @@ theorem TStructure.exists_truncLT_octahedral_split
 
 /-- If the lower obstruction term vanishes, a map into `H0prime X` lifts to a
 map into `X` itself. -/
-noncomputable def TStructure.shortComplexOfDistTriangle_map_truncGEIsoOfSplit
+noncomputable def TStructure.shortComplexOfDistTriangleMapTruncGEIsoOfSplit
     (t : TStructure C) [IsTriangulated C]
     {X₁ X₂ X₃ Z : C} {f : X₁ ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ X₁⟦(1 : ℤ)⟧}
     {v : X₂ ⟶ Z} {m₁ : (t.truncGE 0).obj X₁ ⟶ Z} {m₃ : Z ⟶ X₃}
@@ -210,7 +210,7 @@ theorem HeartStabilityData.truncGE_preadditiveCoyoneda_exact_iff_of_split
           (δ ≫ ((shiftFunctor C (1 : ℤ)).map ((h.t.truncGEπ 0).app X₁)))) hT').map
         (h.t.truncGE 0 ⋙ preadditiveCoyoneda.obj (Opposite.op E.obj))).Exact := by
   let e :=
-    h.t.shortComplexOfDistTriangle_map_truncGEIsoOfSplit (C := C) hT hT' hm₁ hm₃ hvIso
+    h.t.shortComplexOfDistTriangleMapTruncGEIsoOfSplit (C := C) hT hT' hm₁ hm₃ hvIso
   simpa [ShortComplex.map_comp] using
     ShortComplex.exact_iff_of_iso
       ((preadditiveCoyoneda.obj (Opposite.op E.obj)).mapShortComplex.mapIso e)

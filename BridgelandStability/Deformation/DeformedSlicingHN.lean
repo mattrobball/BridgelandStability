@@ -144,7 +144,7 @@ theorem deformedPred_of_shift_one
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
       have hphase : wPhaseOf (-W (cl C v X)) ((a + b) / 2) = φ + 1 := by
         simpa [SkewedStabilityFunction.wPhase, cl_shift_one, map_neg,
-          StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using hSS.phase_eq
+          StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear] using hSS.phase_eq
       have hWne : W (cl C v X) ≠ 0 := by
         intro hw; apply hSS.wNe; rw [cl_shift_one, map_neg, neg_eq_zero]; exact hw
       have key := wPhaseOf_neg hWne ((a + b) / 2 - 1)

@@ -358,7 +358,7 @@ theorem interval_strictShortExact_ofLE_pullbackπ_cokernel
     (C := C) (s := s) (a := a) (b := b) hT
 
 /-- The first map in a strict short exact sequence in a thin interval category is a kernel. -/
-noncomputable def interval_fIsKernel_of_strictShortExact
+noncomputable def intervalFIsKernelOfStrictShortExact
     {s : Slicing C} [IsTriangulated C] {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {S : ShortComplex (s.IntervalCat C a b)} (hS : StrictShortExact S) :
@@ -404,7 +404,7 @@ noncomputable def interval_fIsKernel_of_strictShortExact
     _ = S.f := h.left.f'_i
 
 /-- Pulling back a strict subobject along a cokernel map preserves the cokernel object up to iso. -/
-noncomputable def interval_cokernel_pullbackTopIso
+noncomputable def intervalCokernelPullbackTopIso
     {s : Slicing C} [IsTriangulated C] {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X : s.IntervalCat C a b} (M : Subobject X)
@@ -430,7 +430,7 @@ noncomputable def interval_cokernel_pullbackTopIso
         q (isStrictEpi_cokernel M.arrow) B (cokernel.π B.arrow) (cokernel.condition B.arrow)
         hB.isLimitKernelFork (isStrictEpi_cokernel B.arrow)
   have hKer : IsLimit (KernelFork.ofι S.f S.zero) :=
-    interval_fIsKernel_of_strictShortExact
+    intervalFIsKernelOfStrictShortExact
       (C := C) (s := s) (a := a) (b := b) hS
   have hp : IsStrictEpi p := ⟨hS.shortExact.epi_g, hS.strict_g⟩
   let eK' : kernel p ≅ (pb : s.IntervalCat C a b) :=
@@ -454,13 +454,13 @@ theorem semistable_of_upper_inclusion
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b₁ b₂ ψ ε₀ : ℝ} (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
     {E : C}
-    (hSS : (σ.skewedStabilityFunction_of_near C W hW hab₁).Semistable C E ψ)
+    (hSS : (σ.skewedStabilityFunctionOfNear C W hW hab₁).Semistable C E ψ)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (henv_lo : a + ε₀ ≤ ψ) (henv_hi : ψ ≤ b₁ - ε₀)
     (hthin₂ : b₂ - a + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
-    (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
+    (σ.skewedStabilityFunctionOfNear C W hW hab₂).Semistable C E ψ := by
   have hEI₂ : σ.slicing.intervalProp C a b₂ E :=
     σ.slicing.intervalProp_mono C (show a ≤ a by linarith) hb hSS.intervalProp
   have henv_hi₂ : ψ ≤ b₂ - ε₀ := by
@@ -527,7 +527,7 @@ theorem semistable_of_upper_inclusion
       (C := C) (s := σ.slicing) (a := a) (b := b₂) hT₀
   have hS₀Ker : IsLimit (KernelFork.ofι iK hcomp₀) := by
     simpa [S₀] using
-      interval_fIsKernel_of_strictShortExact
+      intervalFIsKernelOfStrictShortExact
         (C := C) (s := σ.slicing) (a := a) (b := b₂) hS₀
   obtain ⟨X, Y, fX, gY, δY, hTQ, hX_ge, hY₁⟩ :=
     exists_upper_boundary_triangle (C := C) (s := σ.slicing)
@@ -612,7 +612,7 @@ theorem semistable_of_upper_inclusion
     have hBXKer : IsLimit (KernelFork.ofι BX.arrow hBXcomp) := by
       have hS₁Ker : IsLimit (KernelFork.ofι xQ hcomp₁) := by
         simpa [S₁] using
-          interval_fIsKernel_of_strictShortExact
+          intervalFIsKernelOfStrictShortExact
             (C := C) (s := σ.slicing) (a := a) (b := b₂) hS₁
       refine KernelFork.IsLimit.ofι' BX.arrow hBXcomp (fun {W} k hk ↦ ?_)
       let uX : W ⟶ XI₂ := hS₁Ker.lift (KernelFork.ofι k hk)
@@ -705,7 +705,7 @@ theorem semistable_of_upper_inclusion
         wPhaseOf (W (cl C v K)) ((a + b₂) / 2) ∈ Set.Ioo (ψPB - 1) (ψPB + 1) := by
       constructor <;> dsimp [ψPB] <;> linarith [hK_window.1, hK_window.2, hPB_window.1,
         hPB_window.2, hthin₂]
-    let ssf₂ := σ.skewedStabilityFunction_of_near C W hW hab₂
+    let ssf₂ := σ.skewedStabilityFunctionOfNear C W hW hab₂
     have hsumL :
         W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj) =
           W (cl C v (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +

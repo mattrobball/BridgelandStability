@@ -51,7 +51,7 @@ theorem HeartStabilityData.heartCohClass_of_heart_shift
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Truncating above degree `a` does not change the `n`th heart cohomology object when `n < a`. -/
-noncomputable def HeartStabilityData.heartCohIso_of_truncLT
+noncomputable def HeartStabilityData.heartCohIsoOfTruncLT
     (h : HeartStabilityData C) [IsTriangulated C]
     (E : C) (n a : ℤ) (hna : n < a) :
     h.heartCoh (C := C) n ((h.t.truncLT a).obj E) ≅ h.heartCoh (C := C) n E := by
@@ -75,7 +75,7 @@ theorem HeartStabilityData.heartCohClass_of_truncLT
       h.heartCohClass (C := C) n E := by
   rw [HeartStabilityData.heartCohClass]
   congr 1
-  exact HeartK0.of_iso (C := C) h (h.heartCohIso_of_truncLT (C := C) E n a hna)
+  exact HeartK0.of_iso (C := C) h (h.heartCohIsoOfTruncLT (C := C) E n a hna)
 
 /-- On objects already lying in the heart, the Euler lift is the obvious heart
 Grothendieck-group class. -/
@@ -637,7 +637,7 @@ theorem HeartStabilityData.heartEulerClassObj_of_pure
 
 /-- For a pure object concentrated in degree `n`, `heartCoh n` recovers the corresponding heart
 shift object. -/
-noncomputable def HeartStabilityData.heartCohIso_of_pure
+noncomputable def HeartStabilityData.heartCohIsoOfPure
     (h : HeartStabilityData C)
     {X : C} {n : ℤ} (hLE : h.t.IsLE X n) (hGE : h.t.IsGE X n) :
     h.heartCoh (C := C) n X ≅ h.heartShiftOfPure (C := C) n hLE hGE := by
@@ -657,12 +657,12 @@ theorem HeartStabilityData.heartCohClass_eq_pureClass
         HeartK0.of (C := C) h (h.heartShiftOfPure (C := C) n hLE hGE)) := by
   rw [HeartStabilityData.heartCohClass]
   congr 1
-  exact HeartK0.of_iso (C := C) h (h.heartCohIso_of_pure (C := C) hLE hGE)
+  exact HeartK0.of_iso (C := C) h (h.heartCohIsoOfPure (C := C) hLE hGE)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Truncating below degree `a` does not change the `a`th heart cohomology object when the
 original object is already `t`-nonpositive in degree `a`. -/
-noncomputable def HeartStabilityData.heartCohIso_of_truncGE_of_isLE
+noncomputable def HeartStabilityData.heartCohIsoOfTruncGEOfIsLE
     (h : HeartStabilityData C) [IsTriangulated C]
     (E : C) (a : ℤ) (hLE : h.t.IsLE E a) :
     h.heartCoh (C := C) a ((h.t.truncGE a).obj E) ≅ h.heartCoh (C := C) a E := by
@@ -693,7 +693,7 @@ theorem HeartStabilityData.heartCohClass_of_truncGE_of_isLE
   rw [HeartStabilityData.heartCohClass]
   congr 1
   exact HeartK0.of_iso (C := C) h
-    (h.heartCohIso_of_truncGE_of_isLE (C := C) E a hLE)
+    (h.heartCohIsoOfTruncGEOfIsLE (C := C) E a hLE)
 
 theorem HeartStabilityData.heartEulerClassObj_of_truncGE_of_isLE
     (h : HeartStabilityData C) [IsTriangulated C]

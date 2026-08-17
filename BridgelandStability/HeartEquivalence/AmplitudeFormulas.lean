@@ -64,7 +64,7 @@ distinguished triangle realizing that amplitude. -/
 /-- For an object of amplitude `(-1, 0)` presented by a triangle
 `K⟦1⟧ ⟶ X ⟶ Q ⟶ K⟦2⟧` with `K, Q` in the heart, the `(-1)`-st heart
 cohomology of `X` is canonically isomorphic to `K`. -/
-noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
+noncomputable def HeartStabilityData.heartCohNegOneIsoOfAmpNegOneZero
     (h : HeartStabilityData C) [IsTriangulated C]
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
@@ -92,7 +92,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- For an object of amplitude `(-1, 0)` presented by a triangle
 `K⟦1⟧ ⟶ X ⟶ Q ⟶ K⟦2⟧` with `K, Q` in the heart, the `0`-th heart
 cohomology of `X` is canonically isomorphic to `Q`. -/
-noncomputable def HeartStabilityData.heartCoh_zero_iso_of_amp_negOne_zero
+noncomputable def HeartStabilityData.heartCohZeroIsoOfAmpNegOneZero
     (h : HeartStabilityData C) [IsTriangulated C]
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
@@ -126,13 +126,13 @@ theorem HeartStabilityData.heartCohClassSum_of_amp_negOne_zero
       HeartK0.of (C := C) h (h.heartCoh (C := C) (-1) X) =
         HeartK0.of (C := C) h ⟨K, hK⟩ :=
     HeartK0.of_iso (C := C) h
-      (h.heartCoh_negOne_iso_of_amp_negOne_zero (C := C)
+      (h.heartCohNegOneIsoOfAmpNegOneZero (C := C)
         (X := X) (K := K) (Q := Q) hK hQ hT)
   have hzero :
       HeartK0.of (C := C) h (h.heartCoh (C := C) 0 X) =
         HeartK0.of (C := C) h ⟨Q, hQ⟩ :=
     HeartK0.of_iso (C := C) h
-      (h.heartCoh_zero_iso_of_amp_negOne_zero (C := C)
+      (h.heartCohZeroIsoOfAmpNegOneZero (C := C)
         (X := X) (K := K) (Q := Q) hK hQ hT)
   rw [HeartStabilityData.heartCohClassSum, Finset.sum_range_succ, Finset.sum_range_succ,
     Finset.sum_range_zero]

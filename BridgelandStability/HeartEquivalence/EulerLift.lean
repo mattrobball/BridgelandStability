@@ -526,7 +526,7 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_ex
   ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel hKer E
 
 /-- The canonical map from the cokernel of the heart-source `H0'` short complex to `H0' X₃`. -/
-noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_cokernelDesc
+noncomputable def HeartStabilityData.heartSourceH0primeShortComplexCokernelDesc
     (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
@@ -543,7 +543,7 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_cokernelπ_comp_cokern
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
     cokernel.π (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f ≫
-      h.heartSourceH0primeShortComplex_cokernelDesc (C := C) A f g hfg =
+      h.heartSourceH0primeShortComplexCokernelDesc (C := C) A f g hfg =
         (h.heartSourceH0primeShortComplex (C := C) A f g hfg).g :=
   cokernel.π_desc
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f
@@ -552,7 +552,7 @@ theorem HeartStabilityData.heartSourceH0primeShortComplex_cokernelπ_comp_cokern
 
 /-- In the heart-source `H0'` short complex induced by a distinguished triangle, the first map is
 a kernel. -/
-noncomputable def HeartStabilityData.heartSourceH0primeShortComplex_f_is_kernel_of_distTriang
+noncomputable def HeartStabilityData.heartSourceH0primeShortComplexFIsKernelOfDistTriang
     (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} (hfg : f ≫ g = 0)
@@ -629,7 +629,7 @@ theorem HeartStabilityData.H0Functor_isHomological_of_heartSourceH0primeShortCom
   apply h.H0Functor_isHomological_of_heartSourceH0primeShortComplex_f_is_kernel (C := C)
   intro A X₂ X₃ f g δ hT
   let hδ' := hTri A hT
-  exact h.heartSourceH0primeShortComplex_f_is_kernel_of_distTriang
+  exact h.heartSourceH0primeShortComplexFIsKernelOfDistTriang
     (C := C) A (comp_distTriang_mor_zero₁₂ _ hT) hδ'.2
 
 /-- The morphism from the `(-1,0)` truncation of `X₃` to `A[1]` induced by a morphism

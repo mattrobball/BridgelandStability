@@ -623,7 +623,7 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
             hT_strict
         obtain ⟨B, qT, hqT⟩ := ih T hS_lt_T hQT_ne
         let eT : cokernel Tsub.arrow ≅ cokernel A.arrow :=
-          interval_cokernel_pullbackTopIso
+          intervalCokernelPullbackTopIso
             (C := C) (s := σ.slicing) (a := a) (b := b) S.1 hA_strict
         let qA : cokernel A.arrow ⟶ B := eT.inv ≫ qT
         have hqA : IsStrictMDQ (C := C) σ ssf qA :=
@@ -635,7 +635,7 @@ theorem SkewedStabilityFunction.exists_strictMDQ_of_finiteLength
             (hDestabBound hQS_ne hA_ss hA_strict hA_phase_gt) hqA⟩
 
 /-- The interval-theoretic kernel subobject of `q` is a limit kernel fork for `q`. -/
-noncomputable def interval_kernelSubobject_isLimitKernelFork
+noncomputable def intervalKernelSubobjectIsLimitKernelFork
     {s : Slicing C} {a b : ℝ}
     [Fact (a < b)] [Fact (b - a ≤ 1)]
     {X Y : s.IntervalCat C a b} (q : X ⟶ Y) :
@@ -660,7 +660,7 @@ theorem interval_strictShortExact_of_kernelSubobject_strictEpi
   interval_strictShortExact_of_kernel_strictEpi
     (C := C) (s := s) (a := a) (b := b)
     (ShortComplex.mk (kernelSubobject q).arrow q (kernelSubobject_arrow_comp (f := q)))
-    (interval_kernelSubobject_isLimitKernelFork (C := C) (s := s) (a := a) (b := b) q) hq
+    (intervalKernelSubobjectIsLimitKernelFork (C := C) (s := s) (a := a) (b := b) q) hq
 
 theorem Subobject.map_eq_mk {D : Type*} [Category D] {E : D}
     (K : Subobject E) (S : Subobject (K : D)) :
@@ -815,7 +815,7 @@ theorem IsStrictMDQ.phase_lt_of_strictQuotient_of_kernel
   have hMp_nonzero : M.arrow ≫ cokernel.π liftA.arrow ≠ 0 := by
     intro hzero
     have hKer : IsLimit (KernelFork.ofι liftA.arrow (cokernel.condition liftA.arrow)) :=
-      interval_fIsKernel_of_strictShortExact
+      intervalFIsKernelOfStrictShortExact
         (C := C) (s := σ.slicing) (a := a) (b := b)
         (interval_strictShortExact_cokernel_of_strictMono
           (C := C) (s := σ.slicing) (a := a) (b := b) liftA.arrow hLift_strict)

@@ -49,7 +49,7 @@ packaged.
 
 ### §5 — Stability conditions
 
-* `StabilityCondition.P_phi_abelian`: each phase subcategory `P(φ)` is abelian
+* `StabilityCondition.abelianPhaseSlice`: each phase subcategory `P(φ)` is abelian
   (Lemma 5.2).
 * `StabilityCondition.stabilityFunctionOnPhase`: the central charge restricted
   to `P(φ)` gives a stability function on that abelian category.
@@ -118,7 +118,7 @@ theorem StabilityCondition.P_phi_shortExact_triangle
       ∃ (β : W ⟶ A), β ≫ f = α) :
     ∃ (h : Q.obj ⟶ A.obj⟦(1 : ℤ)⟧),
       Triangle.mk f.hom g.hom h ∈ distTriang C := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   let ι := (σ.slicing.P φ).ι
   obtain ⟨K, i, δ, hT⟩ :=
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
@@ -170,14 +170,14 @@ the upper half plane condition follows from the compatibility axiom of `σ`. -/
 def StabilityCondition.stabilityFunctionOnPhase
     (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
     @StabilityFunction (σ.slicing.P φ).FullSubcategory _
-      (σ.P_phi_abelian C φ) := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+      (σ.abelianPhaseSlice C φ) := by
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   exact {
     Zobj := fun E => σ.Z (K₀.of C ((σ.slicing.P φ).ι.obj E))
     map_zero' := fun X hX => by
       simpa using congrArg σ.Z (K₀.of_isZero C (((σ.slicing.P φ).ι.map_isZero hX)))
     additive := fun S hS => by
-      letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+      letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
       letI : IsNormalMonoCategory (σ.slicing.P φ).FullSubcategory := Abelian.toIsNormalMonoCategory
       letI : IsNormalEpiCategory (σ.slicing.P φ).FullSubcategory := Abelian.toIsNormalEpiCategory
       letI : Balanced (σ.slicing.P φ).FullSubcategory := by infer_instance
@@ -211,9 +211,9 @@ def StabilityCondition.stabilityFunctionOnPhase
 theorem StabilityCondition.phase_eq_of_mem_P_phi
     (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1)
     (E : (σ.slicing.P φ).FullSubcategory) (hE : ¬IsZero E) :
-    @StabilityFunction.phase _ _ (σ.P_phi_abelian C φ)
+    @StabilityFunction.phase _ _ (σ.abelianPhaseSlice C φ)
       (σ.stabilityFunctionOnPhase C hφ) E = φ := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   have hEobj : ¬IsZero E.obj := fun hZ ↦
     hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
       (C := C) (P := σ.slicing.P φ) (X := E) hZ)
@@ -233,8 +233,8 @@ For `0 < φ ≤ 1`, every nonzero object of `P(φ)` is already semistable of pha
 theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
     (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
     @StabilityFunction.HasHNProperty (σ.slicing.P φ).FullSubcategory _
-      (σ.P_phi_abelian C φ) (σ.stabilityFunctionOnPhase C hφ) := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+      (σ.abelianPhaseSlice C φ) (σ.stabilityFunctionOnPhase C hφ) := by
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   intro E hE
   let Z := σ.stabilityFunctionOnPhase C hφ
   have hss : Z.IsSemistable E := by

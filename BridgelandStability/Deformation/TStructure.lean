@@ -175,9 +175,9 @@ theorem hom_eq_zero_of_enveloped_interval_semistable
     {E F : C}
     (hE_interval : σ.slicing.intervalProp C a b E)
     (hF_interval : σ.slicing.intervalProp C a b F)
-    (hE : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E
+    (hE : (σ.skewedStabilityFunctionOfNear C W hW hab).Semistable C E
       (wPhaseOf (W (cl C v E)) ((a + b) / 2)))
-    (hF : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C F
+    (hF : (σ.skewedStabilityFunctionOfNear C W hW hab).Semistable C F
       (wPhaseOf (W (cl C v F)) ((a + b) / 2)))
     (hlt :
       wPhaseOf (W (cl C v F)) ((a + b) / 2) <
@@ -222,7 +222,7 @@ theorem exists_deformedHN_of_enveloped_interval
     ∃ G : HNFiltration C (σ.deformedPred C W hW ε₀) X.obj,
       ∀ j, a + ε₀ < G.φ j ∧ G.φ j < b - ε₀ := by
   let ssf : SkewedStabilityFunction C v σ.slicing a b :=
-    σ.skewedStabilityFunction_of_near C W hW hab
+    σ.skewedStabilityFunctionOfNear C W hW hab
   obtain ⟨G, hGφ⟩ :=
     SkewedStabilityFunction.hn_exists_in_thin_interval
       (C := C) (σ := σ) (a := a) (b := b) (ssf := ssf) hFiniteLength
@@ -238,7 +238,7 @@ theorem exists_deformedHN_of_enveloped_interval
             hε₀ hε₀2 hε₀8 hthin hsin hWindow
             E.property F.property hE hF hlt f.hom)
       (fun {Y} _hY {A} hA_ss _hA_strict _hA_dest ↦ by
-        simpa [ssf, StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using
+        simpa [ssf, StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear] using
           (hWindow hA_ss.intervalProp hA_ss.nonzero).2)
       X hX
   let GQ : HNFiltration C (σ.deformedPred C W hW ε₀) X.obj :=
@@ -257,7 +257,7 @@ theorem exists_deformedHN_of_enveloped_interval
         change IsZero (G.factor j) ∨
           ∃ (a' b' : ℝ) (hab' : a' < b') (_ : b' - a' + 2 * ε₀ < 1)
             (_ : a' + ε₀ ≤ G.φ j) (_ : G.φ j ≤ b' - ε₀),
-            (σ.skewedStabilityFunction_of_near C W hW hab').Semistable C (G.factor j) (G.φ j)
+            (σ.skewedStabilityFunctionOfNear C W hW hab').Semistable C (G.factor j) (G.φ j)
         refine Or.inr ⟨a, b, hab, hthin, le_of_lt (hGφ j).1, le_of_lt (hGφ j).2, ?_⟩
         simpa [ssf] using G.semistable j }
   refine ⟨GQ, hGφ⟩

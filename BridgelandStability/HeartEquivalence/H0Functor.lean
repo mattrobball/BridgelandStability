@@ -88,7 +88,7 @@ instance HeartStabilityData.H0Functor_additive
 /-- The tautological shift-sequence structure on `H⁰_t`, used later to compare the
 generic homological-functor API with the explicit `heartCoh n` objects already defined
 in this file. -/
-noncomputable instance HeartStabilityData.H0Functor_shiftSequence
+noncomputable instance HeartStabilityData.H0FunctorShiftSequence
     (h : HeartStabilityData C) :
     (h.H0Functor (C := C)).ShiftSequence ℤ :=
   Functor.ShiftSequence.tautological _ _
@@ -346,7 +346,7 @@ noncomputable def HeartStabilityData.toH0primeNatTrans
 
 /-- If `X ∈ t.≥0`, a morphism into `H0prime X` can be read as a morphism into
 `X` by composing with the canonical map `τ≥0 X ⟶ X`. -/
-noncomputable def HeartStabilityData.fromH0primeHom_of_isGE
+noncomputable def HeartStabilityData.fromH0primeHomOfIsGE
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β : E ⟶ h.H0prime (C := C) X) :
@@ -354,48 +354,48 @@ noncomputable def HeartStabilityData.fromH0primeHom_of_isGE
   β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) ≫ (asIso ((h.t.truncGEπ 0).app X)).inv
 
 @[reassoc (attr := simp)]
-theorem HeartStabilityData.fromH0primeHom_of_isGE_hom
+theorem HeartStabilityData.fromH0primeHomOfIsGE_hom
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β : E ⟶ h.H0prime (C := C) X) :
-    h.fromH0primeHom_of_isGE (C := C) E β ≫ (h.t.truncGEπ 0).app X =
+    h.fromH0primeHomOfIsGE (C := C) E β ≫ (h.t.truncGEπ 0).app X =
       β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) := by
-  simp [HeartStabilityData.fromH0primeHom_of_isGE, Category.assoc]
+  simp [HeartStabilityData.fromH0primeHomOfIsGE, Category.assoc]
 
-theorem HeartStabilityData.toH0primeHom_fromH0primeHom_of_isGE
+theorem HeartStabilityData.toH0primeHom_fromH0primeHomOfIsGE
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β : E ⟶ h.H0prime (C := C) X) :
-    h.toH0primeHom (C := C) E (h.fromH0primeHom_of_isGE (C := C) E β) = β := by
+    h.toH0primeHom (C := C) E (h.fromH0primeHomOfIsGE (C := C) E β) = β := by
   symm
   exact h.toH0primeHom_eq (C := C) E
-    (h.fromH0primeHom_of_isGE (C := C) E β) β
-    (h.fromH0primeHom_of_isGE_hom (C := C) E β).symm
+    (h.fromH0primeHomOfIsGE (C := C) E β) β
+    (h.fromH0primeHomOfIsGE_hom (C := C) E β).symm
 
-theorem HeartStabilityData.fromH0primeHom_of_isGE_toH0primeHom
+theorem HeartStabilityData.fromH0primeHomOfIsGE_toH0primeHom
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (f : E.obj ⟶ X) :
-    h.fromH0primeHom_of_isGE (C := C) E (h.toH0primeHom (C := C) E f) = f := by
+    h.fromH0primeHomOfIsGE (C := C) E (h.toH0primeHom (C := C) E f) = f := by
   apply (cancel_mono ((h.t.truncGEπ 0).app X)).1
   exact
-    (h.fromH0primeHom_of_isGE_hom (C := C) E (h.toH0primeHom (C := C) E f)).trans
+    (h.fromH0primeHomOfIsGE_hom (C := C) E (h.toH0primeHom (C := C) E f)).trans
       (h.toH0primeHom_hom (C := C) E f)
 
 @[simp]
-theorem HeartStabilityData.fromH0primeHom_of_isGE_zero
+theorem HeartStabilityData.fromH0primeHomOfIsGE_zero
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0] :
-    h.fromH0primeHom_of_isGE (C := C) E (0 : E ⟶ h.H0prime (C := C) X) = 0 := by
-  simp [HeartStabilityData.fromH0primeHom_of_isGE]
+    h.fromH0primeHomOfIsGE (C := C) E (0 : E ⟶ h.H0prime (C := C) X) = 0 := by
+  simp [HeartStabilityData.fromH0primeHomOfIsGE]
 
-theorem HeartStabilityData.fromH0primeHom_of_isGE_add
+theorem HeartStabilityData.fromH0primeHomOfIsGE_add
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} [h.t.IsGE X 0]
     (β₁ β₂ : E ⟶ h.H0prime (C := C) X) :
-    h.fromH0primeHom_of_isGE (C := C) E (β₁ + β₂) =
-      h.fromH0primeHom_of_isGE (C := C) E β₁ +
-        h.fromH0primeHom_of_isGE (C := C) E β₂ := by
+    h.fromH0primeHomOfIsGE (C := C) E (β₁ + β₂) =
+      h.fromH0primeHomOfIsGE (C := C) E β₁ +
+        h.fromH0primeHomOfIsGE (C := C) E β₂ := by
   change
     (β₁.hom + β₂.hom) ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) ≫
         (asIso ((h.t.truncGEπ 0).app X)).inv =
@@ -412,9 +412,9 @@ noncomputable def HeartStabilityData.toH0primeIsoOfIsGE
     (E : h.t.heart.FullSubcategory) (X : C) [h.t.IsGE X 0] :
     (E.obj ⟶ X) ≃+ (E ⟶ h.H0prime (C := C) X) where
   toFun := h.toH0primeHom (C := C) E
-  invFun := h.fromH0primeHom_of_isGE (C := C) E
-  left_inv := h.fromH0primeHom_of_isGE_toH0primeHom (C := C) E
-  right_inv := h.toH0primeHom_fromH0primeHom_of_isGE (C := C) E
+  invFun := h.fromH0primeHomOfIsGE (C := C) E
+  left_inv := h.fromH0primeHomOfIsGE_toH0primeHom (C := C) E
+  right_inv := h.toH0primeHom_fromH0primeHomOfIsGE (C := C) E
   map_add' := h.toH0primeHom_add (C := C) E
 
 set_option backward.isDefEq.respectTransparency false in

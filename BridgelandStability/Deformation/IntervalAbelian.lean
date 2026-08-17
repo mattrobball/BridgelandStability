@@ -815,7 +815,7 @@ variable [IsTriangulated C] in
 /-- **P(φ) is abelian** (**Bridgeland's Lemma 5.2**). Each slicing slice `P(φ)` of a
 stability condition is an abelian category. -/
 @[reducible, informal "Lemma 5.2" complete]
-noncomputable def StabilityCondition.WithClassMap.P_phi_abelian
+noncomputable def StabilityCondition.WithClassMap.abelianPhaseSlice
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     Abelian (σ.slicing.P φ).FullSubcategory :=
   AbelianSubcategory.abelian (σ.slicing.P φ).ι

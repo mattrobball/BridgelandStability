@@ -656,7 +656,7 @@ theorem wPhaseOf_cokernel_mapMono_eq
 
 /-- The cokernel of the inclusion `A ≤ ⊤` in an interval category is canonically the cokernel
 of `A.arrow`. -/
-noncomputable def interval_cokernelTopIso
+noncomputable def intervalCokernelTopIso
     {s : Slicing C} {a b : ℝ}
     [HasCokernels (s.IntervalCat C a b)]
     {X : s.IntervalCat C a b} (A : Subobject X) :
@@ -673,7 +673,7 @@ theorem wPhaseOf_cokernel_ofLE_top_eq
       wPhaseOf (W (cl C v (cokernel A.arrow).obj)) α := by
   let eC :=
     (Slicing.IntervalCat.ι (C := C) (s := s) a b).mapIso
-      (interval_cokernelTopIso (C := C) (s := s) (a := a) (b := b) A)
+      (intervalCokernelTopIso (C := C) (s := s) (a := a) (b := b) A)
   exact congrArg (fun x ↦ wPhaseOf (W x) α) (cl_iso C v eC)
 
 theorem wPhaseOf_cokernel_kernelSubobject_eq

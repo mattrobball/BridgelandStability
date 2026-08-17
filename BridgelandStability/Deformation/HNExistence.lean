@@ -52,10 +52,10 @@ theorem interior_has_enveloped_HN_ssf
     (hFL : ThinFiniteLengthInInterval (C := C) σ a b)
     {E : C} (hE : ¬IsZero E)
     (hInt : σ.slicing.intervalProp C (a + 2 * ε) (b - 4 * ε) E) :
-    let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+    let ssf := σ.skewedStabilityFunctionOfNear C W hW hab
     ∃ G : HNFiltration C (fun ψ F => ssf.Semistable C F ψ) E,
       ∀ j, a + ε < G.φ j ∧ G.φ j < b - ε := by
-  let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+  let ssf := σ.skewedStabilityFunctionOfNear C W hW hab
   have hε2 : ε < 1 / 4 := by linarith
   -- E ∈ P((a, b)) via interval monotonicity
   have hE_ab : σ.slicing.intervalProp C a b E :=
@@ -114,7 +114,7 @@ theorem interior_has_enveloped_HN_ssf
       (L := a - ε) (U := b + ε) hWindow hWidth
       (a + ε) (le_refl _) XI hXI_ne
       (fun {B} q hq hBne ↦ by
-        simpa [ssf, StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using
+        simpa [ssf, StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear] using
           wPhaseOf_gt_of_strictQuotient_of_inner_strip
             (C := C) (σ := σ) (W := W) (hW := hW) hε hε2 hthin hsin
             (X := XI) hInt q hq hBne)
@@ -275,7 +275,7 @@ theorem interior_has_enveloped_HN
     ∃ G : HNFiltration C (σ.deformedPred C W hW ε) E,
       ∀ j, a + ε < G.φ j ∧ G.φ j < b - ε := by
   have hε2 : ε < 1 / 4 := by linarith
-  let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+  let ssf := σ.skewedStabilityFunctionOfNear C W hW hab
   obtain ⟨G, hGφ⟩ := interior_has_enveloped_HN_ssf (C := C) σ W hW hab
     hε hε10 hthin hsin hFL hE hInt
   let GQ : HNFiltration C (σ.deformedPred C W hW ε) E :=
@@ -294,7 +294,7 @@ theorem interior_has_enveloped_HN
         change IsZero (G.factor j) ∨
           ∃ (a' b' : ℝ) (hab' : a' < b') (_ : b' - a' + 2 * ε < 1)
             (_ : a' + ε ≤ G.φ j) (_ : G.φ j ≤ b' - ε),
-            (σ.skewedStabilityFunction_of_near C W hW hab').Semistable C (G.factor j) (G.φ j)
+            (σ.skewedStabilityFunctionOfNear C W hW hab').Semistable C (G.factor j) (G.φ j)
         refine Or.inr ⟨a, b, hab, hthin, by linarith [(hGφ j).1], by linarith [(hGφ j).2], ?_⟩
         simpa [ssf] using G.semistable j }
   exact ⟨GQ, hGφ⟩
