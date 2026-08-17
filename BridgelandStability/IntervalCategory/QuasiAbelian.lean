@@ -87,7 +87,7 @@ theorem Slicing.intervalCat_hasKernel (s : Slicing C)
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel fH).obj, hKer_mem⟩
   let k : KI ⟶ X := ObjectProperty.homMk (kernel.ι fH).hom
-  have hk_zero : k ≫ f = 0 := by ext; simp [k, fH, FL]
+  have hk_zero : k ≫ f = 0 := by ext; exact congrArg (·.hom) (kernel.condition fH)
   refine ⟨⟨KernelFork.ofι k hk_zero, ?_⟩⟩
   refine KernelFork.IsLimit.ofι _ _ (fun {W'} g hg ↦ ?_) (fun {W'} g hg ↦ ?_)
     (fun {W'} g hg m hm ↦ ?_)
@@ -102,7 +102,7 @@ theorem Slicing.intervalCat_hasKernel (s : Slicing C)
     have hι' : ι' ≫ fH = 0 := by
       apply ((t.heart).ι).map_injective
       simpa [ι', fH, FL, ObjectProperty.homMk_hom] using congr_arg (·.hom) hg
-    ext; simp [k, fH, FL]
+    ext; exact congrArg (·.hom) (kernel.lift_ι fH ι' hι')
   · let WH : t.heart.FullSubcategory := FL.obj W'
     let ι' : WH ⟶ XH := FL.map g
     have hι' : ι' ≫ fH = 0 := by
@@ -574,7 +574,7 @@ theorem Slicing.IntervalCat.mono_toLeftHeart_of_strictMono (s : Slicing C)
     (s.intervalProp C a b).prop_of_iso eK0 hK_mem_aux
   let KI : s.IntervalCat C a b := ⟨(kernel qH).obj, hKer_mem⟩
   let k : KI ⟶ Y := ObjectProperty.homMk (kernel.ι qH).hom
-  have hk_zero : k ≫ q = 0 := by ext; simp [k, qH, FL]
+  have hk_zero : k ≫ q = 0 := by ext; exact congrArg (·.hom) (kernel.condition qH)
   let hk_limit : IsLimit (KernelFork.ofι k hk_zero) := by
     refine KernelFork.IsLimit.ofι _ _ (fun {W'} g hg ↦ ?_) (fun {W'} g hg ↦ ?_)
       (fun {W'} g hg m hm ↦ ?_)
@@ -589,7 +589,7 @@ theorem Slicing.IntervalCat.mono_toLeftHeart_of_strictMono (s : Slicing C)
       have hι' : ι' ≫ qH = 0 := by
         apply ((t.heart).ι).map_injective
         simpa [ι', qH, FL, ObjectProperty.homMk_hom] using congr_arg (·.hom) hg
-      ext; simp [k, qH, FL]
+      ext; exact congrArg (·.hom) (kernel.lift_ι qH ι' hι')
     · let WH : t.heart.FullSubcategory := FL.obj W'
       let ι' : WH ⟶ YH := FL.map g
       have hι' : ι' ≫ qH = 0 := by
