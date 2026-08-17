@@ -45,6 +45,11 @@ jobs:
       - name: Build BridgelandStability
         run: lake build BridgelandStability
 
+      # The Comparator Challenge is its own library with a Mathlib-only import
+      # closure, so it is not reached by the BridgelandStability target.
+      - name: Build Challenge
+        run: lake build Challenge
+
       - name: Run declaration linter
         run: lake exe runLinter
 

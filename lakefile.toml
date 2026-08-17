@@ -1,7 +1,10 @@
 name = "BridgelandStability"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["BridgelandStability", "Challenge"]
+# Challenge is deliberately NOT a default target: `lake exe runLinter` lints the
+# default targets, and the Challenge is generated, sorry-carrying code that the
+# Mathlib declaration linter should not police. CI builds it explicitly.
+defaultTargets = ["BridgelandStability"]
 
 [leanOptions]
 autoImplicit = false
