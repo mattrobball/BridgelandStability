@@ -559,7 +559,7 @@ namespace CategoryTheory.Triangulated
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C] [Linear k C] [IsFiniteType k C]
+  [Linear k C] [IsFiniteType k C]
 section EulerTriangleAdditivity
 
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
@@ -586,40 +586,43 @@ def eulerForm [(shiftFunctor C (1 : ℤ)).Linear k] :
   K₀.lift C (eulerFormInner k C)
 
 /-- The left radical of the Euler form on `K₀ C`. -/
-def eulerFormRad [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+def eulerFormRad [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddSubgroup (K₀ C) :=
   (eulerForm k C).ker
 
 /-- The numerical Grothendieck group attached to the Euler form on `K₀`. -/
-def NumericalK₀ [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+def NumericalK₀ [(shiftFunctor C (1 : ℤ)).Linear k] :
     Type _ :=
   K₀ C ⧸ eulerFormRad k C
 
 /-- The `AddCommGroup` instance on `NumericalK₀ k C`. -/
-instance NumericalK₀.instAddCommGroup [Linear k C] [IsFiniteType k C]
+instance NumericalK₀.instAddCommGroup
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddCommGroup (NumericalK₀ k C) :=
   inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad k C))
 
 /-- The quotient map `K₀(C) → N(C)`. -/
-abbrev numericalQuotientMap [Linear k C] [IsFiniteType k C]
+abbrev numericalQuotientMap
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ NumericalK₀ k C :=
   QuotientAddGroup.mk' (eulerFormRad k C)
 
 /-- The category `C` is numerically finite if the numerical Grothendieck group attached to the
 Euler form is finitely generated as an abelian group. -/
-class NumericallyFinite [Linear k C] [IsFiniteType k C]
+class NumericallyFinite
     [(shiftFunctor C (1 : ℤ)).Linear k] : Prop where
   /-- The Euler-form numerical Grothendieck group is finitely generated. -/
   fg : AddGroup.FG (NumericalK₀ k C)
 
+section Triangulated
+variable [IsTriangulated C]
+
 /-- A connected component of numerical stability conditions. -/
-abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k]
+abbrev NumericalComponent [(shiftFunctor C (1 : ℤ)).Linear k]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
   StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
 
+end Triangulated
 end CategoryTheory.Triangulated
 
 -- ═══ NumericalStabilityManifold ═══

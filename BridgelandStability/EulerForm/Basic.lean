@@ -40,7 +40,7 @@ namespace CategoryTheory.Triangulated
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [IsTriangulated C] [Linear k C] [IsFiniteType k C]
+  [Linear k C] [IsFiniteType k C]
 
 -- For a middle-exact sequence K →f M →g N of f.d. k-vector spaces (im f = ker g),
 -- dim M = dim(ker g) + dim(im g) = dim(im f) + dim(im g).
@@ -89,7 +89,7 @@ lemma finsum_alternating_shift_cancel {r : ℤ → ℤ} :
 -- pointwise, with all supports finite, then the alternating sums satisfy
 -- Σ (-1)^n b(n) = Σ (-1)^n a(n) + Σ (-1)^n c(n).
 omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
-  [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
+  [Pretriangulated C] [IsFiniteType k C] in
 lemma eulerSum_of_rank_identity
     (E : C) {a b c : ℤ → C} {r : ℤ → ℤ}
     (hrank : ∀ n : ℤ, (Module.finrank k (E ⟶ b n) : ℤ) =
@@ -289,7 +289,7 @@ lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
 -- For a middle-exact sequence in AddCommGrpCat that is also k-linear,
 -- the range/ker equality lifts from abelian groups to k-modules.
 omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
-  [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
+  [Pretriangulated C] [IsFiniteType k C] in
 lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
     (f : A ⟶ B) (g : B ⟶ C') (hfg : f ≫ g = 0)
     (hexact : ∀ (x : E ⟶ B), x ≫ g = 0 → ∃ y : E ⟶ A, y ≫ f = x) :
@@ -319,7 +319,6 @@ noncomputable instance linearCoyonedaObjIsHomological (E : C) :
 
 section EulerTriangleAdditivity
 
-omit [IsTriangulated C]
 
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
@@ -591,43 +590,46 @@ def eulerForm [(shiftFunctor C (1 : ℤ)).Linear k] :
   K₀.lift C (eulerFormInner k C)
 
 /-- The left radical of the Euler form on `K₀ C`. -/
-def eulerFormRad [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+def eulerFormRad [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddSubgroup (K₀ C) :=
   (eulerForm k C).ker
 
 /-- The numerical Grothendieck group attached to the Euler form on `K₀`. -/
-def NumericalK₀ [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+def NumericalK₀ [(shiftFunctor C (1 : ℤ)).Linear k] :
     Type _ :=
   K₀ C ⧸ eulerFormRad k C
 
 /-- The `AddCommGroup` instance on `NumericalK₀ k C`. -/
-instance NumericalK₀.instAddCommGroup [Linear k C] [IsFiniteType k C]
+instance NumericalK₀.instAddCommGroup
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddCommGroup (NumericalK₀ k C) :=
   inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad k C))
 
 /-- The quotient map `K₀(C) → N(C)`. -/
-abbrev numericalQuotientMap [Linear k C] [IsFiniteType k C]
+abbrev numericalQuotientMap
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ NumericalK₀ k C :=
   QuotientAddGroup.mk' (eulerFormRad k C)
 
 /-- The category `C` is numerically finite if the numerical Grothendieck group attached to the
 Euler form is finitely generated as an abelian group. -/
-class NumericallyFinite [Linear k C] [IsFiniteType k C]
+class NumericallyFinite
     [(shiftFunctor C (1 : ℤ)).Linear k] : Prop where
   /-- The Euler-form numerical Grothendieck group is finitely generated. -/
   fg : AddGroup.FG (NumericalK₀ k C)
 
 /-- Instance synthesis for the finite generation of the numerical Grothendieck group. -/
-instance [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k]
+instance [(shiftFunctor C (1 : ℤ)).Linear k]
     [NumericallyFinite k C] : AddGroup.FG (NumericalK₀ k C) :=
   NumericallyFinite.fg
 
+section Triangulated
+
+variable [IsTriangulated C]
+
 /-- Numerical stability conditions are stability conditions whose central charge factors through
 the canonical numerical quotient map `K₀(C) → N(C)`. -/
-abbrev NumericalStabilityCondition [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k] : Type _ :=
+abbrev NumericalStabilityCondition [(shiftFunctor C (1 : ℤ)).Linear k] : Type _ :=
   StabilityCondition.WithClassMap C (numericalQuotientMap k C)
 
 /-! ## Corollary 1.3 packaging -/
@@ -635,14 +637,15 @@ abbrev NumericalStabilityCondition [Linear k C] [IsFiniteType k C]
 /-- The local-homeomorphism package for connected components of numerical stability conditions.
 This is the proposition-object behind Bridgeland's Corollary 1.3. -/
 abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-    [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
+    [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
   StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
     (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 
 /-- A connected component of numerical stability conditions. -/
-abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k]
+abbrev NumericalComponent [(shiftFunctor C (1 : ℤ)).Linear k]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
   StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
+
+end Triangulated
 
 end CategoryTheory.Triangulated
