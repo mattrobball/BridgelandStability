@@ -106,14 +106,12 @@ noncomputable def TStructure.truncGELEObjShiftIso
     ((t.truncGELE n n).obj X)⟦(n : ℤ)⟧ ≅ (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) := by
   let e₁ :
       ((t.truncGELE n n).obj X)⟦(n : ℤ)⟧ ≅
-        (t.truncGE 0).obj (((t.truncLE n).obj X)⟦(n : ℤ)⟧) := by
-    simpa [TStructure.truncGELE] using
-      TStructure.truncGEObjShiftIso (C := C) t n ((t.truncLE n).obj X)
+        (t.truncGE 0).obj (((t.truncLE n).obj X)⟦(n : ℤ)⟧) :=
+    TStructure.truncGEObjShiftIso (C := C) t n ((t.truncLE n).obj X)
   let e₂ :
       (t.truncGE 0).obj (((t.truncLE n).obj X)⟦(n : ℤ)⟧) ≅
-        (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) := by
-      simpa [TStructure.truncGELE] using
-        (t.truncGE 0).mapIso (TStructure.truncLEObjShiftIso (C := C) t n X)
+        (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) :=
+    (t.truncGE 0).mapIso (TStructure.truncLEObjShiftIso (C := C) t n X)
   exact e₁ ≪≫ e₂
 
 /-- The shifted `H⁰_t` object of `X` agrees with the degree-`n` heart cohomology
@@ -122,9 +120,7 @@ noncomputable def HeartStabilityData.H0FunctorShiftObjIsoHeartCoh
     (h : HeartStabilityData C) (n : ℤ) (X : C) :
     ((h.H0Functor (C := C)).shift n).obj X ≅ h.heartCoh (C := C) n X := by
   let e₂ : (h.H0Functor (C := C)).obj (X⟦(n : ℤ)⟧) ≅ h.heartCoh (C := C) n X := by
-    refine ObjectProperty.isoMk _ ?_
-    simpa [HeartStabilityData.H0Functor, HeartStabilityData.heartCohFunctor,
-      HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
+    exact ObjectProperty.isoMk _
       (((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧))) ≪≫
         (TStructure.truncGELEObjShiftIso (C := C) h.t n X).symm)
   exact ((Functor.isoShift (h.H0Functor (C := C)) n).app X).symm ≪≫ e₂

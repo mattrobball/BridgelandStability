@@ -310,10 +310,8 @@ noncomputable def HeartStabilityData.H0FunctorObjIsoOfHeart
       ((h.t.isGE_iff_isIso_truncGEπ_app 0 E.obj).mp hGE0)
   let e0 : (h.t.truncGELE 0 0).obj E.obj ≅ E.obj :=
     (h.t.truncGE 0).mapIso eLE ≪≫ eGE.symm
-  let e0' : ((h.H0Functor (C := C)).obj E.obj).obj ≅ E.obj := by
-    simpa [HeartStabilityData.H0Functor, HeartStabilityData.heartCohFunctor,
-      HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
-      ((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj E.obj) ≪≫ e0)
+  let e0' : ((h.H0Functor (C := C)).obj E.obj).obj ≅ E.obj :=
+    (shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj E.obj) ≪≫ e0
   exact ObjectProperty.isoMk _ e0'
 
 /-- The primed `H0` functor also restricts to the identity on heart objects. -/
@@ -822,8 +820,7 @@ noncomputable def HeartStabilityData.heartCohObjIsoOfHeartShift
     @asIso _ _ _ _ ((h.t.truncGEπ n).app X) ((h.t.isGE_iff_isIso_truncGEπ_app n X).mp hGE)
   let e0 : (h.t.truncGELE n n).obj X ≅ X :=
     (h.t.truncGE n).mapIso eLE ≪≫ eGE.symm
-  simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure, X] using
-    ((shiftFunctor C n).mapIso e0 ≪≫ shiftNegShift (X := E.obj) (i := n))
+  exact (shiftFunctor C n).mapIso e0 ≪≫ shiftNegShift (X := E.obj) (i := n)
 
 theorem HeartStabilityData.heartCohClass_zero_of_heart
     (h : HeartStabilityData C)

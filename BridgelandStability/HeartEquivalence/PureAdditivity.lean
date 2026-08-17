@@ -63,8 +63,7 @@ noncomputable def HeartStabilityData.heartCohIso_of_truncLT
   have hIso :
       IsIso ((h.t.truncGELE n n).map ((h.t.truncLTι a).app E)) := by
     simpa [TStructure.truncGELE]
-  refine ObjectProperty.isoMk _ ?_
-  simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
+  exact ObjectProperty.isoMk _
     ((shiftFunctor C n).mapIso
       (asIso ((h.t.truncGELE n n).map ((h.t.truncLTι a).app E))))
 
@@ -647,9 +646,7 @@ noncomputable def HeartStabilityData.heartCohIso_of_pure
     @asIso _ _ _ _ ((h.t.truncGEπ n).app X) ((h.t.isGE_iff_isIso_truncGEπ_app n X).mp hGE)
   let e : (h.t.truncGELE n n).obj X ≅ X :=
     (h.t.truncGE n).mapIso eLE ≪≫ eGE.symm
-  refine ObjectProperty.isoMk _ ?_
-  simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
-    ((shiftFunctor C n).mapIso e)
+  exact ObjectProperty.isoMk _ ((shiftFunctor C n).mapIso e)
 
 theorem HeartStabilityData.heartCohClass_eq_pureClass
     (h : HeartStabilityData C)
@@ -678,15 +675,12 @@ noncomputable def HeartStabilityData.heartCohIso_of_truncGE_of_isLE
   have hIsoP₂ :
       IsIso ((h.t.truncGE a).map ((h.t.truncGEπ a).app E)) := by
     infer_instance
-  let eE : ((h.t.truncGELE a a).obj E) ≅ P := by
-    simpa [P, TStructure.truncGELE] using
-      (asIso ((h.t.truncGE a).map ((h.t.truncLEι a).app E)))
-  let eP : ((h.t.truncGELE a a).obj P) ≅ P := by
-    simpa [P, TStructure.truncGELE] using
-      ((asIso ((h.t.truncGE a).map ((h.t.truncLEι a).app P))) ≪≫
-        (asIso ((h.t.truncGE a).map ((h.t.truncGEπ a).app E))).symm)
-  refine ObjectProperty.isoMk _ ?_
-  simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure, P] using
+  let eE : ((h.t.truncGELE a a).obj E) ≅ P :=
+    asIso ((h.t.truncGE a).map ((h.t.truncLEι a).app E))
+  let eP : ((h.t.truncGELE a a).obj P) ≅ P :=
+    (asIso ((h.t.truncGE a).map ((h.t.truncLEι a).app P))) ≪≫
+      (asIso ((h.t.truncGE a).map ((h.t.truncGEπ a).app E))).symm
+  exact ObjectProperty.isoMk _
     ((shiftFunctor C a).mapIso eP ≪≫ ((shiftFunctor C a).mapIso eE).symm)
 
 theorem HeartStabilityData.heartCohClass_of_truncGE_of_isLE

@@ -136,12 +136,9 @@ instance HeartStabilityData.H0primeFunctor_additive
 noncomputable def HeartStabilityData.H0ObjIsoH0prime
     (h : HeartStabilityData C) (X : C) :
     (h.H0Functor (C := C)).obj X ≅ h.H0prime (C := C) X := by
-  refine ObjectProperty.isoMk _ ?_
-  simpa [HeartStabilityData.H0Functor, HeartStabilityData.heartCohFunctor,
-    HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure,
-    HeartStabilityData.H0prime] using
-      ((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj X) ≪≫
-        (h.t.truncGELEIsoLEGE 0 0).app X)
+  exact ObjectProperty.isoMk _
+    ((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj X) ≪≫
+      (h.t.truncGELEIsoLEGE 0 0).app X)
 
 @[reassoc]
 theorem HeartStabilityData.H0ObjIsoH0prime_hom_naturality

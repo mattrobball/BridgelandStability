@@ -79,17 +79,13 @@ noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
       ((h.t.truncGELE (-1) (-1)).obj X) ≅ ((h.t.truncGELT (-1) 0).obj X) :=
     (h.t.truncGELEIsoTruncGELT (-1) (-1) 0 rfl).app X
   let e₂ :
-      ((h.t.truncGELT (-1) 0).obj X) ≅ (h.t.truncLT 0).obj X := by
-      simpa [TStructure.truncGELT] using
-        ((@asIso _ _ _ _ ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))
-          (by
-            infer_instance)).symm)
+      ((h.t.truncGELT (-1) 0).obj X) ≅ (h.t.truncLT 0).obj X :=
+    (asIso ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))).symm
   let e₃ : (h.t.truncLT 0).obj X ≅ K⟦(1 : ℤ)⟧ :=
     (asIso eT.hom.hom₁).symm
   let e : ((h.t.truncGELE (-1) (-1)).obj X) ≅ K⟦(1 : ℤ)⟧ := e₁ ≪≫ e₂ ≪≫ e₃
-  let e' : (h.heartCoh (C := C) (-1) X).obj ≅ K := by
-    simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
-      ((shiftFunctor C (-1 : ℤ)).mapIso e ≪≫ shiftShiftNeg (X := K) (i := (1 : ℤ)))
+  let e' : (h.heartCoh (C := C) (-1) X).obj ≅ K :=
+    (shiftFunctor C (-1 : ℤ)).mapIso e ≪≫ shiftShiftNeg (X := K) (i := (1 : ℤ))
   exact ObjectProperty.isoMk _ e'
 
 /-- For an object of amplitude `(-1, 0)` presented by a triangle
@@ -107,18 +103,14 @@ noncomputable def HeartStabilityData.heartCoh_zero_iso_of_amp_negOne_zero
     (C := C) (t := h.t) (X := X) (K := K) (Q := Q) hK hQ hT
   let eT := Classical.choose hEx
   let e₁ :
-      ((h.t.truncGELE 0 0).obj X) ≅ (h.t.truncGE 0).obj X := by
-      refine ((h.t.truncGELEIsoLEGE 0 0).app X) ≪≫ ?_
-      simpa [TStructure.truncLEGE] using
-        (@asIso _ _ _ _ ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))
-          (by
-            infer_instance))
+      ((h.t.truncGELE 0 0).obj X) ≅ (h.t.truncGE 0).obj X :=
+    ((h.t.truncGELEIsoLEGE 0 0).app X) ≪≫
+      asIso ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))
   let e₂ : (h.t.truncGE 0).obj X ≅ Q :=
     (asIso eT.hom.hom₃).symm
   let e : ((h.t.truncGELE 0 0).obj X) ≅ Q := e₁ ≪≫ e₂
-  let e' : (h.heartCoh (C := C) 0 X).obj ≅ Q := by
-    simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
-      ((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj X) ≪≫ e)
+  let e' : (h.heartCoh (C := C) 0 X).obj ≅ Q :=
+    (shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj X) ≪≫ e
   exact ObjectProperty.isoMk _ e'
 
 theorem HeartStabilityData.heartCohClassSum_of_amp_negOne_zero
