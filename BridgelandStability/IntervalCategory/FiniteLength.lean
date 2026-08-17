@@ -327,7 +327,7 @@ theorem Slicing.IntervalCat.strictMono_strictEpi_of_distTriang (s : Slicing C)
   let ιL := tL.ιHeart (H := tL.heart.FullSubcategory)
   have hTL :
       Triangle.mk (ιL.map ((S.map FL).f)) (ιL.map ((S.map FL).g)) δ ∈ distTriang C := by
-    simpa [FL] using hT
+    exact hT
   have hKerL :
       IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) := by
     simpa using Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
@@ -349,7 +349,7 @@ theorem Slicing.IntervalCat.strictMono_strictEpi_of_distTriang (s : Slicing C)
   let ιR := tR.ιHeart (H := tR.heart.FullSubcategory)
   have hTR :
       Triangle.mk (ιR.map ((S.map FR).f)) (ιR.map ((S.map FR).g)) δ ∈ distTriang C := by
-    simpa [FR] using hT
+    exact hT
   have hKerR :
       IsLimit (KernelFork.ofι ((S.map FR).f) (S.map FR).zero) := by
     simpa using Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
@@ -405,18 +405,12 @@ theorem Slicing.IntervalCat.exists_distTriang_of_shortExact_toLeftHeart (s : Sli
     (Triangle.isoMk _ _ (ι.mapIso eKA.symm) (Iso.refl _) (Iso.refl _) ?_ ?_ ?_)
   · simp only [Iso.refl_hom, Functor.mapIso_hom, Iso.symm_hom, Triangle.mk_mor₁]
     have hcomp : ι.map eKA.inv ≫ ι.map i = S.f.hom := by
-      simpa [Functor.map_comp] using
-        congrArg (fun k => ι.map k)
+      exact congrArg (fun k => ι.map k)
         (IsLimit.conePointUniqueUpToIso_inv_comp hKer hLfIsKernel
           Limits.WalkingParallelPair.zero)
     change S.f.hom ≫ 𝟙 S.X₂.obj = ι.map eKA.inv ≫ t.ιHeart.map i
-    simpa [FL] using hcomp.symm
-  · have hmap : t.ιHeart.map ((S.map FL).g) = S.g.hom := rfl
-    simp only [Iso.refl_hom, Triangle.mk_mor₂, Triangle.mk_obj₂, Triangle.mk_obj₃]
-    rw [hmap]
-    convert (rfl : S.g.hom = S.g.hom) using 1
-    · exact Category.comp_id S.g.hom
-    · exact Category.id_comp S.g.hom
+    exact (Category.comp_id _).trans hcomp.symm
+  · exact (Category.comp_id _).trans (Category.id_comp _).symm
   · simp only [Iso.refl_hom, Triangle.mk_mor₃, Functor.mapIso_hom, Iso.symm_hom]
     change (δ ≫ (shiftFunctor C (1 : ℤ)).map (ι.map eKA.hom)) ≫
         (shiftFunctor C (1 : ℤ)).map (ι.map eKA.inv) = 𝟙 _ ≫ δ
@@ -447,7 +441,7 @@ theorem Slicing.IntervalCat.exists_distTriang_of_strictShortExact (s : Slicing C
   let eHi : kernel S.g ≅ h.left.K :=
     IsLimit.conePointUniqueUpToIso (kernelIsKernel S.g) h.left.hi
   have heHi : eHi.inv ≫ kernel.ι S.g = h.left.i := by
-    simpa [KernelFork.ofι] using
+    simpa [eHi, KernelFork.ofι, Fork.ofι] using
       IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel S.g) h.left.hi
         Limits.WalkingParallelPair.zero
   haveI : Epi h.left.f' := hS.shortExact.exact.epi_f' h.left
@@ -507,7 +501,7 @@ theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
   let ιL := tL.ιHeart (H := tL.heart.FullSubcategory)
   have hTL :
       Triangle.mk (ιL.map ((S.map FL).f)) (ιL.map ((S.map FL).g)) δ ∈ distTriang C := by
-    simpa [FL] using hT
+    exact hT
   have hKerL :
       IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) := by
     simpa using Triangulated.AbelianSubcategory.isLimitKernelForkOfDistTriang
@@ -524,7 +518,7 @@ theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
   let ιR := tR.ιHeart (H := tR.heart.FullSubcategory)
   have hTR :
       Triangle.mk (ιR.map ((S.map FR).f)) (ιR.map ((S.map FR).g)) δ ∈ distTriang C := by
-    simpa [FR] using hT
+    exact hT
   have hCokR :
       IsColimit (CokernelCofork.ofπ ((S.map FR).g) (S.map FR).zero) := by
     simpa using Triangulated.AbelianSubcategory.isColimitCokernelCoforkOfDistTriang
@@ -540,7 +534,7 @@ theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
     IsLimit.conePointUniqueUpToIso (kernelIsKernel S.g) hKer
   let eK : S.X₁ ≅ kernel S.g := eK'.symm
   have heK : eK.hom ≫ kernel.ι S.g = S.f := by
-    simpa [KernelFork.ofι] using
+    simpa [eK, eK', KernelFork.ofι, Fork.ofι] using
       IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel S.g) hKer
         Limits.WalkingParallelPair.zero
   have hLift : kernel.lift S.g S.f S.zero = eK.hom := by
@@ -556,7 +550,7 @@ theorem Slicing.IntervalCat.strictShortExact_of_distTriang (s : Slicing C)
   let eQ : cokernel S.f ≅ S.X₃ :=
     IsColimit.coconePointUniqueUpToIso (cokernelIsCokernel S.f) hCok
   have heQ : cokernel.π S.f ≫ eQ.hom = S.g := by
-    simpa [CokernelCofork.ofπ] using
+    simpa [eQ, CokernelCofork.ofπ, Cofork.ofπ] using
       IsColimit.comp_coconePointUniqueUpToIso_hom (cokernelIsCokernel S.f) hCok
         Limits.WalkingParallelPair.one
   have hDesc : cokernel.desc S.f S.g S.zero = eQ.hom := by
@@ -610,7 +604,7 @@ theorem Slicing.IntervalCat.strictShortExact_inclusion (s : Slicing C)
       Triangle.mk ((S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)).f.hom)
         ((S.map (Slicing.IntervalCat.inclusion (C := C) (s := s) ha hb)).g.hom)
           δ ∈ distTriang C := by
-    simpa [Slicing.IntervalCat.inclusion] using hT
+    exact hT
   exact Slicing.IntervalCat.strictShortExact_of_distTriang
     (C := C) (s := s) (a := a₂) (b := b₂) hT'
 

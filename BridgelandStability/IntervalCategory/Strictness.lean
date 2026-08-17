@@ -65,13 +65,13 @@ theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
   let eKh : Abelian.image (FR.map f) ⟶ kernel qH :=
     hkernel_qH.lift (KernelFork.ofι (Abelian.image.ι (FR.map f)) himage_zero)
   have heKh : eKh ≫ kernel.ι qH = Abelian.image.ι (FR.map f) := by
-    simpa [eKh, KernelFork.ofι] using
+    simpa [eKh, KernelFork.ofι, Fork.ofι] using
       hkernel_qH.fac (KernelFork.ofι (Abelian.image.ι (FR.map f)) himage_zero)
         Limits.WalkingParallelPair.zero
   let eKi : kernel qH ⟶ Abelian.image (FR.map f) :=
     himage_kernel.lift (KernelFork.ofι (kernel.ι qH) (kernel.condition qH))
   have heKi : eKi ≫ Abelian.image.ι (FR.map f) = kernel.ι qH := by
-    simpa [eKi, KernelFork.ofι] using
+    simpa [eKi, KernelFork.ofι, Fork.ofι] using
       himage_kernel.fac (KernelFork.ofι (kernel.ι qH) (kernel.condition qH))
         Limits.WalkingParallelPair.zero
   let eK : Abelian.image (FR.map f) ≅ kernel qH := by
@@ -111,13 +111,13 @@ theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
       let ι' : WH ⟶ FR.obj Y := FR.map g
       have hι' : ι' ≫ qH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', qH] using congr_arg (·.hom) hg
+        simpa [ι', qH, FR, ObjectProperty.homMk] using congr_arg (·.hom) hg
       exact ObjectProperty.homMk (kernel.lift qH ι' hι').hom
     · let WH : t.heart.FullSubcategory := FR.obj W'
       let ι' : WH ⟶ FR.obj Y := FR.map g
       have hι' : ι' ≫ qH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', qH] using congr_arg (·.hom) hg
+        simpa [ι', qH, FR, ObjectProperty.homMk] using congr_arg (·.hom) hg
       apply ((s.intervalProp C a b).ι).map_injective
       change (kernel.lift qH ι' hι' ≫ kernel.ι qH).hom = g.hom
       simp [ι', FR]
@@ -125,7 +125,7 @@ theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
       let ι' : WH ⟶ FR.obj Y := FR.map g
       have hι' : ι' ≫ qH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', qH] using congr_arg (·.hom) hg
+        simpa [ι', qH, FR, ObjectProperty.homMk] using congr_arg (·.hom) hg
       let mH : WH ⟶ kernel qH := ObjectProperty.homMk m.hom
       have hm' : mH ≫ kernel.ι qH = kernel.lift qH ι' hι' ≫ kernel.ι qH := by
         apply ((t.heart).ι).map_injective
@@ -138,7 +138,7 @@ theorem Slicing.IntervalCat.mono_toRightHeart_of_strictMono (s : Slicing C)
       simpa [mH] using congr_arg (·.hom) hmEq
   let e : X ≅ KI := IsLimit.conePointUniqueUpToIso (hf.isLimitKernelFork) hk_limit
   have he : e.hom ≫ k = f := by
-    simpa [k, e, KernelFork.ofι] using
+    simpa [k, e, KernelFork.ofι, Fork.ofι] using
       IsLimit.conePointUniqueUpToIso_hom_comp (hf.isLimitKernelFork) hk_limit
         Limits.WalkingParallelPair.zero
   let j : kernel qH ≅ FR.obj KI := by
@@ -199,7 +199,7 @@ theorem Slicing.IntervalCat.strictMono_of_mono_toRightHeart (s : Slicing C)
         have hι : c.ι = Fork.ι ((Cone.postcompose eDiag.inv).obj c) := by
           change c.ι = c.ι ≫ eDiag.inv.app WalkingParallelPair.zero
           simp [eDiag]
-        simpa [c] using hι)
+        exact (Category.id_comp _).trans hι)
   have hmap :
       IsLimit (FR.mapCone (KernelFork.ofι f (cokernel.condition f))) :=
     (isLimitMapConeForkEquiv' FR (cokernel.condition f)).symm hlim'
@@ -276,13 +276,13 @@ noncomputable def Slicing.IntervalCat.toLeftHeartKernelIso (s : Slicing C)
       let ι' : WH ⟶ XH := FL.map g
       have hι' : ι' ≫ fH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', fH] using congr_arg (·.hom) hg
+        simpa [ι', fH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg
       exact ObjectProperty.homMk (kernel.lift fH ι' hι').hom
     · let WH : t.heart.FullSubcategory := FL.obj W'
       let ι' : WH ⟶ XH := FL.map g
       have hι' : ι' ≫ fH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', fH] using congr_arg (·.hom) hg
+        simpa [ι', fH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg
       apply ((s.intervalProp C a b).ι).map_injective
       change (kernel.lift fH ι' hι' ≫ kernel.ι fH).hom = g.hom
       simp [ι', FL]
@@ -290,7 +290,7 @@ noncomputable def Slicing.IntervalCat.toLeftHeartKernelIso (s : Slicing C)
       let ι' : WH ⟶ XH := FL.map g
       have hι' : ι' ≫ fH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', fH] using congr_arg (·.hom) hg
+        simpa [ι', fH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg
       let mH : WH ⟶ kernel fH := ObjectProperty.homMk m.hom
       have hm' : mH ≫ kernel.ι fH = kernel.lift fH ι' hι' ≫ kernel.ι fH := by
         apply ((t.heart).ι).map_injective
@@ -375,13 +375,13 @@ theorem Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι (s : Slicing C)
       let ι' : WH ⟶ XH := FL.map g
       have hι' : ι' ≫ fH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', fH] using congr_arg (·.hom) hg
+        simpa [ι', fH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg
       exact ObjectProperty.homMk (kernel.lift fH ι' hι').hom
     · let WH : t.heart.FullSubcategory := FL.obj W'
       let ι' : WH ⟶ XH := FL.map g
       have hι' : ι' ≫ fH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', fH] using congr_arg (·.hom) hg
+        simpa [ι', fH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg
       apply ((s.intervalProp C a b).ι).map_injective
       change (kernel.lift fH ι' hι' ≫ kernel.ι fH).hom = g.hom
       simp [ι', FL]
@@ -389,7 +389,7 @@ theorem Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι (s : Slicing C)
       let ι' : WH ⟶ XH := FL.map g
       have hι' : ι' ≫ fH = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [ι', fH] using congr_arg (·.hom) hg
+        simpa [ι', fH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg
       let mH : WH ⟶ kernel fH := ObjectProperty.homMk m.hom
       have hm' : mH ≫ kernel.ι fH = kernel.lift fH ι' hι' ≫ kernel.ι fH := by
         apply ((t.heart).ι).map_injective
@@ -409,7 +409,7 @@ theorem Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι (s : Slicing C)
     change (j.hom ≫ kernel.ι fH).hom = (FL.map k).hom
     simp [FL, k, j]
   have he : e.hom ≫ k = kernel.ι f := by
-    simpa [e, KernelFork.ofι] using
+    simpa [e, KernelFork.ofι, Fork.ofι] using
       IsLimit.conePointUniqueUpToIso_hom_comp (kernelIsKernel f) hk_limit
         Limits.WalkingParallelPair.zero
   ext
@@ -418,6 +418,7 @@ theorem Slicing.IntervalCat.toLeftHeartKernelIso_hom_comp_ι (s : Slicing C)
   · change (((FL.mapIso e).hom ≫ j.hom) ≫ kernel.ι fH).hom = (e.hom ≫ k).hom
     rw [Category.assoc, hk_map]
     rfl
+  · rfl
 
 /-- A strict epimorphism in `P((a, b))` becomes an epimorphism in the left heart
 `P((a, a + 1])`. -/
@@ -472,13 +473,13 @@ theorem Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi (s : Slicing C)
       let π' : FL.obj X ⟶ WH := FL.map g'
       have hπ' : kH ≫ π' = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [π', kH] using congr_arg (·.hom) hg'
+        simpa [π', kH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg'
       exact ObjectProperty.homMk (cokernel.desc kH π' hπ').hom
     · let WH : t.heart.FullSubcategory := FL.obj W'
       let π' : FL.obj X ⟶ WH := FL.map g'
       have hπ' : kH ≫ π' = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [π', kH] using congr_arg (·.hom) hg'
+        simpa [π', kH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg'
       apply ((s.intervalProp C a b).ι).map_injective
       change (cokernel.π kH ≫ cokernel.desc kH π' hπ').hom = g'.hom
       simp [π', FL]
@@ -486,7 +487,7 @@ theorem Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi (s : Slicing C)
       let π' : FL.obj X ⟶ WH := FL.map g'
       have hπ' : kH ≫ π' = 0 := by
         apply ((t.heart).ι).map_injective
-        simpa [π', kH] using congr_arg (·.hom) hg'
+        simpa [π', kH, FL, ObjectProperty.homMk] using congr_arg (·.hom) hg'
       let mH : cokernel kH ⟶ WH := ObjectProperty.homMk m.hom
       have hm' : cokernel.π kH ≫ mH = cokernel.π kH ≫ cokernel.desc kH π' hπ' := by
         apply ((t.heart).ι).map_injective
@@ -501,7 +502,7 @@ theorem Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi (s : Slicing C)
       simpa [mH] using congr_arg (·.hom) hmEq
   let e : QI ≅ Y := IsColimit.coconePointUniqueUpToIso hp_colim (hg.isColimitCokernelCofork)
   have he : p ≫ e.hom = g := by
-    simpa [p, e, CokernelCofork.ofπ] using
+    simpa [p, e, CokernelCofork.ofπ, Cofork.ofπ] using
       IsColimit.comp_coconePointUniqueUpToIso_hom hp_colim (hg.isColimitCokernelCofork)
         Limits.WalkingParallelPair.one
   let j : FL.obj QI ≅ cokernel kH := by

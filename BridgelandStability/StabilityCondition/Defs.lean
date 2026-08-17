@@ -141,7 +141,7 @@ theorem stabilityCondition_compat_apply (σ : StabilityCondition C)
     (φ : ℝ) (E : C) (hE : σ.slicing.P φ E) (hNZ : ¬IsZero E) :
     ∃ (m : ℝ), 0 < m ∧
       σ.Z (K₀.of C E) = ↑m * Complex.exp (↑(Real.pi * φ) * Complex.I) := by
-  simpa using σ.compat φ E hE hNZ
+  simpa [PreStabilityCondition.WithClassMap.charge_def] using σ.compat φ E hE hNZ
 
 /-! ### Phase rotation identity -/
 

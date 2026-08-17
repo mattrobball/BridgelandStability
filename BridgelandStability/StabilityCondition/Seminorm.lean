@@ -174,7 +174,7 @@ end
 `ℝ≥0∞` values are nonneg, but useful for API. -/
 theorem stabSeminorm_nonneg (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ) :
     0 ≤ stabSeminorm C σ U :=
-  zero_le _
+  zero_le
 
 /-- The seminorm at zero is zero. -/
 theorem stabSeminorm_zero (σ : StabilityCondition.WithClassMap C v) :

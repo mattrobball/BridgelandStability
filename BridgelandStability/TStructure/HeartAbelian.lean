@@ -138,9 +138,12 @@ theorem heart_admissible :
   exact ⟨K, Q, α, β, γ, isomorphic_distinguished _
     (t.triangleLTGE_distinguished 0 X₃) _
     (Triangle.isoMk _ _ e₁ (Iso.refl _) eQ
-      (by dsimp [α, triangleLTGE]; simp)
-      (by dsimp [β, triangleLTGE]; simp)
-      (by dsimp [γ]; simp))⟩
+      (by dsimp [α, β, γ, triangleLTGE, Triangle.functorMk, Triangle.mk]; simp)
+      (by dsimp [α, β, γ, triangleLTGE, Triangle.functorMk, Triangle.mk]; simp)
+      (by
+        dsimp only [γ, triangleLTGE, Triangle.functorMk, Triangle.mk]
+        simp only [Category.assoc]
+        grind))⟩
 
 variable [IsTriangulated C] [HasFiniteProducts H] in
 /-- **Heart abelianity.** The heart of a t-structure on a triangulated category is abelian,

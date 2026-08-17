@@ -574,7 +574,7 @@ theorem Slicing.intervalProp_of_mono_leftHeart (s : Slicing C)
     simpa [add_comm] using
       (s.phaseShift_leProp C a 1 (cokernel f).obj).mp hQLeShift
   have hT' : Pretriangulated.Triangle.mk i.hom q.hom δ ∈ distTriang C := by
-    simpa using hT
+    exact hT
   have hK_mem_aux : s.intervalProp C a b K.obj :=
     s.first_intervalProp_of_triangle C (Fact.out : a < b) hY hQLe hKGt hT'
   have hKer : IsLimit (KernelFork.ofι f (cokernel.condition f)) :=
@@ -618,7 +618,7 @@ theorem Slicing.intervalProp_of_epi_rightHeart (s : Slicing C)
     simpa [show 1 + (b - 1) = b by linarith] using
       (s.phaseShift_ltProp C (b - 1) 1 Y.obj).mp hYLtShift
   have hT' : Pretriangulated.Triangle.mk i.hom f.hom δ ∈ distTriang C := by
-    simpa using hT
+    exact hT
   exact s.third_intervalProp_of_triangle C (Fact.out : a < b) hX hKGe hYLt hT'
 
 end HeartClosure

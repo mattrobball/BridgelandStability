@@ -76,10 +76,12 @@ theorem hom_eq_zero {C : Type u} [Category.{v} C]
     | mem hQ => exact h _ _ hP hQ f
     | ext hT _ _ ihA ihB =>
       obtain ⟨g, rfl⟩ := Triangle.coyoneda_exact₂ _ hT f (ihB _)
-      simp [ihA g]
+      rw [ihA g]
+      exact zero_comp
   | ext hT _ _ ihX ihY =>
     obtain ⟨g, rfl⟩ := Triangle.yoneda_exact₂ _ hT f (ihX hF _)
-    simp [ihY hF g]
+    rw [ihY hF g]
+    exact comp_zero
 
 /-- Extension closure is closed under isomorphisms. -/
 theorem of_iso {C : Type u} [Category.{v} C] [HasZeroObject C]

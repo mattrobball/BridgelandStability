@@ -133,7 +133,7 @@ theorem isArtinianObject_of_epi {X Y : A} (p : X ⟶ Y) [Epi p]
   obtain ⟨n, hn⟩ := antitone_chain_condition_of_isArtinianObject g
   exact ⟨n, fun m hm ↦ by
     apply pullback_obj_injective_of_epi p
-    simpa using hn m hm⟩
+    exact hn m hm⟩
 
 /-- The subobject `M ≤ (pullback p).obj ⊥` when `M.arrow ≫ p = 0`. This is used to show
 that pullback along the cokernel projection maps every subobject above the kernel. -/
@@ -562,6 +562,7 @@ theorem StabilityFunction.hasHN_of_finiteLength (Z : StabilityFunction A)
       have hNewTop : newChain ⟨hn_Q'.n + 1, by lia⟩ = ⊤ := by
         simp only [newChain, show hn_Q'.n + 1 ≠ 0 from by lia, ite_false]
         convert hpb_top using 2
+        congr 1
       have hNewMono : StrictMono newChain := by
         apply Fin.strictMono_iff_lt_succ.mpr
         intro ⟨i, hi⟩

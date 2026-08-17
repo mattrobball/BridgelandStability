@@ -87,7 +87,7 @@ theorem append_hn_filtration_of_triangle
       haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
       refine ⟨GX.ofIso C (asIso f), ?_⟩
       intro j
-      simpa using hX_gt j
+      simpa [HNFiltration.ofIso] using hX_gt j
   | succ m ih =>
       intro Y GY hn E f g h hT t hX_gt hY_gt hsep
       by_cases hYn : GY.n = 0
@@ -95,7 +95,7 @@ theorem append_hn_filtration_of_triangle
         haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
         refine ⟨GX.ofIso C (asIso f), ?_⟩
         intro j
-        simpa using hX_gt j
+        simpa [HNFiltration.ofIso] using hX_gt j
       · have hYpos : 0 < GY.n := Nat.pos_of_ne_zero hYn
         by_cases hYone : GY.n = 1
         · let j0 : Fin GY.n := ⟨0, by lia⟩
@@ -138,9 +138,9 @@ theorem append_hn_filtration_of_triangle
           have hT23 : Triangle.mk f23 g23 h23 ∈ distTriang C := by
             refine isomorphic_distinguished _ (GY.triangle_dist jLast) _ ?_
             exact Triangle.isoMk _ _ e₁.symm eY.symm (Iso.refl _)
-              (by simp [Tlast, f23, eY])
-              (by simp [Tlast, g23, eY])
-              (by simp [Tlast, h23])
+              (by simp [Tlast, f23, eY, Triangle.mk])
+              (by simp [Tlast, g23, eY, Triangle.mk])
+              (by simp [Tlast, h23, Triangle.mk])
           obtain ⟨Z, f13, h13, hT13⟩ := distinguished_cocone_triangle₁ (g ≫ g23)
           let oct := Triangulated.someOctahedron'
             (show g ≫ g23 = g ≫ g23 by rfl) hT hT23 hT13
@@ -222,16 +222,16 @@ theorem append_hn_filtration_of_triangle_le
       have hYz : IsZero Y := GY.zero_isZero hYn
       haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
       refine ⟨GX.ofIso C (asIso f), fun j ↦ ?_, fun j ↦ ?_⟩
-      · simpa using hX_gt j
-      · simpa using hX_le j
+      · simpa [HNFiltration.ofIso] using hX_gt j
+      · simpa [HNFiltration.ofIso] using hX_le j
   | succ m ih =>
       intro Y GY hn E f g h hT t hX_gt hY_gt hsep hX_le hY_le
       by_cases hYn : GY.n = 0
       · have hYz : IsZero Y := GY.zero_isZero hYn
         haveI : IsIso f := (Triangle.isZero₃_iff_isIso₁ _ hT).mp hYz
         refine ⟨GX.ofIso C (asIso f), fun j ↦ ?_, fun j ↦ ?_⟩
-        · simpa using hX_gt j
-        · simpa using hX_le j
+        · simpa [HNFiltration.ofIso] using hX_gt j
+        · simpa [HNFiltration.ofIso] using hX_le j
       · have hYpos : 0 < GY.n := Nat.pos_of_ne_zero hYn
         by_cases hYone : GY.n = 1
         · let j0 : Fin GY.n := ⟨0, by lia⟩
@@ -273,7 +273,7 @@ theorem append_hn_filtration_of_triangle_le
           have hT23 : Triangle.mk f23 g23 h23 ∈ distTriang C := by
             refine isomorphic_distinguished _ (GY.triangle_dist jLast) _ ?_
             exact Triangle.isoMk _ _ e₁.symm eY.symm (Iso.refl _)
-              (by simp [Tlast, f23, eY]) (by simp [Tlast, g23, eY]) (by simp [Tlast, h23])
+              (by simp [Tlast, f23, eY, Triangle.mk]) (by simp [Tlast, g23, eY, Triangle.mk]) (by simp [Tlast, h23, Triangle.mk])
           obtain ⟨Z, f13, h13, hT13⟩ := distinguished_cocone_triangle₁ (g ≫ g23)
           let oct := Triangulated.someOctahedron'
             (show g ≫ g23 = g ≫ g23 by rfl) hT hT23 hT13
@@ -405,9 +405,9 @@ theorem split_hn_filtration_at_cutoff
             let Tisoₘ := Triangle.isoMk
               (Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂) (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧')) T
               e₁.symm e₂A.symm (Iso.refl _)
-              (by simp [u₂₃, e₂A])
-              (by simp [e₂A])
-              (by simp)
+              (by simp [u₂₃, e₂A, Triangle.mk])
+              (by simp [e₂A, Triangle.mk])
+              (by simp [Triangle.mk])
             have hTu₂₃ :
                 Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂) (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧') ∈
                   distTriang C :=

@@ -123,9 +123,9 @@ theorem Slicing.exists_triangle_gtProp_leProp (s : Slicing C)
           e₁.inv ≫ T.mor₁ ≫ e₂A.hom
         let Tisoₘ := Triangle.isoMk (Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧')) T e₁.symm e₂A.symm (Iso.refl _)
-          (by simp [u₂₃, e₂A])
-          (by simp [e₂A])
-          (by simp)
+          (by simp [u₂₃, e₂A, Triangle.mk])
+          (by simp [e₂A, Triangle.mk])
+          (by simp [Triangle.mk])
         have hTu₂₃ : Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧') ∈ distTriang C :=
           isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by lia⟩) _ Tisoₘ
@@ -152,9 +152,9 @@ theorem Slicing.exists_triangle_gtProp_leProp (s : Slicing C)
           · -- Distinguished triangle via transport
             apply isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by lia⟩)
             exact Triangle.isoMk _ T (eX.trans e₁.symm) e₂A.symm (Iso.refl _)
-              (by simp [u₂₃, eX, e₂A])
-              (by simp [e₂A])
-              (by simp [eX])
+              (by simp [u₂₃, eX, e₂A, Triangle.mk])
+              (by simp [e₂A, Triangle.mk])
+              (by simp [eX, Triangle.mk])
           · -- Single-factor HN filtration of T.obj₃
             exact HNFiltration.single C T.obj₃ (F.φ ⟨F.n - 1, by lia⟩)
               (F.semistable ⟨F.n - 1, by lia⟩)
@@ -194,7 +194,7 @@ theorem Slicing.exists_triangle_gtProp_leProp (s : Slicing C)
                 obtain ⟨i, hi⟩ := hcontain j
                 have hi_lt := i.isLt; change i.val < F.n - 1 at hi_lt
                 exact ⟨⟨i.val, by lia⟩, by simp [G, HNFiltration.prefix] at hi; exact hi⟩⟩),
-            Or.inr ⟨GZ, by lia, ?_, fun _ j ↦ ?_, fun j ↦ ?_⟩⟩
+            Or.inr ⟨GZ, by rw [hGZn]; lia, ?_, fun _ j ↦ ?_, fun j ↦ ?_⟩⟩
           · -- GZ.phiPlus ≤ 0: first phase comes from GY'
             change GZ.φ ⟨0, by lia⟩ ≤ 0
             simp only [GZ, HNFiltration.appendFactor, dif_pos hGY']
@@ -274,9 +274,9 @@ theorem Slicing.exists_triangle_geProp_ltProp (s : Slicing C)
           e₁.inv ≫ T.mor₁ ≫ e₂A.hom
         let Tisoₘ := Triangle.isoMk (Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧')) T e₁.symm e₂A.symm (Iso.refl _)
-          (by simp [u₂₃, e₂A])
-          (by simp [e₂A])
-          (by simp)
+          (by simp [u₂₃, e₂A, Triangle.mk])
+          (by simp [e₂A, Triangle.mk])
+          (by simp [Triangle.mk])
         have hTu₂₃ : Triangle.mk u₂₃ (e₂A.inv ≫ T.mor₂)
           (T.mor₃ ≫ e₁.hom⟦(1 : ℤ)⟧') ∈ distTriang C :=
           isomorphic_distinguished _ (F.triangle_dist ⟨F.n - 1, by lia⟩) _ Tisoₘ

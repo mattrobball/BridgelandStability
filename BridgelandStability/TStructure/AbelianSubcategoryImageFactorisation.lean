@@ -73,6 +73,12 @@ lemma exists_distinguished_triangle_of_image_factorisation
     rw [rotate_distinguished_triangle, ← Triangle.shift_distinguished_iff _ 1]
     refine isomorphic_distinguished _ H.mem _ ?_
     exact Triangle.isoMk _ _ (-(Iso.refl _)) (Iso.refl _) (Iso.refl _)
+      (by dsimp [Triangle.mk, Triangle.rotate, Triangle.shiftFunctor]; simp [← hm₁, ← hm₃])
+      (by dsimp [Triangle.mk, Triangle.rotate, Triangle.shiftFunctor]; simp [← hm₁, ← hm₃])
+      (by
+        dsimp [Triangle.mk, Triangle.rotate, Triangle.shiftFunctor]
+        simp [← hm₁, ← hm₃]
+        exact congrArg ((shiftFunctor C (1 : ℤ)).map α ≫ ·) (Category.comp_id _))
   refine ⟨I, i, δ, m₁, m₃, hI, Hmem, ?_⟩
   exact (ι ⋙ shiftFunctor C (1 : ℤ)).map_injective (by simpa [hm₁] using H.comm₂)
 
