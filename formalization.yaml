@@ -1,5 +1,6 @@
-# formalization.yaml v0.3
-version: "v0.3"
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml v0.4
+version: "v0.4"
 
 # ── WHAT ──────────────────────────────────────────────
 project:
@@ -10,8 +11,7 @@ project:
     - "Matthew Robert Ballard"
   license: "Apache-2.0"
   responsible_maintainers:
-    - name: "Matthew Robert Ballard"
-      github: "mattrobball"
+    - "Matthew Robert Ballard"
   organization: "independent"
   funding:
     - "Renaissance Philanthropy"  # AI for Math fund
@@ -40,8 +40,6 @@ sources:
     location: "https://doi.org/10.4007/annals.2007.166.317"
     relationship: "adapts"
     license: "publisher-restricted"  # Annals of Mathematics
-    author_contacted: "yes"
-    prior_formalization: "none"
     size_bytes: 68866                # pdftotext of arXiv:math/0212237v3 (29 pages)
 
 # ── WITH WHAT ─────────────────────────────────────────
