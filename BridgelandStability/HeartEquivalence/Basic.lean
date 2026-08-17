@@ -593,7 +593,7 @@ lemma K₀.of_shift_nat (X : C) :
       calc
         K₀.of C (X⟦((n + 1 : ℕ) : ℤ)⟧)
             = K₀.of C ((X⟦(n : ℤ)⟧)⟦(1 : ℤ)⟧) := by
-                simpa only [Functor.comp_obj] using
+                exact
                   (K₀.of_iso C
                     (((shiftFunctorAdd' C (n : ℤ) (1 : ℤ) ((n : ℤ) + 1)
                       (by lia)).app X).symm)).symm

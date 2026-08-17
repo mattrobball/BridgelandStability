@@ -112,10 +112,12 @@ noncomputable def HeartStabilityData.H0primeFunctor
   map {X Y} f := ObjectProperty.homMk ((h.t.truncLEGE 0 0).map f)
   map_id X := by
     ext
-    simp [HeartStabilityData.H0prime, TStructure.truncLEGE]
+    simp [HeartStabilityData.H0prime, TStructure.truncLEGE, Functor.comp_obj]
+    rfl
   map_comp f g := by
     ext
-    simp [HeartStabilityData.H0prime, TStructure.truncLEGE]
+    simp [HeartStabilityData.H0prime, TStructure.truncLEGE, Functor.comp_obj]
+    rfl
 
 instance HeartStabilityData.H0primeFunctor_additive
     (h : HeartStabilityData C) :
@@ -163,7 +165,7 @@ theorem HeartStabilityData.H0ObjIsoH0prime_hom_naturality
             (h.t.truncGE 0).map ((h.t.truncLE 0).map f)) ≫
               (h.t.truncGELEIsoLEGE 0 0).hom.app Y := by
                 rw [← Category.assoc]
-                simpa using
+                exact
                   congrArg (fun k =>
                     k ≫ (h.t.truncGELEIsoLEGE 0 0).hom.app Y)
                     (NatTrans.naturality (shiftFunctorZero C ℤ).hom
@@ -172,7 +174,7 @@ theorem HeartStabilityData.H0ObjIsoH0prime_hom_naturality
           ((shiftFunctorZero C ℤ).hom.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj X)) ≫
             (h.t.truncGELEIsoLEGE 0 0).hom.app X) ≫
               (h.t.truncLE 0).map ((h.t.truncGE 0).map f) := by
-                simpa [TStructure.truncGELE, TStructure.truncLEGE, Category.assoc] using
+                simpa [TStructure.truncGELE, TStructure.truncLEGE, Functor.comp_obj, Functor.comp_map] using
                   congrArg (fun k =>
                     (shiftFunctorZero C ℤ).hom.app ((h.t.truncGE 0).obj ((h.t.truncLE 0).obj X)) ≫
                       k)
@@ -285,7 +287,7 @@ theorem HeartStabilityData.toH0primeHom_comp_H0primeFunctor_map
   let rhs :=
     f ≫ (h.t.truncGEπ 0).app X ≫ (h.t.truncGE 0).map g
   have h₁ : lhs = mid := by
-    simpa only [lhs, mid, Category.assoc] using
+    exact
       congrArg
         (fun k => (h.toH0primeHom (C := C) E f).hom ≫ k)
         ((h.t.truncLEι 0).naturality ((h.t.truncGE 0).map g))
@@ -295,9 +297,10 @@ theorem HeartStabilityData.toH0primeHom_comp_H0primeFunctor_map
     exact congrArg (fun k => k ≫ (h.t.truncGE 0).map g)
       (h.toH0primeHom_hom (C := C) E f)
   have h₃ : rhs = f ≫ g ≫ (h.t.truncGEπ 0).app Y := by
-    simpa only [rhs, Category.assoc] using
+    exact
       congrArg (fun k => f ≫ k) (h.t.truncGEπ_naturality 0 g)
-  simpa [HeartStabilityData.H0primeFunctor, TStructure.truncLEGE, Category.assoc, lhs] using
+  simpa [HeartStabilityData.H0primeFunctor, TStructure.truncLEGE, Category.assoc, lhs,
+    Functor.comp_obj, Functor.comp_map] using
     h₁.trans (h₂.trans h₃)
 
 @[simp]
@@ -339,7 +342,7 @@ noncomputable def HeartStabilityData.toH0primeNatTrans
       map_add' := fun f g => h.toH0primeHom_add (C := C) E f g }
   naturality {X Y} g := by
     ext f
-    simpa [Functor.comp_map] using
+    exact
       (h.toH0primeHom_comp_H0primeFunctor_map (C := C) E f g).symm
 
 /-- If `X ∈ t.≥0`, a morphism into `H0prime X` can be read as a morphism into
@@ -452,7 +455,7 @@ theorem HeartStabilityData.H0primeObjIsoTruncGE_inv_naturality
           (h.H0primeObjIsoTruncGE (C := C) Y).hom) := by
             simp [Category.assoc]
     _ = (h.H0primeFunctor (C := C)).map ((h.t.truncGE 0).map g) := by
-      simpa using
+      exact
         (Iso.inv_comp_eq (h.H0primeObjIsoTruncGE (C := C) X)).2
           ((h.H0primeObjIsoTruncGE_hom_naturality (C := C) g).symm)
 

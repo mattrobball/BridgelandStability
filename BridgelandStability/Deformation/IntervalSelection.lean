@@ -101,7 +101,7 @@ theorem interval_strictShortExact_cokernel_of_strictMono
   have hKerBase : IsLimit (KernelFork.ofι S.f S.zero) := by
     simpa [S, KernelFork.ofι] using hf.isLimitKernelFork
   have hEpi : Epi ((S.map FL).g) := by
-    simpa [S, FL] using
+    exact
       Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
         (C := C) (s := s) (a := a) (b := b) (cokernel.π f) (isStrictEpi_cokernel f)
   have hKer :
@@ -136,7 +136,7 @@ theorem intervalInclusion_map_strictMono
   let I : s₁.IntervalCat C a₁ b₁ ⥤ s₂.IntervalCat C a₂ b₂ := ObjectProperty.ιOfLE h
   let S' : ShortComplex (s₂.IntervalCat C a₂ b₂) := S.map I
   have hT' : Triangle.mk S'.f.hom S'.g.hom δ ∈ distTriang C := by
-    simpa [I, S, S'] using hT
+    exact hT
   exact
     (Slicing.IntervalCat.strictMono_strictEpi_of_distTriang
       (C := C) (s := s₂) (a := a₂) (b := b₂) hT').1
@@ -269,7 +269,7 @@ theorem interval_strictArtinianObject_of_inclusion_strict
                 exact hF_mono (f.2 hij)⟩
           obtain ⟨n, hn⟩ := WellFoundedGT.monotone_chain_condition g
           exact ⟨n, fun m hm ↦ hF_inj (by
-            simpa using congrArg OrderDual.ofDual (hn m hm))⟩))
+            exact congrArg OrderDual.ofDual (hn m hm))⟩))
 
 theorem interval_strictNoetherianObject_of_inclusion_strict
     {s₁ s₂ : Slicing C}
@@ -468,8 +468,7 @@ lemma intervalLiftSub_mono
     (M : Subobject X) {A B : Subobject (M : s.IntervalCat C a b)} (h : A ≤ B) :
     intervalLiftSub (C := C) (X := X) M A ≤ intervalLiftSub (C := C) (X := X) M B := by
   refine Subobject.mk_le_mk_of_comm (Subobject.ofLE A B h) ?_
-  dsimp [intervalLiftSub]
-  simp
+  simp [intervalLiftSub]
 
 lemma intervalLiftSub_lt
     {s : Slicing C} {a b : ℝ} {X : s.IntervalCat C a b}
@@ -580,7 +579,7 @@ theorem SkewedStabilityFunction.exists_phase_gt_strictSubobject_of_not_semistabl
   let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
     ShortComplex.mk iKX gXQ (by
       ext
-      simpa [iKX, gXQ] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hT' : Triangle.mk S.f.hom S.g.hom f₃ ∈ distTriang C := by
     simpa [S, iKX, gXQ] using hT
   have hK_strict : IsStrictMono iKX :=
@@ -665,7 +664,7 @@ def intervalLiftSubCokernelIso
     exact congrArg (fun k => k ≫ M.arrow) (Subobject.ofLE_arrow h)
   have hArrow :
       fLift = eA.hom ≫ fBase ≫ eB.inv := by
-    simpa [intervalLiftSub, eA, eB, Category.assoc] using
+    exact
       (Subobject.ofLE_mk_le_mk_of_comm
         fBase
         hwBase :
@@ -726,7 +725,7 @@ theorem SkewedStabilityFunction.exists_minPhase_maximal_strictKernel
   let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
     ShortComplex.mk iKX gXQ (by
       ext
-      simpa [iKX, gXQ] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hT' : Triangle.mk S.f.hom S.g.hom f₃ ∈ distTriang C := by
     simpa [S, iKX, gXQ] using hT
   have hK_strict : IsStrictMono iKX :=
@@ -922,7 +921,7 @@ theorem SkewedStabilityFunction.semistable_of_maxPhase_strictSubobject
   let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
     ShortComplex.mk iKM gMQ (by
       ext
-      simpa [iKM, gMQ] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hT' : Triangle.mk S.f.hom S.g.hom f₃ ∈ distTriang C := by
     simpa [S, iKM, gMQ] using hT
   have hK_strict : IsStrictMono iKM :=

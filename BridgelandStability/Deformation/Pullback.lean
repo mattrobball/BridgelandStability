@@ -154,7 +154,7 @@ theorem interval_strictShortExact_of_kernel_strictEpi
       IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) :=
     isLimitForkMapOfIsLimit' FL S.zero hKer
   have hEpiL : Epi ((S.map FL).g) := by
-    simpa [FL] using
+    exact
       Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
         (C := C) (s := s) (a := a) (b := b) S.g hg
   letI : (S.map FL).HasHomology :=
@@ -344,7 +344,7 @@ theorem interval_strictShortExact_ofLE_pullbackπ_cokernel
       IsLimit (KernelFork.ofι ((S.map FL).f) (S.map FL).zero) :=
     isLimitForkMapOfIsLimit' FL S.zero hKer
   have hEpiL : Epi ((S.map FL).g) := by
-    simpa [S, FL] using
+    exact
       Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
         (C := C) (s := s) (a := a) (b := b) π hπ
   letI : (S.map FL).HasHomology :=
@@ -373,7 +373,7 @@ noncomputable def interval_fIsKernel_of_strictShortExact
   let eHi : kernel S.g ≅ h.left.K :=
     IsLimit.conePointUniqueUpToIso (kernelIsKernel S.g) h.left.hi
   have heHi : eHi.inv ≫ kernel.ι S.g = h.left.i := by
-    simpa [KernelFork.ofι] using
+    exact
       IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel S.g) h.left.hi
         Limits.WalkingParallelPair.zero
   haveI : Epi h.left.f' := hS.shortExact.exact.epi_f' h.left
@@ -437,7 +437,7 @@ noncomputable def interval_cokernel_pullbackTopIso
     IsLimit.conePointUniqueUpToIso (kernelIsKernel p) hKer
   let eK : (pb : s.IntervalCat C a b) ≅ kernel p := eK'.symm
   have heK : eK.hom ≫ kernel.ι p = pb.arrow := by
-    simpa [S, p, KernelFork.ofι] using
+    exact
       IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel p) hKer
         Limits.WalkingParallelPair.zero
   let eC : cokernel pb.arrow ≅ cokernel (kernel.ι p) :=
@@ -518,7 +518,7 @@ theorem semistable_of_upper_inclusion
   let qE : EI₂ ⟶ QI₂ := ObjectProperty.homMk f₂
   let hcomp₀ : iK ≫ qE = 0 := by
     ext
-    simpa [iK, qE] using comp_distTriang_mor_zero₁₂ _ hT
+    exact comp_distTriang_mor_zero₁₂ _ hT
   let S₀ : ShortComplex (σ.slicing.IntervalCat C a b₂) := ShortComplex.mk iK qE hcomp₀
   have hT₀ : Triangle.mk S₀.f.hom S₀.g.hom f₃ ∈ distTriang C := by
     simpa [S₀, iK, qE] using hT
@@ -543,7 +543,7 @@ theorem semistable_of_upper_inclusion
   let qY : QI₂ ⟶ YI₂ := ObjectProperty.homMk gY
   let hcomp₁ : xQ ≫ qY = 0 := by
     ext
-    simpa [xQ, qY] using comp_distTriang_mor_zero₁₂ _ hTQ
+    exact comp_distTriang_mor_zero₁₂ _ hTQ
   let S₁ : ShortComplex (σ.slicing.IntervalCat C a b₂) := ShortComplex.mk xQ qY hcomp₁
   have hT₁ : Triangle.mk S₁.f.hom S₁.g.hom δY ∈ distTriang C := by
     simpa [S₁, xQ, qY] using hTQ
@@ -714,7 +714,7 @@ theorem semistable_of_upper_inclusion
           W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj) =
             W (cl C v (KI₂ : σ.slicing.IntervalCat C a b₂).obj) +
               W (cl C v (Subobject.underlying.obj BX).obj) := by
-        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, SL, PB, KI₂, map_add] using
+        exact
           ssf₂.strict_additive (C := C) (s := σ.slicing) (a := a) (b := b₂) hLeft
       calc
         W (cl C v (PB : σ.slicing.IntervalCat C a b₂).obj) =

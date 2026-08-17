@@ -315,7 +315,7 @@ noncomputable instance linearCoyonedaObjIsHomological (E : C) :
     (((linearCoyoneda k C).obj (Opposite.op E)) : C ⥤ ModuleCat k).IsHomological where
   exact T hT := by
     rw [ShortComplex.exact_iff_exact_map_forget₂]
-    simpa using ((preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT)
+    exact (preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT
 
 section EulerTriangleAdditivity
 
@@ -335,7 +335,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     have hδ_eq : ∀ n : ℤ, ((F.homologySequenceδ T n (n + 1) rfl).hom) = δ_lin n := by
       intro n
       ext x
-      simpa [F, δ_lin] using
+      exact
         (CategoryTheory.Pretriangulated.preadditiveCoyoneda_homologySequenceδ_apply
           (C := C) (T := T) (n₀ := n) (n₁ := n + 1) (h := rfl) (A := Opposite.op E) x)
     have h_ker_f_aux : ∀ m : ℤ,
@@ -344,10 +344,11 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       let f_succ : (E ⟶ T.obj₁⟦m + 1⟧) →ₗ[k] (E ⟶ T.obj₂⟦m + 1⟧) :=
         ((F.shift (m + 1)).map T.mor₁).hom
       have h_exact₁ : LinearMap.range (δ_lin m) = LinearMap.ker f_succ := by
-        simpa [f_succ, hδ_eq m] using
-          (ShortComplex.Exact.moduleCat_range_eq_ker
-            (F.homologySequence_exact₁ T hT m (m + 1) rfl))
-      simpa [r] using
+        rw [← hδ_eq m]
+        exact ShortComplex.Exact.moduleCat_range_eq_ker
+          (F.homologySequence_exact₁ T hT m (m + 1) rfl)
+      simp only [r]
+      exact_mod_cast
         congrArg (fun V : Submodule k (E ⟶ T.obj₁⟦m + 1⟧) => Module.finrank k V) h_exact₁.symm
     have hrank : ∀ n : ℤ,
         (Module.finrank k (E ⟶ T.obj₂⟦n⟧) : ℤ) =
@@ -357,7 +358,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       let f_n : (E ⟶ T.obj₁⟦n⟧) →ₗ[k] (E ⟶ T.obj₂⟦n⟧) := ((F.shift n).map T.mor₁).hom
       let g_n : (E ⟶ T.obj₂⟦n⟧) →ₗ[k] (E ⟶ T.obj₃⟦n⟧) := ((F.shift n).map T.mor₂).hom
       have hexact_B : LinearMap.range f_n = LinearMap.ker g_n := by
-        simpa [f_n, g_n, F] using
+        exact
           (ShortComplex.Exact.moduleCat_range_eq_ker
             (F.homologySequence_exact₂ T hT n))
       haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
@@ -372,9 +373,9 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
           Module.finrank k (LinearMap.range g_n) := by
         have h_exact₃ : LinearMap.range g_n = LinearMap.ker (δ_lin n) := by
-          simpa [g_n, hδ_eq n] using
-            (ShortComplex.Exact.moduleCat_range_eq_ker
-              (F.homologySequence_exact₃ T hT n (n + 1) rfl))
+          rw [← hδ_eq n]
+          exact ShortComplex.Exact.moduleCat_range_eq_ker
+            (F.homologySequence_exact₃ T hT n (n + 1) rfl)
         simpa using
           congrArg (fun V : Submodule k (E ⟶ T.obj₃⟦n⟧) => Module.finrank k V) h_exact₃.symm
       have h_f : (Module.finrank k (LinearMap.range f_n) : ℤ) =
@@ -400,7 +401,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
           ext x
           exact Subsingleton.elim _ _
         apply hnonzero
-        simp [r]
+        simp [r, hδ]
       exact ⟨n + 1, hnontrivial, by simp⟩
     exact eulerSum_of_rank_identity (k := k) (C := C) E
       (a := fun n ↦ T.obj₁⟦n⟧)
@@ -438,7 +439,7 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
           AddCommGrpCat.ofHom (δ_lin n).toAddMonoidHom := by
       intro n
       ext x
-      simpa [Top, δ_lin, G] using
+      exact
         (CategoryTheory.Pretriangulated.preadditiveYoneda_homologySequenceδ_apply
           (C := C) (T := T) (n₀ := n) (n₁ := n + 1) (h := rfl) (B := F) x)
     have hmap₁ : ∀ n : ℤ,
@@ -464,7 +465,8 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
       have h_exact₁_ab : ((δ_lin m).toAddMonoidHom).range = (f_succ.toAddMonoidHom).ker := by
         change (AddCommGrpCat.Hom.hom (G.homologySequenceδ Top m (m + 1) rfl)).range =
           (AddCommGrpCat.Hom.hom ((G.shift (m + 1)).map Top.mor₁)).ker at h_exact₁_ab0
-        simpa [hδ_eq m, hmap₁ (m + 1), f_succ] using h_exact₁_ab0
+        rw [hδ_eq m] at h_exact₁_ab0
+        exact h_exact₁_ab0
       have h_exact₁ : LinearMap.range (δ_lin m) = LinearMap.ker f_succ :=
         linearMap_range_eq_ker_of_addMonoidHom (k := k) (δ_lin m) f_succ h_exact₁_ab
       simpa [r] using
@@ -482,7 +484,7 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
       have hexact_B_ab : (f_n.toAddMonoidHom).range = (g_n.toAddMonoidHom).ker := by
         change (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₁)).range =
           (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₂)).ker at hexact_B_ab0
-        simpa [hmap₁ n, hmap₂ n, f_n, g_n] using hexact_B_ab0
+        exact hexact_B_ab0
       have hexact_B : LinearMap.range f_n = LinearMap.ker g_n :=
         linearMap_range_eq_ker_of_addMonoidHom (k := k) f_n g_n hexact_B_ab
       haveI : Module.Finite k (T.obj₂ ⟶ F⟦n⟧) := IsFiniteType.finite_dim (k := k) T.obj₂ (F⟦n⟧)
@@ -506,7 +508,8 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
         have h_exact₃_ab : (g_n.toAddMonoidHom).range = ((δ_lin n).toAddMonoidHom).ker := by
           change (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₂)).range =
             (AddCommGrpCat.Hom.hom (G.homologySequenceδ Top n (n + 1) rfl)).ker at h_exact₃_ab0
-          simpa [hδ_eq n, hmap₂ n, g_n] using h_exact₃_ab0
+          rw [hδ_eq n] at h_exact₃_ab0
+          exact h_exact₃_ab0
         have h_exact₃ : LinearMap.range g_n = LinearMap.ker (δ_lin n) :=
           linearMap_range_eq_ker_of_addMonoidHom (k := k) g_n (δ_lin n) h_exact₃_ab
         simpa using
@@ -534,7 +537,7 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
           ext x
           exact Subsingleton.elim _ _
         apply hnonzero
-        simp [r]
+        simp [r, hδ]
       exact ⟨n + 1, hnontrivial, by simp⟩
     let a : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₃ ⟶ F⟦n⟧)
     let b : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₂ ⟶ F⟦n⟧)

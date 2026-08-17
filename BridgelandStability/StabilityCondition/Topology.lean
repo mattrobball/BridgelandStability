@@ -596,8 +596,9 @@ private theorem bridgeland_6_4_one_dir
           exact (Set.mem_Ioo.mp hU_σ_bds.2).1
         -- σ-phases of Y⟦-1⟧: max ≤ φ - 1
         have hYs_le : σ.slicing.leProp C (φ - 1) (Y⟦(-1 : ℤ)⟧) := by
-          simpa only [Int.cast_neg, Int.cast_one] using
-            σ.slicing.leProp_shift C φ Y (-1) hYle
+          have h := σ.slicing.leProp_shift C φ Y (-1) hYle
+          rw [show φ + ((-1 : ℤ) : ℝ) = φ - 1 by push_cast; ring] at h
+          exact h
         have hYs_P : FYs.φ ⟨0, hnFYs⟩ ≤ φ - 1 := by
           rw [← σ.slicing.phiPlus_eq C _ hYsZ FYs hnFYs hFYsfirst]
           exact phiPlus_le_of_leProp C σ.slicing hYsZ hYs_le
