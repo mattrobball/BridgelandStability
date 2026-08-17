@@ -88,6 +88,7 @@ noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
     (shiftFunctor C (-1 : ℤ)).mapIso e ≪≫ shiftShiftNeg (X := K) (i := (1 : ℤ))
   exact ObjectProperty.isoMk _ e'
 
+set_option backward.isDefEq.respectTransparency false in
 /-- For an object of amplitude `(-1, 0)` presented by a triangle
 `K⟦1⟧ ⟶ X ⟶ Q ⟶ K⟦2⟧` with `K, Q` in the heart, the `0`-th heart
 cohomology of `X` is canonically isomorphic to `Q`. -/

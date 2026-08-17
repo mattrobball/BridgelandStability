@@ -62,7 +62,7 @@ theorem exists_first_strictShortExact_of_not_semistable_of_finite_leftHeartSubob
         (ShortComplex.mk M.arrow (cokernel.π M.arrow) (cokernel.condition M.arrow)) := by
   let T : Set (Subobject X) := {M | M ≠ ⊥ ∧ IsStrictMono M.arrow}
   have hT_type : Finite T := by
-    simpa [T] using
+    exact
       (Slicing.IntervalCat.finite_strictSubobjects_of_finite_leftHeartSubobjects
         (C := C) (s := σ.slicing) (a := a) (b := b) hX_left)
   have hT_fin : T.Finite := by
@@ -520,7 +520,7 @@ theorem semistable_of_lower_inclusion
   let S₀ : ShortComplex (σ.slicing.IntervalCat C a₂ b) :=
     ShortComplex.mk iK qE (by
       ext
-      simpa [iK, qE] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hT₂ : Triangle.mk iK.hom qE.hom f₃ ∈ distTriang C := by
     simpa [iK, qE] using hT
   have hiK_strict : IsStrictMono iK :=
@@ -542,7 +542,7 @@ theorem semistable_of_lower_inclusion
   let S₁ : ShortComplex (σ.slicing.IntervalCat C a₂ b) :=
     ShortComplex.mk xK kY (by
       ext
-      simpa [xK, kY] using comp_distTriang_mor_zero₁₂ _ hTK)
+      exact comp_distTriang_mor_zero₁₂ _ hTK)
   have hTK₂ : Triangle.mk xK.hom kY.hom δY ∈ distTriang C := by
     simpa [xK, kY] using hTK
   have hxK_strict : IsStrictMono xK :=
@@ -590,7 +590,7 @@ theorem semistable_of_lower_inclusion
       have hmonoRH :
           Mono ((Slicing.IntervalCat.toRightHeart (C := C) (s := σ.slicing) a₁ b
             (Fact.out : b - a₁ ≤ 1)).map xE₁) := by
-        simpa [Slicing.IntervalCat.toRightHeart, xE₁, xE₂] using
+        exact
           (Slicing.IntervalCat.mono_toRightHeart_of_strictMono
             (C := C) (s := σ.slicing) (a := a₂) (b := b) xE₂ hxE₂_strict)
       have hxE₁_strict : IsStrictMono xE₁ := by

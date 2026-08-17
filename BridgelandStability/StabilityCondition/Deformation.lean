@@ -157,7 +157,8 @@ theorem linearInterpolationZ_sub_sub (σ τ : StabilityCondition.WithClassMap C 
     linearInterpolationZ C σ τ t - linearInterpolationZ C σ τ s =
       (t - s) • (τ.Z - σ.Z) := by
   ext x
-  simp [linearInterpolationZ, smul_sub]
+  simp only [linearInterpolationZ, AddMonoidHom.sub_apply, AddMonoidHom.add_apply,
+    AddMonoidHom.smul_apply]
   module
 
 theorem stabSeminorm_smul (σ : StabilityCondition.WithClassMap C v) (U : Λ →+ ℂ) (t : ℝ) :

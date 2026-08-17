@@ -85,10 +85,8 @@ theorem thinFiniteLength_of_node78_window
     ThinFiniteLengthInInterval (C := C) σ (t - 3 * ε₀) (t + 5 * ε₀) := by
   refine ThinFiniteLengthInInterval.of_wide
     (C := C) σ (t := t + ε₀) hε₀ hε₀8 ?_ ?_ hWide
-  · dsimp
-    linarith
-  · dsimp
-    linarith
+  · linarith
+  · linarith
 
 /-- Faithful strict finite-length quotient selection for thin interval categories:
 every nonzero interval object admits a semistable strict quotient whose phase is at most

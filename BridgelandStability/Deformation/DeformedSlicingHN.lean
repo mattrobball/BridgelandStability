@@ -77,10 +77,10 @@ theorem deformedPred_shift_one
         isomorphic_distinguished _ hT_sh _
           (Triangle.isoMk T' shT
             (Iso.refl _) eX.symm (Iso.refl _)
-            (by simp [T'])
+            (by simp [T', Triangle.mk])
             (by change (eX.inv ≫ shT.mor₂) ≫ 𝟙 _ = eX.symm.hom ≫ shT.mor₂
                 simp [Iso.symm])
-            (by simp [T']))
+            (by simp [T', Triangle.mk]))
       have hK1 : σ.slicing.intervalProp C a b (K⟦(-1 : ℤ)⟧) := by
         rcases hK with hZ | ⟨F, hF⟩
         · exact Or.inl ((shiftFunctor C (-1 : ℤ)).map_isZero hZ)
@@ -143,7 +143,8 @@ theorem deformedPred_of_shift_one
       change wPhaseOf (W (cl C v X)) ((a - 1 + (b - 1)) / 2) = φ
       rw [show (a - 1 + (b - 1)) / 2 = (a + b) / 2 - 1 from by ring]
       have hphase : wPhaseOf (-W (cl C v X)) ((a + b) / 2) = φ + 1 := by
-        simpa [SkewedStabilityFunction.wPhase, cl_shift_one, map_neg] using hSS.phase_eq
+        simpa [SkewedStabilityFunction.wPhase, cl_shift_one, map_neg,
+          StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using hSS.phase_eq
       have hWne : W (cl C v X) ≠ 0 := by
         intro hw; apply hSS.wNe; rw [cl_shift_one, map_neg, neg_eq_zero]; exact hw
       have key := wPhaseOf_neg hWne ((a + b) / 2 - 1)

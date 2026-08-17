@@ -49,6 +49,7 @@ theorem HeartStabilityData.heartCohClass_of_heart_shift
   simpa using HeartK0.of_iso (C := C) h
     (ObjectProperty.isoMk _ (h.heartCohObjIsoOfHeartShift (C := C) E n))
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Truncating above degree `a` does not change the `n`th heart cohomology object when `n < a`. -/
 noncomputable def HeartStabilityData.heartCohIso_of_truncLT
     (h : HeartStabilityData C) [IsTriangulated C]
@@ -226,7 +227,7 @@ theorem HeartStabilityData.heartK0_relation_of_pure_distTriang
         exact comp_distTriang_mor_zero₁₂ _ hT_sh)).ShortExact := by
     refine TStructure.heartFullSubcategory_shortExact_of_distTriang
       (C := C) h.t (A := H₁) (B := H₂) (Q := H₃) (f := fH) (g := gH) (δ := shT.mor₃) ?_
-    simpa [fH, gH, shT] using hT_sh
+    exact hT_sh
   have hK0 := HeartK0.of_shortExact (C := C) h hSE
   simpa [H₁, H₂, H₃, zsmul_add] using
     congrArg (fun x : HeartK0 (C := C) h => (((-1 : ℤ) ^ Int.natAbs n) • x)) hK0
@@ -330,11 +331,11 @@ theorem HeartStabilityData.heartCohClassSum_eq_zero_of_isZero
   intro j hj
   exact h.heartCohClass_eq_zero_of_isZero (C := C) hX _
 
-  private theorem HeartStabilityData.heartCohClassSum_succ_lower
-    (h : HeartStabilityData C)
-    {X : C} {b a : ℤ} (hba : b < a) (hGE : h.t.IsGE X (b + 1)) :
-    h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X =
-      h.heartCohClassSum (C := C) (b + 1) (Int.toNat (a - (b + 1))) X := by
+private theorem HeartStabilityData.heartCohClassSum_succ_lower
+  (h : HeartStabilityData C)
+  {X : C} {b a : ℤ} (hba : b < a) (hGE : h.t.IsGE X (b + 1)) :
+  h.heartCohClassSum (C := C) b (Int.toNat (a - b)) X =
+    h.heartCohClassSum (C := C) (b + 1) (Int.toNat (a - (b + 1))) X := by
   have hnat : Int.toNat (a - b) = Int.toNat (a - (b + 1)) + 1 := by
     lia
   rw [hnat, HeartStabilityData.heartCohClassSum, Finset.sum_range_succ']
@@ -658,6 +659,7 @@ theorem HeartStabilityData.heartCohClass_eq_pureClass
   congr 1
   exact HeartK0.of_iso (C := C) h (h.heartCohIso_of_pure (C := C) hLE hGE)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Truncating below degree `a` does not change the `a`th heart cohomology object when the
 original object is already `t`-nonpositive in degree `a`. -/
 noncomputable def HeartStabilityData.heartCohIso_of_truncGE_of_isLE

@@ -78,7 +78,7 @@ def StabilityCondition.stabilityFunctionOnHeart
       let s : Finset (Fin F.n) := Finset.univ.filter (fun i => ¬IsZero (P.factor i))
       have hs : s.Nonempty := by
         obtain ⟨i, hi⟩ := F.exists_nonzero_factor C hEobj
-        exact ⟨i, by simpa [s, P] using hi⟩
+        exact ⟨i, by simpa [s, P, CategoryTheory.Triangulated.PostnikovTower.factor] using hi⟩
       have hphiMinus : 0 < σ.slicing.phiMinus C E.obj hEobj :=
         gt_phases_of_gtProp C σ.slicing hEobj hEheart.1
       have hphiPlus : σ.slicing.phiPlus C E.obj hEobj ≤ 1 :=
@@ -169,7 +169,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
   let s : Finset (Fin F.n) := Finset.univ.filter (fun i => ¬IsZero (P.factor i))
   have hs : s.Nonempty := by
     obtain ⟨i, hi⟩ := F.exists_nonzero_factor C hEobj
-    exact ⟨i, by simpa [s, P] using hi⟩
+    exact ⟨i, by simpa [s, P, CategoryTheory.Triangulated.PostnikovTower.factor] using hi⟩
   have hphiMinus : 0 < σ.slicing.phiMinus C E.obj hEobj :=
     gt_phases_of_gtProp C σ.slicing hEobj hEheart.1
   have hphiPlus : σ.slicing.phiPlus C E.obj hEobj ≤ 1 :=
@@ -195,7 +195,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
     have hXi : ¬IsZero Xi := fun hZ =>
       (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
         ((σ.slicing.P (F.φ i)).ι.map_isZero hZ)
-    simpa [f] using (σ.stabilityFunctionOnPhase C (hphase_mem i hi)).upper Xi hXi
+    exact (σ.stabilityFunctionOnPhase C (hphase_mem i hi)).upper Xi hXi
   have harg_factor : ∀ i ∈ s, Complex.arg (f i) = Real.pi * F.φ i := by
     intro i hi
     have hi_ne : ¬IsZero (P.factor i) := by

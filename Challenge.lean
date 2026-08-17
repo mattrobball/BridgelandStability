@@ -107,6 +107,10 @@ end CategoryTheory.Triangulated
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
+attribute [grind →] StrictAnti.imp
+attribute [grind →] StrictMono.imp
+attribute [grind →] Antitone.imp
+attribute [grind →] Monotone.imp
 namespace CategoryTheory.Triangulated
 section Slicing
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
@@ -144,6 +148,8 @@ structure Slicing where
     φ₂ < φ₁ → (P φ₁) A → (P φ₂) B → ∀ (f : A ⟶ B), f = 0
   /-- Every object has a Harder-Narasimhan filtration. -/
   hn_exists : ∀ (E : C), Nonempty (HNFiltration C P E)
+
+attribute [instance] Slicing.closedUnderIso
 
 /-- The interval subcategory predicate `P((a,b))`: an object `E` belongs to the
 interval subcategory if it is zero or all phases in its HN filtration lie in `(a,b)`. -/
@@ -184,9 +190,9 @@ end CategoryTheory.Triangulated
 -- ═══ GrothendieckGroup.Defs ═══
 
 
+set_option linter.checkUnivs false in
 /-- A presentation of a Grothendieck-style group: objects, relations, and
 the three-term decomposition `obj₂(r) = obj₁(r) + obj₃(r)`. -/
-@[nolint checkUnivs]
 structure K0Presentation (Obj : Type u) (Rel : Type v) where
   /-- The first term of the relation (e.g., `T.obj₁` or `S.X₁`). -/
   obj₁ : Rel → Obj

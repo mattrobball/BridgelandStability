@@ -362,11 +362,12 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
       have hI_le : σ.slicing.leProp C (a + 1) I_H.obj := by
         simpa [add_comm] using (σ.slicing.phaseShift_leProp C a 1 I_H.obj).mp hI_heart.2
       have hT_I' : Triangle.mk i_I.hom (f₂ ≫ β) δ_I ∈ distTriang C := by
-        simpa using hT_I
+        simp only [Triangulated.AbelianSubcategory.ι_map_πQ] at hT_I
+        exact hT_I
       have hT_pH' :
           Triangle.mk (Triangulated.AbelianSubcategory.ιK f₃ α).hom pH.hom (-m₃) ∈
             distTriang C := by
-        simpa [ι] using hT_pH
+        exact hT_pH
       have hIne : ¬IsZero I_H.obj := by
         intro hIZ
         have hIZH : IsZero I_H :=
@@ -452,7 +453,7 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
       let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := σ.slicing) a (ψ₁ + ε₀)
         (Fact.out : ψ₁ + ε₀ - a ≤ 1)
       have hpL_epi : Epi (FL.map pL) := by
-        simpa [FL, pL, EL, IL] using (inferInstance : Epi pH)
+        exact (inferInstance : Epi pH)
       have hpL_strict : IsStrictEpi pL := by
         letI : Epi (FL.map pL) := hpL_epi
         exact Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart
@@ -466,7 +467,7 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
       have hI_phase_ge_left :
           ψ₁ ≤ wPhaseOf (W (cl C v I_H.obj)) αL := by
         let ssfL := σ.skewedStabilityFunction_of_near C W hW habE_left
-        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, EL, IL, pL] using
+        exact
           (SkewedStabilityFunction.phase_le_of_strictQuotient
             (C := C) (σ := σ) (a := a) (b := ψ₁ + ε₀) (ssf := ssfL)
             (X := EL) (Y := IL) hSS₁_left hε₀ hleftThin hW_interval_left hpert_left pL

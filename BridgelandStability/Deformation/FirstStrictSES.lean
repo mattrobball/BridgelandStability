@@ -47,7 +47,7 @@ theorem SkewedStabilityFunction.semistable_of_iso
     have hT' : Triangle.mk (f₁ ≫ e.inv) (e.hom ≫ f₂) f₃ ∈ distTriang C :=
       isomorphic_distinguished _ hT _
         (Triangle.isoMk _ _ (Iso.refl _) e (Iso.refl _)
-          (by simp) (by simp) (by simp))
+          (by simp [Triangle.mk]) (by simp [Triangle.mk]) (by simp [Triangle.mk]))
     exact h.le_of_distTriang hT' hK hQ hKne
 
 section
@@ -119,7 +119,7 @@ theorem SkewedStabilityFunction.phase_gt_of_maxPhase_strictSubobject_of_not_semi
   let S : ShortComplex (σ.slicing.IntervalCat C a b) :=
     ShortComplex.mk iKX gXQ (by
       ext
-      simpa [iKX, gXQ] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hT' : Triangle.mk S.f.hom S.g.hom f₃ ∈ distTriang C := by
     simpa [S, iKX, gXQ] using hT
   have hK_strict : IsStrictMono iKX :=
@@ -201,8 +201,7 @@ theorem SkewedStabilityFunction.exists_first_strictShortExact_of_not_semistable_
         (C := C) (s := σ.slicing) (a := a) (b := b) B.2 hA_strict
     let Cstr : StrictSubobject X := ⟨Csub, hC_strict⟩
     have hC_lt_B : Cstr < B := by
-      simpa [Cstr, Csub] using
-        (intervalLiftSub_lt (C := C) (X := X) B.1 hA_ne_top)
+      exact intervalLiftSub_lt (C := C) (X := X) B.1 hA_ne_top
     have hC_ne : ¬IsZero (Cstr.1 : σ.slicing.IntervalCat C a b) :=
       intervalSubobject_not_isZero_of_ne_bot
         (C := C) (s := σ.slicing) (a := a) (b := b) (X := X) hC_ne_bot

@@ -343,9 +343,7 @@ theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
           (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
             (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
         (h.t.truncLEι 0).app E.obj ≫ (h.t.truncGEπ 0).app E.obj := by
-    simpa [HeartStabilityData.H0prime, TStructure.truncLE, TStructure.truncGELE,
-      TStructure.truncLEGE, TStructure.truncGELEIsoLEGE] using
-      h.t.truncGELTToLTGE_app_pentagon 0 1 E.obj
+    exact h.t.truncGELTToLTGE_app_pentagon 0 1 E.obj
   have hnat :
       eLE.inv ≫ (h.t.truncGEπ 0).app ((h.t.truncLE 0).obj E.obj) =
         (h.t.truncGEπ 0).app E.obj ≫
@@ -495,7 +493,8 @@ noncomputable def HeartStabilityData.heartSourceH0primeShortComplexIso
         ((h.H0primeObjIsoOfHeart (C := C) A).inv ≫
           (h.H0primeFunctor (C := C)).map f) ≫ 𝟙 _
     simp
-  · simp [HeartStabilityData.heartSourceH0primeShortComplex, shortComplexOfDistTriangle]
+  · simp only [HeartStabilityData.heartSourceH0primeShortComplex, shortComplexOfDistTriangle]
+    exact (Category.id_comp _).trans (Category.comp_id _).symm
 
 theorem HeartStabilityData.heartSourceH0primeShortComplex_preadditiveCoyoneda_exact_iff
     (h : HeartStabilityData C)
@@ -757,7 +756,8 @@ theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_comp_t
             congrArg (fun k => u₀ ≫ k)
               (h.truncLT_map_truncGEπ_comp_heartSourceNegOneToAShiftHom (C := C) A δ)
     _ = m ≫ δ := by
-          simpa [Category.assoc] using congrArg (fun k => k ≫ δ) hu₀.symm
+          rw [← Category.assoc]
+          exact congrArg (fun k => k ≫ δ) hu₀.symm
 
 theorem HeartStabilityData.exists_comp_heartSourceNegOneToAShiftHom_eq_of_toH0prime_comp_kernel
     (h : HeartStabilityData C)
