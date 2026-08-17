@@ -420,15 +420,14 @@ noncomputable def HeartStabilityData.toH0primeIsoOfIsGE
   right_inv := h.toH0primeHom_fromH0primeHom_of_isGE (C := C) E
   map_add' := h.toH0primeHom_add (C := C) E
 
+set_option backward.isDefEq.respectTransparency false in
 /-- `H0prime X` is canonically unchanged by replacing `X` with its truncation
 `τ≥0 X`. -/
 noncomputable def HeartStabilityData.H0primeObjIsoTruncGE
     (h : HeartStabilityData C) (X : C) :
     h.H0prime (C := C) X ≅ h.H0prime (C := C) ((h.t.truncGE 0).obj X) := by
   exact ObjectProperty.isoMk _
-    ((h.t.truncLE 0).mapIso
-      (@asIso _ _ _ _ ((h.t.truncGE 0).map ((h.t.truncGEπ 0).app X))
-        (h.t.isIso_truncGE_map_truncGEπ_app 0 0 le_rfl X)))
+    ((h.t.truncLE 0).mapIso (asIso ((h.t.truncGE 0).map ((h.t.truncGEπ 0).app X))))
 
 @[reassoc]
 theorem HeartStabilityData.H0primeObjIsoTruncGE_hom_naturality

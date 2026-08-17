@@ -323,6 +323,7 @@ noncomputable def HeartStabilityData.H0primeObjIsoOfHeart
     h.H0prime (C := C) E.obj ≅ E :=
   (h.H0ObjIsoH0prime (C := C) E.obj).symm ≪≫ h.H0FunctorObjIsoOfHeart (C := C) E
 
+set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
 theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
     (h : HeartStabilityData C) [IsTriangulated C]
@@ -338,7 +339,7 @@ theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
     @asIso _ _ _ _ ((h.t.truncLEι 0).app E.obj)
       ((h.t.isLE_iff_isIso_truncLEι_app 0 E.obj).mp hLE0)
   let eGELE : (h.t.truncGELE 0 0).obj E.obj ≅ (h.t.truncGE 0).obj E.obj :=
-    @asIso _ _ _ _ ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj)) hIsoGEMapLE
+    asIso ((h.t.truncGE 0).map ((h.t.truncLEι 0).app E.obj))
   have hpent :
       (h.t.truncGEπ 0).app ((h.t.truncLE 0).obj E.obj) ≫
           (h.t.truncGELEIsoLEGE 0 0).hom.app E.obj ≫
