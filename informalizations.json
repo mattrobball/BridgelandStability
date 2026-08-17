@@ -409,8 +409,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 181,
-    "endLine": 196,
+    "startLine": 184,
+    "endLine": 199,
     "prose": "$Q(>t)[1] \\subseteq Q(>t+1)$: the forward shift sends $Q(>t)$-objects to $Q(>t+1)$.",
     "proofExposition": "Induction on the extension closure defining $Q(>t)$: zero objects shift to zero, semistable objects shift by `deformedPred_shift_one`, and extensions shift by shifting the distinguished triangle.",
     "termExposition": null
@@ -425,8 +425,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 215,
-    "endLine": 240,
+    "startLine": 218,
+    "endLine": 243,
     "prose": "$Q(\\le t)[-1] \\subseteq Q(\\le t-1)$: the backward shift sends $Q(\\le t)$-objects to $Q(\\le t-1)$.",
     "proofExposition": "For semistable objects, use `deformedPred_of_shift_one` applied to $Y = E[-1]$ with $Y[1] \\cong E$. For extensions, shift the triangle by $-1$.",
     "termExposition": null
@@ -441,8 +441,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 198,
-    "endLine": 213,
+    "startLine": 201,
+    "endLine": 216,
     "prose": "$Q(\\le t)[1] \\subseteq Q(\\le t+1)$: the forward shift sends $Q(\\le t)$-objects to $Q(\\le t+1)$.",
     "proofExposition": "Same induction as `deformedGtPred_shift_one`.",
     "termExposition": null
@@ -457,8 +457,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 255,
-    "endLine": 272,
+    "startLine": 258,
+    "endLine": 275,
     "prose": "**Third-vertex closure for $Q(>t)$**: if $X \\to S \\to Y$ is distinguished with $X, S \\in Q(>t)$, then $Y \\in Q(>t)$.",
     "proofExposition": "Rotate the triangle: $S \\to Y \\to X[1]$ is distinguished. Since $X[1] \\in Q(>t+1) \\subseteq Q(>t)$, the extension closure gives $Y \\in Q(>t)$.",
     "termExposition": null
@@ -473,8 +473,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 274,
-    "endLine": 291,
+    "startLine": 277,
+    "endLine": 294,
     "prose": "**First-vertex closure for $Q(\\le t)$**: if $X \\to R_0 \\to R_1$ is distinguished with $R_0, R_1 \\in Q(\\le t)$, then $X \\in Q(\\le t)$.",
     "proofExposition": "Inverse-rotate: $R_1[-1] \\to X \\to R_0$ is distinguished. Since $R_1[-1] \\in Q(\\le t-1) \\subseteq Q(\\le t)$, extension closure gives $X \\in Q(\\le t)$.",
     "termExposition": null
@@ -489,8 +489,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 112,
-    "endLine": 179,
+    "startLine": 115,
+    "endLine": 182,
     "prose": "**Backward shift for $Q$.** If $E[1]$ is Q-semistable of phase $\\phi + 1$, then $E$ is Q-semistable of phase $\\phi$.",
     "proofExposition": "Reverse the shift transport: shift the interval by $-1$, invert the W-phase shift, and transfer semistability by shifting triangles by $-1$.",
     "termExposition": null
@@ -505,8 +505,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 40,
-    "endLine": 110,
+    "startLine": 41,
+    "endLine": 113,
     "prose": "**Forward shift for $Q$.** If $E$ is Q-semistable of phase $\\phi$, then $E[1]$ is Q-semistable of phase $\\phi + 1$.",
     "proofExposition": "Transport the deformed predicate through the shift: the interval shifts by $+1$, the W-phase shifts by $+1$ (via `wPhaseOf_neg` and negation $W(E[1]) = -W(E)$), and semistability transfers by shifting all triangles.",
     "termExposition": null
@@ -521,8 +521,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 325,
-    "endLine": 598,
+    "startLine": 328,
+    "endLine": 601,
     "prose": "**Q-HN existence** (Bridgeland p.24, Steps 1+2). Every object admits a Q-HN filtration.",
     "proofExposition": "For zero objects, use the trivial filtration. For nonzero $E$, decompose via the $\\sigma$-HN filtration. Each $\\sigma$-factor admits a Q-HN via `sigmaSemistable_hasDeformedHN`. Combine `deformedGtLe_triangle` (Step 2: $Q(>t)/Q(\\le t)$ truncation) with `exists_hn_of_deformedGt_deformedLe_triangle` (Step 1: recursive refinement of truncation triangles into a full HN filtration).",
     "termExposition": null
@@ -537,8 +537,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 309,
-    "endLine": 323,
+    "startLine": 312,
+    "endLine": 326,
     "prose": "Dual: if $S \\in Q(\\le t)$ and distinguished triangle $X \\to S \\to Y$ with $X \\in Q(>t)$ and $Y \\in Q(\\le t)$, then $X = 0$.",
     "proofExposition": "First-vertex closure gives $X \\in Q(\\le t)$. Combined with $X \\in Q(>t)$, apply `isZero_of_deformedGtPred_deformedLePred`.",
     "termExposition": null
@@ -553,8 +553,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 293,
-    "endLine": 307,
+    "startLine": 296,
+    "endLine": 310,
     "prose": "If $S \\in Q(>t)$ and distinguished triangle $X \\to S \\to Y$ with $X \\in Q(>t)$ and $Y \\in Q(\\le t)$, then $Y = 0$.",
     "proofExposition": "Third-vertex closure gives $Y \\in Q(>t)$. Combined with $Y \\in Q(\\le t)$, apply `isZero_of_deformedGtPred_deformedLePred`.",
     "termExposition": null
@@ -569,8 +569,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/Deformation/DeformedSlicingHN.lean",
-    "startLine": 242,
-    "endLine": 253,
+    "startLine": 245,
+    "endLine": 256,
     "prose": "If $X \\in Q(>t) \\cap Q(\\le t)$, then $X = 0$.",
     "proofExposition": "The identity $\\operatorname{id}_X : X \\to X$ is a morphism from a $Q(>t)$-object to a $Q(\\le t)$-object, which is zero by hom-vanishing.",
     "termExposition": null
@@ -692,7 +692,7 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.FirstStrictSES",
     "docstring": "Bridgeland's first strict short exact sequence in a thin category: if an interval object is\nnot `W`-semistable, there is a proper strict subobject of maximal `W`-phase, and its inclusion\ngives a strict short exact sequence `0 → A → E → B → 0`.\n\nThe faithful local-finiteness input here is finiteness of the thin category's\nstrict-subobject set, not an ambient `Finite (Subobject X.obj)` statement in `C`. ",
-    "contentHash": 361261790,
+    "contentHash": 1709646831,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -1296,7 +1296,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -1465,7 +1465,7 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.Deformation.IntervalSelection",
     "docstring": "Among the nonzero strict subobjects of a thin-interval object, there is one with maximal\nW-phase, and among those maximal-phase candidates we may choose one that is maximal for\ninclusion. This is the strict-subobject selection step needed for the thin-interval HN\nrecursion. ",
-    "contentHash": 4145907070,
+    "contentHash": 1242343729,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -4937,7 +4937,7 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.EulerForm.Basic",
     "docstring": null,
-    "contentHash": 600840546,
+    "contentHash": 2204355271,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -5449,7 +5449,7 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.ForMathlib.Analysis.SpecialFunctions.Complex.ArgConvexity",
     "docstring": "Bridgeland's semi-closed upper half plane: the strict upper half plane together with\nthe negative real axis. This is `{z ∈ ℂ | im z > 0} ∪ {z ∈ ℂ | im z = 0 ∧ re z < 0}`.\n\nFor `z` in this set, `Complex.arg z ∈ (0, π]`, so the phase `(1/π) · arg(z)` lies in `(0, 1]`.\nThis matches Bridgeland's Definition 2.1: `H = {r · exp(iπφ) : r > 0, 0 < φ ≤ 1}`. ",
-    "contentHash": 11501682663452204526,
+    "contentHash": 9044468775688056379,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -6281,7 +6281,7 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.GrothendieckGroup.Defs",
     "docstring": "The subgroup of relations: `{obj₂(r) - obj₁(r) - obj₃(r) | r : Rel}`. ",
-    "contentHash": 8313089044335043819,
+    "contentHash": 11577964834663490428,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -7721,7 +7721,7 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.HeartEquivalence.Forward",
     "docstring": "Restrict a Bridgeland stability condition to the heart of its associated\nt-structure, producing the induced stability function on that abelian heart. ",
-    "contentHash": 9923744660386550721,
+    "contentHash": 1886726130078506544,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -7934,8 +7934,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 183,
-    "endLine": 188,
+    "startLine": 181,
+    "endLine": 186,
     "prose": "The normal forms $\\tau^{\\ge 0} \\circ \\tau^{\\le 0}$ and\n  $\\tau^{\\le 0} \\circ \\tau^{\\ge 0}$ assemble into a natural isomorphism\n  of functors $\\mathcal{C} \\to \\operatorname{heart}(t)$.",
     "proofExposition": null,
     "termExposition": "Built from $\\texttt{H0ObjIsoH0prime}$ as components, with naturality from\n  $\\texttt{H0ObjIsoH0prime\\_hom\\_naturality}$."
@@ -7982,8 +7982,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 136,
-    "endLine": 142,
+    "startLine": 134,
+    "endLine": 140,
     "prose": "The two standard normal forms $\\tau^{\\ge 0}(\\tau^{\\le 0} X)$ and\n  $\\tau^{\\le 0}(\\tau^{\\ge 0} X)$ for $H^0(X)$ are canonically isomorphic.",
     "proofExposition": null,
     "termExposition": "Constructed via the shift-by-zero isomorphism composed with the\n  canonical comparison $\\texttt{truncGELEIsoLEGE}$."
@@ -7998,8 +7998,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 144,
-    "endLine": 181,
+    "startLine": 142,
+    "endLine": 179,
     "prose": "The isomorphism $H^0(X) \\cong H^0{}'(X)$ is natural in $X$.",
     "proofExposition": "Verified by checking that both paths around the naturality square\n  agree after composing with the faithful truncation inclusion.",
     "termExposition": null
@@ -8014,8 +8014,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 144,
-    "endLine": 144,
+    "startLine": 142,
+    "endLine": 142,
     "prose": "Associativity-reassociated form of the naturality of the isomorphism $H^0(X) \\cong H^0{}'(X)$.",
     "proofExposition": "Obtained by $\\texttt{reassoc}$ from $\\texttt{H0ObjIsoH0prime\\_hom\\_naturality}$.",
     "termExposition": null
@@ -8047,7 +8047,7 @@
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
     "startLine": 109,
-    "endLine": 123,
+    "endLine": 121,
     "prose": "The alternative $H^0$ in the normal form $\\tau^{\\le 0} \\circ \\tau^{\\ge 0}$,\n  assembled as a functor $\\mathcal{C} \\to \\operatorname{heart}(t)$.",
     "proofExposition": null,
     "termExposition": "Object map: $\\texttt{H0prime}$. Morphism map: the composite truncation\n  applied to $f$, wrapped in $\\texttt{ObjectProperty.homMk}$."
@@ -8062,8 +8062,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 125,
-    "endLine": 134,
+    "startLine": 123,
+    "endLine": 132,
     "prose": "The $H^0{}'$ functor is additive.",
     "proofExposition": "Follows from additivity of the two truncation functors.",
     "termExposition": null
@@ -8078,8 +8078,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 517,
-    "endLine": 527,
+    "startLine": 513,
+    "endLine": 523,
     "prose": "Exactness of the short complex after applying $H^0{}'$ and the preadditive coyoneda is equivalent to exactness after applying $\\tau^{\\ge 0}$ and the preadditive coyoneda.",
     "proofExposition": "Uses the natural isomorphism $\\texttt{toH0primeNatIsoViaTruncGE}$ and $\\texttt{ShortComplex.exact\\_iff\\_of\\_iso}$ to transfer exactness between the two functors.",
     "termExposition": null
@@ -8094,8 +8094,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 422,
-    "endLine": 428,
+    "startLine": 418,
+    "endLine": 424,
     "prose": "$H^0{}'(X)$ is canonically isomorphic to $H^0{}'(\\tau^{\\ge 0} X)$: replacing $X$ by its $\\tau^{\\ge 0}$-truncation does not change $H^0{}'$.",
     "proofExposition": null,
     "termExposition": "Applies $\\tau^{\\le 0}$ to the isomorphism $(\\tau^{\\ge 0})^2(X) \\cong \\tau^{\\ge 0}(X)$ (idempotency) to get an isomorphism of the $\\tau^{\\le 0} \\circ \\tau^{\\ge 0}$ outputs."
@@ -8110,8 +8110,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 430,
-    "endLine": 445,
+    "startLine": 426,
+    "endLine": 441,
     "prose": "Naturality of the isomorphism $H^0{}'(X) \\cong H^0{}'(\\tau^{\\ge 0} X)$ with respect to morphisms in $\\mathcal{C}$.",
     "proofExposition": "Checks that both paths around the naturality square agree after using $\\texttt{truncGEπ\\_naturality}$.",
     "termExposition": null
@@ -8126,8 +8126,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 430,
-    "endLine": 430,
+    "startLine": 426,
+    "endLine": 426,
     "prose": "Associativity-reassociated form of $\\texttt{H0primeObjIsoTruncGE\\_hom\\_naturality}$.",
     "proofExposition": "Obtained by $\\texttt{reassoc}$ from the non-assoc version.",
     "termExposition": null
@@ -8142,8 +8142,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 447,
-    "endLine": 464,
+    "startLine": 443,
+    "endLine": 460,
     "prose": "Naturality of the inverse isomorphism $H^0{}'(\\tau^{\\ge 0} X) \\cong H^0{}'(X)$ with respect to morphisms in $\\mathcal{C}$.",
     "proofExposition": "Deduced from the hom-naturality by inverting and using $\\texttt{Iso.eq\\_comp\\_inv}$.",
     "termExposition": null
@@ -8158,8 +8158,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 447,
-    "endLine": 447,
+    "startLine": 443,
+    "endLine": 443,
     "prose": "Associativity-reassociated form of $\\texttt{H0primeObjIsoTruncGE\\_inv\\_naturality}$.",
     "proofExposition": "Obtained by $\\texttt{reassoc}$ from the non-assoc version.",
     "termExposition": null
@@ -8174,8 +8174,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 348,
-    "endLine": 355,
+    "startLine": 344,
+    "endLine": 351,
     "prose": "If $X \\in \\mathcal{C}^{\\ge 0}$, a morphism $E \\to H^0{}'(X)$ in the heart\n  can be read as a morphism $E_{\\mathrm{obj}} \\to X$ in $\\mathcal{C}$.",
     "proofExposition": null,
     "termExposition": "Composes the underlying morphism with $\\iota_{\\le 0}$ and then with the\n  inverse of $\\pi_{\\ge 0}$ (which is an isomorphism since $X \\in\n  \\mathcal{C}^{\\ge 0}$)."
@@ -8190,8 +8190,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 393,
-    "endLine": 407,
+    "startLine": 389,
+    "endLine": 403,
     "prose": "",
     "proofExposition": null,
     "termExposition": null
@@ -8206,8 +8206,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 357,
-    "endLine": 364,
+    "startLine": 353,
+    "endLine": 360,
     "prose": "",
     "proofExposition": null,
     "termExposition": null
@@ -8222,8 +8222,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 357,
-    "endLine": 357,
+    "startLine": 353,
+    "endLine": 353,
     "prose": "",
     "proofExposition": null,
     "termExposition": null
@@ -8238,8 +8238,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 376,
-    "endLine": 384,
+    "startLine": 372,
+    "endLine": 380,
     "prose": "",
     "proofExposition": null,
     "termExposition": null
@@ -8254,8 +8254,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 386,
-    "endLine": 391,
+    "startLine": 382,
+    "endLine": 387,
     "prose": "",
     "proofExposition": null,
     "termExposition": null
@@ -8334,8 +8334,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 248,
-    "endLine": 258,
+    "startLine": 245,
+    "endLine": 255,
     "prose": "Two morphisms into $H^0{}'(X)$ from a heart object are equal if they agree\n  after composing with the truncation inclusion $\\iota_{\\le 0}$.",
     "proofExposition": "Uses the universal property of $\\tau^{\\le 0}$: the inclusion is a\n  monomorphism on morphisms from objects in $\\mathcal{C}^{\\le 0}$.",
     "termExposition": null
@@ -8350,8 +8350,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 226,
-    "endLine": 233,
+    "startLine": 223,
+    "endLine": 230,
     "prose": "A morphism $f : E_{\\mathrm{obj}} \\to X$ from a heart object factors\n  canonically through $H^0{}'(X) = \\tau^{\\le 0}(\\tau^{\\ge 0} X)$.",
     "proofExposition": null,
     "termExposition": "Lifts $f \\circ \\pi_{\\ge 0}$ through the truncation-$\\le 0$ inclusion using\n  the $\\texttt{liftTruncLE}$ universal property."
@@ -8366,8 +8366,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 315,
-    "endLine": 330,
+    "startLine": 312,
+    "endLine": 326,
     "prose": "The canonical lift is additive: $\\texttt{toH0prime}(f + g) =\n  \\texttt{toH0prime}(f) + \\texttt{toH0prime}(g)$.",
     "proofExposition": "Follows from $\\texttt{hom\\_ext\\_toH0prime}$ and linearity of composition.",
     "termExposition": null
@@ -8382,8 +8382,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 271,
-    "endLine": 304,
+    "startLine": 268,
+    "endLine": 301,
     "prose": "The canonical lift is compatible with post-composition:\n  $\\texttt{toH0prime}(f) \\circ H^0{}'(g) = \\texttt{toH0prime}(f \\circ g)$.",
     "proofExposition": "Both sides agree after composing with the truncation inclusion, by\n  naturality of $\\iota_{\\le 0}$ and the defining property of the lift.",
     "termExposition": null
@@ -8398,8 +8398,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 271,
-    "endLine": 271,
+    "startLine": 268,
+    "endLine": 268,
     "prose": "Associativity-reassociated form of $\\texttt{toH0primeHom\\_comp\\_H0primeFunctor\\_map}$.",
     "proofExposition": "Obtained by $\\texttt{reassoc}$ from the non-assoc version.",
     "termExposition": null
@@ -8414,8 +8414,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 260,
-    "endLine": 269,
+    "startLine": 257,
+    "endLine": 266,
     "prose": "Characterization of when a morphism $\\beta : E \\to H^0{}'(X)$ equals the canonical lift: $\\beta = \\texttt{toH0primeHom}(f)$ iff $\\beta.\\mathrm{hom} \\circ \\iota_{\\le 0} = f \\circ \\pi_{\\ge 0}$.",
     "proofExposition": "Immediate from $\\texttt{hom\\_ext\\_toH0prime}$ and $\\texttt{toH0primeHom\\_hom}$.",
     "termExposition": null
@@ -8430,8 +8430,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 366,
-    "endLine": 374,
+    "startLine": 362,
+    "endLine": 370,
     "prose": "",
     "proofExposition": null,
     "termExposition": null
@@ -8446,8 +8446,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 235,
-    "endLine": 246,
+    "startLine": 232,
+    "endLine": 243,
     "prose": "The underlying morphism of the canonical lift satisfies\n  $\\beta \\circ \\iota_{\\le 0} = f \\circ \\pi_{\\ge 0}$.",
     "proofExposition": "Immediate from the lifting construction.",
     "termExposition": null
@@ -8462,8 +8462,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 235,
-    "endLine": 235,
+    "startLine": 232,
+    "endLine": 232,
     "prose": "Associativity-reassociated form of $\\texttt{toH0primeHom\\_hom}$.",
     "proofExposition": "Obtained by $\\texttt{reassoc}$ from the non-assoc version.",
     "termExposition": null
@@ -8478,8 +8478,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 306,
-    "endLine": 313,
+    "startLine": 303,
+    "endLine": 310,
     "prose": "The canonical lift of the zero morphism is zero.",
     "proofExposition": "Follows from $\\texttt{hom\\_ext\\_toH0prime}$ and the vanishing of $0 \\circ \\pi_{\\ge 0}$.",
     "termExposition": null
@@ -8494,8 +8494,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 409,
-    "endLine": 419,
+    "startLine": 405,
+    "endLine": 415,
     "prose": "For $X \\in \\mathcal{C}^{\\ge 0}$, morphisms $E_{\\mathrm{obj}} \\to X$ are in natural additive bijection with morphisms $E \\to H^0{}'(X)$ in the heart.",
     "proofExposition": null,
     "termExposition": "Packages $\\texttt{toH0primeHom}$ and $\\texttt{fromH0primeHom\\_of\\_isGE}$ as mutually inverse additive maps, with the two round-trip identities from $\\texttt{toH0primeHom\\_fromH0primeHom\\_of\\_isGE}$ and $\\texttt{fromH0primeHom\\_of\\_isGE\\_toH0primeHom}$."
@@ -8510,8 +8510,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 466,
-    "endLine": 486,
+    "startLine": 462,
+    "endLine": 482,
     "prose": "For any $X$, morphisms $E_{\\mathrm{obj}} \\to \\tau^{\\ge 0} X$ are in natural additive bijection with morphisms $E \\to H^0{}'(X)$ in the heart.",
     "proofExposition": null,
     "termExposition": "Composes $\\texttt{toH0primeIsoOfIsGE}$ for $\\tau^{\\ge 0} X$ with postcomposition by $(\\texttt{H0primeObjIsoTruncGE}(X))^{-1}$."
@@ -8526,8 +8526,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 488,
-    "endLine": 502,
+    "startLine": 484,
+    "endLine": 498,
     "prose": "The bijection $\\texttt{toH0primeIsoViaTruncGE}$ is natural in $X$: it commutes with post-composition by a morphism $g : X \\to Y$.",
     "proofExposition": "Reduces to $\\texttt{toH0primeHom\\_comp\\_H0primeFunctor\\_map}$ and $\\texttt{H0primeObjIsoTruncGE\\_inv\\_naturality}$.",
     "termExposition": null
@@ -8542,8 +8542,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 504,
-    "endLine": 515,
+    "startLine": 500,
+    "endLine": 511,
     "prose": "For a heart object $E$, the $H^0{}'$-evaluation functor $\\mathcal{C} \\to \\mathbf{Ab}$ is naturally isomorphic to evaluation of the ambient $\\tau^{\\ge 0}$-truncation functor at $E_{\\mathrm{obj}}$.",
     "proofExposition": null,
     "termExposition": "Assembles the component isomorphisms $\\texttt{toH0primeIsoViaTruncGE}$ into a $\\texttt{NatIso}$ using $\\texttt{toH0primeIsoViaTruncGE\\_naturality}$."
@@ -8558,8 +8558,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 332,
-    "endLine": 346,
+    "startLine": 328,
+    "endLine": 342,
     "prose": "For a heart object $E$, maps $E_{\\mathrm{obj}} \\to X$ in $\\mathcal{C}$\n  induce maps $E \\to H^0{}'(X)$ in the heart, naturally in $X$.",
     "proofExposition": null,
     "termExposition": "Packages $\\texttt{toH0primeHom}$ into a natural transformation\n  between preadditive-coyoneda functors."
@@ -8574,8 +8574,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 215,
-    "endLine": 222,
+    "startLine": 213,
+    "endLine": 219,
     "prose": "The descent map $\\texttt{descTruncGE}$ is additive.",
     "proofExposition": "Follows from uniqueness of the lift and additivity of composition.",
     "termExposition": null
@@ -8590,8 +8590,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 206,
-    "endLine": 213,
+    "startLine": 204,
+    "endLine": 211,
     "prose": "The descent of the zero morphism through $\\tau^{\\ge n}$ is zero.",
     "proofExposition": "Follows from the universal property: the zero morphism composed with\n  the projection is zero.",
     "termExposition": null
@@ -8606,8 +8606,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 194,
-    "endLine": 204,
+    "startLine": 192,
+    "endLine": 202,
     "prose": "Composition of $\\tau^{\\ge n}(g)$ with the descent map\n  $\\texttt{descTruncGE}(f)$ equals $\\texttt{descTruncGE}(g \\circ f)$.",
     "proofExposition": "Both sides lift to the same morphism after composing with the\n  truncation projection, so they agree by the universal property of\n  $\\tau^{\\ge n}$.",
     "termExposition": null
@@ -8622,8 +8622,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Functor.lean",
-    "startLine": 194,
-    "endLine": 194,
+    "startLine": 192,
+    "endLine": 192,
     "prose": "Associativity-reassociated form of $\\texttt{truncGE\\_map\\_comp\\_descTruncGE}$.",
     "proofExposition": "Obtained by $\\texttt{reassoc}$ from the non-assoc version.",
     "termExposition": null
@@ -8638,8 +8638,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 118,
-    "endLine": 127,
+    "startLine": 119,
+    "endLine": 128,
     "prose": "The shifted $H^0_t$ object of $X$ agrees with the degree-$n$ heart\n  cohomology object $\\texttt{heartCoh}(n, X)$.",
     "proofExposition": null,
     "termExposition": "Composes the tautological shift-sequence isomorphism with the\n  shift-by-zero and pure-truncation-shift identifications."
@@ -8654,8 +8654,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 795,
-    "endLine": 849,
+    "startLine": 796,
+    "endLine": 850,
     "prose": "The five-term exact segment in the long exact sequence of the homological\n  $H^0_t$ yields: $[H^n(X_2)] - [H^n(X_3)] + [H^{n+1}(X_1)] =\n  [\\operatorname{im}(H^n(f))] + [\\operatorname{im}(H^{n+1}(f))]$\n  in $K_0(\\operatorname{heart})$.",
     "proofExposition": "Applies $\\texttt{HeartK0.of\\_exact\\_five}$ to the five consecutive terms\n  $H^n(X_1) \\to H^n(X_2) \\to H^n(X_3) \\to H^{n+1}(X_1) \\to H^{n+1}(X_2)$\n  from the long exact cohomology sequence of the distinguished triangle.",
     "termExposition": null
@@ -8670,8 +8670,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 723,
-    "endLine": 727,
+    "startLine": 724,
+    "endLine": 728,
     "prose": "If $H^0{}'$ is a homological functor, then so is $H^0_t$ (via the natural isomorphism $H^0_t \\cong H^0{}'$).",
     "proofExposition": "Applies $\\texttt{Functor.IsHomological.of\\_iso}$ to the inverse of $\\texttt{H0FunctorIsoH0primeFunctor}$.",
     "termExposition": null
@@ -8686,8 +8686,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 729,
-    "endLine": 744,
+    "startLine": 730,
+    "endLine": 745,
     "prose": "If the preadditive-coyoneda evaluations of $H^0{}'$ are all exact on distinguished triangles, then $H^0_t$ is a homological functor.",
     "proofExposition": "Assembles the argument: first shows $H^0{}'$ composed with the preadditive Yoneda is homological (via $\\texttt{H0primeFunctor\\_preadditiveYoneda\\_isHomological\\_of\\_eval}$), then applies $\\texttt{H0primeFunctor\\_isHomological\\_of\\_preadditiveYoneda}$ and $\\texttt{H0Functor\\_isHomological\\_of\\_H0primeFunctor}$.",
     "termExposition": null
@@ -8702,8 +8702,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 746,
-    "endLine": 769,
+    "startLine": 747,
+    "endLine": 770,
     "prose": "It suffices to verify exactness only for distinguished triangles whose first vertex lies in the heart: if those cases hold, then $H^0_t$ is a homological functor.",
     "proofExposition": "Uses $\\texttt{H0primeFunctor\\_preadditiveCoyoneda\\_exact\\_iff\\_octahedral\\_split}$ to reduce the general case to the heart-source case via the octahedral split, then applies $\\texttt{H0Functor\\_isHomological\\_of\\_eval}$.",
     "termExposition": null
@@ -8718,8 +8718,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 673,
-    "endLine": 680,
+    "startLine": 674,
+    "endLine": 681,
     "prose": "The composite $H^0{}'$ followed by the preadditive Yoneda, evaluated at a heart object $E$, is the same as $H^0{}'$ followed by the preadditive coyoneda at $E$.",
     "proofExposition": "This is a definitional equality ($\\texttt{rfl}$).",
     "termExposition": null
@@ -8734,8 +8734,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 699,
-    "endLine": 721,
+    "startLine": 700,
+    "endLine": 722,
     "prose": "If $H^0{}'$ composed with the preadditive Yoneda is a homological functor, then $H^0{}'$ itself is homological.",
     "proofExposition": "The preadditive Yoneda is faithful, so exact sequences are reflected; applies $\\texttt{Functor.reflects\\_exact\\_of\\_faithful}$.",
     "termExposition": null
@@ -8750,8 +8750,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 219,
-    "endLine": 248,
+    "startLine": 220,
+    "endLine": 249,
     "prose": "For any distinguished triangle $T$ and heart object $E$, exactness of $H^0{}'$-coyoneda on $T$ is equivalent to exactness on the octahedral-split triangle; the octahedral split data exists for any $T$.",
     "proofExposition": "Applies $\\texttt{exists\\_truncLT\\_octahedral\\_split}$ at level $0$ to produce the split, checks that $\\tau^{\\ge 0}(v)$ is an isomorphism (making the split exact condition transferable), and translates between the two exactness conditions via $\\texttt{H0primeFunctor\\_preadditiveCoyoneda\\_exact\\_iff\\_truncGE}$ and $\\texttt{truncGE\\_preadditiveCoyoneda\\_exact\\_iff\\_of\\_split}$.",
     "termExposition": null
@@ -8766,8 +8766,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 447,
-    "endLine": 465,
+    "startLine": 448,
+    "endLine": 466,
     "prose": "For a distinguished triangle with first vertex $A \\in \\mathcal{C}^{\\ge 1}$, the short complex obtained by applying $H^0{}'$ and the preadditive coyoneda is exact.",
     "proofExposition": "The map $\\tau^{<0}(m_3)$ is an isomorphism because $A[1] \\in \\mathcal{C}^{\\ge 0}$ forces the rotated-triangle first vertex to be in $\\mathcal{C}^{\\ge 0}$. The result follows from $\\texttt{H0primeFunctor\\_preadditiveCoyoneda\\_exact\\_of\\_isIso\\_truncLT\\_map}$.",
     "termExposition": null
@@ -8782,8 +8782,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 524,
-    "endLine": 550,
+    "startLine": 525,
+    "endLine": 551,
     "prose": "For a distinguished triangle with first vertex $A \\in \\mathcal{C}^{\\ge 0}$, if exactness holds for all heart-source triangles, then the $H^0{}'$-coyoneda short complex is exact.",
     "proofExposition": "Applies the octahedral split at level $1$ to reduce to a heart-source triangle (via $\\tau^{<1}(A) \\in \\operatorname{heart}$) and a triangle with first vertex $\\tau^{\\ge 1}(A) \\in \\mathcal{C}^{\\ge 1}$, then combines via $\\texttt{H0primeFunctor\\_preadditiveCoyoneda\\_exact\\_of\\_split\\_one}$.",
     "termExposition": null
@@ -8798,8 +8798,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 330,
-    "endLine": 445,
+    "startLine": 328,
+    "endLine": 446,
     "prose": "If $\\tau^{<0}(m_3)$ is an isomorphism in a distinguished triangle $A \\to Z \\to X_3$, then the $H^0{}'$-coyoneda short complex on the triangle is exact.",
     "proofExposition": "Using the isomorphism of $\\tau^{<0}(m_3)$, lifts a kernel element $\\beta$ (with $\\beta \\circ H^0{}'(m_3) = 0$) to a morphism $f : E \\to Z$ via the obstruction-zero lifting lemma $\\texttt{exists\\_toH0primeHom\\_eq\\_of\\_obstruction\\_zero}$, then constructs a preimage via $\\texttt{Triangle.coyoneda\\_exact}$.",
     "termExposition": null
@@ -8814,8 +8814,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 467,
-    "endLine": 522,
+    "startLine": 468,
+    "endLine": 523,
     "prose": "Given an octahedral split of a distinguished triangle at level $1$, if the short triangle from $\\tau^{<1}(A)$ gives an exact $H^0{}'$-coyoneda complex, then so does the original triangle.",
     "proofExposition": "The split triangle with first vertex $\\tau^{\\ge 1}(A)$ is exact by $\\texttt{H0primeFunctor\\_preadditiveCoyoneda\\_exact\\_of\\_isGE\\_one}$. Combines both exactness statements to lift kernel elements in the original complex.",
     "termExposition": null
@@ -8830,8 +8830,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 682,
-    "endLine": 697,
+    "startLine": 683,
+    "endLine": 698,
     "prose": "If for every distinguished triangle and every heart object the $H^0{}'$-coyoneda complex is exact, then $H^0{}'$ composed with the preadditive Yoneda is a homological functor.",
     "proofExposition": "Reduces to checking exactness on each evaluation functor $\\mathcal{C} \\to \\mathbf{Ab}$ via $\\texttt{ShortComplex.exact\\_of\\_eval}$ and the provided hypothesis.",
     "termExposition": null
@@ -8846,8 +8846,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 266,
-    "endLine": 308,
+    "startLine": 267,
+    "endLine": 306,
     "prose": "A morphism $\\beta \\circ H^0{}'(g) = 0$ in the heart if and only if $\\beta.\\mathrm{hom} \\circ \\iota_{\\le 0} \\circ \\tau^{\\ge 0}(g) = 0$ in $\\mathcal{C}$.",
     "proofExposition": "Both directions use naturality of $\\iota_{\\le 0}$ and $\\texttt{hom\\_ext\\_toH0prime}$ to pass between the heart and ambient-category conditions.",
     "termExposition": null
@@ -8862,8 +8862,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 250,
-    "endLine": 264,
+    "startLine": 251,
+    "endLine": 265,
     "prose": "If $\\beta.\\mathrm{hom} \\circ \\iota_{\\le 0} \\circ (\\tau^{\\ge 0} \\to X)_{\\mathrm{conn}} = 0$ (the obstruction vanishes), then $\\beta = \\texttt{toH0primeHom}(f)$ for some $f : E_{\\mathrm{obj}} \\to X$.",
     "proofExposition": "Lifts $\\beta.\\mathrm{hom} \\circ \\iota_{\\le 0}$ to a morphism into $X$ via the exactness of the $\\tau^{\\ge 0}$-triangle and the vanishing obstruction, then identifies the lift with $\\texttt{toH0primeHom}$.",
     "termExposition": null
@@ -8878,8 +8878,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 583,
-    "endLine": 601,
+    "startLine": 584,
+    "endLine": 602,
     "prose": "$H^m_t(X) = 0$ when $m > n$ and $X \\in \\mathcal{C}^{\\le n}$.",
     "proofExposition": "The pure truncation $\\tau^{[m,m]} X$ vanishes because $\\tau^{\\ge m}$ of\n  $\\tau^{\\le m} X \\cong X$ is zero for $m > n$ when $X \\in \\mathcal{C}^{\\le n}$.",
     "termExposition": null
@@ -8894,8 +8894,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 567,
-    "endLine": 581,
+    "startLine": 568,
+    "endLine": 582,
     "prose": "$H^m_t(X) = 0$ when $m < n$ and $X \\in \\mathcal{C}^{\\ge n}$.",
     "proofExposition": "The pure truncation $\\tau^{[m,m]} X$ vanishes because $\\tau^{\\le m} X = 0$\n  for $m < n$ when $X \\in \\mathcal{C}^{\\ge n}$. The heart cohomology object,\n  being a shift of this zero object, is also zero.",
     "termExposition": null
@@ -8910,8 +8910,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 321,
-    "endLine": 328,
+    "startLine": 319,
+    "endLine": 326,
     "prose": "For $X \\in \\mathcal{C}^{\\ge 1}$, the object $H^0{}'(X)$ is zero.",
     "proofExposition": "The underlying object $\\tau^{\\le 0}(\\tau^{\\ge 0}(X))$ vanishes because $\\tau^{\\ge 0}(X) \\in \\mathcal{C}^{\\ge 0}$ and $\\tau^{\\le 0}$ of an object in $\\mathcal{C}^{\\ge 1}$ is zero.",
     "termExposition": null
@@ -8926,8 +8926,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 310,
-    "endLine": 319,
+    "startLine": 308,
+    "endLine": 317,
     "prose": "The canonical lift $\\texttt{toH0primeHom}(f) = 0$ if and only if $f \\circ \\pi_{\\ge 0} = 0$.",
     "proofExposition": "Both directions use $\\texttt{hom\\_ext\\_toH0prime}$ together with $\\texttt{toH0primeHom\\_hom}$.",
     "termExposition": null
@@ -8942,8 +8942,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 195,
-    "endLine": 217,
+    "startLine": 196,
+    "endLine": 218,
     "prose": "For an octahedral splitting of a distinguished triangle, exactness of the $\\tau^{\\ge 0}$-coyoneda complex on the original triangle is equivalent to exactness on the split triangle.",
     "proofExposition": "Applies $\\texttt{shortComplexOfDistTriangle\\_map\\_truncGEIsoOfSplit}$ to get a comparison isomorphism, then uses $\\texttt{ShortComplex.exact\\_iff\\_of\\_iso}$.",
     "termExposition": null
@@ -8958,8 +8958,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 632,
-    "endLine": 662,
+    "startLine": 633,
+    "endLine": 663,
     "prose": "A short complex $S$ of functors $J \\to A$ (with $A$ abelian) is exact if and only if for every object $j \\in J$ the evaluation $S_j$ is exact.",
     "proofExposition": "Reduces to checking that the kernel lift is epi on each evaluation using $\\texttt{NatTrans.epi\\_iff\\_epi\\_app}$, the kernel comparison isomorphism, and the given evaluation exactness.",
     "termExposition": null
@@ -8974,8 +8974,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 664,
-    "endLine": 671,
+    "startLine": 665,
+    "endLine": 672,
     "prose": "If the first map of a short complex $S$ in a preadditive category is a kernel, then the complex is exact after applying the preadditive coyoneda functor.",
     "proofExposition": "Given a kernel element $\\beta$ with $\\beta \\circ S.g = 0$, lifts $\\beta$ through the kernel universal property and checks the factorization.",
     "termExposition": null
@@ -8990,8 +8990,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 771,
-    "endLine": 793,
+    "startLine": 772,
+    "endLine": 794,
     "prose": "A homological functor $F$ on a triangulated category $\\mathcal{C}$ maps a spectral object indexed by $\\iota$ to an abelian spectral object by applying the long exact cohomology sequence.",
     "proofExposition": null,
     "termExposition": "Sets $H_n := \\omega_1 \\circ F[n]$ and the connecting maps from $F$'s homology-sequence morphisms; exactness at each position follows from the three exactness axioms of a homological functor."
@@ -9006,8 +9006,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 143,
-    "endLine": 158,
+    "startLine": 144,
+    "endLine": 159,
     "prose": "For any distinguished triangle $X_1 \\to X_2 \\to X_3 \\to X_1[1]$ and integer\n  $a$, the octahedral axiom produces a factorization through the truncation\n  $\\tau^{\\ge a} X_1$.",
     "proofExposition": "Applies the octahedral axiom to the composition\n  $\\tau^{<a} X_1 \\hookrightarrow X_1 \\to X_2$, yielding an intermediate\n  object $Z$ and two new distinguished triangles relating $Z$ to\n  $\\tau^{\\ge a} X_1$ and $X_3$.",
     "termExposition": null
@@ -9022,8 +9022,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 552,
-    "endLine": 565,
+    "startLine": 553,
+    "endLine": 566,
     "prose": "For a distinguished triangle $A \\to X_2 \\to X_3$ with $A$ in the heart, the map $\\tau^{<(-1)}(g)$ is an isomorphism.",
     "proofExposition": "The connecting morphism in the rotated triangle lies in $\\mathcal{C}^{\\ge -1}$ (since $A[1] \\in \\mathcal{C}^{\\ge -1}$), so $\\texttt{isIso₁\\_truncLT\\_map\\_of\\_isGE}$ applies to give the isomorphism.",
     "termExposition": null
@@ -9038,8 +9038,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 129,
-    "endLine": 141,
+    "startLine": 130,
+    "endLine": 142,
     "prose": "If $A \\in \\mathcal{C}^{\\ge a}$ and $A \\to Z \\to X_3 \\to A[1]$ is distinguished,\n  then $\\tau^{<a-1}(m_3)$ is an isomorphism.",
     "proofExposition": "The rotated triangle places $A[1] \\in \\mathcal{C}^{\\ge a-1}$, so the\n  $\\tau^{<a-1}$ functor kills the first vertex and the isomorphism\n  follows from the induced two-term exact sequence.",
     "termExposition": null
@@ -9054,8 +9054,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 160,
-    "endLine": 193,
+    "startLine": 161,
+    "endLine": 194,
     "prose": "Given an octahedral splitting with $\\tau^{\\ge 0}(v)$ an isomorphism, the $\\tau^{\\ge 0}$-images of the two short complexes (original and split) are isomorphic.",
     "proofExposition": null,
     "termExposition": "Builds a $\\texttt{ShortComplex.isoMk}$ from the isomorphism $\\tau^{\\ge 0}(X_1) \\cong \\tau^{\\ge 0}(\\tau^{\\ge 0}(X_1))$ (idempotency) and $\\tau^{\\ge 0}(v)$ (hypothesis), with commutativity checked from $\\texttt{hm_1}$ and $\\texttt{hm_3}$."
@@ -9070,8 +9070,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 103,
-    "endLine": 116,
+    "startLine": 104,
+    "endLine": 117,
     "prose": "Shifting the pure truncation $\\tau^{[n,n]} X$ by $n$ identifies it with\n  $\\tau^{[0,0]}(X[n])$.",
     "proofExposition": null,
     "termExposition": "Composes the $\\ge$-shift isomorphism applied to $\\tau^{\\le n} X$ with\n  the functorial image of the $\\le$-shift isomorphism under $\\tau^{\\ge 0}$."
@@ -9086,8 +9086,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 43,
-    "endLine": 71,
+    "startLine": 44,
+    "endLine": 72,
     "prose": "Shifting $\\tau^{\\ge n} X$ by $n$ identifies it with $\\tau^{\\ge 0}(X[n])$.",
     "proofExposition": null,
     "termExposition": "Constructed by comparing the shifted truncation triangle of $X$ at level $n$\n  with the truncation triangle of $X[n]$ at level $0$, using the uniqueness\n  of the truncation up to a triangle isomorphism."
@@ -9102,8 +9102,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 73,
-    "endLine": 101,
+    "startLine": 74,
+    "endLine": 102,
     "prose": "Shifting $\\tau^{\\le n} X$ by $n$ identifies it with $\\tau^{\\le 0}(X[n])$.",
     "proofExposition": null,
     "termExposition": "Analogous to $\\texttt{truncGEObjShiftIso}$: compares the shifted\n  $\\le$-truncation triangle with the $\\le 0$-truncation of $X[n]$."
@@ -9118,8 +9118,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 603,
-    "endLine": 612,
+    "startLine": 604,
+    "endLine": 613,
     "prose": "The vanishing of a morphism $f = 0$ is independent of the choice of $\\texttt{HasZeroMorphisms}$ instance, since there is at most one such instance.",
     "proofExposition": "Uses $\\texttt{Subsingleton.elim}$ to unify the two zero-morphism structures.",
     "termExposition": null
@@ -9134,8 +9134,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/HeartEquivalence/H0Homological.lean",
-    "startLine": 614,
-    "endLine": 630,
+    "startLine": 615,
+    "endLine": 631,
     "prose": "Exactness of a short complex is independent of the choice of $\\texttt{HasZeroMorphisms}$ instance.",
     "proofExposition": "Uses $\\texttt{Subsingleton.elim}$ to unify the two instances, then the zero-composite witnesses.",
     "termExposition": null
@@ -10069,7 +10069,7 @@
       },
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
-        "hash": 11501682663452204526
+        "hash": 9044468775688056379
       },
       {
         "name": "CategoryTheory.StabilityFunction.HasHNProperty",
@@ -10234,7 +10234,7 @@
       },
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
-        "hash": 11501682663452204526
+        "hash": 9044468775688056379
       },
       {
         "name": "K0Presentation.K0",
@@ -10246,7 +10246,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.StabilityFunction.HasHNProperty",
@@ -10354,7 +10354,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.StabilityCondition.stabilityFunctionOnHeart",
-        "hash": 9923744660386550721
+        "hash": 1886726130078506544
       },
       {
         "name": "CategoryTheory.Triangulated.TStructure.IsBounded",
@@ -11131,7 +11131,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Triangulated.HNFiltration",
@@ -12257,7 +12257,7 @@
     "declKind": "class",
     "moduleName": "BridgelandStability.NumericalStability.Defs",
     "docstring": "A `k`-linear pretriangulated category is of finite type if all Hom spaces are\nfinite-dimensional over `k` and for each pair of objects, only finitely many shifted\nHom spaces are nonzero. ",
-    "contentHash": 3562069142879585118,
+    "contentHash": 7197924072119134789,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -12341,7 +12341,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -12353,7 +12353,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.IsFiniteType",
-        "hash": 3562069142879585118
+        "hash": 7197924072119134789
       },
       {
         "name": "CategoryTheory.Triangulated.IsTriangleAdditive",
@@ -12385,7 +12385,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.basisNhd",
-        "hash": 423668461743486659
+        "hash": 8033431380500330680
       },
       {
         "name": "CategoryTheory.Triangulated.cl",
@@ -12513,7 +12513,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace",
-        "hash": 13789441654075307493
+        "hash": 13964815904547753304
       }
     ],
     "paperRef": "Corollary 1.3",
@@ -12574,7 +12574,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -12598,7 +12598,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.basisNhd",
-        "hash": 423668461743486659
+        "hash": 8033431380500330680
       },
       {
         "name": "CategoryTheory.Triangulated.cl",
@@ -12686,7 +12686,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace",
-        "hash": 13789441654075307493
+        "hash": 13964815904547753304
       }
     ],
     "paperRef": "Corollary 1.3",
@@ -12836,8 +12836,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/QuasiAbelian/Basic.lean",
-    "startLine": 574,
-    "endLine": 591,
+    "startLine": 575,
+    "endLine": 592,
     "prose": "A faithful functor $F : \\mathcal{A} \\to \\mathcal{C}$ that preserves monomorphisms\n  induces an injection on subobject lattices. If `Finite (Subobject (F.obj E))` in\n  $\\mathcal{C}$, then `Finite (Subobject E)` in $\\mathcal{A}$. The key use case is\n  the full subcategory inclusion $\\iota : \\mathcal{P}(\\phi) \\hookrightarrow\n  \\mathcal{C}$, transferring local finiteness of the slicing.",
     "proofExposition": "Construct an injective map `Subobject E \\to Subobject (F.obj E)` by applying $F$\n  to representative arrows, verify injectivity using faithfulness and `preimageIso`,\n  and apply `Finite.of_injective`.",
     "termExposition": null
@@ -13055,7 +13055,7 @@
     "declKind": "class",
     "moduleName": "BridgelandStability.QuasiAbelian.Basic",
     "docstring": "A preadditive category with kernels, cokernels, pullbacks, and pushouts is\n*quasi-abelian* if pullbacks of strict epimorphisms are strict epimorphisms and\npushouts of strict monomorphisms are strict monomorphisms.\n\nThis follows the definition from Schneiders (1999). ",
-    "contentHash": 3644458584350914495,
+    "contentHash": 17289175079544298995,
     "depHashes": null,
     "paperRef": "Definition 4.1",
     "paperComment": null,
@@ -13172,8 +13172,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/QuasiAbelian/Basic.lean",
-    "startLine": 593,
-    "endLine": 611,
+    "startLine": 594,
+    "endLine": 612,
     "prose": "Artinian objects transfer across full faithful functors that preserve monomorphisms.",
     "proofExposition": "Map descending chains of subobjects in $\\mathcal{A}$ to descending chains in\n  $\\mathcal{C}$ via the injective monotone subobject image map. Stabilization in\n  $\\mathcal{C}$ pulls back to stabilization in $\\mathcal{A}$ by injectivity.",
     "termExposition": null
@@ -13189,7 +13189,7 @@
     "paperComment": null,
     "sourceFile": "BridgelandStability/QuasiAbelian/Basic.lean",
     "startLine": 505,
-    "endLine": 518,
+    "endLine": 519,
     "prose": "In an abelian category, strict-Artinian and Artinian coincide, because every mono\n  is strict.",
     "proofExposition": "Every subobject is strict (since every mono is strict in an abelian category),\n  so descending chains of subobjects are descending chains of strict subobjects.\n  Apply the antitone chain condition.",
     "termExposition": null
@@ -13204,8 +13204,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/QuasiAbelian/Basic.lean",
-    "startLine": 613,
-    "endLine": 626,
+    "startLine": 614,
+    "endLine": 627,
     "prose": "Noetherian objects transfer across full faithful functors that preserve monomorphisms.",
     "proofExposition": "Map ascending chains of subobjects in $\\mathcal{A}$ to ascending chains in\n  $\\mathcal{C}$ via the injective monotone subobject image map. Stabilization in\n  $\\mathcal{C}$ pulls back to stabilization in $\\mathcal{A}$ by injectivity.",
     "termExposition": null
@@ -13220,8 +13220,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/QuasiAbelian/Basic.lean",
-    "startLine": 520,
-    "endLine": 531,
+    "startLine": 521,
+    "endLine": 532,
     "prose": "In an abelian category, strict-Noetherian and Noetherian coincide, because every\n  mono is strict.",
     "proofExposition": "Every subobject is strict (since every mono is strict in an abelian category),\n  so ascending chains of subobjects are ascending chains of strict subobjects.\n  Apply the monotone chain condition.",
     "termExposition": null
@@ -13252,8 +13252,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/QuasiAbelian/Basic.lean",
-    "startLine": 688,
-    "endLine": 711,
+    "startLine": 689,
+    "endLine": 712,
     "prose": "Strict-Artinian objects transfer across full faithful functors that send strict\n  monomorphisms to strict monomorphisms.",
     "proofExposition": "Map descending chains of strict subobjects in $\\mathcal{A}$ to descending chains\n  of subobjects in $\\mathcal{C}$ via the injective monotone strict-subobject image\n  map, then use the Artinian hypothesis in $\\mathcal{C}$ and injectivity.",
     "termExposition": null
@@ -13460,8 +13460,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/QuasiAbelian/Basic.lean",
-    "startLine": 713,
-    "endLine": 732,
+    "startLine": 714,
+    "endLine": 733,
     "prose": "Strict-Noetherian objects transfer across full faithful functors that send strict\n  monomorphisms to strict monomorphisms.",
     "proofExposition": "Map ascending chains of strict subobjects in $\\mathcal{A}$ to ascending chains of\n  subobjects in $\\mathcal{C}$ via the injective monotone strict-subobject image map,\n  then use the Noetherian hypothesis in $\\mathcal{C}$ and injectivity.",
     "termExposition": null
@@ -16022,7 +16022,7 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.StabilityCondition.ConnectedComponent",
     "docstring": "The generating family of Bridgeland basis neighborhoods on `Stab(D)`. ",
-    "contentHash": 18144778987445447823,
+    "contentHash": 7108078065971383115,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -16070,7 +16070,7 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.ConnectedComponent",
     "docstring": "Every stability condition admits a small Bridgeland basis neighbourhood contained in its\ntopological connected component. This is the local connectedness input actually needed later. ",
-    "contentHash": 138268124,
+    "contentHash": 959161706,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -16194,7 +16194,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -16218,7 +16218,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.basisNhd",
-        "hash": 423668461743486659
+        "hash": 8033431380500330680
       },
       {
         "name": "CategoryTheory.Triangulated.cl",
@@ -16298,7 +16298,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace",
-        "hash": 13789441654075307493
+        "hash": 13964815904547753304
       }
     ],
     "paperRef": "Lemma 6.2",
@@ -16375,7 +16375,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -16532,7 +16532,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -16713,7 +16713,7 @@
     "declKind": "theorem",
     "moduleName": "BridgelandStability.StabilityCondition.Deformation",
     "docstring": "A small Bridgeland basis neighborhood, with radius below the local deformation witness,\nlies in the connected component of its center. This is the direct straight-line interpolation\nargument from Bridgeland §7. ",
-    "contentHash": 2461241316,
+    "contentHash": 3506844503,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -16985,7 +16985,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Triangulated.HNFiltration",
@@ -17050,7 +17050,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Triangulated.HNFiltration",
@@ -17255,7 +17255,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -17372,7 +17372,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -17497,7 +17497,7 @@
     "declKind": "instance",
     "moduleName": "BridgelandStability.StabilityCondition.Defs",
     "docstring": "The Bridgeland topology on `Stab_v(D)`, generated by the basis neighborhoods\n`B_ε(σ)` for all stability conditions `σ` and all `ε ∈ (0, 1/8)`.\n\nThis is the BLMNPS topology: the coarsest making both the charge map `σ ↦ σ.Z`\nand the slicing map continuous. When `v = id`, this recovers Bridgeland's original\ntopology on `Stab(D)`. ",
-    "contentHash": 13789441654075307493,
+    "contentHash": 13964815904547753304,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -17513,7 +17513,7 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.StabilityCondition.Defs",
     "docstring": "The basis neighborhood `B_ε(σ)` for the Bridgeland topology on `Stab_v(D)`. ",
-    "contentHash": 423668461743486659,
+    "contentHash": 8033431380500330680,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -17598,8 +17598,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 278,
-    "endLine": 291,
+    "startLine": 279,
+    "endLine": 292,
     "prose": "A reusable non-existential package for Bridgeland's Theorem 1.2 on a fixed connected\n  component $\\Sigma$. Bundles:\n  (1) the complex-linear charge space $V(\\Sigma)$,\n  (2) a `NormedAddCommGroup` and `NormedSpace \\mathbb{C}` instance on it,\n  (3) the proof that all central charges in $\\Sigma$ lie in $V(\\Sigma)$, and\n  (4) the proof that the restricted charge map is a local homeomorphism.",
     "proofExposition": null,
     "termExposition": "A structure with fields `V`, `instNormedAddCommGroup`, `instNormedSpace`,\n  `mem_charge`, and `isLocalHomeomorph_chargeMap`."
@@ -17614,8 +17614,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 300,
-    "endLine": 303,
+    "startLine": 301,
+    "endLine": 304,
     "prose": "The restricted central charge map attached to a component local model:\n  $\\sigma \\mapsto Z(\\sigma) \\in V$.",
     "proofExposition": null,
     "termExposition": "Defined by $\\langle \\sigma, h_\\sigma \\rangle \\mapsto \\langle \\sigma.Z,\n  M.\\text{mem\\_charge}(\\sigma, h_\\sigma) \\rangle$."
@@ -17669,7 +17669,7 @@
       },
       {
         "name": "K0Presentation.subgroup",
-        "hash": 8313089044335043819
+        "hash": 11577964834663490428
       },
       {
         "name": "CategoryTheory.Subobject.IsStrict",
@@ -17693,7 +17693,7 @@
       },
       {
         "name": "CategoryTheory.Triangulated.basisNhd",
-        "hash": 423668461743486659
+        "hash": 8033431380500330680
       },
       {
         "name": "CategoryTheory.Triangulated.cl",
@@ -17785,14 +17785,14 @@
       },
       {
         "name": "CategoryTheory.Triangulated.StabilityCondition.WithClassMap.topologicalSpace",
-        "hash": 13789441654075307493
+        "hash": 13964815904547753304
       }
     ],
     "paperRef": "Theorem 1.2",
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 646,
-    "endLine": 656,
+    "startLine": 647,
+    "endLine": 657,
     "prose": "Bridgeland's Theorem 1.2: for each connected component $\\Sigma$ of the stability space $\\mathrm{Stab}(\\mathcal{C})$, the central charge map $Z : \\Sigma \\to V(\\Sigma)$ is a local homeomorphism onto a linear subspace $V(\\Sigma) \\subset \\mathrm{Hom}(\\Lambda, \\mathbb{C})$ equipped with a natural normed topology.",
     "proofExposition": "The proof assembles the `ComponentTopologicalLinearLocalModel` for each connected component, which packages: the normed subspace $V(\\Sigma)$, the fact that every central charge lands in $V(\\Sigma)$, and the local homeomorphism property of the charge map (proved via a seminorm ball argument showing openness and continuity of $Z$).",
     "termExposition": null
@@ -17807,8 +17807,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 73,
-    "endLine": 112,
+    "startLine": 74,
+    "endLine": 113,
     "prose": "The restricted Bridgeland seminorm is a genuine additive group norm on $V(\\Sigma)$:\n  it satisfies the triangle inequality, is symmetric under negation, and the only\n  element with norm zero is the zero homomorphism.",
     "proofExposition": null,
     "termExposition": "Constructs an `AddGroupNorm` from the Bridgeland seminorm, using\n  `stabSeminorm_add_le` for the triangle inequality, `stabSeminorm_neg` for negation\n  symmetry, and `eq_zero_of_stabSeminorm_toReal_eq_zero` for definiteness."
@@ -17823,8 +17823,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 67,
-    "endLine": 71,
+    "startLine": 68,
+    "endLine": 72,
     "prose": "The **Bridgeland norm** $\\|U\\| = (\\|U\\|_{\\sigma_0})_{\\text{toReal}}$ on\n  $V(\\Sigma)$, attached to the chosen representative.",
     "proofExposition": "Directly converts the $\\mathbb{R}_{\\geq 0}^\\infty$-valued seminorm to a real\n  norm via `ENNReal.toReal`.",
     "termExposition": null
@@ -17839,8 +17839,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 216,
-    "endLine": 259,
+    "startLine": 217,
+    "endLine": 260,
     "prose": "The chosen norm on $V(\\Sigma)$ is equivalent to the Bridgeland norm coming from any\n  representative $\\sigma \\in \\Sigma$: there exist $K, L > 0$ with\n  $\\|U\\| \\leq K \\cdot \\|U\\|_\\sigma$ and $\\|U\\|_\\sigma \\leq L \\cdot \\|U\\|$.",
     "proofExposition": "Obtains domination constants from `stabSeminorm_dominated_of_connected` in both\n  directions, then converts the $\\mathbb{R}_{\\geq 0}^\\infty$ bounds to real\n  inequalities.",
     "termExposition": null
@@ -17855,8 +17855,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 114,
-    "endLine": 117,
+    "startLine": 115,
+    "endLine": 118,
     "prose": "$V(\\Sigma)$ is a normed additive commutative group under the Bridgeland norm.",
     "proofExposition": "Obtained from `componentAddGroupNorm` via `AddGroupNorm.toNormedAddCommGroup`.",
     "termExposition": null
@@ -17871,8 +17871,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 119,
-    "endLine": 144,
+    "startLine": 120,
+    "endLine": 145,
     "prose": "$V(\\Sigma)$ is a $\\mathbb{C}$-normed space under the Bridgeland norm.",
     "proofExposition": "Verifies the `NormedSpace.ofCore` axioms: nonnegativity (trivial from\n  $\\mathbb{R}_{\\geq 0}^\\infty$), homogeneity (from `stabSeminorm_smul_complex`),\n  triangle inequality (from `componentAddGroupNorm`), and definiteness (from\n  `eq_zero_of_stabSeminorm_toReal_eq_zero`).",
     "termExposition": null
@@ -17887,8 +17887,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 40,
-    "endLine": 42,
+    "startLine": 41,
+    "endLine": 43,
     "prose": "A chosen representative $\\sigma_0$ of a connected component\n  $\\Sigma \\in \\pi_0(\\operatorname{Stab}_v(\\mathcal{D}))$.",
     "proofExposition": null,
     "termExposition": "Obtained via `Classical.choose` from `ConnectedComponents.exists_rep`."
@@ -17898,13 +17898,13 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.StabilityCondition.LocalHomeomorphism",
     "docstring": "The seminorm balls in `V(Σ)` coming from the representative `σ₀ ∈ Σ`. ",
-    "contentHash": 11306574844844690566,
+    "contentHash": 3815436359327031854,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 146,
-    "endLine": 150,
+    "startLine": 147,
+    "endLine": 151,
     "prose": "The seminorm ball in $V(\\Sigma)$:\n  $\\{\\, F \\in V(\\Sigma) : \\|F - W\\|_{\\sigma_0} < r \\,\\}$.",
     "proofExposition": null,
     "termExposition": "Defined directly in terms of the $\\mathbb{R}_{\\geq 0}^\\infty$-valued Bridgeland\n  seminorm."
@@ -17919,8 +17919,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 152,
-    "endLine": 163,
+    "startLine": 153,
+    "endLine": 164,
     "prose": "The seminorm balls coincide with the metric balls for the induced norm on\n  $V(\\Sigma)$.",
     "proofExposition": "Unfolds both definitions and converts between $\\mathbb{R}_{\\geq 0}^\\infty$ and\n  $\\mathbb{R}$ comparisons via `ENNReal.ofReal_lt_ofReal_iff` and\n  `ENNReal.ofReal_toReal`.",
     "termExposition": null
@@ -17930,13 +17930,13 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.StabilityCondition.LocalHomeomorphism",
     "docstring": "The basis of seminorm balls defining the topology on `V(Σ)`. ",
-    "contentHash": 7489378898705300808,
+    "contentHash": 5457968081177216126,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 165,
-    "endLine": 169,
+    "startLine": 166,
+    "endLine": 170,
     "prose": "The basis of seminorm balls defining a topology on $V(\\Sigma)$.",
     "proofExposition": null,
     "termExposition": "The set of sets of the form `componentSeminormBall C cc W r` with $r > 0$."
@@ -17951,8 +17951,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 54,
-    "endLine": 65,
+    "startLine": 55,
+    "endLine": 66,
     "prose": "**Bridgeland's $V(\\Sigma)$**: the $\\mathbb{C}$-linear subspace of\n  $\\operatorname{Hom}(\\Lambda, \\mathbb{C})$ consisting of homomorphisms with finite\n  Bridgeland seminorm relative to the chosen representative $\\sigma_0 \\in \\Sigma$.",
     "proofExposition": null,
     "termExposition": "Defined as a `Submodule ℂ (Λ →+ ℂ)` whose carrier is\n  `finiteSeminormSubgroup C (componentRep C cc)`. Closure under $\\mathbb{C}$-scalar\n  multiplication uses `stabSeminorm_smul_complex`."
@@ -17967,8 +17967,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 171,
-    "endLine": 174,
+    "startLine": 172,
+    "endLine": 175,
     "prose": "The topology on $V(\\Sigma)$ generated by seminorm balls for one representative.",
     "proofExposition": null,
     "termExposition": "Defined as `TopologicalSpace.generateFrom (componentSeminormBasis C cc)`."
@@ -17983,8 +17983,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 194,
-    "endLine": 201,
+    "startLine": 195,
+    "endLine": 202,
     "prose": "The topology generated by seminorm balls agrees with the topology induced by the\n  Bridgeland norm on $V(\\Sigma)$.",
     "proofExposition": "Follows from `isTopologicalBasis_componentSeminormBasis` and the characterization\n  of a topology by its topological basis.",
     "termExposition": null
@@ -17999,8 +17999,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 204,
-    "endLine": 214,
+    "startLine": 205,
+    "endLine": 215,
     "prose": "Any element of $V(\\Sigma)$ has finite Bridgeland seminorm with respect to any\n  stability condition in the same connected component.",
     "proofExposition": "Uses `finiteSeminormSubgroup_eq_of_connected` to transfer the finiteness from the\n  chosen representative to any other member of the component.",
     "termExposition": null
@@ -18015,8 +18015,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 50,
-    "endLine": 52,
+    "startLine": 51,
+    "endLine": 53,
     "prose": "The type of stability conditions in a fixed connected component $\\Sigma$.",
     "proofExposition": null,
     "termExposition": "Defined as the subtype\n  $\\{\\, \\sigma : \\operatorname{Stab}_v(\\mathcal{D}) \\mid [\\sigma] = \\Sigma \\,\\}$."
@@ -18031,8 +18031,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 309,
-    "endLine": 644,
+    "startLine": 310,
+    "endLine": 645,
     "prose": "**Bridgeland's Theorem 1.2**: the canonical componentwise local linear model.\n  For each connected component $\\Sigma$ of $\\operatorname{Stab}_v(\\mathcal{D})$,\n  the central charge map $\\sigma \\mapsto Z(\\sigma)$ is a local homeomorphism from\n  $\\Sigma$ to the complex normed space $V(\\Sigma)$.\n\n  Specializing to $v = \\operatorname{id}$ recovers Bridgeland's Theorem 1.2;\n  specializing to the numerical quotient recovers Corollary 1.3.",
     "proofExposition": null,
     "termExposition": "Constructs a `ComponentTopologicalLinearLocalModel` by assembling the seminorm\n  topology agreement (`componentSeminormTopology_eq_normTopology`), continuity of\n  the charge map (Proposition 6.3 + Lemma 6.2), injectivity (Lemma 6.4), and\n  openness (Theorem 7.1 + Lemma 6.2 reverse comparison)."
@@ -18047,8 +18047,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 271,
-    "endLine": 274,
+    "startLine": 272,
+    "endLine": 275,
     "prose": "The **central charge map** restricted to a connected component and landing in\n  $V(\\Sigma)$: $\\sigma \\mapsto Z(\\sigma) \\in V(\\Sigma)$.",
     "proofExposition": null,
     "termExposition": "Defined by $\\langle \\sigma, h_\\sigma \\rangle \\mapsto \\langle \\sigma.Z,\n  \\text{componentZ\\_mem}(\\sigma, h_\\sigma) \\rangle$."
@@ -18063,8 +18063,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 262,
-    "endLine": 269,
+    "startLine": 263,
+    "endLine": 270,
     "prose": "For $\\sigma \\in \\Sigma$, its central charge $Z(\\sigma)$ lies in $V(\\Sigma)$.",
     "proofExposition": "Uses `finiteSeminormSubgroup_eq_of_connected` to transfer\n  `Z_mem_finiteSeminormSubgroup` from $\\sigma$ to the chosen representative.",
     "termExposition": null
@@ -18079,8 +18079,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 176,
-    "endLine": 192,
+    "startLine": 177,
+    "endLine": 193,
     "prose": "The seminorm-ball basis is a genuine topological basis for the norm topology on\n  $V(\\Sigma)$.",
     "proofExposition": "Verifies that each seminorm ball is open in the norm topology (since it equals a\n  metric ball) and that every neighborhood contains a seminorm ball (since metric balls\n  are seminorm balls).",
     "termExposition": null
@@ -18095,8 +18095,8 @@
     "paperRef": null,
     "paperComment": null,
     "sourceFile": "BridgelandStability/StabilityCondition/LocalHomeomorphism.lean",
-    "startLine": 44,
-    "endLine": 46,
+    "startLine": 45,
+    "endLine": 47,
     "prose": "The chosen representative satisfies $[\\sigma_0] = \\Sigma$.",
     "proofExposition": "Immediate from `Classical.choose_spec`.",
     "termExposition": null
@@ -18106,7 +18106,7 @@
     "declKind": "def",
     "moduleName": "BridgelandStability.StabilityCondition.Seminorm",
     "docstring": "The subspace `V(σ)` of group homomorphisms with finite seminorm.\nThis is an `AddSubgroup` of `Λ →+ ℂ` consisting of those `U` for which\n`‖U‖_σ < ∞`. On a connected component of `Stab(D)`, this subspace is independent\nof the chosen `σ` (by Lemma 6.2). ",
-    "contentHash": 15221745799520055824,
+    "contentHash": 6743507164002342081,
     "depHashes": null,
     "paperRef": null,
     "paperComment": null,
@@ -18627,7 +18627,7 @@
     "depHashes": [
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
-        "hash": 11501682663452204526
+        "hash": 9044468775688056379
       }
     ],
     "paperRef": "Definition 2.1",
@@ -18648,7 +18648,7 @@
     "depHashes": [
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
-        "hash": 11501682663452204526
+        "hash": 9044468775688056379
       }
     ],
     "paperRef": "Definition 2.2",
@@ -19137,7 +19137,7 @@
       },
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
-        "hash": 11501682663452204526
+        "hash": 9044468775688056379
       },
       {
         "name": "CategoryTheory.StabilityFunction.IsSemistable",
@@ -19170,7 +19170,7 @@
       },
       {
         "name": "CategoryTheory.upperHalfPlaneUnion",
-        "hash": 11501682663452204526
+        "hash": 9044468775688056379
       },
       {
         "name": "CategoryTheory.StabilityFunction.IsSemistable",
@@ -19841,7 +19841,7 @@
     "paperComment": null,
     "sourceFile": "BridgelandStability/TStructure/AbelianSubcategoryImageFactorisation.lean",
     "startLine": 51,
-    "endLine": 84,
+    "endLine": 81,
     "prose": "**Image factorisation triangle.** Given a distinguished triangle\n  $\\iota(X_1) \\xrightarrow{\\iota(f_1)} \\iota(X_2) \\xrightarrow{f_2} X_3 \\xrightarrow{f_3}\n  \\iota(X_1)[1]$\n  with $X_1, X_2$ in the abelian subcategory, and a decomposition of $X_3$ as\n  $\\iota(K)[1] \\xrightarrow{\\alpha} X_3 \\xrightarrow{\\beta} \\iota(Q)\n  \\xrightarrow{\\gamma} \\iota(K)[1][1]$ (also distinguished), there exist:\n  an object $I$ in the subcategory, morphisms $i \\colon I \\to X_2$,\n  $\\delta \\colon \\iota(Q) \\to \\iota(I)[1]$, $m_1 \\colon X_1 \\to I$, and\n  $m_3 \\colon \\iota(I) \\to \\iota(K)[1]$ such that\n  (1) $\\iota(i), \\iota(\\pi_Q), \\delta$ form a distinguished triangle,\n  (2) $\\iota(\\iota_K), \\iota(m_1), -m_3$ form a distinguished triangle, and\n  (3) $m_1 \\circ i = f_1$.",
     "proofExposition": "The proof applies the octahedral axiom to the factorisation\n  $f_2 \\circ \\beta = \\iota(\\pi_Q)$. The epi $\\pi_Q$ yields the first triangle via\n  `exists_distinguished_triangle_of_epi`. The octahedron produces the second triangle\n  and the factorisation $m_1 \\circ i = f_1$. The key lifting steps use fullness of\n  $\\iota \\circ \\operatorname{shift}$ to extract $m_1$ and $m_3$ as morphisms in the\n  ambient category, and `IsTriangulated` to access the octahedral axiom.",
     "termExposition": null
