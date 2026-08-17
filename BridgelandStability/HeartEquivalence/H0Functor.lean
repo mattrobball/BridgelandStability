@@ -115,11 +115,9 @@ noncomputable def HeartStabilityData.H0primeFunctor
   map_id X := by
     ext
     simp [HeartStabilityData.H0prime, TStructure.truncLEGE, Functor.comp_obj]
-    rfl
   map_comp f g := by
     ext
     simp [HeartStabilityData.H0prime, TStructure.truncLEGE, Functor.comp_obj]
-    rfl
 
 instance HeartStabilityData.H0primeFunctor_additive
     (h : HeartStabilityData C) :
@@ -218,7 +216,6 @@ theorem TStructure.descTruncGE_add
     t.descTruncGE (f + g) n = t.descTruncGE f n + t.descTruncGE g n := by
   apply t.from_truncGE_obj_ext
   rw [t.π_descTruncGE, CategoryTheory.Preadditive.comp_add, t.π_descTruncGE, t.π_descTruncGE]
-  rfl
 
 end
 
@@ -326,7 +323,6 @@ theorem HeartStabilityData.toH0primeHom_add
         (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X)
   rw [CategoryTheory.Preadditive.add_comp]
   rw [h.toH0primeHom_hom (C := C) E f, h.toH0primeHom_hom (C := C) E g]
-  rfl
 
 /-- For a heart object `E`, maps `E.obj ⟶ X` in the ambient triangulated category induce
 maps `E ⟶ H⁰'(X)` in the heart, naturally in `X`. -/

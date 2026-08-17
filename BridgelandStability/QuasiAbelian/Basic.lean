@@ -508,6 +508,7 @@ theorem isArtinianObject_of_isStrictArtinianObject [IsStrictArtinianObject X] :
   intro f
   let g : ℕ →o (StrictSubobject X)ᵒᵈ :=
     ⟨fun n ↦ OrderDual.toDual ⟨f n, by
+        haveI := Subobject.arrow_mono (f n)
         exact (Subobject.isStrict_iff _).2 (isStrictMono_of_mono (Subobject.arrow (f n)))⟩,
       fun i j hij ↦ f.2 hij⟩
   haveI : WellFoundedGT (StrictSubobject X)ᵒᵈ := by
@@ -535,7 +536,7 @@ section SubobjectFiniteness
 
 variable {A : Type u} [Category.{v} A] {C : Type u} [Category.{v} C]
 
-private def subobjectImageOfFaithfulPreservesMono (F : A ⥤ C) [F.Full] [F.Faithful]
+private def subobjectImageOfFaithfulPreservesMono (F : A ⥤ C)
     [F.PreservesMonomorphisms] {E : A} :
     Subobject E → Subobject (F.obj E) :=
   Subobject.lift (fun {S} (f : S ⟶ E) [Mono f] ↦ Subobject.mk (F.map f))
@@ -558,8 +559,8 @@ private theorem subobjectImageOfFaithfulPreservesMono_injective (F : A ⥤ C) [F
       simp only [Functor.preimageIso_hom, Functor.map_comp, Functor.map_preimage]
       exact Subobject.ofMkLEMk_comp heq.le))
 
-private theorem subobjectImageOfFaithfulPreservesMono_monotone (F : A ⥤ C) [F.Full]
-    [F.Faithful] [F.PreservesMonomorphisms] {E : A} :
+private theorem subobjectImageOfFaithfulPreservesMono_monotone (F : A ⥤ C)
+    [F.PreservesMonomorphisms] {E : A} :
     Monotone (subobjectImageOfFaithfulPreservesMono (A := A) (C := C) F (E := E)) := by
   intro s₁ s₂ h
   induction s₁ using Subobject.ind
@@ -633,7 +634,7 @@ variable {A : Type u} [Category.{v} A] [HasZeroMorphisms A] [Preadditive A]
   {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
   [HasKernels C] [HasCokernels C]
 
-private noncomputable def strictSubobjectImageOfFaithful (F : A ⥤ C) [F.Full] [F.Faithful]
+private noncomputable def strictSubobjectImageOfFaithful (F : A ⥤ C)
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} :
     StrictSubobject E → Subobject (F.obj E) :=
@@ -643,7 +644,7 @@ private noncomputable def strictSubobjectImageOfFaithful (F : A ⥤ C) [F.Full] 
     exact Subobject.mk (F.map B.1.arrow)
 
 omit [Preadditive A] [Preadditive C] in
-private theorem strictSubobjectImageOfFaithful_monotone (F : A ⥤ C) [F.Full] [F.Faithful]
+private theorem strictSubobjectImageOfFaithful_monotone (F : A ⥤ C)
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} :
     Monotone (strictSubobjectImageOfFaithful (A := A) (C := C) F hF (E := E)) := by

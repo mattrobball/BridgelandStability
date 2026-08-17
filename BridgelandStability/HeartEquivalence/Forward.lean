@@ -78,7 +78,7 @@ def StabilityCondition.stabilityFunctionOnHeart
       let s : Finset (Fin F.n) := Finset.univ.filter (fun i => ¬IsZero (P.factor i))
       have hs : s.Nonempty := by
         obtain ⟨i, hi⟩ := F.exists_nonzero_factor C hEobj
-        exact ⟨i, by simpa [s, P, CategoryTheory.Triangulated.PostnikovTower.factor] using hi⟩
+        exact ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, hi⟩⟩
       have hphiMinus : 0 < σ.slicing.phiMinus C E.obj hEobj :=
         gt_phases_of_gtProp C σ.slicing hEobj hEheart.1
       have hphiPlus : σ.slicing.phiPlus C E.obj hEobj ≤ 1 :=
@@ -169,7 +169,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
   let s : Finset (Fin F.n) := Finset.univ.filter (fun i => ¬IsZero (P.factor i))
   have hs : s.Nonempty := by
     obtain ⟨i, hi⟩ := F.exists_nonzero_factor C hEobj
-    exact ⟨i, by simpa [s, P, CategoryTheory.Triangulated.PostnikovTower.factor] using hi⟩
+    exact ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, hi⟩⟩
   have hphiMinus : 0 < σ.slicing.phiMinus C E.obj hEobj :=
     gt_phases_of_gtProp C σ.slicing hEobj hEheart.1
   have hphiPlus : σ.slicing.phiPlus C E.obj hEobj ≤ 1 :=

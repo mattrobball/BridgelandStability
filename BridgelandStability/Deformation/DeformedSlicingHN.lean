@@ -36,6 +36,7 @@ truncation-zero lemmas, and the main `deformedSlicing_hn_exists` theorem.
 
 /-! ### Shift lemmas for Q-HN existence -/
 
+set_option backward.isDefEq.respectTransparency.types false in
 /-- Forward shift for `deformedPred`: if `E` is Q-semistable of phase `φ`, then `E⟦1⟧`
 is Q-semistable of phase `φ + 1`. Extracted from `deformedSlicing.shift_iff`. -/
 theorem deformedPred_shift_one
@@ -77,7 +78,9 @@ theorem deformedPred_shift_one
         isomorphic_distinguished _ hT_sh _
           (Triangle.isoMk T' shT
             (Iso.refl _) eX.symm (Iso.refl _)
-            (by simp [T', Triangle.mk])
+            (by
+              dsimp [T', Triangle.mk]
+              simp)
             (by change (eX.inv ≫ shT.mor₂) ≫ 𝟙 _ = eX.symm.hom ≫ shT.mor₂
                 simp [Iso.symm])
             (by simp [T', Triangle.mk]))

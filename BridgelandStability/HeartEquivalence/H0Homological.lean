@@ -17,6 +17,7 @@ five-term exact sequence for heart cohomology.
 
 @[expose] public section
 
+set_option backward.isDefEq.respectTransparency.types false
 set_option backward.privateInPublic true
 set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
@@ -296,9 +297,6 @@ theorem HeartStabilityData.comp_H0primeFunctor_map_eq_zero_iff
             (h.t.truncGE 0).map g := by
       simp [HeartStabilityData.H0primeFunctor, HeartStabilityData.H0prime,
         TStructure.truncLEGE, Category.assoc]
-      exact
-        congrArg (fun k => β.hom ≫ k)
-          ((h.t.truncLEι 0).naturality ((h.t.truncGE 0).map g))
     have hzero :
         β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) ≫
             (h.t.truncGE 0).map g =
@@ -405,7 +403,10 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_tru
     have hu₂ :
         u' ≫ (h.t.truncLT 0).map m₃ ≫ (h.t.truncLTι 0).app X₃ =
           u ≫ (h.t.truncLTι 0).app X₃ := by
-      simp [u', Category.assoc]
+      have hnat : (h.t.truncLTι 0).app Z ≫ m₃ =
+          (h.t.truncLT 0).map m₃ ≫ (h.t.truncLTι 0).app X₃ :=
+        ((h.t.truncLTι 0).naturality m₃).symm
+      simp only [u', Category.assoc, hnat, IsIso.inv_hom_id_assoc]
     have hu₃ : u ≫ (h.t.truncLTι 0).app X₃ = f ≫ m₃ := by
       exact hu.symm
     exact hu₁.trans (hu₂.trans hu₃)
