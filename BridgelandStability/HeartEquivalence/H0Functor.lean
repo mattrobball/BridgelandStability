@@ -299,9 +299,9 @@ theorem HeartStabilityData.toH0primeHom_comp_H0primeFunctor_map
   have h₃ : rhs = f ≫ g ≫ (h.t.truncGEπ 0).app Y := by
     exact
       congrArg (fun k => f ≫ k) (h.t.truncGEπ_naturality 0 g)
-  simpa [HeartStabilityData.H0primeFunctor, TStructure.truncLEGE, Category.assoc, lhs,
-    Functor.comp_obj, Functor.comp_map] using
-    h₁.trans (h₂.trans h₃)
+  simp only [HeartStabilityData.H0primeFunctor, ObjectProperty.FullSubcategory.comp_hom,
+    ObjectProperty.homMk_hom, Category.assoc]
+  exact h₁.trans (h₂.trans h₃)
 
 @[simp]
 theorem HeartStabilityData.toH0primeHom_zero
@@ -423,9 +423,10 @@ noncomputable def HeartStabilityData.toH0primeIsoOfIsGE
 noncomputable def HeartStabilityData.H0primeObjIsoTruncGE
     (h : HeartStabilityData C) (X : C) :
     h.H0prime (C := C) X ≅ h.H0prime (C := C) ((h.t.truncGE 0).obj X) := by
-  refine ObjectProperty.isoMk _ ?_
-  simpa [HeartStabilityData.H0prime] using
-    (h.t.truncLE 0).mapIso (asIso ((h.t.truncGE 0).map ((h.t.truncGEπ 0).app X)))
+  exact ObjectProperty.isoMk _
+    ((h.t.truncLE 0).mapIso
+      (@asIso _ _ _ _ ((h.t.truncGE 0).map ((h.t.truncGEπ 0).app X))
+        (h.t.isIso_truncGE_map_truncGEπ_app 0 0 le_rfl X)))
 
 @[reassoc]
 theorem HeartStabilityData.H0primeObjIsoTruncGE_hom_naturality
@@ -435,10 +436,14 @@ theorem HeartStabilityData.H0primeObjIsoTruncGE_hom_naturality
       (h.H0primeFunctor (C := C)).map g ≫
         (h.H0primeObjIsoTruncGE (C := C) Y).hom := by
   ext
-  simpa [HeartStabilityData.H0primeObjIsoTruncGE, HeartStabilityData.H0primeFunctor,
-    HeartStabilityData.H0prime, TStructure.truncLEGE, Functor.map_comp] using
-    congrArg ((h.t.truncLE 0).map)
-      (congrArg ((h.t.truncGE 0).map) (h.t.truncGEπ_naturality 0 g))
+  simp only [HeartStabilityData.H0primeObjIsoTruncGE, HeartStabilityData.H0primeFunctor,
+    ObjectProperty.FullSubcategory.comp_hom, ObjectProperty.homMk_hom,
+    ObjectProperty.isoMk_hom, Functor.mapIso_hom, asIso_hom]
+  show (h.t.truncLEGE 0 0).map ((h.t.truncGEπ 0).app X) ≫
+      (h.t.truncLEGE 0 0).map ((h.t.truncGE 0).map g) =
+    (h.t.truncLEGE 0 0).map g ≫ (h.t.truncLEGE 0 0).map ((h.t.truncGEπ 0).app Y)
+  rw [← (h.t.truncLEGE 0 0).map_comp, ← (h.t.truncLEGE 0 0).map_comp]
+  exact congrArg ((h.t.truncLEGE 0 0).map) (h.t.truncGEπ_naturality 0 g)
 
 @[reassoc]
 theorem HeartStabilityData.H0primeObjIsoTruncGE_inv_naturality
