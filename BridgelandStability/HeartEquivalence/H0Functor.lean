@@ -95,6 +95,7 @@ noncomputable instance HeartStabilityData.H0Functor_shiftSequence
 
 /-- The degree-zero cohomology object, written in the alternative normal form
 `τ≤0(τ≥0 X)`. This is often a more convenient target for maps out of `H⁰(X)`. -/
+@[implicit_reducible]
 def HeartStabilityData.H0prime
     (h : HeartStabilityData C) (X : C) : h.t.heart.FullSubcategory :=
   ⟨(h.t.truncLEGE 0 0).obj X, by
@@ -106,6 +107,7 @@ def HeartStabilityData.H0prime
 
 /-- The degree-zero cohomology object in the normal form `τ≤0(τ≥0 X)` assembled
 into a functor `C ⥤ heart(t)`. -/
+@[implicit_reducible]
 noncomputable def HeartStabilityData.H0primeFunctor
     (h : HeartStabilityData C) : C ⥤ h.t.heart.FullSubcategory where
   obj := h.H0prime (C := C)
@@ -225,6 +227,7 @@ end
 
 /-- A morphism from a heart object into `X` factors canonically through the
 degree-zero normal form `H0prime X = τ≤0(τ≥0 X)`. -/
+@[implicit_reducible]
 noncomputable def HeartStabilityData.toH0primeHom
     (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) {X : C} (f : E.obj ⟶ X) :
@@ -501,7 +504,6 @@ theorem HeartStabilityData.toH0primeIsoViaTruncGE_naturality
         (h.H0primeObjIsoTruncGE (C := C) Y).inv
   rw [← Category.assoc,
     h.toH0primeHom_comp_H0primeFunctor_map (C := C) E f ((h.t.truncGE 0).map g)]
-  rfl
 
 /-- For a heart object `E`, the `H0prime`-evaluation functor is naturally isomorphic
 to evaluation of the ambient `τ≥0` truncation functor at `E.obj`. -/
