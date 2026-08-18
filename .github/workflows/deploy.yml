@@ -46,6 +46,15 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
+      # verso and doc-gen4 tag per Lean *minor* line: there is no v4.32.1 tag,
+      # v4.32.0 covers the whole v4.32.x series. Derived rather than hardcoded
+      # because hardcoding is why these pins silently rotted behind the
+      # toolchain until Deploy -- which only runs on main -- finally ran.
+      - name: Resolve tool revisions from lean-toolchain
+        run: |
+          LEAN_VER="$(sed 's|leanprover/lean4:||' lean-toolchain)"
+          echo "VERSO_REV=$(echo "$LEAN_VER" | cut -d. -f1,2).0" >> "$GITHUB_ENV"
+
       - name: Download oleans
         if: github.event_name != 'workflow_dispatch'
         uses: actions/download-artifact@v4
@@ -74,8 +83,13 @@ jobs:
           path: /tmp/lean-exposition/.lake
           key: exposition-${{ hashFiles('lean-toolchain') }}-${{ env.LEAN_EXPOSITION_REF }}
 
+      # Build it with this project's toolchain. lean-exposition ships its own
+      # lean-toolchain, and when that is older than ours the `lake env` call
+      # below runs a Lake too old to parse Mathlib's lakefile at all
+      # ("unknown namespace `Lake`").
       - name: Build exposition binary
         run: |
+          cp lean-toolchain /tmp/lean-exposition/lean-toolchain
           cd /tmp/lean-exposition && lake build exposition
           echo "EXPOSITION_BIN=/tmp/lean-exposition/.lake/build/bin/exposition" >> "$GITHUB_ENV"
 
@@ -127,6 +141,15 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
+      # verso and doc-gen4 tag per Lean *minor* line: there is no v4.32.1 tag,
+      # v4.32.0 covers the whole v4.32.x series. Derived rather than hardcoded
+      # because hardcoding is why these pins silently rotted behind the
+      # toolchain until Deploy -- which only runs on main -- finally ran.
+      - name: Resolve tool revisions from lean-toolchain
+        run: |
+          LEAN_VER="$(sed 's|leanprover/lean4:||' lean-toolchain)"
+          echo "VERSO_REV=$(echo "$LEAN_VER" | cut -d. -f1,2).0" >> "$GITHUB_ENV"
+
       - name: Download oleans
         if: github.event_name != 'workflow_dispatch'
         uses: actions/download-artifact@v4
@@ -159,7 +182,7 @@ jobs:
             --output site-build \
             --source-path "$(pwd)" \
             --prefix BridgelandStability \
-            --verso-rev v4.29.0 \
+            --verso-rev ${{ env.VERSO_REV }} \
             --repo-url "https://github.com/${{ github.repository }}"
 
       - name: Restore site cache
@@ -168,9 +191,9 @@ jobs:
           path: |
             site-build/.lake
             site-build/lake-manifest.json
-          key: site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('informalizations.json') }}
+          key: site-lake-${{ hashFiles('lean-toolchain') }}-${{ env.VERSO_REV }}-${{ hashFiles('informalizations.json') }}
           restore-keys: |
-            site-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-
+            site-lake-${{ hashFiles('lean-toolchain') }}-${{ env.VERSO_REV }}-
 
       - name: Build Verso site
         run: |
@@ -210,6 +233,15 @@ jobs:
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      # verso and doc-gen4 tag per Lean *minor* line: there is no v4.32.1 tag,
+      # v4.32.0 covers the whole v4.32.x series. Derived rather than hardcoded
+      # because hardcoding is why these pins silently rotted behind the
+      # toolchain until Deploy -- which only runs on main -- finally ran.
+      - name: Resolve tool revisions from lean-toolchain
+        run: |
+          LEAN_VER="$(sed 's|leanprover/lean4:||' lean-toolchain)"
+          echo "VERSO_REV=$(echo "$LEAN_VER" | cut -d. -f1,2).0" >> "$GITHUB_ENV"
 
       - name: Download oleans
         if: github.event_name != 'workflow_dispatch'
@@ -280,6 +312,15 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
+      # verso and doc-gen4 tag per Lean *minor* line: there is no v4.32.1 tag,
+      # v4.32.0 covers the whole v4.32.x series. Derived rather than hardcoded
+      # because hardcoding is why these pins silently rotted behind the
+      # toolchain until Deploy -- which only runs on main -- finally ran.
+      - name: Resolve tool revisions from lean-toolchain
+        run: |
+          LEAN_VER="$(sed 's|leanprover/lean4:||' lean-toolchain)"
+          echo "VERSO_REV=$(echo "$LEAN_VER" | cut -d. -f1,2).0" >> "$GITHUB_ENV"
+
       # Fast path (workflow_run): pull both oleans and the pre-extracted decls
       # from the CI run that triggered us.  Skips a ~10 min BS build.
       - name: Download oleans (from upstream CI)
@@ -318,7 +359,7 @@ jobs:
             --output comparison-build \
             --source-path "$(pwd)" \
             --prefix BridgelandStability \
-            --verso-rev v4.29.0 \
+            --verso-rev ${{ env.VERSO_REV }} \
             --repo-url "https://github.com/${{ github.repository }}"
 
       - name: Restore comparison shadow cache
@@ -327,9 +368,9 @@ jobs:
           path: |
             comparison-build/.lake
             comparison-build/lake-manifest.json
-          key: comparison-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-${{ hashFiles('paper-statements.json', 'extracted.json') }}
+          key: comparison-lake-${{ hashFiles('lean-toolchain') }}-${{ env.VERSO_REV }}-${{ hashFiles('paper-statements.json', 'extracted.json') }}
           restore-keys: |
-            comparison-lake-${{ hashFiles('lean-toolchain') }}-v4.29.0-
+            comparison-lake-${{ hashFiles('lean-toolchain') }}-${{ env.VERSO_REV }}-
 
       - name: Build comparison site
         run: |

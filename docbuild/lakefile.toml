@@ -3,10 +3,13 @@ reservoir = false
 version = "0.1.0"
 packagesDir = "../.lake/packages"
 
+# Tracks the Lean minor line in lean-toolchain. doc-gen4 older than the
+# toolchain fails to build its own SQLite dependency under the module system
+# ("Invalid `meta` definition `_eval`").
 [[require]]
 scope = "leanprover"
 name = "doc-gen4"
-rev = "v4.29.0"
+rev = "v4.33.0"
 
 [[require]]
 name = "BridgelandStability"

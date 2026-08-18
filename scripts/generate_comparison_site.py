@@ -220,7 +220,7 @@ def main() -> int:
                         "(for the lakefile `path` require)")
     p.add_argument("--prefix", default="BridgelandStability",
                    help="Root module prefix (unused in v1, for forward compat)")
-    p.add_argument("--verso-rev", default="v4.29.0",
+    p.add_argument("--verso-rev", default="v4.33.0",
                    help="Verso git revision for the shadow project's lakefile")
     p.add_argument("--informal-rev", default="main",
                    help="lean-informal git revision (unused in v1; BS provides "
