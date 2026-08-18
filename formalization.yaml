@@ -5,6 +5,22 @@ version: "v0.4"
 # ── WHAT ──────────────────────────────────────────────
 project:
   name: "BridgelandStability"
+  description: >-
+    AI-assisted Lean 4 / Mathlib formalization of the main results of Tom
+    Bridgeland's "Stability conditions on triangulated categories" (Annals of
+    Mathematics 166 (2007), 317-345). Covers Sections 2-7 of the paper,
+    culminating in Theorem 1.2, that the central charge map is a local
+    homeomorphism on each connected component of Stab(D), and Corollary 1.3,
+    that connected components of Stab_N(D) are finite-dimensional complex
+    manifolds. Both are proved in class-map generality, for an arbitrary
+    surjective class map v : K₀(D) →+ Λ as in Bayer–Macrì–Stellari and
+    Bayer–Lahoz–Macrì–Nuer–Perry–Stellari, then specialized to the identity
+    for Theorem 1.2 and to the numerical quotient for Corollary 1.3; the
+    classical Stab(D) is the case v = id. Supporting development includes
+    slicings and Harder-Narasimhan filtrations, the quasi-abelian structure of
+    interval subcategories P((a,b)), the Grothendieck and numerical
+    Grothendieck groups, the Euler form, and the deformation argument
+    underlying the local homeomorphism result.
   url: "https://github.com/mattrobball/BridgelandStability"
   date: "2026-03-20"
   authors:
