@@ -18,7 +18,7 @@ permissions:
 
 env:
   LEAN_EXPOSITION_REPO: mattrobball/lean-exposition
-  LEAN_EXPOSITION_REF: port/lean-v4.33.0
+  LEAN_EXPOSITION_REF: master
 
 # ════════════════════════════════════════════════════════════════
 # Job graph:

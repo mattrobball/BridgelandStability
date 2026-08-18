@@ -12,7 +12,7 @@ autoImplicit = false
 [[require]]
 name = "informal"
 git = "https://github.com/mattrobball/lean-informal"
-rev = "feat/tfb-preserve-elaboration-env"
+rev = "main"
 
 [[require]]
 name = "mathlib"
