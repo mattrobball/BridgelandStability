@@ -264,10 +264,12 @@ kernels and cokernels (it is quasi-abelian when b − a ≤ 1).
 ```lean
 -- Statements only (proofs not part of the trusted base):
 
-noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasKernels (s : Slicing C) :
     HasKernels (s.IntervalCat C a b)
 
-noncomputable instance Slicing.intervalCat_hasCokernels (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasCokernels (s : Slicing C) :
     HasCokernels (s.IntervalCat C a b)
 ```
 
@@ -452,7 +454,9 @@ def eulerFormInner (E : C) : K₀ C →+ ℤ := by
   exact K₀.lift C (fun F ↦ eulerFormObj k C E F)
 
 -- Statement only: E ↦ χ(E, −) is triangle-additive
-instance eulerFormInner_isTriangleAdditive
+omit [IsTriangulated C] in
+@[instance]
+theorem eulerFormInner_isTriangleAdditive
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (eulerFormInner k C)
 

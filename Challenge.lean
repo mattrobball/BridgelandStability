@@ -1,51 +1,53 @@
-import Mathlib.CategoryTheory.Triangulated.Pretriangulated
-import Mathlib.CategoryTheory.ComposableArrows.Basic
-import Mathlib.CategoryTheory.Triangulated.Triangulated
-import Mathlib.CategoryTheory.Triangulated.TStructure.Basic
-import Mathlib.CategoryTheory.Triangulated.TStructure.Heart
-import Mathlib.CategoryTheory.ObjectProperty.ContainsZero
-import Mathlib.CategoryTheory.Subobject.Lattice
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Real.Archimedean
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.GroupTheory.FreeAbelianGroup
-import Mathlib.Tactic
-import Mathlib.GroupTheory.QuotientGroup.Defs
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.CategoryTheory.Abelian.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-import Mathlib.Algebra.Homology.ShortComplex.ShortExact
-import Mathlib.CategoryTheory.Subobject.Basic
-import Mathlib.CategoryTheory.Subobject.ArtinianObject
-import Mathlib.CategoryTheory.Subobject.NoetherianObject
-import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
-import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
-import Mathlib.CategoryTheory.ObjectProperty.Retract
-import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
-import Mathlib.CategoryTheory.Preadditive.LeftExact
-import Mathlib.Data.Complex.Basic
-import Mathlib.Topology.IsLocalHomeomorph
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Topology.Connected.Clopen
-import Mathlib.Data.ENNReal.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.CategoryTheory.Linear.Basic
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.RingTheory.Finiteness.Defs
-import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.Algebra.Ring.NegOnePow
-import Mathlib.GroupTheory.Finiteness
-import Mathlib.CategoryTheory.Triangulated.Yoneda
-import Mathlib.CategoryTheory.Linear.Yoneda
-import Mathlib.CategoryTheory.Shift.Linear
-import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Geometry.Manifold.Complex
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+module
+
+public import Mathlib.CategoryTheory.Triangulated.Pretriangulated
+public import Mathlib.CategoryTheory.ComposableArrows.Basic
+public import Mathlib.CategoryTheory.Triangulated.Triangulated
+public import Mathlib.CategoryTheory.Triangulated.TStructure.Basic
+public import Mathlib.CategoryTheory.Triangulated.TStructure.Heart
+public import Mathlib.CategoryTheory.ObjectProperty.ContainsZero
+public import Mathlib.CategoryTheory.Subobject.Lattice
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Real.Archimedean
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.GroupTheory.FreeAbelianGroup
+public import Mathlib.Tactic
+public import Mathlib.GroupTheory.QuotientGroup.Defs
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.CategoryTheory.Abelian.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
+public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
+public import Mathlib.CategoryTheory.Subobject.Basic
+public import Mathlib.CategoryTheory.Subobject.ArtinianObject
+public import Mathlib.CategoryTheory.Subobject.NoetherianObject
+public import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
+public import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
+public import Mathlib.CategoryTheory.ObjectProperty.Retract
+public import Mathlib.CategoryTheory.ObjectProperty.FiniteProducts
+public import Mathlib.CategoryTheory.Preadditive.LeftExact
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Topology.IsLocalHomeomorph
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.Topology.Connected.Clopen
+public import Mathlib.Data.ENNReal.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.CategoryTheory.Linear.Basic
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Algebra.Ring.NegOnePow
+public import Mathlib.GroupTheory.Finiteness
+public import Mathlib.CategoryTheory.Triangulated.Yoneda
+public import Mathlib.CategoryTheory.Linear.Yoneda
+public import Mathlib.CategoryTheory.Shift.Linear
+public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.Geometry.Manifold.Complex
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-! # Trusted Formalization Base
 BridgelandStability — `CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent`
@@ -54,12 +56,40 @@ Auto-generated — all proofs replaced with `sorry`.
 -/
 
 
-universe v u u' v' u'' v'' w
-
 -- ═══ PostnikovTower.Defs ═══
 
+section
+/-!
+# Postnikov Towers in Triangulated Categories
+
+A Postnikov tower of an object `E` in a pretriangulated category is a finite chain of
+distinguished triangles that filter `E`. This structure separates the tower/filtration
+data from any phase or semistability data that may be layered on top (e.g., for
+Harder-Narasimhan filtrations).
+
+## Main definitions
+
+* `CategoryTheory.Triangulated.PostnikovTower`: a finite chain of distinguished triangles
+  filtering an object `E`, with a zero base and `E` at the top.
+* `CategoryTheory.Triangulated.PostnikovTower.length`: the number of factors.
+* `CategoryTheory.Triangulated.PostnikovTower.factor`: the `i`-th factor object, derived
+  as `(triangle i).obj₃` (no separate data field).
+
+## Implementation notes
+
+The chain of objects uses `ComposableArrows C n` (i.e., `Fin (n+1) ⥤ C`), ensuring
+good categorical packaging. Each consecutive pair of objects is completed to a
+distinguished triangle with a factor object as the third vertex. The factor is
+derived directly as `obj₃` of the triangle — no separate `factor` field or
+`triangle_obj₃` isomorphism is needed.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
+universe v u
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
@@ -102,11 +132,33 @@ def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
 
 end CategoryTheory.Triangulated
 
+end
+end
+end
+
 -- ═══ Slicing.Defs ═══
 
+section
+/-!
+# Slicing Definitions
+
+Core data-carrying declarations for Bridgeland slicings: the `HNFiltration` and `Slicing`
+structures, the intrinsic phase functions `φ⁺`/`φ⁻`, and supporting HN filtration operations
+(prefix, shift, transport, drop, existence of nonzero factors).
+
+These definitions are separated from the full proof files so that downstream modules
+(stability conditions, topology, Euler form) can import lightweight type-level dependencies
+without pulling in hom-vanishing proofs and interval subcategory theory.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
+universe v u
+/-! ### Grind annotations for arithmetic automation -/
 attribute [grind →] StrictAnti.imp
 attribute [grind →] StrictMono.imp
 attribute [grind →] Antitone.imp
@@ -115,6 +167,7 @@ namespace CategoryTheory.Triangulated
 section Slicing
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+/-! ### Core structures -/
 
 /-- A Harder-Narasimhan (HN) filtration of an object `E` with respect to a phase
 predicate `P`. This extends a `PostnikovTower` with phase data: each factor is
@@ -150,11 +203,16 @@ structure Slicing where
   hn_exists : ∀ (E : C), Nonempty (HNFiltration C P E)
 
 attribute [instance] Slicing.closedUnderIso
+/-! ### Shift lemmas -/
+/-! ### Phase bounds and interval subcategories -/
 
 /-- The interval subcategory predicate `P((a,b))`: an object `E` belongs to the
 interval subcategory if it is zero or all phases in its HN filtration lie in `(a,b)`. -/
 def Slicing.intervalProp (s : Slicing C) (a b : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (F : HNFiltration C s.P E), ∀ i, a < F.φ i ∧ F.φ i < b
+
+/-! ### HN filtration operations -/
+/-! ### Existence of nonzero factors and intrinsic phases -/
 
 /-- For any nonzero object, there exists an HN filtration with nonzero first factor.
 Proved by repeatedly dropping zero first factors; terminates since `n` decreases
@@ -167,6 +225,8 @@ Proved by repeatedly dropping zero last factors. -/
 lemma HNFiltration.exists_nonzero_last (s : Slicing C) {E : C} (hE : ¬IsZero E) :
     ∃ (F : HNFiltration C s.P E) (hn : 0 < F.n),
       ¬IsZero (F.triangle ⟨F.n - 1, by lia⟩).obj₃  := sorry
+
+/-! ### Intrinsic phase definitions -/
 
 /-- The intrinsic highest phase of a nonzero object with respect to a slicing.
 This is the phase of the first factor in any HN filtration with nonzero first factor.
@@ -187,8 +247,33 @@ noncomputable def Slicing.phiMinus (s : Slicing C) (E : C) (hE : ¬IsZero E) : �
 end Slicing
 end CategoryTheory.Triangulated
 
+end
+end
+end
+
 -- ═══ GrothendieckGroup.Defs ═══
 
+section
+/-!
+# K₀ Presentation
+
+A lightweight algebraic abstraction for Grothendieck group quotients. A
+`K0Presentation` specifies a type of objects, a type of relations, and
+three projections extracting the "middle = first + third" pattern. The
+quotient `P.K0 = FreeAbelianGroup Obj ⧸ {obj₂(r) - obj₁(r) - obj₃(r)}` is
+the associated Grothendieck group.
+
+This factors out the identical quotient plumbing shared by:
+- The triangulated K₀ (relations from distinguished triangles)
+- The heart K₀ (relations from short exact sequences)
+
+The abstraction lives below category theory — it is purely algebraic.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
+universe u v u' v' u'' v''
 
 set_option linter.checkUnivs false in
 /-- A presentation of a Grothendieck-style group: objects, relations, and
@@ -230,13 +315,45 @@ def lift {A : Type*} [AddCommGroup A] (f : Obj → A) [P.IsAdditive f] : P.K0 �
       have h := IsAdditive.additive (P := P) (f := f) r
       rw [h]; abel)
 
+/-! ### Extensionality and induction -/
+/-! ### Functorial maps -/
 end K0Presentation
+
+end
+end
 
 -- ═══ GrothendieckGroup.Basic ═══
 
+section
+/-!
+# Grothendieck Group of a Triangulated Category
+
+We define the Grothendieck group `K₀ C` of a pretriangulated category `C` as the free abelian
+group on objects of `C` modulo the distinguished triangle relations:
+`[B] = [A] + [C]` for each distinguished triangle `A → B → C → A⟦1⟧`.
+
+The isomorphism relation `[X] = [Y]` for `X ≅ Y` is derivable from the triangle relations
+(via the distinguished triangle `X → Y → 0 → X⟦1⟧`), so we do not include it as a separate
+generator.
+
+## Main definitions
+
+* `CategoryTheory.Triangulated.trianglePresentation`: the `K0Presentation` for triangles
+* `CategoryTheory.Triangulated.K₀`: the Grothendieck group via `K0Presentation`
+* `CategoryTheory.Triangulated.K₀.of`: the class map `C → K₀ C`
+* `CategoryTheory.Triangulated.K₀.of_triangle`: additivity on distinguished triangles
+* `CategoryTheory.Triangulated.IsTriangleAdditive`: typeclass for functions `C → A` that
+  respect distinguished triangle relations
+* `CategoryTheory.Triangulated.K₀.lift`: the universal property of `K₀`
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits
 open scoped ZeroObject
+universe v u u'
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
@@ -268,7 +385,9 @@ class IsTriangleAdditive {A : Type*} [AddCommGroup A] (f : C → A) : Prop where
     T ∈ (distTriang C) → f T.obj₂ = f T.obj₁ + f T.obj₃
 
 variable {C} in
-instance {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] :
+@[instance]
+theorem trianglePresentation_isAdditive {A : Type*} [AddCommGroup A] (f : C → A)
+    [IsTriangleAdditive f] :
     (trianglePresentation C).IsAdditive f  := sorry
 
 /-- The universal property of K₀: any triangle-additive function lifts
@@ -276,6 +395,8 @@ to an additive group homomorphism from K₀. -/
 def K₀.lift {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] : K₀ C →+ A :=
   (trianglePresentation C).lift f
 
+/-! ### K₀ additivity for Postnikov towers -/
+/-! ### Class map to a target lattice -/
 section ClassMap
 variable {Λ : Type u'} [AddCommGroup Λ] (v : K₀ C →+ Λ)
 
@@ -288,9 +409,47 @@ abbrev cl (E : C) : Λ := v (K₀.of C E)
 end ClassMap
 end CategoryTheory.Triangulated
 
+end
+end
+end
+
 -- ═══ QuasiAbelian.Basic ═══
 
+section
+/-!
+# Strict Morphisms and Quasi-Abelian Categories
+
+We define strict morphisms and quasi-abelian categories following
+Bridgeland's "Stability conditions on triangulated categories" (2007), §4.
+
+A morphism `f : X ⟶ Y` in a category with kernels and cokernels is *strict*
+if the canonical comparison morphism from the coimage to the image is an isomorphism.
+In an abelian category every morphism is strict, so strictness is a nontrivial condition
+only in the pre-abelian setting.
+
+A *quasi-abelian* category is a preadditive category with kernels, cokernels, pullbacks,
+and pushouts in which pullbacks of strict epimorphisms are strict epimorphisms and
+pushouts of strict monomorphisms are strict monomorphisms.
+
+## Main definitions
+
+* `CategoryTheory.IsStrict`: a morphism is strict if `coimageImageComparison` is an iso
+* `CategoryTheory.IsStrictMono`: mono + strict
+* `CategoryTheory.IsStrictEpi`: epi + strict
+* `CategoryTheory.QuasiAbelian`: quasi-abelian category
+* `CategoryTheory.StrictShortExact`: short exact with strict morphisms
+
+## References
+
+* Bridgeland, "Stability conditions on triangulated categories", Annals of Math. 2007
+* Schneiders, "Quasi-abelian categories and sheaves", Mém. Soc. Math. Fr. 1999
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 open CategoryTheory CategoryTheory.Limits
+universe v u
 namespace CategoryTheory
 variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
 section Strict
@@ -354,14 +513,54 @@ abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
 end StrictSubobject
 end CategoryTheory
 
+end
+end
+
 -- ═══ IntervalCategory.Basic ═══
 
+section
+/-!
+# Interval Subcategories of Slicings
+
+Given a slicing `s` on a pretriangulated category `C` and an open interval `(a, b) ⊂ ℝ`,
+we define the interval subcategory `P((a, b))` as the full subcategory of `C` on objects
+whose HN phases all lie in `(a, b)`.
+
+These interval subcategories play a central role in Bridgeland's deformation theorem (§7):
+when `b - a` is small enough (relative to the local finiteness parameter), objects in
+`P((a,b))` have finite length in the quasi-abelian sense, i.e. well-founded chains of
+strict subobjects and strict quotients, enabling HN filtration arguments within thin
+subcategories.
+
+## Main definitions
+
+* `CategoryTheory.Triangulated.Slicing.IntervalCat`: the full subcategory `P((a, b))`
+* `CategoryTheory.Triangulated.Slicing.intervalFiniteLength`: objects in thin intervals
+  have well-founded subobject lattices
+
+## Main results
+
+* `CategoryTheory.Triangulated.Slicing.intervalHom_eq_zero`: hom-vanishing between
+  objects in disjoint intervals
+* `CategoryTheory.Triangulated.Slicing.intervalProp_of_semistable`: semistable objects
+  with phase in `(a, b)` lie in `P((a, b))`
+
+## References
+
+* Bridgeland, "Stability conditions on triangulated categories", §4, §7
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
+universe v u
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
+/-! ### Interval subcategory -/
 
 /-- The interval subcategory `P((a, b))` of a slicing, defined as the full subcategory
 on objects whose HN phases all lie in `(a, b)`. An object `E` belongs to `P((a, b))` if
@@ -371,38 +570,76 @@ This is **Bridgeland's Definition 4.1** specialized to open intervals. -/
 abbrev Slicing.IntervalCat (s : Slicing C) (a b : ℝ) :=
   (s.intervalProp C a b).FullSubcategory
 
+/-! ### Finite length in thin intervals -/
+/-! ### Interval containment -/
+/-! ### Hom-vanishing between disjoint intervals -/
 end CategoryTheory.Triangulated
+
+end
+end
+end
 
 -- ═══ IntervalCategory.QuasiAbelian ═══
 
+section
+/-!
+# Quasi-Abelian Structure of Interval Categories
+
+Preabelian and quasi-abelian structure, strict morphisms, local finiteness,
+skewed stability functions, and K₀ relations for interval subcategories.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
+universe v u
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 section Preabelian
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 
-noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasKernels (s : Slicing C) :
     HasKernels (s.IntervalCat C a b)  := sorry
 
-noncomputable instance Slicing.intervalCat_hasCokernels (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasCokernels (s : Slicing C) :
     HasCokernels (s.IntervalCat C a b)  := sorry
 
 end Preabelian
 end CategoryTheory.Triangulated
 
+end
+end
+end
+
 -- ═══ IntervalCategory.FiniteLength ═══
 
+section
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped ZeroObject
+universe v u u'
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
 section Preabelian
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
+/-!
+# Finite Length and Skewed Stability Functions
+
+Additive/preserving instances, local finiteness in thin intervals,
+strict short exact sequences, K₀ relations, skewed stability functions.
+-/
+/-! ### Local finiteness in thin interval categories -/
 
 omit [IsTriangulated C] in
 /-- A slicing is locally finite if there exists `η > 0` with `η < 1/2` such that every
@@ -426,20 +663,44 @@ structure Slicing.IsLocallyFinite (s : Slicing C) : Prop where
       IsStrictArtinianObject E ∧ IsStrictNoetherianObject E
 
 end Preabelian
+/-! ### Skewed stability functions (Definition 4.4) -/
 variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 variable [IsTriangulated C] {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)]
 end CategoryTheory.Triangulated
 
+end
+end
+end
+
 -- ═══ StabilityCondition.Defs ═══
 
+section
+/-!
+# Stability Condition Definitions
+
+Core data-carrying declarations for Bridgeland stability conditions: the
+`PreStabilityCondition.WithClassMap` and `StabilityCondition.WithClassMap` structures,
+the generalized metric `slicingDist`, the seminorm `stabSeminorm`, basis neighborhoods,
+the Bridgeland topology, and connected-component types.
+
+These definitions are separated from the proof files so that downstream modules
+(Euler form, numerical stability, manifold structure) can import type-level dependencies
+without pulling in phase rigidity proofs and sector-bound lemmas.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated Complex
 open scoped ENNReal
+universe v u u'
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
 variable {Λ : Type u'} [AddCommGroup Λ]
+/-! ### Prestability and stability conditions -/
 namespace PreStabilityCondition
 
 /-- A Bridgeland prestability condition with respect to a class map
@@ -473,6 +734,8 @@ structure WithClassMap (v : K₀ C →+ Λ)
   locallyFinite : slicing.IsLocallyFinite C
 
 end StabilityCondition
+/-! ### Phase rotation identity -/
+/-! ### Generalized metric and seminorm -/
 
 open Real in
 /-- The Bridgeland generalized metric on slicings. For slicings `s₁` and `s₂`,
@@ -492,6 +755,8 @@ def stabSeminorm {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v)
     (U : Λ →+ ℂ) : ℝ≥0∞ :=
   ⨆ (E : C) (φ : ℝ) (_ : σ.slicing.P φ E) (_ : ¬IsZero E),
     ENNReal.ofReal (‖U (cl C v E)‖ / ‖σ.charge E‖)
+
+/-! ### Topology on Stab(D) -/
 
 /-- The basis neighborhood `B_ε(σ)` for the Bridgeland topology on `Stab_v(D)`. -/
 def basisNhd {v : K₀ C →+ Λ} (σ : StabilityCondition.WithClassMap C v) (ε : ℝ) :
@@ -524,15 +789,33 @@ abbrev Component (v : K₀ C →+ Λ) (cc : StabilityCondition.WithClassMap.Comp
 end StabilityCondition.WithClassMap
 end CategoryTheory.Triangulated
 
+end
+end
+end
+
 -- ═══ NumericalStability.Defs ═══
 
+section
+/-!
+# Finite Type and Object-Level Euler Form
+
+The `IsFiniteType` class and `eulerFormObj` definition, separated from the
+comparison tools so that downstream Defs modules can import lightweight
+type-level dependencies without pulling in continuity and equivalence proofs.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
+universe w v u u'
 namespace CategoryTheory.Triangulated
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+/-! ### Finite type -/
 
 /-- A `k`-linear pretriangulated category is of finite type if all Hom spaces are
 finite-dimensional over `k` and for each pair of objects, only finitely many shifted
@@ -543,6 +826,8 @@ class IsFiniteType [Linear k C] : Prop where
   /-- For each pair of objects, only finitely many shifted Hom spaces are nontrivial. -/
   finite_support : ∀ (E F : C), Set.Finite {n : ℤ | Nontrivial (E ⟶ (shiftFunctor C n).obj F)}
 
+/-! ### Object-level Euler form -/
+
 /-- The Euler form on objects: `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])`.
 This is defined as a finitely-supported sum using `finsum`. -/
 def eulerFormObj [Linear k C] (E F : C) : ℤ :=
@@ -550,22 +835,43 @@ def eulerFormObj [Linear k C] (E F : C) : ℤ :=
 
 end CategoryTheory.Triangulated
 
+end
+end
+end
+
 -- ═══ EulerForm.Basic ═══
 
+section
+/-!
+# Euler form on `K₀`
+
+We prove that the Euler form `χ(E,F) = Σₙ (-1)ⁿ dim_k Hom(E, F[n])` is
+triangle-additive in both arguments, then lift it to a bilinear form on `K₀`.
+
+The proof uses the long exact Hom sequence from the homological Yoneda functor
+and the rank-nullity theorem for finite-dimensional vector spaces.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped CategoryTheory.Pretriangulated.Opposite
+universe w v u
 namespace CategoryTheory.Triangulated
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [Linear k C] [IsFiniteType k C]
+  [IsTriangulated C] [Linear k C] [IsFiniteType k C]
 section EulerTriangleAdditivity
 
+omit [IsTriangulated C] in
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F)  := sorry
 
 end EulerTriangleAdditivity
+/-! ## Euler form on `K₀` -/
 
 /-- For fixed `E`, lift `F ↦ χ(E, F)` to a group homomorphism `K₀ C →+ ℤ`
 using the universal property of `K₀`. -/
@@ -573,9 +879,11 @@ def eulerFormInner (E : C) : K₀ C →+ ℤ := by
   letI := eulerFormObj_contravariant_triangleAdditive (k := k) (C := C) E
   exact K₀.lift C (fun F ↦ eulerFormObj k C E F)
 
+omit [IsTriangulated C] in
 /-- The outer function `E ↦ eulerFormInner E` is triangle-additive, so the Euler
 form descends to a bilinear form on `K₀`. -/
-instance eulerFormInner_isTriangleAdditive
+@[instance]
+theorem eulerFormInner_isTriangleAdditive
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (eulerFormInner k C)  := sorry
 
@@ -596,44 +904,64 @@ def NumericalK₀ [(shiftFunctor C (1 : ℤ)).Linear k] :
   K₀ C ⧸ eulerFormRad k C
 
 /-- The `AddCommGroup` instance on `NumericalK₀ k C`. -/
-instance NumericalK₀.instAddCommGroup
-    [(shiftFunctor C (1 : ℤ)).Linear k] :
+instance NumericalK₀.instAddCommGroup [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddCommGroup (NumericalK₀ k C) :=
   inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad k C))
 
 /-- The quotient map `K₀(C) → N(C)`. -/
-abbrev numericalQuotientMap
-    [(shiftFunctor C (1 : ℤ)).Linear k] :
+abbrev numericalQuotientMap [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ NumericalK₀ k C :=
   QuotientAddGroup.mk' (eulerFormRad k C)
 
 /-- The category `C` is numerically finite if the numerical Grothendieck group attached to the
 Euler form is finitely generated as an abelian group. -/
-class NumericallyFinite
+class NumericallyFinite [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k] : Prop where
   /-- The Euler-form numerical Grothendieck group is finitely generated. -/
   fg : AddGroup.FG (NumericalK₀ k C)
 
-section Triangulated
-variable [IsTriangulated C]
+/-! ## Corollary 1.3 packaging -/
 
 /-- A connected component of numerical stability conditions. -/
 abbrev NumericalComponent [(shiftFunctor C (1 : ℤ)).Linear k]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
   StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
 
-end Triangulated
 end CategoryTheory.Triangulated
+
+end
+end
+end
 
 -- ═══ NumericalStabilityManifold ═══
 
+section
+/-!
+# Numerical Stability Manifolds
+
+Bridgeland's Corollary 1.3: each connected component of `Stab_Λ(D)` is a
+complex manifold of dimension `rk(Λ)`.
+
+The proof is direct assembly from the generalized `ComponentTopologicalLinearLocalModel`:
+1. `V(Σ) ⊆ Hom(Λ, ℂ)` is finite-dimensional (because `Λ` has finite rank).
+2. The charge map `σ ↦ σ.Z` is a local homeomorphism into `V(Σ)`.
+3. Apply the generic manifold construction.
+-/
+@[expose] public section
+set_option backward.privateInPublic true
+set_option backward.privateInPublic.warn false
+set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
 open scoped Manifold Topology
+universe w v u u'
 namespace CategoryTheory.Triangulated
+/-! ### Finite-dimensionality of `Hom(Λ, ℂ)` -/
+/-! ### Generic manifold construction -/
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
   [IsTriangulated C]
+/-! ### Corollary 1.3: Complex manifold structure -/
 
 /-- **Bridgeland's Corollary 1.3** for numerical stability conditions. Each connected
 component of `Stab_N(D)` is a complex manifold of dimension `rk(N(D))`.
@@ -653,3 +981,7 @@ theorem NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent
         (NumericalComponent (k := k) C cc)  := sorry
 
 end CategoryTheory.Triangulated
+
+end
+end
+end
