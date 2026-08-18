@@ -8,7 +8,6 @@ module
 public import BridgelandStability.Slicing.TStructureConstruction
 public import BridgelandStability.GrothendieckGroup.Basic
 public import BridgelandStability.QuasiAbelian.Basic
-public import BridgelandStability.ForMathlib.CategoryTheory.ObjectProperty.FullSubcategoryLimits
 public import BridgelandStability.TStructure.HeartAbelian
 public import Mathlib.CategoryTheory.Limits.Constructions.Pullbacks
 public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
@@ -88,7 +87,8 @@ lemma Slicing.intervalProp_of_isZero (s : Slicing C) {E : C} (hE : IsZero E)
   Or.inl hE
 
 /-- The interval property contains the zero object. -/
-instance Slicing.intervalProp_containsZero (s : Slicing C) (a b : ℝ) :
+@[instance]
+theorem Slicing.intervalProp_containsZero (s : Slicing C) (a b : ℝ) :
     (s.intervalProp C a b).ContainsZero where
   exists_zero := ⟨0, isZero_zero C, s.intervalProp_of_isZero C (isZero_zero C) a b⟩
 
@@ -188,14 +188,16 @@ abbrev Slicing.IntervalCat.inclusion (s : Slicing C)
   ObjectProperty.ιOfLE (fun _ hX ↦ s.intervalProp_mono C ha hb hX)
 
 /-- The interval property is closed under isomorphisms. -/
-instance Slicing.intervalProp_closedUnderIso (s : Slicing C) (a b : ℝ) :
+@[instance]
+theorem Slicing.intervalProp_closedUnderIso (s : Slicing C) (a b : ℝ) :
     (s.intervalProp C a b).IsClosedUnderIsomorphisms where
   of_iso e hE := by
     rcases hE with hZ | ⟨F, hF⟩
     · exact Or.inl (IsZero.of_iso hZ e.symm)
     · exact Or.inr ⟨F.ofIso C e, hF⟩
 
-instance Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
+@[instance]
+theorem Slicing.intervalProp_stableUnderRetracts (s : Slicing C) (a b : ℝ) :
     CategoryTheory.ObjectProperty.IsStableUnderRetracts (s.intervalProp C a b) where
   of_retract {X Y} h hY := by
     by_cases hX : IsZero X
@@ -268,8 +270,10 @@ lemma Slicing.intervalProp_biprod (s : Slicing C) {a b : ℝ} {X Y : C}
     s.intervalProp C a b (X ⊞ Y) :=
   s.intervalProp_of_triangle C hX hY (binaryBiproductTriangle_distinguished X Y)
 
+omit [IsTriangulated C] in
 /-- The interval property is closed under binary products. -/
-instance Slicing.intervalProp_closedUnderBinaryProducts (s : Slicing C) (a b : ℝ) :
+@[instance]
+theorem Slicing.intervalProp_closedUnderBinaryProducts (s : Slicing C) (a b : ℝ) :
     (s.intervalProp C a b).IsClosedUnderBinaryProducts :=
   ObjectProperty.IsClosedUnderLimitsOfShape.mk' (by
     rintro _ ⟨F, hF⟩
@@ -280,13 +284,17 @@ instance Slicing.intervalProp_closedUnderBinaryProducts (s : Slicing C) (a b : �
           | WalkingPair.right => Iso.refl _))).symm)
       (s.intervalProp_biprod C (hF ⟨WalkingPair.left⟩) (hF ⟨WalkingPair.right⟩)))
 
+omit [IsTriangulated C] in
 /-- The interval property is closed under finite products. -/
-instance Slicing.intervalProp_closedUnderFiniteProducts (s : Slicing C) (a b : ℝ) :
+@[instance]
+theorem Slicing.intervalProp_closedUnderFiniteProducts (s : Slicing C) (a b : ℝ) :
     (s.intervalProp C a b).IsClosedUnderFiniteProducts :=
   ObjectProperty.IsClosedUnderFiniteProducts.mk'
 
+omit [IsTriangulated C] in
 /-- Thin interval subcategories have finite products. -/
-noncomputable instance Slicing.intervalCat_hasFiniteProducts (s : Slicing C) (a b : ℝ) :
+@[instance]
+theorem Slicing.intervalCat_hasFiniteProducts (s : Slicing C) (a b : ℝ) :
     HasFiniteProducts (s.IntervalCat C a b) :=
   hasFiniteProducts_of_has_binary_and_terminal
 

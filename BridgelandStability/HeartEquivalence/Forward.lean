@@ -78,7 +78,7 @@ def StabilityCondition.stabilityFunctionOnHeart
       let s : Finset (Fin F.n) := Finset.univ.filter (fun i => ¬IsZero (P.factor i))
       have hs : s.Nonempty := by
         obtain ⟨i, hi⟩ := F.exists_nonzero_factor C hEobj
-        exact ⟨i, by simpa [s, P] using hi⟩
+        exact ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, hi⟩⟩
       have hphiMinus : 0 < σ.slicing.phiMinus C E.obj hEobj :=
         gt_phases_of_gtProp C σ.slicing hEobj hEheart.1
       have hphiPlus : σ.slicing.phiPlus C E.obj hEobj ≤ 1 :=
@@ -98,7 +98,7 @@ def StabilityCondition.stabilityFunctionOnHeart
             _ ≤ 1 := hphiPlus
       have hterm : ∀ i ∈ s, σ.Z (K₀.of C (P.factor i)) ∈ upperHalfPlaneUnion := by
         intro i hi
-        letI : Abelian (σ.slicing.P (F.φ i)).FullSubcategory := σ.P_phi_abelian C (F.φ i)
+        letI : Abelian (σ.slicing.P (F.φ i)).FullSubcategory := σ.abelianPhaseSlice C (F.φ i)
         let Xi : (σ.slicing.P (F.φ i)).FullSubcategory := ⟨P.factor i, F.semistable i⟩
         have hXi : ¬IsZero Xi := fun hZ =>
           (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
@@ -169,7 +169,7 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
   let s : Finset (Fin F.n) := Finset.univ.filter (fun i => ¬IsZero (P.factor i))
   have hs : s.Nonempty := by
     obtain ⟨i, hi⟩ := F.exists_nonzero_factor C hEobj
-    exact ⟨i, by simpa [s, P] using hi⟩
+    exact ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, hi⟩⟩
   have hphiMinus : 0 < σ.slicing.phiMinus C E.obj hEobj :=
     gt_phases_of_gtProp C σ.slicing hEobj hEheart.1
   have hphiPlus : σ.slicing.phiPlus C E.obj hEobj ≤ 1 :=
@@ -190,12 +190,12 @@ theorem StabilityCondition.stabilityFunctionOnHeart_phase_le_phiPlus
   let f : Fin F.n → ℂ := fun i => σ.Z (K₀.of C (P.factor i))
   have hterm : ∀ i ∈ s, f i ∈ upperHalfPlaneUnion := by
     intro i hi
-    letI : Abelian (σ.slicing.P (F.φ i)).FullSubcategory := σ.P_phi_abelian C (F.φ i)
+    letI : Abelian (σ.slicing.P (F.φ i)).FullSubcategory := σ.abelianPhaseSlice C (F.φ i)
     let Xi : (σ.slicing.P (F.φ i)).FullSubcategory := ⟨P.factor i, F.semistable i⟩
     have hXi : ¬IsZero Xi := fun hZ =>
       (show ¬IsZero (P.factor i) from by simpa [s, P] using hi)
         ((σ.slicing.P (F.φ i)).ι.map_isZero hZ)
-    simpa [f] using (σ.stabilityFunctionOnPhase C (hphase_mem i hi)).upper Xi hXi
+    exact (σ.stabilityFunctionOnPhase C (hphase_mem i hi)).upper Xi hXi
   have harg_factor : ∀ i ∈ s, Complex.arg (f i) = Real.pi * F.φ i := by
     intro i hi
     have hi_ne : ¬IsZero (P.factor i) := by
@@ -346,7 +346,7 @@ theorem Subobject.map_eq_mk_mono_local {X Y : A} (f : X ⟶ Y) [Mono f] (S : Sub
 
 /-- The image of a subobject along a monomorphism is canonically isomorphic to
 the original subobject. -/
-noncomputable def Subobject.mapMonoIso_local {X Y : A} (f : X ⟶ Y) [Mono f]
+private noncomputable def Subobject.mapMonoIso {X Y : A} (f : X ⟶ Y) [Mono f]
     (S : Subobject X) :
     ((Subobject.map f).obj S : A) ≅ (S : A) :=
   Subobject.isoOfEqMk _ (S.arrow ≫ f) (Subobject.map_eq_mk_mono_local f S)
@@ -355,20 +355,20 @@ omit [Abelian A] in
 theorem Subobject.ofLE_map_comp_mapMonoIso_hom_local {X Y : A} (f : X ⟶ Y) [Mono f]
     {S T : Subobject X} (h : S ≤ T) :
     Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
-        ((Subobject.map f).monotone h) ≫ (Subobject.mapMonoIso_local f T).hom =
-      (Subobject.mapMonoIso_local f S).hom ≫ Subobject.ofLE S T h := by
+        ((Subobject.map f).monotone h) ≫ (Subobject.mapMonoIso f T).hom =
+      (Subobject.mapMonoIso f S).hom ≫ Subobject.ofLE S T h := by
   apply Subobject.eq_of_comp_arrow_eq
   apply (cancel_mono f).1
-  simp [Subobject.mapMonoIso_local, Category.assoc]
+  simp [Subobject.mapMonoIso, Category.assoc]
 
 /-- Taking cokernels after mapping a short exact quotient along a monomorphism
 does not change the resulting quotient object. -/
-noncomputable def Subobject.cokernelMapMonoIso_local {X Y : A} (f : X ⟶ Y) [Mono f]
+private noncomputable def Subobject.cokernelMapMonoIso {X Y : A} (f : X ⟶ Y) [Mono f]
     {S T : Subobject X} (h : S ≤ T) :
     cokernel (Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
       ((Subobject.map f).monotone h)) ≅
       cokernel (Subobject.ofLE S T h) :=
-  cokernel.mapIso _ _ (Subobject.mapMonoIso_local f S) (Subobject.mapMonoIso_local f T)
+  cokernel.mapIso _ _ (Subobject.mapMonoIso f S) (Subobject.mapMonoIso f T)
     (by simpa [Category.assoc] using (Subobject.ofLE_map_comp_mapMonoIso_hom_local f h))
 
 theorem phase_cokernel_mapMono_eq_local (Z : StabilityFunction A) {X Y : A} (f : X ⟶ Y)
@@ -376,7 +376,7 @@ theorem phase_cokernel_mapMono_eq_local (Z : StabilityFunction A) {X Y : A} (f :
     Z.phase (cokernel (Subobject.ofLE ((Subobject.map f).obj S) ((Subobject.map f).obj T)
       ((Subobject.map f).monotone h))) =
       Z.phase (cokernel (Subobject.ofLE S T h)) :=
-  Z.phase_eq_of_iso (Subobject.cokernelMapMonoIso_local f h)
+  Z.phase_eq_of_iso (Subobject.cokernelMapMonoIso f h)
 
 theorem isSemistable_cokernel_mapMono_iff_local (Z : StabilityFunction A) {X Y : A}
     (f : X ⟶ Y) [Mono f] {S T : Subobject X} (h : S ≤ T) :
@@ -384,8 +384,8 @@ theorem isSemistable_cokernel_mapMono_iff_local (Z : StabilityFunction A) {X Y :
       ((Subobject.map f).obj T) ((Subobject.map f).monotone h))) ↔
       Z.IsSemistable (cokernel (Subobject.ofLE S T h)) := by
   constructor <;> intro hs
-  · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso_local f h) hs
-  · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso_local f h).symm hs
+  · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso f h) hs
+  · exact Z.isSemistable_of_iso (Subobject.cokernelMapMonoIso f h).symm hs
 
 theorem StabilityFunction.exists_hn_with_last_phase_of_semistable_local
     (Z : StabilityFunction A) {E : A} (hss : Z.IsSemistable E) :

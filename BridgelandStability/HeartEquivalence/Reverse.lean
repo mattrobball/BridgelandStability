@@ -208,10 +208,11 @@ theorem StabilityCondition.stabilityFunctionOnHeart_hasHN_local
           have hTlast : Triangle.mk i.hom q.hom δ ∈ distTriang C := by
             refine isomorphic_distinguished _ (F.triangle_dist jLast) _ ?_
             exact Triangle.isoMk _ _ e₁.symm e₂X.symm (Iso.refl _)
-              (by simp [Tlast, i, e₂X]) (by simp [Tlast, q, e₂X]) (by simp [Tlast, δ])
+              (by simp [Tlast, i, e₂X, Triangle.mk]) (by simp [Tlast, q, e₂X, Triangle.mk])
+                (by simp [Tlast, δ, Triangle.mk])
           have hiq_hom : i.hom ≫ q.hom = 0 := by
             have := comp_distTriang_mor_zero₁₂ _ hTlast
-            simpa using this
+            exact this
           have hiq : i ≫ q = 0 := by
             ext
             exact hiq_hom
@@ -446,7 +447,8 @@ theorem phasePredicate_closedUnderIso
   shiftedHeartSemistable_closedUnderIso (C := C) h
     (phaseBase φ) (phaseIndex φ)
 
-instance phasePredicate_instClosedUnderIso
+@[instance]
+theorem phasePredicate_instClosedUnderIso
     (h : HeartStabilityData C) (φ : ℝ) :
     (phasePredicate (C := C) h φ).IsClosedUnderIsomorphisms :=
   phasePredicate_closedUnderIso (C := C) h φ
@@ -806,7 +808,7 @@ theorem TStructure.heart_shortExact_triangle
   -- g' is epi in the heart (faithful inclusion preserves the epi test)
   haveI : Epi g' := ⟨fun {Z} h₁ h₂ hh ↦ by
     ext; exact (cancel_epi g).mp (by
-      simpa [ObjectProperty.FullSubcategory.comp_hom] using
+      exact
         congr_arg InducedCategory.Hom.hom hh)⟩
   -- Get a distinguished triangle from the epi g' via the heart's abelian structure
   obtain ⟨K, i, δ, hT⟩ :=
@@ -835,7 +837,7 @@ theorem TStructure.heart_shortExact_triangle
   have hγβ : γ ≫ β = 𝟙 A' := by
     haveI : Mono f' := ⟨fun {Z} h₁ h₂ hh ↦ by
       ext; exact (cancel_mono f).mp (by
-        simpa [ObjectProperty.FullSubcategory.comp_hom] using
+        exact
           congr_arg InducedCategory.Hom.hom hh)⟩
     rw [← cancel_mono f', Category.assoc, hβf, hγi, Category.id_comp]
   -- Construct the isomorphism K ≅ A' in the heart

@@ -48,8 +48,8 @@ theorem wPhaseOf_lt_of_phiPlus_lt
     {E : C} (hE : ¬IsZero E)
     (hI : σ.slicing.intervalProp C a b E)
     (hphiPlus : σ.slicing.phiPlus C E hE < b - 4 * ε) :
-    wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v E))
-      ((σ.skewedStabilityFunction_of_near C W hW hab).α) < b - 3 * ε := by
+    wPhaseOf ((σ.skewedStabilityFunctionOfNear C W hW hab).W (cl C v E))
+      ((σ.skewedStabilityFunctionOfNear C W hW hab).α) < b - 3 * ε := by
   -- E ∈ P((a, b-4ε)) from intrinsic phases
   have hab4 : a < b - 4 * ε := by linarith
   have hI_narrow : σ.slicing.intervalProp C a (b - 4 * ε) E :=
@@ -83,8 +83,8 @@ theorem wPhaseOf_lt_of_phiPlus_lt
   -- Result: wPhaseOf(W(E), (a+b)/2) < (b-4ε)+ε = b-3ε
   have h := wPhaseOf_lt_of_intervalProp C σ hE W (α := (a + b) / 2)
     hα_le hI_narrow hW_ne hperturb_fmt
-  -- ssf.W = W and ssf.α = (a+b)/2 by definition of skewedStabilityFunction_of_near
-  simp only [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near]
+  -- ssf.W = W and ssf.α = (a+b)/2 by definition of skewedStabilityFunctionOfNear
+  simp only [StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear]
   linarith
 
 /-! ### HN existence with φ⁺ reduction -/
@@ -110,20 +110,20 @@ theorem hn_exists_with_phiPlus_reduction
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     (hFL : ThinFiniteLengthInInterval (C := C) σ a b)
     (hW_interval : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      (σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v F) ≠ 0)
+      (σ.skewedStabilityFunctionOfNear C W hW hab).W (cl C v F) ≠ 0)
     {L U : ℝ}
     (hWindow : ∀ {F : C}, σ.slicing.intervalProp C a b F → ¬IsZero F →
-      L < wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v F))
-        (σ.skewedStabilityFunction_of_near C W hW hab).α ∧
-        wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v F))
-          (σ.skewedStabilityFunction_of_near C W hW hab).α < U)
+      L < wPhaseOf ((σ.skewedStabilityFunctionOfNear C W hW hab).W (cl C v F))
+        (σ.skewedStabilityFunctionOfNear C W hW hab).α ∧
+        wPhaseOf ((σ.skewedStabilityFunctionOfNear C W hW hab).W (cl C v F))
+          (σ.skewedStabilityFunctionOfNear C W hW hab).α < U)
     (hWidth : U - L < 1)
     (t : ℝ) (ht : a + ε ≤ t)
     (X : σ.slicing.IntervalCat C a b) (hX : ¬IsZero X)
     (hquot : ∀ {B : σ.slicing.IntervalCat C a b} (q : X ⟶ B),
       IsStrictEpi q → ¬IsZero B.obj →
-        t < wPhaseOf ((σ.skewedStabilityFunction_of_near C W hW hab).W (cl C v B.obj))
-          (σ.skewedStabilityFunction_of_near C W hW hab).α)
+        t < wPhaseOf ((σ.skewedStabilityFunctionOfNear C W hW hab).W (cl C v B.obj))
+          (σ.skewedStabilityFunctionOfNear C W hW hab).α)
     -- Window-interval compatibility
     (hL_a : a ≤ L + ε)
     -- Width condition (needed for wPhaseOf_lt_of_intervalProp's hα_le)
@@ -131,13 +131,13 @@ theorem hn_exists_with_phiPlus_reduction
     -- φ⁺ upper bound (propagates through kernels via phiPlus_triangle_le)
     (hphiPlus_X : ∀ (hXne : ¬IsZero X.obj),
       σ.slicing.phiPlus C X.obj hXne < b - 4 * ε) :
-    let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+    let ssf := σ.skewedStabilityFunctionOfNear C W hW hab
     let Psem : ℝ → ObjectProperty C := fun ψ F => ssf.Semistable C F ψ
     ∃ G : HNFiltration C Psem X.obj,
       ∀ j, t < G.φ j ∧ G.φ j < U := by
   letI : IsTriangulated C := ‹IsTriangulated C›
   -- Follows Lemma77.lean:71-303 with MDQ call swapped and φ⁺ invariant threaded.
-  let ssf := σ.skewedStabilityFunction_of_near C W hW hab
+  let ssf := σ.skewedStabilityFunctionOfNear C W hW hab
   let Psem : ℝ → ObjectProperty C := fun ψ F => ssf.Semistable C F ψ
   letI : IsStrictArtinianObject X := (hFL X).1
   letI : IsStrictNoetherianObject X := (hFL X).2
@@ -263,7 +263,7 @@ theorem hn_exists_with_phiPlus_reduction
           (C := C) (s := σ.slicing) (a := a) (b := b) S.2 hK_strict
       let Tstr : StrictSubobject X := ⟨T, hT_strict⟩
       have hT_lt : Tstr < S := by
-        simpa [Tstr, T] using
+        exact
           (intervalLiftSub_lt (C := C) (X := X) S.1 hK_ne_top)
       have hT_ne : ¬IsZero (T : σ.slicing.IntervalCat C a b) :=
         intervalSubobject_not_isZero_of_ne_bot
@@ -377,7 +377,7 @@ theorem hn_exists_with_phiPlus_reduction
       let GK : HNFiltration C Psem (K : σ.slicing.IntervalCat C a b).obj :=
         GT.ofIso C ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eK)
       have hGK : ∀ j, ψB < GK.φ j ∧ GK.φ j < U := by
-        simpa [GK] using hGT
+        exact hGT
       let SQ : ShortComplex (σ.slicing.IntervalCat C a b) :=
         ShortComplex.mk K.arrow q (kernelSubobject_arrow_comp (f := q))
       have hSQ : StrictShortExact SQ :=
@@ -478,6 +478,6 @@ theorem hn_exists_with_phiPlus_reduction
     (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso (asIso S0.1.arrow)
   refine ⟨G0.ofIso C eTop, ?_⟩
   intro j
-  simpa using hG0 j
+  exact hG0 j
 
 end CategoryTheory.Triangulated

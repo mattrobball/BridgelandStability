@@ -17,6 +17,7 @@ five-term exact sequence for heart cohomology.
 
 @[expose] public section
 
+set_option backward.isDefEq.respectTransparency.types false
 set_option backward.privateInPublic true
 set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
@@ -90,10 +91,10 @@ noncomputable def TStructure.truncLEObjShiftIso
       dsimp [T₁]
       simpa using t.isGE_shift ((t.truncGE (n + 1)).obj X) (n + 1) n 1 (by lia))
     (by
-      dsimp [T₂]
+      dsimp [T₂, TStructure.triangleLEGE, Triangle.functorMk, Triangle.mk]
       infer_instance)
     (by
-      dsimp [T₂]
+      dsimp [T₂, TStructure.triangleLEGE, Triangle.functorMk, Triangle.mk]
       infer_instance)
     (by lia)
   let e := Classical.choose eEx
@@ -106,14 +107,12 @@ noncomputable def TStructure.truncGELEObjShiftIso
     ((t.truncGELE n n).obj X)⟦(n : ℤ)⟧ ≅ (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) := by
   let e₁ :
       ((t.truncGELE n n).obj X)⟦(n : ℤ)⟧ ≅
-        (t.truncGE 0).obj (((t.truncLE n).obj X)⟦(n : ℤ)⟧) := by
-    simpa [TStructure.truncGELE] using
-      TStructure.truncGEObjShiftIso (C := C) t n ((t.truncLE n).obj X)
+        (t.truncGE 0).obj (((t.truncLE n).obj X)⟦(n : ℤ)⟧) :=
+    TStructure.truncGEObjShiftIso (C := C) t n ((t.truncLE n).obj X)
   let e₂ :
       (t.truncGE 0).obj (((t.truncLE n).obj X)⟦(n : ℤ)⟧) ≅
-        (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) := by
-      simpa [TStructure.truncGELE] using
-        (t.truncGE 0).mapIso (TStructure.truncLEObjShiftIso (C := C) t n X)
+        (t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧) :=
+    (t.truncGE 0).mapIso (TStructure.truncLEObjShiftIso (C := C) t n X)
   exact e₁ ≪≫ e₂
 
 /-- The shifted `H⁰_t` object of `X` agrees with the degree-`n` heart cohomology
@@ -122,9 +121,7 @@ noncomputable def HeartStabilityData.H0FunctorShiftObjIsoHeartCoh
     (h : HeartStabilityData C) (n : ℤ) (X : C) :
     ((h.H0Functor (C := C)).shift n).obj X ≅ h.heartCoh (C := C) n X := by
   let e₂ : (h.H0Functor (C := C)).obj (X⟦(n : ℤ)⟧) ≅ h.heartCoh (C := C) n X := by
-    refine ObjectProperty.isoMk _ ?_
-    simpa [HeartStabilityData.H0Functor, HeartStabilityData.heartCohFunctor,
-      HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
+    exact ObjectProperty.isoMk _
       (((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj (X⟦(n : ℤ)⟧))) ≪≫
         (TStructure.truncGELEObjShiftIso (C := C) h.t n X).symm)
   exact ((Functor.isoShift (h.H0Functor (C := C)) n).app X).symm ≪≫ e₂
@@ -141,7 +138,7 @@ theorem TStructure.isIso_truncLT_pred_map_of_isGE
   have hGE : t.IsGE (T.rotate.obj₃) (a - 1) := by
     change t.IsGE (A⟦(1 : ℤ)⟧) (a - 1)
     simpa [T] using t.isGE_shift A a 1 (a - 1) (by lia)
-  simpa [T] using t.isIso₁_truncLT_map_of_isGE T.rotate hrot (a - 1) hGE
+  exact t.isIso₁_truncLT_map_of_isGE T.rotate hrot (a - 1) hGE
 
 theorem TStructure.exists_truncLT_octahedral_split
     (t : TStructure C)
@@ -162,8 +159,8 @@ theorem TStructure.exists_truncLT_octahedral_split
 
 /-- If the lower obstruction term vanishes, a map into `H0prime X` lifts to a
 map into `X` itself. -/
-noncomputable def TStructure.shortComplexOfDistTriangle_map_truncGEIsoOfSplit
-    (t : TStructure C) [IsTriangulated C]
+noncomputable def TStructure.shortComplexOfDistTriangleMapTruncGEIsoOfSplit
+    (t : TStructure C)
     {X₁ X₂ X₃ Z : C} {f : X₁ ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ X₁⟦(1 : ℤ)⟧}
     {v : X₂ ⟶ Z} {m₁ : (t.truncGE 0).obj X₁ ⟶ Z} {m₃ : Z ⟶ X₃}
     (hT : Triangle.mk f g δ ∈ distTriang C)
@@ -187,11 +184,16 @@ noncomputable def TStructure.shortComplexOfDistTriangle_map_truncGEIsoOfSplit
     e₁
     e₂
     (Iso.refl _) ?_ ?_
-  · simpa [Functor.map_comp] using congrArg ((t.truncGE 0).map) hm₁
-  · simpa [Functor.map_comp] using congrArg ((t.truncGE 0).map) hm₃
+  · show (t.truncGE 0).map ((t.truncGEπ 0).app X₁) ≫ (t.truncGE 0).map m₁ =
+      (t.truncGE 0).map f ≫ (t.truncGE 0).map v
+    rw [← (t.truncGE 0).map_comp, ← (t.truncGE 0).map_comp]
+    exact congrArg ((t.truncGE 0).map) hm₁
+  · show (t.truncGE 0).map v ≫ (t.truncGE 0).map m₃ = (t.truncGE 0).map g ≫ 𝟙 _
+    rw [← (t.truncGE 0).map_comp, Category.comp_id]
+    exact congrArg ((t.truncGE 0).map) hm₃
 
 theorem HeartStabilityData.truncGE_preadditiveCoyoneda_exact_iff_of_split
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X₁ X₂ X₃ Z : C} {f : X₁ ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ X₁⟦(1 : ℤ)⟧}
     {v : X₂ ⟶ Z} {m₁ : (h.t.truncGE 0).obj X₁ ⟶ Z} {m₃ : Z ⟶ X₃}
     (hT : Triangle.mk f g δ ∈ distTriang C)
@@ -209,13 +211,13 @@ theorem HeartStabilityData.truncGE_preadditiveCoyoneda_exact_iff_of_split
           (δ ≫ ((shiftFunctor C (1 : ℤ)).map ((h.t.truncGEπ 0).app X₁)))) hT').map
         (h.t.truncGE 0 ⋙ preadditiveCoyoneda.obj (Opposite.op E.obj))).Exact := by
   let e :=
-    h.t.shortComplexOfDistTriangle_map_truncGEIsoOfSplit (C := C) hT hT' hm₁ hm₃ hvIso
+    h.t.shortComplexOfDistTriangleMapTruncGEIsoOfSplit (C := C) hT hT' hm₁ hm₃ hvIso
   simpa [ShortComplex.map_comp] using
     ShortComplex.exact_iff_of_iso
       ((preadditiveCoyoneda.obj (Opposite.op E.obj)).mapShortComplex.mapIso e)
 
 theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_iff_octahedral_split
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (T : Triangle C) (hT : T ∈ distTriang C) (E : h.t.heart.FullSubcategory) :
     ∃ (Z : C) (v : T.obj₂ ⟶ Z) (w : Z ⟶ ((h.t.truncLT 0).obj T.obj₁)⟦(1 : ℤ)⟧)
       (m₁ : (h.t.truncGE 0).obj T.obj₁ ⟶ Z) (m₃ : Z ⟶ T.obj₃)
@@ -259,7 +261,7 @@ theorem HeartStabilityData.exists_toH0primeHom_eq_of_obstruction_zero
     simpa [b, Category.assoc] using hβ
   obtain ⟨f, hf⟩ := Triangle.coyoneda_exact₃ _ (h.t.triangleLTGE_distinguished 0 X) b hb
   refine ⟨f, h.toH0primeHom_eq (C := C) E f β ?_⟩
-  simpa [b] using hf
+  exact hf
 
 theorem HeartStabilityData.comp_H0primeFunctor_map_eq_zero_iff
     (h : HeartStabilityData C)
@@ -271,18 +273,18 @@ theorem HeartStabilityData.comp_H0primeFunctor_map_eq_zero_iff
   constructor
   · intro hβ
     have hβ' : β.hom ≫ (h.t.truncLE 0).map ((h.t.truncGE 0).map g) = 0 := by
-      simpa [HeartStabilityData.H0primeFunctor, HeartStabilityData.H0prime,
-        TStructure.truncLEGE] using congrArg (fun f => f.hom) hβ
+      simp [HeartStabilityData.H0primeFunctor, HeartStabilityData.H0prime,
+        TStructure.truncLEGE]
+      exact congrArg (fun f => f.hom) hβ
     have hβ'' :
         β.hom ≫ (h.t.truncLE 0).map ((h.t.truncGE 0).map g) ≫
           (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Y) = 0 := by
-      simpa [Category.assoc] using
-        congrArg (fun k => k ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Y)) hβ'
+      rw [← Category.assoc, hβ', zero_comp]
     calc
       β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) ≫ (h.t.truncGE 0).map g =
           β.hom ≫ (h.t.truncLE 0).map ((h.t.truncGE 0).map g) ≫
             (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Y) := by
-              simpa [Category.assoc] using
+              exact
                 congrArg (fun k => β.hom ≫ k)
                   (((h.t.truncLEι 0).naturality ((h.t.truncGE 0).map g)).symm)
       _ = 0 := hβ''
@@ -293,10 +295,8 @@ theorem HeartStabilityData.comp_H0primeFunctor_map_eq_zero_iff
             (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Y) =
           β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) ≫
             (h.t.truncGE 0).map g := by
-      simpa [HeartStabilityData.H0primeFunctor, HeartStabilityData.H0prime,
-        TStructure.truncLEGE, Category.assoc] using
-        congrArg (fun k => β.hom ≫ k)
-          ((h.t.truncLEι 0).naturality ((h.t.truncGE 0).map g))
+      simp [HeartStabilityData.H0primeFunctor, HeartStabilityData.H0prime,
+        TStructure.truncLEGE, Category.assoc]
     have hzero :
         β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj X) ≫
             (h.t.truncGE 0).map g =
@@ -316,10 +316,9 @@ theorem HeartStabilityData.toH0primeHom_eq_zero_iff
     simpa [hf] using h.toH0primeHom_hom (C := C) E f
 
 theorem HeartStabilityData.isZero_H0prime_of_isGE_one
-    (h : HeartStabilityData C) [inst : IsTriangulated C]
+    (h : HeartStabilityData C)
     {X : C} [h.t.IsGE X 1] :
-    IsZero (@HeartStabilityData.H0prime C _ _ _ _ _ _ inst h X) := by
-  letI := inst
+    IsZero (@HeartStabilityData.H0prime C _ _ _ _ _ _ _ h X) := by
   refine ObjectProperty.FullSubcategory.isZero_of_obj_isZero (C := C) ?_
   change IsZero ((h.t.truncLE 0).obj ((h.t.truncGE 0).obj X))
   exact h.t.isZero_truncLE_obj_of_isGE 0 1 rfl ((h.t.truncGE 0).obj X)
@@ -353,7 +352,7 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_tru
           (h.t.truncGEδLT 0).app Z ≫ ((h.t.truncLT 0).map m₃)⟦(1 : ℤ)⟧' =
         β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫
           (h.t.truncGE 0).map m₃ ≫ (h.t.truncGEδLT 0).app X₃ := by
-            simpa [Category.assoc] using
+            exact
               congrArg
                 (fun k =>
                   β.hom ≫ (h.t.truncLEι 0).app ((h.t.truncGE 0).obj Z) ≫ k)
@@ -378,7 +377,7 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_tru
   have hfm₃π :
       f ≫ m₃ ≫ (h.t.truncGEπ 0).app X₃ = 0 := by
     have hβ' : h.toH0primeHom (C := C) E f ≫ (h.H0primeFunctor (C := C)).map m₃ = 0 := by
-      simpa [hfβ] using hβ
+      exact hfβ ▸ hβ
     have hzeroTo : h.toH0primeHom (C := C) E (f ≫ m₃) = 0 := by
       calc
         h.toH0primeHom (C := C) E (f ≫ m₃) =
@@ -388,7 +387,9 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_tru
         _ = 0 := hβ'
     simpa [Category.assoc] using (h.toH0primeHom_eq_zero_iff (C := C) E (f ≫ m₃)).mp hzeroTo
   obtain ⟨u, hu⟩ := Triangle.coyoneda_exact₂ _ (h.t.triangleLTGE_distinguished 0 X₃) (f ≫ m₃)
-    (by simpa using hfm₃π)
+    (by
+      simp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Category.assoc]
+      exact hfm₃π)
   change E.obj ⟶ (h.t.truncLT 0).obj X₃ at u
   let u' : E.obj ⟶ (h.t.truncLT 0).obj Z := u ≫ inv ((h.t.truncLT 0).map m₃)
   have hu' :
@@ -401,9 +402,12 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_tru
     have hu₂ :
         u' ≫ (h.t.truncLT 0).map m₃ ≫ (h.t.truncLTι 0).app X₃ =
           u ≫ (h.t.truncLTι 0).app X₃ := by
-      simp [u', Category.assoc]
+      have hnat : (h.t.truncLTι 0).app Z ≫ m₃ =
+          (h.t.truncLT 0).map m₃ ≫ (h.t.truncLTι 0).app X₃ :=
+        ((h.t.truncLTι 0).naturality m₃).symm
+      simp only [u', Category.assoc, hnat, IsIso.inv_hom_id_assoc]
     have hu₃ : u ≫ (h.t.truncLTι 0).app X₃ = f ≫ m₃ := by
-      simpa using hu.symm
+      exact hu.symm
     exact hu₁.trans (hu₂.trans hu₃)
   let n : E.obj ⟶ Z := u' ≫ (h.t.truncLTι 0).app Z
   have hn : n ≫ m₃ = f ≫ m₃ := by
@@ -428,19 +432,19 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_tru
       h.toH0primeHom (C := C) E f' = h.toH0primeHom (C := C) E f := by
     simp [f', hnegzero]
   have hfβ' : h.toH0primeHom (C := C) E f = β := by
-    simpa using hfβ.symm
+    exact hfβ.symm
   have hcomp₁ :
       h.toH0primeHom (C := C) E a ≫ (h.H0primeFunctor (C := C)).map m₁ =
         h.toH0primeHom (C := C) E (a ≫ m₁) :=
     h.toH0primeHom_comp_H0primeFunctor_map (C := C) E a m₁
   have hcomp₂ :
       h.toH0primeHom (C := C) E (a ≫ m₁) = h.toH0primeHom (C := C) E f' := by
-    simpa using congrArg (h.toH0primeHom (C := C) E) ha.symm
+    exact congrArg (h.toH0primeHom (C := C) E) ha.symm
   refine ⟨h.toH0primeHom (C := C) E a, ?_⟩
   exact hcomp₁.trans (hcomp₂.trans (hf'Eq.trans hfβ'))
 
 theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_one
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {A Z X₃ : C} [h.t.IsGE A 1]
     {m₁ : A ⟶ Z} {m₃ : Z ⟶ X₃} {δ : X₃ ⟶ A⟦(1 : ℤ)⟧}
     (hT : Triangle.mk m₁ m₃ δ ∈ distTriang C)
@@ -455,7 +459,7 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_one
     have hGE : h.t.IsGE (T.rotate.obj₃) 0 := by
       change h.t.IsGE (A⟦(1 : ℤ)⟧) 0
       simpa [T] using h.t.isGE_shift A 1 1 0 (by lia)
-    simpa [T] using h.t.isIso₁_truncLT_map_of_isGE T.rotate hrot 0 hGE
+    exact h.t.isIso₁_truncLT_map_of_isGE T.rotate hrot 0 hGE
   exact h.H0primeFunctor_preadditiveCoyoneda_exact_of_isIso_truncLT_map
     (C := C) hT hm₃LT E
 
@@ -485,7 +489,9 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_split_one
     h.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_one (C := C) h23 E
   rw [ShortComplex.ab_exact_iff] at hex23 hex13
   have hβ' : β ≫ (h.H0primeFunctor (C := C)).map (v ≫ m₃) = 0 := by
-    simpa [hm₃] using hβ
+    have hmap : (h.H0primeFunctor (C := C)).map (v ≫ m₃) =
+        (h.H0primeFunctor (C := C)).map g := congrArg _ hm₃
+    exact hmap ▸ hβ
   have hβvm₃ :
       (β ≫ (h.H0primeFunctor (C := C)).map v) ≫
           (h.H0primeFunctor (C := C)).map m₃ = 0 := by
@@ -501,7 +507,7 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_split_one
     calc
       β ≫ (h.H0primeFunctor (C := C)).map v =
           a ≫ (h.H0primeFunctor (C := C)).map m₁ := by
-            simpa using ha.symm
+            exact ha.symm
       _ = 0 := ha_m₁_zero
   obtain ⟨a', ha'⟩ := hex13 β hβv_zero
   refine ⟨a' ≫ (h.H0primeFunctor (C := C)).map ((h.t.truncLTι 1).app A), ?_⟩
@@ -512,10 +518,10 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_split_one
         simp [Functor.map_comp, Category.assoc]
     _ = a' ≫
         (h.H0primeFunctor (C := C)).map (((h.t.truncLTι 1).app A) ≫ f) := by rfl
-    _ = β := by simpa [Functor.map_comp] using ha'
+    _ = β := by exact ha'
 
 theorem HeartStabilityData.H0primeFunctor_preadditiveCoyoneda_exact_of_isGE_zero_of_heart_case
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {A X₂ X₃ : C} [h.t.IsGE A 0]
     {f : A ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A⟦(1 : ℤ)⟧}
     (hT : Triangle.mk f g δ ∈ distTriang C)
@@ -555,13 +561,12 @@ theorem TStructure.isIso_truncLT_negOne_map_of_heart_source
     change t.IsGE (A.obj⟦(1 : ℤ)⟧) (-1)
     letI : t.IsGE A.obj 0 := (t.mem_heart_iff A.obj).mp A.property |>.2
     simpa [T] using t.isGE_shift A.obj 0 1 (-1)
-  simpa [T] using t.isIso₁_truncLT_map_of_isGE T.rotate hrot (-1) hGE
+  exact t.isIso₁_truncLT_map_of_isGE T.rotate hrot (-1) hGE
 
 theorem HeartStabilityData.isZero_H0Functor_shift_obj_of_lt_bound
-    (h : HeartStabilityData C) [inst : IsTriangulated C]
+    (h : HeartStabilityData C)
     {X : C} {m n : ℤ} (hmn : m < n) (hGE : h.t.IsGE X n) :
-    IsZero (((@HeartStabilityData.H0Functor C _ _ _ _ _ _ inst h).shift m).obj X) := by
-  letI := inst
+    IsZero (((@HeartStabilityData.H0Functor C _ _ _ _ _ _ _ h).shift m).obj X) := by
   have hGE' : h.t.IsGE X (m + 1) := h.t.isGE_of_ge X (m + 1) n (by lia)
   have hzeroObj : IsZero ((h.t.truncGELE m m).obj X) := by
     dsimp [TStructure.truncGELE]
@@ -574,10 +579,9 @@ theorem HeartStabilityData.isZero_H0Functor_shift_obj_of_lt_bound
   exact IsZero.of_iso hzeroHeart (h.H0FunctorShiftObjIsoHeartCoh (C := C) m X)
 
 theorem HeartStabilityData.isZero_H0Functor_shift_obj_of_gt_bound
-    (h : HeartStabilityData C) [inst : IsTriangulated C]
+    (h : HeartStabilityData C)
     {X : C} {m n : ℤ} (hmn : n < m) (hLE : h.t.IsLE X n) :
-    IsZero (((@HeartStabilityData.H0Functor C _ _ _ _ _ _ inst h).shift m).obj X) := by
-  letI := inst
+    IsZero (((@HeartStabilityData.H0Functor C _ _ _ _ _ _ _ h).shift m).obj X) := by
   have hLE' : h.t.IsLE X (m - 1) := h.t.isLE_of_le X n (m - 1) (by lia)
   have hzeroObj : IsZero ((h.t.truncGELE m m).obj X) := by
     dsimp [TStructure.truncGELE]
@@ -661,7 +665,7 @@ theorem ShortComplex.preadditiveCoyoneda_exact_of_f_is_kernel
   rw [ShortComplex.ab_exact_iff]
   intro β hβ
   refine ⟨hS.lift (KernelFork.ofι β ?_), hS.fac _ WalkingParallelPair.zero⟩
-  simpa using hβ
+  exact hβ
 
 theorem HeartStabilityData.H0primeFunctor_comp_preadditiveYoneda_eval
     (h : HeartStabilityData C) (E : h.t.heart.FullSubcategory) :
@@ -686,11 +690,11 @@ theorem HeartStabilityData.H0primeFunctor_preadditiveYoneda_isHomological_of_eva
   refine ⟨fun T hT ↦ ?_⟩
   apply ShortComplex.exact_of_eval
   intro E
-  simpa [HeartStabilityData.H0primeFunctor_comp_preadditiveYoneda_eval] using
+  exact
     hExact T hT (Opposite.unop E)
 
 theorem HeartStabilityData.H0primeFunctor_isHomological_of_preadditiveYoneda
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     [Functor.IsHomological
       (h.H0primeFunctor (C := C) ⋙
         (preadditiveYoneda :
@@ -720,7 +724,7 @@ theorem HeartStabilityData.H0Functor_isHomological_of_H0primeFunctor
   Functor.IsHomological.of_iso (h.H0FunctorIsoH0primeFunctor (C := C)).symm
 
 theorem HeartStabilityData.H0Functor_isHomological_of_eval
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (hExact :
       ∀ (T : Triangle C) (hT : T ∈ distTriang C) (E : h.t.heart.FullSubcategory),
         ((shortComplexOfDistTriangle T hT).map
@@ -737,7 +741,7 @@ theorem HeartStabilityData.H0Functor_isHomological_of_eval
   exact h.H0Functor_isHomological_of_H0primeFunctor (C := C)
 
 theorem HeartStabilityData.H0Functor_isHomological_of_eval_of_heart_case
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (hHeart :
       ∀ (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
         {f : A.obj ⟶ X₂} {g : X₂ ⟶ X₃} {δ : X₃ ⟶ A.obj⟦(1 : ℤ)⟧}
@@ -773,17 +777,17 @@ noncomputable def SpectralObject.mapHomologicalFunctor
     { app := fun D => F.homologySequenceδ (X.ω₂.obj D) n₀ n₁ h
       naturality := by
         intro D D' φ
-        simpa using
+        exact
           F.homologySequenceδ_naturality (X.ω₂.obj D) (X.ω₂.obj D') (X.ω₂.map φ) n₀ n₁ h }
   exact₁' n₀ n₁ h D := by
     let hEx := F.homologySequence_exact₁ (X.ω₂.obj D) (X.ω₂_obj_distinguished D) n₀ n₁ h
-    simpa using hEx.exact_toComposableArrows
+    exact hEx.exact_toComposableArrows
   exact₂' n D := by
     let hEx := F.homologySequence_exact₂ (X.ω₂.obj D) (X.ω₂_obj_distinguished D) n
-    simpa using hEx.exact_toComposableArrows
+    exact hEx.exact_toComposableArrows
   exact₃' n₀ n₁ h D := by
     let hEx := F.homologySequence_exact₃ (X.ω₂.obj D) (X.ω₂_obj_distinguished D) n₀ n₁ h
-    simpa using hEx.exact_toComposableArrows
+    exact hEx.exact_toComposableArrows
 
 /-- The five-term exact segment in the long exact sequence of a homological
 `H⁰_t` yields the corresponding Grothendieck-group relation in the heart. -/

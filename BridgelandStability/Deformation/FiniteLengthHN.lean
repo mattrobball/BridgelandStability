@@ -152,7 +152,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
           (C := C) (s := σ.slicing) (a := a) (b := b) S.2 hK_strict
       let Tstr : StrictSubobject X := ⟨T, hT_strict⟩
       have hT_lt : Tstr < S := by
-        simpa [Tstr, T] using
+        exact
           (intervalLiftSub_lt (C := C) (X := X) S.1 hK_ne_top)
       have hT_ne : ¬IsZero (T : σ.slicing.IntervalCat C a b) :=
         intervalSubobject_not_isZero_of_ne_bot
@@ -222,7 +222,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
       let GK : HNFiltration C Psem (K : σ.slicing.IntervalCat C a b).obj :=
         GT.ofIso C ((Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso eK)
       have hGK : ∀ j, ψB < GK.φ j ∧ GK.φ j < U := by
-        simpa [GK] using hGT
+        exact hGT
       let SQ : ShortComplex (σ.slicing.IntervalCat C a b) :=
         ShortComplex.mk K.arrow q (kernelSubobject_arrow_comp (f := q))
       have hSQ : StrictShortExact SQ :=
@@ -299,7 +299,7 @@ theorem SkewedStabilityFunction.hn_exists_in_thin_interval_of_quotientLowerBound
     (Slicing.IntervalCat.ι (C := C) (s := σ.slicing) a b).mapIso (asIso S0.1.arrow)
   refine ⟨G0.ofIso C eTop, ?_⟩
   intro j
-  simpa using hG0 j
+  exact hG0 j
 
 theorem SkewedStabilityFunction.hn_exists_in_thin_interval
     (σ : StabilityCondition.WithClassMap C v) {a b : ℝ}

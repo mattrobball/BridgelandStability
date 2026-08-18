@@ -65,7 +65,7 @@ theorem phiPlus_bound_of_destabilizing_subobject
       wPhaseOf (W (cl C v Y.obj)) ((a + b) / 2) + ε)
     (hψ_upper : wPhaseOf (W (cl C v Y.obj)) ((a + b) / 2) < b - 3 * ε)
     {A : Subobject Y}
-    (hA_ss : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C
+    (hA_ss : (σ.skewedStabilityFunctionOfNear C W hW hab).Semistable C
       (A : σ.slicing.IntervalCat C a b).obj
       (wPhaseOf (W (cl C v (A : σ.slicing.IntervalCat C a b).obj)) ((a + b) / 2)))
     (hA_strict : IsStrictMono A.arrow) :
@@ -100,9 +100,9 @@ theorem hom_eq_zero_of_enveloped_semistable
     (hthin : b - a + 2 * ε < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
     {E F : C}
-    (hE : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E
+    (hE : (σ.skewedStabilityFunctionOfNear C W hW hab).Semistable C E
       (wPhaseOf (W (cl C v E)) ((a + b) / 2)))
-    (hF : (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C F
+    (hF : (σ.skewedStabilityFunctionOfNear C W hW hab).Semistable C F
       (wPhaseOf (W (cl C v F)) ((a + b) / 2)))
     (hgap : wPhaseOf (W (cl C v F)) ((a + b) / 2) <
       wPhaseOf (W (cl C v E)) ((a + b) / 2))
@@ -148,7 +148,7 @@ theorem comp_of_destabilizing_with_quotient_bound
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hab : a < b) (hthin : b - a + 2 * ε < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
-    (hssf : ssf = σ.skewedStabilityFunction_of_near C W hW_stab hab)
+    (hssf : ssf = σ.skewedStabilityFunctionOfNear C W hW_stab hab)
     -- Quotient lower bound
     {t_lo : ℝ} (ht_lo : a + ε ≤ t_lo)
     {X : σ.slicing.IntervalCat C a b}

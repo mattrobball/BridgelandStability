@@ -49,7 +49,7 @@ packaged.
 
 ### §5 — Stability conditions
 
-* `StabilityCondition.P_phi_abelian`: each phase subcategory `P(φ)` is abelian
+* `StabilityCondition.abelianPhaseSlice`: each phase subcategory `P(φ)` is abelian
   (Lemma 5.2).
 * `StabilityCondition.stabilityFunctionOnPhase`: the central charge restricted
   to `P(φ)` gives a stability function on that abelian category.
@@ -118,7 +118,7 @@ theorem StabilityCondition.P_phi_shortExact_triangle
       ∃ (β : W ⟶ A), β ≫ f = α) :
     ∃ (h : Q.obj ⟶ A.obj⟦(1 : ℤ)⟧),
       Triangle.mk f.hom g.hom h ∈ distTriang C := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   let ι := (σ.slicing.P φ).ι
   obtain ⟨K, i, δ, hT⟩ :=
     Triangulated.AbelianSubcategory.exists_distinguished_triangle_of_epi
@@ -170,14 +170,14 @@ the upper half plane condition follows from the compatibility axiom of `σ`. -/
 def StabilityCondition.stabilityFunctionOnPhase
     (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
     @StabilityFunction (σ.slicing.P φ).FullSubcategory _
-      (σ.P_phi_abelian C φ) := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+      (σ.abelianPhaseSlice C φ) := by
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   exact {
     Zobj := fun E => σ.Z (K₀.of C ((σ.slicing.P φ).ι.obj E))
     map_zero' := fun X hX => by
       simpa using congrArg σ.Z (K₀.of_isZero C (((σ.slicing.P φ).ι.map_isZero hX)))
     additive := fun S hS => by
-      letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+      letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
       letI : IsNormalMonoCategory (σ.slicing.P φ).FullSubcategory := Abelian.toIsNormalMonoCategory
       letI : IsNormalEpiCategory (σ.slicing.P φ).FullSubcategory := Abelian.toIsNormalEpiCategory
       letI : Balanced (σ.slicing.P φ).FullSubcategory := by infer_instance
@@ -211,9 +211,9 @@ def StabilityCondition.stabilityFunctionOnPhase
 theorem StabilityCondition.phase_eq_of_mem_P_phi
     (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1)
     (E : (σ.slicing.P φ).FullSubcategory) (hE : ¬IsZero E) :
-    @StabilityFunction.phase _ _ (σ.P_phi_abelian C φ)
+    @StabilityFunction.phase _ _ (σ.abelianPhaseSlice C φ)
       (σ.stabilityFunctionOnPhase C hφ) E = φ := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   have hEobj : ¬IsZero E.obj := fun hZ ↦
     hE (ObjectProperty.FullSubcategory.isZero_of_obj_isZero
       (C := C) (P := σ.slicing.P φ) (X := E) hZ)
@@ -233,8 +233,8 @@ For `0 < φ ≤ 1`, every nonzero object of `P(φ)` is already semistable of pha
 theorem StabilityCondition.stabilityFunctionOnPhase_hasHN
     (σ : StabilityCondition C) {φ : ℝ} (hφ : φ ∈ Set.Ioc (0 : ℝ) 1) :
     @StabilityFunction.HasHNProperty (σ.slicing.P φ).FullSubcategory _
-      (σ.P_phi_abelian C φ) (σ.stabilityFunctionOnPhase C hφ) := by
-  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.P_phi_abelian C φ
+      (σ.abelianPhaseSlice C φ) (σ.stabilityFunctionOnPhase C hφ) := by
+  letI : Abelian (σ.slicing.P φ).FullSubcategory := σ.abelianPhaseSlice C φ
   intro E hE
   let Z := σ.stabilityFunctionOnPhase C hφ
   have hss : Z.IsSemistable E := by
@@ -545,7 +545,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The canonical map from the Grothendieck group of the heart to the ambient
 triangulated Grothendieck group. -/
 def HeartStabilityData.heartK0ToK0
-    (h : HeartStabilityData C) [IsTriangulated C] :
+    (h : HeartStabilityData C) :
     HeartK0 (C := C) h →+ K₀ C := by
       letI : Abelian h.t.heart.FullSubcategory := h.t.heartFullSubcategoryAbelian
       letI : IsNormalMonoCategory h.t.heart.FullSubcategory := Abelian.toIsNormalMonoCategory
@@ -571,7 +571,7 @@ def HeartStabilityData.heartK0ToK0
 
 @[simp]
 theorem HeartStabilityData.heartK0ToK0_of
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     h.heartK0ToK0 C (HeartK0.of (C := C) h E) = K₀.of C E.obj := by
   change (FreeAbelianGroup.lift fun E : h.t.heart.FullSubcategory => K₀.of C E.obj)
@@ -593,7 +593,7 @@ lemma K₀.of_shift_nat (X : C) :
       calc
         K₀.of C (X⟦((n + 1 : ℕ) : ℤ)⟧)
             = K₀.of C ((X⟦(n : ℤ)⟧)⟦(1 : ℤ)⟧) := by
-                simpa only [Functor.comp_obj] using
+                exact
                   (K₀.of_iso C
                     (((shiftFunctorAdd' C (n : ℤ) (1 : ℤ) ((n : ℤ) + 1)
                       (by lia)).app X).symm)).symm
@@ -648,7 +648,7 @@ def HeartStabilityData.heartShiftOfPure (h : HeartStabilityData C)
 
 /-- A `t`-pure object contributes a class coming from the heart. -/
 theorem HeartStabilityData.exists_preimage_of_pure
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X : C} (n : ℤ) (hLE : h.t.IsLE X n) (hGE : h.t.IsGE X n) :
     ∃ x : HeartK0 (C := C) h, h.heartK0ToK0 C x = K₀.of C X := by
   let H := HeartStabilityData.heartShiftOfPure (C := C) h n hLE hGE
@@ -666,7 +666,7 @@ theorem HeartStabilityData.exists_preimage_of_pure
   simpa [H, HeartStabilityData.heartShiftOfPure] using hshift.symm
 
 theorem HeartStabilityData.exists_preimage_of_width
-    (h : HeartStabilityData C) [IsTriangulated C] (b : ℤ) :
+    (h : HeartStabilityData C) (b : ℤ) :
     ∀ n : ℕ, ∀ {E : C}, h.t.IsLE E (b + n) → h.t.IsGE E b →
       ∃ x : HeartK0 (C := C) h, h.heartK0ToK0 C x = K₀.of C E := by
   intro n
@@ -708,7 +708,7 @@ theorem HeartStabilityData.exists_preimage_of_width
 heart of a bounded t-structure. This is the surjective half of the canonical map
 `K₀(heart(t)) → K₀(C)`. -/
 theorem HeartStabilityData.heartK0ToK0_surjective
-    (h : HeartStabilityData C) [IsTriangulated C] :
+    (h : HeartStabilityData C) :
     Function.Surjective (h.heartK0ToK0 C) := by
   intro x
   induction x using QuotientAddGroup.induction_on with

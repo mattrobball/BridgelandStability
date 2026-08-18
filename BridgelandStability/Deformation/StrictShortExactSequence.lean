@@ -62,7 +62,7 @@ theorem exists_first_strictShortExact_of_not_semistable_of_finite_leftHeartSubob
         (ShortComplex.mk M.arrow (cokernel.π M.arrow) (cokernel.condition M.arrow)) := by
   let T : Set (Subobject X) := {M | M ≠ ⊥ ∧ IsStrictMono M.arrow}
   have hT_type : Finite T := by
-    simpa [T] using
+    exact
       (Slicing.IntervalCat.finite_strictSubobjects_of_finite_leftHeartSubobjects
         (C := C) (s := σ.slicing) (a := a) (b := b) hX_left)
   have hT_fin : T.Finite := by
@@ -488,16 +488,15 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
 theorem semistable_of_lower_inclusion
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b ψ ε₀ : ℝ} (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₂ ≤ a₁)
     {E : C}
-    (hSS : (σ.skewedStabilityFunction_of_near C W hW ha₁).Semistable C E ψ)
+    (hSS : (σ.skewedStabilityFunctionOfNear C W hW ha₁).Semistable C E ψ)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (henv_lo : a₁ + ε₀ ≤ ψ) (henv_hi : ψ ≤ b - ε₀)
     (hthin₂ : b - a₂ + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
-    (σ.skewedStabilityFunction_of_near C W hW ha₂).Semistable C E ψ := by
+    (σ.skewedStabilityFunctionOfNear C W hW ha₂).Semistable C E ψ := by
   have hEI₂ : σ.slicing.intervalProp C a₂ b E :=
     σ.slicing.intervalProp_mono C ha (show b ≤ b by linarith) hSS.intervalProp
   have henv_lo₂ : a₂ + ε₀ ≤ ψ := by
@@ -520,7 +519,7 @@ theorem semistable_of_lower_inclusion
   let S₀ : ShortComplex (σ.slicing.IntervalCat C a₂ b) :=
     ShortComplex.mk iK qE (by
       ext
-      simpa [iK, qE] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hT₂ : Triangle.mk iK.hom qE.hom f₃ ∈ distTriang C := by
     simpa [iK, qE] using hT
   have hiK_strict : IsStrictMono iK :=
@@ -542,7 +541,7 @@ theorem semistable_of_lower_inclusion
   let S₁ : ShortComplex (σ.slicing.IntervalCat C a₂ b) :=
     ShortComplex.mk xK kY (by
       ext
-      simpa [xK, kY] using comp_distTriang_mor_zero₁₂ _ hTK)
+      exact comp_distTriang_mor_zero₁₂ _ hTK)
   have hTK₂ : Triangle.mk xK.hom kY.hom δY ∈ distTriang C := by
     simpa [xK, kY] using hTK
   have hxK_strict : IsStrictMono xK :=
@@ -590,7 +589,7 @@ theorem semistable_of_lower_inclusion
       have hmonoRH :
           Mono ((Slicing.IntervalCat.toRightHeart (C := C) (s := σ.slicing) a₁ b
             (Fact.out : b - a₁ ≤ 1)).map xE₁) := by
-        simpa [Slicing.IntervalCat.toRightHeart, xE₁, xE₂] using
+        exact
           (Slicing.IntervalCat.mono_toRightHeart_of_strictMono
             (C := C) (s := σ.slicing) (a := a₂) (b := b) xE₂ hxE₂_strict)
       have hxE₁_strict : IsStrictMono xE₁ := by
@@ -658,23 +657,22 @@ theorem semistable_of_lower_inclusion
 theorem semistable_of_interval_inclusion
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b₁ b₂ ψ ε₀ : ℝ}
     (hab₁ : a₁ < b₁) (hab₂ : a₂ < b₂) (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂)
     {E : C}
-    (hSS : (σ.skewedStabilityFunction_of_near C W hW hab₁).Semistable C E ψ)
+    (hSS : (σ.skewedStabilityFunctionOfNear C W hW hab₁).Semistable C E ψ)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (henv_lo : a₁ + ε₀ ≤ ψ) (henv_hi : ψ ≤ b₁ - ε₀)
     (hthin₂ : b₂ - a₂ + 2 * ε₀ < 1)
   (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
-    (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
+    (σ.skewedStabilityFunctionOfNear C W hW hab₂).Semistable C E ψ := by
   have hthin_mid : b₂ - a₁ + 2 * ε₀ < 1 := by
     linarith
   have hab_mid : a₁ < b₂ := by
     linarith
   have hmid :
-      (σ.skewedStabilityFunction_of_near C W hW hab_mid).Semistable C E ψ :=
+      (σ.skewedStabilityFunctionOfNear C W hW hab_mid).Semistable C E ψ :=
     semistable_of_upper_inclusion
       (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hab_mid hb hSS
       hε₀ hε₀2 henv_lo henv_hi hthin_mid hsin
@@ -688,7 +686,7 @@ theorem semistable_of_target_subinterval
     {a₁ a₂ b₂ b₁ ψ ε₀ : ℝ}
     (hab₁ : a₁ < b₁) (hab₂ : a₂ < b₂) (ha : a₁ ≤ a₂) (hb : b₂ ≤ b₁)
     {E : C}
-    (hSS : (σ.skewedStabilityFunction_of_near C W hW hab₁).Semistable C E ψ)
+    (hSS : (σ.skewedStabilityFunctionOfNear C W hW hab₁).Semistable C E ψ)
     (hI₂ : σ.slicing.intervalProp C a₂ b₂ E)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (henv₂_lo : a₂ + ε₀ ≤ ψ) (henv₂_hi : ψ ≤ b₂ - ε₀)
@@ -696,7 +694,7 @@ theorem semistable_of_target_subinterval
     (hthin₂ : b₂ - a₂ + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
-    (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
+    (σ.skewedStabilityFunctionOfNear C W hW hab₂).Semistable C E ψ := by
   refine semistable_of_target_envelope_triangleTest
     (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hSS hab₂ hI₂ hε₀ henv₂_lo henv₂_hi
     hthin₂ ?_
@@ -732,11 +730,10 @@ theorem semistable_of_target_subinterval
 theorem semistable_of_target_envelope
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b₁ b₂ ψ ε₀ : ℝ}
     (hab₁ : a₁ < b₁) (hab₂ : a₂ < b₂)
     {E : C}
-    (hSS : (σ.skewedStabilityFunction_of_near C W hW hab₁).Semistable C E ψ)
+    (hSS : (σ.skewedStabilityFunctionOfNear C W hW hab₁).Semistable C E ψ)
     (hI₂ : σ.slicing.intervalProp C a₂ b₂ E)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (henv₁_lo : a₁ + ε₀ ≤ ψ) (henv₁_hi : ψ ≤ b₁ - ε₀)
@@ -745,7 +742,7 @@ theorem semistable_of_target_envelope
     (hthin₂ : b₂ - a₂ + 2 * ε₀ < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) <
       ENNReal.ofReal (Real.sin (Real.pi * ε₀))) :
-    (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ := by
+    (σ.skewedStabilityFunctionOfNear C W hW hab₂).Semistable C E ψ := by
   set a : ℝ := max a₁ a₂
   set b : ℝ := min b₁ b₂
   have ha₁ : a₁ ≤ a := by
@@ -805,7 +802,7 @@ theorem semistable_of_target_envelope
       linarith
     exact lt_of_le_of_lt hthin₁' hthin₁
   have hmid :
-      (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ :=
+      (σ.skewedStabilityFunctionOfNear C W hW hab).Semistable C E ψ :=
     semistable_of_target_subinterval
       (C := C) (σ := σ) (W := W) (hW := hW) hab₁ hab
       (show a₁ ≤ a by dsimp [a]; exact le_max_left _ _) (show b ≤ b₁ by

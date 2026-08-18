@@ -118,7 +118,8 @@ lemma Slicing.shift_inv (s : Slicing C) (φ : ℝ) (X : C)
   (s.shift_iff φ X).mpr h
 
 /-- Each phase slice of a slicing contains the zero object. -/
-instance (s : Slicing C) (φ : ℝ) : (s.P φ).ContainsZero where
+@[instance]
+theorem Slicing.P_containsZero (s : Slicing C) (φ : ℝ) : (s.P φ).ContainsZero where
   exists_zero := ⟨0, isZero_zero C, s.zero_mem φ⟩
 
 /-! ### Shift lemmas -/

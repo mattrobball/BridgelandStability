@@ -587,7 +587,7 @@ theorem exists_upper_boundary_strictShortExact
   let gi : QI ⟶ YI := ObjectProperty.homMk g
   let S : ShortComplex (s.IntervalCat C a b₂) := ShortComplex.mk fi gi (by
       ext
-      simpa [fi, gi] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hTS : Triangle.mk S.f.hom S.g.hom h ∈ distTriang C := by
     simpa [S, fi, gi] using hT
   refine ⟨S, ?_, ?_, hX_ge, hY_small⟩
@@ -624,7 +624,7 @@ theorem exists_lower_boundary_strictShortExact
   let gi : KI ⟶ YI := ObjectProperty.homMk g
   let S : ShortComplex (s.IntervalCat C a₂ b) := ShortComplex.mk fi gi (by
       ext
-      simpa [fi, gi] using comp_distTriang_mor_zero₁₂ _ hT)
+      exact comp_distTriang_mor_zero₁₂ _ hT)
   have hTS : Triangle.mk S.f.hom S.g.hom h ∈ distTriang C := by
     simpa [S, fi, gi] using hT
   refine ⟨S, ?_, ?_, hX_small, hY_le⟩
@@ -637,7 +637,7 @@ theorem intervalProp_of_wSemistable_upper_target
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b₁ b₂ ψ ε₀ : ℝ} (hab₁ : a < b₁) (hab₂ : a < b₂) (hb : b₁ ≤ b₂)
     {E : C}
-    (hSS : (σ.skewedStabilityFunction_of_near C W hW hab₂).Semistable C E ψ)
+    (hSS : (σ.skewedStabilityFunctionOfNear C W hW hab₂).Semistable C E ψ)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (henv_lo : a + ε₀ ≤ ψ) (henv_hi : ψ ≤ b₁ - ε₀)
     (hthin₂ : b₂ - a + 2 * ε₀ < 1)
@@ -669,7 +669,7 @@ theorem intervalProp_of_wSemistable_upper_target
       have hX_phase_eq :
           wPhaseOf (W (cl C v X)) ((a + b₂) / 2) = ψ := by
         rw [cl_iso C v (asIso fX)]
-        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using hSS.phase_eq
+        simpa [StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear] using hSS.phase_eq
       linarith
     · letI : Fact (a < b₂) := ⟨hab₂⟩
       letI : Fact (b₂ - a ≤ 1) := ⟨by linarith⟩
@@ -680,7 +680,7 @@ theorem intervalProp_of_wSemistable_upper_target
       let qY : EI₂ ⟶ YI₂ := ObjectProperty.homMk gY
       let hcomp : xE ≫ qY = 0 := by
         ext
-        simpa [xE, qY] using comp_distTriang_mor_zero₁₂ _ hTQ
+        exact comp_distTriang_mor_zero₁₂ _ hTQ
       let S : ShortComplex (σ.slicing.IntervalCat C a b₂) := ShortComplex.mk xE qY hcomp
       have hT₂ : Triangle.mk S.f.hom S.g.hom δY ∈ distTriang C := by
         simpa [S, xE, qY] using hTQ
@@ -696,8 +696,8 @@ theorem intervalProp_of_wSemistable_upper_target
             (C := C) (σ := σ) (W := W) hab₂ hε₀ hthin₂ hsin) hFne hF
       have hY_phase_ge :
           ψ ≤ wPhaseOf (W (cl C v Y)) ((a + b₂) / 2) := by
-        let ssf₂ := σ.skewedStabilityFunction_of_near C W hW hab₂
-        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, EI₂, YI₂, qY] using
+        let ssf₂ := σ.skewedStabilityFunctionOfNear C W hW hab₂
+        exact
           (SkewedStabilityFunction.phase_le_of_strictQuotient
             (C := C) (σ := σ) (a := a) (b := b₂) (ssf := ssf₂)
             (X := EI₂) (Y := YI₂) hSS hε₀ hthin₂ hW_interval hpert₂ qY hqY_strict hY_zero)
@@ -720,17 +720,16 @@ theorem intervalProp_of_wSemistable_upper_target
       have hY_phase_lt :
           wPhaseOf (W (cl C v Y)) ((a + b₂) / 2) < ψ :=
         wPhaseOf_seesaw_dual hsum.symm
-          (by simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using hSS.phase_eq)
+          (by simpa [StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear] using hSS.phase_eq)
           hX_phase_gt (hW_interval hX₂ hX_zero) hX_range hY_range
       linarith
 
 theorem intervalProp_of_wSemistable_lower_target
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b ψ ε₀ : ℝ} (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₁ ≤ a₂)
     {E : C}
-    (hSS : (σ.skewedStabilityFunction_of_near C W hW ha₁).Semistable C E ψ)
+    (hSS : (σ.skewedStabilityFunctionOfNear C W hW ha₁).Semistable C E ψ)
     (hε₀ : 0 < ε₀) (hε₀2 : ε₀ < 1 / 4)
     (henv_lo : a₂ + ε₀ ≤ ψ) (henv_hi : ψ ≤ b - ε₀)
     (hthin₁ : b - a₁ + 2 * ε₀ < 1)
@@ -761,7 +760,7 @@ theorem intervalProp_of_wSemistable_lower_target
     let qY : EI₁ ⟶ YI₁ := ObjectProperty.homMk gY
     let hcomp : xE ≫ qY = 0 := by
       ext
-      simpa [xE, qY] using comp_distTriang_mor_zero₁₂ _ hTQ
+      exact comp_distTriang_mor_zero₁₂ _ hTQ
     let S : ShortComplex (σ.slicing.IntervalCat C a₁ b) := ShortComplex.mk xE qY hcomp
     have hT₁ : Triangle.mk S.f.hom S.g.hom δY ∈ distTriang C := by
       simpa [S, xE, qY] using hTQ
@@ -779,8 +778,8 @@ theorem intervalProp_of_wSemistable_lower_target
           (C := C) (σ := σ) (W := W) ha₁ hε₀ hthin₁ hsin) hFne hF
     have hY_phase_ge :
         ψ ≤ wPhaseOf (W (cl C v Y)) ((a₁ + b) / 2) := by
-      let ssf₁ := σ.skewedStabilityFunction_of_near C W hW ha₁
-      simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, EI₁, YI₁, qY] using
+      let ssf₁ := σ.skewedStabilityFunctionOfNear C W hW ha₁
+      exact
         (SkewedStabilityFunction.phase_le_of_strictQuotient
           (C := C) (σ := σ) (a := a₁) (b := b) (ssf := ssf₁)
           (X := EI₁) (Y := YI₁) hSS hε₀ hthin₁ hW_interval hpert₁ qY hqY_strict hY_zero)

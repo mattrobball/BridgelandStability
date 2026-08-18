@@ -76,10 +76,12 @@ theorem hom_eq_zero {C : Type u} [Category.{v} C]
     | mem hQ => exact h _ _ hP hQ f
     | ext hT _ _ ihA ihB =>
       obtain ⟨g, rfl⟩ := Triangle.coyoneda_exact₂ _ hT f (ihB _)
-      simp [ihA g]
+      rw [ihA g]
+      exact zero_comp
   | ext hT _ _ ihX ihY =>
     obtain ⟨g, rfl⟩ := Triangle.yoneda_exact₂ _ hT f (ihX hF _)
-    simp [ihY hF g]
+    rw [ihY hF g]
+    exact comp_zero
 
 /-- Extension closure is closed under isomorphisms. -/
 theorem of_iso {C : Type u} [Category.{v} C] [HasZeroObject C]
@@ -119,12 +121,14 @@ theorem of_postnikovTower {C : Type u} [Category.{v} C]
     have h₃ : Q.ExtensionClosure T.obj₃ := .mem (hfactors ⟨k, by lia⟩)
     exact .of_iso e₂ (.ext hT h₁ h₃)
 
-instance {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+@[instance]
+theorem closedUnderIso {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
     (P : ObjectProperty C) : P.ExtensionClosure.IsClosedUnderIsomorphisms :=
   ⟨fun e h => .of_iso e h⟩
 
-instance {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+@[instance]
+theorem triangulatedClosed₂ {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
     (P : ObjectProperty C) : P.ExtensionClosure.IsTriangulatedClosed₂ :=
   ⟨fun T hT h1 h3 => ⟨T.obj₂, .ext hT h1 h3, ⟨Iso.refl _⟩⟩⟩

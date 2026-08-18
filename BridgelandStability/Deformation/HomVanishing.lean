@@ -51,7 +51,7 @@ def StabilityCondition.WithClassMap.deformedPred (σ : StabilityCondition.WithCl
     (ε₀ : ℝ) (ψ : ℝ) : ObjectProperty C :=
   fun E ↦ IsZero E ∨ ∃ (a b : ℝ) (hab : a < b) (_ : b - a + 2 * ε₀ < 1)
     (_ : a + ε₀ ≤ ψ) (_ : ψ ≤ b - ε₀),
-    (σ.skewedStabilityFunction_of_near C W hW hab).Semistable C E ψ
+    (σ.skewedStabilityFunctionOfNear C W hW hab).Semistable C E ψ
 
 /-- Zero objects are in every `Q(ψ)`. -/
 lemma StabilityCondition.WithClassMap.deformedPred_zero (σ : StabilityCondition.WithClassMap C v)
@@ -289,7 +289,7 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
         dsimp [a]
         linarith
       have hSS₁_left :
-          (σ.skewedStabilityFunction_of_near C W hW habE_left).Semistable C E ψ₁ :=
+          (σ.skewedStabilityFunctionOfNear C W hW habE_left).Semistable C E ψ₁ :=
         semistable_of_target_envelope
           (C := C) (σ := σ) (W := W) (hW := hW) hab₁ habE_left hSS₁ hE_left
           hε₀ hε₀2 henv₁_lo henv₁_hi henvE_left_lo (by linarith) hthin₁ hleftThin hsin
@@ -311,7 +311,7 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
         dsimp [a]
         linarith [hsmallGap]
       have hSS₂_right :
-          (σ.skewedStabilityFunction_of_near C W hW habF_right).Semistable C F ψ₂ :=
+          (σ.skewedStabilityFunctionOfNear C W hW habF_right).Semistable C F ψ₂ :=
         semistable_of_target_envelope
           (C := C) (σ := σ) (W := W) (hW := hW) hab₂ habF_right hSS₂ hF_right
           hε₀ hε₀2 henv₂_lo henv₂_hi (by linarith) henvF_right_hi hthin₂ hrightThin hsin
@@ -362,11 +362,12 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
       have hI_le : σ.slicing.leProp C (a + 1) I_H.obj := by
         simpa [add_comm] using (σ.slicing.phaseShift_leProp C a 1 I_H.obj).mp hI_heart.2
       have hT_I' : Triangle.mk i_I.hom (f₂ ≫ β) δ_I ∈ distTriang C := by
-        simpa using hT_I
+        simp only [Triangulated.AbelianSubcategory.ι_map_πQ] at hT_I
+        exact hT_I
       have hT_pH' :
           Triangle.mk (Triangulated.AbelianSubcategory.ιK f₃ α).hom pH.hom (-m₃) ∈
             distTriang C := by
-        simpa [ι] using hT_pH
+        exact hT_pH
       have hIne : ¬IsZero I_H.obj := by
         intro hIZ
         have hIZH : IsZero I_H :=
@@ -452,7 +453,7 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
       let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := σ.slicing) a (ψ₁ + ε₀)
         (Fact.out : ψ₁ + ε₀ - a ≤ 1)
       have hpL_epi : Epi (FL.map pL) := by
-        simpa [FL, pL, EL, IL] using (inferInstance : Epi pH)
+        exact (inferInstance : Epi pH)
       have hpL_strict : IsStrictEpi pL := by
         letI : Epi (FL.map pL) := hpL_epi
         exact Slicing.IntervalCat.strictEpi_of_epi_toLeftHeart
@@ -465,8 +466,8 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
             (C := C) (σ := σ) (W := W) hab_left hε₀ hleftThin hsin) hGne hG
       have hI_phase_ge_left :
           ψ₁ ≤ wPhaseOf (W (cl C v I_H.obj)) αL := by
-        let ssfL := σ.skewedStabilityFunction_of_near C W hW habE_left
-        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near, EL, IL, pL] using
+        let ssfL := σ.skewedStabilityFunctionOfNear C W hW habE_left
+        exact
           (SkewedStabilityFunction.phase_le_of_strictQuotient
             (C := C) (σ := σ) (a := a) (b := ψ₁ + ε₀) (ssf := ssfL)
             (X := EL) (Y := IL) hSS₁_left hε₀ hleftThin hW_interval_left hpert_left pL
@@ -494,7 +495,7 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
         σ.slicing.intervalProp_mono C (show ψ₂ - ε₀ ≤ ψ₂ - ε₀ by linarith)
           (show a + 1 ≤ a + 1 + δ by linarith) hF_right
       have hSS₂_big :
-          (σ.skewedStabilityFunction_of_near C W hW habF_big).Semistable C F ψ₂ :=
+          (σ.skewedStabilityFunctionOfNear C W hW habF_big).Semistable C F ψ₂ :=
         semistable_of_upper_inclusion
           (C := C) (σ := σ) (W := W) (hW := hW)
           (hab₁ := habF_right) (hab₂ := habF_big)
@@ -511,7 +512,7 @@ theorem StabilityCondition.WithClassMap.hom_eq_zero_of_deformedPred
             (lt_of_le_of_lt (σ.slicing.phiPlus_le_of_leProp C hQZ hQ_le) (by linarith))
       have hI_phase_le_big :
           wPhaseOf (W (cl C v I_H.obj)) ((ψ₂ - ε₀ + (a + 1 + δ)) / 2) ≤ ψ₂ := by
-        simpa [StabilityCondition.WithClassMap.skewedStabilityFunction_of_near] using
+        simpa [StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear] using
           hSS₂_big.le_of_distTriang hT_I' hI_big hQ_big hIne
       have hI_phase_eq_right_big :
           wPhaseOf (W (cl C v I_H.obj)) αR =

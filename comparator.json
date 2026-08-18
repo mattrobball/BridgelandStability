@@ -1,9 +1,20 @@
 {
-  "challenge_module": "BridgelandStability.Spec",
+  "challenge_module": "Challenge",
   "solution_module": "BridgelandStability.NumericalStabilityManifold",
   "theorem_names": [
-    "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent"
+    "CategoryTheory.Triangulated.NumericalStabilityCondition.existsComplexManifoldOnConnectedComponent",
+    "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_first",
+    "CategoryTheory.Triangulated.HNFiltration.exists_nonzero_last",
+    "CategoryTheory.Triangulated.trianglePresentation_isAdditive",
+    "CategoryTheory.Triangulated.Slicing.intervalCat_hasKernels",
+    "CategoryTheory.Triangulated.Slicing.intervalCat_hasCokernels",
+    "CategoryTheory.Triangulated.eulerFormObj_contravariant_triangleAdditive",
+    "CategoryTheory.Triangulated.eulerFormInner_isTriangleAdditive"
   ],
-  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
   "enable_nanoda": false
 }

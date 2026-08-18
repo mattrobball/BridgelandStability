@@ -784,7 +784,7 @@ theorem SkewedStabilityFunction.phase_le_of_strictQuotient
     CategoryTheory.categoryWithHomology_of_abelian (C := t.heart.FullSubcategory)
   let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := σ.slicing) a b (Fact.out : b - a ≤ 1)
   have hEpi : Epi ((S.map FL).g) := by
-    simpa [S, FL] using
+    exact
       Slicing.IntervalCat.epi_toLeftHeart_of_strictEpi
         (C := C) (s := σ.slicing) (a := a) (b := b) p hp
   have hKerBase : IsLimit (KernelFork.ofι S.f S.zero) := by

@@ -236,9 +236,8 @@ theorem exists_mdq_of_artinian_noetherian
   suffices
       ∀ (S : Subobject E), ¬IsZero (cokernel S.arrow) →
         ∃ (B : A) (q : cokernel S.arrow ⟶ B), IsMDQ Z q by
-    let e0 : cokernel (⊥ : Subobject E).arrow ≅ E := by
-      simpa [Subobject.bot_arrow] using
-        (cokernelZeroIsoTarget (X := ((⊥ : Subobject E) : A)) (Y := E))
+    let e0 : cokernel (⊥ : Subobject E).arrow ≅ E :=
+      cokernelIsoOfEq Subobject.bot_arrow ≪≫ cokernelZeroIsoTarget
     have hbot : ¬IsZero (cokernel (⊥ : Subobject E).arrow) := fun hZ =>
       hE (hZ.of_iso e0.symm)
     obtain ⟨B, q, hq⟩ := this ⊥ hbot

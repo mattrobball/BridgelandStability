@@ -67,7 +67,7 @@ theorem StabilityCondition.WithClassMap.W_ne_zero_of_seminorm_lt_one (σ : Stabi
 /-- **Node 7.2a**. Given a stability condition `σ` and a group homomorphism `W` with
 `‖W - Z‖_σ < 1`, `W` restricts to a `SkewedStabilityFunction` on any interval `(a, b)`
 with `a < b`. The skewing parameter is `(a + b) / 2`. -/
-def StabilityCondition.WithClassMap.skewedStabilityFunction_of_near (σ : StabilityCondition.WithClassMap C v)
+def StabilityCondition.WithClassMap.skewedStabilityFunctionOfNear (σ : StabilityCondition.WithClassMap C v)
     (W : Λ →+ ℂ) (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
     {a b : ℝ} (hab : a < b) :
     SkewedStabilityFunction C v σ.slicing a b where

@@ -18,6 +18,7 @@ on each connected component of Stab(D).
 
 @[expose] public section
 
+set_option backward.isDefEq.respectTransparency.types false
 set_option backward.privateInPublic true
 set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
@@ -636,7 +637,7 @@ noncomputable def componentTopologicalLinearLocalModel
           have hZeq : Zmap yComp = F := by
             apply Subtype.ext
             exact hρZ
-          simpa [yU, yComp, hZeq] using hyS
+          exact hZeq ▸ hyS
         exact IsOpenEmbedding.of_continuous_injective_isOpenMap
           (hZcont.comp continuous_subtype_val) hZinj hZopen
     change @IsLocalHomeomorph comp V inferInstance inferInstance Zmap

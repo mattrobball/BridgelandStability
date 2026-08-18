@@ -126,7 +126,7 @@ theorem isStrictEpi_of_isColimitCokernelCofork
   let e : Abelian.coimage f ≅ Y :=
     IsColimit.coconePointUniqueUpToIso (cokernelIsCokernel (kernel.ι f)) hf
   have he : Abelian.coimage.π f ≫ e.hom = f := by
-    simpa [Abelian.coimage, e, CokernelCofork.ofπ] using
+    simpa [Abelian.coimage, e, CokernelCofork.ofπ, Cofork.ofπ] using
       IsColimit.comp_coconePointUniqueUpToIso_hom
         (cokernelIsCokernel (kernel.ι f)) hf Limits.WalkingParallelPair.one
   have hcomp : Abelian.coimageImageComparison f ≫ Abelian.image.ι f = e.hom := by
@@ -447,7 +447,10 @@ def isStrictArtinianObject : ObjectProperty C :=
 condition. -/
 abbrev IsStrictArtinianObject : Prop := isStrictArtinianObject.Is X
 
-instance [IsStrictArtinianObject X] : WellFoundedLT (StrictSubobject X) :=
+omit [Preadditive C] in
+@[instance]
+theorem wellFoundedLT_strictSubobject [IsStrictArtinianObject X] :
+    WellFoundedLT (StrictSubobject X) :=
   isStrictArtinianObject.prop_of_is X
 
 /-- An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain
@@ -459,7 +462,10 @@ def isStrictNoetherianObject : ObjectProperty C :=
 condition. -/
 abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
 
-instance [IsStrictNoetherianObject X] : WellFoundedGT (StrictSubobject X) :=
+omit [Preadditive C] in
+@[instance]
+theorem wellFoundedGT_strictSubobject [IsStrictNoetherianObject X] :
+    WellFoundedGT (StrictSubobject X) :=
   isStrictNoetherianObject.prop_of_is X
 
 section
@@ -508,14 +514,14 @@ theorem isArtinianObject_of_isStrictArtinianObject [IsStrictArtinianObject X] :
   intro f
   let g : ℕ →o (StrictSubobject X)ᵒᵈ :=
     ⟨fun n ↦ OrderDual.toDual ⟨f n, by
+        haveI := Subobject.arrow_mono (f n)
         exact (Subobject.isStrict_iff _).2 (isStrictMono_of_mono (Subobject.arrow (f n)))⟩,
       fun i j hij ↦ f.2 hij⟩
   haveI : WellFoundedGT (StrictSubobject X)ᵒᵈ := by
     rw [wellFoundedGT_dual_iff]
     infer_instance
   obtain ⟨n, hn⟩ := WellFoundedGT.monotone_chain_condition g
-  exact ⟨n, fun m hm ↦ by
-    simpa using congrArg Subtype.val (hn m hm)⟩
+  exact ⟨n, fun m hm ↦ congrArg Subtype.val (hn m hm)⟩
 
 /-- In an abelian category, strict-Noetherian and Noetherian coincide, because every mono is
 strict. -/
@@ -528,8 +534,7 @@ theorem isNoetherianObject_of_isStrictNoetherianObject [IsStrictNoetherianObject
         exact (Subobject.isStrict_iff _).2 (isStrictMono_of_mono (Subobject.arrow (f n)))⟩,
       fun i j hij ↦ f.2 hij⟩
   obtain ⟨n, hn⟩ := WellFoundedGT.monotone_chain_condition g
-  exact ⟨n, fun m hm ↦ by
-    simpa using congrArg Subtype.val (hn m hm)⟩
+  exact ⟨n, fun m hm ↦ congrArg Subtype.val (hn m hm)⟩
 
 end StrictSubobjectAbelian
 
@@ -537,7 +542,7 @@ section SubobjectFiniteness
 
 variable {A : Type u} [Category.{v} A] {C : Type u} [Category.{v} C]
 
-private def subobjectImageOfFaithfulPreservesMono (F : A ⥤ C) [F.Full] [F.Faithful]
+private def subobjectImageOfFaithfulPreservesMono (F : A ⥤ C)
     [F.PreservesMonomorphisms] {E : A} :
     Subobject E → Subobject (F.obj E) :=
   Subobject.lift (fun {S} (f : S ⟶ E) [Mono f] ↦ Subobject.mk (F.map f))
@@ -560,8 +565,8 @@ private theorem subobjectImageOfFaithfulPreservesMono_injective (F : A ⥤ C) [F
       simp only [Functor.preimageIso_hom, Functor.map_comp, Functor.map_preimage]
       exact Subobject.ofMkLEMk_comp heq.le))
 
-private theorem subobjectImageOfFaithfulPreservesMono_monotone (F : A ⥤ C) [F.Full]
-    [F.Faithful] [F.PreservesMonomorphisms] {E : A} :
+private theorem subobjectImageOfFaithfulPreservesMono_monotone (F : A ⥤ C)
+    [F.PreservesMonomorphisms] {E : A} :
     Monotone (subobjectImageOfFaithfulPreservesMono (A := A) (C := C) F (E := E)) := by
   intro s₁ s₂ h
   induction s₁ using Subobject.ind
@@ -609,7 +614,7 @@ theorem isArtinianObject_of_faithful_preservesMono (F : A ⥤ C) [F.Full] [F.Fai
   obtain ⟨n, hn⟩ := antitone_chain_condition_of_isArtinianObject g
   exact ⟨n, fun m hm ↦
     subobjectImageOfFaithfulPreservesMono_injective (A := A) (C := C) F (E := E)
-      (by simpa using hn m hm)⟩
+      (hn m hm)⟩
 
 /-- Noetherian objects transfer across full faithful functors that preserve monomorphisms. -/
 theorem isNoetherianObject_of_faithful_preservesMono (F : A ⥤ C) [F.Full] [F.Faithful]
@@ -635,7 +640,7 @@ variable {A : Type u} [Category.{v} A] [HasZeroMorphisms A] [Preadditive A]
   {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [Preadditive C]
   [HasKernels C] [HasCokernels C]
 
-private noncomputable def strictSubobjectImageOfFaithful (F : A ⥤ C) [F.Full] [F.Faithful]
+private noncomputable def strictSubobjectImageOfFaithful (F : A ⥤ C)
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} :
     StrictSubobject E → Subobject (F.obj E) :=
@@ -645,7 +650,7 @@ private noncomputable def strictSubobjectImageOfFaithful (F : A ⥤ C) [F.Full] 
     exact Subobject.mk (F.map B.1.arrow)
 
 omit [Preadditive A] [Preadditive C] in
-private theorem strictSubobjectImageOfFaithful_monotone (F : A ⥤ C) [F.Full] [F.Faithful]
+private theorem strictSubobjectImageOfFaithful_monotone (F : A ⥤ C)
     (hF : ∀ {X Y : A} (f : X ⟶ Y), IsStrictMono f → IsStrictMono (F.map f))
     {E : A} :
     Monotone (strictSubobjectImageOfFaithful (A := A) (C := C) F hF (E := E)) := by
@@ -709,7 +714,7 @@ theorem isStrictArtinianObject_of_faithful_map_strictMono (F : A ⥤ C) [F.Full]
           obtain ⟨n, hn⟩ := antitone_chain_condition_of_isArtinianObject g
           exact ⟨n, fun m hm ↦
             strictSubobjectImageOfFaithful_injective (A := A) (C := C) F hF (E := E)
-              (by simpa using hn m hm)⟩))
+              (hn m hm)⟩))
 
 /-- Strict-Noetherian objects transfer across full faithful functors that send strict
 monomorphisms to strict monomorphisms. -/

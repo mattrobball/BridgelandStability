@@ -33,9 +33,9 @@ set_option backward.proofsInPublic true
 
 universe u v u' v' u'' v''
 
+set_option linter.checkUnivs false in
 /-- A presentation of a Grothendieck-style group: objects, relations, and
 the three-term decomposition `obj₂(r) = obj₁(r) + obj₃(r)`. -/
-@[nolint checkUnivs]
 structure K0Presentation (Obj : Type u) (Rel : Type v) where
   /-- The first term of the relation (e.g., `T.obj₁` or `S.X₁`). -/
   obj₁ : Rel → Obj
@@ -129,7 +129,8 @@ theorem induction_on {motive : P.K0 → Prop} (x : P.K0)
 /-! ### Functorial maps -/
 
 /-- The class map is additive for its own presentation. -/
-instance isAdditive_of : P.IsAdditive P.of where
+@[instance]
+theorem isAdditive_of : P.IsAdditive P.of where
   additive := P.of_rel
 
 /-- The induced map on Grothendieck groups from a function on objects that respects

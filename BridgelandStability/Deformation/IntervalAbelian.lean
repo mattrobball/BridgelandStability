@@ -377,7 +377,8 @@ lemma StabilityCondition.WithClassMap.P_phi_biprod
     (binaryBiproductTriangle_distinguished X Y)
 
 /-- P(φ) is closed under binary products for a stability condition. -/
-instance StabilityCondition.WithClassMap.P_phi_closedUnderBinaryProducts
+@[instance]
+theorem StabilityCondition.WithClassMap.P_phi_closedUnderBinaryProducts
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     (σ.slicing.P φ).IsClosedUnderBinaryProducts :=
   ObjectProperty.IsClosedUnderLimitsOfShape.mk' (by
@@ -390,13 +391,15 @@ instance StabilityCondition.WithClassMap.P_phi_closedUnderBinaryProducts
       (σ.P_phi_biprod C (hF ⟨WalkingPair.left⟩) (hF ⟨WalkingPair.right⟩)))
 
 /-- P(φ) is closed under finite products for a stability condition. -/
-instance StabilityCondition.WithClassMap.P_phi_closedUnderFiniteProducts
+@[instance]
+theorem StabilityCondition.WithClassMap.P_phi_closedUnderFiniteProducts
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     (σ.slicing.P φ).IsClosedUnderFiniteProducts :=
   ObjectProperty.IsClosedUnderFiniteProducts.mk'
 
 /-- P(φ) has finite products for a stability condition. -/
-noncomputable instance StabilityCondition.P_phi_hasFiniteProducts
+@[instance]
+theorem StabilityCondition.P_phi_hasFiniteProducts
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     HasFiniteProducts (σ.slicing.P φ).FullSubcategory :=
   hasFiniteProducts_of_has_binary_and_terminal
@@ -481,8 +484,11 @@ theorem P_phi_of_truncation_of_P_phi_cone
   haveI hQ_le : t.IsLE ((t.truncGE 0).obj X₃) 0 := by
     have hrot_trunc := rot_of_distTriang _ htrunc
     refine t.isLE₂ _ hrot_trunc 0 ?_ ?_
-    · dsimp; exact hX₃_le
-    · dsimp
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
+      exact hX₃_le
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
       haveI : t.IsLE ((t.truncLT 0).obj X₃) (-1) := t.isLE_truncLT_obj ..
       haveI := t.isLE_shift ((t.truncLT 0).obj X₃) (-1) 1 (-2)
       exact t.isLE_of_le _ (-2) 0
@@ -492,11 +498,14 @@ theorem P_phi_of_truncation_of_P_phi_cone
   haveI : t.IsGE ((t.truncLT 0).obj X₃) (-1) := by
     have hinv := inv_rot_of_distTriang _ htrunc
     refine t.isGE₂ _ hinv (-1) ?_ ?_
-    · dsimp
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
       haveI : t.IsGE (((t.truncGE 0).obj X₃)⟦(-1 : ℤ)⟧) 1 :=
         t.isGE_shift _ 0 (-1) 1
       exact t.isGE_of_ge _ (-1) 1
-    · dsimp; exact ‹t.IsGE X₃ (-1)›
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
+      exact ‹t.IsGE X₃ (-1)›
   -- Convert t-structure bounds to original slicing phase bounds
   -- Q has s-phases in (φ-1, φ]
   have hQ_sgt : s.gtProp C (φ - 1) ((t.truncGE 0).obj X₃) :=
@@ -556,7 +565,7 @@ theorem P_phi_of_truncation_of_P_phi_cone
       ((t.mem_heart_iff R.obj).mp R.property).2
     have hk_C : g_C ≫ k.hom = 0 := by
       have := congr_arg InducedCategory.Hom.hom hk
-      simpa only [ObjectProperty.FullSubcategory.comp_hom] using this
+      exact this
     have hmk : ((t.triangleLTGE 0).obj X₃).mor₂ ≫ k.hom = 0 := by
       have : f₂ ≫ (((t.triangleLTGE 0).obj X₃).mor₂ ≫ k.hom) = 0 := by
         rwa [← Category.assoc]
@@ -622,7 +631,8 @@ theorem P_phi_of_truncation_of_P_phi_cone
       σ.charge ((t.truncLT 0).obj X₃) +
       σ.charge ((t.truncGE 0).obj X₃) := by
     have h := cl_triangle C v _ htrunc
-    dsimp [TStructure.triangleLTGE] at h
+    dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate] at h
     simp only [charge_def, h, map_add]
   -- K₀ on original triangle: Im(Z(X₃)·rot) = 0 since A, B ∈ P(φ)
   have hZX₃_im : (σ.charge X₃ * rot).im = 0 := by
@@ -758,8 +768,11 @@ theorem StabilityCondition.WithClassMap.P_phi_admissible
   haveI hQ_le : t.IsLE ((t.truncGE 0).obj X₃) 0 := by
     have hrot_trunc := rot_of_distTriang _ htrunc
     refine t.isLE₂ _ hrot_trunc 0 ?_ ?_
-    · dsimp; exact hX₃_le
-    · dsimp
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
+      exact hX₃_le
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
       haveI : t.IsLE ((t.truncLT 0).obj X₃) (-1) := t.isLE_truncLT_obj ..
       haveI := t.isLE_shift ((t.truncLT 0).obj X₃) (-1) 1 (-2)
       exact t.isLE_of_le _ (-2) 0
@@ -767,11 +780,14 @@ theorem StabilityCondition.WithClassMap.P_phi_admissible
   haveI hK_ge : t.IsGE ((t.truncLT 0).obj X₃) (-1) := by
     have hinv := inv_rot_of_distTriang _ htrunc
     refine t.isGE₂ _ hinv (-1) ?_ ?_
-    · dsimp
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
       haveI : t.IsGE (((t.truncGE 0).obj X₃)⟦(-1 : ℤ)⟧) 1 :=
         t.isGE_shift _ 0 (-1) 1
       exact t.isGE_of_ge _ (-1) 1
-    · dsimp; exact hX₃_ge
+    · dsimp [TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk, Triangle.rotate,
+        Triangle.invRotate]
+      exact hX₃_ge
   -- Q is in the heart (IsGE 0 by truncation + IsLE 0)
   haveI : t.IsGE ((t.truncGE 0).obj X₃) 0 := inferInstance
   -- K' := ((truncLT 0).obj X₃)⟦-1⟧ is in the heart
@@ -791,15 +807,17 @@ theorem StabilityCondition.WithClassMap.P_phi_admissible
   exact ⟨K, Q, α, β, γ, isomorphic_distinguished _
     (t.triangleLTGE_distinguished 0 X₃) _
     (Triangle.isoMk _ _ e₁ (Iso.refl _) (Iso.refl _)
-      (by dsimp [α, TStructure.triangleLTGE]; simp)
-      (by dsimp [β, TStructure.triangleLTGE]; simp)
-      (by dsimp [γ]; simp))⟩
+      (by dsimp [α, β, γ, TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk]; simp)
+      (by dsimp [α, β, γ, TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk]; simp)
+      (by
+        dsimp [α, β, γ, TStructure.triangleLTGE, Triangle.functorMk, Triangle.mk]
+        simp only [Category.assoc]
+        grind))⟩
 
-variable [IsTriangulated C] in
 /-- **P(φ) is abelian** (**Bridgeland's Lemma 5.2**). Each slicing slice `P(φ)` of a
 stability condition is an abelian category. -/
 @[reducible, informal "Lemma 5.2" complete]
-noncomputable def StabilityCondition.WithClassMap.P_phi_abelian
+noncomputable def StabilityCondition.WithClassMap.abelianPhaseSlice
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     Abelian (σ.slicing.P φ).FullSubcategory :=
   AbelianSubcategory.abelian (σ.slicing.P φ).ι

@@ -311,16 +311,17 @@ lemma linearMap_range_eq_ker_of_addMonoidHom {V W X : Type v}
   change x ∈ f.toAddMonoidHom.range ↔ x ∈ g.toAddMonoidHom.ker
   rw [h]
 
-noncomputable instance linearCoyonedaObjIsHomological (E : C) :
+omit [IsTriangulated C] [IsFiniteType k C] in
+@[instance]
+theorem linearCoyonedaObjIsHomological (E : C) :
     (((linearCoyoneda k C).obj (Opposite.op E)) : C ⥤ ModuleCat k).IsHomological where
   exact T hT := by
     rw [ShortComplex.exact_iff_exact_map_forget₂]
-    simpa using ((preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT)
+    exact (preadditiveCoyoneda.obj (Opposite.op E)).map_distinguished_exact T hT
 
 section EulerTriangleAdditivity
 
-omit [IsTriangulated C]
-
+omit [IsTriangulated C] in
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
@@ -335,7 +336,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     have hδ_eq : ∀ n : ℤ, ((F.homologySequenceδ T n (n + 1) rfl).hom) = δ_lin n := by
       intro n
       ext x
-      simpa [F, δ_lin] using
+      exact
         (CategoryTheory.Pretriangulated.preadditiveCoyoneda_homologySequenceδ_apply
           (C := C) (T := T) (n₀ := n) (n₁ := n + 1) (h := rfl) (A := Opposite.op E) x)
     have h_ker_f_aux : ∀ m : ℤ,
@@ -344,10 +345,11 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       let f_succ : (E ⟶ T.obj₁⟦m + 1⟧) →ₗ[k] (E ⟶ T.obj₂⟦m + 1⟧) :=
         ((F.shift (m + 1)).map T.mor₁).hom
       have h_exact₁ : LinearMap.range (δ_lin m) = LinearMap.ker f_succ := by
-        simpa [f_succ, hδ_eq m] using
-          (ShortComplex.Exact.moduleCat_range_eq_ker
-            (F.homologySequence_exact₁ T hT m (m + 1) rfl))
-      simpa [r] using
+        rw [← hδ_eq m]
+        exact ShortComplex.Exact.moduleCat_range_eq_ker
+          (F.homologySequence_exact₁ T hT m (m + 1) rfl)
+      simp only [r]
+      exact_mod_cast
         congrArg (fun V : Submodule k (E ⟶ T.obj₁⟦m + 1⟧) => Module.finrank k V) h_exact₁.symm
     have hrank : ∀ n : ℤ,
         (Module.finrank k (E ⟶ T.obj₂⟦n⟧) : ℤ) =
@@ -357,7 +359,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       let f_n : (E ⟶ T.obj₁⟦n⟧) →ₗ[k] (E ⟶ T.obj₂⟦n⟧) := ((F.shift n).map T.mor₁).hom
       let g_n : (E ⟶ T.obj₂⟦n⟧) →ₗ[k] (E ⟶ T.obj₃⟦n⟧) := ((F.shift n).map T.mor₂).hom
       have hexact_B : LinearMap.range f_n = LinearMap.ker g_n := by
-        simpa [f_n, g_n, F] using
+        exact
           (ShortComplex.Exact.moduleCat_range_eq_ker
             (F.homologySequence_exact₂ T hT n))
       haveI : Module.Finite k (E ⟶ T.obj₂⟦n⟧) := IsFiniteType.finite_dim (k := k) E (T.obj₂⟦n⟧)
@@ -372,9 +374,9 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
       have h_ker_δ : Module.finrank k (LinearMap.ker (δ_lin n)) =
           Module.finrank k (LinearMap.range g_n) := by
         have h_exact₃ : LinearMap.range g_n = LinearMap.ker (δ_lin n) := by
-          simpa [g_n, hδ_eq n] using
-            (ShortComplex.Exact.moduleCat_range_eq_ker
-              (F.homologySequence_exact₃ T hT n (n + 1) rfl))
+          rw [← hδ_eq n]
+          exact ShortComplex.Exact.moduleCat_range_eq_ker
+            (F.homologySequence_exact₃ T hT n (n + 1) rfl)
         simpa using
           congrArg (fun V : Submodule k (E ⟶ T.obj₃⟦n⟧) => Module.finrank k V) h_exact₃.symm
       have h_f : (Module.finrank k (LinearMap.range f_n) : ℤ) =
@@ -400,7 +402,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
           ext x
           exact Subsingleton.elim _ _
         apply hnonzero
-        simp [r]
+        simp [r, hδ]
       exact ⟨n + 1, hnontrivial, by simp⟩
     exact eulerSum_of_rank_identity (k := k) (C := C) E
       (a := fun n ↦ T.obj₁⟦n⟧)
@@ -415,6 +417,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
 -- Same argument applied to the preadditiveYoneda functor.
+omit [IsTriangulated C] in
 theorem eulerFormObj_covariant_triangleAdditive (F : C)
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (fun E ↦ eulerFormObj k C E F) where
@@ -438,7 +441,7 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
           AddCommGrpCat.ofHom (δ_lin n).toAddMonoidHom := by
       intro n
       ext x
-      simpa [Top, δ_lin, G] using
+      exact
         (CategoryTheory.Pretriangulated.preadditiveYoneda_homologySequenceδ_apply
           (C := C) (T := T) (n₀ := n) (n₁ := n + 1) (h := rfl) (B := F) x)
     have hmap₁ : ∀ n : ℤ,
@@ -464,7 +467,8 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
       have h_exact₁_ab : ((δ_lin m).toAddMonoidHom).range = (f_succ.toAddMonoidHom).ker := by
         change (AddCommGrpCat.Hom.hom (G.homologySequenceδ Top m (m + 1) rfl)).range =
           (AddCommGrpCat.Hom.hom ((G.shift (m + 1)).map Top.mor₁)).ker at h_exact₁_ab0
-        simpa [hδ_eq m, hmap₁ (m + 1), f_succ] using h_exact₁_ab0
+        rw [hδ_eq m] at h_exact₁_ab0
+        exact h_exact₁_ab0
       have h_exact₁ : LinearMap.range (δ_lin m) = LinearMap.ker f_succ :=
         linearMap_range_eq_ker_of_addMonoidHom (k := k) (δ_lin m) f_succ h_exact₁_ab
       simpa [r] using
@@ -482,7 +486,7 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
       have hexact_B_ab : (f_n.toAddMonoidHom).range = (g_n.toAddMonoidHom).ker := by
         change (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₁)).range =
           (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₂)).ker at hexact_B_ab0
-        simpa [hmap₁ n, hmap₂ n, f_n, g_n] using hexact_B_ab0
+        exact hexact_B_ab0
       have hexact_B : LinearMap.range f_n = LinearMap.ker g_n :=
         linearMap_range_eq_ker_of_addMonoidHom (k := k) f_n g_n hexact_B_ab
       haveI : Module.Finite k (T.obj₂ ⟶ F⟦n⟧) := IsFiniteType.finite_dim (k := k) T.obj₂ (F⟦n⟧)
@@ -506,7 +510,8 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
         have h_exact₃_ab : (g_n.toAddMonoidHom).range = ((δ_lin n).toAddMonoidHom).ker := by
           change (AddCommGrpCat.Hom.hom ((G.shift n).map Top.mor₂)).range =
             (AddCommGrpCat.Hom.hom (G.homologySequenceδ Top n (n + 1) rfl)).ker at h_exact₃_ab0
-          simpa [hδ_eq n, hmap₂ n, g_n] using h_exact₃_ab0
+          rw [hδ_eq n] at h_exact₃_ab0
+          exact h_exact₃_ab0
         have h_exact₃ : LinearMap.range g_n = LinearMap.ker (δ_lin n) :=
           linearMap_range_eq_ker_of_addMonoidHom (k := k) g_n (δ_lin n) h_exact₃_ab
         simpa using
@@ -534,7 +539,7 @@ theorem eulerFormObj_covariant_triangleAdditive (F : C)
           ext x
           exact Subsingleton.elim _ _
         apply hnonzero
-        simp [r]
+        simp [r, hδ]
       exact ⟨n + 1, hnontrivial, by simp⟩
     let a : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₃ ⟶ F⟦n⟧)
     let b : ℤ → ℤ := fun n ↦ Module.finrank k (T.obj₂ ⟶ F⟦n⟧)
@@ -570,9 +575,11 @@ def eulerFormInner (E : C) : K₀ C →+ ℤ := by
   letI := eulerFormObj_contravariant_triangleAdditive (k := k) (C := C) E
   exact K₀.lift C (fun F ↦ eulerFormObj k C E F)
 
+omit [IsTriangulated C] in
 /-- The outer function `E ↦ eulerFormInner E` is triangle-additive, so the Euler
 form descends to a bilinear form on `K₀`. -/
-instance eulerFormInner_isTriangleAdditive
+@[instance]
+theorem eulerFormInner_isTriangleAdditive
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (eulerFormInner k C) where
   additive T hT := by
@@ -588,24 +595,22 @@ def eulerForm [(shiftFunctor C (1 : ℤ)).Linear k] :
   K₀.lift C (eulerFormInner k C)
 
 /-- The left radical of the Euler form on `K₀ C`. -/
-def eulerFormRad [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+def eulerFormRad [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddSubgroup (K₀ C) :=
   (eulerForm k C).ker
 
 /-- The numerical Grothendieck group attached to the Euler form on `K₀`. -/
-def NumericalK₀ [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] :
+def NumericalK₀ [(shiftFunctor C (1 : ℤ)).Linear k] :
     Type _ :=
   K₀ C ⧸ eulerFormRad k C
 
 /-- The `AddCommGroup` instance on `NumericalK₀ k C`. -/
-instance NumericalK₀.instAddCommGroup [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k] :
+instance NumericalK₀.instAddCommGroup [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddCommGroup (NumericalK₀ k C) :=
   inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad k C))
 
 /-- The quotient map `K₀(C) → N(C)`. -/
-abbrev numericalQuotientMap [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k] :
+abbrev numericalQuotientMap [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ NumericalK₀ k C :=
   QuotientAddGroup.mk' (eulerFormRad k C)
 
@@ -616,15 +621,16 @@ class NumericallyFinite [Linear k C] [IsFiniteType k C]
   /-- The Euler-form numerical Grothendieck group is finitely generated. -/
   fg : AddGroup.FG (NumericalK₀ k C)
 
+omit [IsTriangulated C] in
 /-- Instance synthesis for the finite generation of the numerical Grothendieck group. -/
-instance [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k]
-    [NumericallyFinite k C] : AddGroup.FG (NumericalK₀ k C) :=
+@[instance]
+theorem numericalK₀_fg [(shiftFunctor C (1 : ℤ)).Linear k] [NumericallyFinite k C] :
+    AddGroup.FG (NumericalK₀ k C) :=
   NumericallyFinite.fg
 
 /-- Numerical stability conditions are stability conditions whose central charge factors through
 the canonical numerical quotient map `K₀(C) → N(C)`. -/
-abbrev NumericalStabilityCondition [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k] : Type _ :=
+abbrev NumericalStabilityCondition [(shiftFunctor C (1 : ℤ)).Linear k] : Type _ :=
   StabilityCondition.WithClassMap C (numericalQuotientMap k C)
 
 /-! ## Corollary 1.3 packaging -/
@@ -632,13 +638,12 @@ abbrev NumericalStabilityCondition [Linear k C] [IsFiniteType k C]
 /-- The local-homeomorphism package for connected components of numerical stability conditions.
 This is the proposition-object behind Bridgeland's Corollary 1.3. -/
 abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComponents
-    [Linear k C] [IsFiniteType k C] [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
+    [(shiftFunctor C (1 : ℤ)).Linear k] : Prop :=
   StabilityCondition.WithClassMap.CentralChargeIsLocalHomeomorphOnConnectedComponents
     (C := C) (Λ := NumericalK₀ k C) (v := numericalQuotientMap k C)
 
 /-- A connected component of numerical stability conditions. -/
-abbrev NumericalComponent [Linear k C] [IsFiniteType k C]
-    [(shiftFunctor C (1 : ℤ)).Linear k]
+abbrev NumericalComponent [(shiftFunctor C (1 : ℤ)).Linear k]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
   StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
 

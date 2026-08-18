@@ -64,8 +64,8 @@ distinguished triangle realizing that amplitude. -/
 /-- For an object of amplitude `(-1, 0)` presented by a triangle
 `K⟦1⟧ ⟶ X ⟶ Q ⟶ K⟦2⟧` with `K, Q` in the heart, the `(-1)`-st heart
 cohomology of `X` is canonically isomorphic to `K`. -/
-noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+noncomputable def HeartStabilityData.heartCohNegOneIsoOfAmpNegOneZero
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -79,24 +79,21 @@ noncomputable def HeartStabilityData.heartCoh_negOne_iso_of_amp_negOne_zero
       ((h.t.truncGELE (-1) (-1)).obj X) ≅ ((h.t.truncGELT (-1) 0).obj X) :=
     (h.t.truncGELEIsoTruncGELT (-1) (-1) 0 rfl).app X
   let e₂ :
-      ((h.t.truncGELT (-1) 0).obj X) ≅ (h.t.truncLT 0).obj X := by
-      simpa [TStructure.truncGELT] using
-        ((@asIso _ _ _ _ ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))
-          (by
-            infer_instance)).symm)
+      ((h.t.truncGELT (-1) 0).obj X) ≅ (h.t.truncLT 0).obj X :=
+    (asIso ((h.t.truncGEπ (-1)).app ((h.t.truncLT 0).obj X))).symm
   let e₃ : (h.t.truncLT 0).obj X ≅ K⟦(1 : ℤ)⟧ :=
     (asIso eT.hom.hom₁).symm
   let e : ((h.t.truncGELE (-1) (-1)).obj X) ≅ K⟦(1 : ℤ)⟧ := e₁ ≪≫ e₂ ≪≫ e₃
-  let e' : (h.heartCoh (C := C) (-1) X).obj ≅ K := by
-    simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
-      ((shiftFunctor C (-1 : ℤ)).mapIso e ≪≫ shiftShiftNeg (X := K) (i := (1 : ℤ)))
+  let e' : (h.heartCoh (C := C) (-1) X).obj ≅ K :=
+    (shiftFunctor C (-1 : ℤ)).mapIso e ≪≫ shiftShiftNeg (X := K) (i := (1 : ℤ))
   exact ObjectProperty.isoMk _ e'
 
+set_option backward.isDefEq.respectTransparency false in
 /-- For an object of amplitude `(-1, 0)` presented by a triangle
 `K⟦1⟧ ⟶ X ⟶ Q ⟶ K⟦2⟧` with `K, Q` in the heart, the `0`-th heart
 cohomology of `X` is canonically isomorphic to `Q`. -/
-noncomputable def HeartStabilityData.heartCoh_zero_iso_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+noncomputable def HeartStabilityData.heartCohZeroIsoOfAmpNegOneZero
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -107,22 +104,18 @@ noncomputable def HeartStabilityData.heartCoh_zero_iso_of_amp_negOne_zero
     (C := C) (t := h.t) (X := X) (K := K) (Q := Q) hK hQ hT
   let eT := Classical.choose hEx
   let e₁ :
-      ((h.t.truncGELE 0 0).obj X) ≅ (h.t.truncGE 0).obj X := by
-      refine ((h.t.truncGELEIsoLEGE 0 0).app X) ≪≫ ?_
-      simpa [TStructure.truncLEGE] using
-        (@asIso _ _ _ _ ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))
-          (by
-            infer_instance))
+      ((h.t.truncGELE 0 0).obj X) ≅ (h.t.truncGE 0).obj X :=
+    ((h.t.truncGELEIsoLEGE 0 0).app X) ≪≫
+      asIso ((h.t.truncLEι 0).app ((h.t.truncGE 0).obj X))
   let e₂ : (h.t.truncGE 0).obj X ≅ Q :=
     (asIso eT.hom.hom₃).symm
   let e : ((h.t.truncGELE 0 0).obj X) ≅ Q := e₁ ≪≫ e₂
-  let e' : (h.heartCoh (C := C) 0 X).obj ≅ Q := by
-    simpa [HeartStabilityData.heartCoh, HeartStabilityData.heartShiftOfPure] using
-      ((shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj X) ≪≫ e)
+  let e' : (h.heartCoh (C := C) 0 X).obj ≅ Q :=
+    (shiftFunctorZero C ℤ).app ((h.t.truncGELE 0 0).obj X) ≪≫ e
   exact ObjectProperty.isoMk _ e'
 
 theorem HeartStabilityData.heartCohClassSum_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -133,20 +126,20 @@ theorem HeartStabilityData.heartCohClassSum_of_amp_negOne_zero
       HeartK0.of (C := C) h (h.heartCoh (C := C) (-1) X) =
         HeartK0.of (C := C) h ⟨K, hK⟩ :=
     HeartK0.of_iso (C := C) h
-      (h.heartCoh_negOne_iso_of_amp_negOne_zero (C := C)
+      (h.heartCohNegOneIsoOfAmpNegOneZero (C := C)
         (X := X) (K := K) (Q := Q) hK hQ hT)
   have hzero :
       HeartK0.of (C := C) h (h.heartCoh (C := C) 0 X) =
         HeartK0.of (C := C) h ⟨Q, hQ⟩ :=
     HeartK0.of_iso (C := C) h
-      (h.heartCoh_zero_iso_of_amp_negOne_zero (C := C)
+      (h.heartCohZeroIsoOfAmpNegOneZero (C := C)
         (X := X) (K := K) (Q := Q) hK hQ hT)
   rw [HeartStabilityData.heartCohClassSum, Finset.sum_range_succ, Finset.sum_range_succ,
     Finset.sum_range_zero]
   simp [HeartStabilityData.heartCohClass, hneg, hzero]
 
 theorem HeartStabilityData.ZOnHeartK0_heartCohClassSum_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -159,7 +152,7 @@ theorem HeartStabilityData.ZOnHeartK0_heartCohClassSum_of_amp_negOne_zero
   simpa using congrArg (h.ZOnHeartK0 (C := C)) hclass
 
 theorem HeartStabilityData.heartEulerClassObj_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -172,7 +165,7 @@ theorem HeartStabilityData.heartEulerClassObj_of_amp_negOne_zero
     (X := X) (K := K) (Q := Q) hK hQ hT
 
 theorem HeartStabilityData.eulerZObj_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -187,7 +180,7 @@ theorem HeartStabilityData.eulerZObj_of_amp_negOne_zero
     (X := X) (K := K) (Q := Q) hK hQ hT
 
 theorem HeartStabilityData.heartEulerClassObj_triangle_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -207,7 +200,7 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_amp_negOne_zero
     hK', hQ']
 
 theorem HeartStabilityData.eulerZObj_triangle_of_amp_negOne_zero
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X K Q : C} (hK : h.t.heart K) (hQ : h.t.heart Q)
     {α : K⟦(1 : ℤ)⟧ ⟶ X} {β : X ⟶ Q} {γ : Q ⟶ (K⟦(1 : ℤ)⟧)⟦(1 : ℤ)⟧}
     (hT : Triangle.mk α β γ ∈ distTriang C)
@@ -227,7 +220,7 @@ theorem HeartStabilityData.eulerZObj_triangle_of_amp_negOne_zero
     hK', hQ']
 
 theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     [Functor.IsHomological (h.H0Functor (C := C))]
     (T : Triangle C) (hT : T ∈ distTriang C) {b a : ℤ} (hab : b ≤ a)
     (h₁LE : h.t.IsLE T.obj₁ (a + 1)) (h₁GE : h.t.IsGE T.obj₁ (b + 1))
@@ -342,8 +335,9 @@ theorem HeartStabilityData.heartEulerClassObj_triangle_of_bounds
             exact h.heartEulerClassObj_eq_heartCohClassSum (C := C)
               (X := T.obj₃) (b := b) (a := a) hab h₃LE h₃GE
 
-instance HeartStabilityData.heartEulerClassObj_isTriangleAdditive
-    (h : HeartStabilityData C) [IsTriangulated C]
+@[instance]
+theorem HeartStabilityData.heartEulerClassObj_isTriangleAdditive
+    (h : HeartStabilityData C)
     [Functor.IsHomological (h.H0Functor (C := C))] :
     IsTriangleAdditive (fun E ↦ h.heartEulerClassObj (C := C) E) where
   additive T hT := by

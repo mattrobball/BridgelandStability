@@ -36,7 +36,6 @@ variable {Λ : Type u'} [AddCommGroup Λ] {v : K₀ C →+ Λ}
 
 /-! ### Deformed slicing construction -/
 
-variable [IsTriangulated C] in
 /-- **Deformed slicing** (Node 7.Q + 7.6 + 7.7). The slicing `Q` with `Q(ψ) =
 deformedPred σ W hW ε ψ`, where `ε` is the perturbation parameter (`ε < ε₀`) and
 `ε₀` is the local finiteness parameter (< 1/10).

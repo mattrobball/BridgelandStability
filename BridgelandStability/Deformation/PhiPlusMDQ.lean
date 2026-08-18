@@ -96,7 +96,7 @@ theorem exists_strictMDQ_with_quotient_bound
     {ε : ℝ} (hε : 0 < ε) (hε2 : ε < 1 / 4) (hε8 : ε < 1 / 8)
     (hab : a < b) (hthin : b - a + 2 * ε < 1)
     (hsin : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal (Real.sin (Real.pi * ε)))
-    (hssf : ssf = σ.skewedStabilityFunction_of_near C W hW_stab hab)
+    (hssf : ssf = σ.skewedStabilityFunctionOfNear C W hW_stab hab)
     -- Window-interval compatibility (L ≥ a - ε, trivially true in Theorem71)
     (hL_a : a ≤ L + ε)
     -- W-semistable quotient lower bound (for comp_of_destabilizing_with_quotient_bound)
@@ -204,7 +204,7 @@ theorem exists_strictMDQ_with_quotient_bound
                 (C := C) (s := σ.slicing) (a := a) (b := b) hA_ne_top hA_strict)
               hT_strict
           let eT : cokernel Tsub.arrow ≅ cokernel A.arrow :=
-            interval_cokernel_pullbackTopIso
+            intervalCokernelPullbackTopIso
               (C := C) (s := σ.slicing) (a := a) (b := b) S.1 hA_strict
           -- Propagate quotient lower bound
           have hQLo_T : ∀ {B' : σ.slicing.IntervalCat C a b}
@@ -437,7 +437,7 @@ theorem exists_strictMDQ_with_quotient_bound
                   (C := C) (s := σ.slicing) (a := a) (b := b) hAhi_ne_top hAhi_strict)
                 hT_strict
             let eT : cokernel Tsub.arrow ≅ cokernel Ahi.arrow :=
-              interval_cokernel_pullbackTopIso
+              intervalCokernelPullbackTopIso
                 (C := C) (s := σ.slicing) (a := a) (b := b) S.1 hAhi_strict
             -- Propagate quotient lower bound
             have hQLo_T : ∀ {B' : σ.slicing.IntervalCat C a b}
