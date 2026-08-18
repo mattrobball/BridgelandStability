@@ -18,7 +18,7 @@ permissions:
 
 env:
   LEAN_EXPOSITION_REPO: mattrobball/lean-exposition
-  LEAN_EXPOSITION_REF: refactor/use-lean-informal
+  LEAN_EXPOSITION_REF: port/lean-v4.33.0
 
 # ════════════════════════════════════════════════════════════════
 # Job graph:
@@ -83,13 +83,8 @@ jobs:
           path: /tmp/lean-exposition/.lake
           key: exposition-${{ hashFiles('lean-toolchain') }}-${{ env.LEAN_EXPOSITION_REF }}
 
-      # Build it with this project's toolchain. lean-exposition ships its own
-      # lean-toolchain, and when that is older than ours the `lake env` call
-      # below runs a Lake too old to parse Mathlib's lakefile at all
-      # ("unknown namespace `Lake`").
       - name: Build exposition binary
         run: |
-          cp lean-toolchain /tmp/lean-exposition/lean-toolchain
           cd /tmp/lean-exposition && lake build exposition
           echo "EXPOSITION_BIN=/tmp/lean-exposition/.lake/build/bin/exposition" >> "$GITHUB_ENV"
 
@@ -114,6 +109,7 @@ jobs:
             --repo-url "https://github.com/${{ github.repository }}" \
             --trusted-base-raw-url "https://raw.githubusercontent.com/${{ github.repository }}/main/Challenge.lean" \
             --comparator-config comparator.json \
+            --exclude-lib Challenge \
             --write-shadow comparator-shadow \
             --shadow-only
 
