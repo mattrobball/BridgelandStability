@@ -447,7 +447,10 @@ def isStrictArtinianObject : ObjectProperty C :=
 condition. -/
 abbrev IsStrictArtinianObject : Prop := isStrictArtinianObject.Is X
 
-instance [IsStrictArtinianObject X] : WellFoundedLT (StrictSubobject X) :=
+omit [Preadditive C] in
+@[instance]
+theorem wellFoundedLT_strictSubobject [IsStrictArtinianObject X] :
+    WellFoundedLT (StrictSubobject X) :=
   isStrictArtinianObject.prop_of_is X
 
 /-- An object is *strict-Noetherian* if its strict subobjects satisfy the ascending chain
@@ -459,7 +462,10 @@ def isStrictNoetherianObject : ObjectProperty C :=
 condition. -/
 abbrev IsStrictNoetherianObject : Prop := isStrictNoetherianObject.Is X
 
-instance [IsStrictNoetherianObject X] : WellFoundedGT (StrictSubobject X) :=
+omit [Preadditive C] in
+@[instance]
+theorem wellFoundedGT_strictSubobject [IsStrictNoetherianObject X] :
+    WellFoundedGT (StrictSubobject X) :=
   isStrictNoetherianObject.prop_of_is X
 
 section

@@ -122,11 +122,13 @@ abbrev Slicing.IntervalCat.toLeftHeart (s : Slicing C) (a b : ℝ) (hab : b - a 
   obj X := ⟨X.obj, s.intervalProp_implies_leftHeart C hab X.property⟩
   map f := ObjectProperty.homMk f.hom
 
-instance Slicing.IntervalCat.toLeftHeart_full (s : Slicing C) (a b : ℝ) (hab : b - a ≤ 1) :
+@[instance]
+theorem Slicing.IntervalCat.toLeftHeart_full (s : Slicing C) (a b : ℝ) (hab : b - a ≤ 1) :
     Functor.Full (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b hab) where
   map_surjective {_ _} f := ⟨ObjectProperty.homMk f.hom, rfl⟩
 
-instance Slicing.IntervalCat.toLeftHeart_faithful (s : Slicing C) (a b : ℝ)
+@[instance]
+theorem Slicing.IntervalCat.toLeftHeart_faithful (s : Slicing C) (a b : ℝ)
     (hab : b - a ≤ 1) :
     Functor.Faithful (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b hab) where
   map_injective := by
@@ -146,7 +148,8 @@ instance Slicing.IntervalCat.toRightHeart_full (s : Slicing C) (a b : ℝ) (hab 
     Functor.Full (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b hab) where
   map_surjective {_ _} f := ⟨ObjectProperty.homMk f.hom, rfl⟩
 
-instance Slicing.IntervalCat.toRightHeart_faithful (s : Slicing C) (a b : ℝ)
+@[instance]
+theorem Slicing.IntervalCat.toRightHeart_faithful (s : Slicing C) (a b : ℝ)
     (hab : b - a ≤ 1) :
     Functor.Faithful (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b hab) where
   map_injective := by

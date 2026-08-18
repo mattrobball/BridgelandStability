@@ -222,7 +222,8 @@ def HNFiltration.appendFactor {P : ℝ → ObjectProperty C} {Y' Z : C}
 /-! ### Closure under isomorphisms -/
 
 /-- The property `P(> t)` is closed under isomorphisms. -/
-instance Slicing.gtProp_closedUnderIso (s : Slicing C) (t : ℝ) :
+@[instance]
+theorem Slicing.gtProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     (s.gtProp C t).IsClosedUnderIsomorphisms where
   of_iso e hE := by
     rcases hE with hZ | ⟨F, hF, hgt⟩
@@ -230,7 +231,8 @@ instance Slicing.gtProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     · exact Or.inr ⟨F.ofIso C e, hF, hgt⟩
 
 /-- The property `P(≤ t)` is closed under isomorphisms. -/
-instance Slicing.leProp_closedUnderIso (s : Slicing C) (t : ℝ) :
+@[instance]
+theorem Slicing.leProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     (s.leProp C t).IsClosedUnderIsomorphisms where
   of_iso e hE := by
     rcases hE with hZ | ⟨F, hF, hle⟩
@@ -238,7 +240,8 @@ instance Slicing.leProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     · exact Or.inr ⟨F.ofIso C e, hF, hle⟩
 
 /-- The property `P(< t)` is closed under isomorphisms. -/
-instance Slicing.ltProp_closedUnderIso (s : Slicing C) (t : ℝ) :
+@[instance]
+theorem Slicing.ltProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     (s.ltProp C t).IsClosedUnderIsomorphisms where
   of_iso e hE := by
     rcases hE with hZ | ⟨F, hF, hlt⟩
@@ -246,7 +249,8 @@ instance Slicing.ltProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     · exact Or.inr ⟨F.ofIso C e, hF, hlt⟩
 
 /-- The property `P(≥ t)` is closed under isomorphisms. -/
-instance Slicing.geProp_closedUnderIso (s : Slicing C) (t : ℝ) :
+@[instance]
+theorem Slicing.geProp_closedUnderIso (s : Slicing C) (t : ℝ) :
     (s.geProp C t).IsClosedUnderIsomorphisms where
   of_iso e hE := by
     rcases hE with hZ | ⟨F, hF, hge⟩

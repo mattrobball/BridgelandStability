@@ -40,7 +40,7 @@ namespace CategoryTheory.Triangulated
 variable (k : Type w) [Field k]
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
   [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
-  [Linear k C] [IsFiniteType k C]
+  [IsTriangulated C] [Linear k C] [IsFiniteType k C]
 
 -- For a middle-exact sequence K →f M →g N of f.d. k-vector spaces (im f = ker g),
 -- dim M = dim(ker g) + dim(im g) = dim(im f) + dim(im g).
@@ -89,7 +89,7 @@ lemma finsum_alternating_shift_cancel {r : ℤ → ℤ} :
 -- pointwise, with all supports finite, then the alternating sums satisfy
 -- Σ (-1)^n b(n) = Σ (-1)^n a(n) + Σ (-1)^n c(n).
 omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
-  [Pretriangulated C] [IsFiniteType k C] in
+  [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
 lemma eulerSum_of_rank_identity
     (E : C) {a b c : ℤ → C} {r : ℤ → ℤ}
     (hrank : ∀ n : ℤ, (Module.finrank k (E ⟶ b n) : ℤ) =
@@ -289,7 +289,7 @@ lemma eulerSum_of_rank_identity_int {a b c r : ℤ → ℤ}
 -- For a middle-exact sequence in AddCommGrpCat that is also k-linear,
 -- the range/ker equality lifts from abelian groups to k-modules.
 omit [HasZeroObject C] [HasShift C ℤ] [∀ n : ℤ, (shiftFunctor C n).Additive]
-  [Pretriangulated C] [IsFiniteType k C] in
+  [Pretriangulated C] [IsTriangulated C] [IsFiniteType k C] in
 lemma linearRange_eq_linearKer_of_ab_exact {A B C' : C} (E : C)
     (f : A ⟶ B) (g : B ⟶ C') (hfg : f ≫ g = 0)
     (hexact : ∀ (x : E ⟶ B), x ≫ g = 0 → ∃ y : E ⟶ A, y ≫ f = x) :
@@ -311,7 +311,9 @@ lemma linearMap_range_eq_ker_of_addMonoidHom {V W X : Type v}
   change x ∈ f.toAddMonoidHom.range ↔ x ∈ g.toAddMonoidHom.ker
   rw [h]
 
-noncomputable instance linearCoyonedaObjIsHomological (E : C) :
+omit [IsTriangulated C] [IsFiniteType k C] in
+@[instance]
+theorem linearCoyonedaObjIsHomological (E : C) :
     (((linearCoyoneda k C).obj (Opposite.op E)) : C ⥤ ModuleCat k).IsHomological where
   exact T hT := by
     rw [ShortComplex.exact_iff_exact_map_forget₂]
@@ -319,7 +321,7 @@ noncomputable instance linearCoyonedaObjIsHomological (E : C) :
 
 section EulerTriangleAdditivity
 
-
+omit [IsTriangulated C] in
 theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
     IsTriangleAdditive (fun F ↦ eulerFormObj k C E F) where
   additive := fun T hT ↦ by
@@ -415,6 +417,7 @@ theorem eulerFormObj_contravariant_triangleAdditive (E : C) :
 
 -- The covariant Euler form `E ↦ χ(E,F)` is triangle-additive.
 -- Same argument applied to the preadditiveYoneda functor.
+omit [IsTriangulated C] in
 theorem eulerFormObj_covariant_triangleAdditive (F : C)
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (fun E ↦ eulerFormObj k C E F) where
@@ -572,9 +575,11 @@ def eulerFormInner (E : C) : K₀ C →+ ℤ := by
   letI := eulerFormObj_contravariant_triangleAdditive (k := k) (C := C) E
   exact K₀.lift C (fun F ↦ eulerFormObj k C E F)
 
+omit [IsTriangulated C] in
 /-- The outer function `E ↦ eulerFormInner E` is triangle-additive, so the Euler
 form descends to a bilinear form on `K₀`. -/
-instance eulerFormInner_isTriangleAdditive
+@[instance]
+theorem eulerFormInner_isTriangleAdditive
     [(shiftFunctor C (1 : ℤ)).Linear k] :
     IsTriangleAdditive (eulerFormInner k C) where
   additive T hT := by
@@ -600,32 +605,28 @@ def NumericalK₀ [(shiftFunctor C (1 : ℤ)).Linear k] :
   K₀ C ⧸ eulerFormRad k C
 
 /-- The `AddCommGroup` instance on `NumericalK₀ k C`. -/
-instance NumericalK₀.instAddCommGroup
-    [(shiftFunctor C (1 : ℤ)).Linear k] :
+instance NumericalK₀.instAddCommGroup [(shiftFunctor C (1 : ℤ)).Linear k] :
     AddCommGroup (NumericalK₀ k C) :=
   inferInstanceAs (AddCommGroup (K₀ C ⧸ eulerFormRad k C))
 
 /-- The quotient map `K₀(C) → N(C)`. -/
-abbrev numericalQuotientMap
-    [(shiftFunctor C (1 : ℤ)).Linear k] :
+abbrev numericalQuotientMap [(shiftFunctor C (1 : ℤ)).Linear k] :
     K₀ C →+ NumericalK₀ k C :=
   QuotientAddGroup.mk' (eulerFormRad k C)
 
 /-- The category `C` is numerically finite if the numerical Grothendieck group attached to the
 Euler form is finitely generated as an abelian group. -/
-class NumericallyFinite
+class NumericallyFinite [Linear k C] [IsFiniteType k C]
     [(shiftFunctor C (1 : ℤ)).Linear k] : Prop where
   /-- The Euler-form numerical Grothendieck group is finitely generated. -/
   fg : AddGroup.FG (NumericalK₀ k C)
 
+omit [IsTriangulated C] in
 /-- Instance synthesis for the finite generation of the numerical Grothendieck group. -/
-instance [(shiftFunctor C (1 : ℤ)).Linear k]
-    [NumericallyFinite k C] : AddGroup.FG (NumericalK₀ k C) :=
+@[instance]
+theorem numericalK₀_fg [(shiftFunctor C (1 : ℤ)).Linear k] [NumericallyFinite k C] :
+    AddGroup.FG (NumericalK₀ k C) :=
   NumericallyFinite.fg
-
-section Triangulated
-
-variable [IsTriangulated C]
 
 /-- Numerical stability conditions are stability conditions whose central charge factors through
 the canonical numerical quotient map `K₀(C) → N(C)`. -/
@@ -645,7 +646,5 @@ abbrev NumericalStabilityCondition.CentralChargeIsLocalHomeomorphOnConnectedComp
 abbrev NumericalComponent [(shiftFunctor C (1 : ℤ)).Linear k]
     (cc : StabilityCondition.WithClassMap.ComponentIndex C (numericalQuotientMap k C)) :=
   StabilityCondition.WithClassMap.Component C (numericalQuotientMap k C) cc
-
-end Triangulated
 
 end CategoryTheory.Triangulated

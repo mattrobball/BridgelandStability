@@ -545,7 +545,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The canonical map from the Grothendieck group of the heart to the ambient
 triangulated Grothendieck group. -/
 def HeartStabilityData.heartK0ToK0
-    (h : HeartStabilityData C) [IsTriangulated C] :
+    (h : HeartStabilityData C) :
     HeartK0 (C := C) h →+ K₀ C := by
       letI : Abelian h.t.heart.FullSubcategory := h.t.heartFullSubcategoryAbelian
       letI : IsNormalMonoCategory h.t.heart.FullSubcategory := Abelian.toIsNormalMonoCategory
@@ -571,7 +571,7 @@ def HeartStabilityData.heartK0ToK0
 
 @[simp]
 theorem HeartStabilityData.heartK0ToK0_of
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     h.heartK0ToK0 C (HeartK0.of (C := C) h E) = K₀.of C E.obj := by
   change (FreeAbelianGroup.lift fun E : h.t.heart.FullSubcategory => K₀.of C E.obj)
@@ -648,7 +648,7 @@ def HeartStabilityData.heartShiftOfPure (h : HeartStabilityData C)
 
 /-- A `t`-pure object contributes a class coming from the heart. -/
 theorem HeartStabilityData.exists_preimage_of_pure
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {X : C} (n : ℤ) (hLE : h.t.IsLE X n) (hGE : h.t.IsGE X n) :
     ∃ x : HeartK0 (C := C) h, h.heartK0ToK0 C x = K₀.of C X := by
   let H := HeartStabilityData.heartShiftOfPure (C := C) h n hLE hGE
@@ -666,7 +666,7 @@ theorem HeartStabilityData.exists_preimage_of_pure
   simpa [H, HeartStabilityData.heartShiftOfPure] using hshift.symm
 
 theorem HeartStabilityData.exists_preimage_of_width
-    (h : HeartStabilityData C) [IsTriangulated C] (b : ℤ) :
+    (h : HeartStabilityData C) (b : ℤ) :
     ∀ n : ℕ, ∀ {E : C}, h.t.IsLE E (b + n) → h.t.IsGE E b →
       ∃ x : HeartK0 (C := C) h, h.heartK0ToK0 C x = K₀.of C E := by
   intro n
@@ -708,7 +708,7 @@ theorem HeartStabilityData.exists_preimage_of_width
 heart of a bounded t-structure. This is the surjective half of the canonical map
 `K₀(heart(t)) → K₀(C)`. -/
 theorem HeartStabilityData.heartK0ToK0_surjective
-    (h : HeartStabilityData C) [IsTriangulated C] :
+    (h : HeartStabilityData C) :
     Function.Surjective (h.heartK0ToK0 C) := by
   intro x
   induction x using QuotientAddGroup.induction_on with

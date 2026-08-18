@@ -377,7 +377,8 @@ lemma StabilityCondition.WithClassMap.P_phi_biprod
     (binaryBiproductTriangle_distinguished X Y)
 
 /-- P(φ) is closed under binary products for a stability condition. -/
-instance StabilityCondition.WithClassMap.P_phi_closedUnderBinaryProducts
+@[instance]
+theorem StabilityCondition.WithClassMap.P_phi_closedUnderBinaryProducts
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     (σ.slicing.P φ).IsClosedUnderBinaryProducts :=
   ObjectProperty.IsClosedUnderLimitsOfShape.mk' (by
@@ -390,13 +391,15 @@ instance StabilityCondition.WithClassMap.P_phi_closedUnderBinaryProducts
       (σ.P_phi_biprod C (hF ⟨WalkingPair.left⟩) (hF ⟨WalkingPair.right⟩)))
 
 /-- P(φ) is closed under finite products for a stability condition. -/
-instance StabilityCondition.WithClassMap.P_phi_closedUnderFiniteProducts
+@[instance]
+theorem StabilityCondition.WithClassMap.P_phi_closedUnderFiniteProducts
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     (σ.slicing.P φ).IsClosedUnderFiniteProducts :=
   ObjectProperty.IsClosedUnderFiniteProducts.mk'
 
 /-- P(φ) has finite products for a stability condition. -/
-noncomputable instance StabilityCondition.P_phi_hasFiniteProducts
+@[instance]
+theorem StabilityCondition.P_phi_hasFiniteProducts
     (σ : StabilityCondition.WithClassMap C v) (φ : ℝ) :
     HasFiniteProducts (σ.slicing.P φ).FullSubcategory :=
   hasFiniteProducts_of_has_binary_and_terminal
@@ -811,7 +814,6 @@ theorem StabilityCondition.WithClassMap.P_phi_admissible
         simp only [Category.assoc]
         grind))⟩
 
-variable [IsTriangulated C] in
 /-- **P(φ) is abelian** (**Bridgeland's Lemma 5.2**). Each slicing slice `P(φ)` of a
 stability condition is an abelian category. -/
 @[reducible, informal "Lemma 5.2" complete]

@@ -727,7 +727,6 @@ theorem intervalProp_of_wSemistable_upper_target
 theorem intervalProp_of_wSemistable_lower_target
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b ψ ε₀ : ℝ} (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₁ ≤ a₂)
     {E : C}
     (hSS : (σ.skewedStabilityFunctionOfNear C W hW ha₁).Semistable C E ψ)

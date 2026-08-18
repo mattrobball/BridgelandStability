@@ -129,7 +129,8 @@ theorem induction_on {motive : P.K0 → Prop} (x : P.K0)
 /-! ### Functorial maps -/
 
 /-- The class map is additive for its own presentation. -/
-instance isAdditive_of : P.IsAdditive P.of where
+@[instance]
+theorem isAdditive_of : P.IsAdditive P.of where
   additive := P.of_rel
 
 /-- The induced map on Grothendieck groups from a function on objects that respects

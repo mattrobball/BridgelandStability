@@ -447,7 +447,8 @@ theorem phasePredicate_closedUnderIso
   shiftedHeartSemistable_closedUnderIso (C := C) h
     (phaseBase φ) (phaseIndex φ)
 
-instance phasePredicate_instClosedUnderIso
+@[instance]
+theorem phasePredicate_instClosedUnderIso
     (h : HeartStabilityData C) (φ : ℝ) :
     (phasePredicate (C := C) h φ).IsClosedUnderIsomorphisms :=
   phasePredicate_closedUnderIso (C := C) h φ

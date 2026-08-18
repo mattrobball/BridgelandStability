@@ -153,7 +153,9 @@ class IsTriangleAdditive {A : Type*} [AddCommGroup A] (f : C → A) : Prop where
     T ∈ (distTriang C) → f T.obj₂ = f T.obj₁ + f T.obj₃
 
 variable {C} in
-instance {A : Type*} [AddCommGroup A] (f : C → A) [IsTriangleAdditive f] :
+@[instance]
+theorem trianglePresentation_isAdditive {A : Type*} [AddCommGroup A] (f : C → A)
+    [IsTriangleAdditive f] :
     (trianglePresentation C).IsAdditive f where
   additive := fun ⟨T, hT⟩ => IsTriangleAdditive.additive T hT
 

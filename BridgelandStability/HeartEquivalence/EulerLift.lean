@@ -88,7 +88,7 @@ theorem HeartStabilityData.heartCohClass_five_term_relation
 /-- The ambient image of the signed heart cohomology class is the class of the
 pure truncation `τ^[n,n]E`. -/
 theorem HeartStabilityData.heartK0ToK0_heartCohClass
-    (h : HeartStabilityData C) [IsTriangulated C] (n : ℤ) (E : C) :
+    (h : HeartStabilityData C) (n : ℤ) (E : C) :
     h.heartK0ToK0 C (h.heartCohClass (C := C) n E) =
       K₀.of C ((h.t.truncGELE n n).obj E) := by
   dsimp [HeartStabilityData.heartCohClass]
@@ -110,7 +110,7 @@ theorem HeartStabilityData.heartK0ToK0_heartCohClass
 /-- One-step telescoping for the bounded truncations: passing from `τ≤(n-1)E` to
 `τ≤nE` adds exactly the degree-`n` pure truncation. -/
 theorem HeartStabilityData.k0_truncLE_step
-    (h : HeartStabilityData C) [IsTriangulated C] (n : ℤ) (E : C) :
+    (h : HeartStabilityData C) (n : ℤ) (E : C) :
     K₀.of C ((h.t.truncLE n).obj E) =
       K₀.of C ((h.t.truncLE (n - 1)).obj E) +
         h.heartK0ToK0 C (h.heartCohClass (C := C) n E) := by
@@ -152,7 +152,7 @@ theorem HeartStabilityData.heartCohClassSum_succ
 concentrated in degrees `≥ b`, then `τ≤(b+n)E` is the sum of the heart
 cohomology classes in degrees `b, …, b+n`. -/
 theorem HeartStabilityData.heartK0ToK0_heartCohClassSum_truncLE
-    (h : HeartStabilityData C) [IsTriangulated C] (b : ℤ) :
+    (h : HeartStabilityData C) (b : ℤ) :
     ∀ n : ℕ, ∀ {E : C}, h.t.IsGE E b →
       h.heartK0ToK0 C (h.heartCohClassSum (C := C) b n E) =
         K₀.of C ((h.t.truncLE (b + (n : ℤ))).obj E) := by
@@ -198,7 +198,7 @@ theorem HeartStabilityData.heartK0ToK0_heartCohClassSum_truncLE
 /-- The canonical bounded interval sum of heart cohomology classes maps to `[E]` in
 ambient `K₀`. This is the usual formula `[E] = Σ (-1)^n [H^n_t(E)]`. -/
 theorem HeartStabilityData.heartK0ToK0_heartCohClassSum
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     {E : C} (a b : ℤ) (hab : b ≤ a) (hLE : h.t.IsLE E a) (hGE : h.t.IsGE E b) :
     h.heartK0ToK0 C (h.heartCohClassSum (C := C) b (Int.toNat (a - b)) E) = K₀.of C E := by
   have hsum :=
@@ -281,7 +281,7 @@ noncomputable def HeartStabilityData.heartEulerClassObj
 /-- The canonical object-level lift maps to the ambient Grothendieck-group class
 of the original object. -/
 theorem HeartStabilityData.heartK0ToK0_heartEulerClassObj
-    (h : HeartStabilityData C) [IsTriangulated C] (E : C) :
+    (h : HeartStabilityData C) (E : C) :
     h.heartK0ToK0 C (h.heartEulerClassObj (C := C) E) = K₀.of C E := by
   classical
   let a := h.upperBound (C := C) E
@@ -324,7 +324,7 @@ noncomputable def HeartStabilityData.H0primeObjIsoOfHeart
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
 theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (E : h.t.heart.FullSubcategory) :
     ((h.H0primeObjIsoOfHeart (C := C) E).inv).hom ≫
         (h.t.truncLEι 0).app ((h.t.truncGE 0).obj E.obj) =
@@ -416,7 +416,7 @@ theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_hom_comp_truncLEι
 
 @[reassoc]
   private theorem HeartStabilityData.H0primeObjIsoOfHeart_inv_comp_H0primeFunctor_map
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X : C} (f : A.obj ⟶ X) :
     (h.H0primeObjIsoOfHeart (C := C) A).inv ≫ (h.H0primeFunctor (C := C)).map f =
       h.toH0primeHom (C := C) A f := by
@@ -465,7 +465,7 @@ noncomputable def HeartStabilityData.heartSourceH0primeShortComplex
 
 @[simp]
 theorem HeartStabilityData.heartSourceH0primeShortComplex_f_eq_toH0primeHom
-    (h : HeartStabilityData C) [IsTriangulated C]
+    (h : HeartStabilityData C)
     (A : h.t.heart.FullSubcategory) {X₂ X₃ : C}
     (f : A.obj ⟶ X₂) (g : X₂ ⟶ X₃) (hfg : f ≫ g = 0) :
     (h.heartSourceH0primeShortComplex (C := C) A f g hfg).f =

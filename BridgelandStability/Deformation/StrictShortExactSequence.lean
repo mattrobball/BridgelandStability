@@ -488,7 +488,6 @@ theorem SkewedStabilityFunction.semistable_cokernel_of_minPhase_strictKernel
 theorem semistable_of_lower_inclusion
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b ψ ε₀ : ℝ} (ha₁ : a₁ < b) (ha₂ : a₂ < b) (ha : a₂ ≤ a₁)
     {E : C}
     (hSS : (σ.skewedStabilityFunctionOfNear C W hW ha₁).Semistable C E ψ)
@@ -658,7 +657,6 @@ theorem semistable_of_lower_inclusion
 theorem semistable_of_interval_inclusion
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b₁ b₂ ψ ε₀ : ℝ}
     (hab₁ : a₁ < b₁) (hab₂ : a₂ < b₂) (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂)
     {E : C}
@@ -732,7 +730,6 @@ theorem semistable_of_target_subinterval
 theorem semistable_of_target_envelope
     (σ : StabilityCondition.WithClassMap C v) (W : Λ →+ ℂ)
     (hW : stabSeminorm C σ (W - σ.Z) < ENNReal.ofReal 1)
-    [IsTriangulated C]
     {a₁ a₂ b₁ b₂ ψ ε₀ : ℝ}
     (hab₁ : a₁ < b₁) (hab₂ : a₂ < b₂)
     {E : C}

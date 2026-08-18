@@ -36,21 +36,24 @@ Additive/preserving instances, local finiteness in thin intervals,
 strict short exact sequences, K₀ relations, skewed stability functions.
 -/
 
-instance Slicing.IntervalCat.toLeftHeart_additive (s : Slicing C) (a b : ℝ)
+@[instance]
+theorem Slicing.IntervalCat.toLeftHeart_additive (s : Slicing C) (a b : ℝ)
     (hab : b - a ≤ 1) :
     Functor.Additive (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b hab) where
   map_add := by
     intro X Y f g
     rfl
 
-instance Slicing.IntervalCat.toRightHeart_additive (s : Slicing C) (a b : ℝ)
+@[instance]
+theorem Slicing.IntervalCat.toRightHeart_additive (s : Slicing C) (a b : ℝ)
     (hab : b - a ≤ 1) :
     Functor.Additive (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b hab) where
   map_add := by
     intro X Y f g
     rfl
 
-noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesKernel (s : Slicing C)
+@[instance]
+theorem Slicing.IntervalCat.toLeftHeart_preservesKernel (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {X Y : s.IntervalCat C a b} (f : X ⟶ Y) :
     PreservesLimit (parallelPair f 0)
       (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
@@ -77,7 +80,8 @@ noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesKernel (s : Slic
           rw [← hι]
           simp
 
-noncomputable instance Slicing.IntervalCat.toRightHeart_preservesCokernel (s : Slicing C)
+@[instance]
+theorem Slicing.IntervalCat.toRightHeart_preservesCokernel (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] {X Y : s.IntervalCat C a b} (f : X ⟶ Y) :
     PreservesColimit (parallelPair f 0)
       (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
@@ -106,31 +110,40 @@ noncomputable instance Slicing.IntervalCat.toRightHeart_preservesCokernel (s : S
           rw [← hπ]
           simp [Category.assoc]
 
-noncomputable instance Slicing.intervalCat_hasBinaryBiproducts (s : Slicing C) :
+omit [IsTriangulated C] [Fact (a < b)] [Fact (b - a ≤ 1)] in
+@[instance]
+theorem Slicing.intervalCat_hasBinaryBiproducts (s : Slicing C) :
     HasBinaryBiproducts (s.IntervalCat C a b) :=
   HasBinaryBiproducts.of_hasBinaryProducts
 
-noncomputable instance Slicing.intervalCat_hasEqualizers (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasEqualizers (s : Slicing C) :
     HasEqualizers (s.IntervalCat C a b) :=
   Preadditive.hasEqualizers_of_hasKernels
 
-noncomputable instance Slicing.intervalCat_hasCoequalizers (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasCoequalizers (s : Slicing C) :
     HasCoequalizers (s.IntervalCat C a b) :=
   Preadditive.hasCoequalizers_of_hasCokernels
 
-noncomputable instance Slicing.intervalCat_hasFiniteCoproducts (s : Slicing C) :
+omit [IsTriangulated C] [Fact (a < b)] [Fact (b - a ≤ 1)] in
+@[instance]
+theorem Slicing.intervalCat_hasFiniteCoproducts (s : Slicing C) :
     HasFiniteCoproducts (s.IntervalCat C a b) :=
   hasFiniteCoproducts_of_has_binary_and_initial
 
-noncomputable instance Slicing.intervalCat_hasPullbacks (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasPullbacks (s : Slicing C) :
     HasPullbacks (s.IntervalCat C a b) :=
   Limits.hasPullbacks_of_hasBinaryProducts_of_hasEqualizers _
 
-noncomputable instance Slicing.intervalCat_hasPushouts (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasPushouts (s : Slicing C) :
     HasPushouts (s.IntervalCat C a b) :=
   Limits.hasPushouts_of_hasBinaryCoproducts_of_hasCoequalizers _
 
-noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesFiniteLimits (s : Slicing C)
+@[instance]
+theorem Slicing.IntervalCat.toLeftHeart_preservesFiniteLimits (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
     PreservesFiniteLimits
       (Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
@@ -140,7 +153,8 @@ noncomputable instance Slicing.IntervalCat.toLeftHeart_preservesFiniteLimits (s 
   let FL := Slicing.IntervalCat.toLeftHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)
   exact Functor.preservesFiniteLimits_of_preservesKernels FL
 
-noncomputable instance Slicing.IntervalCat.toRightHeart_preservesFiniteColimits (s : Slicing C)
+@[instance]
+theorem Slicing.IntervalCat.toRightHeart_preservesFiniteColimits (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
     PreservesFiniteColimits
       (Slicing.IntervalCat.toRightHeart (C := C) (s := s) a b (Fact.out : b - a ≤ 1)) := by
@@ -206,7 +220,8 @@ theorem Slicing.IntervalCat.comp_strictMono (s : Slicing C)
   exact Slicing.IntervalCat.strictMono_of_mono_toRightHeart
     (C := C) (s := s) (a := a) (b := b) (f ≫ g)
 
-noncomputable instance Slicing.intervalCat_quasiAbelian (s : Slicing C)
+@[instance]
+theorem Slicing.intervalCat_quasiAbelian (s : Slicing C)
     {a b : ℝ} [Fact (a < b)] [Fact (b - a ≤ 1)] :
     QuasiAbelian (s.IntervalCat C a b) where
   pullback_strictEpi := by

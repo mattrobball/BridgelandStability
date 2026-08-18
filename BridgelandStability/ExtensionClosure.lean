@@ -121,12 +121,14 @@ theorem of_postnikovTower {C : Type u} [Category.{v} C]
     have h₃ : Q.ExtensionClosure T.obj₃ := .mem (hfactors ⟨k, by lia⟩)
     exact .of_iso e₂ (.ext hT h₁ h₃)
 
-instance {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+@[instance]
+theorem closedUnderIso {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
     (P : ObjectProperty C) : P.ExtensionClosure.IsClosedUnderIsomorphisms :=
   ⟨fun e h => .of_iso e h⟩
 
-instance {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
+@[instance]
+theorem triangulatedClosed₂ {C : Type u} [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
     [Preadditive C] [∀ n : ℤ, (shiftFunctor C n).Additive] [Pretriangulated C]
     (P : ObjectProperty C) : P.ExtensionClosure.IsTriangulatedClosed₂ :=
   ⟨fun T hT h1 h3 => ⟨T.obj₂, .ext hT h1 h3, ⟨Iso.refl _⟩⟩⟩

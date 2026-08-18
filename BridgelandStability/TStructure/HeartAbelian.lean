@@ -155,7 +155,8 @@ noncomputable def heartAbelian : Abelian H :=
 /-! ### The heart contains zero and is closed under binary products -/
 
 /-- The zero object lies in the heart of any t-structure. -/
-instance heart_containsZero : t.heart.ContainsZero where
+@[instance]
+theorem heart_containsZero : t.heart.ContainsZero where
   exists_zero := ⟨0, isZero_zero C, (t.mem_heart_iff _).mpr ⟨inferInstance, inferInstance⟩⟩
 
 /-- The biproduct of two heart objects lies in the heart. -/
@@ -166,7 +167,8 @@ lemma heart_biprod (X Y : C) (hX : t.heart X) (hY : t.heart Y) :
   exact ⟨t.isLE₂ _ hT 0 hX.1 hY.1, t.isGE₂ _ hT 0 hX.2 hY.2⟩
 
 /-- The heart of a t-structure is closed under binary products. -/
-instance heart_closedUnderBinaryProducts :
+@[instance]
+theorem heart_closedUnderBinaryProducts :
     t.heart.IsClosedUnderBinaryProducts :=
   ObjectProperty.IsClosedUnderLimitsOfShape.mk' (by
     rintro _ ⟨F, hF⟩
@@ -184,11 +186,13 @@ instance heart_closedUnderBinaryProducts :
       (t.heart_biprod A B (hF ⟨WalkingPair.left⟩) (hF ⟨WalkingPair.right⟩)))
 
 /-- The heart of a t-structure is closed under finite products. -/
-instance heart_closedUnderFiniteProducts : t.heart.IsClosedUnderFiniteProducts :=
+@[instance]
+theorem heart_closedUnderFiniteProducts : t.heart.IsClosedUnderFiniteProducts :=
   ObjectProperty.IsClosedUnderFiniteProducts.mk'
 
 /-- The full subcategory defined by the heart has finite products. -/
-noncomputable instance heart_hasFiniteProducts :
+@[instance]
+theorem heart_hasFiniteProducts :
     HasFiniteProducts t.heart.FullSubcategory :=
   hasFiniteProducts_of_has_binary_and_terminal
 

@@ -117,7 +117,8 @@ theorem Slicing.intervalCat_hasKernel (s : Slicing C)
       Fork.IsLimit.hom_ext (kernelIsKernel fH) hm'
     ext; simpa [mH] using congr_arg (·.hom) hmEq
 
-noncomputable instance Slicing.intervalCat_hasKernels (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasKernels (s : Slicing C) :
     HasKernels (s.IntervalCat C a b) :=
   ⟨fun {X Y} f ↦ Slicing.intervalCat_hasKernel (C := C) (s := s)
     (a := a) (b := b) (X := X) (Y := Y) f⟩
@@ -198,7 +199,8 @@ theorem Slicing.intervalCat_hasCokernel (s : Slicing C)
     change m.hom = (cokernel.desc fH π' hπ').hom
     simpa [mH] using congr_arg (·.hom) hmEq
 
-noncomputable instance Slicing.intervalCat_hasCokernels (s : Slicing C) :
+@[instance]
+theorem Slicing.intervalCat_hasCokernels (s : Slicing C) :
     HasCokernels (s.IntervalCat C a b) :=
   ⟨fun {X Y} f ↦ Slicing.intervalCat_hasCokernel (C := C) (s := s)
     (a := a) (b := b) (X := X) (Y := Y) f⟩

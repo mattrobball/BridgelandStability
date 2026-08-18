@@ -58,7 +58,8 @@ noncomputable def HeartStabilityData.heartCohFunctor
       · simpa using (h.t.isLE_shift ((h.t.truncGELE n n).obj E) n n 0 (by lia))
       · simpa using (h.t.isGE_shift ((h.t.truncGELE n n).obj E) n n 0 (by lia)))
 
-instance HeartStabilityData.heartCohFunctor_additive
+@[instance]
+theorem HeartStabilityData.heartCohFunctor_additive
     (h : HeartStabilityData C) (n : ℤ) :
     Functor.Additive (h.heartCohFunctor (C := C) n) where
   map_add := by
@@ -79,7 +80,8 @@ noncomputable abbrev HeartStabilityData.H0Functor
     (h : HeartStabilityData C) : C ⥤ h.t.heart.FullSubcategory :=
   h.heartCohFunctor (C := C) 0
 
-instance HeartStabilityData.H0Functor_additive
+@[instance]
+theorem HeartStabilityData.H0Functor_additive
     (h : HeartStabilityData C) :
     Functor.Additive (h.H0Functor (C := C)) := by
   dsimp [HeartStabilityData.H0Functor]
@@ -119,7 +121,8 @@ noncomputable def HeartStabilityData.H0primeFunctor
     ext
     simp [HeartStabilityData.H0prime, TStructure.truncLEGE, Functor.comp_obj]
 
-instance HeartStabilityData.H0primeFunctor_additive
+@[instance]
+theorem HeartStabilityData.H0primeFunctor_additive
     (h : HeartStabilityData C) :
     Functor.Additive (h.H0primeFunctor (C := C)) where
   map_add := by
