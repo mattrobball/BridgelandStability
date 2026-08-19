@@ -1,6 +1,7 @@
 module
 
 public import Mathlib.CategoryTheory.Triangulated.Pretriangulated
+public import Mathlib.CategoryTheory.Triangulated.Subcategory
 public import Mathlib.CategoryTheory.ComposableArrows.Basic
 public import Mathlib.CategoryTheory.Triangulated.Triangulated
 public import Mathlib.CategoryTheory.Triangulated.TStructure.Basic
@@ -89,6 +90,7 @@ set_option backward.privateInPublic.warn false
 set_option backward.proofsInPublic true
 noncomputable section
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Pretriangulated
+open scoped ZeroObject
 universe v u
 namespace CategoryTheory.Triangulated
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ]
@@ -130,6 +132,19 @@ distinguished triangle. -/
 def PostnikovTower.factor {E : C} (P : PostnikovTower C E) (i : Fin P.n) : C :=
   (P.triangle i).obj₃
 
+/-! ### `IsPostnikovTower` predicate
+
+A principled replacement for the bundled `PostnikovTower` structure. Given a
+family `Q : Fin n → ObjectProperty C`, the predicate `IsPostnikovTower Q chain`
+asserts that `chain : ComposableArrows C n` is a Postnikov tower whose `i`-th
+cone lies in `Q i`. The cone of the `i`-th consecutive morphism is existentially
+bundled via `ObjectProperty.trW`, so there is no separate triangle data. -/
+variable {C}
+/-! ### Tower-level algebra
+
+Operations that construct new `IsPostnikovTower` witnesses from old ones, without
+reference to any phase data. These are the reusable building blocks for HN
+filtration operations. -/
 end CategoryTheory.Triangulated
 
 end
