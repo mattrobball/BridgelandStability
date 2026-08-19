@@ -502,6 +502,12 @@ def generate_lakefile(source_path: str, verso_rev: str) -> str:
     """Generate lakefile.toml."""
     return f"""name = "BridgelandInformal"
 version = "0.1.0"
+# Without `defaultTargets`, a bare `lake build` in this generated project
+# only warns ("no targets specified and no default targets configured"),
+# builds nothing, and still exits 0 — a green build that compiled nothing.
+# `informal` is what CI builds explicitly (see .github/workflows/deploy.yml);
+# it pulls in the `InformalDocs` library through `InformalMain`.
+defaultTargets = ["informal"]
 
 [[require]]
 name = "verso"
