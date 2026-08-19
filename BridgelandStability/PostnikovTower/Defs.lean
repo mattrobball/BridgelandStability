@@ -8,7 +8,6 @@ module
 public import Mathlib.CategoryTheory.Triangulated.Pretriangulated
 public import Mathlib.CategoryTheory.Triangulated.Subcategory
 public import Mathlib.CategoryTheory.ComposableArrows.Basic
-public import Mathlib.CategoryTheory.IsomorphismClasses
 
 /-!
 # Postnikov Towers in Triangulated Categories
@@ -156,7 +155,8 @@ end IsPostnikovTower
 
 /-- `IsPostnikovTower Q` is closed under isomorphisms of composable arrows:
 if two chains are naturally isomorphic, being a Postnikov tower transports across. -/
-instance IsPostnikovTower.isClosedUnderIsomorphisms {n : ℕ}
+@[instance]
+theorem IsPostnikovTower.isClosedUnderIsomorphisms {n : ℕ}
     (Q : Fin n → ObjectProperty C) :
     ObjectProperty.IsClosedUnderIsomorphisms
       (IsPostnikovTower (C := C) Q : ObjectProperty (ComposableArrows C n)) where
@@ -207,7 +207,7 @@ lemma dropFirst (h : IsPostnikovTower Q chain) (hn : 1 ≤ n)
         (fun i : Fin (n - 1) ↦ chain.map' (i.val + 1) (i.val + 2) (by lia) (by lia))) where
   base_isZero := by
     set T := h.triangle ⟨0, by lia⟩ with hT_def
-    haveI hiso : IsIso T.mor₁ :=
+    have hiso : IsIso T.mor₁ :=
       (Pretriangulated.Triangle.isZero₃_iff_isIso₁ T
         (h.triangle_mem_distTriang ⟨0, by lia⟩)).mp hzero
     exact h.base_isZero.of_iso (asIso T.mor₁).symm
