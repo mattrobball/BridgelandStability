@@ -8,7 +8,6 @@ module
 public import BridgelandStability.EulerForm.Basic
 public import Mathlib.Geometry.Manifold.Complex
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
-public meta import Informal
 
 /-!
 # Comparator Challenge: Bridgeland Corollary 1.3
