@@ -45,7 +45,7 @@ classification fields. The complete current example is the
 [Palomar template](https://github.com/PalomarRegistry/PalomarTemplate/blob/main/formalization.yaml).
 
 ```yaml
-version: "v0.3"
+version: "v0.4"
 
 # ── WHAT ──────────────────────────────────────────────
 project:
