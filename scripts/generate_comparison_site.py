@@ -188,6 +188,13 @@ def render_lakefile(source_path: str, verso_rev: str, informal_rev: str) -> str:
     return (
         'name = "BridgelandComparison"\n'
         'version = "0.1.0"\n'
+        '# Without `defaultTargets`, a bare `lake build` in this generated\n'
+        '# project only warns ("no targets specified and no default targets\n'
+        '# configured"), builds nothing, and still exits 0 — a green build that\n'
+        '# compiled nothing. `comparison` is what CI builds explicitly (see\n'
+        '# .github/workflows/deploy.yml); it pulls in the `ComparisonDocs`\n'
+        '# library through `ComparisonMain`.\n'
+        'defaultTargets = ["comparison"]\n'
         '\n'
         '[[require]]\n'
         'name = "verso"\n'
