@@ -184,9 +184,8 @@ def true_decl_kind(source_path: str, start_line: int,
 
 
 _MAIN_RE = re.compile(r"<main[\s>].*?</main>", re.DOTALL)
-_CODE_BLOCK_RE = re.compile(
-    r'(<code class="hl lean block"[^>]*>)(.*?)(</code>)', re.DOTALL
-)
+_CODE_OPEN_RE = re.compile(r'<code class="hl lean block"[^>]*>')
+_CODE_TAG_RE = re.compile(r'<code[\s>]|</code>')
 _HREF_RE = re.compile(r'href="([^"]+)"')
 _ID_RE = re.compile(r'\sid="([^"]+)"')
 _A_WITH_HREF_RE = re.compile(
@@ -267,10 +266,32 @@ def extract_code_blocks_raw(entry_page: Path) -> list[str]:
     if main_match is None:
         return []
     results: list[str] = []
-    for m in _CODE_BLOCK_RE.finditer(main_match.group(0)):
-        open_tag, inner, close_tag = m.group(1), m.group(2), m.group(3)
+    for open_tag, inner, close_tag in _iter_code_blocks(main_match.group(0)):
         results.append(open_tag + _strip_metadata(inner) + close_tag)
     return results
+
+
+def _iter_code_blocks(html: str):
+    """Yield (open_tag, inner, close_tag) for each top-level
+    `<code class="hl lean block">` element, matching `</code>` by nesting
+    depth.  Verso puts linter/diagnostic hovers inside the block as nested
+    `<code class="verso-message ...">` elements, so a non-greedy regex up to
+    the first `</code>` truncates the block and leaves tags open (the
+    browser then re-opens `<code>` around everything after it)."""
+    pos = 0
+    while True:
+        m = _CODE_OPEN_RE.search(html, pos)
+        if m is None:
+            return
+        depth, i = 1, m.end()
+        for t in _CODE_TAG_RE.finditer(html, i):
+            depth += -1 if t.group(0) == "</code>" else 1
+            if depth == 0:
+                yield m.group(0), html[m.end():t.start()], "</code>"
+                pos = t.end()
+                break
+        else:
+            return  # unbalanced input: stop rather than emit a broken block
 
 
 def rewrite_code_block_hrefs(block: str,
