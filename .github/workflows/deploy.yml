@@ -259,6 +259,19 @@ jobs:
           restore-keys: |
             docbuild-${{ hashFiles('lean-toolchain') }}-
 
+      # The doc-gen4 build holds a large heap; when it forks `git` for the
+      # per-package `srcUri.github` targets the runner (no swap) fails with
+      # "resource exhausted (error code: 12, cannot allocate memory)".
+      # A swap file gives fork/exec the headroom it needs.
+      - name: Add swap space
+        run: |
+          sudo swapoff -a || true
+          sudo fallocate -l 16G /swapfile-docs
+          sudo chmod 600 /swapfile-docs
+          sudo mkswap /swapfile-docs
+          sudo swapon /swapfile-docs
+          free -h
+
       - name: Build API docs
         run: |
           cd docbuild
